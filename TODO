@@ -1,0 +1,2 @@
+* JToolBar benutzen um Buttons anzuordnen (http://docs.oracle.com/javase/tutorial/uiswing/components/toolbar.html)
+* Action generieren, um ToolBar und MenuBar synchron zu halten (http://docs.oracle.com/javase/tutorial/uiswing/misc/action.html)
