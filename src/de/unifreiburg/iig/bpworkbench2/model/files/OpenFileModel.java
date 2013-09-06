@@ -46,8 +46,7 @@ public class OpenFileModel extends Observable {
 		// dtm = new DefaultTreeModel(root);
 		// tree = new JTree(dtm);
 		// tree.setEditable(true);
-		tree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.setShowsRootHandles(true);
 
 	}
@@ -131,8 +130,7 @@ public class OpenFileModel extends Observable {
 			log.log(Level.FINE, "setOpenFileIndex to: " + i);
 			currentlyViewedFile = i;
 			if (notify) {
-				log.log(Level.FINE,
-						"Notify Observers about open File Index change");
+				log.log(Level.FINE, "Notify Observers about open File Index change");
 				setChanged();
 				notifyObservers("indexChange");
 			}
@@ -221,9 +219,7 @@ public class OpenFileModel extends Observable {
 		// check if file is a directory
 		if (!dir.isDirectory()) {
 			log.log(Level.SEVERE, dir.toString() + "is not a directory");
-			JOptionPane.showMessageDialog(null, dir.toString()
-					+ " is no a (valid) directory", "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, dir.toString() + " is no a (valid) directory", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		// dir is a folder. Proceed
@@ -252,9 +248,11 @@ public class OpenFileModel extends Observable {
 
 			@Override
 			public boolean accept(File dir, String fileName) {
-				return (fileName.endsWith(".txt"));
+				return (fileName.endsWith(".png"));
 			}
 		});
+
+		// traverse through files
 		for (File file : filelist) {
 			addFileSilently(file);
 		}
@@ -292,8 +290,7 @@ public class OpenFileModel extends Observable {
 		// Express the individual actions as an enum. Another possible idea
 		// would be to store every change in an individual object, aka implement
 		// the command pattern
-		CUR_INDEX_CHANGE(1), FILE_NAME_CHANGE(10), SAVED_CURRENT(20), SAVED_ALL(
-				30);
+		CUR_INDEX_CHANGE(1), FILE_NAME_CHANGE(10), SAVED_CURRENT(20), SAVED_ALL(30);
 		public int value;
 
 		private actions(int value) {
@@ -316,8 +313,7 @@ class OpenFile implements UserOpenFile {
 	 * Return name of file. Append a "*" if this File has unsaved changes
 	 */
 	public String toString() {
-		return hasUnsavedChanges ? "*" + openFile.toString() : openFile
-				.toString();
+		return hasUnsavedChanges ? "*" + openFile.toString() : openFile.toString();
 	}
 
 	public OpenFile(String fileName) {

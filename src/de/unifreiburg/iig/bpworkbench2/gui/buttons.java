@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.model;
+package de.unifreiburg.iig.bpworkbench2.gui;
 
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -18,8 +18,8 @@ import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 
 import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
-import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
+import de.unifreiburg.iig.bpworkbench2.model.EditAnalyseModel;
 
 /**
  * Model for Buttons. Holds buttons like "open", "save", ... With

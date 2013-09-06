@@ -25,7 +25,6 @@ import org.jdesktop.swingx.MultiSplitPane;
 
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyseModel;
-import de.unifreiburg.iig.bpworkbench2.model.buttons;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
 
 @SuppressWarnings("serial")

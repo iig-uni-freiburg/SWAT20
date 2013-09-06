@@ -22,12 +22,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.unifreiburg.iig.bpworkbench2.gui.MenuView;
 import de.unifreiburg.iig.bpworkbench2.gui.MenuView.MenuNames;
+import de.unifreiburg.iig.bpworkbench2.gui.buttons.ButtonName;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.gui.TreeView;
+import de.unifreiburg.iig.bpworkbench2.gui.buttons;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyseModel;
-import de.unifreiburg.iig.bpworkbench2.model.buttons;
-import de.unifreiburg.iig.bpworkbench2.model.buttons.ButtonName;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
 import de.unifreiburg.iig.bpworkbench2.model.files.UserFile;
 

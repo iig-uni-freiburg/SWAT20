@@ -1,7 +1,9 @@
 package de.unifreiburg.iig.bpworkbench2.model.files;
 
 import gui.PNMLEditor;
+import gui.actions.SaveAction;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +68,7 @@ public class UserFile extends File {
 		return super.getName();
 	}
 
-	/**
+	/*
 	 * private void createEditor() { try { editor = new
 	 * JEditorPane(this.toURI().toURL());
 	 * 
@@ -75,11 +77,15 @@ public class UserFile extends File {
 	 * this.toString()); } catch (IOException e) { editor = new JEditorPane();
 	 * log.log(Level.SEVERE, "Could not open file " + this.getPath() +
 	 * this.toString()); } }
-	 **/
+	 */
 
 	private void createEditor() {
 		try {
 			editor = new PNMLEditor(this);
+			// create file open Action and fire it onto the editor
+			// OpenAction oa = new OpenAction();
+			// oa.actionPerformed(new ActionEvent(editor,
+			// ActionEvent.ACTION_PERFORMED, "open"));
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Could not open editor: " + e.toString());
 			editor = new PNMLEditor(null);
@@ -139,8 +145,10 @@ public class UserFile extends File {
 	}
 
 	public void save() {
-		log.log(Level.SEVERE, "Saving of PNML currently unimplemented");
-		System.out.println("Unimplented");
+		// log.log(Level.SEVERE, "Saving of PNML currently unimplemented");
+		// System.out.println("Unimplented");
+		SaveAction sa = new SaveAction(false);
+		sa.actionPerformed(new ActionEvent(editor, ActionEvent.ACTION_PERFORMED, "save"));
 
 	}
 }

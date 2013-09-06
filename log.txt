@@ -6327,3 +6327,230 @@ INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.fi
 FEIN: setOpenFileIndex to: 3
 05.09.2013 13:31:16 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setOpenFileIndex
 FEIN: setOpenFileIndex to: 0
+06.09.2013 12:57:53 de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+06.09.2013 12:57:54 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /tmp
+06.09.2013 12:57:55 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 12:57:55 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 12:57:55 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 12:57:57 de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+06.09.2013 12:57:57 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 12:57:57 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 12:57:57 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 12:57:57 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 12:57:57 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 1 Elements in FileModel
+06.09.2013 12:58:38 de.unifreiburg.iig.bpworkbench2.controller.EditOrAnalyseListener reactOnJRadioButtonMenu
+INFO: Activating ANALYSE view
+06.09.2013 12:58:38 de.unifreiburg.iig.bpworkbench2.controller.EditOrAnalyseListener reactOnJRadioButton
+INFO: Activating ANALYSE view
+06.09.2013 12:58:40 de.unifreiburg.iig.bpworkbench2.controller.EditOrAnalyseListener reactOnJRadioButtonMenu
+INFO: Activating EDIT view
+06.09.2013 12:58:40 de.unifreiburg.iig.bpworkbench2.controller.EditOrAnalyseListener reactOnJRadioButton
+INFO: Activating EDIT view
+06.09.2013 12:58:41 de.unifreiburg.iig.bpworkbench2.controller.EditOrAnalyseListener reactOnJRadioButton
+INFO: Activating ANALYSE view
+06.09.2013 12:58:41 de.unifreiburg.iig.bpworkbench2.controller.EditOrAnalyseListener reactOnJRadioButtonMenu
+INFO: Activating ANALYSE view
+06.09.2013 13:56:43 de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+06.09.2013 13:56:44 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /tmp
+06.09.2013 13:56:44 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:56:44 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:56:44 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:56:46 de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+06.09.2013 13:56:46 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:56:46 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 13:56:46 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:56:46 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:56:46 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 1 Elements in FileModel
+06.09.2013 13:57:30 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:57:30 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 13:57:30 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:57:30 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:57:35 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:57:35 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 13:57:35 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:57:35 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:57:36 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:57:36 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 13:57:36 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:57:36 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:58:44 de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+06.09.2013 13:58:44 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /tmp
+06.09.2013 13:58:45 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:58:45 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:58:45 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:58:50 de.unifreiburg.iig.bpworkbench2.controller.OpenListener actionPerformed
+INFO: Opening Project: workspace.
+
+06.09.2013 13:58:50 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /home/richard/workspace
+06.09.2013 13:58:50 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:58:50 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:58:50 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:58:59 de.unifreiburg.iig.bpworkbench2.controller.OpenListener actionPerformed
+INFO: Opening Project: SWAT20.
+
+06.09.2013 13:58:59 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /home/richard/workspace/SWAT20
+06.09.2013 13:58:59 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:58:59 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 13:58:59 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:58:59 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:59:13 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:59:13 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 13:59:13 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:59:13 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 13:59:24 de.unifreiburg.iig.bpworkbench2.controller.OpenListener actionPerformed
+INFO: Opening Project: SWAT20.
+
+06.09.2013 13:59:24 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /home/richard/workspace/SWAT20
+06.09.2013 13:59:24 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 13:59:24 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 13:59:24 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 13:59:24 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 14:01:02 de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+06.09.2013 14:01:03 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /tmp
+06.09.2013 14:01:03 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 14:01:03 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 14:01:03 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 14:01:09 de.unifreiburg.iig.bpworkbench2.controller.OpenListener actionPerformed
+INFO: Opening Project: SWAT20.
+
+06.09.2013 14:01:09 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /home/richard/workspace/SWAT20
+06.09.2013 14:01:09 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 14:01:09 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 14:01:09 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 14:01:09 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 14:05:58 de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+06.09.2013 14:05:58 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /tmp
+06.09.2013 14:06:05 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 14:06:05 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 14:06:05 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 14:06:17 de.unifreiburg.iig.bpworkbench2.controller.OpenListener actionPerformed
+INFO: Opening Project: SWAT20.
+
+06.09.2013 14:06:17 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /home/richard/workspace/SWAT20
+06.09.2013 14:06:21 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 14:06:21 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 14:06:21 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 14:06:21 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 14:09:30 de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+06.09.2013 14:09:30 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /tmp
+06.09.2013 14:09:30 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 14:09:30 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 14:09:30 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 14:09:39 de.unifreiburg.iig.bpworkbench2.controller.OpenListener actionPerformed
+INFO: Opening Project: SWAT20.
+
+06.09.2013 14:09:39 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /home/richard/workspace/SWAT20
+06.09.2013 14:09:39 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 14:09:39 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 14:09:39 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 14:09:39 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 14:10:12 de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+06.09.2013 14:10:12 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /tmp
+06.09.2013 14:10:12 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 14:10:12 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 14:10:12 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+06.09.2013 14:10:18 de.unifreiburg.iig.bpworkbench2.controller.OpenListener actionPerformed
+INFO: Opening Project: SWAT20.
+
+06.09.2013 14:10:18 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory /home/richard/workspace/SWAT20
+06.09.2013 14:10:18 de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+06.09.2013 14:10:18 de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+AM FEINSTEN: Set active tab to: 0
+06.09.2013 14:10:18 de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FEIN: the OpenFileModel changed
+06.09.2013 14:10:18 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
