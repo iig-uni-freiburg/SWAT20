@@ -1,8 +1,5 @@
 package de.unifreiburg.iig.bpworkbench2.model.files;
 
-import gui.PNMLEditor;
-import gui.actions.SaveAction;
-
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.logging.Level;
@@ -12,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PNMLEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 

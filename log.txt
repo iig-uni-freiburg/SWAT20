@@ -6554,3 +6554,221 @@ AM FEINSTEN: Set active tab to: 0
 FEIN: the OpenFileModel changed
 06.09.2013 14:10:18 de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
 INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+Sep 09, 2013 9:25:14 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:25:14 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:25:14 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:25:23 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:25:23 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:25:23 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:25:26 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:25:27 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+Sep 09, 2013 9:25:27 AM de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+FINEST: Set active tab to: 0
+Sep 09, 2013 9:25:27 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FINE: the OpenFileModel changed
+Sep 09, 2013 9:25:27 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+Sep 09, 2013 9:25:27 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 1 Elements in FileModel
+Sep 09, 2013 9:26:05 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:26:06 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:26:06 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:26:09 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:26:09 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:26:23 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:26:24 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:26:24 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:26:26 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:26:27 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:27:16 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:27:17 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:27:17 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:27:19 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:27:20 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+Sep 09, 2013 9:27:20 AM de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+FINEST: Set active tab to: 0
+Sep 09, 2013 9:27:20 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FINE: the OpenFileModel changed
+Sep 09, 2013 9:27:20 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+Sep 09, 2013 9:27:20 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 1 Elements in FileModel
+Sep 09, 2013 9:31:14 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:31:15 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:31:15 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:31:17 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:31:17 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:31:41 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:31:42 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:31:42 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:31:44 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:31:45 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:33:30 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:33:31 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:33:31 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:33:34 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:33:34 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:33:51 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:33:51 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:33:51 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:33:55 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:33:55 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:34:35 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:34:36 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:34:36 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:35:01 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:35:01 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:37:00 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:37:01 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:37:01 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:37:06 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:37:06 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:37:26 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:37:27 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:37:27 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:37:46 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:37:46 AM de.unifreiburg.iig.bpworkbench2.model.files.UserFile createEditor
+SEVERE: Could not open editor: java.lang.NullPointerException
+Sep 09, 2013 9:38:14 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:38:14 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:38:14 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:38:17 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:38:18 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+Sep 09, 2013 9:38:18 AM de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+FINEST: Set active tab to: 0
+Sep 09, 2013 9:38:18 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FINE: the OpenFileModel changed
+Sep 09, 2013 9:38:18 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+Sep 09, 2013 9:38:18 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 1 Elements in FileModel
+Sep 09, 2013 9:39:51 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:39:51 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:39:51 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:39:54 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:39:55 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+Sep 09, 2013 9:39:55 AM de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+FINEST: Set active tab to: 0
+Sep 09, 2013 9:39:55 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FINE: the OpenFileModel changed
+Sep 09, 2013 9:39:55 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+Sep 09, 2013 9:39:55 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 1 Elements in FileModel
+Sep 09, 2013 9:40:53 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:40:53 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+Sep 09, 2013 9:40:53 AM de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+FINEST: Set active tab to: 0
+Sep 09, 2013 9:40:53 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FINE: the OpenFileModel changed
+Sep 09, 2013 9:40:53 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+Sep 09, 2013 9:40:53 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 2 Elements in FileModel
+Sep 09, 2013 9:40:55 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setOpenFileIndex
+FINE: setOpenFileIndex to: 1
+Sep 09, 2013 9:42:15 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:42:16 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:42:16 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:42:19 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:42:20 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+Sep 09, 2013 9:42:20 AM de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+FINEST: Set active tab to: 0
+Sep 09, 2013 9:42:20 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FINE: the OpenFileModel changed
+Sep 09, 2013 9:42:20 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+Sep 09, 2013 9:42:20 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 1 Elements in FileModel
+Sep 09, 2013 9:44:08 AM de.unifreiburg.iig.bpworkbench2.logging.BPLog addHandler
+INFO: Logging for de.unifreiburg.iig.bpworkbench2.gui.SplitGui registered
+Sep 09, 2013 9:44:08 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+INFO: Opening Directory \tmp
+Sep 09, 2013 9:44:08 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel setFolder
+SEVERE: \tmpis not a directory
+Sep 09, 2013 9:44:11 AM de.unifreiburg.iig.bpworkbench2.gui.SplitGui$1 actionPerformed
+INFO: klick on Button
+Sep 09, 2013 9:44:11 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel update
+INFO: OpenFileModel changed. Notifiying observers
+Sep 09, 2013 9:44:11 AM de.unifreiburg.iig.bpworkbench2.gui.TabView FileModelToTab
+FINEST: Set active tab to: 0
+Sep 09, 2013 9:44:11 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView update
+FINE: the OpenFileModel changed
+Sep 09, 2013 9:44:11 AM de.unifreiburg.iig.bpworkbench2.gui.TreeView reactOnFileModelChange
+INFO: TreeView updated due to change in de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel
+Sep 09, 2013 9:44:11 AM de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel addFile
+INFO: Now: 1 Elements in FileModel
