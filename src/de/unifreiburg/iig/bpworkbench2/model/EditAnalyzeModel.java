@@ -2,15 +2,15 @@ package de.unifreiburg.iig.bpworkbench2.model;
 
 import java.util.Observable;
 
-public class EditAnalyseModel extends Observable {
+public class EditAnalyzeModel extends Observable {
 	private boolean edit = true;
-	private static EditAnalyseModel myEoAM = new EditAnalyseModel();
+	private static EditAnalyzeModel myEoAM = new EditAnalyzeModel();
 
 	public boolean isInEditMode() {
 		return edit;
 	}
 
-	public static EditAnalyseModel getModel() {
+	public static EditAnalyzeModel getModel() {
 		return myEoAM;
 	}
 

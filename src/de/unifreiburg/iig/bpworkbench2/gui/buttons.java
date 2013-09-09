@@ -19,7 +19,7 @@ import javax.swing.UIManager;
 
 import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
-import de.unifreiburg.iig.bpworkbench2.model.EditAnalyseModel;
+import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
 
 /**
  * Model for Buttons. Holds buttons like "open", "save", ... With
@@ -168,8 +168,8 @@ public class buttons implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		// Check if Mode changed:
-		if (arg0 instanceof EditAnalyseModel) {
-			EditAnalyseModel eam = (EditAnalyseModel) arg0;
+		if (arg0 instanceof EditAnalyzeModel) {
+			EditAnalyzeModel eam = (EditAnalyzeModel) arg0;
 			edit.setSelected(eam.isInEditMode());
 			analysis.setSelected(!eam.isInEditMode());
 		}

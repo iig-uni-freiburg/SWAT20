@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
@@ -24,14 +23,14 @@ import org.jdesktop.swingx.MultiSplitLayout.Split;
 import org.jdesktop.swingx.MultiSplitPane;
 
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
-import de.unifreiburg.iig.bpworkbench2.model.EditAnalyseModel;
+import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
 
 @SuppressWarnings("serial")
 public class SplitGui implements Serializable, Observer {
 	private MultiSplitPane msp;
 	public JFrame window;
-	private JEditorPane editor = new JEditorPane();
+	// private JEditorPane editor = new JEditorPane();
 	// private JTree tree;
 	private TreeView tv;
 	private TabView tabView;
@@ -72,7 +71,6 @@ public class SplitGui implements Serializable, Observer {
 		// get the gui layout and set the model
 		msp = new MultiSplitPane();
 		msp.getMultiSplitLayout().setModel(getMSPModel());
-		// msp = getMultiSplitPane();
 
 		// fill the gui layout
 		addElementsToSplitPane(msp);
@@ -151,11 +149,7 @@ public class SplitGui implements Serializable, Observer {
 
 	}
 
-	/**
-	 * Generates the MultiSplitPane model
-	 * 
-	 * @return
-	 */
+	/** Generates the MultiSplitPane model **/
 	private MultiSplitPane getMultiSplitPane() {
 		// get a MultiSplitPane instance
 		MultiSplitPane multiSplitPane = new MultiSplitPane();
@@ -175,8 +169,7 @@ public class SplitGui implements Serializable, Observer {
 		// Set it to column mode
 		center_right.setRowLayout(false);
 		// add leafs as children
-		center_right
-				.setChildren(getAsList(controls, new Divider(), properties));
+		center_right.setChildren(getAsList(controls, new Divider(), properties));
 
 		// set the weight of the split to 0.2 (this is not the individual leafs)
 		center_right.setWeight(0.2);
@@ -189,15 +182,14 @@ public class SplitGui implements Serializable, Observer {
 		Split center = getEditorAndConsole();
 		Split centerSplit = new Split();
 		centerSplit.setRowLayout(true);
-		centerSplit.setChildren(getAsList(center_left, new Divider(), center,
-				new Divider(), getCenter_Right()));
-		centerSplit.setWeight(0.65);
+		centerSplit.setChildren(getAsList(center_left, new Divider(), center, new Divider(), getCenter_Right()));
+		// centerSplit.setWeight(0.65);
 		return centerSplit;
 	}
 
 	private Split getEditorAndConsole() {
 		Leaf editor = getLeaf("editor", 0.7);// was weight=0.7
-		Leaf console = getLeaf("console", 0.3);// was weight=0.3
+		Leaf console = getLeaf("console", 0.2);// was weight=0.3
 		Split editorSplit = new Split();
 		editorSplit.setRowLayout(false);
 		editorSplit.setWeight(0.6);
@@ -217,20 +209,19 @@ public class SplitGui implements Serializable, Observer {
 		Leaf bottom = getLeaf("bottomLine");// weight was 0.1
 		Split gui = new Split();
 		gui.setRowLayout(false);
-		gui.setChildren(getAsList(menuLine, new Divider(), iconLine,
-				new Divider(), getCenter(), new Divider(), bottom));
+		gui.setChildren(getAsList(menuLine, new Divider(), iconLine, new Divider(), getCenter(), new Divider(), bottom));
 		return gui;
 	}
 
 	/**
-	 * wraper to get new MunltiSplitPane leafs
+	 * wraper to get new MunltiSplitPane leafs with given weighting factor
 	 * 
 	 * @param name
-	 *            The name of the new leaf
+	 *            The name the new leaf should have
 	 * @param weight
 	 *            The weight of this leaf to its siblings. Weight is between 0
-	 *            and 1 inclusive
-	 * @return the leaf
+	 *            and 1 inclusive. Weights of siblings must add up to 1
+	 * @return the {@link MultiSplitPane} {@link Leaf} itself
 	 */
 	private Leaf getLeaf(String name, double weight) {
 		Leaf temp = new Leaf(name);
@@ -261,19 +252,8 @@ public class SplitGui implements Serializable, Observer {
 		// add Views to the OpenFileModel's Observer list
 		OpenFileModel.getInstance().addObserver(tv);
 		OpenFileModel.getInstance().addObserver(tabView);
-		EditAnalyseModel.getModel().addObserver(buttons.getInstance());
-		EditAnalyseModel.getModel().addObserver(menuView);
-	}
-
-	private void setTreeView(TreeView tv) {
-		// TODO: remove TreeView from MultiSplitPane and add new tree
-		this.tv = tv;
-		// this.tree = tv.getTree();
-	}
-
-	private void setTabView(TabView tabView) {
-		// TODO: remove old tabView and add new TabView to msp
-		this.tabView = tabView;
+		EditAnalyzeModel.getModel().addObserver(buttons.getInstance());
+		EditAnalyzeModel.getModel().addObserver(menuView);
 	}
 
 	public SplitGui getInstance() {
@@ -281,7 +261,7 @@ public class SplitGui implements Serializable, Observer {
 		return null;
 	}
 
-	private List getAsList(Node... leafs) {
+	private List<Node> getAsList(Node... leafs) {
 		return Arrays.asList(leafs);
 	}
 

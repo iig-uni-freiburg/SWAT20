@@ -1,2 +1,3 @@
+* Reihenfolge, in der MultiSplitPane generiert wird ändern, um Problem in der GUI zu beheben
 * JToolBar benutzen um Buttons anzuordnen (http://docs.oracle.com/javase/tutorial/uiswing/components/toolbar.html)
 * Action generieren, um ToolBar und MenuBar synchron zu halten (http://docs.oracle.com/javase/tutorial/uiswing/misc/action.html)

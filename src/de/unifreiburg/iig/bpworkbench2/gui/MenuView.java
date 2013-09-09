@@ -13,14 +13,22 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
 
 import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
-import de.unifreiburg.iig.bpworkbench2.model.EditAnalyseModel;
+import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
 
+/**
+ * MenuBar for SWAT20. Observes the EditAnalyzeModel. Menu entries can be
+ * accessed through method {@link #getMenu(String)} with {@link MenuNames} as
+ * Input
+ * 
+ * @author richard
+ * 
+ */
 public class MenuView extends JMenuBar implements Observer {
+
+	private static final long serialVersionUID = 1L;
 	private LinkedHashMap<String, JMenuItem> menus = new LinkedHashMap<String, JMenuItem>();
-	private JRadioButtonMenuItem editMode = new JRadioButtonMenuItem(
-			"Edit Mode");
-	private JRadioButtonMenuItem analyseMode = new JRadioButtonMenuItem(
-			"Analyse Mode");
+	private JRadioButtonMenuItem editMode = new JRadioButtonMenuItem("Edit Mode");
+	private JRadioButtonMenuItem analyseMode = new JRadioButtonMenuItem("Analyse Mode");
 	private static MenuView myMenuView = new MenuView();
 
 	private MenuView() {
@@ -32,13 +40,10 @@ public class MenuView extends JMenuBar implements Observer {
 		this.add(edit);
 
 		// Create menu items for file
-		JMenuItem open = new JMenuItem("Open Dir...",
-				UIManager.getIcon("FileView.directoryIcon"));
+		JMenuItem open = new JMenuItem("Open Dir...", UIManager.getIcon("FileView.directoryIcon"));
 		JMenuItem saveAll = new JMenuItem("Save all");
-		JMenuItem save = new JMenuItem("Save",
-				UIManager.getIcon("FileView.floppyDriveIcon"));
-		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(
-				SWAT2Controller.class.getResource("../ressources/addFile.png")));
+		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
+		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(SWAT2Controller.class.getResource("../ressources/addFile.png")));
 
 		file.add(open);
 		file.add(saveAll);
@@ -72,9 +77,9 @@ public class MenuView extends JMenuBar implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (o instanceof EditAnalyseModel) {
+		if (o instanceof EditAnalyzeModel) {
 			// The Mode changed
-			EditAnalyseModel eam = (EditAnalyseModel) o;
+			EditAnalyzeModel eam = (EditAnalyzeModel) o;
 			// set selected mode
 			editMode.setSelected(eam.isInEditMode());
 			analyseMode.setSelected(!eam.isInEditMode());
@@ -90,10 +95,15 @@ public class MenuView extends JMenuBar implements Observer {
 		return editMode;
 	}
 
+	/**
+	 * returns the menu entrie identified by key. Key is one of
+	 * {@link MenuNames}.
+	 **/
 	public JMenuItem getMenu(String key) {
 		return menus.get(key);
 	}
 
+	/** Statics as identifier for JMenuItem **/
 	public class MenuNames {
 		public static final String SAVE_MENU = "saveMenu";
 		public static final String OPEN_MENU = "openButon";
