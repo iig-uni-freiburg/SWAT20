@@ -18,9 +18,8 @@ public class testGui {
 		frame.setSize(450, 300);
 
 		/*
-		 * LOAD PNML-EDITOR parsers not finished, that's why we create an empty
-		 * editor with "null", as soon as the finished parsers are implemented,
-		 * "null" is replaced by the File-Object of the pnml-file
+		 * LOAD PNML-EDITOR parser partially finished, you may create an empty
+		 * editor with "null", or an Editor to Load a PT-Net oder CPN by inserting its File-Object
 		 */
 //		panel = new PNMLEditor(null);
 		panel = new PNMLEditor(new File("/Users/julius/Desktop/Samples/sampleCPnet.pnml"));
