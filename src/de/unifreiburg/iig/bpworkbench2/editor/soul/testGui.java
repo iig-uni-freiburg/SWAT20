@@ -5,6 +5,7 @@ import javax.swing.*;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.PNMLEditor;
 
 import java.awt.Color;
+import java.io.File;
 
 
 public class testGui {
@@ -21,7 +22,8 @@ public class testGui {
 		 * editor with "null", as soon as the finished parsers are implemented,
 		 * "null" is replaced by the File-Object of the pnml-file
 		 */
-		panel = new PNMLEditor(null);
+//		panel = new PNMLEditor(null);
+		panel = new PNMLEditor(new File("/Users/julius/Desktop/Samples/sampleCPnet.pnml"));
 
 		// set background black
 		panel.setBackground(Color.black);

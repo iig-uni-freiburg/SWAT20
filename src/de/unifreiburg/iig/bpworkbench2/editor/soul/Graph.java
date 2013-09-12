@@ -34,15 +34,15 @@ public class Graph extends mxGraph {
         //removing edges in place-to-place and tr2tr connections
         mxCell edgeSource = (mxCell) ((mxCell) edge).getSource();
         mxCell edgeTarget = (mxCell) ((mxCell) edge).getTarget();
-        if (edgeSource != null && edgeTarget != null) {
-            CellInfo sourceInfo = (CellInfo) edgeSource.getValue();
-            CellInfo targetInfo = (CellInfo) edgeTarget.getValue();
-            if (sourceInfo.getType().equals(targetInfo.getType())) {
-                removeCells(new Object[]{edge});
-            } else {
-                dataHolder.updateData();
-            }
-        }
+//        if (edgeSource != null && edgeTarget != null) {
+//            CellInfo sourceInfo = (CellInfo) edgeSource.getValue();
+//            CellInfo targetInfo = (CellInfo) edgeTarget.getValue();
+//            if (sourceInfo.getType().equals(targetInfo.getType())) {
+//                removeCells(new Object[]{edge});
+//            } else {
+//                dataHolder.updateData();
+//            }
+//        }
     }
 
     @Override

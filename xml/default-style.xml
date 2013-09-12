@@ -10,7 +10,7 @@
 	<add as="defaultEdge" extend="defaultEdge">
 		<add as="labelBackgroundColor" value="white"/>
 		<add as="rounded" value="1"/>
-		<add as="edgeStyle" value="elbowEdgeStyle"/>
+		<add as="edgeStyle" value="direct"/>
 	</add>
 	<add as="entity" extend="defaultEdge">
 		<add as="edgeStyle" value="entityRelationEdgeStyle"/>
