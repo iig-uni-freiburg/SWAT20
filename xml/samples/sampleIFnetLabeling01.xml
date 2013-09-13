@@ -1,0 +1,23 @@
+<labeling xmlns="http://www.pnml.org/version-2009/grammar/pnml" id="ifn-example" type="http://files.telematik.uni-freiburg.de/ifnml/grammar/v1.0/labeling">
+  <classifications>
+    <transitionClassification id="t1">
+      <classification>high</classification>
+    </transitionClassification>
+  </classifications>
+  <tokenlabels>
+    <tokenlabel>
+      <color>green</color>
+      <classification>low</classification>
+    </tokenlabel>
+    <tokenlabel>
+      <color>yellow</color>
+      <classification>high</classification>
+    </tokenlabel>
+  </tokenlabels>
+  <clearances>
+    <clearance>
+      <subject>subjectA</subject>
+      <classification>high</classification>
+    </clearance>
+  </clearances>
+</labeling>

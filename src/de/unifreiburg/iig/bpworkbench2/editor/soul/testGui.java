@@ -6,6 +6,7 @@ import de.unifreiburg.iig.bpworkbench2.editor.gui.PNMLEditor;
 
 import java.awt.Color;
 import java.io.File;
+import java.net.URL;
 
 
 public class testGui {
@@ -22,7 +23,11 @@ public class testGui {
 		 * editor with "null", or an Editor to Load a PT-Net oder CPN by inserting its File-Object
 		 */
 //		panel = new PNMLEditor(null);
-		panel = new PNMLEditor(new File("/Users/julius/Desktop/Samples/sampleCPnet.pnml"));
+		String filePath = PNMLEditor.class.getResource(
+				"/samples/sampleCPnet.pnml").getPath();
+		System.out.println(filePath);
+		
+		panel = new PNMLEditor(new File(filePath));
 
 		// set background black
 		panel.setBackground(Color.black);
