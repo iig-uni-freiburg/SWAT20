@@ -5,9 +5,9 @@
 	<classpathentry kind="lib" path="xml"/>
 	<classpathentry kind="lib" path="lib/com.springsource.org.apache.commons.collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/MultiSplit.jar"/>
-	<classpathentry kind="lib" path="lib/jgraphx.jar" sourcepath="C:/Program Files/jgraphx/src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SEPIA"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TOVAL"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JAGAL"/>
+	<classpathentry kind="lib" path="lib/jgraphx.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

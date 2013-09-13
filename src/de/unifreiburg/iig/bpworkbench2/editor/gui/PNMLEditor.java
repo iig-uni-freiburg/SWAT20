@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.*;
 
 import com.mxgraph.layout.*;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.*;
 import com.mxgraph.swing.handler.*;
 import com.mxgraph.swing.util.*;
@@ -47,17 +49,27 @@ import com.mxgraph.view.mxGraph;
 
 
 
+
+
+
+
+
+
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.NodeGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.TokenGraphics;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
@@ -80,6 +92,7 @@ public final class PNMLEditor extends JPanel {
 	protected String appTitle;
 	protected JLabel statusBar;
 	protected static File currentFile;
+	private static AbstractPetriNet<?, ?, ?, ?, ?> pn;
 	protected boolean modified = false;
 	protected mxRubberband rubberband;
 	protected mxKeyboardHandler keyboardHandler;
@@ -264,10 +277,11 @@ public final class PNMLEditor extends JPanel {
 	private static mxGraphComponent visualizeGraph(
 			AbstractGraphicalPN<?, ?, ?, ?, ?> n,
 			mxGraphComponent graphComponent2) {
-		AbstractPetriNet<?, ?, ?, ?, ?> pn = n.getPetriNet();
+		pn = n.getPetriNet();
 		AbstractPNGraphics<?, ?, ?, ?, ?> pnG = n.getPetriNetGraphics();
 		mxGraph graph = graphComponent2.getGraph();
 		graph.getModel().beginUpdate();
+//		map2Str(pnG.getTokenGraphics(), graph);
 
 		traverseFlowRelation(pn, graph, pnG);
 
@@ -278,6 +292,7 @@ public final class PNMLEditor extends JPanel {
 	private static void traverseFlowRelation(
 			AbstractPetriNet<?, ?, ?, ?, ?> pn, mxGraph graph,
 			AbstractPNGraphics<?, ?, ?, ?, ?> pnG) {
+		
 		for (Object oFlowRelation : pn.getFlowRelations()) {
 			Object source = null;
 			Object target = null;
@@ -296,7 +311,7 @@ public final class PNMLEditor extends JPanel {
 			}
 
 			CPNFlowRelation cpnFlowRelation = null;
-			if (oFlowRelation instanceof CPNFlowRelation)
+			if (oFlowRelation instanceof CPNFlowRelation){
 				cpnFlowRelation = (CPNFlowRelation) oFlowRelation;
 
 			AbstractPNNode<?> sourceNode = cpnFlowRelation.getSource();
@@ -309,6 +324,23 @@ public final class PNMLEditor extends JPanel {
 					target);
 
 		}
+		
+		
+		CWNFlowRelation cwnFlowRelation = null;
+		if (oFlowRelation instanceof CWNFlowRelation){
+			cwnFlowRelation = (CWNFlowRelation) oFlowRelation;
+
+		AbstractPNNode<?> sourceNode = cwnFlowRelation.getSource();
+
+		source = getEndpoint(sourceNode, createdVertices, pnG, graph);
+		AbstractPNNode<?> targetNode = cwnFlowRelation.getTarget();
+		target = getEndpoint(targetNode, createdVertices, pnG, graph);
+
+		graph.insertEdge(null, cwnFlowRelation.getName(), "test", source,
+				target);
+
+	}
+	}
 
 	}
 
@@ -322,7 +354,7 @@ public final class PNMLEditor extends JPanel {
 
 				NodeGraphics pG = (NodeGraphics) pnG.getPlaceGraphics().get(
 						place);
-				endpoint = addVertex(graph, place.getName(), pG,
+				endpoint = addVertex(graph, place.getName() , place, pG,
 						mxConstants.SHAPE_ELLIPSE);
 				createdVertices2.put(place, endpoint);
 			} else
@@ -334,10 +366,10 @@ public final class PNMLEditor extends JPanel {
 				NodeGraphics pT = (NodeGraphics) pnG.getTransitionGraphics()
 						.get(transition);
 
-				endpoint = addVertex(graph, transition.getName(), pT,
+				endpoint = addVertex(graph, transition.getName(), transition,  pT,
 						mxConstants.SHAPE_RECTANGLE);
 				createdVertices2.put(transition, endpoint);
-				System.out.println(createdVertices2.size());
+//				System.out.println(createdVertices2.size());
 			} else
 				endpoint = createdVertices2.get(transition);
 		}
@@ -347,9 +379,16 @@ public final class PNMLEditor extends JPanel {
 
 				NodeGraphics pG = (NodeGraphics) pnG.getPlaceGraphics().get(
 						place);
-
-				endpoint = addVertex(graph, place.getName(), pG,
-						mxConstants.SHAPE_ELLIPSE);
+//				System.out.println(pnG.getTokenGraphics().entrySet());
+				endpoint = addVertex(graph, place.getName(), place, pG,
+						//TODO: different styles to test
+//						mxConstants.SHAPE_ELLIPSE+ ";image=http://www.jgraph.com/images/mxgraph.gif;"
+//								+ "perimeter=rectanglePerimeter;imageVerticalAlign=top;fontStyle=1;align=center;"
+//								+ "verticalAlign=top;spacing=2;spacingTop=40;imageAlign=center;"   
+//								+ "imageWidth=40;imageHeight=40;rounded=1;"
+//								+ "shadow=1;glass=1;");
+						"shape=placeShape;");
+				mxCell cell = (mxCell) endpoint;
 				createdVertices2.put(place, endpoint);
 			} else
 				endpoint = createdVertices2.get(place);
@@ -360,10 +399,34 @@ public final class PNMLEditor extends JPanel {
 				NodeGraphics pT = (NodeGraphics) pnG.getTransitionGraphics()
 						.get(transition);
 
-				endpoint = addVertex(graph, transition.getName(), pT,
+				endpoint = addVertex(graph, transition.getName(), transition, pT,
 						mxConstants.SHAPE_RECTANGLE);
 				createdVertices2.put(transition, endpoint);
-				System.out.println(createdVertices2.size());
+			} else
+				endpoint = createdVertices2.get(transition);
+		}
+		if (sourceNode instanceof CWNPlace) {
+			CWNPlace place = (CWNPlace) sourceNode;
+			if (!createdVertices2.keySet().contains(place)) {
+
+				NodeGraphics pG = (NodeGraphics) pnG.getPlaceGraphics().get(
+						place);
+
+				endpoint = addVertex(graph, place.getName(), place, pG,
+						mxConstants.SHAPE_ELLIPSE);
+				createdVertices2.put(place, endpoint);
+			} else
+				endpoint = createdVertices2.get(place);
+		}
+		if (sourceNode instanceof CWNTransition) {
+			CWNTransition transition = (CWNTransition) sourceNode;
+			if ((!createdVertices2.keySet().contains(transition))) {
+				NodeGraphics pT = (NodeGraphics) pnG.getTransitionGraphics()
+						.get(transition);
+
+				endpoint = addVertex(graph, transition.getName(), transition, pT,
+						mxConstants.SHAPE_RECTANGLE);
+				createdVertices2.put(transition, endpoint);
 			} else
 				endpoint = createdVertices2.get(transition);
 		}
@@ -371,11 +434,42 @@ public final class PNMLEditor extends JPanel {
 
 		return endpoint;
 	}
-	
+	//Currently not in use, "how to read the tokens" in progress
+//	protected static <A extends Object, B extends Object> mxGraph map2Str(
+//			Map<A, B> m, mxGraph graph) {
+//		// boolean empty = true;
+//		// StringBuilder str = new StringBuilder();
+//		for (Entry<A, B> pairs : m.entrySet()) {
+//			System.out.println(pairs);
+//			TokenGraphics tg = (TokenGraphics) pairs.getValue();
+//			tg.getColorName();
+////			if (pairs.getKey().getClass().toString().contains("Place"))
+//////				graph.insertVertex(graph.getDefaultParent(), pairs.getKey()
+//////						.toString(), new Object(), ((NodeGraphics) pairs
+//////						.getValue()).getPosition().getX(),
+//////						((NodeGraphics) pairs.getValue()).getPosition().getY(),
+//////						size_x, size_y, mxConstants.SHAPE_ELLIPSE);
+////			if (pairs.getKey().getClass().toString().contains("Transition"))
+//////				graph.insertVertex(graph.getDefaultParent(), pairs.getKey()
+//////						.toString(), new Object(), ((NodeGraphics) pairs
+//////						.getValue()).getPosition().getX(),
+//////						((NodeGraphics) pairs.getValue()).getPosition().getY(),
+//////						size_x, size_y, mxConstants.SHAPE_RECTANGLE);
+//			// if(pairs.getKey().getClass().toString().contains("Transition"))
+//			// graph.insertEdge((graph.getDefaultParent(),
+//			// pairs.getKey().toString(), , arg3, arg4)
+//			// str.append("\n");
+//			// str.append("                            " + pairs.getKey() + ": "
+//			// + pairs.getValue());
+//			// empty = false;
+//			// graph.ins
+//		}
+//		return graph;
+//	}
 	private static Object addVertex(mxGraph graph, String name,
-			NodeGraphics pG, String shape) {
+			Object transition, NodeGraphics pG, String shape) {
 		Object vertex = graph
-				.insertVertex(graph.getDefaultParent(), name, new Object(), pG.getPosition()
+				.insertVertex(graph.getDefaultParent(), name, transition, pG.getPosition()
 						.getX(), pG.getPosition().getY(), pG
 						.getDimension().getX(), pG.getDimension()
 						.getY(), shape);
