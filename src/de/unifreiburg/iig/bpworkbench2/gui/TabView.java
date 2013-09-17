@@ -62,8 +62,12 @@ public class TabView extends JTabbedPane implements Observer {
 		// JEditorPane editor = uFile.getEditor();
 		JPanel editor = uFile.getEditor();
 		// editor.setHorizontalAlignment(JLabel.CENTER);
-		panel.setLayout(new GridLayout(1, 1));
-		panel.add(editor);
+		if (editor != null) {
+			panel.setLayout(new GridLayout(1, 1));
+			panel.add(editor);
+			return panel;
+		}
+		return null;
 
 		// add Document Listener to set current file having changes
 		/*
@@ -87,7 +91,7 @@ public class TabView extends JTabbedPane implements Observer {
 		 * 
 		 * } });
 		 */
-		return panel;
+
 	}
 
 	protected void FileModelToTab() {
@@ -97,9 +101,13 @@ public class TabView extends JTabbedPane implements Observer {
 		OpenFileModel ofm = OpenFileModel.getInstance();
 		int curViewedTab = ofm.getOpenFileIndex();
 
+		// add tab for every uFile only if uFile carries a valid PNML editor
 		for (UserFile uFile : ofm.getFiles()) {
-			this.addTab(uFile.getName(), makeTextPanel(uFile));
+			if (uFile.getEditor() != null) {
+				this.addTab(uFile.getName(), makeTextPanel(uFile));
+			}
 		}
+
 		try {
 			this.setSelectedIndex(curViewedTab);
 			log.log(Level.FINEST, "Set active tab to: " + curViewedTab);

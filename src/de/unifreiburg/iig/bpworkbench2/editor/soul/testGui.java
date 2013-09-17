@@ -1,13 +1,12 @@
 package de.unifreiburg.iig.bpworkbench2.editor.soul;
 
-import javax.swing.*;
-
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PNMLEditor;
-
 import java.awt.Color;
 import java.io.File;
 import java.net.URL;
 
+import javax.swing.JFrame;
+
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PNMLEditor;
 
 public class testGui {
 
@@ -20,9 +19,10 @@ public class testGui {
 
 		/*
 		 * LOAD PNML-EDITOR parser partially finished, you may create an empty
-		 * editor with "null", or an Editor to Load a PT-Net oder CPN by inserting its File-Object
+		 * editor with "null", or an Editor to Load a PT-Net oder CPN by
+		 * inserting its File-Object
 		 */
-//		panel = new PNMLEditor(null);
+		// panel = new PNMLEditor(null);
 		String filePath = PNMLEditor.class.getResource(
 				"/samples/sampleCPnet.pnml").getPath();
 		System.out.println(filePath);

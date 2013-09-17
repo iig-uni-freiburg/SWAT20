@@ -1,5 +1,6 @@
 package de.unifreiburg.iig.bpworkbench2.gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -67,6 +68,7 @@ public class SplitGui implements Serializable, Observer {
 		// set windows size
 		window.setSize(600, 380);
 		window.setVisible(true);
+		window.pack();
 
 		// get the gui layout and set the model
 		msp = new MultiSplitPane();
@@ -89,7 +91,7 @@ public class SplitGui implements Serializable, Observer {
 	 */
 	private void addElementsToSplitPane(MultiSplitPane msp) {
 		// get Buttons
-		buttons bts = buttons.getInstance();
+		Buttons bts = Buttons.getInstance();
 
 		// insert the menu line
 		JButton menuLine = new JButton("menuLine with Action Listener");
@@ -104,6 +106,7 @@ public class SplitGui implements Serializable, Observer {
 		msp.add(menuLine, "menuLine");
 		// add the buttons from the button-model
 		msp.add(bts.getButtonPanel(), "iconLine");
+		// msp.add(bts, "iconLine");
 
 		msp.add(new JButton("Bottom Line"), "bottomLine");
 		msp.add(new JButton("Left Center"), "center.left");
@@ -120,6 +123,7 @@ public class SplitGui implements Serializable, Observer {
 
 		// msp.add(new JScrollPane(editor), "editor");
 		JButton console = new JButton("console");
+		console.setPreferredSize(new Dimension(50, 200));
 		// console.setPreferredSize(new Dimension(20, 20));
 		msp.add(console, "console");
 		// msp.add(tabView.getTab(), "console");
@@ -161,8 +165,8 @@ public class SplitGui implements Serializable, Observer {
 
 	private Split getCenter_Right() {
 		// create leafs
-		Leaf controls = new Leaf("controls");
-		Leaf properties = new Leaf("properties");
+		Leaf controls = getLeaf("controls");
+		Leaf properties = getLeaf("properties");
 
 		// create splitNode (container) which holds both leafs.
 		Split center_right = new Split();
@@ -183,12 +187,12 @@ public class SplitGui implements Serializable, Observer {
 		Split centerSplit = new Split();
 		centerSplit.setRowLayout(true);
 		centerSplit.setChildren(getAsList(center_left, new Divider(), center, new Divider(), getCenter_Right()));
-		// centerSplit.setWeight(0.65);
+		centerSplit.setWeight(0.7);
 		return centerSplit;
 	}
 
 	private Split getEditorAndConsole() {
-		Leaf editor = getLeaf("editor", 0.7);// was weight=0.7
+		Leaf editor = getLeaf("editor", 0.8);// was weight=0.7
 		Leaf console = getLeaf("console", 0.2);// was weight=0.3
 		Split editorSplit = new Split();
 		editorSplit.setRowLayout(false);
@@ -204,7 +208,7 @@ public class SplitGui implements Serializable, Observer {
 	 */
 	private Split getMSPModel() {
 		// MenuLine, iconLine and bottom only
-		Leaf menuLine = new Leaf("menuLine");// weight was 0.1
+		Leaf menuLine = getLeaf("menuLine");// weight was 0.1
 		Leaf iconLine = getLeaf("iconLine"); // weight was 0.15
 		Leaf bottom = getLeaf("bottomLine");// weight was 0.1
 		Split gui = new Split();
@@ -242,7 +246,8 @@ public class SplitGui implements Serializable, Observer {
 
 	/**
 	 * Create Gui Object and models. The Gui object creates the needed views on
-	 * the models and adds them as observers
+	 * the models and adds them as observers: ({@link TreeView}, {@link TabView}
+	 * , {@link MenuView}).
 	 */
 	private SplitGui() {
 		// get Views on OpenFileModel
@@ -252,13 +257,8 @@ public class SplitGui implements Serializable, Observer {
 		// add Views to the OpenFileModel's Observer list
 		OpenFileModel.getInstance().addObserver(tv);
 		OpenFileModel.getInstance().addObserver(tabView);
-		EditAnalyzeModel.getModel().addObserver(buttons.getInstance());
+		EditAnalyzeModel.getModel().addObserver(Buttons.getInstance());
 		EditAnalyzeModel.getModel().addObserver(menuView);
-	}
-
-	public SplitGui getInstance() {
-		// return mySplitGui;
-		return null;
 	}
 
 	private List<Node> getAsList(Node... leafs) {

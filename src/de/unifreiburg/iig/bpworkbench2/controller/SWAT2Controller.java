@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.DocumentEvent;
@@ -20,12 +22,12 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import de.unifreiburg.iig.bpworkbench2.gui.Buttons;
+import de.unifreiburg.iig.bpworkbench2.gui.Buttons.ButtonName;
 import de.unifreiburg.iig.bpworkbench2.gui.MenuView;
 import de.unifreiburg.iig.bpworkbench2.gui.MenuView.MenuNames;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.gui.TreeView;
-import de.unifreiburg.iig.bpworkbench2.gui.buttons;
-import de.unifreiburg.iig.bpworkbench2.gui.buttons.ButtonName;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
@@ -53,15 +55,17 @@ public class SWAT2Controller {
 		/* ---add Handlers (Controller)--- */
 
 		// add Handler to TreeView
-		TreeView.getTreeView().addTreeSelectionListener(new SelectionListener());
+		// TreeView.getTreeView().addTreeSelectionListener(new
+		// SelectionListener());
+		TreeView.getTreeView().addMouseListener(new TreeMouseListener());
 
 		// add Handler to Buttons, etc...
 		// get button model
-		buttons bts = buttons.getInstance();
+		Buttons bts = Buttons.getInstance();
 		MenuView mv = MenuView.getInstance();
 
 		// Open Button
-		bts.getButton(buttons.ButtonName.OPEN_BTN).addActionListener(new OpenListener());
+		bts.getButton(Buttons.ButtonName.OPEN_BTN).addActionListener(new OpenListener());
 		mv.getMenu(MenuNames.OPEN_MENU).addActionListener(new OpenListener());
 
 		// Save Button
@@ -70,7 +74,10 @@ public class SWAT2Controller {
 
 		// New Button
 		bts.getButton(ButtonName.NEW_BTN).addActionListener(new NewFileListener());
-		mv.getMenu(MenuNames.NEW_MENU).addActionListener(new NewFileListener());
+		mv.getMenu(MenuNames.NEW_FILE_MENU).addActionListener(new NewFileListener());
+
+		// Exit Menu
+		mv.getMenu(MenuNames.EXIT_MENU).addActionListener(new exitHandler());
 
 		// Add GUI as Observer of Button change
 		// bts.addObserver(gui);
@@ -123,16 +130,20 @@ class OpenListener implements ActionListener {
 			// File was chosen
 			File file = fc.getSelectedFile();
 			// Try to open the directory
-			log.log(Level.INFO, "Opening Project: " + file.getName() + ".\n");
+			log.log(Level.INFO, "Opening Project: " + file.getName() + ".");
 			OpenFileModel.getInstance().setFolder(file);
 		} else {
-			log.log(Level.SEVERE, "Open command cancelled by user.\n");
+			log.log(Level.SEVERE, "Open command cancelled by user.");
 
 		}
 
 	}
 }
 
+/**
+ * opens a new File Dialog that asks the user for a new filename. Checks if file
+ * lies within project directory
+ **/
 class NewFileListener implements ActionListener {
 
 	@Override
@@ -155,6 +166,7 @@ class NewFileListener implements ActionListener {
 		if (!file.getParent().equals(ofm.getProject().getPath())) {
 			JOptionPane.showMessageDialog(SplitGui.getGui().window, file.getParentFile() + " not in project directory: "
 					+ ofm.getProject().getPath());
+			actionPerformed(e);
 			return;
 		}
 		// Add File
@@ -199,6 +211,60 @@ class SelectionListener implements TreeSelectionListener {
 		}
 
 	}
+}
+
+class TreeMouseListener implements MouseListener {
+
+	@Override
+	public void mouseClicked(java.awt.event.MouseEvent e) {
+		if (e.getSource() instanceof JTree && e.getClickCount() == 2) {
+			System.out.println("Double Click on JTree");
+			JTree tree = (JTree) e.getSource();
+			// open the corresponding Tab:
+
+			// get the new object that the user selected
+			Object newObj = ((DefaultMutableTreeNode) (tree.getSelectionPath().getLastPathComponent())).getUserObject();
+
+			if (newObj == null) {
+				return;
+			}
+			// search the marked Object inside the OpenFileModel and set the
+			// active file accordingly
+			// get index of just marked object
+			OpenFileModel ofm = OpenFileModel.getInstance();
+			// get index of newly selected Object
+			int newIndex = ofm.getIndexOf(newObj);
+			// set index inside the model
+			OpenFileModel.getInstance().setOpenFileIndex(newIndex);
+
+		}
+
+	}
+
+	@Override
+	public void mouseEntered(java.awt.event.MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(java.awt.event.MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(java.awt.event.MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(java.awt.event.MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
 
 /**
@@ -294,6 +360,16 @@ class EditOrAnalyseListener implements ItemListener {
 			log.log(Level.INFO, "Activating EDIT view");
 			EditAnalyzeModel.getModel().setEditMode(true);
 		}
+	}
+
+}
+
+class exitHandler implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		System.exit(0);
+
 	}
 
 }

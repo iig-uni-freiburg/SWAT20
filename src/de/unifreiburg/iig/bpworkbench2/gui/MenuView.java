@@ -44,11 +44,13 @@ public class MenuView extends JMenuBar implements Observer {
 		JMenuItem saveAll = new JMenuItem("Save all");
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
 		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(SWAT2Controller.class.getResource("../ressources/addFile.png")));
+		JMenuItem exit = new JMenuItem("Exit");
 
 		file.add(open);
 		file.add(saveAll);
 		file.add(save);
 		file.add(addFile);
+		file.add(exit);
 
 		// Create menu items for edit
 		// Button Group
@@ -68,6 +70,7 @@ public class MenuView extends JMenuBar implements Observer {
 		menus.put(MenuNames.OPEN_MENU, open);
 		menus.put(MenuNames.SAVE_MENU, save);
 		menus.put(MenuNames.NEW_FILE_MENU, addFile);
+		menus.put(MenuNames.EXIT_MENU, exit);
 
 	}
 
@@ -114,6 +117,7 @@ public class MenuView extends JMenuBar implements Observer {
 		public static final String ANALYSE_MENU = "analyseMenu";
 		public static final String EDIT_MENU = "editMenu";
 		public static final String SAVEALL_MENU = "saveAllMenu";
+		public static final String EXIT_MENU = "exitMenu";
 	}
 
 }

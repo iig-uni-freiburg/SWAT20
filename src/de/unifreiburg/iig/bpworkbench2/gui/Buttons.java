@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
 import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
@@ -30,40 +31,45 @@ import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
  * 
  */
 @SuppressWarnings("serial")
-public class buttons implements Observer {
+public class Buttons extends JToolBar implements Observer {
 	// private JButton[] buttons;
 	private LinkedHashMap<String, JButton> buttons = new LinkedHashMap<String, JButton>();
 	private JPanel buttonPanel = new JPanel();
 	private JPanel viewPanel = new JPanel();
 	private Logger log = BPLog.getLogger(SplitGui.class.getName());
-	private static buttons myButtons = new buttons();
+	private static Buttons myButtons = new Buttons();
 	private JRadioButton edit = new JRadioButton("Edit");
 	private JRadioButton analysis = new JRadioButton("Analyse");
 
-	private buttons() {
+	private Buttons() {
+
+		// set some prooperties
+		setFloatable(false);
+		// setRollover(true);
+		// setPreferredSize(new Dimension(100, 50));
+
 		// create Buttons and put them into buttons
 
 		// new Button
-		buttons.put(ButtonName.NEW_BTN,
-				new JButton(UIManager.getIcon("FileView.fileIcon")));
-		buttons.get(ButtonName.NEW_BTN).setToolTipText(
-				"Create or view single file");
+		buttons.put(ButtonName.NEW_BTN, new JButton(UIManager.getIcon("FileView.fileIcon")));
+		buttons.get(ButtonName.NEW_BTN).setToolTipText("Create or view single file");
+		add(buttons.get(ButtonName.NEW_BTN));
 
 		// load Button
-		buttons.put(ButtonName.OPEN_BTN,
-				new JButton(UIManager.getIcon("FileView.directoryIcon")));
+		buttons.put(ButtonName.OPEN_BTN, new JButton(UIManager.getIcon("FileView.directoryIcon")));
 		buttons.get(ButtonName.OPEN_BTN).setToolTipText("Open a directory");
+		add(buttons.get(ButtonName.OPEN_BTN));
 
 		// save Button
-		buttons.put(ButtonName.SAVE_BTN,
-				new JButton(UIManager.getIcon("FileView.floppyDriveIcon")));
+		buttons.put(ButtonName.SAVE_BTN, new JButton(UIManager.getIcon("FileView.floppyDriveIcon")));
 		buttons.get(ButtonName.SAVE_BTN).setToolTipText("Save current file");
+		add(buttons.get(ButtonName.SAVE_BTN));
 
 		// new File Button with logo
-		Icon newFileIcon = new ImageIcon(
-				SWAT2Controller.class.getResource("../ressources/addFile.png"));
+		Icon newFileIcon = new ImageIcon(SWAT2Controller.class.getResource("../ressources/addFile.png"));
 		buttons.put(ButtonName.NEW_FILE_BTN, new JButton(newFileIcon));
 		// buttons.get(ButtonName.NEW_FILE_BTN).setToolTipText("create new file");
+		add(buttons.get(ButtonName.NEW_FILE_BTN));
 
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -72,6 +78,8 @@ public class buttons implements Observer {
 		for (JButton button : buttons.values()) {
 			buttonPanel.add(button);
 		}
+
+		validate();
 
 		// create Analysis and Editor Mode RadioButtons.
 		// Listen to key 'e' and 'a'
@@ -94,7 +102,7 @@ public class buttons implements Observer {
 		viewPanel.add(analysis);
 	}
 
-	public static buttons getInstance() {
+	public static Buttons getInstance() {
 		return myButtons;
 	}
 

@@ -42,13 +42,8 @@ public class OpenFileModel extends Observable {
 	private UserFile projectName;
 
 	private OpenFileModel() {
-		// root = new DefaultMutableTreeNode("Project");
-		// dtm = new DefaultTreeModel(root);
-		// tree = new JTree(dtm);
-		// tree.setEditable(true);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.setShowsRootHandles(true);
-
 	}
 
 	/**
@@ -192,7 +187,7 @@ public class OpenFileModel extends Observable {
 	 * Inform observers and also represent internal JTree represantation
 	 */
 	private void update() {
-		log.log(Level.INFO, "OpenFileModel changed. Notifiying observers");
+		log.log(Level.FINE, "OpenFileModel changed. Notifiying observers");
 		// store current selection
 
 		// currentlyViewedFile = openFiles.indexOf(tree
@@ -234,21 +229,19 @@ public class OpenFileModel extends Observable {
 		update();
 	}
 
-	/**
-	 * 
-	 * @return true iff currently viewed file has unsaved changes
-	 */
+	/** @return true iff currently viewed file has unsaved changes **/
 	public boolean hasUnsavedChange() {
 		return openFiles.get(currentlyViewedFile).hasUnsavedChanges();
 	}
 
+	/** read the given directory and parse all files **/
 	private void parseList(File dir) {
 		// create fileList out of *.txt files
 		File[] filelist = dir.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String fileName) {
-				return (fileName.endsWith(".png"));
+				return (fileName.endsWith(".pnml"));
 			}
 		});
 
@@ -258,11 +251,11 @@ public class OpenFileModel extends Observable {
 		}
 		projectName = new UserFile(dir);
 		update();
-
 	}
 
 	public void setUnsavedChange(UserFile userFile) {
 		// For later use?
+
 	}
 
 	/**

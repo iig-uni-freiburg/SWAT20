@@ -86,8 +86,8 @@ public class UserFile extends File {
 			// oa.actionPerformed(new ActionEvent(editor,
 			// ActionEvent.ACTION_PERFORMED, "open"));
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "Could not open editor: " + e.toString());
-			editor = new PNMLEditor(null);
+			log.log(Level.SEVERE, "Could not open editor: in " + getClass().toString() + " " + e.toString());
+			// editor = new PNMLEditor(null);
 		}
 
 	}

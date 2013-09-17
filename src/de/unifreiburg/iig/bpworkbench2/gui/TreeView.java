@@ -38,8 +38,7 @@ public class TreeView extends JTree implements Observer {
 			// The active file changed. Do not represent this in the treeView.
 			// Otherwise the treeView handler would fire and change the
 			// FileModel again
-			log.log(Level.FINEST,
-					"Ignored change in OpenFileModel. Only active Index changed");
+			log.log(Level.FINEST, "Ignored change in OpenFileModel. Only active Index changed");
 			return;// Do nothing
 		}
 		OpenFileModel ofm = (OpenFileModel) arg0;
@@ -48,8 +47,7 @@ public class TreeView extends JTree implements Observer {
 		// inform the tree that the undlerlying model has changed
 		// ((DefaultTreeModel) tree.getModel()).reload();
 		treeModel.reload();
-		log.log(Level.INFO, "TreeView updated due to change in "
-				+ OpenFileModel.class.getName());
+		log.log(Level.INFO, "TreeView updated due to change in " + OpenFileModel.class.getName());
 	}
 
 	/**
@@ -66,8 +64,7 @@ public class TreeView extends JTree implements Observer {
 	}
 
 	private TreeView() {
-
-		root = new DefaultMutableTreeNode("Project Gesine");
+		root = new DefaultMutableTreeNode("Project Root");
 		treeModel = new DefaultTreeModel(root);
 		this.setModel(treeModel);
 		this.setShowsRootHandles(true);
@@ -85,8 +82,7 @@ public class TreeView extends JTree implements Observer {
 		for (UserFile uFile : ofm.getFiles()) {
 			root.add(new DefaultMutableTreeNode(uFile));
 		}
-		this.setSelectionInterval(ofm.getOpenFileIndex() - 1,
-				ofm.getOpenFileIndex());
+		this.setSelectionInterval(ofm.getOpenFileIndex() - 1, ofm.getOpenFileIndex());
 		root.setUserObject(ofm.getProject());
 		// treeModel.reload();
 	}

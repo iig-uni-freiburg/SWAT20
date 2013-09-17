@@ -11,7 +11,7 @@ public class BPLog {
 
 	private static Logger log;
 	private static boolean initialized = false;
-	private static Level lvl = Level.FINEST; // LogLevel for Logfile
+	private static Level lvl = Level.FINEST; // LogLevel for logfile and logger
 
 	private BPLog() {
 
