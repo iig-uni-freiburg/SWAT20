@@ -24,7 +24,7 @@ public class testGui {
 		 */
 		// panel = new PNMLEditor(null);
 		String filePath = PNMLEditor.class.getResource(
-				"/samples/sampleCPnet.pnml").getPath();
+				"/samples/sampleCPnet_moretokens.pnml").getPath();
 		System.out.println(filePath);
 		
 		panel = new PNMLEditor(new File(filePath));
