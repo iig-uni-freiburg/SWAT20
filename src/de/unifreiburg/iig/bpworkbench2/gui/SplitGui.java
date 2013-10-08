@@ -31,8 +31,6 @@ import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
 public class SplitGui implements Serializable, Observer {
 	private MultiSplitPane msp;
 	public JFrame window;
-	// private JEditorPane editor = new JEditorPane();
-	// private JTree tree;
 	private TreeView tv;
 	private TabView tabView;
 	private Logger log = BPLog.getLogger(SplitGui.class.getName()); // Logger
@@ -252,13 +250,18 @@ public class SplitGui implements Serializable, Observer {
 	private SplitGui() {
 		// get Views on OpenFileModel
 		tv = TreeView.getTreeView();
-		// tree = tv.getTree();
 		tabView = new TabView();
+
 		// add Views to the OpenFileModel's Observer list
-		OpenFileModel.getInstance().addObserver(tv);
-		OpenFileModel.getInstance().addObserver(tabView);
-		EditAnalyzeModel.getModel().addObserver(Buttons.getInstance());
-		EditAnalyzeModel.getModel().addObserver(menuView);
+		OpenFileModel ofm = OpenFileModel.getInstance();
+		ofm.addObserver(tv);
+		ofm.addObserver(tabView);
+		ofm.addObserver(Buttons.getInstance());
+
+		// add Views to the EditOrAnalyze Model
+		EditAnalyzeModel eam = EditAnalyzeModel.getModel();
+		eam.addObserver(menuView);
+		eam.addObserver(Buttons.getInstance());
 	}
 
 	private List<Node> getAsList(Node... leafs) {

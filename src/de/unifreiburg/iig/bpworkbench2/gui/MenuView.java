@@ -81,7 +81,7 @@ public class MenuView extends JMenuBar implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof EditAnalyzeModel) {
-			// The Mode changed
+			// The Mode (Analyze / Edit) changed
 			EditAnalyzeModel eam = (EditAnalyzeModel) o;
 			// set selected mode
 			editMode.setSelected(eam.isInEditMode());

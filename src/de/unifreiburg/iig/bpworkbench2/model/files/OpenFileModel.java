@@ -104,7 +104,6 @@ public class OpenFileModel extends Observable {
 				return i;
 			}
 		}
-
 		return -1;
 	}
 
@@ -114,6 +113,15 @@ public class OpenFileModel extends Observable {
 
 	public void setOpenFileIndex(int i) {
 		setOpenFileIndex(i, true);
+	}
+
+	/** search o and set it as new active userFile if found **/
+	public void setOpenFileIndex(Object o) {
+		int index = getIndexOf(o);
+		if (index != -1) {
+			setOpenFileIndex(index, true);
+		}
+
 	}
 
 	public void setOpenFileIndex(int i, boolean notify) {

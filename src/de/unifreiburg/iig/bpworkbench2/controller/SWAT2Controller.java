@@ -166,11 +166,11 @@ class NewFileListener implements ActionListener {
 		if (!file.getParent().equals(ofm.getProject().getPath())) {
 			JOptionPane.showMessageDialog(SplitGui.getGui().window, file.getParentFile() + " not in project directory: "
 					+ ofm.getProject().getPath());
-			actionPerformed(e);
+			actionPerformed(e); // ask user again
 			return;
 		}
 		// Add File
-		log.log(Level.INFO, "Adding file: " + file.getName() + ".\n");
+		log.log(Level.FINE, "Adding file: " + file.getName() + ".\n");
 		// Create a new file in the current directory
 		UserFile uFile = new UserFile(ofm.getProject().getAbsolutePath() + File.separatorChar + file.getName());
 		ofm.addFile(uFile);
@@ -218,27 +218,19 @@ class TreeMouseListener implements MouseListener {
 	@Override
 	public void mouseClicked(java.awt.event.MouseEvent e) {
 		if (e.getSource() instanceof JTree && e.getClickCount() == 2) {
-			System.out.println("Double Click on JTree");
+			// System.out.println("Double Click on JTree");
 			JTree tree = (JTree) e.getSource();
 			// open the corresponding Tab:
-
 			// get the new object that the user selected
 			Object newObj = ((DefaultMutableTreeNode) (tree.getSelectionPath().getLastPathComponent())).getUserObject();
-
 			if (newObj == null) {
-				return;
+				return; // nothing was selected by user
 			}
-			// search the marked Object inside the OpenFileModel and set the
-			// active file accordingly
-			// get index of just marked object
+
+			// set selected object as active file
 			OpenFileModel ofm = OpenFileModel.getInstance();
-			// get index of newly selected Object
-			int newIndex = ofm.getIndexOf(newObj);
-			// set index inside the model
-			OpenFileModel.getInstance().setOpenFileIndex(newIndex);
-
+			ofm.setOpenFileIndex(newObj);
 		}
-
 	}
 
 	@Override
@@ -268,8 +260,8 @@ class TreeMouseListener implements MouseListener {
 }
 
 /**
- * UpdateListener adds itself automatically on creation to uFile. works with
- * JEditor
+ * UpdateListener adds itself automatically on creation to uFile. works on
+ * JEditor only
  * 
  * @author richard
  * 
@@ -332,11 +324,11 @@ class EditOrAnalyseListener implements ItemListener {
 		// which button was pressed? Check for action command
 		if (rbtn.getActionCommand().equals("analysis")) {
 			// activate analysis view
-			log.log(Level.INFO, "Activating ANALYSE view");
+			log.log(Level.FINEST, "Activating ANALYSE view");
 			EditAnalyzeModel.getModel().setEditMode(false);
 		} else if (rbtn.getActionCommand().equals("edit")) {
 			// activate edit view
-			log.log(Level.INFO, "Activating EDIT view");
+			log.log(Level.FINEST, "Activating EDIT view");
 			EditAnalyzeModel.getModel().setEditMode(true);
 		}
 
@@ -353,11 +345,11 @@ class EditOrAnalyseListener implements ItemListener {
 		// which button was pressed? Check for action command
 		if (rbtn.getActionCommand().equals("analysis")) {
 			// activate analysis view
-			log.log(Level.INFO, "Activating ANALYSE view");
+			log.log(Level.FINEST, "Activating ANALYSE view");
 			EditAnalyzeModel.getModel().setEditMode(false);
 		} else if (rbtn.getActionCommand().equals("edit")) {
 			// activate edit view
-			log.log(Level.INFO, "Activating EDIT view");
+			log.log(Level.FINEST, "Activating EDIT view");
 			EditAnalyzeModel.getModel().setEditMode(true);
 		}
 	}

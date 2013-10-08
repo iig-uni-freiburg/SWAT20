@@ -32,10 +32,7 @@ import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
  */
 @SuppressWarnings("serial")
 public class Buttons extends JToolBar implements Observer {
-	// private JButton[] buttons;
 	private LinkedHashMap<String, JButton> buttons = new LinkedHashMap<String, JButton>();
-	private JPanel buttonPanel = new JPanel();
-	private JPanel viewPanel = new JPanel();
 	private Logger log = BPLog.getLogger(SplitGui.class.getName());
 	private static Buttons myButtons = new Buttons();
 	private JRadioButton edit = new JRadioButton("Edit");
@@ -43,12 +40,12 @@ public class Buttons extends JToolBar implements Observer {
 
 	private Buttons() {
 
-		// set some prooperties
+		// set some properties
 		setFloatable(false);
-		// setRollover(true);
+		setRollover(true);
 		// setPreferredSize(new Dimension(100, 50));
 
-		// create Buttons and put them into buttons
+		// create JButtons and put them into HashMap -------------------------
 
 		// new Button
 		buttons.put(ButtonName.NEW_BTN, new JButton(UIManager.getIcon("FileView.fileIcon")));
@@ -67,39 +64,29 @@ public class Buttons extends JToolBar implements Observer {
 
 		// new File Button with logo
 		Icon newFileIcon = new ImageIcon(SWAT2Controller.class.getResource("../ressources/addFile.png"));
-		buttons.put(ButtonName.NEW_FILE_BTN, new JButton(newFileIcon));
+		buttons.put(ButtonName.NEW_FILE_BTN, new JButton(newFileIcon) {
+			{
+				setToolTipText("Create new file");
+			}
+		});
 		// buttons.get(ButtonName.NEW_FILE_BTN).setToolTipText("create new file");
 		add(buttons.get(ButtonName.NEW_FILE_BTN));
 
-		buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-
-		// add Buttons
-		for (JButton button : buttons.values()) {
-			buttonPanel.add(button);
-		}
-
-		validate();
-
-		// create Analysis and Editor Mode RadioButtons.
+		// create Analysis and Editor Mode RadioButtons -----------------------
 		// Listen to key 'e' and 'a'
 		edit.setMnemonic(KeyEvent.VK_E);
-		edit.setMnemonic(KeyEvent.VK_A);
+		analysis.setMnemonic(KeyEvent.VK_A);
 
 		edit.setSelected(true);
 
 		analysis.setActionCommand("analysis");
 		edit.setActionCommand("edit");
 
-		// add to group
+		// add JRadioButtons to group
 		ButtonGroup group = new ButtonGroup();
 		group.add(analysis);
 		group.add(edit);
 
-		// add group to viewPanel
-		viewPanel.setLayout(new GridLayout(1, 0));
-		viewPanel.add(edit);
-		viewPanel.add(analysis);
 	}
 
 	public static Buttons getInstance() {
@@ -131,6 +118,15 @@ public class Buttons extends JToolBar implements Observer {
 	 * @return
 	 */
 	public JPanel getButtonPanel() {
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+
+		// add Buttons
+		for (JButton button : buttons.values()) {
+			buttonPanel.add(button);
+		}
+
+		validate();
 		return buttonPanel;
 	}
 
@@ -140,6 +136,10 @@ public class Buttons extends JToolBar implements Observer {
 	 * @return
 	 */
 	public JPanel getEditorViewPanel() {
+		JPanel viewPanel = new JPanel();
+		viewPanel.setLayout(new GridLayout(1, 0));
+		viewPanel.add(edit);
+		viewPanel.add(analysis);
 		return viewPanel;
 	}
 
@@ -178,6 +178,7 @@ public class Buttons extends JToolBar implements Observer {
 		// Check if Mode changed:
 		if (arg0 instanceof EditAnalyzeModel) {
 			EditAnalyzeModel eam = (EditAnalyzeModel) arg0;
+			// Set edit and analysis checkbox according to model
 			edit.setSelected(eam.isInEditMode());
 			analysis.setSelected(!eam.isInEditMode());
 		}
