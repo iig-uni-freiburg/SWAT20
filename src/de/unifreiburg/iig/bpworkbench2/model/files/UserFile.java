@@ -27,6 +27,7 @@ public class UserFile extends File {
 	// private JEditorPane editor;
 	private PNMLEditor editor;
 	private static Logger log = BPLog.getLogger(SplitGui.class.getName());
+	private boolean parseable = false;
 
 	public UserFile(String pathname) {
 		super(pathname);
@@ -85,11 +86,16 @@ public class UserFile extends File {
 			// OpenAction oa = new OpenAction();
 			// oa.actionPerformed(new ActionEvent(editor,
 			// ActionEvent.ACTION_PERFORMED, "open"));
+			parseable = true;
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "Could not open editor: in " + getClass().toString() + " " + e.toString());
+			log.log(Level.SEVERE, "Could not open editor for " + getAbsolutePath() + ": in " + getClass().toString() + " " + e.toString());
 			// editor = new PNMLEditor(null);
 		}
 
+	}
+
+	public boolean isParseable() {
+		return parseable;
 	}
 
 	public JPanel getEditor() {

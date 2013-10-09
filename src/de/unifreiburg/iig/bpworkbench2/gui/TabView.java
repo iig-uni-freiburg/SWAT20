@@ -1,6 +1,5 @@
 package de.unifreiburg.iig.bpworkbench2.gui;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Observable;
 import java.util.Observer;
@@ -29,12 +28,14 @@ public class TabView extends JTabbedPane implements Observer {
 	public TabView() {
 		log = BPLog.getLogger(SplitGui.class.getName());
 		// tab = new JTabbedPane();
-		this.setDoubleBuffered(true);
-		this.setPreferredSize(new Dimension(50, 50));
+		// this.setDoubleBuffered(true);
+		// this.setPreferredSize(new Dimension(50, 50));
 		this.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
+				// SplitGui.getGui().revalidate();
+				// synchronize active tab with active index in the Model
 				OpenFileModel ofm = OpenFileModel.getInstance();
 				int index = ((JTabbedPane) arg0.getSource()).getSelectedIndex();
 				ofm.setOpenFileIndex(index, false);

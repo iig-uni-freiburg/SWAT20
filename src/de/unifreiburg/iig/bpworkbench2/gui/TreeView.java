@@ -80,7 +80,9 @@ public class TreeView extends JTree implements Observer {
 	private void fileModelToTree(OpenFileModel ofm) {
 		root.removeAllChildren();
 		for (UserFile uFile : ofm.getFiles()) {
-			root.add(new DefaultMutableTreeNode(uFile));
+			if (uFile.isParseable()) {
+				root.add(new DefaultMutableTreeNode(uFile));
+			}
 		}
 		this.setSelectionInterval(ofm.getOpenFileIndex() - 1, ofm.getOpenFileIndex());
 		root.setUserObject(ofm.getProject());

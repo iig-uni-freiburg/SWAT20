@@ -63,7 +63,10 @@ public class OpenFileModel extends Observable {
 	}
 
 	private void addFileSilently(File file) {
-		openFiles.add(new UserFile(file));
+		UserFile uFile = new UserFile(file);
+		if (uFile.isParseable())
+			openFiles.add(uFile);
+		SplitGui.getGui().revalidate();
 	}
 
 	public void addFile(String file) {
@@ -221,8 +224,8 @@ public class OpenFileModel extends Observable {
 		log.log(Level.INFO, "Opening Directory " + dir.toString());
 		// check if file is a directory
 		if (!dir.isDirectory()) {
-			log.log(Level.SEVERE, dir.toString() + "is not a directory");
-			JOptionPane.showMessageDialog(null, dir.toString() + " is no a (valid) directory", "Error", JOptionPane.ERROR_MESSAGE);
+			log.log(Level.SEVERE, dir.toString() + " is not a directory");
+			JOptionPane.showMessageDialog(null, dir.toString() + " is not a (valid) directory", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		// dir is a folder. Proceed
@@ -255,7 +258,8 @@ public class OpenFileModel extends Observable {
 
 		// traverse through files
 		for (File file : filelist) {
-			addFileSilently(file);
+			if (file.isFile())
+				addFileSilently(file);
 		}
 		projectName = new UserFile(dir);
 		update();

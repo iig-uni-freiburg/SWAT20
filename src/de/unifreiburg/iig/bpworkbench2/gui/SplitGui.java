@@ -1,15 +1,12 @@
 package de.unifreiburg.iig.bpworkbench2.gui;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Frame;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -34,7 +31,7 @@ public class SplitGui implements Serializable, Observer {
 	private TreeView tv;
 	private TabView tabView;
 	private Logger log = BPLog.getLogger(SplitGui.class.getName()); // Logger
-	private MenuView menuView = MenuView.getInstance(); // menu
+	private MenuView menuView; // menu
 
 	private static SplitGui gui = new SplitGui();
 
@@ -46,7 +43,6 @@ public class SplitGui implements Serializable, Observer {
 		myGui.show();
 		OpenFileModel.getInstance().addObserver(myGui);
 		OpenFileModel.getInstance().setFolder(new File("/tmp"));
-
 	}
 
 	public static SplitGui getGui() {
@@ -65,8 +61,7 @@ public class SplitGui implements Serializable, Observer {
 
 		// set windows size
 		window.setSize(600, 380);
-		window.setVisible(true);
-		window.pack();
+		window.setExtendedState(Frame.MAXIMIZED_BOTH);
 
 		// get the gui layout and set the model
 		msp = new MultiSplitPane();
@@ -74,11 +69,14 @@ public class SplitGui implements Serializable, Observer {
 
 		// fill the gui layout
 		addElementsToSplitPane(msp);
+		msp.setPreferredSize(msp.getMultiSplitLayout().getModel().getBounds().getSize());
 		window.add(msp);
 		// change size of dividers
 		msp.getMultiSplitLayout().setDividerSize(3);
 
 		window.setJMenuBar(menuView);
+		window.setVisible(true);
+		window.pack();
 
 	}
 
@@ -92,16 +90,16 @@ public class SplitGui implements Serializable, Observer {
 		Buttons bts = Buttons.getInstance();
 
 		// insert the menu line
-		JButton menuLine = new JButton("menuLine with Action Listener");
-		menuLine.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				log.log(Level.INFO, "klick on Button");
-				OpenFileModel.getInstance().addFile("Datei ...");
-			}
-		});
-		msp.add(menuLine, "menuLine");
+		// JButton menuLine = new JButton("menuLine with Action Listener");
+		// menuLine.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// log.log(Level.INFO, "klick on Button");
+		// OpenFileModel.getInstance().addFile("Datei ...");
+		// }
+		// });
+		// msp.add(menuLine, "menuLine");
 		// add the buttons from the button-model
 		msp.add(bts.getButtonPanel(), "iconLine");
 		// msp.add(bts, "iconLine");
@@ -121,33 +119,13 @@ public class SplitGui implements Serializable, Observer {
 
 		// msp.add(new JScrollPane(editor), "editor");
 		JButton console = new JButton("console");
-		console.setPreferredSize(new Dimension(50, 200));
+		// console.setPreferredSize(new Dimension(200, 50));
 		// console.setPreferredSize(new Dimension(20, 20));
 		msp.add(console, "console");
 		// msp.add(tabView.getTab(), "console");
 
 		msp.add(new JScrollPane(tv), "center.left");
 		// msp.add(tree, "center.left");
-		/*
-		 * tree.addTreeSelectionListener(new TreeSelectionListener() {
-		 * 
-		 * @Override public void valueChanged(TreeSelectionEvent arg0) { try {
-		 * editor.setText("Selection path: " +
-		 * arg0.getNewLeadSelectionPath().toString() + " OFile-Model: " +
-		 * OpenFileModel.getInstance().getIndexOf( ((DefaultMutableTreeNode)
-		 * arg0 .getNewLeadSelectionPath() .getLastPathComponent())
-		 * .getUserObject())); int newIndex =
-		 * OpenFileModel.getInstance().getIndexOf( ((DefaultMutableTreeNode)
-		 * arg0 .getNewLeadSelectionPath()
-		 * .getLastPathComponent()).getUserObject());
-		 * OpenFileModel.getInstance().setOpenFileIndex(newIndex);
-		 * 
-		 * } catch (NullPointerException e) {
-		 * 
-		 * }
-		 * 
-		 * } });
-		 */
 
 	}
 
@@ -174,12 +152,12 @@ public class SplitGui implements Serializable, Observer {
 		center_right.setChildren(getAsList(controls, new Divider(), properties));
 
 		// set the weight of the split to 0.2 (this is not the individual leafs)
-		center_right.setWeight(0.2);
+		center_right.setWeight(0.15);
 		return center_right;
 	}
 
 	private Split getCenter() {
-		Leaf center_left = getLeaf("center.left", 0.2);
+		Leaf center_left = getLeaf("center.left", 0.15);
 		// Leaf center = getLeaf("center", 0.6);
 		Split center = getEditorAndConsole();
 		Split centerSplit = new Split();
@@ -194,8 +172,8 @@ public class SplitGui implements Serializable, Observer {
 		Leaf console = getLeaf("console", 0.2);// was weight=0.3
 		Split editorSplit = new Split();
 		editorSplit.setRowLayout(false);
-		editorSplit.setWeight(0.6);
 		editorSplit.setChildren(getAsList(editor, new Divider(), console));
+		editorSplit.setWeight(0.7);
 		return editorSplit;
 	}
 
@@ -206,12 +184,14 @@ public class SplitGui implements Serializable, Observer {
 	 */
 	private Split getMSPModel() {
 		// MenuLine, iconLine and bottom only
-		Leaf menuLine = getLeaf("menuLine");// weight was 0.1
+		// Leaf menuLine = getLeaf("menuLine");// weight was 0.1
 		Leaf iconLine = getLeaf("iconLine"); // weight was 0.15
 		Leaf bottom = getLeaf("bottomLine");// weight was 0.1
 		Split gui = new Split();
 		gui.setRowLayout(false);
-		gui.setChildren(getAsList(menuLine, new Divider(), iconLine, new Divider(), getCenter(), new Divider(), bottom));
+		// gui.setChildren(getAsList(menuLine, new Divider(), iconLine, new
+		// Divider(), getCenter(), new Divider(), bottom));
+		gui.setChildren(getAsList(iconLine, new Divider(), getCenter(), new Divider(), bottom));
 		return gui;
 	}
 
@@ -248,20 +228,22 @@ public class SplitGui implements Serializable, Observer {
 	 * , {@link MenuView}).
 	 */
 	private SplitGui() {
-		// get Views on OpenFileModel
+		// generate Views
 		tv = TreeView.getTreeView();
 		tabView = new TabView();
+		Buttons bts = Buttons.getInstance();
+		menuView = MenuView.getInstance();
 
 		// add Views to the OpenFileModel's Observer list
 		OpenFileModel ofm = OpenFileModel.getInstance();
 		ofm.addObserver(tv);
 		ofm.addObserver(tabView);
-		ofm.addObserver(Buttons.getInstance());
+		ofm.addObserver(bts);
 
 		// add Views to the EditOrAnalyze Model
 		EditAnalyzeModel eam = EditAnalyzeModel.getModel();
 		eam.addObserver(menuView);
-		eam.addObserver(Buttons.getInstance());
+		eam.addObserver(bts);
 	}
 
 	private List<Node> getAsList(Node... leafs) {
@@ -272,6 +254,13 @@ public class SplitGui implements Serializable, Observer {
 	public void update(Observable o, Object arg) {
 		// log.log(Level.INFO, "redraw gui");
 		// Buttons might have changed
+
+	}
+
+	public void revalidate() {
+		// msp.revalidate();
+		window.pack();
+		// msp.revalidate();
 
 	}
 

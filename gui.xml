@@ -5,8 +5,8 @@
    <object class="java.awt.Rectangle">
     <int>0</int>
     <int>0</int>
-    <int>498</int>
-    <int>366</int>
+    <int>500</int>
+    <int>300</int>
    </object>
   </void>
   <void id="ArrayList0" property="children">
@@ -16,7 +16,7 @@
       <object class="java.awt.Rectangle">
        <int>0</int>
        <int>0</int>
-       <int>498</int>
+       <int>500</int>
        <int>25</int>
       </object>
      </void>
@@ -34,7 +34,7 @@
       <object class="java.awt.Rectangle">
        <int>0</int>
        <int>25</int>
-       <int>498</int>
+       <int>500</int>
        <int>10</int>
       </object>
      </void>
@@ -49,7 +49,7 @@
       <object class="java.awt.Rectangle">
        <int>0</int>
        <int>35</int>
-       <int>498</int>
+       <int>500</int>
        <int>25</int>
       </object>
      </void>
@@ -67,7 +67,7 @@
       <object class="java.awt.Rectangle">
        <int>0</int>
        <int>60</int>
-       <int>498</int>
+       <int>500</int>
        <int>10</int>
       </object>
      </void>
@@ -82,8 +82,8 @@
       <object class="java.awt.Rectangle">
        <int>0</int>
        <int>70</int>
-       <int>498</int>
-       <int>261</int>
+       <int>500</int>
+       <int>195</int>
       </object>
      </void>
      <void id="ArrayList1" property="children">
@@ -94,7 +94,7 @@
           <int>0</int>
           <int>70</int>
           <int>113</int>
-          <int>261</int>
+          <int>195</int>
          </object>
         </void>
         <void property="name">
@@ -112,7 +112,7 @@
           <int>113</int>
           <int>70</int>
           <int>10</int>
-          <int>261</int>
+          <int>195</int>
          </object>
         </void>
         <void property="parent">
@@ -127,7 +127,7 @@
           <int>123</int>
           <int>70</int>
           <int>81</int>
-          <int>261</int>
+          <int>195</int>
          </object>
         </void>
         <void property="name">
@@ -145,7 +145,7 @@
           <int>204</int>
           <int>70</int>
           <int>10</int>
-          <int>261</int>
+          <int>195</int>
          </object>
         </void>
         <void property="parent">
@@ -159,8 +159,8 @@
          <object class="java.awt.Rectangle">
           <int>214</int>
           <int>70</int>
-          <int>284</int>
-          <int>261</int>
+          <int>286</int>
+          <int>195</int>
          </object>
         </void>
         <void id="ArrayList2" property="children">
@@ -170,7 +170,7 @@
             <object class="java.awt.Rectangle">
              <int>214</int>
              <int>70</int>
-             <int>284</int>
+             <int>286</int>
              <int>25</int>
             </object>
            </void>
@@ -188,7 +188,7 @@
             <object class="java.awt.Rectangle">
              <int>214</int>
              <int>95</int>
-             <int>284</int>
+             <int>286</int>
              <int>10</int>
             </object>
            </void>
@@ -203,8 +203,8 @@
             <object class="java.awt.Rectangle">
              <int>214</int>
              <int>105</int>
-             <int>284</int>
-             <int>226</int>
+             <int>286</int>
+             <int>160</int>
             </object>
            </void>
            <void property="name">
@@ -247,8 +247,8 @@
      <void property="bounds">
       <object class="java.awt.Rectangle">
        <int>0</int>
-       <int>331</int>
-       <int>498</int>
+       <int>265</int>
+       <int>500</int>
        <int>10</int>
       </object>
      </void>
@@ -262,8 +262,8 @@
      <void property="bounds">
       <object class="java.awt.Rectangle">
        <int>0</int>
-       <int>341</int>
-       <int>498</int>
+       <int>275</int>
+       <int>500</int>
        <int>25</int>
       </object>
      </void>
