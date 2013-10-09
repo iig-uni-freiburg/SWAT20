@@ -63,7 +63,7 @@ Object value = ((mxCell)state.getCell()).getValue();
 //		System.out.println(((mxCell)state.getCell()).getParent().getValue());
 		AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>) ((mxCell)state.getCell()).getParent().getValue();
 		try {
-			n.getPetriNet().addPlace(((mxCell)state.getCell()).getId(), "sonew");
+			n.getPetriNet().addPlace(((mxCell)state.getCell()).getId(), "name");
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,7 +71,7 @@ Object value = ((mxCell)state.getCell()).getValue();
 		 ((mxCell)state.getCell()).setValue(n);
 		 mxCell cell = ((mxCell)state.getCell());
 //		 cell.setId("new3");
-		 state.setLabel("sonew");
+		 state.setLabel("");
 //		 state.setCell(cell);
 //		cell.notifyAll();
 

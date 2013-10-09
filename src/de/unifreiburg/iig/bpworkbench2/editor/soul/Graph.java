@@ -79,10 +79,10 @@ System.out.println("testiiiiiiiiiiiiiiiiiiiiii");
 //                       System.out.println(n.getPetriNet().getPlace(cell.getId()).getLabel());
                         //if is for handling copy/paste
                         if (cell.getChildCount() == 0) {
-                            label = new mxCell("bli" , geom, "shape=none;fontSize=12");
+                            label = new mxCell("name" , geom, "shape=none;fontSize=12");
                         } else {
                             label = (mxCell) cell.getChildAt(0);
-                            label.setValue( "blub");
+                            label.setValue( "name2");
                             
                         }
                         label.setVertex(true);

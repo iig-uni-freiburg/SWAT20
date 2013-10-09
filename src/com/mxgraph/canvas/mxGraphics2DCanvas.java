@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.swing.CellRendererPane;
 
 import com.mxgraph.shape.PNPlaceShape;
+import com.mxgraph.shape.PNTransitionShape;
 import com.mxgraph.shape.mxActorShape;
 import com.mxgraph.shape.mxArrowShape;
 import com.mxgraph.shape.mxCloudShape;
@@ -95,7 +96,6 @@ public class mxGraphics2DCanvas extends mxBasicCanvas
 		putShape(mxConstants.SHAPE_CURVE, new mxCurveShape());
 		putShape(mxConstants.SHAPE_DOUBLE_ELLIPSE, new mxDoubleEllipseShape());
 		putShape(mxConstants.SHAPE_ELLIPSE, new mxEllipseShape());
-		putShape("placeShape", new PNPlaceShape());
 		putShape(mxConstants.SHAPE_HEXAGON, new mxHexagonShape());
 		putShape(mxConstants.SHAPE_IMAGE, new mxImageShape());
 		putShape(mxConstants.SHAPE_LABEL, new mxLabelShape());
@@ -106,6 +106,10 @@ public class mxGraphics2DCanvas extends mxBasicCanvas
 		putShape(mxConstants.SHAPE_TRIANGLE, new mxTriangleShape());
 		putTextShape(TEXT_SHAPE_DEFAULT, new mxDefaultTextShape());
 		putTextShape(TEXT_SHAPE_HTML, new mxHtmlTextShape());
+		
+		//customized shapes
+		putShape("placeShape", new PNPlaceShape());
+		putShape("transitionShape", new PNTransitionShape());
 	}
 
 	/**

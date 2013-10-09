@@ -200,8 +200,8 @@ public final class PNMLEditor extends JPanel {
 		shapesPalette.addTemplate(
 				"Transition",
 				new ImageIcon(PNMLEditor.class
-						.getResource("/images/rectangle.png")), "fontSize=12",
-				40, 40, null);
+						.getResource("/images/rectangle.png")), "shape=transitionShape;",
+				30, 30, null);
 		// shapesPalette.addTemplate(
 		// "Immediate",
 		// new ImageIcon(
@@ -376,7 +376,7 @@ public final class PNMLEditor extends JPanel {
 			if (!createdVertices2.keySet().contains(place)) {
 
 				NodeGraphics pG = (NodeGraphics) n.getPetriNetGraphics().getPlaceGraphics().get(
-						place);
+						place.getName());
 				endpoint = addVertex(graph, place.getName() , n, pG,
 						mxConstants.SHAPE_ELLIPSE);
 				createdVertices2.put(place, endpoint);
@@ -387,7 +387,7 @@ public final class PNMLEditor extends JPanel {
 			PTTransition transition = (PTTransition) sourceNode;
 			if ((!createdVertices2.keySet().contains(transition))) {
 				NodeGraphics pT = (NodeGraphics) n.getPetriNetGraphics().getTransitionGraphics()
-						.get(transition);
+						.get(transition.getName());
 
 				endpoint = addVertex(graph, transition.getName(), n,  pT,
 						mxConstants.SHAPE_RECTANGLE);
@@ -401,7 +401,7 @@ public final class PNMLEditor extends JPanel {
 			if (!createdVertices2.keySet().contains(place)) {
 
 				NodeGraphics pG = (NodeGraphics) n.getPetriNetGraphics().getPlaceGraphics().get(
-						place);
+						place.getName());
 				try {
 System.out.println(					pn.getMarking().get(place.getName())
 );				} catch (ParameterException e) {
@@ -426,7 +426,7 @@ System.out.println(					pn.getMarking().get(place.getName())
 			CPNTransition transition = (CPNTransition) sourceNode;
 			if ((!createdVertices2.keySet().contains(transition))) {
 				NodeGraphics pT = (NodeGraphics) n.getPetriNetGraphics().getTransitionGraphics()
-						.get(transition);
+						.get(transition.getName());
 
 				endpoint = addVertex(graph, transition.getName(), n, pT,
 						mxConstants.SHAPE_RECTANGLE);
@@ -439,7 +439,7 @@ System.out.println(					pn.getMarking().get(place.getName())
 			if (!createdVertices2.keySet().contains(place)) {
 
 				NodeGraphics pG = (NodeGraphics) n.getPetriNetGraphics().getPlaceGraphics().get(
-						place);
+						place.getName());
 
 				endpoint = addVertex(graph, place.getName(), n, pG,
 						mxConstants.SHAPE_ELLIPSE);
@@ -451,7 +451,7 @@ System.out.println(					pn.getMarking().get(place.getName())
 			CWNTransition transition = (CWNTransition) sourceNode;
 			if ((!createdVertices2.keySet().contains(transition))) {
 				NodeGraphics pT = (NodeGraphics) n.getPetriNetGraphics().getTransitionGraphics()
-						.get(transition);
+						.get(transition.getName());
 
 				endpoint = addVertex(graph, transition.getName(), n, pT,
 						mxConstants.SHAPE_RECTANGLE);
