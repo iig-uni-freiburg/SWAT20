@@ -7,6 +7,8 @@ import com.mxgraph.util.png.mxPngEncodeParam;
 import com.mxgraph.util.png.mxPngImageEncoder;
 import com.mxgraph.view.mxGraph;
 
+import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
+import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.*;
 import de.unifreiburg.iig.bpworkbench2.editor.mxgraphmod.util.png.*;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
@@ -28,18 +30,18 @@ public class SaveAction extends AbstractAction {
         this.showDialog = showDialog;
     }
 
-    public static PNMLEditor getEditor(ActionEvent e) {
+    public static PTNEditor getEditor(ActionEvent e) {
         if (e.getSource() instanceof Component) {
             Component component = (Component) e.getSource();
-            while (component != null && !(component instanceof PNMLEditor)) {
+            while (component != null && !(component instanceof PTNEditor)) {
                 component = component.getParent();
             }
-            return (PNMLEditor) component;
+            return (PTNEditor) component;
         }
         return null;
     }
 
-    protected void saveXmlPng(PNMLEditor editor, String filename,
+    protected void saveXmlPng(PTNEditor editor, String filename,
             Color bg) throws IOException {
         mxGraphComponent graphComponent = editor.getGraphComponent();
         mxGraph graph = graphComponent.getGraph();
@@ -74,12 +76,12 @@ public class SaveAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
         success = false;
-        PNMLEditor editor = getEditor(e);
+        PTNEditor editor = getEditor(e);
 
         if (editor != null) {
             mxGraphComponent graphComponent = editor.getGraphComponent();
-            DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
-                    "PNG+XML file (.png)");
+            DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".pnml",
+                    "PNML file (.pnml)");
             String filename = null;
 
             if (showDialog || editor.getCurrentFile() == null) {
@@ -122,7 +124,10 @@ public class SaveAction extends AbstractAction {
             }
 
             try {
-                saveXmlPng(editor, filename, null);
+//            	editor.getNetContainer();
+        		PNSerialization.serialize(editor.getNetContainer(), PNSerializationFormat.PNML, filename);
+
+//                saveXmlPng(editor, filename, null);
                 editor.setModified(false);
                 editor.setCurrentFile(new File(filename));
             } catch (Exception ex) {
