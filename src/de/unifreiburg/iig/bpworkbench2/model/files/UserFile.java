@@ -9,7 +9,17 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PNMLEditor;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.CPNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.CWNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.IFNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PTNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
@@ -25,7 +35,7 @@ import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 public class UserFile extends File {
 	private boolean hasUnsavedChanges = false;
 	// private JEditorPane editor;
-	private PNMLEditor editor;
+	private JPanel editor;
 	private static Logger log = BPLog.getLogger(SplitGui.class.getName());
 	private boolean parseable = false;
 
@@ -81,7 +91,38 @@ public class UserFile extends File {
 
 	private void createEditor() {
 		try {
-			editor = new PNMLEditor(this);
+			
+			
+			/*
+			 * PetriNet
+			 */
+			AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this,
+					true, false);
+			AbstractPetriNet<?, ?, ?, ?, ?> petriNet = netContainer.getPetriNet();
+
+			
+			//distinguish between different net-types to choose corresponding editor
+			if (petriNet instanceof PTNet) {
+				editor = new PTNEditor(netContainer);
+
+			}
+
+			if (petriNet instanceof CPN) {
+				editor = new CPNEditor(netContainer);
+			}
+
+			if (petriNet instanceof CWN) {
+				editor = new CWNEditor(netContainer);
+
+			}
+
+			if (petriNet instanceof IFNet) {
+				editor = new IFNEditor(netContainer);
+			}
+			
+			
+			
+//			editor = new PNMLEditor(this);
 			// create file open Action and fire it onto the editor
 			// OpenAction oa = new OpenAction();
 			// oa.actionPerformed(new ActionEvent(editor,
