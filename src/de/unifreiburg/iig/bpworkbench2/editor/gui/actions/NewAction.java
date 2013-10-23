@@ -2,7 +2,7 @@ package de.unifreiburg.iig.bpworkbench2.editor.gui.actions;
 
 import com.mxgraph.model.mxCell;
 
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PNMLEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PTNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
 
 import java.awt.Component;
@@ -12,18 +12,18 @@ import javax.swing.*;
 
 public class NewAction extends AbstractAction {
 
-    public static PNMLEditor getEditor(ActionEvent e) {
+    public static PTNEditor getEditor(ActionEvent e) {
         if (e.getSource() instanceof Component) {
             Component component = (Component) e.getSource();
-            while (component != null && !(component instanceof PNMLEditor)) {
+            while (component != null && !(component instanceof PTNEditor)) {
                 component = component.getParent();
             }
-            return (PNMLEditor) component;
+            return (PTNEditor) component;
         }
         return null;
     }
 
-    public void clean(PNMLEditor editor) {
+    public void clean(PTNEditor editor) {
         Graph graph = (Graph) editor.getGraphComponent().getGraph();
         mxCell root = new mxCell();
         root.insert(new mxCell());
@@ -37,7 +37,7 @@ public class NewAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        PNMLEditor editor = getEditor(e);
+        PTNEditor editor = getEditor(e);
         String filename = "New Diagram";
         try {
             filename = editor.getCurrentFile().getName();
