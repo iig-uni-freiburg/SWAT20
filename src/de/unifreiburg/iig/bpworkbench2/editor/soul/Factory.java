@@ -39,7 +39,7 @@ public abstract class Factory {
 
     public static JFrame createFrame() {
         JFrame frame = new JFrame();
-        final PNMLEditor editor = new PNMLEditor();
+        final PTNEditor editor = new PTNEditor();
         frame.add(editor);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
