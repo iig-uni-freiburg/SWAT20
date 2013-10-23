@@ -37,7 +37,7 @@ public class HistoryAction extends AbstractAction {
                 editor.getUndoManager().redo();
             }
             Graph graph = (Graph) editor.getGraphComponent().getGraph();
-            graph.getDataHolder().updateData();
+//            graph.getDataHolder().updateData();
         }
     }
 }

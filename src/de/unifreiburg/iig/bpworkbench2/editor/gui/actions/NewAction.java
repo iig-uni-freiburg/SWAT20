@@ -31,7 +31,7 @@ public class NewAction extends AbstractAction {
         editor.setModified(false);
         editor.setCurrentFile(null);
         editor.getGraphComponent().zoomAndCenter();
-        graph.getDataHolder().clean();
+//        graph.getDataHolder().clean();
         editor.getControlPanel().reset();
         editor.getUndoManager().clear();
     }
