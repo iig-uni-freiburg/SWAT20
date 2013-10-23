@@ -3,6 +3,7 @@ package de.unifreiburg.iig.bpworkbench2.editor.gui;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.handler.mxConnectionHandler;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
@@ -38,11 +39,12 @@ public class GraphComponent extends mxGraphComponent {
         setGridStyle(mxGraphComponent.GRID_STYLE_LINE);
         setGridColor(Color.decode("#dddddd"));
         setGridVisible(true);
+    
 		getConnectionHandler().setCreateTarget(true);
 
 
         mxCodec codec = new mxCodec();
-        Document doc = mxUtils.loadDocument(PNMLEditor.class.getResource(
+        Document doc = mxUtils.loadDocument(PTNEditor.class.getResource(
                 "/default-style.xml").toString());
         codec.decode(doc.getDocumentElement(), graph.getStylesheet());
         getGraphControl().addMouseListener(new MouseAdapter() {
@@ -52,7 +54,6 @@ public class GraphComponent extends mxGraphComponent {
                 Object object = getCellAt(e.getX(), e.getY());
                 if (object != null && e.getClickCount() == 2) {
                     mxCell cell = (mxCell) object;
-                    System.out.println(cell.getValue().getClass());
                     Object value = ((mxCell)cell).getValue();
             		
             		
@@ -60,7 +61,6 @@ public class GraphComponent extends mxGraphComponent {
             			AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>)  value;
             			CPNPlace place = (CPNPlace) n.getPetriNet().getPlace(((mxCell)cell).getId());
             			
-            	System.out.println(n.getPetriNet().getTransition(((mxCell)cell).getId()));
             	try {
 					n.getPetriNet().getTransition(((mxCell)cell).getId()).fire();
 //					n.getPetriNet().getTransition(((mxCell)cell).getId()).checkState();
@@ -122,4 +122,9 @@ public class GraphComponent extends mxGraphComponent {
 //        return super.getFoldingIcon(state);
         return null;
     }
+    @Override
+	protected ConnectionHandler createConnectionHandler()
+	{
+		return new ConnectionHandler(this);
+	}
 }
