@@ -29,7 +29,7 @@ public final class ControlPanel extends JPanel {
     public ControlPanel(Graph graph) {
         this.graph = graph;
         initComponents();
-        updateMatrix();
+//        updateMatrix();
 
         //revalidate size on component resizing
         addComponentListener(new ComponentAdapter() {
@@ -99,43 +99,43 @@ public final class ControlPanel extends JPanel {
         return panel;
     }
 
-    public void updateMatrix() {
-        int[][] matrix = graph.getDataHolder().getMatrixDi();
-        int[] marking = graph.getDataHolder().getMarking();
-        if (matrix.length == 0) {
-            matrix = new int[1][0];
-        }
-        if (marking == null) {
-            marking = new int[0];
-        }
-
-        Integer[][] integerMatrix = null;
-        Integer[][] integerMarking = null;
-        integerMatrix = new Integer[matrix.length][matrix[0].length];
-        for (int i = 0; i < integerMatrix.length; i++) {
-            for (int j = 0; j < integerMatrix[i].length; j++) {
-                integerMatrix[i][j] = Integer.valueOf(matrix[i][j]);
-            }
-        }
-        tableDi.setModel(new DefaultTableModel(integerMatrix,
-                graph.getDataHolder().getColumnNames()));
-        matrix = graph.getDataHolder().getMatrixDq();
-        if (matrix.length == 0) {
-            matrix = new int[1][0];
-        }
-        integerMatrix = new Integer[matrix.length][matrix[0].length];
-        for (int i = 0; i < integerMatrix.length; i++) {
-            for (int j = 0; j < integerMatrix[i].length; j++) {
-                integerMatrix[i][j] = Integer.valueOf(matrix[i][j]);
-            }
-        }
-        tableDq.setModel(new DefaultTableModel(integerMatrix, graph.getDataHolder().getColumnNames()));
-        integerMarking = new Integer[1][marking.length];
-        for (int i = 0; i < integerMarking[0].length; i++) {
-            integerMarking[0][i] = Integer.valueOf(marking[i]);
-        }
-        tableMarking.setModel(new DefaultTableModel(integerMarking, graph.getDataHolder().getColumnNames()));
-    }
+//    public void updateMatrix() {
+//        int[][] matrix = graph.getDataHolder().getMatrixDi();
+//        int[] marking = graph.getDataHolder().getMarking();
+//        if (matrix.length == 0) {
+//            matrix = new int[1][0];
+//        }
+//        if (marking == null) {
+//            marking = new int[0];
+//        }
+//
+//        Integer[][] integerMatrix = null;
+//        Integer[][] integerMarking = null;
+//        integerMatrix = new Integer[matrix.length][matrix[0].length];
+//        for (int i = 0; i < integerMatrix.length; i++) {
+//            for (int j = 0; j < integerMatrix[i].length; j++) {
+//                integerMatrix[i][j] = Integer.valueOf(matrix[i][j]);
+//            }
+//        }
+//        tableDi.setModel(new DefaultTableModel(integerMatrix,
+//                graph.getDataHolder().getColumnNames()));
+//        matrix = graph.getDataHolder().getMatrixDq();
+//        if (matrix.length == 0) {
+//            matrix = new int[1][0];
+//        }
+//        integerMatrix = new Integer[matrix.length][matrix[0].length];
+//        for (int i = 0; i < integerMatrix.length; i++) {
+//            for (int j = 0; j < integerMatrix[i].length; j++) {
+//                integerMatrix[i][j] = Integer.valueOf(matrix[i][j]);
+//            }
+//        }
+//        tableDq.setModel(new DefaultTableModel(integerMatrix, graph.getDataHolder().getColumnNames()));
+//        integerMarking = new Integer[1][marking.length];
+//        for (int i = 0; i < integerMarking[0].length; i++) {
+//            integerMarking[0][i] = Integer.valueOf(marking[i]);
+//        }
+//        tableMarking.setModel(new DefaultTableModel(integerMarking, graph.getDataHolder().getColumnNames()));
+//    }
 
 //    public void updateTree() {
 //        cleanTreeTab();
@@ -167,7 +167,7 @@ public final class ControlPanel extends JPanel {
 
 
     public void reset() {
-        updateMatrix();
+//        updateMatrix();
         cleanTreeTab();
         cleanSimulationTab();
     }
