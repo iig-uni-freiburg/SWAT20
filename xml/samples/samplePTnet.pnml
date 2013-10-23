@@ -1,15 +1,18 @@
 <pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
-  <net id="ptnet-example" type="http://files.telematik.uni-freiburg.de/ifnml/grammar/v1.0/ptnet">
-    <!--     ->- t1 ->- p2
-            |
-            p1             -->
+  <net id="ptnet-example" type="http://ifnml.telematik.uni-freiburg.de/ifnml/grammar/v1.0/ptnet">
     <page id="top-level">
       <name>
         <text>An example place/transition net</text>
       </name>
       <place id="p1">
         <name>
-          <text>ready</text>
+          <text>bar</text>
+          <graphics>
+            <offset x="1.0" y="-5.0"/>
+            <fill color="#FF0000" gradient-color="#FFFFFF" gradient-rotation="diagonal" image="http://www.some-url.com/image.png"/>
+            <line color="black" shape="line" style="solid" width="1.5"/>
+            <font align="left" decoration="underline" family="arial,sans-serif" rotation="0.0" size="medium" style="italic" weight="bold"/>
+          </graphics>
         </name>
         <graphics>
           <position x="20.0" y="20.0"/>
@@ -28,6 +31,12 @@
       <place id="p2">
         <name>
           <text>end</text>
+          <graphics>
+            <offset x="1.0" y="-5.0"/>
+            <fill color="#FF0000" gradient-color="#FFFFFF" gradient-rotation="diagonal" image="http://www.some-url.com/image.png"/>
+            <line color="black" shape="line" style="solid" width="1.5"/>
+            <font align="left" decoration="underline" family="arial,sans-serif" rotation="0.0" size="medium" style="italic" weight="bold"/>
+          </graphics>
         </name>
         <graphics>
           <position x="100.0" y="60.0"/>
@@ -37,6 +46,12 @@
       <transition id="t1">
         <name>
           <text>do smth</text>
+          <graphics>
+            <offset x="1.0" y="-5.0"/>
+            <fill color="#FF0000" gradient-color="#FFFFFF" gradient-rotation="diagonal" image="http://www.some-url.com/image.png"/>
+            <line color="black" shape="line" style="solid" width="1.5"/>
+            <font align="left" decoration="underline" family="arial,sans-serif" rotation="0.0" size="medium" style="italic" weight="bold"/>
+          </graphics>
         </name>
         <graphics>
           <position x="60.0" y="60.0"/>

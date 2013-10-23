@@ -1,23 +1,30 @@
-<labeling xmlns="http://www.pnml.org/version-2009/grammar/pnml" id="ifn-example" type="http://files.telematik.uni-freiburg.de/ifnml/grammar/v1.0/labeling">
+<analysiscontext xmlns="http://www.pnml.org/version-2009/grammar/pnml" id="ifn-analysiscontext-example" type="http://ifnml.telematik.uni-freiburg.de/ifnml/grammar/v1.0/analysiscontext">
   <classifications>
-    <transitionClassification id="t1">
-      <classification>high</classification>
-    </transitionClassification>
+    <classification>
+      <activity>do smth</activity>
+      <securitydomain>high</securitydomain>
+    </classification>
   </classifications>
   <tokenlabels>
     <tokenlabel>
       <color>green</color>
-      <classification>low</classification>
+      <securitydomain>low</securitydomain>
     </tokenlabel>
     <tokenlabel>
       <color>yellow</color>
-      <classification>high</classification>
+      <securitydomain>high</securitydomain>
     </tokenlabel>
   </tokenlabels>
   <clearances>
     <clearance>
       <subject>subjectA</subject>
-      <classification>high</classification>
+      <securitydomain>high</securitydomain>
     </clearance>
   </clearances>
-</labeling>
+  <subjectdescriptors>
+    <subjectdescriptor>
+      <activity>do smth</activity>
+      <subject>subjectA</subject>
+    </subjectdescriptor>
+  </subjectdescriptors>
+</analysiscontext>
