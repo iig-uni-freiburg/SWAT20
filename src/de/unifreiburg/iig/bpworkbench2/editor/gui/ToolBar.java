@@ -22,7 +22,7 @@ import javax.swing.text.DocumentFilter;
 
 public class ToolBar extends JToolBar {
 
-    public ToolBar(final PNMLEditor pnmlEditor, int orientation) {
+    public ToolBar(final PTNEditor pnmlEditor, int orientation) {
         super(orientation);
         setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(3, 3, 3, 3),
@@ -39,7 +39,7 @@ public class ToolBar extends JToolBar {
         add(pnmlEditor.bind("Paste", TransferHandler.getPasteAction(), "/images/paste.gif"));
         addSeparator();
 
-        add(pnmlEditor.bind("Delete", mxGraphActions.getDeleteAction(), "/images/delete.gif"));
+        add(pnmlEditor.bind("Delete", new DeleteAction("delete"), "/images/delete.gif"));
         addSeparator();
 
         add(pnmlEditor.bind("Undo", new HistoryAction(true), "/images/undo.gif"));
