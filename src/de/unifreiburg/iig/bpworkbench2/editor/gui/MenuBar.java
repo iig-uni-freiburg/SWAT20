@@ -20,7 +20,7 @@ import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
 
 public class MenuBar extends JMenuBar {
 
-    public MenuBar(final PNMLEditor editor) {
+    public MenuBar(final PTNEditor editor) {
         final mxGraphComponent graphComponent = editor.getGraphComponent();
         final mxGraph graph = graphComponent.getGraph();
         JMenu menu = null;
@@ -44,7 +44,7 @@ public class MenuBar extends JMenuBar {
         menu.add(editor.bind("Copy", TransferHandler.getCopyAction(), "/images/copy.gif"));
         menu.add(editor.bind("Paste", TransferHandler.getPasteAction(), "/images/paste.gif"));
         menu.addSeparator();
-        menu.add(editor.bind("Delete", mxGraphActions.getDeleteAction(), "/images/delete.gif"));
+        menu.add(editor.bind("Delete", new de.unifreiburg.iig.bpworkbench2.editor.gui.actions.DeleteAction("delete"), "/images/delete.gif"));
 
         menu = add(new JMenu("Format"));
         populateFormatMenu(menu, editor);
@@ -205,7 +205,7 @@ public class MenuBar extends JMenuBar {
         });
     }
 
-    public static void populateFormatMenu(JMenu menu, PNMLEditor pnmlEditor) {
+    public static void populateFormatMenu(JMenu menu, PTNEditor pnmlEditor) {
         JMenu submenu = (JMenu) menu.add(new JMenu("Label"));
         submenu.add(pnmlEditor.bind("Rotate Label",
                 new ToggleAction(mxConstants.STYLE_HORIZONTAL, true)));
