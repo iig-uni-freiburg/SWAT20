@@ -14,4 +14,10 @@ public abstract class Constants {
     public static final String SIMULATION_END = "End";
     public static final String SIMULATION_PLAN = "Plan";
     public static final String SIMULATION_EXEC = "Execute";
+	public static final String PNPlace = "pnPlace";
+	public static final String PNPlaceShape = "shape=" + PNPlace + ";";
+	public static final String PNTransition = "pnTransition";
+	public static final String PNTransitionShape = "shape=" + PNTransition + ";";
+	public static final String PlaceNamePrefix = "p";
+	public static final String TransitionNamePrefix = "t";
 }

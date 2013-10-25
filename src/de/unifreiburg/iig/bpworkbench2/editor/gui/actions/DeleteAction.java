@@ -51,47 +51,48 @@ public class DeleteAction extends AbstractAction {
 	{
 		mxGraph graph = getGraph(e);
 
-		if (graph != null)
-		{
-//			System.out.println(graph.getSelectionCell().getClass());
-			mxCell cell;
-			if(graph.getSelectionCell() instanceof mxCell){
-			cell =(mxCell) graph.getSelectionCell();
-			Object value = cell.getValue();
-			if(cell.getParent().getValue() != null){
-				AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>) cell.getParent().getValue();
-				String cellID = (String) cell.getId();
-				if(cellID.startsWith("p"))
-			try {
-				n.getPetriNet().removePlace(cellID);
-			} catch (ParameterException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-				
-				if(cellID.startsWith("t"))
-			try {
-				n.getPetriNet().removeTransition(cellID);
-			} catch (ParameterException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-				
-				if(cellID.startsWith("arc")){
-					
-					try {
-						n.getPetriNet().removeFlowRelation(cellID);
-					} catch (ParameterException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-				}
-			}
-			
+//		if (graph != null)
+//		{
+////			System.out.println(graph.getSelectionCell().getClass());
+//			mxCell cell;
+//			if(graph.getSelectionCell() instanceof mxCell){
+//			cell =(mxCell) graph.getSelectionCell();
+//			Object value = cell.getValue();
+//			if(cell.getParent().getValue() != null){
+//				AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>) cell.getParent().getValue();
+//				String cellID = (String) cell.getId();
+//				if(cellID.startsWith("p"))
+//			try {
+//				n.getPetriNet().removePlace(cellID);
+//			} catch (ParameterException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//				
+//				if(cellID.startsWith("t"))
+//			try {
+//				n.getPetriNet().removeTransition(cellID);
+//			} catch (ParameterException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//				
+//				if(cellID.startsWith("arc")){
+//					
+//					try {
+//						n.getPetriNet().removeFlowRelation(cellID);
+//					} catch (ParameterException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//					
+//				}
+//			}
+//			
 
 			graph.removeCells();
-		}}
+//		}
+//	}
 	}
 	/**
 	 * 

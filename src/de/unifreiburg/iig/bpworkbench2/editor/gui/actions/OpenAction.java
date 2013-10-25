@@ -5,12 +5,19 @@ import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 
+import de.invation.code.toval.parser.ParserException;
+import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.*;
 import de.unifreiburg.iig.bpworkbench2.editor.mxgraphmod.util.png.mxPNGzTXtDecoder;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.net.URLDecoder;
@@ -25,25 +32,25 @@ public class OpenAction extends AbstractAction {
 
     protected String lastDir = Properties.getInstance().getLastDir();
 
-    public static PNMLEditor getEditor(ActionEvent e) {
+    public static PTNEditor getEditor(ActionEvent e) {
         if (e.getSource() instanceof Component) {
             Component component = (Component) e.getSource();
-            while (component != null && !(component instanceof PNMLEditor)) {
+            while (component != null && !(component instanceof PTNEditor)) {
                 component = component.getParent();
             }
-            return (PNMLEditor) component;
+            return (PTNEditor) component;
         }
         return null;
     }
 
-    protected void resetEditor(PNMLEditor editor) {
+    protected void resetEditor(PTNEditor editor) {
         editor.setModified(false);
         editor.getUndoManager().clear();
         editor.getGraphComponent().zoomAndCenter();
         editor.getControlPanel().reset();
     }
 
-    protected void openXmlPng(PNMLEditor editor, File file) throws IOException {
+    protected void openXmlPng(PTNEditor editor, File file) throws IOException {
         Graph graph = (Graph) editor.getGraphComponent().getGraph();
         Map<String, String> text = mxPNGzTXtDecoder.decodezTXt(new FileInputStream(file));
 //        System.out.println(text);
@@ -54,9 +61,7 @@ public class OpenAction extends AbstractAction {
                 mxCodec codec = new mxCodec(document);
                 Element dE = document.getDocumentElement();
                 mxIGraphModel model = editor.getGraphComponent().getGraph().getModel();
-                System.out.println(dE + "-" + model);
                Object test = codec.decode(document.getDocumentElement(), editor.getGraphComponent().getGraph().getModel());
-               System.out.println(test);
 //                editor.setCurrentFile(file);
 //                resetEditor(editor);
 //                graph.getDataHolder().updateData();
@@ -67,7 +72,7 @@ public class OpenAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        PNMLEditor editor = getEditor(e);
+        PTNEditor editor = getEditor(e);
         String filename = "New Diagram";
         try {
             filename = editor.getCurrentFile().getName();
@@ -100,7 +105,8 @@ public class OpenAction extends AbstractAction {
                 String path = (lastDir != null) ? lastDir : System.getProperty("user.dir");
 
                 JFileChooser fc = new JFileChooser(path);
-                fc.setFileFilter(new DefaultFileFilter(".png", "XML+PNG file (.png)"));
+                fc.setFileFilter( new DefaultFileFilter(".pnml",
+                        "PNML file (.pnml)"));
 
                 int rc = fc.showDialog(null, "Open");
 
@@ -109,10 +115,46 @@ public class OpenAction extends AbstractAction {
                     Properties.getInstance().setLastDir(lastDir);
 
                     try {
-                        openXmlPng(editor, fc.getSelectedFile());
+                    	 
+//                        openXmlPng(editor, fc.getSelectedFile());
+            			/*
+            			 * PetriNet
+            			 */
+            			AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(fc.getSelectedFile(),
+            					true, false);
+            			AbstractPetriNet<?, ?, ?, ?, ?> petriNet = netContainer.getPetriNet();
+
+            			
+            			//distinguish between different net-types to choose corresponding editor
+            			if (petriNet instanceof PTNet) {
+//            				editor = new PTNEditor(netContainer);
+//            				resetEditor(editor);
+//            				editor =  new PTNEditor(netContainer);
+            				PTNEditor newEditor = new PTNEditor(netContainer);
+            				JPanel frame = (JPanel) editor.getParent();
+            				frame.add(newEditor);
+            				frame.remove(editor);
+            			
+//            				frame.setVisible(true);
+            				SwingUtilities.updateComponentTreeUI(frame);
+//            				newEditor.getParent().remove(editor);
+//            				newEditor.getParent().repaint();
+////            				editor.setEnabled(false);
+//            				newEditor.getParent().setVisible(true);
+//            				newEditor.getParent().removeAll();
+//            				editor.getGraphComponent().refresh();
+//editor.getGraphComponent().refresh(); //wie öffnen realisieren? neuer editor oder in gegebenen graphcomponent aktualisieren?
+            			}
+
                     } catch (IOException ex) {
                         //opening error
-                    }
+                    } catch (ParserException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ParameterException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 }
             }
         }

@@ -81,6 +81,7 @@ import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.NewAction;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.OpenAction;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.PrintAction;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SaveAction;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
 //import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPN;
 //import de.uni.freiburg.iig.telematik.sepia.graphic.NodeGraphics;
@@ -225,7 +226,7 @@ public class PTNEditor extends JPanel {
 		shapesPalette.addTemplate(
 				"Transition",
 				new ImageIcon(PTNEditor.class
-						.getResource("/images/rectangle.png")), "shape=transitionShape;",
+						.getResource("/images/rectangle.png")), Constants.PNTransitionShape,
 				30, 30,  null);
 		// shapesPalette.addTemplate(
 		// "Immediate",
@@ -236,7 +237,7 @@ public class PTNEditor extends JPanel {
 				"Place",
 				new ImageIcon(PTNEditor.class
 						.getResource("/images/ellipse.png")),
-				"shape=placeShape;", 30, 30, null  );
+				Constants.PNPlaceShape, 30, 30, null  );
 	}
 
 	
@@ -431,7 +432,7 @@ public class PTNEditor extends JPanel {
 				NodeGraphics pG = (NodeGraphics) n.getPetriNetGraphics().getPlaceGraphics().get(
 						place.getName());
 				endpoint = addVertex(graph, place.getName() , n, pG,
-						"shape=placeShape;", place.getName());
+						 Constants.PNPlaceShape, place.getName());
 				createdVertices2.put(place, endpoint);
 			} else
 				endpoint = createdVertices2.get(place);
@@ -443,7 +444,7 @@ public class PTNEditor extends JPanel {
 						.get(transition.getName());
 
 				endpoint = addVertex(graph, transition.getName(), n,  pT,
-						"shape=transitionShape;", transition.getName());
+						Constants.PNTransitionShape, transition.getName());
 				createdVertices2.put(transition, endpoint);
 //				System.out.println(createdVertices2.size());
 			} else
@@ -469,7 +470,7 @@ System.out.println(					pn.getMarking().get(place.getName())
 //								+ "verticalAlign=top;spacing=2;spacingTop=40;imageAlign=center;"   
 //								+ "imageWidth=40;imageHeight=40;rounded=1;"
 //								+ "shadow=1;glass=1;");
-						"shape=placeShape;", place.getName());
+						Constants.PNPlaceShape, place.getName());
 				mxCell cell = (mxCell) endpoint;
 				createdVertices2.put(place, endpoint);
 			} else
