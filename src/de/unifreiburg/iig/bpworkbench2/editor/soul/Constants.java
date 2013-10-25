@@ -1,5 +1,7 @@
 package de.unifreiburg.iig.bpworkbench2.editor.soul;
 
+import java.awt.Color;
+
 public abstract class Constants {
 
     public static final String CONTAINER = "container";
@@ -20,4 +22,9 @@ public abstract class Constants {
 	public static final String PNTransitionShape = "shape=" + PNTransition + ";";
 	public static final String PlaceNamePrefix = "p";
 	public static final String TransitionNamePrefix = "t";
+	public static final Color bluelow = new Color(234, 243, 252);
+	public static final Color bluemid = new Color(214, 227, 242);
+	public static final Color bluehigh = new Color(182, 202, 228);
+	public static final Color blueBG = new Color(107, 202, 167);
+	
 }
