@@ -1,5 +1,7 @@
 package de.unifreiburg.iig.bpworkbench2.editor.soul;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +41,10 @@ public class Graph extends mxGraph {
 		setCellsEditable(false);
 		setDisconnectOnMove(false);
 		setExtendParents(false); // disables extending parents after adding
-		setVertexLabelsMovable(false);
+		setVertexLabelsMovable(true);
+		  BasicStroke selectionStroke = new BasicStroke(1.0f);
+		    Color selectionColor = Color.RED;
+
 
 	}
 
@@ -224,6 +229,7 @@ public class Graph extends mxGraph {
 				}
 				if (cell.getStyle().contentEquals(Constants.PNTransitionShape)) {
 						try {
+							System.out.println(cell.getId());
 							n.getPetriNet().removeTransition(cell.getId());
 							n.getPetriNetGraphics().getTransitionGraphics().remove(cell.getId());
 						} catch (ParameterException e) {
@@ -535,13 +541,14 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 
 		if (edgeTarget.getStyle().contentEquals(Constants.PNTransitionShape))
 			label = new mxCell(n.getPetriNet().getTransition(nodeName)
-					.getLabel(), geom, "shape=none;fontSize=12");
+					.getLabel(), geom, Constants.PNLabelStyle);
 		if (edgeTarget.getStyle().contentEquals(Constants.PNPlaceShape))
 			label = new mxCell(n.getPetriNet().getPlace(nodeName).getLabel(),
-					geom, "shape=none;fontSize=12");
+					geom, Constants.PNLabelStyle);
 
 		label.setVertex(true);
 		label.setConnectable(false);
+		
 		edgeTarget.insert(label);
 	}
 
@@ -582,6 +589,13 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 		edgeTarget.setValue(prefix + id);
 		edgeTarget.setId(prefix + id);
 		return id;
+	}
+
+
+
+	public void setPN(AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer) {
+		this.n = netContainer;
+		
 	}
 
 }
