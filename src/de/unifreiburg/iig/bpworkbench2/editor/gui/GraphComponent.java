@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNPlace;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.CellInfo;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
 
 import java.awt.Color;
@@ -37,8 +38,11 @@ public class GraphComponent extends mxGraphComponent {
         super(graph);
 
         setGridStyle(mxGraphComponent.GRID_STYLE_LINE);
-        setGridColor(Color.decode("#dddddd"));
+        setGridColor(Constants.bluehigh);
+		setBackground(Constants.blueBG);
+
         setGridVisible(true);
+
     
 		getConnectionHandler().setCreateTarget(true);
 

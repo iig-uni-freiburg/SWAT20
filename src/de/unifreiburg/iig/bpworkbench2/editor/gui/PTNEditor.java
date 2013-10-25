@@ -1,6 +1,7 @@
 package de.unifreiburg.iig.bpworkbench2.editor.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -11,6 +12,7 @@ import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -46,6 +48,7 @@ import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.swing.util.mxMorphing;
+import com.mxgraph.swing.util.mxSwingConstants;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
@@ -130,8 +133,7 @@ public class PTNEditor extends JPanel {
 			setModified(true);
 		}
 	};
-	private AbstractGraphicalPN<?, ?, ?, ?, ?>  netContainer;
-	private String placeConvention = "p";
+	public AbstractGraphicalPN<?, ?, ?, ?, ?>  netContainer;
 
 	public AbstractGraphicalPN<?, ?, ?, ?, ?> getNetContainer() {
 		return netContainer;
@@ -226,7 +228,7 @@ public class PTNEditor extends JPanel {
 		shapesPalette.addTemplate(
 				"Transition",
 				new ImageIcon(PTNEditor.class
-						.getResource("/images/rectangle.png")), Constants.PNTransitionShape,
+						.getResource("/images/rectangle.png")), Constants.PNTransitionShape ,
 				30, 30,  null);
 		// shapesPalette.addTemplate(
 		// "Immediate",
@@ -237,17 +239,8 @@ public class PTNEditor extends JPanel {
 				"Place",
 				new ImageIcon(PTNEditor.class
 						.getResource("/images/ellipse.png")),
-				Constants.PNPlaceShape, 30, 30, null  );
+				Constants.PNPlaceShape   , 30, 30, null  );
 	}
-
-	
-	private String getIndex(SortedMap<Integer, String> map) {
-		int index = getLowestIndex(map);
-		map.put(index, placeConvention + index);
-		System.out.println(map.get(index));
-		return map.get(index);
-	}
-
 	public int getLowestIndex(SortedMap<Integer, String> a) {
 		if(!a.isEmpty()){
 		for(int i = 1;i<=a.lastKey();i++){
@@ -258,51 +251,7 @@ public class PTNEditor extends JPanel {
 		return a.lastKey()+1;}
 		else{return 1;}
 	}
-//	public PTNEditor(File file) {
-//
-//		this("PetriNet Editor", new GraphComponent(new Graph()));
-//		
-//		//if the is a File, parse is using the PNMLParser from the SEPIA Project.
-//		if (file != null){
-//		netContainer = null;
-//	
-//		
-//		try {
-//			netContainer = new PNMLParser().parse(file, true, true);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ParserException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ParameterException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		//Show PetriNet Properties
-////		System.out.println( netContainer.getPetriNet() );
-////		System.out.println( netContainer.getPetriNetGraphics() );
-////		netContainer.getPetriNet().getTransitions().iterator().next().
-////		try {
-////			System.out.println(place.getState().multiplicity("black")+ "##############1");
-////			int multiplicity = place.getState().decMultiplicity(new String("black"));
-//////			((AbstractCPNPlace<CPNFlowRelation>) place).getState().setMultiplicity("black", 1);
-////			System.out.println(place.getState().multiplicity("black")+ "##############2");
-////			CPNMarking m= (CPNMarking) n.getPetriNet().getMarking();
-////			m.get(place.getName()).clear();
-////			m.clear();
-////			System.out.println(place.getState().multiplicity("black")+ "##############2");
-////System.out.println(m);
-//////			System.out.println(m.getClass());
-////		} catch (ParameterException e1) {
-////			// TODO Auto-generated catch block
-////			e1.printStackTrace();
-////		}
-//		graphComponent = visualizeGraph(netContainer, graphComponent);}
-//
-//		
-//	}
-	
+
 	
 	public PTNEditor(AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer2) {
 		this("PetriNet Editor", new GraphComponent(new Graph()));
@@ -310,8 +259,15 @@ public class PTNEditor extends JPanel {
 		netContainer = netContainer2;
 		if(netContainer == null)
 			netContainer = new GraphicalPTNet(new PTNet(), new PTGraphics());
+		((Graph)graphComponent.getGraph()).setPN(netContainer);
 		graphComponent = visualizeGraph(netContainer, graphComponent);
-		
+		graphComponent.getViewport().setOpaque(true);
+		graphComponent.getViewport().setBackground(Constants.blueBG);
+
+		Map<String, Object> style = graphComponent.getGraph().getStylesheet().getDefaultEdgeStyle();
+		System.out.println(style);
+		style.put("strokeWidth",2.0);
+		style.put("strokeColor",Integer.toHexString(Constants.bluelow.getRGB()));
 	}
 
 	private void setLayoutOrganic(final mxGraph graph) {
@@ -862,4 +818,5 @@ System.out.println(					pn.getMarking().get(place.getName())
 			return map;
 		}
 	}
+
 }

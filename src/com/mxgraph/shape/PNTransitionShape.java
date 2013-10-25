@@ -29,6 +29,7 @@ public class PNTransitionShape extends mxBasicShape
 state.setLabel("");
 
 
+
 ////state.getCell()
 //mxCell cell = (mxCell) state.getCell();
 //Object value = ((mxCell)state.getCell()).getValue();
