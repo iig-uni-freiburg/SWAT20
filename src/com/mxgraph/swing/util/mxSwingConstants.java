@@ -110,7 +110,7 @@ public class mxSwingConstants
 			mxSwingConstants.RUBBERBAND_FILLCOLOR = new Color(51, 153, 255, 80);
 			mxSwingConstants.HANDLE_BORDERCOLOR = Color.black;
 			mxSwingConstants.HANDLE_FILLCOLOR = Constants.bluelow;
-			mxSwingConstants.LABEL_HANDLE_FILLCOLOR = Constants.blueBG;
+			mxSwingConstants.LABEL_HANDLE_FILLCOLOR = Color.orange;
 			mxSwingConstants.LOCKED_HANDLE_FILLCOLOR = Constants.bluelow;
 			mxSwingConstants.CONNECT_HANDLE_FILLCOLOR = Constants.bluelow;
 			mxSwingConstants.EDGE_SELECTION_COLOR = Constants.bluelow;

@@ -246,12 +246,12 @@ public class mxConstants
     /**
      * Defines the selection color for edges. Default is green.
      */
-    public static Color EDGE_SELECTION_COLOR = Color.green;
+    public static Color EDGE_SELECTION_COLOR = new Color(100,100,100);
  
     /**
      * Defines the selection color for vertices. Default is green.
      */
-    public static Color VERTEX_SELECTION_COLOR = Color.green;
+    public static Color VERTEX_SELECTION_COLOR = new Color(100,100,100);
  
     /**
      * Defines the stroke used for painting selected edges. Default is a dashed
@@ -269,6 +269,10 @@ public class mxConstants
             BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] {
                     3, 3 }, 0.0f);
  
+  
+    
+    
+    
     /**
      * Defines the stroke used for painting the preview for new and existing edges
      * that are being changed. Default is a dashed line.

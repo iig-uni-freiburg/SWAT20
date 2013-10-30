@@ -45,7 +45,7 @@ public class OpenEmptyPTNetEditor {
 		// panel = new PNMLEditor(null);
 		String filePath = PTNEditor.class.getResource(
 				"/samples/samplePTnet.pnml").getPath();
-		System.out.println(filePath);
+
 		
 //		/*
 //		 * PetriNet

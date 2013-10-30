@@ -14,6 +14,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.CellInfo;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
@@ -52,26 +55,90 @@ public class GraphComponent extends mxGraphComponent {
                 "/default-style.xml").toString());
         codec.decode(doc.getDocumentElement(), graph.getStylesheet());
         getGraphControl().addMouseListener(new MouseAdapter() {
-
-            @Override
+        	@Override
             public void mouseReleased(MouseEvent e) {
                 Object object = getCellAt(e.getX(), e.getY());
+             System.out.println("step1");
+                
                 if (object != null && e.getClickCount() == 2) {
                     mxCell cell = (mxCell) object;
                     Object value = ((mxCell)cell).getValue();
             		
-            		
-            		if(value instanceof AbstractGraphicalPN<?, ?, ?, ?, ?>){
-            			AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>)  value;
-            			CPNPlace place = (CPNPlace) n.getPetriNet().getPlace(((mxCell)cell).getId());
-            			
-            	try {
-					n.getPetriNet().getTransition(((mxCell)cell).getId()).fire();
-//					n.getPetriNet().getTransition(((mxCell)cell).getId()).checkState();
-				} catch (PNException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+                    System.out.println("step2" + value);
+            		if(cell.getParent().getValue() instanceof AbstractGraphicalPN<?, ?, ?, ?, ?>){
+            			AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>)  cell.getParent().getValue();
+            			PTPlace place = (PTPlace) n.getPetriNet().getPlace(((mxCell)cell).getId());
+            			System.out.println("step3" + n);
+                 
+                        if (cell.getStyle().contentEquals(Constants.PNPlaceShape)) {
+                        	System.out.println("step4");
+                            String marks = JOptionPane.showInputDialog(
+                                    "Input new amount of marks");
+                            if (marks != null) {
+                            	PTMarking initialMarking;
+                            	if(n.getPetriNet().getInitialMarking() == null){
+    							initialMarking = new PTMarking();
+    							}
+                            	else initialMarking = (PTMarking) n.getPetriNet().getInitialMarking();
+//    							int ressources = ;
+    							try {
+									n.getPetriNet().getPlace(cell.getId())
+											.setCapacity(new Integer(marks));
+									initialMarking.set(cell.getId(), new Integer(marks));
+
+	    							if (n.getPetriNet() instanceof PTNet) {
+	    								PTNet ptNet = (PTNet) n.getPetriNet();
+	    								ptNet.setInitialMarking(initialMarking);
+	    								System.out.println(ptNet.getPlace(cell.getId()).getState() + "MARKING");
+	    							}
+								} catch (ParameterException e2) {
+									// TODO Auto-generated catch block
+									e2.printStackTrace();
+								}
+    						
+
+                            }
+//                            graph.getDataHolder().updateData();
+//                            ControlPanel.setTree();
+                            refresh();
+                        
+//                        if (info.isTransition()) {
+//                            new InputDialog(info).setVisible(true);
+////                            graph.getDataHolder().updateData();
+//                            refresh();
+//                        }
+//                        if (info.isContainer()) {
+//                            String name = "     ";
+//                            name += JOptionPane.showInputDialog(
+//                                    "Input new name");
+//                            info.setName(name);
+//
+//                            refresh();
+//                        }
+                    }}
+                }
+                super.mouseClicked(e);
+            }
+        });
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                Object object = getCellAt(e.getX(), e.getY());
+//                if (object != null && e.getClickCount() == 2) {
+//                    mxCell cell = (mxCell) object;
+//                    Object value = ((mxCell)cell).getValue();
+//            		
+//            		
+//            		if(value instanceof AbstractGraphicalPN<?, ?, ?, ?, ?>){
+//            			AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>)  value;
+//            			CPNPlace place = (CPNPlace) n.getPetriNet().getPlace(((mxCell)cell).getId());
+//            			
+//            	try {
+//					n.getPetriNet().getTransition(((mxCell)cell).getId()).fire();
+////					n.getPetriNet().getTransition(((mxCell)cell).getId()).checkState();
+//				} catch (PNException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
 //            			try {
 //            				System.out.println(place.getState().multiplicity("black")+ "##############1");
 //							int multiplicity = place.getState().decMultiplicity(new String("black"));
@@ -112,14 +179,14 @@ public class GraphComponent extends mxGraphComponent {
 //                                    "Input new name");
 //                            info.setName(name);
 //
-                            refresh();
-                        }
-//                    }
-//                }
-                super.mouseClicked(e);
-            }
-        });
-    }
+//                            refresh();
+//                        }
+////                    }
+////                }
+//                super.mouseClicked(e);
+//            }
+//        });
+//    }
 
     @Override
     public ImageIcon getFoldingIcon(mxCellState state) {

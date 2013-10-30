@@ -58,7 +58,7 @@ import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
-import com.mxgraph.view.mxGraph;
+//import com.mxgraph.view.mxGraph;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -266,11 +266,11 @@ public class PTNEditor extends JPanel {
 
 		Map<String, Object> style = graphComponent.getGraph().getStylesheet().getDefaultEdgeStyle();
 		System.out.println(style);
-		style.put("strokeWidth",2.0);
+		style.put("strokeWidth",2.0); 
 		style.put("strokeColor",Integer.toHexString(Constants.bluelow.getRGB()));
 	}
 
-	private void setLayoutOrganic(final mxGraph graph) {
+	private void setLayoutOrganic(final Graph graph) {
 		mxOrganicLayout layout = new mxOrganicLayout(graph);
 		// Execute layout
 		// final mxGraph graph =graph;
@@ -305,7 +305,7 @@ public class PTNEditor extends JPanel {
 	protected static mxGraphComponent visualizeGraph(
 			AbstractGraphicalPN<?, ?, ?, ?, ?> n,
 			mxGraphComponent graphComponent2) {
-		mxGraph graph = graphComponent2.getGraph();
+		Graph graph = (Graph) graphComponent2.getGraph();
 		if(n != null){
 			System.out.println("here");
 		pn = n.getPetriNet();
@@ -322,10 +322,11 @@ public class PTNEditor extends JPanel {
 	}
 
 	private static void traverseFlowRelation(
-			AbstractPetriNet<?, ?, ?, ?, ?> pn, mxGraph graph,
+			AbstractPetriNet<?, ?, ?, ?, ?> pn, Graph graph,
 			AbstractGraphicalPN<?, ?, ?, ?, ?> n) {
-		if(graph.getDefaultParent() instanceof mxCell);
-((mxCell)graph.getDefaultParent()).setValue(n);
+		if (graph.getDefaultParent() instanceof mxCell)
+			;
+		((mxCell) graph.getDefaultParent()).setValue(n);
 		for (Object oFlowRelation : pn.getFlowRelations()) {
 			Object source = null;
 			Object target = null;
@@ -343,43 +344,43 @@ public class PTNEditor extends JPanel {
 
 			}
 
-			CPNFlowRelation cpnFlowRelation = null;
-			if (oFlowRelation instanceof CPNFlowRelation){
-				cpnFlowRelation = (CPNFlowRelation) oFlowRelation;
-
-			AbstractPNNode<?> sourceNode = cpnFlowRelation.getSource();
-
-			source = getEndpoint(sourceNode, createdVertices, n, graph);
-			AbstractPNNode<?> targetNode = cpnFlowRelation.getTarget();
-			target = getEndpoint(targetNode, createdVertices, n, graph);
-
-			graph.insertEdge(null, cpnFlowRelation.getName(), "test", source,
-					target);
-
-		}
+//			CPNFlowRelation cpnFlowRelation = null;
+//			if (oFlowRelation instanceof CPNFlowRelation) {
+//				cpnFlowRelation = (CPNFlowRelation) oFlowRelation;
+//
+//				AbstractPNNode<?> sourceNode = cpnFlowRelation.getSource();
+//
+//				source = getEndpoint(sourceNode, createdVertices, n, graph);
+//				AbstractPNNode<?> targetNode = cpnFlowRelation.getTarget();
+//				target = getEndpoint(targetNode, createdVertices, n, graph);
+//
+//				graph.insertEdge(null, cpnFlowRelation.getName(), "test",
+//						source, target);
+//
+//			}
 		
 		
-		CWNFlowRelation cwnFlowRelation = null;
-		if (oFlowRelation instanceof CWNFlowRelation){
-			cwnFlowRelation = (CWNFlowRelation) oFlowRelation;
-
-		AbstractPNNode<?> sourceNode = cwnFlowRelation.getSource();
-
-		source = getEndpoint(sourceNode, createdVertices, n, graph);
-		AbstractPNNode<?> targetNode = cwnFlowRelation.getTarget();
-		target = getEndpoint(targetNode, createdVertices, n, graph);
-
-		graph.insertEdge(null, cwnFlowRelation.getName(), "test", source,
-				target);
-
-	}
+//			CWNFlowRelation cwnFlowRelation = null;
+//			if (oFlowRelation instanceof CWNFlowRelation) {
+//				cwnFlowRelation = (CWNFlowRelation) oFlowRelation;
+//
+//				AbstractPNNode<?> sourceNode = cwnFlowRelation.getSource();
+//
+//				source = getEndpoint(sourceNode, createdVertices, n, graph);
+//				AbstractPNNode<?> targetNode = cwnFlowRelation.getTarget();
+//				target = getEndpoint(targetNode, createdVertices, n, graph);
+//
+//				graph.insertEdge(null, cwnFlowRelation.getName(), "test",
+//						source, target);
+//
+//			}
 	}
 
 	}
 
 	private static Object getEndpoint(AbstractPNNode<?> sourceNode,
 			HashMap<Object, Object> createdVertices2,
-			AbstractGraphicalPN<?, ?, ?, ?, ?> n, mxGraph graph) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?> n, Graph graph) {
 		Object endpoint = null;
 		if (sourceNode instanceof PTPlace) {
 			PTPlace place = (PTPlace) sourceNode;
@@ -406,69 +407,69 @@ public class PTNEditor extends JPanel {
 			} else
 				endpoint = createdVertices2.get(transition);
 		}
-		if (sourceNode instanceof CPNPlace) {
-			CPNPlace place = (CPNPlace) sourceNode;
-			if (!createdVertices2.keySet().contains(place)) {
-
-				NodeGraphics pG = (NodeGraphics) n.getPetriNetGraphics().getPlaceGraphics().get(
-						place.getName());
-				try {
-System.out.println(					pn.getMarking().get(place.getName())
-);				} catch (ParameterException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-//				System.out.println(pnG.getTokenGraphics().entrySet());
-				endpoint = addVertex(graph, null, n, pG,
-						//TODO: different styles to test
-//						mxConstants.SHAPE_ELLIPSE+ ";image=http://www.jgraph.com/images/mxgraph.gif;"
-//								+ "perimeter=rectanglePerimeter;imageVerticalAlign=top;fontStyle=1;align=center;"
-//								+ "verticalAlign=top;spacing=2;spacingTop=40;imageAlign=center;"   
-//								+ "imageWidth=40;imageHeight=40;rounded=1;"
-//								+ "shadow=1;glass=1;");
-						Constants.PNPlaceShape, place.getName());
-				mxCell cell = (mxCell) endpoint;
-				createdVertices2.put(place, endpoint);
-			} else
-				endpoint = createdVertices2.get(place);
-		}
-		if (sourceNode instanceof CPNTransition) {
-			CPNTransition transition = (CPNTransition) sourceNode;
-			if ((!createdVertices2.keySet().contains(transition))) {
-				NodeGraphics pT = (NodeGraphics) n.getPetriNetGraphics().getTransitionGraphics()
-						.get(transition.getName());
-
-				endpoint = addVertex(graph, transition.getName(), n, pT,
-						mxConstants.SHAPE_RECTANGLE, transition.getName());
-				createdVertices2.put(transition, endpoint);
-			} else
-				endpoint = createdVertices2.get(transition);
-		}
-		if (sourceNode instanceof CWNPlace) {
-			CWNPlace place = (CWNPlace) sourceNode;
-			if (!createdVertices2.keySet().contains(place)) {
-
-				NodeGraphics pG = (NodeGraphics) n.getPetriNetGraphics().getPlaceGraphics().get(
-						place.getName());
-
-				endpoint = addVertex(graph, place.getName(), n, pG,
-						mxConstants.SHAPE_ELLIPSE, place.getName());
-				createdVertices2.put(place, endpoint);
-			} else
-				endpoint = createdVertices2.get(place);
-		}
-		if (sourceNode instanceof CWNTransition) {
-			CWNTransition transition = (CWNTransition) sourceNode;
-			if ((!createdVertices2.keySet().contains(transition))) {
-				NodeGraphics pT = (NodeGraphics) n.getPetriNetGraphics().getTransitionGraphics()
-						.get(transition.getName());
-
-				endpoint = addVertex(graph, transition.getName(), n, pT,
-						mxConstants.SHAPE_RECTANGLE, transition.getName());
-				createdVertices2.put(transition, endpoint);
-			} else
-				endpoint = createdVertices2.get(transition);
-		}
+//		if (sourceNode instanceof CPNPlace) {
+//			CPNPlace place = (CPNPlace) sourceNode;
+//			if (!createdVertices2.keySet().contains(place)) {
+//
+//				NodeGraphics pG = (NodeGraphics) n.getPetriNetGraphics().getPlaceGraphics().get(
+//						place.getName());
+//				try {
+//System.out.println(					pn.getMarking().get(place.getName())
+//);				} catch (ParameterException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+////				System.out.println(pnG.getTokenGraphics().entrySet());
+//				endpoint = addVertex(graph, null, n, pG,
+//						//TODO: different styles to test
+////						mxConstants.SHAPE_ELLIPSE+ ";image=http://www.jgraph.com/images/mxgraph.gif;"
+////								+ "perimeter=rectanglePerimeter;imageVerticalAlign=top;fontStyle=1;align=center;"
+////								+ "verticalAlign=top;spacing=2;spacingTop=40;imageAlign=center;"   
+////								+ "imageWidth=40;imageHeight=40;rounded=1;"
+////								+ "shadow=1;glass=1;");
+//						Constants.PNPlaceShape, place.getName());
+//				mxCell cell = (mxCell) endpoint;
+//				createdVertices2.put(place, endpoint);
+//			} else
+//				endpoint = createdVertices2.get(place);
+//		}
+//		if (sourceNode instanceof CPNTransition) {
+//			CPNTransition transition = (CPNTransition) sourceNode;
+//			if ((!createdVertices2.keySet().contains(transition))) {
+//				NodeGraphics pT = (NodeGraphics) n.getPetriNetGraphics().getTransitionGraphics()
+//						.get(transition.getName());
+//
+//				endpoint = addVertex(graph, transition.getName(), n, pT,
+//						mxConstants.SHAPE_RECTANGLE, transition.getName());
+//				createdVertices2.put(transition, endpoint);
+//			} else
+//				endpoint = createdVertices2.get(transition);
+//		}
+//		if (sourceNode instanceof CWNPlace) {
+//			CWNPlace place = (CWNPlace) sourceNode;
+//			if (!createdVertices2.keySet().contains(place)) {
+//
+//				NodeGraphics pG = (NodeGraphics) n.getPetriNetGraphics().getPlaceGraphics().get(
+//						place.getName());
+//
+//				endpoint = addVertex(graph, place.getName(), n, pG,
+//						mxConstants.SHAPE_ELLIPSE, place.getName());
+//				createdVertices2.put(place, endpoint);
+//			} else
+//				endpoint = createdVertices2.get(place);
+//		}
+//		if (sourceNode instanceof CWNTransition) {
+//			CWNTransition transition = (CWNTransition) sourceNode;
+//			if ((!createdVertices2.keySet().contains(transition))) {
+//				NodeGraphics pT = (NodeGraphics) n.getPetriNetGraphics().getTransitionGraphics()
+//						.get(transition.getName());
+//
+//				endpoint = addVertex(graph, transition.getName(), n, pT,
+//						mxConstants.SHAPE_RECTANGLE, transition.getName());
+//				createdVertices2.put(transition, endpoint);
+//			} else
+//				endpoint = createdVertices2.get(transition);
+//		}
 
 
 		return endpoint;
@@ -515,10 +516,10 @@ System.out.println(					pn.getMarking().get(place.getName())
 //		
 //		return vertex;
 //	}
-	private static Object addVertex(mxGraph graph, String name,
+	private static Object addVertex(Graph graph, String name,
 			Object n, NodeGraphics pG, String shape, String id) {
 		mxCell vertex = (mxCell) graph
-				.insertVertex(graph.getDefaultParent(), name, n, pG.getPosition()
+				.insertVertexInPN((AbstractGraphicalPN<?, ?, ?, ?, ?>) n, graph.getDefaultParent(), name, null, pG.getPosition()
 						.getX(), pG.getPosition().getY(), pG
 						.getDimension().getX(), pG.getDimension()
 						.getY(), shape);
@@ -677,7 +678,7 @@ System.out.println(					pn.getMarking().get(place.getName())
 			return new AbstractAction(mxResources.get(key)) {
 
 				public void actionPerformed(ActionEvent e) {
-					final mxGraph graph = graphComponent.getGraph();
+					final Graph graph = (Graph) graphComponent.getGraph();
 					Object cell = graph.getSelectionCell();
 
 					if (cell == null
@@ -721,7 +722,7 @@ System.out.println(					pn.getMarking().get(place.getName())
 		mxIGraphLayout layout = null;
 
 		if (ident != null) {
-			mxGraph graph = graphComponent.getGraph();
+			Graph graph = (Graph) graphComponent.getGraph();
 
 			if (ident.equals("verticalHierarchical")) {
 				layout = new mxHierarchicalLayout(graph);
