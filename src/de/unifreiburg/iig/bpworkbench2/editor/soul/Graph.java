@@ -31,6 +31,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.S
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
@@ -87,7 +88,7 @@ public class Graph extends mxGraph {
 					edgeTarget.setId(edgeSource.getId());
 				isDNDgenerated = true;	
 				}
-				if (edgeSource.getStyle().contentEquals(Constants.PNPlaceShape) && !isDNDgenerated )
+				if (edgeSource.getStyle().contentEquals(Constants.PNPlaceShape) && !isDNDgenerated && (((mxCell) edge).getValue() == ""))
 					addPTArcToPN((mxCell) edge, edgeSource, edgeTarget, n);
 				if (edgeTarget.getStyle().contentEquals(Constants.PNTransitionShape) && isDNDgenerated) {
 					String prefix = Constants.TransitionNamePrefix;
@@ -101,7 +102,7 @@ public class Graph extends mxGraph {
 
 
 				}
-				if (edgeSource.getStyle().contentEquals(Constants.PNTransitionShape)&& !isDNDgenerated)
+				if (edgeSource.getStyle().contentEquals(Constants.PNTransitionShape)&& !isDNDgenerated && (((mxCell) edge).getValue() == ""))
 					addTPArcToPN(edge, edgeSource, edgeTarget, n);				
 				if (edgeTarget.getStyle().contentEquals(Constants.PNPlaceShape)&& isDNDgenerated) {
 					String prefix = Constants.PlaceNamePrefix;
@@ -595,7 +596,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 					.addFlowRelationTP(edgeSource.getId(),
 							edgeTarget.getId());
 			((mxCell) edge).setId(fr.getName());
-//			((mxCell) edge).setValue(fr.getName());
+			((mxCell) edge).setValue(((PTFlowRelation)fr).getWeight());
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -609,7 +610,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 					.addFlowRelationPT(edgeSource.getId(),
 							edgeTarget.getId());
 			((mxCell) edge).setId(fr.getName());
-//			((mxCell) edge).setValue(fr.getName());
+			((mxCell) edge).setValue(((PTFlowRelation)fr).getWeight());
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
