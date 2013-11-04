@@ -82,6 +82,14 @@ public class OpenFileModel extends Observable {
 
 	}
 
+	public void rename(String newName) {
+		log.log(Level.INFO, "Renaming a File to " + newName);
+		UserFile uFile = getOpenFile();
+		// TODO: check if file exists
+		getOpenFile().renameTo(new File(uFile.getAbsolutePath() + "/" + newName));
+		update();
+	}
+
 	public void removeFile(File file) {
 		openFiles.remove(file);
 		update();

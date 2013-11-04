@@ -33,13 +33,15 @@ public class MenuView extends JMenuBar implements Observer {
 
 	private MenuView() {
 		super();
-		JMenu file, edit;
+		JMenu file, edit, settings;
 		file = new JMenu("File");
 		edit = new JMenu("Edit");
+		settings = new JMenu("Settings");
 		this.add(file);
 		this.add(edit);
+		this.add(settings);
 
-		// Create menu items for file
+		// Create menu items for "file"
 		JMenuItem open = new JMenuItem("Open Dir...", UIManager.getIcon("FileView.directoryIcon"));
 		JMenuItem saveAll = new JMenuItem("Save all");
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
@@ -52,7 +54,7 @@ public class MenuView extends JMenuBar implements Observer {
 		file.add(addFile);
 		file.add(exit);
 
-		// Create menu items for edit
+		// Create menu items for "edit"
 		// Button Group
 		ButtonGroup editOrAnalyseGroup = new ButtonGroup();
 		editOrAnalyseGroup.add(editMode);
@@ -63,8 +65,9 @@ public class MenuView extends JMenuBar implements Observer {
 		edit.add(editMode);
 		edit.add(analyseMode);
 
-		this.add(file);
-		this.add(edit);
+		// Add Entries for "settings"
+		JMenuItem prismPathSetting = new JMenuItem("Set Prism Model Checker Path...");
+		settings.add(prismPathSetting);
 
 		// put all entries into menus-map
 		menus.put(MenuNames.OPEN_MENU, open);

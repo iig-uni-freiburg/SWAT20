@@ -202,9 +202,7 @@ class SelectionListener implements TreeSelectionListener {
 			// get index of just marked object
 			OpenFileModel ofm = OpenFileModel.getInstance();
 			// get index of newly selected Object
-			int newIndex = ofm.getIndexOf(newObj);
-			// set index inside the model
-			OpenFileModel.getInstance().setOpenFileIndex(newIndex);
+			ofm.setOpenFileIndex(newObj);
 
 		} catch (NullPointerException e) {
 
