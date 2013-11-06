@@ -1,7 +1,6 @@
 package de.unifreiburg.iig.bpworkbench2.editor.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -9,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +49,6 @@ import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.swing.util.mxMorphing;
-import com.mxgraph.swing.util.mxSwingConstants;
-import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
@@ -59,6 +58,7 @@ import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
 //import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphSelectionModel;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -68,12 +68,6 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.PTGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
@@ -84,21 +78,11 @@ import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.NewAction;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.OpenAction;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.PrintAction;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SaveAction;
+import de.unifreiburg.iig.bpworkbench2.editor.properties.PTProperties;
+import de.unifreiburg.iig.bpworkbench2.editor.properties.PropertiesView;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
-//import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPN;
-//import de.uni.freiburg.iig.telematik.sepia.graphic.NodeGraphics;
-//import de.uni.freiburg.iig.telematik.sepia.graphic.PNGraphics;
-//import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
-//import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.GraphProperties;
 
 public class PTNEditor extends JPanel {
 
@@ -127,19 +111,34 @@ public class PTNEditor extends JPanel {
 					.getProperty("edit"));
 		}
 	};
+	
+	
+	
+	
+	protected PTProperties properties = null;
+	protected PropertiesView propertiesView = null;
+	
+	protected void setProperties(){
+		properties = new PTProperties(getNetContainer());
+	}
+	
+	public PropertiesView getPropertiesView() {
+		return propertiesView;
+	}
+
 	protected mxIEventListener changeTracker = new mxIEventListener() {
 
 		public void invoke(Object source, mxEventObject evt) {
 			setModified(true);
 		}
 	};
-	public AbstractGraphicalPN<?, ?, ?, ?, ?>  netContainer;
+	public AbstractGraphicalPN<?, ?, ?, ?, ?,?,?>  netContainer;
 
-	public AbstractGraphicalPN<?, ?, ?, ?, ?> getNetContainer() {
-		return netContainer;
+	public GraphicalPTNet getNetContainer() {
+		return (GraphicalPTNet) netContainer;
 	}
 
-	public void setNetContainer(AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer) {
+	public void setNetContainer(AbstractGraphicalPN<?, ?, ?, ?, ?,?,?> netContainer) {
 		this.netContainer = netContainer;
 	}
 
@@ -186,7 +185,6 @@ public class PTNEditor extends JPanel {
 		panel.add(new ToolBar(this, JToolBar.HORIZONTAL), BorderLayout.NORTH);
 
 		controlPanel = new ControlPanel(graph);
-//		graph.getDataHolder().setDataWatcher(controlPanel);
 		final JSplitPane outer = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				panel, controlPanel);
 		outer.setDividerSize(9);
@@ -219,22 +217,11 @@ public class PTNEditor extends JPanel {
 
 		Palette shapesPalette = (Palette) libraryPane.add(new Palette());
 
-		// shapesPalette.addTemplate(
-		// "Container",
-		// new ImageIcon(
-		// PNMLEditor.class.getResource("/images/swimlane.png")),
-		// "swimlane", 150, 150, new CellInfo("     Container"));
-		// shapesPalette.getComponent(0).setEnabled(false);
 		shapesPalette.addTemplate(
 				"Transition",
 				new ImageIcon(PTNEditor.class
 						.getResource("/images/rectangle.png")), Constants.PNTransitionShape ,
 				30, 30,  null);
-		// shapesPalette.addTemplate(
-		// "Immediate",
-		// new ImageIcon(
-		// PNMLEditor.class.getResource("/images/rectangle2.png")),
-		// "immediate;fontSize=12", 20, 60, new CellInfo(0.0, 0.5));
 		shapesPalette.addTemplate(
 				"Place",
 				new ImageIcon(PTNEditor.class
@@ -253,7 +240,7 @@ public class PTNEditor extends JPanel {
 	}
 
 	
-	public PTNEditor(AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer2) {
+	public PTNEditor(GraphicalPTNet netContainer2) {
 		this("PetriNet Editor", new GraphComponent(new Graph()));
 		
 		netContainer = netContainer2;
@@ -268,6 +255,30 @@ public class PTNEditor extends JPanel {
 		System.out.println(style);
 		style.put("strokeWidth",2.0); 
 		style.put("strokeColor",Integer.toHexString(Constants.bluelow.getRGB()));
+		
+
+	//selectionListener
+      graphComponent.getGraph().getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener() {
+
+     @Override
+     public void invoke(Object sender, mxEventObject evt) {
+    	 mxCell cell = (mxCell) ((mxGraphSelectionModel)sender).getCell();
+    	 System.out.println(cell.getId() + "#" + evt.getName());
+    	 try {
+			GraphProperties.getInstance().setName((String) cell.getValue());
+			GraphProperties.getInstance().setSizeX(Integer.toString((int)cell.getGeometry().getWidth()));
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+     }
+     });
+
+				
+
+
+		
 	}
 
 	private void setLayoutOrganic(final Graph graph) {
@@ -303,7 +314,7 @@ public class PTNEditor extends JPanel {
 	}
 
 	protected static mxGraphComponent visualizeGraph(
-			AbstractGraphicalPN<?, ?, ?, ?, ?> n,
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ? , ?> n,
 			mxGraphComponent graphComponent2) {
 		Graph graph = (Graph) graphComponent2.getGraph();
 		if(n != null){
@@ -312,7 +323,6 @@ public class PTNEditor extends JPanel {
 		AbstractPNGraphics<?, ?, ?, ?, ?> pnG = n.getPetriNetGraphics();
 		
 		graph.getModel().beginUpdate();
-//		map2Str(pnG.getTokenGraphics(), graph);
 
 		traverseFlowRelation(pn, graph, n);
 
@@ -323,7 +333,7 @@ public class PTNEditor extends JPanel {
 
 	private static void traverseFlowRelation(
 			AbstractPetriNet<?, ?, ?, ?, ?> pn, Graph graph,
-			AbstractGraphicalPN<?, ?, ?, ?, ?> n) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?,?> n) {
 		if (graph.getDefaultParent() instanceof mxCell)
 			;
 		((mxCell) graph.getDefaultParent()).setValue(n);
@@ -380,7 +390,7 @@ public class PTNEditor extends JPanel {
 
 	private static Object getEndpoint(AbstractPNNode<?> sourceNode,
 			HashMap<Object, Object> createdVertices2,
-			AbstractGraphicalPN<?, ?, ?, ?, ?> n, Graph graph) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?,?,?> n, Graph graph) {
 		Object endpoint = null;
 		if (sourceNode instanceof PTPlace) {
 			PTPlace place = (PTPlace) sourceNode;
@@ -519,7 +529,7 @@ public class PTNEditor extends JPanel {
 	private static Object addVertex(Graph graph, String name,
 			Object n, NodeGraphics pG, String shape, String id) {
 		mxCell vertex = (mxCell) graph
-				.insertVertexInPN((AbstractGraphicalPN<?, ?, ?, ?, ?>) n, graph.getDefaultParent(), name, null, pG.getPosition()
+				.insertVertexInPN((AbstractGraphicalPN<?, ?, ?, ?, ?,?,?>) n, graph.getDefaultParent(), name, null, pG.getPosition()
 						.getX(), pG.getPosition().getY(), pG
 						.getDimension().getX(), pG.getDimension()
 						.getY(), shape);
