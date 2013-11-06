@@ -264,14 +264,7 @@ public class PTNEditor extends JPanel {
      public void invoke(Object sender, mxEventObject evt) {
     	 mxCell cell = (mxCell) ((mxGraphSelectionModel)sender).getCell();
     	 System.out.println(cell.getId() + "#" + evt.getName());
-    	 try {
-			GraphProperties.getInstance().setName((String) cell.getValue());
-			GraphProperties.getInstance().setSizeX(Integer.toString((int)cell.getGeometry().getWidth()));
-		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+    	
      }
      });
 
