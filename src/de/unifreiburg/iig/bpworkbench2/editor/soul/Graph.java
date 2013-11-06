@@ -40,7 +40,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
 public class Graph extends mxGraph {
 
 	private DataHolder dataHolder;
-	AbstractGraphicalPN<?, ?, ?, ?, ?> n ;
+	AbstractGraphicalPN<?, ?, ?, ?, ?, ? , ?> n ;
 	int i = 0;
 
 	public Graph() {
@@ -144,7 +144,7 @@ public class Graph extends mxGraph {
 	 * @param nodeName
 	 */
 	public void addGraphicalInfoToPN(mxCell cell,
-			AbstractGraphicalPN<?, ?, ?, ?, ?> n, String nodeName) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n, String nodeName) {
 		
 		Line line = new Line();
 		Fill fill = new Fill();
@@ -347,7 +347,7 @@ public class Graph extends mxGraph {
 //					&& !mxUtils.isTrue(style, mxConstants.STYLE_NOLABEL, false)) {
 //				result = convertValueToString(cell);
 //				if (result.contains("de.uni.freiburg.iig.telematik.sepia")) {
-//					AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>) ((mxCell) cell)
+//					AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>) ((mxCell) cell)
 //							.getValue();
 //					if (n.getPetriNet().getPlace(((mxCell) cell).getId()) != null) {
 //						result = "";
@@ -478,7 +478,7 @@ public void cellLabelChanged(Object cell, Object value, boolean autoSize)
 //				System.out.println(getLabelPosition(cell) + "position");
 //				result = convertValueToString(cell);
 //				if (result.contains("de.uni.freiburg.iig.telematik.sepia")) {
-//					AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>) ((mxCell) cell)
+//					AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>) ((mxCell) cell)
 //							.getValue();
 //					if (n.getPetriNet().getPlace(((mxCell) cell).getId()) != null) {
 //						result = "";
@@ -590,7 +590,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 	
 
 	public void addTPArcToPN(Object edge, mxCell edgeSource, mxCell edgeTarget,
-			AbstractGraphicalPN<?, ?, ?, ?, ?> n) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n) {
 		try {
 			AbstractFlowRelation<?, ?, ?> fr = n.getPetriNet()
 					.addFlowRelationTP(edgeSource.getId(),
@@ -604,7 +604,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 	}
 
 	public void addPTArcToPN(mxCell edge, mxCell edgeSource, mxCell edgeTarget,
-			AbstractGraphicalPN<?, ?, ?, ?, ?> n) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n) {
 		try {
 			AbstractFlowRelation<?, ?, ?> fr = n.getPetriNet()
 					.addFlowRelationPT(edgeSource.getId(),
@@ -619,7 +619,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 	}
 	
 	public void addLabelToNode(mxCell edgeTarget,
-			AbstractGraphicalPN<?, ?, ?, ?, ?> n, String nodeName) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n, String nodeName) {
 //		mxGeometry geom = new mxGeometry(0, 0, edgeTarget.getGeometry()
 //				.getWidth(), 10);
 ////System.out.println(getLabel(edgeTarget) + "--------------------Label");
@@ -661,7 +661,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 
 	}
 
-	public String addPNNode(mxCell edgeTarget, AbstractGraphicalPN<?, ?, ?, ?, ?> n, String prefix)
+	public String addPNNode(mxCell edgeTarget, AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n, String prefix)
 			throws ParameterException {
 		SortedMap<Integer, String> sortedMap = new TreeMap<Integer, String>();
 		Collection<?> nodeCollection = null;
@@ -702,7 +702,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 
 
 
-	public void setPN(AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer) {
+	public void setPN(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer) {
 		this.n = netContainer;
 		
 	}
@@ -793,9 +793,9 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 
 
 
-	public Object insertVertexInPN(AbstractGraphicalPN<?, ?, ?, ?, ?> net, Object object, String name, Object object2, double d, double e, double f, double g, String shape){
+	public Object insertVertexInPN(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net, Object object, String name, Object object2, double d, double e, double f, double g, String shape){
 		
-		n = (AbstractGraphicalPN<?, ?, ?, ?, ?>) net;
+		n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>) net;
 		return insertPNVertex(object,name, object2,  d,  e,  f,  g, shape, false);}
 @Override
 /**

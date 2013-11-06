@@ -7,6 +7,7 @@ import com.mxgraph.swing.handler.mxConnectionHandler;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -20,10 +21,13 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.CellInfo;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.GraphProperties;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
 
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeSupport;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -48,8 +52,6 @@ public class GraphComponent extends mxGraphComponent {
 
     
 		getConnectionHandler().setCreateTarget(true);
-
-
         mxCodec codec = new mxCodec();
         Document doc = mxUtils.loadDocument(PTNEditor.class.getResource(
                 "/default-style.xml").toString());
@@ -58,20 +60,16 @@ public class GraphComponent extends mxGraphComponent {
         	@Override
             public void mouseReleased(MouseEvent e) {
                 Object object = getCellAt(e.getX(), e.getY());
-             System.out.println("step1");
                 
                 if (object != null && e.getClickCount() == 2) {
                     mxCell cell = (mxCell) object;
                     Object value = ((mxCell)cell).getValue();
             		
-                    System.out.println("step2" + value);
-            		if(cell.getParent().getValue() instanceof AbstractGraphicalPN<?, ?, ?, ?, ?>){
-            			AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>)  cell.getParent().getValue();
+            		if(cell.getParent().getValue() instanceof AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>){
+            			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>)  cell.getParent().getValue();
             			PTPlace place = (PTPlace) n.getPetriNet().getPlace(((mxCell)cell).getId());
-            			System.out.println("step3" + n);
-                 
+
                         if (cell.getStyle().contentEquals(Constants.PNPlaceShape)) {
-                        	System.out.println("step4");
                             String marks = JOptionPane.showInputDialog(
                                     "Input new amount of marks");
                             if (marks != null) {
@@ -82,14 +80,13 @@ public class GraphComponent extends mxGraphComponent {
                             	else initialMarking = (PTMarking) n.getPetriNet().getInitialMarking();
 //    							int ressources = ;
     							try {
-									n.getPetriNet().getPlace(cell.getId())
-											.setCapacity(new Integer(marks));
+//									n.getPetriNet().getPlace(cell.getId())
+//											.setCapacity(new Integer(marks));
 									initialMarking.set(cell.getId(), new Integer(marks));
 
 	    							if (n.getPetriNet() instanceof PTNet) {
 	    								PTNet ptNet = (PTNet) n.getPetriNet();
 	    								ptNet.setInitialMarking(initialMarking);
-	    								System.out.println(ptNet.getPlace(cell.getId()).getState() + "MARKING");
 	    							}
 								} catch (ParameterException e2) {
 									// TODO Auto-generated catch block
@@ -128,8 +125,8 @@ public class GraphComponent extends mxGraphComponent {
 //                    Object value = ((mxCell)cell).getValue();
 //            		
 //            		
-//            		if(value instanceof AbstractGraphicalPN<?, ?, ?, ?, ?>){
-//            			AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>)  value;
+//            		if(value instanceof AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>){
+//            			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>)  value;
 //            			CPNPlace place = (CPNPlace) n.getPetriNet().getPlace(((mxCell)cell).getId());
 //            			
 //            	try {

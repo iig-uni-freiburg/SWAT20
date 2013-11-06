@@ -143,7 +143,7 @@ public void updateVertexLabelOffset(mxCellState state)
 public void addAnnotationGraphics(mxCellState state) {
 	mxCell cell = (mxCell) state.getCell();
 	if (cell.getParent() != null) {
-		AbstractGraphicalPN<?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?>) cell
+		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>) cell
 				.getParent().getValue();
 		mxPoint offset = state.getAbsoluteOffset();
 		AnnotationGraphics annotation = null;

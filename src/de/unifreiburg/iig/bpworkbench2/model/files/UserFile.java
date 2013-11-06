@@ -10,6 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
@@ -96,15 +97,14 @@ public class UserFile extends File {
 			/*
 			 * PetriNet
 			 */
-			AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this,
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this,
 					true, false);
 			AbstractPetriNet<?, ?, ?, ?, ?> petriNet = netContainer.getPetriNet();
 
 			
 			//distinguish between different net-types to choose corresponding editor
-			if (petriNet instanceof PTNet) {
-				editor = new PTNEditor(netContainer);
-
+			if (netContainer instanceof GraphicalPTNet) {
+				editor = new PTNEditor((GraphicalPTNet) netContainer);
 			}
 
 			if (petriNet instanceof CPN) {

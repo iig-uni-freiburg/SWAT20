@@ -58,14 +58,13 @@ public class PNPlaceShape extends mxBasicShape {
 
 	private int k;
 
-	private AbstractGraphicalPN<?, ?, ?, ?, ?> n;
+	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n;
 
 	private mxCell cell;
 
 	public Shape createShape(mxGraphics2DCanvas canvas, mxCellState state) {
 		Rectangle temp = state.getRectangle();
 		cell = (mxCell) state.getCell();
-System.out.println(state.getStyle());
 		Float shape = new Ellipse2D.Float(temp.x, temp.y, temp.width,
 				temp.height);
 
@@ -116,7 +115,7 @@ System.out.println(state.getStyle());
 
 				if ((value != null)
 						&& (((mxCell) state.getCell()).getParent() != null)) {
-					n = (AbstractGraphicalPN<?, ?, ?, ?, ?>) ((mxCell) state
+					n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>) ((mxCell) state
 							.getCell()).getParent().getValue();
 					PTPlace place = (PTPlace) n.getPetriNet().getPlace(
 							cell.getId());
@@ -191,7 +190,6 @@ System.out.println(state.getStyle());
 
 							e.printStackTrace();
 						}
-						System.out.println("HELLO");
 					}
 				}
 
