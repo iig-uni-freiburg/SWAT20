@@ -1,35 +1,15 @@
 package de.unifreiburg.iig.bpworkbench2.editor.gui.actions;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URLEncoder;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
-import com.mxgraph.io.mxCodec;
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxCellRenderer;
-import com.mxgraph.util.mxUtils;
-import com.mxgraph.util.png.mxPngEncodeParam;
-import com.mxgraph.util.png.mxPngImageEncoder;
-import com.mxgraph.view.mxGraph;
 
 import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.relict.Properties;
 
 public class PrintAction extends AbstractAction {
 
     protected boolean showDialog, success;
-    protected String lastDir = de.unifreiburg.iig.bpworkbench2.editor.relict.Properties.getInstance().getLastDir();
 
     public PrintAction() {
     

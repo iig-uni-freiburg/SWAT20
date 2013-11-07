@@ -4,12 +4,12 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.relict.Properties;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 public class ExitAction extends AbstractAction {

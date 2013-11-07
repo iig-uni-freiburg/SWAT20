@@ -1,12 +1,14 @@
 package de.unifreiburg.iig.bpworkbench2.editor.gui;
 
-import javax.swing.*;
+import java.awt.MenuBar;
+
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import javax.swing.TransferHandler;
 
 import com.mxgraph.swing.util.mxGraphActions;
 
-import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.*;
-import de.unifreiburg.iig.bpworkbench2.editor.relict.MenuBar;
-import de.unifreiburg.iig.bpworkbench2.editor.relict.Properties;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.HistoryAction;
 
 public class PopupMenu extends JPopupMenu {
 
@@ -31,7 +33,7 @@ public class PopupMenu extends JPopupMenu {
         addSeparator();
 
         JMenu menu = (JMenu) add(new JMenu("Format"));
-        MenuBar.populateFormatMenu(menu, ptnEditor);
+//        MenuBar.populateFormatMenu(menu, ptnEditor);
         add(ptnEditor.bind("Edit", mxGraphActions.getEditAction())).setEnabled(selected);
 
         addSeparator();

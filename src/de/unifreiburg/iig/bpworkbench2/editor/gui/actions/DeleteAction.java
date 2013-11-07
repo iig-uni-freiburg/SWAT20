@@ -1,32 +1,11 @@
 package de.unifreiburg.iig.bpworkbench2.editor.gui.actions;
 
-import com.mxgraph.io.*;
-import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxIGraphModel;
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxGraph;
-
-import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.*;
-import de.unifreiburg.iig.bpworkbench2.editor.relict.Properties;
-import de.unifreiburg.iig.bpworkbench2.editor.relict.mxgraphmod.util.png.mxPNGzTXtDecoder;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
-
-import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.io.*;
-import java.net.URLDecoder;
-import java.util.Collection;
-import java.util.Map;
-import java.util.SortedMap;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.view.mxGraph;
 
 public class DeleteAction extends AbstractAction {
 

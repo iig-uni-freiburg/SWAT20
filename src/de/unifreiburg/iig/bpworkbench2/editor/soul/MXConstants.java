@@ -1,8 +1,7 @@
 package de.unifreiburg.iig.bpworkbench2.editor.soul;
 
 import java.awt.Color;
-
-import de.unifreiburg.iig.bpworkbench2.editor.relict.mxConstants;
+import java.awt.image.BufferedImage;
 
 public abstract class MXConstants {
 
@@ -24,6 +23,18 @@ public abstract class MXConstants {
 	public static final Color bluehigh = new Color(182, 202, 228);
 	public static final Color blueBG = new Color(234, 243, 252);
     
+	public static BufferedImage EMPTY_IMAGE;
+	static{
+        try{
+            MXConstants.EMPTY_IMAGE = new BufferedImage(1, 1,BufferedImage.TYPE_INT_RGB);
+        }
+        catch (Exception e){
+            // Occurs when running on GAE, BufferedImage is a
+            // blacklisted class
+            MXConstants.EMPTY_IMAGE = null;
+        }
+    }
+	
 	public static final String PNPlace = "pnPlace";
 	public static final String PNPlaceShape = "shape=" + PNPlace + ";"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 	public static final String PNTransition = "pnTransition";

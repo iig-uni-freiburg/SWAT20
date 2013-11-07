@@ -1,16 +1,30 @@
 package de.unifreiburg.iig.bpworkbench2.editor.gui;
 
-import java.awt.*;
-import java.awt.dnd.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import com.mxgraph.model.*;
-import com.mxgraph.swing.util.*;
-import com.mxgraph.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
-import de.unifreiburg.iig.bpworkbench2.editor.relict.mxConstants;
+import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
+import com.mxgraph.swing.util.mxGraphTransferable;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxRectangle;
+
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 public class PalettePanel extends JPanel {
 
@@ -101,7 +115,7 @@ public class PalettePanel extends JPanel {
                 if (!entry.isEnabled()) {
                     return;
                 }
-                e.startDrag(null, mxConstants.EMPTY_IMAGE, new Point(),
+                e.startDrag(null, MXConstants.EMPTY_IMAGE, new Point(),
                         t, null);
             }
         };
