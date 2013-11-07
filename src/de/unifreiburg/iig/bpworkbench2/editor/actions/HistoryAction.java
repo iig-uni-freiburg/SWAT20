@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
 
 public class HistoryAction extends AbstractAction {
 

@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;

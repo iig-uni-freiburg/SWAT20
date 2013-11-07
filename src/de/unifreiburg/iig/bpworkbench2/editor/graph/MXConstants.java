@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.graph;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

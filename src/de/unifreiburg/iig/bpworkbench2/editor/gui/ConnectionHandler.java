@@ -36,7 +36,7 @@ import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 
 import de.uni.freiburg.iig.telematik.jagal.graph.Vertex;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
+import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
 
 /**
  * Connection handler creates new connections between cells. This control is used to display the connector

@@ -2,7 +2,7 @@
  * $Id: mxGraphView.java,v 1.1 2012/11/15 13:26:46 gaudenz Exp $
  * Copyright (c) 2007-2010, Gaudenz Alder, David Benson
  */
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.graph;
 
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
+import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
 
 /**
  * Implements a view for the graph. This class is in charge of computing the

@@ -24,7 +24,7 @@ import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 
-import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
+import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
 
 public class PalettePanel extends JPanel {
 
