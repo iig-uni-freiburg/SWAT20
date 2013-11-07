@@ -1,14 +1,11 @@
 package de.unifreiburg.iig.bpworkbench2.editor.test;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -18,12 +15,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
-import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.unifreiburg.iig.bpworkbench2.editor.CPNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.IFNetEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.CWNEditor;
 
 public class testGui {
 	
@@ -53,30 +47,30 @@ public class testGui {
 		/*
 		 * PetriNet
 		 */
-		AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML,
+		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML,
 				true, false);
 		AbstractPetriNet<?, ?, ?, ?, ?> petriNet = netContainer.getPetriNet();
 System.out.println(filePath);
 //		PNSerialization.serialize(netContainer, PNSerializationFormat.PNML, "/C:/Users/julius/petrineteditor_wb/SWAT20/xml/samples/samplePTnet3.pnml");
 		
 		//distinguish between different net-types
-		if (petriNet instanceof PTNet) {
-			panel = new PNEditor(netContainer);
-
-		}
-
-		if (petriNet instanceof CPN) {
-			panel = new CPNEditor(netContainer);
-		}
-
-		if (petriNet instanceof CWN) {
-			panel = new CWNEditor(netContainer);
-
-		}
-
-		if (petriNet instanceof IFNet) {
-			panel = new IFNetEditor(netContainer);
-		}
+//		if (petriNet instanceof PTNet) {
+//			panel = new PNEditor(netContainer);
+//
+//		}
+//
+//		if (petriNet instanceof CPN) {
+//			panel = new CPNEditor(netContainer);
+//		}
+//
+//		if (petriNet instanceof CWN) {
+//			panel = new CWNEditor(netContainer);
+//
+//		}
+//
+//		if (petriNet instanceof IFNet) {
+//			panel = new IFNetEditor(netContainer);
+//		}
 		
 		
 		// set background black

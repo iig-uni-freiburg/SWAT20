@@ -6,9 +6,8 @@ import javax.swing.TransferHandler;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.DeleteAction;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.HistoryAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
+import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
 
 public class ToolBar extends JToolBar {
 
@@ -28,12 +27,10 @@ public class ToolBar extends JToolBar {
         add(pnEditor.bind("Copy", TransferHandler.getCopyAction(), "/images/copy.gif"));
         add(pnEditor.bind("Paste", TransferHandler.getPasteAction(), "/images/paste.gif"));
         addSeparator();
-
-        add(pnEditor.bind("Delete", new DeleteAction("delete"), "/images/delete.gif"));
         addSeparator();
 
-        add(pnEditor.bind("Undo", new HistoryAction(true), "/images/undo.gif"));
-        add(pnEditor.bind("Redo", new HistoryAction(false), "/images/redo.gif"));
+        add(pnEditor.bind("Undo", new UndoRedoAction(pnEditor, true), "/images/undo.gif"));
+        add(pnEditor.bind("Redo", new UndoRedoAction(pnEditor, false), "/images/redo.gif"));
 
         addSeparator();
 //        Action temp = new AbstractAction("", new ImageIcon(Editor.class.getResource("/images/connector.gif"))) {

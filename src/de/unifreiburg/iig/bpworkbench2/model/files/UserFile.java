@@ -16,12 +16,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.unifreiburg.iig.bpworkbench2.editor.CPNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.IFNetEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.CWNEditor;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 
@@ -106,29 +104,28 @@ public class UserFile extends File {
 			/*
 			 * PetriNet
 			 */
-			AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this, true, false);
-			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this,
-					true, false);
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this, true, false);
 			AbstractPetriNet<?, ?, ?, ?, ?> petriNet = netContainer.getPetriNet();
 
 			// distinguish between different net-types to choose corresponding
 			// editor
 			if (netContainer instanceof GraphicalPTNet) {
-				editor = new PNEditor((GraphicalPTNet) netContainer);
+				editor = new PTNetEditor((GraphicalPTNet) netContainer, this);
 			}
 
-			if (petriNet instanceof CPN) {
-				editor = new CPNEditor(netContainer);
-			}
-
-			if (petriNet instanceof CWN) {
-				editor = new CWNEditor(netContainer);
-
-			}
-
-			if (petriNet instanceof IFNet) {
-				editor = new IFNetEditor(netContainer);
-			}
+			//TODO
+//			if (petriNet instanceof CPN) {
+//				editor = new CPNEditor(netContainer);
+//			}
+//
+//			if (petriNet instanceof CWN) {
+//				editor = new CWNEditor(netContainer);
+//
+//			}
+//
+//			if (petriNet instanceof IFNet) {
+//				editor = new IFNetEditor(netContainer);
+//			}
 
 			// editor = new PNMLEditor(this);
 			// create file open Action and fire it onto the editor

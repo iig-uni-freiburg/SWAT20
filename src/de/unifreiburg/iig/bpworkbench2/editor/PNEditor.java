@@ -32,6 +32,7 @@ import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.swing.util.mxGraphActions;
+import com.mxgraph.swing.util.mxGraphActions.DeleteAction;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
@@ -51,8 +52,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.DeleteAction;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.HistoryAction;
+import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.PrintAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
@@ -199,7 +199,13 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), graphComponent);
-					PopupMenu menu = new PopupMenu(PNEditor.this);
+					PopupMenu menu = null;
+					try {
+						menu = new PopupMenu(PNEditor.this);
+					} catch (ParameterException e1) {
+						// Cannot happen, since this is not null
+						e1.printStackTrace();
+					}
 					menu.show(graphComponent, pt.x, pt.y);
 					e.consume();
 				}
@@ -458,15 +464,16 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 			ActionMap map = super.createActionMap();
 			try {
 				map.put("save", new SaveAction(PNEditor.this));
+				map.put("undo", new UndoRedoAction(PNEditor.this, true));
+				map.put("redo", new UndoRedoAction(PNEditor.this, false));
+				map.put("printNet", new PrintAction(PNEditor.this));
 			} catch (ParameterException e) {
 				// Cannot happen, since this is not null
 				e.printStackTrace();
 			}
-			map.put("undo", new HistoryAction(true));
-			map.put("redo", new HistoryAction(false));
+			
 			map.put("selectVertices", mxGraphActions.getSelectVerticesAction());
 			map.put("selectEdges", mxGraphActions.getSelectEdgesAction());
-			map.put("printNet", new PrintAction());
 			map.put("delete", new DeleteAction("delete"));
 			return map;
 		}
