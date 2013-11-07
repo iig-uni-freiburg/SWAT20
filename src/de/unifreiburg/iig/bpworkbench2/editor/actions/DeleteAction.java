@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.gui.actions;
+package de.unifreiburg.iig.bpworkbench2.editor.actions;
 
 import java.awt.event.ActionEvent;
 

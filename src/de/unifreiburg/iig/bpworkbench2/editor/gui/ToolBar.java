@@ -6,10 +6,9 @@ import javax.swing.TransferHandler;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.DeleteAction;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.HistoryAction;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SaveAction;
-//import math.simulation.Simulation;
+import de.unifreiburg.iig.bpworkbench2.editor.actions.DeleteAction;
+import de.unifreiburg.iig.bpworkbench2.editor.actions.HistoryAction;
+import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
 
 public class ToolBar extends JToolBar {
 

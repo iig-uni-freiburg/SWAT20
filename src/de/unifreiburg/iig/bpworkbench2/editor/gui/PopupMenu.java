@@ -8,7 +8,7 @@ import javax.swing.TransferHandler;
 
 import com.mxgraph.swing.util.mxGraphActions;
 
-import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.HistoryAction;
+import de.unifreiburg.iig.bpworkbench2.editor.actions.HistoryAction;
 
 public class PopupMenu extends JPopupMenu {
 

@@ -17,11 +17,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.CPNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.CWNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.IFNetEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 
