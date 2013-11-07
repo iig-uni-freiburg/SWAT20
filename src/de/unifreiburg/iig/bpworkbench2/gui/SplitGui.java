@@ -259,7 +259,7 @@ public class SplitGui implements Serializable, Observer {
 
 	public void revalidate() {
 		// msp.revalidate();
-		window.pack();
+		// window.pack();
 		// msp.revalidate();
 
 	}

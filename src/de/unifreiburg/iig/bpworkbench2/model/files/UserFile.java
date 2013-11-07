@@ -39,10 +39,17 @@ public class UserFile extends File {
 	private JPanel editor;
 	private static Logger log = BPLog.getLogger(SplitGui.class.getName());
 	private boolean parseable = false;
+	private boolean show = false;
 
 	public UserFile(String pathname) {
 		super(pathname);
 		hasUnsavedChanges = false;
+		createEditor();
+	}
+
+	/** Set file to be shown **/
+	public void show() {
+		show = true;
 		createEditor();
 	}
 
@@ -91,18 +98,21 @@ public class UserFile extends File {
 	 */
 
 	private void createEditor() {
+		if (!show)
+			return;
+
 		try {
-			
-			
+
 			/*
 			 * PetriNet
 			 */
+			AbstractGraphicalPN<?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this, true, false);
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this,
 					true, false);
 			AbstractPetriNet<?, ?, ?, ?, ?> petriNet = netContainer.getPetriNet();
 
-			
-			//distinguish between different net-types to choose corresponding editor
+			// distinguish between different net-types to choose corresponding
+			// editor
 			if (netContainer instanceof GraphicalPTNet) {
 				editor = new PTNEditor((GraphicalPTNet) netContainer);
 			}
@@ -119,10 +129,8 @@ public class UserFile extends File {
 			if (petriNet instanceof IFNet) {
 				editor = new IFNEditor(netContainer);
 			}
-			
-			
-			
-//			editor = new PNMLEditor(this);
+
+			// editor = new PNMLEditor(this);
 			// create file open Action and fire it onto the editor
 			// OpenAction oa = new OpenAction();
 			// oa.actionPerformed(new ActionEvent(editor,

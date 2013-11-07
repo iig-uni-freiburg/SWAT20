@@ -12,6 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
 
+import de.unifreiburg.iig.bpworkbench2.controller.PrismPathChooser;
 import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
 
@@ -37,6 +38,7 @@ public class MenuView extends JMenuBar implements Observer {
 		file = new JMenu("File");
 		edit = new JMenu("Edit");
 		settings = new JMenu("Settings");
+
 		this.add(file);
 		this.add(edit);
 		this.add(settings);
@@ -68,6 +70,7 @@ public class MenuView extends JMenuBar implements Observer {
 		// Add Entries for "settings"
 		JMenuItem prismPathSetting = new JMenuItem("Set Prism Model Checker Path...");
 		settings.add(prismPathSetting);
+		prismPathSetting.addActionListener(new PrismPathChooser());
 
 		// put all entries into menus-map
 		menus.put(MenuNames.OPEN_MENU, open);

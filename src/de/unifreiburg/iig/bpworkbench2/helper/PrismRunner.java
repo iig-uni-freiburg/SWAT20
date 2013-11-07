@@ -31,7 +31,7 @@ public class PrismRunner {
 		PrismSearch prismsearch = PrismSearch.getInstance();
 		File prismPath = prismsearch.getPrismPath();
 		System.out.println("_____Path to Prism: " + prismPath);
-		SwatProperties.setProperty("PrismPath", prismPath.toString());
+		SwatProperties.getInstance().setProperty("PrismPath", prismPath.toString());
 		List<File> files = prismsearch.getPossiblePaths();
 		for (File file : files) {
 			System.out.println(file.toString());
@@ -94,6 +94,15 @@ public class PrismRunner {
 		}
 		return sb.toString();
 	}
+
+	public String searchForPrism() {
+		PrismSearch psearch = PrismSearch.getInstance();
+		return psearch.getPrismPath().toString();
+	}
+
+	public boolean validatePrismPath(String path) {
+		return PrismSearch.getInstance().checkPrismPath(new File(path));
+	}
 }
 
 /**
@@ -120,10 +129,10 @@ class PrismSearch {
 		// Search in executionpath
 		addExecPath();
 		// Also, try user.home and user.dir with and without bin/ appended
-		addUserHome();
+		addUsersHome();
 	}
 
-	private void addUserHome() {
+	private void addUsersHome() {
 		// get Os specific Path seperator
 		String sep = System.getProperty("file.separator");
 		// search prism in user home (and $home/bin)
@@ -149,6 +158,7 @@ class PrismSearch {
 		prismPaths.addAll(Arrays.asList(execPath.getParentFile().getParentFile().listFiles(filter)));
 	}
 
+	/** Depending on the users OS, get the correct PrismSearch Object **/
 	public static PrismSearch getInstance() {
 
 		if (isWindows())
@@ -194,11 +204,22 @@ class PrismSearch {
 			if ((test = new File(file, "bin/prism")).exists()) {
 				log.log(Level.INFO, "Found Prism Model Checker: " + file);
 				if (test.canExecute())
-					return test;
+					return file;
 			}
 		}
 		return null;
 	}
+
+	public boolean checkPrismPath(File path) {
+		File test;
+		if ((test = new File(path, "bin/prism")).exists()) {
+			log.log(Level.INFO, "Found possible Prism Model Checker: " + path);
+			if (test.canExecute())
+				return true;
+		}
+		return false;
+	}
+
 }
 
 /** Suggests files to search for prism for linux **/

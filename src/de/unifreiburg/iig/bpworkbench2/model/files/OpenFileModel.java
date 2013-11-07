@@ -130,6 +130,8 @@ public class OpenFileModel extends Observable {
 	public void setOpenFileIndex(Object o) {
 		int index = getIndexOf(o);
 		if (index != -1) {
+			// Object was activated.
+			openFiles.get(index).show();
 			setOpenFileIndex(index, true);
 		}
 

@@ -28,7 +28,6 @@ public class TreeView extends JTree implements Observer {
 			log.log(Level.FINE, "the OpenFileModel changed");
 			reactOnFileModelChange(arg0, arg1);
 		}
-
 	}
 
 	private void reactOnFileModelChange(Observable arg0, Object arg1) {

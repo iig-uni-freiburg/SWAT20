@@ -150,6 +150,7 @@ class NewFileListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Logger log = BPLog.getLogger(SplitGui.class.getName());
 		OpenFileModel ofm = OpenFileModel.getInstance();
+
 		// Ask user for new FileName
 		JFileChooser fc = new JFileChooser(ofm.getProject());
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -215,7 +216,7 @@ class TreeMouseListener implements MouseListener {
 
 	@Override
 	public void mouseClicked(java.awt.event.MouseEvent e) {
-		if (e.getSource() instanceof JTree && e.getClickCount() == 2) {
+		if (e.getSource() instanceof JTree) {
 			// System.out.println("Double Click on JTree");
 			JTree tree = (JTree) e.getSource();
 			// open the corresponding Tab:
@@ -227,7 +228,15 @@ class TreeMouseListener implements MouseListener {
 
 			// set selected object as active file
 			OpenFileModel ofm = OpenFileModel.getInstance();
-			ofm.setOpenFileIndex(newObj);
+			if (e.getClickCount() == 2) {
+				// Douple-Click. Open File
+				ofm.setOpenFileIndex(newObj);
+			}
+
+			else if (e.getButton() == 2) {
+				// Rename selected file
+				UserFile uFile = ofm.getFile(ofm.getIndexOf(newObj));
+			}
 		}
 	}
 
