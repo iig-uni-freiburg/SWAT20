@@ -9,6 +9,9 @@ import java.util.Random;
 import java.util.StringTokenizer;
 //import math.simulation.Event;
 
+import de.unifreiburg.iig.bpworkbench2.editor.relict.DataHolder;
+import de.unifreiburg.iig.bpworkbench2.editor.relict.NodeInfo;
+
 public class Utils {
 
 //    private static LCGenerator generator = new LCGenerator(0.5, 211321, 21765, 41);

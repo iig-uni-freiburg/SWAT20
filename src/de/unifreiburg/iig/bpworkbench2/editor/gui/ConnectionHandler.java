@@ -36,7 +36,7 @@ import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 
 import de.uni.freiburg.iig.telematik.jagal.graph.Vertex;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 /**
  * Connection handler creates new connections between cells. This control is used to display the connector
@@ -90,12 +90,12 @@ public class ConnectionHandler extends mxConnectionHandler
 								mxCell cell = (mxCell) vertex;
 								if(cell.getChildAt(0) != null && cell.getChildCount() ==1)
 								cell.remove(cell.getChildAt(0));
-								if(cell.getStyle().contentEquals(Constants.PNPlaceShape)){
-									cell.setStyle(Constants.PNTransitionShape);
+								if(cell.getStyle().contentEquals(MXConstants.PNPlaceShape)){
+									cell.setStyle(MXConstants.PNTransitionShape);
 									cell.setValue(null);
 								}
-								else if(cell.getStyle().contentEquals(Constants.PNTransitionShape)){
-									cell.setStyle(Constants.PNPlaceShape);
+								else if(cell.getStyle().contentEquals(MXConstants.PNTransitionShape)){
+									cell.setStyle(MXConstants.PNPlaceShape);
 									cell.setValue(null);
 								}
 							}

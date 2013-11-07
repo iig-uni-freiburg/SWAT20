@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.gui;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 /**
  * $Id: mxConstants.java,v 1.71 2011-07-18 15:28:02 david Exp $

@@ -1,10 +1,10 @@
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 import java.util.ArrayList;
 
 import com.mxgraph.model.mxCell;
 
-import de.unifreiburg.iig.bpworkbench2.editor.gui.ControlPanel;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
 
 public class DataHolder {
 

@@ -1,7 +1,9 @@
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 import java.io.Serializable;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import de.unifreiburg.iig.bpworkbench2.editor.soul.Utils;
 
 //needs revision
 public class NodeInfo implements Serializable {

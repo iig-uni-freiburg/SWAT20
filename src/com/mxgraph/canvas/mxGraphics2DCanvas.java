@@ -52,7 +52,7 @@ import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 /**
  * An implementation of a canvas that uses Graphics2D for painting.
@@ -110,8 +110,8 @@ public class mxGraphics2DCanvas extends mxBasicCanvas
 		putTextShape(TEXT_SHAPE_HTML, new mxHtmlTextShape());
 		
 		//customized shapes
-		putShape( Constants.PNPlace, new PNPlaceShape());
-		putShape(Constants.PNTransition, new PNTransitionShape());
+		putShape( MXConstants.PNPlace, new PNPlaceShape());
+		putShape(MXConstants.PNTransition, new PNTransitionShape());
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.gui;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 //import math.Tree;
 import java.awt.event.*;

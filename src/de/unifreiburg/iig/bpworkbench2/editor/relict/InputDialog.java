@@ -1,11 +1,10 @@
-package de.unifreiburg.iig.bpworkbench2.editor.gui;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
 
-import de.unifreiburg.iig.bpworkbench2.editor.soul.CellInfo;
 
 public class InputDialog extends JDialog {
 

@@ -19,8 +19,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.CPNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.CWNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.IFNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PTNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.IFNetEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
@@ -114,7 +114,7 @@ public class UserFile extends File {
 			// distinguish between different net-types to choose corresponding
 			// editor
 			if (netContainer instanceof GraphicalPTNet) {
-				editor = new PTNEditor((GraphicalPTNet) netContainer);
+				editor = new PNEditor((GraphicalPTNet) netContainer);
 			}
 
 			if (petriNet instanceof CPN) {
@@ -127,7 +127,7 @@ public class UserFile extends File {
 			}
 
 			if (petriNet instanceof IFNet) {
-				editor = new IFNEditor(netContainer);
+				editor = new IFNetEditor(netContainer);
 			}
 
 			// editor = new PNMLEditor(this);

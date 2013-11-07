@@ -1,73 +1,108 @@
 package de.unifreiburg.iig.bpworkbench2.editor.properties;
 
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
+import de.invation.code.toval.graphic.RestrictedTextField;
 import de.invation.code.toval.validate.ParameterException;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.GraphProperties;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
+import de.invation.code.toval.validate.Validate;
+import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties.FieldType;
 
 
 
-public class PropertiesView extends JPanel{
-	
-	
-	/**
-	 * 
-	 */
+public class PropertiesView extends JPanel implements PNPropertiesListener{
+
 	private static final long serialVersionUID = 1L;
-	private JTextField label;
-	private JTextField size_x;
-	protected PTProperties properties =  null;
+	
+	protected Map<String, PropertiesField> placeFields = new HashMap<String,PropertiesField>();
+	protected Map<String, PropertiesField> transitionFields = new HashMap<String,PropertiesField>();
+	protected Map<String, PropertiesField> arcFields = new HashMap<String,PropertiesField>();
+	
+	protected PNProperties properties =  null;
 
-	public PropertiesView(PTProperties properties){
+	public PropertiesView(PNProperties properties) throws ParameterException{
+		Validate.notNull(properties);
 		this.properties = properties;
-//		setName("Properties");
-//		JMenuItem menuItem = new JMenuItem("Edit Place");
-//		add(menuItem);
-//		
-//		label = new JTextField("name");
-//		label.addActionListener(new java.awt.event.ActionListener() {
-//	            public void actionPerformed(java.awt.event.ActionEvent e) {
-//	            	System.out.println(((JTextField)e.getSource()).getText() + "########");
-//	    			try {
-//						GraphProperties.getInstance().setName(((JTextField)e.getSource()).getText());
-//					} catch (ParameterException e1) {
-//						e1.printStackTrace();
-//					}
-//
-//	            }
-//	        });
-//add(label);
-//
-//
-//size_x = new JTextField("xxxx");
-//size_x.addActionListener(new java.awt.event.ActionListener() {
-//        public void actionPerformed(java.awt.event.ActionEvent e) {
-//        	System.out.println(((JTextField)e.getSource()).getText() + "########");
-//			try {
-//				GraphProperties.getInstance().setSizeX(((JTextField)e.getSource()).getText());
-//			} catch (ParameterException e1) {
-//				e1.printStackTrace();
-//			}
-//
-//        }
-//    });
-//
-//add(size_x);
-
-
-
-
+		setUpGUI();
 	}
+	
+	protected void setUpGUI() throws ParameterException{
+		for(String placeName: properties.getPlaceNames()){
+			for(PNProperty placeProperty: properties.getPlaceProperties()){
+				placeFields.put(placeName, new PropertiesField(FieldType.PLACE, placeName, properties.getValue(FieldType.PLACE, placeName, placeProperty), placeProperty));
+			}
+		}
+		for(String transitionName: properties.getTransitionNames()){
+			for(PNProperty transitionProperty: properties.getTransitionProperties()){
+				transitionFields.put(transitionName, new PropertiesField(FieldType.TRANSITION, transitionName, properties.getValue(FieldType.TRANSITION, transitionName, transitionProperty), transitionProperty));
+			}
+		}
+		for(String arcName: properties.getArcNames()){
+			for(PNProperty arcProperty: properties.getArcProperties()){
+				arcFields.put(arcName, new PropertiesField(FieldType.ARC, arcName, properties.getValue(FieldType.ARC, arcName, arcProperty), arcProperty));
+			}
+		}
+	}
+	
+	protected void propertiesFieldValueChanged(FieldType fieldType, String name, PNProperty property, String oldValue, String newValue) {
+		try {
+			properties.setValue(this, fieldType, name, property, newValue);
+		} catch (ParameterException e1) {
+			switch(fieldType){
+			case PLACE:
+				placeFields.get(name).setText(oldValue);
+				break;
+			case TRANSITION:
+				transitionFields.get(name).setText(oldValue);
+				break;
+			case ARC:
+				arcFields.get(name).setText(oldValue);
+				break;
+			}
+		}
+	}
+	
+	@Override
+	public void propertyChange(PNChangeEvent event) {
+		if(event.getSource() != this){
+			switch(event.getFieldType()){
+			case PLACE:
+				placeFields.get(event.getName()).setText(event.getNewValue().toString());
+				break;
+			case TRANSITION:
+				transitionFields.get(event.getName()).setText(event.getNewValue().toString());
+				break;
+			case ARC:
+				arcFields.get(event.getName()).setText(event.getNewValue().toString());
+				break;
+			}
+		}
+	}
+	
+	private class PropertiesField extends RestrictedTextField {
+		
+		private static final long serialVersionUID = -2791152505686200734L;
+		
+		private FieldType type = null;
+		private PNProperty property = null;
+		private String name = null;
+
+		public PropertiesField(FieldType type, String name, String text, PNProperty property) {
+			super(property.getRestriction(), text);
+			this.type = type;
+			this.property = property;
+			this.name = name;
+		}
+
+		@Override
+		protected void valueChanged(String oldValue, String newValue) {
+			propertiesFieldValueChanged(type, name, property, oldValue, newValue);
+		}
+		
+	}
+	
+	
    
 }

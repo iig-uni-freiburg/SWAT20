@@ -5,11 +5,12 @@ import javax.swing.*;
 import com.mxgraph.swing.util.mxGraphActions;
 
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.*;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
+import de.unifreiburg.iig.bpworkbench2.editor.relict.MenuBar;
+import de.unifreiburg.iig.bpworkbench2.editor.relict.Properties;
 
 public class PopupMenu extends JPopupMenu {
 
-    public PopupMenu(PTNEditor ptnEditor) {
+    public PopupMenu(PNEditor ptnEditor) {
         boolean selected = !ptnEditor.getGraphComponent().getGraph().isSelectionEmpty();
 
         add(ptnEditor.bind("Undo", new HistoryAction(true),

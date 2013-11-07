@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 public class mxSwingConstants
 {
@@ -104,17 +104,17 @@ public class mxSwingConstants
 		try
 		{
 			mxSwingConstants.SHADOW_COLOR = Color.gray;
-			mxSwingConstants.DEFAULT_VALID_COLOR = Constants.bluehigh;
+			mxSwingConstants.DEFAULT_VALID_COLOR = MXConstants.bluehigh;
 			mxSwingConstants.DEFAULT_INVALID_COLOR = Color.RED;
 			mxSwingConstants.RUBBERBAND_BORDERCOLOR = new Color(51, 153, 255);
 			mxSwingConstants.RUBBERBAND_FILLCOLOR = new Color(51, 153, 255, 80);
 			mxSwingConstants.HANDLE_BORDERCOLOR = Color.black;
-			mxSwingConstants.HANDLE_FILLCOLOR = Constants.bluelow;
+			mxSwingConstants.HANDLE_FILLCOLOR = MXConstants.bluelow;
 			mxSwingConstants.LABEL_HANDLE_FILLCOLOR = Color.orange;
-			mxSwingConstants.LOCKED_HANDLE_FILLCOLOR = Constants.bluelow;
-			mxSwingConstants.CONNECT_HANDLE_FILLCOLOR = Constants.bluelow;
-			mxSwingConstants.EDGE_SELECTION_COLOR = Constants.bluelow;
-			mxSwingConstants.VERTEX_SELECTION_COLOR = Constants.bluelow;
+			mxSwingConstants.LOCKED_HANDLE_FILLCOLOR = MXConstants.bluelow;
+			mxSwingConstants.CONNECT_HANDLE_FILLCOLOR = MXConstants.bluelow;
+			mxSwingConstants.EDGE_SELECTION_COLOR = MXConstants.bluelow;
+			mxSwingConstants.VERTEX_SELECTION_COLOR = MXConstants.bluelow;
 		}
 		catch (Exception e)
 		{

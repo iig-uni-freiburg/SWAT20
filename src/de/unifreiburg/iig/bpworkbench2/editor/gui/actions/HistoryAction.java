@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PTNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
 
 public class HistoryAction extends AbstractAction {
@@ -16,19 +16,19 @@ public class HistoryAction extends AbstractAction {
         this.undo = undo;
     }
 
-    public static PTNEditor getEditor(ActionEvent e) {
+    public static PNEditor getEditor(ActionEvent e) {
         if (e.getSource() instanceof Component) {
             Component component = (Component) e.getSource();
-            while (component != null && !(component instanceof PTNEditor)) {
+            while (component != null && !(component instanceof PNEditor)) {
                 component = component.getParent();
             }
-            return (PTNEditor) component;
+            return (PNEditor) component;
         }
         return null;
     }
 
     public void actionPerformed(ActionEvent e) {
-        PTNEditor editor = getEditor(e);
+        PNEditor editor = getEditor(e);
 
         if (editor != null) {
             if (undo) {

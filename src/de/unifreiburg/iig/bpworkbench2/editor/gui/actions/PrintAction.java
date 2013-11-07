@@ -23,25 +23,25 @@ import com.mxgraph.util.png.mxPngEncodeParam;
 import com.mxgraph.util.png.mxPngImageEncoder;
 import com.mxgraph.view.mxGraph;
 
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PTNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.relict.Properties;
 
 public class PrintAction extends AbstractAction {
 
     protected boolean showDialog, success;
-    protected String lastDir = de.unifreiburg.iig.bpworkbench2.editor.soul.Properties.getInstance().getLastDir();
+    protected String lastDir = de.unifreiburg.iig.bpworkbench2.editor.relict.Properties.getInstance().getLastDir();
 
     public PrintAction() {
     
     }
 
-    public static PTNEditor getEditor(ActionEvent e) {
+    public static PNEditor getEditor(ActionEvent e) {
         if (e.getSource() instanceof Component) {
             Component component = (Component) e.getSource();
-            while (component != null && !(component instanceof PTNEditor)) {
+            while (component != null && !(component instanceof PNEditor)) {
                 component = component.getParent();
             }
-            return (PTNEditor) component;
+            return (PNEditor) component;
         }
         return null;
     }
@@ -82,7 +82,7 @@ public class PrintAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         success = false;
         System.out.println("\n//PRINT NET INFORMATION//\n");
-        PTNEditor editor = getEditor(e);
+        PNEditor editor = getEditor(e);
        System.out.println(editor.getNetContainer().getPetriNet());
        System.out.println(editor.getNetContainer().getPetriNetGraphics());
        System.out.println("////////////////////////");

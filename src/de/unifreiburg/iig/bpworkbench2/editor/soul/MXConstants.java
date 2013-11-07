@@ -2,9 +2,9 @@ package de.unifreiburg.iig.bpworkbench2.editor.soul;
 
 import java.awt.Color;
 
-import de.unifreiburg.iig.bpworkbench2.editor.gui.mxConstants;
+import de.unifreiburg.iig.bpworkbench2.editor.relict.mxConstants;
 
-public abstract class Constants {
+public abstract class MXConstants {
 
     public static final String CONTAINER = "container";
     public static final String PLACE = "place";
@@ -25,13 +25,11 @@ public abstract class Constants {
 	public static final Color blueBG = new Color(234, 243, 252);
     
 	public static final String PNPlace = "pnPlace";
-	public static final String PNPlaceShape = "shape=" + PNPlace + ";"  +"fillColor="+Integer.toHexString(Constants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(Constants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(Constants.blueBG.getRGB())+";";
+	public static final String PNPlaceShape = "shape=" + PNPlace + ";"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 	public static final String PNTransition = "pnTransition";
-	public static final String PNTransitionShape = "shape=" + PNTransition + ";"  +"fillColor="+Integer.toHexString(Constants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(Constants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(Constants.blueBG.getRGB())+";";
+	public static final String PNTransitionShape = "shape=" + PNTransition + ";"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 	public static final String PlaceNamePrefix = "p";
 	public static final String TransitionNamePrefix = "t";
-	public static final String PNLabelStyle ="shape=none;fontSize=12;fontColor="+ Integer.toHexString(Constants.bluelow.getRGB())+ ";";
- 
-
+	public static final String PNLabelStyle ="shape=none;fontSize=12;fontColor="+ Integer.toHexString(MXConstants.bluelow.getRGB())+ ";";
 	
 }

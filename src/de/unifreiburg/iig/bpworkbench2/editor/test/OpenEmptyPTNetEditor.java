@@ -19,14 +19,14 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.CPNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.CWNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.IFNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PTNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.IFNetEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
 
 public class OpenEmptyPTNetEditor {
 	
-	public final static String PNML = PTNEditor.class.getResource(
+	public final static String PNML = PNEditor.class.getResource(
 			"/samples/samplePTnet.pnml").getPath();
-	public final static String LABELING = PTNEditor.class.getResource(
+	public final static String LABELING = PNEditor.class.getResource(
 			"/samples/sampleIFnetLabeling01.xml").getPath();
 
 	public static void main(String[] args) throws IOException, ParserException, ParameterException {
@@ -43,7 +43,7 @@ public class OpenEmptyPTNetEditor {
 		 * inserting its File-Object
 		 */
 		// panel = new PNMLEditor(null);
-		String filePath = PTNEditor.class.getResource(
+		String filePath = PNEditor.class.getResource(
 				"/samples/samplePTnet.pnml").getPath();
 
 		
@@ -75,7 +75,7 @@ public class OpenEmptyPTNetEditor {
 		
 		//distinguish between different net-types
 		if (petriNet instanceof PTNet) {
-			panel = new PTNEditor(null);
+			panel = new PNEditor(null);
 
 		}
 
@@ -89,7 +89,7 @@ public class OpenEmptyPTNetEditor {
 		}
 
 		if (petriNet instanceof IFNet) {
-			panel = new IFNEditor(netContainer);
+			panel = new IFNetEditor(netContainer);
 		}
 		
 		

@@ -11,9 +11,9 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.*;
-import de.unifreiburg.iig.bpworkbench2.editor.mxgraphmod.util.png.mxPNGzTXtDecoder;
+import de.unifreiburg.iig.bpworkbench2.editor.relict.Properties;
+import de.unifreiburg.iig.bpworkbench2.editor.relict.mxgraphmod.util.png.mxPNGzTXtDecoder;
 import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

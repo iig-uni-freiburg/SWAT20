@@ -10,11 +10,13 @@ import com.mxgraph.model.*;
 import com.mxgraph.swing.util.*;
 import com.mxgraph.util.*;
 
-public class Palette extends JPanel {
+import de.unifreiburg.iig.bpworkbench2.editor.relict.mxConstants;
+
+public class PalettePanel extends JPanel {
 
     protected JLabel selectedEntry = null;
 
-    public Palette() {
+    public PalettePanel() {
         setLayout(new GridLayout(getComponentCount(), 1));
     }
 
@@ -75,7 +77,7 @@ public class Palette extends JPanel {
 
         final JLabel entry = new JLabel(icon);
         entry.setPreferredSize(new Dimension(50, 50));
-        entry.setBackground(Palette.this.getBackground().brighter());
+        entry.setBackground(PalettePanel.this.getBackground().brighter());
         entry.setFont(new Font(entry.getFont().getFamily(), 0, 10));
 
         entry.setVerticalTextPosition(JLabel.BOTTOM);

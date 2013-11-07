@@ -1,7 +1,9 @@
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 import java.awt.*;
 import javax.swing.*;
+
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 
 public class WrapFactory {
@@ -35,12 +37,12 @@ public class WrapFactory {
         history.add(new JLabel("Legend:"), "wrap");
         JLabel label = createLegendLabel("common", Color.white);
         history.add(label);
-        label = createLegendLabel("root", Color.decode(Constants.ROOT_COLOR));
+        label = createLegendLabel("root", Color.decode(MXConstants.ROOT_COLOR));
         label.setForeground(Color.WHITE);
         history.add(label, "wrap");
-        label = createLegendLabel("terminal", Color.decode(Constants.TERMINAL_COLOR));
+        label = createLegendLabel("terminal", Color.decode(MXConstants.TERMINAL_COLOR));
         history.add(label);
-        label = createLegendLabel("immediate", Color.decode(Constants.IMMEDIATE_COLOR));
+        label = createLegendLabel("immediate", Color.decode(MXConstants.IMMEDIATE_COLOR));
         history.add(label, "wrap");
         label = createLegendLabel("<html><b> covering </b></html>", Color.white);
         history.add(label);

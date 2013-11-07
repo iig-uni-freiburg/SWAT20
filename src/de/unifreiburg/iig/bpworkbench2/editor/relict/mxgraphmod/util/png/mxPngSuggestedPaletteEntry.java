@@ -31,7 +31,7 @@
  * You acknowledge that Software is not designed,licensed or intended for use in 
  * the design, construction, operation or maintenance of any nuclear facility.
  */
-package de.unifreiburg.iig.bpworkbench2.editor.mxgraphmod.util.png;
+package de.unifreiburg.iig.bpworkbench2.editor.relict.mxgraphmod.util.png;
 
 import java.io.Serializable;
 

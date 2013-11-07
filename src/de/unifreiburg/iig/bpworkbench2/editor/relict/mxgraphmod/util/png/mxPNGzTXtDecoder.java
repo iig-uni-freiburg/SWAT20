@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.mxgraphmod.util.png;
+package de.unifreiburg.iig.bpworkbench2.editor.relict.mxgraphmod.util.png;
 
 /**
  * $Id: mxPNGzTXtDecoder.java,v 1.3 2010-08-09 10:46:51 david Exp $

@@ -37,7 +37,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 /**
  * Implements a view for the graph. This class is in charge of computing the
@@ -156,7 +156,7 @@ public void addAnnotationGraphics(mxCellState state) {
 		}
 	Map<String, AnnotationGraphics> labelAnnotationGraphics = null;
 	System.out.println(cell.getValue() + cell.getStyle());
-	if (cell.getStyle()!=null && cell.getStyle().contentEquals(Constants.PNPlaceShape)) {
+	if (cell.getStyle()!=null && cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
 		if (n.getPetriNetGraphics().getPlaceLabelAnnotationGraphics() == null)
 			labelAnnotationGraphics = new HashMap<String, AnnotationGraphics>();
 	 else {
@@ -167,7 +167,7 @@ public void addAnnotationGraphics(mxCellState state) {
 				labelAnnotationGraphics);
 	}
 	
-	if (cell.getStyle()!=null &&cell.getStyle().contentEquals(Constants.PNTransitionShape)) {
+	if (cell.getStyle()!=null &&cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
 		if (n.getPetriNetGraphics().getTransitionLabelAnnotationGraphics() == null)
 			labelAnnotationGraphics = new HashMap<String, AnnotationGraphics>();
 	 else {

@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.gui;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 import java.awt.*;
 import java.awt.event.*;

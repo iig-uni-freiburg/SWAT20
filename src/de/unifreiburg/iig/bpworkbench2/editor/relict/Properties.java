@@ -1,6 +1,8 @@
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 import java.io.*;
+
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 public class Properties implements Serializable {
 
@@ -19,7 +21,7 @@ public class Properties implements Serializable {
     public static Properties getInstance() {
         if (instance == null) {
             try {
-                FileInputStream fis = new FileInputStream(Constants.CONFIG_FILE);
+                FileInputStream fis = new FileInputStream(MXConstants.CONFIG_FILE);
                 ObjectInputStream oin = new ObjectInputStream(fis);
                 instance = (Properties) oin.readObject();
             } catch (Exception ex) {

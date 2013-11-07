@@ -1,6 +1,8 @@
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 import java.io.Serializable;
+
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 public class CellInfo implements Serializable {
 
@@ -16,24 +18,24 @@ public class CellInfo implements Serializable {
     }
 
     public CellInfo(String name) {
-        this.type = Constants.CONTAINER;
+        this.type = MXConstants.CONTAINER;
         this.name = name;
     }
 
     public CellInfo(int marks) {
-        this.type = Constants.PLACE;
+        this.type = MXConstants.PLACE;
         this.marks = marks;
     }
 
     public CellInfo(double variance, double lambda) {
-        this.type = Constants.TRANSITION;
+        this.type = MXConstants.TRANSITION;
         this.variance = variance;
         this.lambda = lambda;
         this.immediate = (variance == 0.0);
     }
 
     public CellInfo(double variance, double lambda, double probability) {
-        this.type = Constants.TRANSITION;
+        this.type = MXConstants.TRANSITION;
         this.variance = variance;
         this.lambda = lambda;
         this.probability = (probability > 1.0 || probability < 0) ? 0.0 : probability;
@@ -101,21 +103,21 @@ public class CellInfo implements Serializable {
     }
 
     public boolean isTransition() {
-        return (type.equals(Constants.TRANSITION)) ? true : false;
+        return (type.equals(MXConstants.TRANSITION)) ? true : false;
     }
 
     public boolean isContainer() {
-        return (type.equals(Constants.CONTAINER)) ? true : false;
+        return (type.equals(MXConstants.CONTAINER)) ? true : false;
     }
 
     public boolean isPlace() {
-        return (type.equals(Constants.PLACE)) ? true : false;
+        return (type.equals(MXConstants.PLACE)) ? true : false;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (this.type.equals(Constants.PLACE)) {
+        if (this.type.equals(MXConstants.PLACE)) {
             for (int i = 0; i < marks && marks <= 5; i++) {
                 sb.append("•");
                 if ((i == 0 && marks == 3) || (i == 1 && marks > 3)) {
@@ -126,11 +128,11 @@ public class CellInfo implements Serializable {
                 sb.append(marks);
             }
         }
-        if (this.type.equals(Constants.TRANSITION) && !this.immediate) {
+        if (this.type.equals(MXConstants.TRANSITION) && !this.immediate) {
             sb.append("p:");
             sb.append(probability);
         }
-        if (this.type.equals(Constants.CONTAINER)) {
+        if (this.type.equals(MXConstants.CONTAINER)) {
             sb.append(name);
         }
         return sb.toString();

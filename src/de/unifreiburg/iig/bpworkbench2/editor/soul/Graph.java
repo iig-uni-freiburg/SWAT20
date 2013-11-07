@@ -1,7 +1,5 @@
 package de.unifreiburg.iig.bpworkbench2.editor.soul;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,53 +10,45 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import com.mxgraph.layout.mxParallelEdgeLayout;
-import com.mxgraph.model.*;
-import com.mxgraph.util.*;
-import com.mxgraph.view.*;
+import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.view.mxCellState;
+import com.mxgraph.view.mxConnectionConstraint;
+import com.mxgraph.view.mxGraph;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Dimension;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Shape;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
 
 public class Graph extends mxGraph {
 
-	private DataHolder dataHolder;
-	AbstractGraphicalPN<?, ?, ?, ?, ?, ? , ?> n ;
-	int i = 0;
+	AbstractGraphicalPN<?, ?, ?, ?, ?, ? , ?> netContainer = null;
 
-	public Graph() {
+	public Graph(AbstractGraphicalPN<?, ?, ?, ?, ?, ? , ?> netContainer) throws ParameterException {
+		Validate.notNull(netContainer);
+		
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
 		setCellsEditable(false);
 		setDisconnectOnMove(false);
-
 		setExtendParents(false); // disables extending parents after adding
 		setVertexLabelsMovable(true);
-		  BasicStroke selectionStroke = new BasicStroke(1.0f);
-		    Color selectionColor = Color.RED;
-		    
-		
-
 	}
-
-
 
 	@Override
 	public void cellConnected(Object edge, Object terminal, boolean source,
@@ -66,7 +56,7 @@ public class Graph extends mxGraph {
 		super.cellConnected(edge, terminal, source, constraint);
 		System.out.println(isCellBendable(edge)+"#########Bend");
 		System.out.println(isCellEditable(edge));
-//setCellE
+		//setCellE
 		// making edges parallel
 		mxParallelEdgeLayout layout = new mxParallelEdgeLayout(this);
 		layout.execute(getDefaultParent());
@@ -88,31 +78,31 @@ public class Graph extends mxGraph {
 					edgeTarget.setId(edgeSource.getId());
 				isDNDgenerated = true;	
 				}
-				if (edgeSource.getStyle().contentEquals(Constants.PNPlaceShape) && !isDNDgenerated && (((mxCell) edge).getValue() == ""))
-					addPTArcToPN((mxCell) edge, edgeSource, edgeTarget, n);
-				if (edgeTarget.getStyle().contentEquals(Constants.PNTransitionShape) && isDNDgenerated) {
-					String prefix = Constants.TransitionNamePrefix;
+				if (edgeSource.getStyle().contentEquals(MXConstants.PNPlaceShape) && !isDNDgenerated && (((mxCell) edge).getValue() == ""))
+					addPTArcToPN((mxCell) edge, edgeSource, edgeTarget, netContainer);
+				if (edgeTarget.getStyle().contentEquals(MXConstants.PNTransitionShape) && isDNDgenerated) {
+					String prefix = MXConstants.TransitionNamePrefix;
 					String nodeName = null;
-					try {nodeName = addPNNode(edgeTarget, n, prefix);
+					try {nodeName = addPNNode(edgeTarget, netContainer, prefix);
 					} catch (ParameterException e) {e.printStackTrace();}
-					addLabelToNode(edgeTarget, n, nodeName);
-					addPTArcToPN((mxCell) edge, edgeSource, edgeTarget, n);
-					addGraphicalInfoToPN(edgeTarget, n, nodeName);
-					addGraphicalInfoToPN((mxCell) edge, n, ((mxCell)edge).getId());
+					addLabelToNode(edgeTarget, netContainer, nodeName);
+					addPTArcToPN((mxCell) edge, edgeSource, edgeTarget, netContainer);
+					addGraphicalInfoToPN(edgeTarget, netContainer, nodeName);
+					addGraphicalInfoToPN((mxCell) edge, netContainer, ((mxCell)edge).getId());
 
 
 				}
-				if (edgeSource.getStyle().contentEquals(Constants.PNTransitionShape)&& !isDNDgenerated && (((mxCell) edge).getValue() == ""))
-					addTPArcToPN(edge, edgeSource, edgeTarget, n);				
-				if (edgeTarget.getStyle().contentEquals(Constants.PNPlaceShape)&& isDNDgenerated) {
-					String prefix = Constants.PlaceNamePrefix;
+				if (edgeSource.getStyle().contentEquals(MXConstants.PNTransitionShape)&& !isDNDgenerated && (((mxCell) edge).getValue() == ""))
+					addTPArcToPN(edge, edgeSource, edgeTarget, netContainer);				
+				if (edgeTarget.getStyle().contentEquals(MXConstants.PNPlaceShape)&& isDNDgenerated) {
+					String prefix = MXConstants.PlaceNamePrefix;
 					String nodeName = null;
-					try {nodeName = addPNNode(edgeTarget, n, prefix);
+					try {nodeName = addPNNode(edgeTarget, netContainer, prefix);
 					} catch (ParameterException e) {e.printStackTrace();}
-					addLabelToNode(edgeTarget, n, nodeName);
-					addTPArcToPN(edge, edgeSource, edgeTarget, n);
-					addGraphicalInfoToPN(edgeTarget, n, nodeName);
-					addGraphicalInfoToPN((mxCell) edge, n, ((mxCell)edge).getId());
+					addLabelToNode(edgeTarget, netContainer, nodeName);
+					addTPArcToPN(edge, edgeSource, edgeTarget, netContainer);
+					addGraphicalInfoToPN(edgeTarget, netContainer, nodeName);
+					addGraphicalInfoToPN((mxCell) edge, netContainer, ((mxCell)edge).getId());
 				}
 			}
 		}			
@@ -159,7 +149,7 @@ public class Graph extends mxGraph {
 		} catch (ParameterException e) {e.printStackTrace();}
 		
 		
-		if(cell.getStyle().contentEquals(Constants.PNPlaceShape)){
+		if(cell.getStyle().contentEquals(MXConstants.PNPlaceShape)){
 			if(n.getPetriNetGraphics().getPlaceGraphics() == null){
 				n.getPetriNetGraphics().setPlaceGraphics(
 						 new HashMap<String, NodeGraphics>());
@@ -167,7 +157,7 @@ public class Graph extends mxGraph {
 			n.getPetriNetGraphics().getPlaceGraphics().put(nodeName, nodeGraphics);
 			
 		}
-		if(cell.getStyle().contentEquals(Constants.PNTransitionShape)){
+		if(cell.getStyle().contentEquals(MXConstants.PNTransitionShape)){
 			if(n.getPetriNetGraphics().getTransitionGraphics() == null){
 				n.getPetriNetGraphics().setTransitionGraphics(
 						 new HashMap<String, NodeGraphics>());
@@ -211,22 +201,22 @@ public class Graph extends mxGraph {
 		super.cellsRemoved(cells);
 		for (Object object : cells) {
 			mxCell cell = (mxCell) object;
-			if (cell.getStyle().contentEquals(Constants.PNPlaceShape)) {	
+			if (cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {	
 						try {
-							n.getPetriNet().removePlace(cell.getId());
-							n.getPetriNetGraphics().getPlaceGraphics().remove(cell.getId());
-							n.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().remove(cell.getId());
+							netContainer.getPetriNet().removePlace(cell.getId());
+							netContainer.getPetriNetGraphics().getPlaceGraphics().remove(cell.getId());
+							netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().remove(cell.getId());
 						} catch (ParameterException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}	
 				}
-				if (cell.getStyle().contentEquals(Constants.PNTransitionShape)) {
+				if (cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
 						try {
 							System.out.println(cell.getId());
-							n.getPetriNet().removeTransition(cell.getId());
-							n.getPetriNetGraphics().getTransitionGraphics().remove(cell.getId());
-							n.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().remove(cell.getId());
+							netContainer.getPetriNet().removeTransition(cell.getId());
+							netContainer.getPetriNetGraphics().getTransitionGraphics().remove(cell.getId());
+							netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().remove(cell.getId());
 						} catch (ParameterException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -234,7 +224,7 @@ public class Graph extends mxGraph {
 				}
 				if (cell.getId().startsWith("arc")) {	
 						try {
-							n.getPetriNet().removeFlowRelation(cell.getId());
+							netContainer.getPetriNet().removeFlowRelation(cell.getId());
 //							n.getPetriNetGraphics().getArcGraphics().remove(cell.getId());
 						} catch (ParameterException e) {
 							// TODO Auto-generated catch block
@@ -302,16 +292,16 @@ public class Graph extends mxGraph {
 						if (cell.getParent() != null) {
 							NodeGraphics pG = null;
 							if (cell.getStyle().contentEquals(
-									Constants.PNPlaceShape)) {
-								pG = n.getPetriNetGraphics()
+									MXConstants.PNPlaceShape)) {
+								pG = netContainer.getPetriNetGraphics()
 										.getPlaceGraphics().get(cell.getId());
 								
 								updatePositionInPN(cell, pG);}
 							
 						
 						if (cell.getStyle().contentEquals(
-								Constants.PNTransitionShape)) {
-							 pG = n.getPetriNetGraphics()
+								MXConstants.PNTransitionShape)) {
+							 pG = netContainer.getPetriNetGraphics()
 									.getTransitionGraphics().get(cell.getId());
 							 updatePositionInPN(cell, pG);
 						
@@ -433,11 +423,11 @@ public void cellLabelChanged(Object cell, Object value, boolean autoSize)
 		getModel().setValue(cell, value);
 		
 		mxCell mxcell = (mxCell) cell;
-		if (mxcell.getStyle().contentEquals(Constants.PNPlaceShape)) {	
-			n.getPetriNet().getPlace(((mxCell) cell).getId()).setLabel((String) value);
+		if (mxcell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {	
+			netContainer.getPetriNet().getPlace(((mxCell) cell).getId()).setLabel((String) value);
 			}
-			if (mxcell.getStyle().contentEquals(Constants.PNTransitionShape)) {
-				n.getPetriNet().getTransition(((mxCell) cell).getId()).setLabel((String) value);
+			if (mxcell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+				netContainer.getPetriNet().getTransition(((mxCell) cell).getId()).setLabel((String) value);
 			}
 
 
@@ -665,7 +655,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 			throws ParameterException {
 		SortedMap<Integer, String> sortedMap = new TreeMap<Integer, String>();
 		Collection<?> nodeCollection = null;
-		if (edgeTarget.getStyle().contentEquals(Constants.PNTransitionShape)) {
+		if (edgeTarget.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
 			nodeCollection = n.getPetriNet().getTransitions();
 			for (Object o : nodeCollection) {
 				if (o instanceof PTTransition) {
@@ -676,7 +666,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 			n.getPetriNet().addTransition(prefix + getLowestIndex(sortedMap));
 		}
 
-		if (edgeTarget.getStyle().contentEquals(Constants.PNPlaceShape)) {
+		if (edgeTarget.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
 			nodeCollection = n.getPetriNet().getPlaces();
 			for (Object o : nodeCollection) {
 				if (o instanceof PTPlace) {
@@ -703,7 +693,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 
 
 	public void setPN(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer) {
-		this.n = netContainer;
+		this.netContainer = netContainer;
 		
 	}
 
@@ -734,11 +724,8 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 	 * @return Returns the new vertex that has been inserted.
 	 */
 	public Object insertPNVertex(Object parent, String id, Object value,
-			double x, double y, double width, double height, String style,
-			boolean relative)
-	{
-		Object vertex = createVertex(parent, id, value, x, y, width, height,
-				style, relative);
+								 double x, double y, double width, double height, String style, boolean relative){
+		Object vertex = createVertex(parent, id, value, x, y, width, height, style, relative);
 		Object result = addCell(vertex, parent);
 		addLabelAndInfo(vertex);
 		return result;
@@ -751,18 +738,17 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 
 
 					if (cell.getStyle().contentEquals(
-							Constants.PNPlaceShape)) {
-						String prefix = Constants.PlaceNamePrefix;
+							MXConstants.PNPlaceShape)) {
+						String prefix = MXConstants.PlaceNamePrefix;
 						String nodeName = null;
-						if(n.getPetriNet().getPlace(cell.getId()) ==null){
-						try {nodeName = addPNNode(cell, n, prefix);
+						if(netContainer.getPetriNet().getPlace(cell.getId()) ==null){
+						try {
+							nodeName = addPNNode(cell, netContainer, prefix);
 						} catch (ParameterException e) {e.printStackTrace();}
-						
-
-							addLabelToNode(cell, n, nodeName);
-							addGraphicalInfoToPN(cell, n, nodeName);
+							addLabelToNode(cell, netContainer, nodeName);
+							addGraphicalInfoToPN(cell, netContainer, nodeName);
 						} else {
-							cell.setValue(n.getPetriNet().getPlace(cell.getId()).getLabel());
+							cell.setValue(netContainer.getPetriNet().getPlace(cell.getId()).getLabel());
 						}
 							
 
@@ -770,17 +756,17 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 					}
 
 					if (cell.getStyle().contentEquals(
-							Constants.PNTransitionShape)) {
-						String prefix = Constants.TransitionNamePrefix;
+							MXConstants.PNTransitionShape)) {
+						String prefix = MXConstants.TransitionNamePrefix;
 						String nodeName = null;
-						if(n.getPetriNet().getTransition(cell.getId()) ==null){
-						try {nodeName = addPNNode(cell, n, prefix);
+						if(netContainer.getPetriNet().getTransition(cell.getId()) ==null){
+						try {nodeName = addPNNode(cell, netContainer, prefix);
 						} catch (ParameterException e) {e.printStackTrace();}
 						
-						addLabelToNode(cell, n, nodeName);
-						addGraphicalInfoToPN(cell, n, nodeName);
+						addLabelToNode(cell, netContainer, nodeName);
+						addGraphicalInfoToPN(cell, netContainer, nodeName);
 						} else {
-							cell.setValue(n.getPetriNet().getTransition(cell.getId()).getLabel());
+							cell.setValue(netContainer.getPetriNet().getTransition(cell.getId()).getLabel());
 						}
 					
 					}
@@ -790,13 +776,7 @@ private void addNodeToMap(Map<Integer, String> a, String string, String prefix) 
 
 		}
 	}
-
-
-
-	public Object insertVertexInPN(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net, Object object, String name, Object object2, double d, double e, double f, double g, String shape){
-		
-		n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>) net;
-		return insertPNVertex(object,name, object2,  d,  e,  f,  g, shape, false);}
+	
 @Override
 /**
  * Adds the cells to the parent at the given index, connecting each cell to

@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.soul;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
 //import math.Tree;
 import com.mxgraph.io.mxCodec;
@@ -12,6 +12,7 @@ import com.mxgraph.view.mxGraph;
 
 import de.unifreiburg.iig.bpworkbench2.editor.gui.*;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.ExitAction;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 
 import java.awt.*;
@@ -39,7 +40,7 @@ public abstract class Factory {
 
     public static JFrame createFrame() {
         JFrame frame = new JFrame();
-        final PTNEditor editor = new PTNEditor();
+        final PNEditor editor = new PNEditor();
         frame.add(editor);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
@@ -51,7 +52,7 @@ public abstract class Factory {
                 new ExitAction().actionPerformed(event);
             }
         });
-        frame.setJMenuBar(new de.unifreiburg.iig.bpworkbench2.editor.gui.MenuBar(editor));
+        frame.setJMenuBar(new de.unifreiburg.iig.bpworkbench2.editor.relict.MenuBar(editor));
         frame.setSize(870, 640);
         frame.setLocationRelativeTo(null);
         editor.updateTitle();
@@ -239,10 +240,10 @@ public abstract class Factory {
                     NodeInfo info = (NodeInfo) newnode.getUserObject();
                     String color = "#ffffff";
                     if (info.isTerminal()) {
-                        color = Constants.TERMINAL_COLOR;
+                        color = MXConstants.TERMINAL_COLOR;
                     }
                     if (info.isImmediate()) {
-                        color = Constants.IMMEDIATE_COLOR;
+                        color = MXConstants.IMMEDIATE_COLOR;
                     }
                     int fontStyle = 0;
                     fontStyle += (info.isDuplicate()) ? 2 : 0;

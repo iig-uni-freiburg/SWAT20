@@ -1,49 +1,40 @@
 package de.unifreiburg.iig.bpworkbench2.editor.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import javax.swing.BorderFactory;
+import javax.swing.JToolBar;
+import javax.swing.TransferHandler;
 
-import javax.swing.*;
-
-import com.mxgraph.swing.util.*;
-
-import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.*;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
-
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.KeyAdapter;
-
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Document;
-import javax.swing.text.DocumentFilter;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.DeleteAction;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.HistoryAction;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SaveAction;
 //import math.simulation.Simulation;
 
 public class ToolBar extends JToolBar {
 
-    public ToolBar(final PTNEditor pnmlEditor, int orientation) {
+	private static final long serialVersionUID = -6491749112943066366L;
+
+	public ToolBar(PNEditor pnEditor, int orientation) throws ParameterException {
         super(orientation);
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(3, 3, 3, 3),
-                getBorder()));
+        Validate.notNull(pnEditor);
+        
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3), getBorder()));
         setFloatable(false);
 
-        add(pnmlEditor.bind("New", new NewAction(), "/images/new.gif"));
-        add(pnmlEditor.bind("Open...", new OpenAction(), "/images/open.gif"));
-        add(pnmlEditor.bind("Save", new SaveAction(false), "/images/save.gif"));
+        add(pnEditor.bind("Save", new SaveAction(pnEditor), "/images/save.gif"));
         addSeparator();
 
-        add(pnmlEditor.bind("Cut", TransferHandler.getCutAction(), "/images/cut.gif"));
-        add(pnmlEditor.bind("Copy", TransferHandler.getCopyAction(), "/images/copy.gif"));
-        add(pnmlEditor.bind("Paste", TransferHandler.getPasteAction(), "/images/paste.gif"));
+        add(pnEditor.bind("Cut", TransferHandler.getCutAction(), "/images/cut.gif"));
+        add(pnEditor.bind("Copy", TransferHandler.getCopyAction(), "/images/copy.gif"));
+        add(pnEditor.bind("Paste", TransferHandler.getPasteAction(), "/images/paste.gif"));
         addSeparator();
 
-        add(pnmlEditor.bind("Delete", new DeleteAction("delete"), "/images/delete.gif"));
+        add(pnEditor.bind("Delete", new DeleteAction("delete"), "/images/delete.gif"));
         addSeparator();
 
-        add(pnmlEditor.bind("Undo", new HistoryAction(true), "/images/undo.gif"));
-        add(pnmlEditor.bind("Redo", new HistoryAction(false), "/images/redo.gif"));
+        add(pnEditor.bind("Undo", new HistoryAction(true), "/images/undo.gif"));
+        add(pnEditor.bind("Redo", new HistoryAction(false), "/images/redo.gif"));
 
         addSeparator();
 //        Action temp = new AbstractAction("", new ImageIcon(Editor.class.getResource("/images/connector.gif"))) {

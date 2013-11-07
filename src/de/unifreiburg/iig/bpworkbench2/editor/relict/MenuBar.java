@@ -1,26 +1,28 @@
-package de.unifreiburg.iig.bpworkbench2.editor.gui;
+package de.unifreiburg.iig.bpworkbench2.editor.relict;
 
-import java.awt.event.*;
-import java.io.File;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
+import javax.swing.TransferHandler;
 
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
-
-
-
-
-import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.*;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.SetStyleAction;
+import de.unifreiburg.iig.bpworkbench2.editor.gui.actions.ToggleAction;
 
 public class MenuBar extends JMenuBar {
 
-    public MenuBar(final PTNEditor editor) {
+    public MenuBar(final PNEditor editor) {
         final mxGraphComponent graphComponent = editor.getGraphComponent();
         final mxGraph graph = graphComponent.getGraph();
         JMenu menu = null;
@@ -205,7 +207,7 @@ public class MenuBar extends JMenuBar {
         });
     }
 
-    public static void populateFormatMenu(JMenu menu, PTNEditor pnmlEditor) {
+    public static void populateFormatMenu(JMenu menu, PNEditor pnmlEditor) {
         JMenu submenu = (JMenu) menu.add(new JMenu("Label"));
         submenu.add(pnmlEditor.bind("Rotate Label",
                 new ToggleAction(mxConstants.STYLE_HORIZONTAL, true)));

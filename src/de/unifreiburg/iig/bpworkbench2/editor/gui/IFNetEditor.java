@@ -3,30 +3,28 @@ package de.unifreiburg.iig.bpworkbench2.editor.gui;
 import java.io.File;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalCPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;
 
-public class CPNEditor extends PNEditor {
+public class IFNetEditor extends CPNEditor {
 
-	private static final long serialVersionUID = 7463202384539027183L;
-
-	public CPNEditor(File fileReference) throws ParameterException {
+	public IFNetEditor(File fileReference) throws ParameterException {
 		super(fileReference);
 	}
 
-	public CPNEditor(AbstractGraphicalCPN netContainer, File fileReference) throws ParameterException {
+	public IFNetEditor(GraphicalIFNet netContainer, File fileReference) throws ParameterException {
 		super(netContainer, fileReference);
 	}
 
 	@Override
-	public AbstractGraphicalCPN getNetContainer() {
-		return (AbstractGraphicalCPN) super.getNetContainer();
+	public GraphicalIFNet getNetContainer() {
+		return (GraphicalIFNet) super.getNetContainer();
 	}
 
 	@Override
 	protected PNProperties createPNProperties() {
-		//TODO:		return new CPNProperties(getNetContainer());
+		//TODO:		return new IFNetProperties(getNetContainer());
 		return null;
 	}
 
@@ -39,9 +37,9 @@ public class CPNEditor extends PNEditor {
 
 	@Override
 	protected PNProperties getPNProperties() {
-		//TODO:		return (CPNProperties) super.getPNProperties();
+		//TODO:		return (IFNetProperties) super.getPNProperties();
 		return null;
 	}
 	
-	
+
 }

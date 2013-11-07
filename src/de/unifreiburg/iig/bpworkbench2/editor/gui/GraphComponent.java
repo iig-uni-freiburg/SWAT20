@@ -1,59 +1,45 @@
 package de.unifreiburg.iig.bpworkbench2.editor.gui;
 
-import com.mxgraph.io.mxCodec;
-import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.swing.handler.mxConnectionHandler;
-import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxCellState;
-
-import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.CellInfo;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Constants;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.GraphProperties;
-import de.unifreiburg.iig.bpworkbench2.editor.soul.Properties;
-
-import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeSupport;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
-import javax.swing.SwingUtilities;
 
 import org.w3c.dom.Document;
+
+import com.mxgraph.io.mxCodec;
+import com.mxgraph.model.mxCell;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxUtils;
+import com.mxgraph.view.mxCellState;
+
+import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.Graph;
+import de.unifreiburg.iig.bpworkbench2.editor.soul.MXConstants;
 
 /**
  *
  */
 public class GraphComponent extends mxGraphComponent {
 
-    public GraphComponent(final Graph graph) {
+    public GraphComponent(Graph graph) {
         super(graph);
 
         setGridStyle(mxGraphComponent.GRID_STYLE_LINE);
-        setGridColor(Constants.bluehigh);
-		setBackground(Constants.blueBG);
+        setGridColor(MXConstants.bluehigh);
+		setBackground(MXConstants.blueBG);
 
         setGridVisible(true);
 
     
 		getConnectionHandler().setCreateTarget(true);
         mxCodec codec = new mxCodec();
-        Document doc = mxUtils.loadDocument(PTNEditor.class.getResource(
+        Document doc = mxUtils.loadDocument(PNEditor.class.getResource(
                 "/default-style.xml").toString());
         codec.decode(doc.getDocumentElement(), graph.getStylesheet());
         getGraphControl().addMouseListener(new MouseAdapter() {
@@ -69,7 +55,7 @@ public class GraphComponent extends mxGraphComponent {
             			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>)  cell.getParent().getValue();
             			PTPlace place = (PTPlace) n.getPetriNet().getPlace(((mxCell)cell).getId());
 
-                        if (cell.getStyle().contentEquals(Constants.PNPlaceShape)) {
+                        if (cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
                             String marks = JOptionPane.showInputDialog(
                                     "Input new amount of marks");
                             if (marks != null) {

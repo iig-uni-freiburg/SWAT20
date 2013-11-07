@@ -2,7 +2,7 @@
  * $Id: mxPngTextDecoder.java,v 1.1 2012/11/15 13:26:39 gaudenz Exp $
  * Copyright (c) 2010, David Benson, Gaudenz Alder
  */
-package de.unifreiburg.iig.bpworkbench2.editor.mxgraphmod.util.png;
+package de.unifreiburg.iig.bpworkbench2.editor.relict.mxgraphmod.util.png;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
