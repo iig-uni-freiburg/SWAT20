@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.gui;
+package de.unifreiburg.iig.bpworkbench2.editor.graph;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -19,8 +19,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
+import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
 
 /**
  *

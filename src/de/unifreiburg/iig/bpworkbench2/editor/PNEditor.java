@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.gui;
+package de.unifreiburg.iig.bpworkbench2.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -56,6 +56,7 @@ import de.unifreiburg.iig.bpworkbench2.editor.actions.HistoryAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.PrintAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
+import de.unifreiburg.iig.bpworkbench2.editor.graph.GraphComponent;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PNChangeEvent;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;

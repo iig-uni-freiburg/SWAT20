@@ -9,8 +9,8 @@ import java.util.Properties;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
+import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
 
 public class ExitAction extends AbstractAction {
 

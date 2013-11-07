@@ -20,10 +20,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.CPNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.CPNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.IFNetEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.gui.CWNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.IFNetEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
 
 public class testGui {
 	

@@ -4,7 +4,7 @@ import javax.swing.AbstractAction;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
 
 public abstract class AbstractPNEditorAction extends AbstractAction {
 

@@ -2,7 +2,7 @@
  * $Id: mxConnectionHandler.java,v 1.1 2012/11/15 13:26:44 gaudenz Exp $
  * Copyright (c) 2008, Gaudenz Alder
  */
-package de.unifreiburg.iig.bpworkbench2.editor.gui;
+package de.unifreiburg.iig.bpworkbench2.editor.graph;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -36,7 +36,6 @@ import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 
 import de.uni.freiburg.iig.telematik.jagal.graph.Vertex;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
 
 /**
  * Connection handler creates new connections between cells. This control is used to display the connector

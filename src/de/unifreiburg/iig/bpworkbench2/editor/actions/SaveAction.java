@@ -6,7 +6,7 @@ import java.io.File;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
-import de.unifreiburg.iig.bpworkbench2.editor.gui.PNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
 
 public class SaveAction extends AbstractPNEditorAction {
 
