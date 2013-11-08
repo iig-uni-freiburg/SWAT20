@@ -3,32 +3,21 @@ package de.unifreiburg.iig.bpworkbench2.editor;
 import java.io.File;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;
 
-public class CPNEditor extends AbstractCPNEditor {
+public abstract class AbstractCPNEditor extends PNEditor {
 
 	private static final long serialVersionUID = 7463202384539027183L;
 
-	public CPNEditor(File fileReference) throws ParameterException {
+	public AbstractCPNEditor(File fileReference) throws ParameterException {
 		super(fileReference);
 	}
 
-	public CPNEditor(GraphicalCPN netContainer, File fileReference) throws ParameterException {
+	@SuppressWarnings("rawtypes")
+	public AbstractCPNEditor(AbstractGraphicalCPN netContainer, File fileReference) throws ParameterException {
 		super(netContainer, fileReference);
-	}
-
-	@Override
-	public GraphicalCPN getNetContainer() {
-		return (GraphicalCPN) super.getNetContainer();
-	}
-	
-	@Override
-	public GraphicalCPN createNetContainer() {
-		return new GraphicalCPN(new CPN(), new CPNGraphics());
 	}
 
 	@Override
