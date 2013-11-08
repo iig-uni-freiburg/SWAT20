@@ -44,17 +44,14 @@ import com.mxgraph.view.mxGraphSelectionModel;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.PTGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.PrintAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
+import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.GraphComponent;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
@@ -117,7 +114,7 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 	
 	private void initialize(AbstractGraphicalPN<?, ?, ?, ?, ?,?,?> netContainer, File fileReference) throws ParameterException{
 		if(netContainer == null){
-			this.netContainer = new GraphicalPTNet(new PTNet(), new PTGraphics());
+			this.netContainer = createNetContainer();
 		} else {
 			this.netContainer = netContainer;
 		}
@@ -127,6 +124,8 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		propertiesView = new PropertiesView(properties);
 		properties.addPNPropertiesListener(propertiesView);
 	}
+	
+	protected abstract AbstractGraphicalPN<?, ?, ?, ?, ?,?,?> createNetContainer();
 	
 	protected abstract PNProperties createPNProperties();
 	

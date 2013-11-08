@@ -4,8 +4,10 @@ import java.io.File;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.PTGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PTProperties;
 
@@ -19,6 +21,11 @@ public class PTNetEditor extends PNEditor {
 
 	public PTNetEditor(GraphicalPTNet netContainer, File fileReference) throws ParameterException {
 		super(netContainer, fileReference);
+	}
+
+	@Override
+	protected GraphicalPTNet createNetContainer() {
+		return new GraphicalPTNet(new PTNet(), new PTGraphics());
 	}
 
 	@Override
