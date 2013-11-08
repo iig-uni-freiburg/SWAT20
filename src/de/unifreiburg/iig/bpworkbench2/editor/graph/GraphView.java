@@ -75,8 +75,11 @@ import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
 public class GraphView extends mxGraphView
 {
 
-	public GraphView(mxGraph graph) {
+	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer;
+
+	public GraphView(mxGraph graph, AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer) {
 		super(graph);
+		this.netContainer = netContainer;
 		// TODO Auto-generated constructor stub
 	}
 @Override
@@ -123,8 +126,28 @@ public void updateVertexLabelOffset(mxCellState state)
 				+ state.getHeight());
 	}
 	
-
-
+	System.out.println(netContainer + ((mxCell)state.getCell()).getId());
+	mxCell cell = (mxCell) state.getCell();
+	if (cell.getStyle()!=null && cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+	AnnotationGraphics placeLabel = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
+if(placeLabel != null){
+	state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX()
+				+ placeLabel.getOffset().getX());
+		state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY()
+				+ placeLabel.getOffset().getY());
+	
+	}
+	}
+	if (cell.getStyle()!=null && cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+		AnnotationGraphics transitionLabel = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
+		if(transitionLabel != null){
+			state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX()
+					+ transitionLabel.getOffset().getX());
+			state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getY()
+					+ transitionLabel.getOffset().getY());
+		
+		}
+	}
 		addAnnotationGraphics(state);
 	
 	
@@ -142,9 +165,9 @@ public void updateVertexLabelOffset(mxCellState state)
  */
 public void addAnnotationGraphics(mxCellState state) {
 	mxCell cell = (mxCell) state.getCell();
+
 	if (cell.getParent() != null) {
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n = (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?>) cell
-				.getParent().getValue();
+		cell.getParent().setValue(netContainer);
 		mxPoint offset = state.getAbsoluteOffset();
 		AnnotationGraphics annotation = null;
 		try {
@@ -155,38 +178,38 @@ public void addAnnotationGraphics(mxCellState state) {
 			e.printStackTrace();
 		}
 	Map<String, AnnotationGraphics> labelAnnotationGraphics = null;
-	System.out.println(cell.getValue() + cell.getStyle());
+	System.out.println(netContainer + cell.getStyle());
 	if (cell.getStyle()!=null && cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
-		if (n.getPetriNetGraphics().getPlaceLabelAnnotationGraphics() == null)
+		if (netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics() == null)
 			labelAnnotationGraphics = new HashMap<String, AnnotationGraphics>();
 	 else {
-		labelAnnotationGraphics = n.getPetriNetGraphics()
+		labelAnnotationGraphics = netContainer.getPetriNetGraphics()
 				.getPlaceLabelAnnotationGraphics();}
 		labelAnnotationGraphics.put(cell.getId(), annotation);
-		n.getPetriNetGraphics().setPlaceLabelAnnotationGraphics(
+		netContainer.getPetriNetGraphics().setPlaceLabelAnnotationGraphics(
 				labelAnnotationGraphics);
 	}
 	
 	if (cell.getStyle()!=null &&cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
-		if (n.getPetriNetGraphics().getTransitionLabelAnnotationGraphics() == null)
+		if (netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics() == null)
 			labelAnnotationGraphics = new HashMap<String, AnnotationGraphics>();
 	 else {
-		labelAnnotationGraphics = n.getPetriNetGraphics()
+		labelAnnotationGraphics = netContainer.getPetriNetGraphics()
 				.getTransitionLabelAnnotationGraphics();}
 		labelAnnotationGraphics.put(cell.getId(), annotation);
-		n.getPetriNetGraphics().setTransitionLabelAnnotationGraphics(
+		netContainer.getPetriNetGraphics().setTransitionLabelAnnotationGraphics(
 				labelAnnotationGraphics);
 	}
 	
 	
 	if (cell.getId()!=null && cell.getId().startsWith("arc")) {
-		if (n.getPetriNetGraphics().getArcAnnotationGraphics() == null)
+		if (netContainer.getPetriNetGraphics().getArcAnnotationGraphics() == null)
 			labelAnnotationGraphics = new HashMap<String, AnnotationGraphics>();
 	 else {
-		labelAnnotationGraphics = n.getPetriNetGraphics()
+		labelAnnotationGraphics = netContainer.getPetriNetGraphics()
 				.getArcAnnotationGraphics();}
 		labelAnnotationGraphics.put(cell.getId(), annotation);
-		n.getPetriNetGraphics().setArcAnnotationGraphics(
+		netContainer.getPetriNetGraphics().setArcAnnotationGraphics(
 				labelAnnotationGraphics);
 	}
 }

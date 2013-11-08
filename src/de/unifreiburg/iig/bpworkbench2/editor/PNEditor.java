@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -121,7 +122,7 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		setFileReference(fileReference);
 		properties = createPNProperties();
 		properties.addPNPropertiesListener(this);
-		propertiesView = new PropertiesView(properties);
+//		propertiesView = new PropertiesView(properties);
 		properties.addPNPropertiesListener(propertiesView);
 	}
 	
@@ -157,6 +158,7 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 	public mxGraphComponent getGraphComponent(){
 		if(graphComponent == null){
 			try {
+				System.out.println(netContainer + "#PNEditor160");
 				graphComponent = new GraphComponent(new Graph(netContainer));
 			} catch (ParameterException e) {
 				// Should not happen, since netContainer is not null
@@ -167,7 +169,6 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 			graphComponent.getViewport().setBackground(MXConstants.blueBG);
 
 			Map<String, Object> style = getGraph().getStylesheet().getDefaultEdgeStyle();
-			System.out.println(style);
 			style.put("strokeWidth", 2.0);
 			style.put("strokeColor", Integer.toHexString(MXConstants.bluelow.getRGB()));
 			
@@ -222,15 +223,14 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		});
 
 		// Add SelectionListener for graph
-		getGraph().getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener() {
-
-			@Override
-			public void invoke(Object sender, mxEventObject evt) {
-				mxCell cell = (mxCell) ((mxGraphSelectionModel) sender).getCell();
-				System.out.println(cell.getId() + "#" + evt.getName());
-
-			}
-		});
+//		getGraph().getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener() {
+//
+//			@Override
+//			public void invoke(Object sender, mxEventObject evt) {
+//				mxCell cell = (mxCell) ((mxGraphSelectionModel) sender).getCell();
+//
+//			}
+//		});
 	}
 
 	private void setUpUndo(){
@@ -313,10 +313,12 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		for(AbstractPlace place: getNetContainer().getPetriNet().getPlaces()){
 			Object createdNode = addVertex(place.getName(), place.getLabel(), netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()), getPlaceShape(place));
 			nodeReferences.put(place, createdNode);
+			getGraph().addLabelAndInfo(createdNode);
 		}
 		for(AbstractTransition transition: getNetContainer().getPetriNet().getTransitions()){
 			Object createdNode = addVertex(transition.getName(), transition.getLabel(), netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()), getTransitionShape(transition));
 			nodeReferences.put(transition, createdNode);
+			getGraph().addLabelAndInfo(createdNode);
 		}
 		for(AbstractFlowRelation relation: getNetContainer().getPetriNet().getFlowRelations()){
 			getGraph().insertEdge(null, relation.getName(), getArcConstraint(relation), nodeReferences.get(relation.getSource()), nodeReferences.get(relation.getTarget()));
