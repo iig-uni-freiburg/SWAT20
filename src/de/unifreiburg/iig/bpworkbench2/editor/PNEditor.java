@@ -122,7 +122,7 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		setFileReference(fileReference);
 		properties = createPNProperties();
 		properties.addPNPropertiesListener(this);
-//		propertiesView = new PropertiesView(properties);
+		propertiesView = new PropertiesView(properties);
 		properties.addPNPropertiesListener(propertiesView);
 	}
 	
