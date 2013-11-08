@@ -97,6 +97,7 @@ public class GraphView extends mxGraphView
  */
 public void updateVertexLabelOffset(mxCellState state)
 {
+	System.out.println("UPDATEVERTEXLABELOFFSET");
 	String horizontal = mxUtils.getString(state.getStyle(),
 			mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
 
@@ -126,28 +127,28 @@ public void updateVertexLabelOffset(mxCellState state)
 				+ state.getHeight());
 	}
 	
-	System.out.println(netContainer + ((mxCell)state.getCell()).getId());
-	mxCell cell = (mxCell) state.getCell();
-	if (cell.getStyle()!=null && cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
-	AnnotationGraphics placeLabel = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
-if(placeLabel != null){
-	state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX()
-				+ placeLabel.getOffset().getX());
-		state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY()
-				+ placeLabel.getOffset().getY());
-	
-	}
-	}
-	if (cell.getStyle()!=null && cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
-		AnnotationGraphics transitionLabel = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
-		if(transitionLabel != null){
-			state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX()
-					+ transitionLabel.getOffset().getX());
-			state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getY()
-					+ transitionLabel.getOffset().getY());
-		
-		}
-	}
+//	System.out.println(netContainer + ((mxCell)state.getCell()).getId());
+//	mxCell cell = (mxCell) state.getCell();
+//	if (cell.getStyle()!=null && cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+//	AnnotationGraphics placeLabel = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
+//if(placeLabel != null){
+//	state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX()
+//				+ placeLabel.getOffset().getX());
+//		state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY()
+//				+ placeLabel.getOffset().getY());
+//	
+//	}
+//	}
+//	if (cell.getStyle()!=null && cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+//		AnnotationGraphics transitionLabel = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
+//		if(transitionLabel != null){
+//			state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX()
+//					+ transitionLabel.getOffset().getX());
+//			state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getY()
+//					+ transitionLabel.getOffset().getY());
+//		
+//		}
+//	}
 		addAnnotationGraphics(state);
 	
 	
