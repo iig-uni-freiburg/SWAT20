@@ -19,6 +19,7 @@ import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxConnectionConstraint;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphView;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -54,9 +55,7 @@ public class Graph extends mxGraph {
 	@Override
 	public void cellConnected(Object edge, Object terminal, boolean source, mxConnectionConstraint constraint) {
 		super.cellConnected(edge, terminal, source, constraint);
-		System.out.println(isCellBendable(edge) + "#########Bend");
-		System.out.println(isCellEditable(edge));
-		// setCellE
+		// setCell
 		// making edges parallel
 		mxParallelEdgeLayout layout = new mxParallelEdgeLayout(this);
 		layout.execute(getDefaultParent());
@@ -211,7 +210,6 @@ public class Graph extends mxGraph {
 			}
 			if (cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
 				try {
-					System.out.println(cell.getId());
 					netContainer.getPetriNet().removeTransition(cell.getId());
 					netContainer.getPetriNetGraphics().getTransitionGraphics().remove(cell.getId());
 					netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().remove(cell.getId());
@@ -445,7 +443,6 @@ public class Graph extends mxGraph {
 		} finally {
 			model.endUpdate();
 		}
-		System.out.println("Changed");
 	}
 
 	public String getLabelPosition(Object cell) {
@@ -453,7 +450,6 @@ public class Graph extends mxGraph {
 
 		if (cell != null) {
 			mxCellState state = view.getState(cell);
-			System.out.println(state);
 			// mxPoint offset = (state != null) ? state.getAbsoluteOffset()
 			// : getChildOffsetForCell(cell);
 			// System.out.println(get + "offset");
@@ -640,14 +636,22 @@ public class Graph extends mxGraph {
 		return id;
 	}
 
+	
+	@Override
+	public GraphView getView()
+	{
+		return (GraphView) view;
+	}
+
+	
 	/**
 	 * Constructs a new customized view to be used in this graph, which also
 	 * writes labelannotations in the PN-Model.
 	 */
 	@Override
 	protected GraphView createGraphView() {
-		System.out.println(netContainer);
-		return new GraphView(this, netContainer);
+		view = new GraphView(this, netContainer);
+		return (GraphView) view;
 	}
 
 	/**
@@ -678,7 +682,10 @@ public class Graph extends mxGraph {
 	 */
 	public Object insertPNVertex(Object parent, String id, Object value, double x, double y, double width, double height, String style, boolean relative) {
 		Object vertex = createVertex(parent, id, value, x, y, width, height, style, relative);
+		
 		Object result = addCell(vertex, parent);
+		mxCellState state = getView().getState(result, false);
+
 		return result;
 	}
 
@@ -839,5 +846,10 @@ public class Graph extends mxGraph {
 			}
 		}
 	}
+	
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetContainer(){
+		return netContainer;
+	}
+	
 
 }
