@@ -25,6 +25,8 @@ import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 
 import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
+import de.unifreiburg.iig.bpworkbench2.editor.graph.mxPlace;
+import de.unifreiburg.iig.bpworkbench2.editor.graph.mxTransition;
 
 public class PalettePanel extends JPanel {
 
@@ -68,9 +70,18 @@ public class PalettePanel extends JPanel {
         addTemplate(name, icon, cell);
     }
 
-    public void addTemplate(final String name, ImageIcon icon, String style,
+    public void addPlaceTemplate(final String name, ImageIcon icon, String style,
             int width, int height, Object value) {
-        mxCell cell = new mxCell(value, new mxGeometry(0, 0, width, height),
+        mxPlace cell = new mxPlace(value, new mxGeometry(0, 0, width, height),
+                style);
+        cell.setVertex(true);
+
+        addTemplate(name, icon, cell);
+    }
+    
+    public void addTransitionTemplate(final String name, ImageIcon icon, String style,
+            int width, int height, Object value) {
+        mxTransition cell = new mxTransition(value, new mxGeometry(0, 0, width, height),
                 style);
         cell.setVertex(true);
 

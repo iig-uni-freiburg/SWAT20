@@ -4,31 +4,16 @@
  */
 package de.unifreiburg.iig.bpworkbench2.editor.graph;
 
-import java.awt.geom.Line2D;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGeometry;
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxEventSource;
 import com.mxgraph.util.mxPoint;
-import com.mxgraph.util.mxRectangle;
-import com.mxgraph.util.mxUndoableEdit;
-import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
-import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
-import com.mxgraph.view.mxPerimeter.mxPerimeterFunction;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -37,7 +22,6 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
 
 /**
  * Implements a view for the graph. This class is in charge of computing the
@@ -131,7 +115,7 @@ public void updateVertexLabelOffset(mxCellState state)
 	+ state.getHeight());
 	}
 
-		if (cell.getStyle() != null && cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+		if (cell.getStyle() != null && cell instanceof mxPlace) {
 			AnnotationGraphics placeLabel = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
 			if (placeLabel != null) {
 				if (isOffsetChangeable) {
@@ -144,7 +128,7 @@ public void updateVertexLabelOffset(mxCellState state)
 				;
 			}
 		}
-		if (cell.getStyle() != null && cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+		if (cell instanceof mxTransition) {
 			AnnotationGraphics transitionLabel = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
 			if (transitionLabel != null) {
 				if (isOffsetChangeable) {
@@ -196,14 +180,14 @@ private double getHorizontalOffset() {
 				e.printStackTrace();
 			}
 			Map<String, AnnotationGraphics> labelAnnotationGraphics = null;
-			if (cell.getStyle() != null && cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+			if (cell.getStyle() != null && cell instanceof mxPlace) {
 
 				labelAnnotationGraphics = (netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics() == null) ? 
 						new HashMap<String, AnnotationGraphics>() : netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics();
 				labelAnnotationGraphics.put(cell.getId(), annotation);
 				netContainer.getPetriNetGraphics().setPlaceLabelAnnotationGraphics(labelAnnotationGraphics);
 			}
-			if (cell.getStyle() != null && cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+			if (cell instanceof mxTransition) {
 				labelAnnotationGraphics = (netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics() == null) ? 
 						new HashMap<String, AnnotationGraphics>() : netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics();
 				labelAnnotationGraphics.put(cell.getId(), annotation);

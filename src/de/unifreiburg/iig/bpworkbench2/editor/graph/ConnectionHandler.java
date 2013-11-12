@@ -82,25 +82,14 @@ public class ConnectionHandler extends mxConnectionHandler
 	
 						if (!marker.hasValidState() && isCreateTarget())
 						{
-							Object vertex = createTargetVertex(e, source.getCell());
+							Object vertex = null;
+						
+							if(source.getCell() instanceof mxPlace)
+							vertex = createTargetTransition(e);
 							
-							if(vertex instanceof mxCell){
-								
-								mxCell cell = (mxCell) vertex;
-								if(cell.getChildAt(0) != null && cell.getChildCount() ==1)
-								cell.remove(cell.getChildAt(0));
-								if(cell.getStyle().contentEquals(MXConstants.PNPlaceShape)){
-									cell.setStyle(MXConstants.PNTransitionShape);
-									cell.setValue(null);
-								}
-								else if(cell.getStyle().contentEquals(MXConstants.PNTransitionShape)){
-									cell.setStyle(MXConstants.PNPlaceShape);
-									cell.setValue(null);
-								}
-							}
-	
-							
-//							Object vertex = createTargetVertex(e, source.getCell());
+							if(source.getCell() instanceof mxTransition)
+								 vertex = createTargetPlace(e);
+
 							dropTarget = graph.getDropTarget(
 									new Object[] { vertex }, e.getPoint(),
 									graphComponent.getCellAt(e.getX(), e.getY()));
@@ -166,6 +155,25 @@ public class ConnectionHandler extends mxConnectionHandler
 		reset();
 	}
 
-
+	private Object createTargetPlace(MouseEvent e) {
+		System.out.println("createTargetPlace");
+		mxPoint point = graphComponent.getPointForEvent(e);
+		mxPlace cell = new mxPlace(null, new mxGeometry(graphComponent
+				.getGraph().snap(point.getX() - 30 / 2),  graphComponent
+						.getGraph().snap(point.getY() - 30 / 2), 30, 30),
+						  ((Graph)graphComponent.getGraph()).getPlaceShape());
+		cell.setVertex(true);
+		return cell;
+	}
+private Object createTargetTransition(MouseEvent e) {
+	System.out.println("createTargetTransition");
+	mxPoint point = graphComponent.getPointForEvent(e);
+	mxTransition cell = new mxTransition(null, new mxGeometry(graphComponent
+			.getGraph().snap(point.getX() - 30 / 2),  graphComponent
+			.getGraph().snap(point.getY() - 30 / 2), 30, 30),
+            ((Graph)graphComponent.getGraph()).getTransitionShape());
+    cell.setVertex(true);
+	return cell;
+}
 
 }

@@ -39,6 +39,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
 public class Graph extends mxGraph {
 
 	AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
+	private String placeShape;
+	private String transitionShape;
 
 	public Graph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer) throws ParameterException {
 		Validate.notNull(netContainer);
@@ -65,7 +67,7 @@ public class Graph extends mxGraph {
 		mxCell edgeSource = (mxCell) ((mxCell) edge).getSource();
 		mxCell edgeTarget = (mxCell) ((mxCell) edge).getTarget();
 		if (edgeSource != null && edgeTarget != null) {
-			if (edgeSource.getStyle().contentEquals(edgeTarget.getStyle().toString())) {
+			if (edgeSource.getClass() == edgeTarget.getClass()) {
 				removeCells(new Object[] { edge });
 			} else {
 
@@ -74,9 +76,9 @@ public class Graph extends mxGraph {
 					edgeTarget.setId(edgeSource.getId());
 					isDNDgenerated = true;
 				}
-				if (edgeSource.getStyle().contentEquals(MXConstants.PNPlaceShape) && !isDNDgenerated && (((mxCell) edge).getValue() == ""))
+				if (edgeSource instanceof mxPlace && !isDNDgenerated && (((mxCell) edge).getValue() == ""))
 					addPTArcToPN((mxCell) edge, edgeSource, edgeTarget, netContainer);
-				if (edgeTarget.getStyle().contentEquals(MXConstants.PNTransitionShape) && isDNDgenerated) {
+				if (edgeTarget instanceof mxTransition && isDNDgenerated) {
 					String prefix = MXConstants.TransitionNamePrefix;
 					String nodeName = null;
 					try {
@@ -90,9 +92,9 @@ public class Graph extends mxGraph {
 					addGraphicalInfoToPN((mxCell) edge, netContainer, ((mxCell) edge).getId());
 
 				}
-				if (edgeSource.getStyle().contentEquals(MXConstants.PNTransitionShape) && !isDNDgenerated && (((mxCell) edge).getValue() == ""))
+				if (edgeSource instanceof mxTransition && !isDNDgenerated && (((mxCell) edge).getValue() == ""))
 					addTPArcToPN(edge, edgeSource, edgeTarget, netContainer);
-				if (edgeTarget.getStyle().contentEquals(MXConstants.PNPlaceShape) && isDNDgenerated) {
+				if (edgeTarget instanceof mxPlace && isDNDgenerated) {
 					String prefix = MXConstants.PlaceNamePrefix;
 					String nodeName = null;
 					try {
@@ -145,14 +147,14 @@ public class Graph extends mxGraph {
 			e.printStackTrace();
 		}
 
-		if (cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+		if (cell instanceof mxPlace) {
 			if (n.getPetriNetGraphics().getPlaceGraphics() == null) {
 				n.getPetriNetGraphics().setPlaceGraphics(new HashMap<String, NodeGraphics>());
 			}
 			n.getPetriNetGraphics().getPlaceGraphics().put(nodeName, nodeGraphics);
 
 		}
-		if (cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+		if (cell instanceof mxTransition) {
 			if (n.getPetriNetGraphics().getTransitionGraphics() == null) {
 				n.getPetriNetGraphics().setTransitionGraphics(new HashMap<String, NodeGraphics>());
 			}
@@ -198,7 +200,7 @@ public class Graph extends mxGraph {
 		super.cellsRemoved(cells);
 		for (Object object : cells) {
 			mxCell cell = (mxCell) object;
-			if (cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+			if (cell instanceof mxPlace) {
 				try {
 					netContainer.getPetriNet().removePlace(cell.getId());
 					netContainer.getPetriNetGraphics().getPlaceGraphics().remove(cell.getId());
@@ -208,7 +210,7 @@ public class Graph extends mxGraph {
 					e.printStackTrace();
 				}
 			}
-			if (cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+			if (cell instanceof mxTransition) {
 				try {
 					netContainer.getPetriNet().removeTransition(cell.getId());
 					netContainer.getPetriNetGraphics().getTransitionGraphics().remove(cell.getId());
@@ -283,13 +285,13 @@ public class Graph extends mxGraph {
 						mxCell cell = (mxCell) o;
 						if (cell.getParent() != null) {
 							NodeGraphics pG = null;
-							if (cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+							if (cell instanceof mxPlace) {
 								pG = netContainer.getPetriNetGraphics().getPlaceGraphics().get(cell.getId());
 
 								updatePositionInPN(cell, pG);
 							}
 
-							if (cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+							if (cell instanceof mxTransition) {
 								pG = netContainer.getPetriNetGraphics().getTransitionGraphics().get(cell.getId());
 								updatePositionInPN(cell, pG);
 
@@ -412,10 +414,10 @@ public class Graph extends mxGraph {
 			getModel().setValue(cell, value);
 
 			mxCell mxcell = (mxCell) cell;
-			if (mxcell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+			if (mxcell instanceof mxPlace) {
 				netContainer.getPetriNet().getPlace(((mxCell) cell).getId()).setLabel((String) value);
 			}
-			if (mxcell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+			if (mxcell instanceof mxTransition) {
 				netContainer.getPetriNet().getTransition(((mxCell) cell).getId()).setLabel((String) value);
 			}
 
@@ -603,7 +605,7 @@ public class Graph extends mxGraph {
 	public String addPNNode(mxCell edgeTarget, AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n, String prefix) throws ParameterException {
 		SortedMap<Integer, String> sortedMap = new TreeMap<Integer, String>();
 		Collection<?> nodeCollection = null;
-		if (edgeTarget.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+		if (edgeTarget instanceof mxTransition) {
 			nodeCollection = n.getPetriNet().getTransitions();
 			for (Object o : nodeCollection) {
 				if (o instanceof PTTransition) {
@@ -614,7 +616,7 @@ public class Graph extends mxGraph {
 			n.getPetriNet().addTransition(prefix + getLowestIndex(sortedMap));
 		}
 
-		if (edgeTarget.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+		if (edgeTarget instanceof mxPlace) {
 			nodeCollection = n.getPetriNet().getPlaces();
 			for (Object o : nodeCollection) {
 				if (o instanceof PTPlace) {
@@ -680,8 +682,8 @@ public class Graph extends mxGraph {
 	 *            Specifies if the geometry should be relative.
 	 * @return Returns the new vertex that has been inserted.
 	 */
-	public Object insertPNVertex(Object parent, String id, Object value, double x, double y, double width, double height, String style, boolean relative) {
-		Object vertex = createVertex(parent, id, value, x, y, width, height, style, relative);
+	public Object insertPNPlace(Object parent, String id, Object value, double x, double y, double width, double height, String style, boolean relative) {
+		Object vertex = createPlace(parent, id, value, x, y, width, height, style, relative);
 		
 		Object result = addCell(vertex, parent);
 		mxCellState state = getView().getState(result, false);
@@ -689,11 +691,51 @@ public class Graph extends mxGraph {
 		return result;
 	}
 
+	private Object createPlace(Object parent, String id, Object value,
+			double x, double y, double width, double height, String style,
+			boolean relative) {
+		
+			mxGeometry geometry = new mxGeometry(x, y, width, height);
+			geometry.setRelative(relative);
+
+			mxPlace vertex = new mxPlace(value, geometry, style);
+			vertex.setId(id);
+			vertex.setVertex(true);
+			vertex.setConnectable(true);
+
+			return vertex;
+		}
+	
+	public Object insertPNTransition(Object parent, String id, Object value, double x, double y, double width, double height, String style, boolean relative) {
+		Object vertex = createTransition(parent, id, value, x, y, width, height, style, relative);
+		
+		Object result = addCell(vertex, parent);
+		mxCellState state = getView().getState(result, false);
+
+		return result;
+	}
+
+	private Object createTransition(Object parent, String id, Object value,
+			double x, double y, double width, double height, String style,
+			boolean relative) {
+		
+			mxGeometry geometry = new mxGeometry(x, y, width, height);
+			geometry.setRelative(relative);
+
+			mxTransition vertex = new mxTransition(value, geometry, style);
+			vertex.setId(id);
+			vertex.setVertex(true);
+			vertex.setConnectable(true);
+
+			return vertex;
+		}
+	
+
 	public void addLabelAndInfo(Object vertex) {
 		if (vertex instanceof mxCell) {
 			mxCell cell = (mxCell) vertex;
 
-			if (cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+			if (cell instanceof mxPlace) {
 				String prefix = MXConstants.PlaceNamePrefix;
 				String nodeName = null;
 				if (netContainer.getPetriNet().getPlace(cell.getId()) == null) {
@@ -710,7 +752,7 @@ public class Graph extends mxGraph {
 
 			}
 
-			if (cell.getStyle().contentEquals(MXConstants.PNTransitionShape)) {
+			if (cell instanceof mxTransition) {
 				String prefix = MXConstants.TransitionNamePrefix;
 				String nodeName = null;
 				if (netContainer.getPetriNet().getTransition(cell.getId()) == null) {
@@ -851,5 +893,39 @@ public class Graph extends mxGraph {
 		return netContainer;
 	}
 	
+	
+	@Override
+	public Object createVertex(Object parent, String id, Object value,
+			double x, double y, double width, double height, String style,
+			boolean relative)
+	{
+		mxGeometry geometry = new mxGeometry(x, y, width, height);
+		geometry.setRelative(relative);
+
+		mxPlace vertex = new mxPlace(value, geometry, style);
+		vertex.setId(id);
+		vertex.setVertex(true);
+		vertex.setConnectable(true);
+
+		return vertex;
+	}
+
+	public String getTransitionShape() {
+		// TODO Auto-generated method stub
+		return transitionShape;
+	}
+	
+	public void setPlaceShape(String placeShape) {
+		this.placeShape = placeShape;
+	}
+
+	public void setTransitionShape(String transitionShape) {
+		this.transitionShape = transitionShape;
+	}
+
+	public String getPlaceShape() {
+		// TODO Auto-generated method stub
+		return placeShape;
+	}
 
 }

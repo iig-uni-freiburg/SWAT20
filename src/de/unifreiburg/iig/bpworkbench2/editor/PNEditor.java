@@ -9,11 +9,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -41,14 +39,11 @@ import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
-import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraphSelectionModel;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jagal.ts.State;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
@@ -60,6 +55,8 @@ import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.GraphComponent;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
+import de.unifreiburg.iig.bpworkbench2.editor.graph.mxPlace;
+import de.unifreiburg.iig.bpworkbench2.editor.graph.mxTransition;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PNChangeEvent;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;
 import de.unifreiburg.iig.bpworkbench2.editor.properties.PNPropertiesListener;
@@ -168,6 +165,8 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 				e.printStackTrace();
 			}
 			visualizeGraph();
+			getGraph().setTransitionShape(getTransitionShape());
+			getGraph().setPlaceShape(getPlaceShape());
 			graphComponent.getViewport().setOpaque(true);
 			graphComponent.getViewport().setBackground(MXConstants.blueBG);
 
@@ -230,9 +229,9 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 
 			@Override
 			public void invoke(Object sender, mxEventObject evt) {
+				System.out.println(((mxGraphSelectionModel) sender).getCell());
 				mxCell cell = (mxCell) ((mxGraphSelectionModel) sender).getCell();
-				if(cell instanceof mxCell){
- 
+				if(cell instanceof mxCell && (getGraph().getView().getState(cell) != null)){
 				double horizontal = getGraph().getView().getState(cell).getAbsoluteOffset().getX();
 				double vertical = getGraph().getView().getState(cell).getAbsoluteOffset().getY();
 				getGraph().getView().setHorizontalOffset(horizontal);
@@ -261,8 +260,8 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 	private JPanel getPalettePanel(){
 		if(palettePanel == null){
 			palettePanel = new PalettePanel();
-			palettePanel.addTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), MXConstants.PNTransitionShape, 30, 30, null);
-			palettePanel.addTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), MXConstants.PNPlaceShape, 30, 30, null);
+			palettePanel.addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), getTransitionShape(), 30, 30, null);
+			palettePanel.addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), getPlaceShape(), 30, 30, null);
 		}
 		return palettePanel;
 	}
@@ -322,12 +321,12 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 	@SuppressWarnings("rawtypes")
 	private void traverseFlowRelation() {
 		for(AbstractPlace place: getNetContainer().getPetriNet().getPlaces()){
-			Object createdNode = addVertex(place.getName(), place.getLabel(), netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()), getPlaceShape(place));
+			Object createdNode = addPlace(place.getName(), place.getLabel(), netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()), getPlaceShape());
 			nodeReferences.put(place, createdNode);
 			getGraph().addLabelAndInfo(createdNode);
 		}
 		for(AbstractTransition transition: getNetContainer().getPetriNet().getTransitions()){
-			Object createdNode = addVertex(transition.getName(), transition.getLabel(), netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()), getTransitionShape(transition));
+			Object createdNode = addTransition(transition.getName(), transition.getLabel(), netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()), getTransitionShape());
 			nodeReferences.put(transition, createdNode);
 			getGraph().addLabelAndInfo(createdNode);
 
@@ -338,26 +337,44 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 
 	}
 	
+	private Object addTransition(String name, String label,
+			NodeGraphics nodeGraphics, String transitionShape) {
+		mxTransition vertex = (mxTransition) getGraph().insertPNTransition(getGraph().getDefaultParent(), label, null, nodeGraphics.getPosition()
+				.getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension()
+				.getY(), transitionShape, false);
+vertex.setId(name);
+return vertex;
+	}
+
+	private Object addPlace(String name, String label,
+			NodeGraphics nodeGraphics, String placeShape) {
+		mxPlace vertex = (mxPlace) getGraph().insertPNPlace(getGraph().getDefaultParent(), label, null, nodeGraphics.getPosition()
+				.getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension()
+				.getY(), placeShape, false);
+vertex.setId(name);
+return vertex;
+	}
+
 	@SuppressWarnings("rawtypes")
-	protected String getPlaceShape(AbstractPlace place){
+	protected String getPlaceShape(){
 		return MXConstants.PNPlaceShape;
 	}
 	
 	@SuppressWarnings("rawtypes")
-	protected String getTransitionShape(AbstractTransition transition){
+	protected String getTransitionShape(){
 		 return MXConstants.PNTransitionShape;
 	}
 	
 	@SuppressWarnings("rawtypes")
 	protected abstract String getArcConstraint(AbstractFlowRelation relation);
 	
-	private Object addVertex(String name, String label, NodeGraphics nodeGraphics, String shape) {
-		mxCell vertex = (mxCell) getGraph().insertPNVertex(getGraph().getDefaultParent(), label, null, nodeGraphics.getPosition()
-						.getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension()
-						.getY(), shape, false);
-		vertex.setId(name);
-		return vertex;
-	}
+//	private Object addVertex(String name, String label, NodeGraphics nodeGraphics, String shape) {
+//		mxCell vertex = (mxCell) getGraph().insertPNVertex(getGraph().getDefaultParent(), label, null, nodeGraphics.getPosition()
+//						.getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension()
+//						.getY(), shape, false);
+//		vertex.setId(name);
+//		return vertex;
+//	}
 
 	public void setFileReference(File fileReference) throws ParameterException {
 		Validate.notNull(fileReference);

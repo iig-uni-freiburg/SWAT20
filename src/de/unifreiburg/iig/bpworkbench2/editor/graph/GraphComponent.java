@@ -46,7 +46,7 @@ public class GraphComponent extends mxGraphComponent {
 
 				if (object != null && e.getClickCount() == 2) {
 					mxCell cell = (mxCell) object;
-					if (cell.getStyle().contentEquals(MXConstants.PNPlaceShape)) {
+					if (cell instanceof mxPlace) {
 						AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> n = ((Graph) getGraph()).getNetContainer();
 						String marks = JOptionPane.showInputDialog("Input new amount of marks");
 						if (marks != null) {
