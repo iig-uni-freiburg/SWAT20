@@ -7,7 +7,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 
 public class IFNetEditor extends AbstractCPNEditor {
 

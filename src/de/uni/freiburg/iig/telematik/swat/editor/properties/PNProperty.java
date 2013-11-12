@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.editor.properties;
+package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
 import de.invation.code.toval.graphic.RestrictedTextField.Restriction;
 

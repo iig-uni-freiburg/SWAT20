@@ -24,8 +24,8 @@ public class OpenEmptyPTNetEditor {
 			"/samples/sampleIFnetLabeling01.xml").getPath();
 
 	public static void main(String[] args) throws IOException, ParserException, ParameterException {
-//		testEmptyNet();
-		openSampleNet();
+		testEmptyNet();
+//		openSampleNet();
 	}
 	
 	private static void testEmptyNet() throws ParameterException{
@@ -50,37 +50,31 @@ public class OpenEmptyPTNetEditor {
 	}
 	
 	
-	private static void openSampleNet() throws IOException, ParserException,
-			ParameterException {
+	private static void openSampleNet() throws IOException, ParserException, ParameterException {
 		// Create new JFrame
 		JFrame frame = new JFrame();
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser()
-				.parse(PNML);
+		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML);
 
 		GraphicalPTNet graphicalPTNet = (GraphicalPTNet) netContainer;
-		for (Object o : graphicalPTNet.getPetriNet().getFlowRelations()) {
-			PTFlowRelation fr = ((PTFlowRelation) o);
-
-			System.out.println("NAME:" + fr.getName() + "\nWEIGHT:"
-					+ fr.getWeight());
-			System.out.println(graphicalPTNet.getPetriNet()
-					.getFlowRelation(fr.getName()).getWeight());
+		for (PTFlowRelation relation : graphicalPTNet.getPetriNet().getFlowRelations()) {
+			System.out.println("NAME:" + relation.getName() + "\nWEIGHT:" + relation.getWeight());
+			System.out.println(graphicalPTNet.getPetriNet().getFlowRelation(relation.getName()));
+//			System.out.println(graphicalPTNet.getPetriNet().getFlowRelation(relation.getName()).getWeight());
 		}
-
-		JPanel panel = new PTNetEditor(((GraphicalPTNet) netContainer),
-				new File(PNML));
-		frame.setTitle("PTNet Editor");
-		frame.setSize(450, 300);
-
-		// set background black
-		panel.setBackground(Color.black);
-
-		// add Editor to JFrame
-		frame.add(panel);
-
-		// show all
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//		JPanel panel = new PTNetEditor(((GraphicalPTNet) netContainer), new File(PNML));
+//		frame.setTitle("PTNet Editor");
+//		frame.setSize(450, 300);
+//
+//		// set background black
+//		panel.setBackground(Color.black);
+//
+//		// add Editor to JFrame
+//		frame.add(panel);
+//
+//		// show all
+//		frame.setVisible(true);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 }

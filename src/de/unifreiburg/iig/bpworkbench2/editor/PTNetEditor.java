@@ -5,11 +5,11 @@ import java.io.File;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.PTGraphics;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PTProperties;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
 
 public class PTNetEditor extends PNEditor {
 
@@ -34,19 +34,40 @@ public class PTNetEditor extends PNEditor {
 	}
 
 	@Override
-	protected PNProperties createPNProperties() {
-		return new PTProperties(getNetContainer());
+	protected PTProperties createPNProperties() {
+		try {
+			return new PTProperties(getNetContainer());
+		} catch (ParameterException e) {
+			// Should not happen, since getNetContainer never returns null;
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	@SuppressWarnings("rawtypes") 
 	@Override
-	protected String getArcConstraint(AbstractFlowRelation relation) {
-		return String.valueOf(((PTFlowRelation) relation).getWeight());
-	}
-
-	@Override
-	protected PNProperties getPNProperties() {
+	protected PTProperties getPNProperties() {
 		return (PTProperties) super.getPNProperties();
+	}
+
+	@Override
+	protected PNGraphComponent createGraphComponent() {
+		try {
+			return new PTGraphComponent(new PTGraph(getNetContainer(), getPNProperties()));
+		} catch (ParameterException e) {
+			// Should not happen, since getNetContainer() and getPNProperties() never return null;
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public EditorPopupMenu getPopupMenu() {
+		try {
+			return new EditorPopupMenu(this);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

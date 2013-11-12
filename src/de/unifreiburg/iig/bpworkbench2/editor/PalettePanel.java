@@ -16,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.TransferHandler;
 import javax.swing.border.LineBorder;
 
 import com.mxgraph.model.mxCell;
@@ -24,16 +25,20 @@ import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 
-import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.mxPlace;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.mxTransition;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 public class PalettePanel extends JPanel {
 
-    protected JLabel selectedEntry = null;
+	private static final long serialVersionUID = -1156941541375286369L;
+	
+	protected JLabel selectedEntry = null;
 
-    public PalettePanel() {
+    public PalettePanel(String placeShape, String transitionShape) {
         setLayout(new GridLayout(getComponentCount(), 1));
+        addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), transitionShape, EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), null);
+		addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), placeShape, EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(), null);
     }
 
     public void setSelectionEntry(JLabel entry, mxGraphTransferable t) {
@@ -57,8 +62,7 @@ public class PalettePanel extends JPanel {
         }
     }
 
-    public void addEdgeTemplate(final String name, ImageIcon icon,
-            String style, int width, int height, Object value) {
+    public void addEdgeTemplate(final String name, ImageIcon icon, String style, int width, int height, Object value) {
         mxGeometry geometry = new mxGeometry(0, 0, width, height);
         geometry.setTerminalPoint(new mxPoint(0, height), true);
         geometry.setTerminalPoint(new mxPoint(width, 0), false);
@@ -70,28 +74,21 @@ public class PalettePanel extends JPanel {
         addTemplate(name, icon, cell);
     }
 
-    public void addPlaceTemplate(final String name, ImageIcon icon, String style,
-            int width, int height, Object value) {
-        mxPlace cell = new mxPlace(value, new mxGeometry(0, 0, width, height),
-                style);
+    public void addPlaceTemplate(String name, ImageIcon icon, String style, int width, int height, Object value) {
+        PNGraphCell cell = new PNGraphCell(value, new mxGeometry(0, 0, width, height), style, PNComponent.PLACE);
         cell.setVertex(true);
-
         addTemplate(name, icon, cell);
     }
     
-    public void addTransitionTemplate(final String name, ImageIcon icon, String style,
-            int width, int height, Object value) {
-        mxTransition cell = new mxTransition(value, new mxGeometry(0, 0, width, height),
-                style);
+    public void addTransitionTemplate(String name, ImageIcon icon, String style, int width, int height, Object value) {
+        PNGraphCell cell = new PNGraphCell(value, new mxGeometry(0, 0, width, height), style, PNComponent.TRANSITION);
         cell.setVertex(true);
-
         addTemplate(name, icon, cell);
     }
 
     public void addTemplate(final String name, ImageIcon icon, mxCell cell) {
         mxRectangle bounds = (mxGeometry) cell.getGeometry().clone();
-        final mxGraphTransferable t = new mxGraphTransferable(
-                new Object[]{cell}, bounds);
+        final mxGraphTransferable t = new mxGraphTransferable(new Object[]{cell}, bounds);
 
         if (icon != null) {
             if (icon.getIconWidth() > 32 || icon.getIconHeight() > 32) {
@@ -111,7 +108,6 @@ public class PalettePanel extends JPanel {
 
         entry.setToolTipText(name);
         entry.setText(name);
-
         entry.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -119,22 +115,21 @@ public class PalettePanel extends JPanel {
                 setSelectionEntry(entry, t);
             }
         });
+      
 
         DragGestureListener dragGestureListener = new DragGestureListener() {
-
             public void dragGestureRecognized(DragGestureEvent e) {
                 if (!entry.isEnabled()) {
                     return;
                 }
-                e.startDrag(null, MXConstants.EMPTY_IMAGE, new Point(),
-                        t, null);
+                e.startDrag(null, MXConstants.EMPTY_IMAGE, new Point(), t, null);
             }
         };
 
         DragSource dragSource = new DragSource();
-        dragSource.createDefaultDragGestureRecognizer(entry,
-                DnDConstants.ACTION_COPY, dragGestureListener);
-
+        dragSource.createDefaultDragGestureRecognizer(entry, DnDConstants.ACTION_COPY, dragGestureListener);
         add(entry);
     }
+    
+    
 }

@@ -7,7 +7,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 
 public class CPNEditor extends AbstractCPNEditor {
 

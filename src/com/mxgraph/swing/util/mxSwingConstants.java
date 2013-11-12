@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 
 public class mxSwingConstants
 {

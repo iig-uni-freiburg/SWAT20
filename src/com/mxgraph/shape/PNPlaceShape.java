@@ -40,7 +40,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 
 public class PNPlaceShape extends mxBasicShape {
 

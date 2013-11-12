@@ -35,6 +35,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 
 public class Graph extends mxGraph {
 
@@ -54,6 +56,10 @@ public class Graph extends mxGraph {
 		setVertexLabelsMovable(true);
 	}
 
+
+	/**
+	 * enforces, that only nodes with different types (place/transition) can be connected.
+	 */
 	@Override
 	public void cellConnected(Object edge, Object terminal, boolean source, mxConnectionConstraint constraint) {
 		super.cellConnected(edge, terminal, source, constraint);
@@ -732,7 +738,7 @@ public class Graph extends mxGraph {
 	
 
 	public void addLabelAndInfo(Object vertex) {
-		if (vertex instanceof mxCell) {
+		if (vertex instanceof PNGraphCell) {
 			mxCell cell = (mxCell) vertex;
 
 			if (cell instanceof mxPlace) {

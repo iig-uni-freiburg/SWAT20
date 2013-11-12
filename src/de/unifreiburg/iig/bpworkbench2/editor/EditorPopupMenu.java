@@ -10,9 +10,11 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
 
-public class PopupMenu extends JPopupMenu {
+public class EditorPopupMenu extends JPopupMenu {
+	
+	private static final long serialVersionUID = -2983257974918330746L;
 
-	public PopupMenu(PNEditor pnEditor) throws ParameterException {
+	public EditorPopupMenu(PNEditor pnEditor) throws ParameterException {
 		Validate.notNull(pnEditor);
 		boolean selected = !pnEditor.getGraphComponent().getGraph().isSelectionEmpty();
 

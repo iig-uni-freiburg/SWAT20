@@ -1,15 +1,10 @@
 package de.unifreiburg.iig.bpworkbench2.editor;
 
 import java.awt.BorderLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,11 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
-import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.swing.util.mxGraphActions;
@@ -44,33 +36,27 @@ import com.mxgraph.view.mxGraphSelectionModel;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.PrintAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.GraphComponent;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.mxPlace;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.mxTransition;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PNChangeEvent;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PNPropertiesListener;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperty;
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PropertiesView;
 
-public abstract class PNEditor extends JPanel implements PNPropertiesListener {
+public abstract class PNEditor extends JPanel {
 
 	private static final long serialVersionUID = 1023415244830760771L;
 	private static final String scaleMessageFormat = "Scale: %s %%";
 	
 	protected JPanel statusPanel = null;
 	protected PalettePanel palettePanel = null;
-	protected mxGraphComponent graphComponent;
+	protected PNGraphComponent graphComponent;
 	protected ToolBar toolbar = null;
 	protected mxRubberband rubberband;
 	protected mxKeyboardHandler keyboardHandler;
@@ -94,8 +80,6 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 	protected PNProperties properties = null;
 	protected PropertiesView propertiesView = null;
 	public AbstractGraphicalPN<?, ?, ?, ?, ?,?,?>  netContainer = null;
-	@SuppressWarnings("rawtypes")
-	Map<AbstractPNNode, Object> nodeReferences = new HashMap<AbstractPNNode, Object>();
 	
 
 	//------- Constructors --------------------------------------------------------------------
@@ -122,7 +106,6 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		}
 		setFileReference(fileReference);
 		properties = createPNProperties();
-		properties.addPNPropertiesListener(this);
 		propertiesView = new PropertiesView(properties);
 		properties.addPNPropertiesListener(propertiesView);
 	}
@@ -156,15 +139,10 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		return toolbar;
 	}
 	
-	public mxGraphComponent getGraphComponent(){
+	public PNGraphComponent getGraphComponent(){
 		if(graphComponent == null){
-			try {
-				graphComponent = new GraphComponent(new Graph(netContainer));
-			} catch (ParameterException e) {
-				// Should not happen, since netContainer is not null
-				e.printStackTrace();
-			}
-			visualizeGraph();
+			graphComponent = createGraphComponent();
+			setUpGraph();
 			getGraph().setTransitionShape(getTransitionShape());
 			getGraph().setPlaceShape(getPlaceShape());
 			graphComponent.getViewport().setOpaque(true);
@@ -180,63 +158,26 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		return graphComponent;
 	}
 	
+	protected abstract PNGraphComponent createGraphComponent();
+	
 	private void addGraphComponentListeners() {
-		graphComponent.addMouseWheelListener(new MouseWheelListener() {
-
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				if (e.getSource() instanceof mxGraphOutline || e.isControlDown()) {
-					if (e.getWheelRotation() < 0) {
-						graphComponent.zoomIn();
-					} else {
-						graphComponent.zoomOut();
-					}
-					displayStatusMessage(String.format(scaleMessageFormat, (int) (100 * getGraph().getView().getScale())));
-				}
-			}
-		});
-
-		graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), graphComponent);
-					PopupMenu menu = null;
-					try {
-						menu = new PopupMenu(PNEditor.this);
-					} catch (ParameterException e1) {
-						// Cannot happen, since this is not null
-						e1.printStackTrace();
-					}
-					menu.show(graphComponent, pt.x, pt.y);
-					e.consume();
-				}
-			}
-		});
 
 		graphComponent.getGraphControl().addMouseMotionListener(
 				new MouseMotionListener() {
-					public void mouseDragged(MouseEvent e) {
-						displayStatusMessage(e.getX() + ", " + e.getY());
-					}
+					public void mouseDragged(MouseEvent e) {}
+					
 					public void mouseMoved(MouseEvent e) {
-						mouseDragged(e);
+						displayStatusMessage(e.getX() + ", " + e.getY());
 					}
 		});
 
 		// Add SelectionListener for graph
 		getGraph().getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener() {
-
 			@Override
 			public void invoke(Object sender, mxEventObject evt) {
 				System.out.println(((mxGraphSelectionModel) sender).getCell());
-				mxCell cell = (mxCell) ((mxGraphSelectionModel) sender).getCell();
-				if(cell instanceof mxCell && (getGraph().getView().getState(cell) != null)){
-				double horizontal = getGraph().getView().getState(cell).getAbsoluteOffset().getX();
-				double vertical = getGraph().getView().getState(cell).getAbsoluteOffset().getY();
-				getGraph().getView().setHorizontalOffset(horizontal);
-				getGraph().getView().setVerticalOffset(vertical);}
-			
+				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
+				//TODO: Notify properties view for highlighting
 			}
 		});
 	}
@@ -259,9 +200,7 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 	
 	private JPanel getPalettePanel(){
 		if(palettePanel == null){
-			palettePanel = new PalettePanel();
-			palettePanel.addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), getTransitionShape(), 30, 30, null);
-			palettePanel.addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), getPlaceShape(), 30, 30, null);
+			palettePanel = new PalettePanel(getPlaceShape(), getTransitionShape());
 		}
 		return palettePanel;
 	}
@@ -290,8 +229,8 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		return properties;
 	}
 	
-	private Graph getGraph(){
-		return (Graph) graphComponent.getGraph();
+	private PNGraph getGraph(){
+		return graphComponent.getGraph();
 	}
 	
 	public void setPlaceLabel(String placeName, String placeLabel) throws ParameterException{
@@ -305,77 +244,39 @@ public abstract class PNEditor extends JPanel implements PNPropertiesListener {
 		properties.setPlaceLabel(this, placeName, placeLabel);
 	}
 	
+	public abstract EditorPopupMenu getPopupMenu();
+	
 	//TODO: Do same thing for transition label, place size, transition size
 
-	protected void visualizeGraph() {
+	@SuppressWarnings("rawtypes") 
+	protected void setUpGraph() {
 		if(netContainer.getPetriNet().isEmpty())
 			return;
 
 		getGraph().getModel().beginUpdate();
-		traverseFlowRelation();
-		getGraph().getModel().endUpdate();
 		
-		getGraph().getView().isOffsetChangeable(true);
-	}
-
-	@SuppressWarnings("rawtypes")
-	private void traverseFlowRelation() {
 		for(AbstractPlace place: getNetContainer().getPetriNet().getPlaces()){
-			Object createdNode = addPlace(place.getName(), place.getLabel(), netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()), getPlaceShape());
-			nodeReferences.put(place, createdNode);
-			getGraph().addLabelAndInfo(createdNode);
+			getGraphComponent().addExistingPlaceToGraph(place, netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()));
 		}
 		for(AbstractTransition transition: getNetContainer().getPetriNet().getTransitions()){
-			Object createdNode = addTransition(transition.getName(), transition.getLabel(), netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()), getTransitionShape());
-			nodeReferences.put(transition, createdNode);
-			getGraph().addLabelAndInfo(createdNode);
-
+			getGraphComponent().addExistingTransitionToGraph(transition, netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()));
 		}
 		for(AbstractFlowRelation relation: getNetContainer().getPetriNet().getFlowRelations()){
-			getGraph().insertEdge(null, relation.getName(), getArcConstraint(relation), nodeReferences.get(relation.getSource()), nodeReferences.get(relation.getTarget()));
+			getGraphComponent().addExistingRelation(relation, netContainer.getPetriNetGraphics().getArcGraphics().get(relation.getName()));
 		}
-
-	}
-	
-	private Object addTransition(String name, String label,
-			NodeGraphics nodeGraphics, String transitionShape) {
-		mxTransition vertex = (mxTransition) getGraph().insertPNTransition(getGraph().getDefaultParent(), label, null, nodeGraphics.getPosition()
-				.getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension()
-				.getY(), transitionShape, false);
-vertex.setId(name);
-return vertex;
+		getGraph().getModel().endUpdate();
+		
+		getGraphComponent().setLabelPositions(netContainer.getPetriNetGraphics());
 	}
 
-	private Object addPlace(String name, String label,
-			NodeGraphics nodeGraphics, String placeShape) {
-		mxPlace vertex = (mxPlace) getGraph().insertPNPlace(getGraph().getDefaultParent(), label, null, nodeGraphics.getPosition()
-				.getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension()
-				.getY(), placeShape, false);
-vertex.setId(name);
-return vertex;
-	}
-
-	@SuppressWarnings("rawtypes")
 	protected String getPlaceShape(){
 		return MXConstants.PNPlaceShape;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	protected String getTransitionShape(){
 		 return MXConstants.PNTransitionShape;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	protected abstract String getArcConstraint(AbstractFlowRelation relation);
-	
-//	private Object addVertex(String name, String label, NodeGraphics nodeGraphics, String shape) {
-//		mxCell vertex = (mxCell) getGraph().insertPNVertex(getGraph().getDefaultParent(), label, null, nodeGraphics.getPosition()
-//						.getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension()
-//						.getY(), shape, false);
-//		vertex.setId(name);
-//		return vertex;
-//	}
-
 	public void setFileReference(File fileReference) throws ParameterException {
 		Validate.notNull(fileReference);
 		Validate.noDirectory(fileReference);
@@ -417,54 +318,6 @@ return vertex;
 		// TODO: Do something
 	}
 	
-	
-	@Override
-	public void propertyChange(PNChangeEvent event) {
-		if(event.getSource() != this){
-			switch(event.getFieldType()){
-			case PLACE:
-				handlePlacePropertyChange(event.getName(), event.getProperty(), event.getOldValue(), event.getNewValue());
-				break;
-			case TRANSITION:
-				handleTransitionPropertyChange(event.getName(), event.getProperty(), event.getOldValue(), event.getNewValue());
-				break;
-			case ARC:
-				handleArcPropertyChange(event.getName(), event.getProperty(), event.getOldValue(), event.getNewValue());
-				break;
-			}
-			getGraph().refresh();
-		}
-	}
-
-	private boolean handlePlacePropertyChange(String name, PNProperty property, Object oldValue, Object newValue) {
-		switch(property){
-		case PLACE_LABEL:
-			//TODO:
-			return true;
-		case PLACE_SIZE:
-			//TODO:
-			return true;
-		}
-		return false;
-	}
-
-
-	protected boolean handleTransitionPropertyChange(String name, PNProperty property, Object oldValue, Object newValue) {
-		switch(property){
-		case TRANSITION_LABEL:
-			//TODO:
-			return true;
-		case TRANSITION_SIZE:
-			//TODO:
-			return true;
-		}
-		return false;
-	}
-	
-	protected boolean handleArcPropertyChange(String name, PNProperty property, Object oldValue, Object newValue) {
-		return false;
-	}
-
 	protected class KeyboardHandler extends mxKeyboardHandler {
 
 		public KeyboardHandler(mxGraphComponent graphComponent) {

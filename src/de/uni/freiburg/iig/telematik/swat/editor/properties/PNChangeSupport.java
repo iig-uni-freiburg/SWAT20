@@ -1,9 +1,10 @@
-package de.unifreiburg.iig.bpworkbench2.editor.properties;
+package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class PNChangeSupport {
+	
 	private Set<PNPropertiesListener> listeners = new HashSet<PNPropertiesListener>();
 	
 	public void addListener(PNPropertiesListener listener){
@@ -12,9 +13,10 @@ public class PNChangeSupport {
 	public void removeListener(PNPropertiesListener listener){
 		listeners.remove(listener);
 	} 
-	public void fireChangeEvent(PNChangeEvent event){
+	public void fireChangeEvent(Object source, PNPropertyChangeEvent event){
 		for(PNPropertiesListener listener : listeners){
-			listener.propertyChange(event);
+			if(source != listener)
+				listener.propertyChange(event);
 		}
 	}
 

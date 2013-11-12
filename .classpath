@@ -8,6 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/SEPIA"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TOVAL"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JAGAL"/>
-	<classpathentry kind="lib" path="lib/jgraphx.jar"/>
+	<classpathentry kind="lib" path="lib/jgraphx.jar" sourcepath="lib/jgraphXwithsources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

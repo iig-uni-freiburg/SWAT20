@@ -56,8 +56,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset
  * <code>root</code> and <code>previous</code> properties contain the new and
  * previous root, respectively.
  */
-public class GraphView extends mxGraphView
-{
+public class GraphView extends mxGraphView {
 
 	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer;
 	private double horizontalOffset = 0;
@@ -69,6 +68,7 @@ public class GraphView extends mxGraphView
 		this.netContainer = netContainer;
 		// TODO Auto-generated constructor stub
 	}
+	
 @Override
 /**
  * Updates the absoluteOffset of the given vertex cell state. This takes

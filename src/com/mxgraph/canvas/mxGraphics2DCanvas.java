@@ -52,7 +52,7 @@ import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
-import de.unifreiburg.iig.bpworkbench2.editor.graph.MXConstants;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 
 /**
  * An implementation of a canvas that uses Graphics2D for painting.

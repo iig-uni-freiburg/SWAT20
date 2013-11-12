@@ -1,19 +1,19 @@
-package de.unifreiburg.iig.bpworkbench2.editor.properties;
+package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
 import java.util.EventObject;
 
-import de.unifreiburg.iig.bpworkbench2.editor.properties.PNProperties.FieldType;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
-public class PNChangeEvent extends EventObject{
+public class PNPropertyChangeEvent extends EventObject{
 	
 	private static final long serialVersionUID = -4892583337247587700L;
 	private PNProperty property = null;
-	private FieldType fieldType = null;
+	private PNComponent fieldType = null;
 	private String name = null;
 	private Object oldValue = null;
 	private Object newValue = null;
 
-	public PNChangeEvent(Object source, FieldType fieldType, String name, PNProperty property, Object oldValue, Object newValue) {
+	public PNPropertyChangeEvent(Object source, PNComponent fieldType, String name, PNProperty property, Object oldValue, Object newValue) {
 		super(source);
 		this.fieldType = fieldType;
 		this.property = property;
@@ -38,7 +38,7 @@ public class PNChangeEvent extends EventObject{
 		return newValue;
 	}
 
-	public FieldType getFieldType() {
+	public PNComponent getFieldType() {
 		return fieldType;
 	}
 
