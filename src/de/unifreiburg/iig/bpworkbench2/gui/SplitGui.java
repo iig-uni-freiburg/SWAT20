@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,17 +19,19 @@ import org.jdesktop.swingx.MultiSplitLayout.Node;
 import org.jdesktop.swingx.MultiSplitLayout.Split;
 import org.jdesktop.swingx.MultiSplitPane;
 
-import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
 
 @SuppressWarnings("serial")
+/**
+ * Creates JFrame and draws GUI elements (observers) in it. Registers observers
+ * to their models
+ */
 public class SplitGui implements Serializable, Observer {
 	private MultiSplitPane msp;
 	public JFrame window;
 	private TreeView tv;
 	private TabView tabView;
-	private Logger log = BPLog.getLogger(SplitGui.class.getName()); // Logger
 	private MenuView menuView; // menu
 
 	private static SplitGui gui = new SplitGui();
@@ -42,7 +43,9 @@ public class SplitGui implements Serializable, Observer {
 		SplitGui myGui = gui;
 		myGui.show();
 		OpenFileModel.getInstance().addObserver(myGui);
-		OpenFileModel.getInstance().setFolder(new File("/tmp"));
+		OpenFileModel.getInstance().setFolder(new File("/tmp")); // TODO: just
+																	// for
+																	// testing
 	}
 
 	public static SplitGui getGui() {
@@ -55,7 +58,7 @@ public class SplitGui implements Serializable, Observer {
 	 */
 	public void show() {
 		// generate frame for the gui
-		window = new JFrame("Gesine Testing");
+		window = new JFrame("SWAT 2.0");
 		// TODO: Add close handler to save unsaved files
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,67 +68,56 @@ public class SplitGui implements Serializable, Observer {
 
 		// get the gui layout and set the model
 		msp = new MultiSplitPane();
-		msp.getMultiSplitLayout().setModel(getMSPModel());
 
-		// fill the gui layout
+		// fill the gui layout, add it to the frame
 		addElementsToSplitPane(msp);
 		msp.setPreferredSize(msp.getMultiSplitLayout().getModel().getBounds().getSize());
 		window.add(msp);
 		// change size of dividers
 		msp.getMultiSplitLayout().setDividerSize(3);
 
+		// set the menu bar
 		window.setJMenuBar(menuView);
 		window.setVisible(true);
 		window.pack();
-
 	}
 
 	/**
-	 * inserts gui elements inside the MultiSplitpane
+	 * inserts gui elements inside the MultiSplitpane.
 	 * 
 	 * @param msp
 	 */
 	private void addElementsToSplitPane(MultiSplitPane msp) {
-		// get Buttons
-		Buttons bts = Buttons.getInstance();
 
-		// insert the menu line
-		// JButton menuLine = new JButton("menuLine with Action Listener");
-		// menuLine.addActionListener(new ActionListener() {
-		//
-		// @Override
-		// public void actionPerformed(ActionEvent e) {
-		// log.log(Level.INFO, "klick on Button");
-		// OpenFileModel.getInstance().addFile("Datei ...");
-		// }
-		// });
-		// msp.add(menuLine, "menuLine");
+		// set the model behind the MultiSplitPane
+		msp.getMultiSplitLayout().setModel(getMSPModel());
+		// get Buttons
+		Buttons buttons = Buttons.getInstance();
+
 		// add the buttons from the button-model
-		msp.add(bts.getButtonPanel(), "iconLine");
-		// msp.add(bts, "iconLine");
+		msp.add(buttons.getButtonPanel(), "iconLine");
 
 		msp.add(new JButton("Bottom Line"), "bottomLine");
 		msp.add(new JButton("Left Center"), "center.left");
-		// msp.add(new JButton("controls"), "controls");
 
-		// add view or edit buttons
-		msp.add(bts.getEditorViewPanel(), "controls");
+		// add view and edit buttons
+		msp.add(buttons.getEditorViewPanel(), "controls");
 
+		// fill the gap (will be properties view)
 		msp.add(new JButton("properties"), "properties");
 
 		// add the tab view
-		// editor.setPreferredSize(new Dimension(200, 200));
 		msp.add(tabView, "editor");
 
-		// msp.add(new JScrollPane(editor), "editor");
+		// fill the gap (will be console output)
 		JButton console = new JButton("console");
 		// console.setPreferredSize(new Dimension(200, 50));
 		// console.setPreferredSize(new Dimension(20, 20));
 		msp.add(console, "console");
 		// msp.add(tabView.getTab(), "console");
 
+		// add the TreeView to the left
 		msp.add(new JScrollPane(tv), "center.left");
-		// msp.add(tree, "center.left");
 
 	}
 
@@ -224,8 +216,8 @@ public class SplitGui implements Serializable, Observer {
 
 	/**
 	 * Create Gui Object and models. The Gui object creates the needed views on
-	 * the models and adds them as observers: ({@link TreeView}, {@link TabView}
-	 * , {@link MenuView}).
+	 * the models and registers them as observers: ({@link TreeView},
+	 * {@link TabView} , {@link MenuView}).
 	 */
 	private SplitGui() {
 		// generate Views

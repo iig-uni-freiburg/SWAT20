@@ -3,8 +3,8 @@ package de.unifreiburg.iig.bpworkbench2.controller;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 
 import javax.swing.BoxLayout;
@@ -31,59 +31,19 @@ public class PrismPathChooser extends JFrame implements ActionListener {
 
 	public PrismPathChooser() {
 		// Initialize Layout and size
-		setSize(400, 150);
+		setSize(400, 120);
 		setPreferredSize(new Dimension(400, 100));
 		setLocation(300, 350);
 		// setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
-		addWindowListener(new WindowListener() {
-
-			@Override
-			public void windowOpened(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void windowIconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
+		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent arg0) {
 				setVisible(false);
-
-			}
-
-			@Override
-			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 		});
-		// create Labels containing current Path
 
-		// setLayout(new GridLayout(2, 2));
-		// setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		// create Labels containing current Path
 		add(new JLabel("Current path:"));
 		currentPath = getPathLabel();
 		add(currentPath);
@@ -91,6 +51,7 @@ public class PrismPathChooser extends JFrame implements ActionListener {
 		add(getAutoSelect());
 		add(saveButton());
 		add(getManualSearch());
+
 		validatePath();
 	}
 
@@ -140,46 +101,42 @@ public class PrismPathChooser extends JFrame implements ActionListener {
 		};
 	}
 
-	private JButton setPath() {
-		JButton setPath = new JButton("select Path...");
-		// TODO: hier weiter machen
-		return null;
-	}
-
-	private void validatePath() {
+	/** check if path in label {@link #currentPath} is valid **/
+	private boolean validatePath() {
 		PrismRunner pr = new PrismRunner();
 		if (pr.validatePrismPath(currentPath.getText())) {
-			okLabel.setText("Path valid");
+			okLabel.setText("Path seems valid");
+			return true;
 		} else {
 			okLabel.setText("Path seems unvalid");
-			// TODO: FileChooser machen
+			return false;
 		}
-
 	}
 
+	/** set the current path, validate it and store into properties file **/
 	public void setPath(File file) {
 		currentPath.setText(file.toString());
-		validatePath();
+		if (validatePath())
+			SwatProperties.getInstance().setProperty("PrismSearchPath", file.toString());
 	}
 
 	@Override
+	/** reacts on click to MenuBar (shows up) and reacts on the click to manually search for a prism path**/
 	public void actionPerformed(ActionEvent arg0) {
-		// Manually search a path
+		// Show up GUI or manually choose a path
 		if (arg0.getActionCommand().equals("manual")) {
-			// Let user search for prism
+			/** User manually chooses a path to prism **/
 			JFileChooser fc = new JFileChooser(SwatProperties.getInstance().getProperty("PrismSearchPath", System.getProperty("home.dir")));
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			int returnVal = fc.showOpenDialog(null);
 			if (returnVal != JFileChooser.APPROVE_OPTION) {
-				// file was not correctly chosen
+				// File Choose was cancelled
 				return;
 			}
-
-			// File was chosen correctly
-			File file = fc.getSelectedFile();
-			SwatProperties.getInstance().setProperty("PrismSearchPath", file.toString());
-			setPath(file);
+			// File was chosen by user
+			setPath(fc.getSelectedFile());
 		} else {
+			/** Action was fired to show the PathChooser GUI **/
 			System.out.println("Starting Prism Path Chooser");
 			setVisible(true);
 		}

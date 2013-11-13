@@ -23,17 +23,17 @@ import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
  * @author richard
  * 
  */
-@SuppressWarnings("serial")
-public class UserFile extends File {
+public class SwatComponent {
 	private boolean hasUnsavedChanges = false;
 	// private JEditorPane editor;
 	private JPanel editor;
 	private static Logger log = BPLog.getLogger(SplitGui.class.getName());
 	private boolean parseable = false;
 	private boolean show = false;
+	private File file;
 
-	public UserFile(String pathname) {
-		super(pathname);
+	public SwatComponent(String pathname) {
+		file = new File(pathname);
 		hasUnsavedChanges = false;
 		createEditor();
 	}
@@ -44,14 +44,14 @@ public class UserFile extends File {
 		createEditor();
 	}
 
-	public UserFile(String pathname, boolean hasUnsavedChanges) {
-		super(pathname);
+	public SwatComponent(String pathname, boolean hasUnsavedChanges) {
+		file = new File(pathname);
 		this.hasUnsavedChanges = hasUnsavedChanges;
 		createEditor();
 	}
 
-	public UserFile(File file) {
-		super(file.toString());
+	public SwatComponent(File file) {
+		this.file = file;
 		createEditor();
 	}
 
@@ -70,11 +70,12 @@ public class UserFile extends File {
 	 * changes
 	 */
 	public String getName() {
-		return hasUnsavedChanges ? "*" + super.getName() : super.getName();
+		return hasUnsavedChanges ? "*" + file.getName() : file.getName();
 	}
 
+	/** returns name of the file **/
 	public String toString() {
-		return super.getName();
+		return file.getName();
 	}
 
 	/*
@@ -100,13 +101,13 @@ public class UserFile extends File {
 			/*
 			 * PetriNet
 			 */
-			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(this, true, false);
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(file, true, false);
 			AbstractPetriNet<?, ?, ?, ?, ?> petriNet = netContainer.getPetriNet();
 
 			// distinguish between different net-types to choose corresponding
 			// editor
 			if (netContainer instanceof GraphicalPTNet) {
-				editor = new PTNetEditor((GraphicalPTNet) netContainer, this);
+				editor = new PTNetEditor((GraphicalPTNet) netContainer, file);
 			}
 
 			// TODO
@@ -130,7 +131,8 @@ public class UserFile extends File {
 			// ActionEvent.ACTION_PERFORMED, "open"));
 			parseable = true;
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "Could not open editor for " + getAbsolutePath() + ": in " + getClass().toString() + " " + e.toString());
+			log.log(Level.SEVERE,
+					"Could not open editor for " + file.getAbsolutePath() + ": in " + getClass().toString() + " " + e.toString());
 			// editor = new PNMLEditor(null);
 		}
 
@@ -198,5 +200,9 @@ public class UserFile extends File {
 		// sa.actionPerformed(new ActionEvent(editor,
 		// ActionEvent.ACTION_PERFORMED, "save"));
 
+	}
+
+	public File getFile() {
+		return file;
 	}
 }

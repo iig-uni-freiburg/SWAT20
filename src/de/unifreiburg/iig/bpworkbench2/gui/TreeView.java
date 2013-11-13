@@ -11,7 +11,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
-import de.unifreiburg.iig.bpworkbench2.model.files.UserFile;
+import de.unifreiburg.iig.bpworkbench2.model.files.SwatComponent;
 
 @SuppressWarnings("serial")
 public class TreeView extends JTree implements Observer {
@@ -78,7 +78,7 @@ public class TreeView extends JTree implements Observer {
 	 */
 	private void fileModelToTree(OpenFileModel ofm) {
 		root.removeAllChildren();
-		for (UserFile uFile : ofm.getFiles()) {
+		for (SwatComponent uFile : ofm.getFiles()) {
 			if (uFile.isParseable()) {
 				root.add(new DefaultMutableTreeNode(uFile));
 			}

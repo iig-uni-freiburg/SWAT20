@@ -39,9 +39,12 @@ public class PrismRunner {
 
 	}
 
+	/**
+	 * Class to start and to search for prism executable
+	 */
 	public PrismRunner() {
-		// search for Prism path
-		prismPath = PrismSearch.getInstance().getPrismPath();
+		// search for Prism path. Check property. If not set, search for it
+		prismPath = new File(SwatProperties.getInstance().getProperty("PrismPath", PrismSearch.getInstance().getPrismPath().toString()));
 	}
 
 	/**
@@ -51,7 +54,7 @@ public class PrismRunner {
 	public String execPrism(String modelPath, String... propertyPath) {
 		// TODO: make it threaded?
 		// prepare property String
-		String propertyString = propertyString(propertyPath);
+		String propertyString = generatePropertyString(propertyPath);
 		Process p = null;
 
 		try {
@@ -86,8 +89,8 @@ public class PrismRunner {
 		}
 	}
 
-	private String propertyString(String[] propertyPath) {
-		StringBuilder sb = new StringBuilder();
+	private String generatePropertyString(String[] propertyPath) {
+		StringBuilder sb = new StringBuilder(100);
 		for (int i = 0; i < propertyPath.length; i++) {
 			sb.append(" ");
 			sb.append(propertyPath[i]);
@@ -95,12 +98,15 @@ public class PrismRunner {
 		return sb.toString();
 	}
 
+	/** Returns path to prism as String **/
 	public String searchForPrism() {
-		PrismSearch psearch = PrismSearch.getInstance();
-		return psearch.getPrismPath().toString();
+		return PrismSearch.getInstance().getPrismPath().toString();
 	}
 
 	public boolean validatePrismPath(String path) {
+		if (path == null || path.equals("")) {
+			return false;
+		}
 		return PrismSearch.getInstance().checkPrismPath(new File(path));
 	}
 }
@@ -108,14 +114,14 @@ public class PrismRunner {
 /**
  * Searches for prism executable. Depending on OS, the corresponding PrismSearch
  * extension is chosen ({@link LinuxSearch}, {@link WindowsSearch} or
- * {@link MacOSSearch}).
+ * {@link MacOSSearch}) and returned by {@link #getInstance()}.
  **/
 class PrismSearch {
-	private static Logger log = BPLog.getLogger(SplitGui.class.getName());
+	protected static Logger log = BPLog.getLogger(SplitGui.class.getName());
 	private static String OS = System.getProperty("os.name").toLowerCase();
 	/**
-	 * Possible Paths were Prism could be installed. Is set by decorators
-	 * (Classes extending this class)
+	 * Possible Paths were Prism could be installed. Is additionally populated
+	 * by decorators (Classes extending this class)
 	 **/
 	protected List<File> prismPaths = new LinkedList<File>();
 	FilenameFilter filter = new FilenameFilter() {
@@ -126,12 +132,16 @@ class PrismSearch {
 
 	protected PrismSearch() {
 		// For all operating systems:
-		// Search in executionpath
+		// Search in runtimepath of SWAT
 		addExecPath();
 		// Also, try user.home and user.dir with and without bin/ appended
 		addUsersHome();
 	}
 
+	/**
+	 * add the user's home dir to the list of possible prism paths (
+	 * {@link #prismPaths})
+	 **/
 	private void addUsersHome() {
 		// get Os specific Path seperator
 		String sep = System.getProperty("file.separator");
@@ -152,10 +162,10 @@ class PrismSearch {
 	private void addExecPath() {
 		// Search in execution path, underlying path and underlying underlying
 		// path of SWAT2
-		File execPath = new File(SWAT2Controller.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-		prismPaths.addAll(Arrays.asList(execPath.listFiles(filter)));
-		prismPaths.addAll(Arrays.asList(execPath.getParentFile().listFiles(filter)));
-		prismPaths.addAll(Arrays.asList(execPath.getParentFile().getParentFile().listFiles(filter)));
+		File runtimePath = new File(SWAT2Controller.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+		prismPaths.addAll(Arrays.asList(runtimePath.listFiles(filter)));
+		prismPaths.addAll(Arrays.asList(runtimePath.getParentFile().listFiles(filter)));
+		prismPaths.addAll(Arrays.asList(runtimePath.getParentFile().getParentFile().listFiles(filter)));
 	}
 
 	/** Depending on the users OS, get the correct PrismSearch Object **/
@@ -168,7 +178,7 @@ class PrismSearch {
 		else if (isUnix() || isSolaris())
 			return (PrismSearch) new LinuxSearch();
 		else
-			return null;
+			return null; // or better pretend to be windows?
 	}
 
 	public List<File> getPossiblePaths() {
@@ -210,19 +220,24 @@ class PrismSearch {
 		return null;
 	}
 
+	/**
+	 * check if given file (path) contains the file bin/prism and is executable
+	 * by the VM
+	 **/
 	public boolean checkPrismPath(File path) {
 		File test;
 		if ((test = new File(path, "bin/prism")).exists()) {
-			log.log(Level.INFO, "Found possible Prism Model Checker: " + path);
-			if (test.canExecute())
+			if (test.canExecute()) {
+				log.log(Level.INFO, "Found possible Prism Model Checker: " + path);
 				return true;
+			}
 		}
 		return false;
 	}
 
 }
 
-/** Suggests files to search for prism for linux **/
+/** Search for Prism model checker on Linux **/
 class LinuxSearch extends PrismSearch {
 
 	/** search for Prism on Linux **/
@@ -239,12 +254,22 @@ class LinuxSearch extends PrismSearch {
 /** Search for Prism model checker on Windows OS **/
 class WindowsSearch extends PrismSearch {
 
-	/** Search for Prism model checker on Windows OS **/
+	/** suggest additional folders to search for prism on Windows OS **/
 	public WindowsSearch() {
 		// Search on C:\program files, C:\program files(x86)...
 		prismPaths.addAll(Arrays.asList(new File(System.getenv("ProgramFiles")).listFiles(filter)));
 		prismPaths.addAll(Arrays.asList(new File(System.getenv("%programfiles%" + " " + "(x86)")).listFiles(filter)));
 		prismPaths.addAll(Arrays.asList(new File("c:\\Program Files\\").listFiles(filter)));
+	}
+
+	public boolean checkPrismPath(File path) {
+		File test;
+		if ((test = new File(path, "bin\\prism")).exists()) {
+			log.log(Level.INFO, "Found possible Prism Model Checker: " + path);
+			if (test.canExecute())
+				return true;
+		}
+		return false;
 	}
 }
 

@@ -27,7 +27,7 @@ import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
  * 
  */
 public class OpenFileModel extends Observable {
-	private ArrayList<UserFile> openFiles = new ArrayList<UserFile>();
+	private ArrayList<SwatComponent> openFiles = new ArrayList<SwatComponent>();
 	private int currentlyViewedFile = 0;
 	private static OpenFileModel myOpenFileModel = new OpenFileModel();
 	// Static so that always the same JTree is meant
@@ -58,35 +58,35 @@ public class OpenFileModel extends Observable {
 	}
 
 	public void addFile(File file) {
-		openFiles.add(new UserFile(file));
+		openFiles.add(new SwatComponent(file));
 		update();
 	}
 
 	private void addFileSilently(File file) {
-		UserFile uFile = new UserFile(file);
+		SwatComponent uFile = new SwatComponent(file);
 		if (uFile.isParseable())
 			openFiles.add(uFile);
 		SplitGui.getGui().revalidate();
 	}
 
 	public void addFile(String file) {
-		openFiles.add(new UserFile(file));
+		openFiles.add(new SwatComponent(file));
 		update();
 
 		log.log(Level.INFO, "Now: " + getSize() + " Elements in FileModel");
 	}
 
 	public void addFile(UserFile file) {
-		openFiles.add(file);
+		openFiles.add(new SwatComponent(file));
 		update();
 
 	}
 
 	public void rename(String newName) {
 		log.log(Level.INFO, "Renaming a File to " + newName);
-		UserFile uFile = getOpenFile();
+		File uFile = getOpenFile().getFile();
 		// TODO: check if file exists
-		getOpenFile().renameTo(new File(uFile.getAbsolutePath() + "/" + newName));
+		getOpenFile().getFile().renameTo(new File(uFile.getAbsolutePath() + "/" + newName));
 		update();
 	}
 
@@ -95,14 +95,13 @@ public class OpenFileModel extends Observable {
 		update();
 	}
 
-	public UserFile getFile(int i) {
+	public SwatComponent getFile(int i) {
 		return openFiles.get(i);
 	}
 
-	public UserFile getOpenFile() {
+	public SwatComponent getOpenFile() {
 
 		return openFiles.get(currentlyViewedFile);
-
 	}
 
 	public int getOpenFileIndex() {
@@ -126,7 +125,10 @@ public class OpenFileModel extends Observable {
 		setOpenFileIndex(i, true);
 	}
 
-	/** search o and set it as new active userFile if found **/
+	/**
+	 * search o and set it as new active userFile if found. Set it active,
+	 * create the editor
+	 **/
 	public void setOpenFileIndex(Object o) {
 		int index = getIndexOf(o);
 		if (index != -1) {
@@ -158,7 +160,7 @@ public class OpenFileModel extends Observable {
 		setOpenFileIndex(newIndex);
 	}
 
-	public ArrayList<UserFile> getFiles() {
+	public ArrayList<SwatComponent> getFiles() {
 		return openFiles;
 	}
 

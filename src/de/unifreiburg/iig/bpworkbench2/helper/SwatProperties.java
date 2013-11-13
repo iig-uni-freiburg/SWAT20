@@ -34,7 +34,6 @@ public class SwatProperties {
 	}
 
 	public String getProperty(String key, String defaultValue) {
-		System.out.println(property.getProperty("PrismPath", "bla"));
 		return property.getProperty(key, defaultValue);
 	}
 

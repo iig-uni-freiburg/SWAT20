@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.logging.Level;
@@ -24,18 +25,22 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.unifreiburg.iig.bpworkbench2.gui.Buttons;
 import de.unifreiburg.iig.bpworkbench2.gui.Buttons.ButtonName;
+import de.unifreiburg.iig.bpworkbench2.gui.FileRenamer;
 import de.unifreiburg.iig.bpworkbench2.gui.MenuView;
 import de.unifreiburg.iig.bpworkbench2.gui.MenuView.MenuNames;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
 import de.unifreiburg.iig.bpworkbench2.gui.TreeView;
+import de.unifreiburg.iig.bpworkbench2.helper.PrismRunner;
+import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
+import de.unifreiburg.iig.bpworkbench2.model.files.SwatComponent;
 import de.unifreiburg.iig.bpworkbench2.model.files.UserFile;
 
 public class SWAT2Controller {
-	public int test;
 
+	/** ---Starts SWAT--- **/
 	public static void main(String args[]) {
 
 		// Set look and feel
@@ -43,24 +48,31 @@ public class SWAT2Controller {
 
 		// Generate GUI. The GUI automatically registers with the OpenFileModel
 		SplitGui gui = SplitGui.getGui();
-		// Show gui
 		gui.show();
 
-		// Set a starting point for the project
-		String startPath = System.getProperty("user.home");
+		// Set a starting point for the project. Read property file
+		SwatProperties swatProps = SwatProperties.getInstance();
+		String startPath = swatProps.getProperty("Project.home", System.getProperty("user.home"));
 		OpenFileModel.getInstance().setFolder(new File(startPath));
 
-		// add Observers if needed
+		// Search for Prism path is none is set
+		if (swatProps.getProperty("PrismPath") == null) {
+			swatProps.setProperty("PrismPath", new PrismRunner().searchForPrism());
+		}
 
 		/* ---add Handlers (Controller)--- */
+		addHandler();
 
+	}
+
+	private static void addHandler() {
 		// add Handler to TreeView
 		// TreeView.getTreeView().addTreeSelectionListener(new
 		// SelectionListener());
-		TreeView.getTreeView().addMouseListener(new TreeMouseListener());
+		// TreeView.getTreeView().addMouseListener(new TreeMouseListener());
+		TreeView.getTreeView().addMouseListener(new TMListener());
 
-		// add Handler to Buttons, etc...
-		// get button model
+		// add Handler to Buttons and Menu
 		Buttons bts = Buttons.getInstance();
 		MenuView mv = MenuView.getInstance();
 
@@ -79,15 +91,12 @@ public class SWAT2Controller {
 		// Exit Menu
 		mv.getMenu(MenuNames.EXIT_MENU).addActionListener(new exitHandler());
 
-		// Add GUI as Observer of Button change
-		// bts.addObserver(gui);
-
 		// RadioButtonHandler
 		EditOrAnalyseListener editAnalyseListener = new EditOrAnalyseListener();
 		bts.getAnalyseBtn().addItemListener(editAnalyseListener);
 		bts.getEditBtn().addItemListener(editAnalyseListener);
 
-		// Menu entry handler
+		// Menu handler
 		MenuView menuView = MenuView.getInstance();
 		menuView.getAnalyseMenuEntry().addItemListener(editAnalyseListener);
 		menuView.getEditMenuEntry().addItemListener(editAnalyseListener);
@@ -118,6 +127,7 @@ class SaveListener implements ActionListener {
 
 }
 
+/** Opens a Directory and sets it as project root **/
 class OpenListener implements ActionListener {
 	Logger log = BPLog.getLogger(SplitGui.class.getName());
 
@@ -129,9 +139,10 @@ class OpenListener implements ActionListener {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			// File was chosen
 			File file = fc.getSelectedFile();
-			// Try to open the directory
+			// Try to open the directory, set it as default
 			log.log(Level.INFO, "Opening Project: " + file.getName() + ".");
 			OpenFileModel.getInstance().setFolder(file);
+			SwatProperties.getInstance().setProperty("Project.home", file.toString());
 		} else {
 			log.log(Level.SEVERE, "Open command cancelled by user.");
 
@@ -212,30 +223,60 @@ class SelectionListener implements TreeSelectionListener {
 	}
 }
 
-class TreeMouseListener implements MouseListener {
-
+/** Implements MouseListener through MouseAdapter. Reacts on TreeView clicks **/
+class TMListener extends MouseAdapter {
+	// MouseAdapter implements MouseListener
 	@Override
 	public void mouseClicked(java.awt.event.MouseEvent e) {
+		/** only react on JTree actions **/
 		if (e.getSource() instanceof JTree) {
-			// System.out.println("Double Click on JTree");
 			JTree tree = (JTree) e.getSource();
-			// open the corresponding Tab:
-			// get the new object that the user selected
+			// Prepare to open the corresponding Tab
+			// get the object that the user selected
 			Object newObj = ((DefaultMutableTreeNode) (tree.getSelectionPath().getLastPathComponent())).getUserObject();
 			if (newObj == null) {
 				return; // nothing was selected by user
 			}
 
-			// set selected object as active file
+			// Open or rename selected file
+			OpenFileModel ofm = OpenFileModel.getInstance();
+			if (e.getClickCount() == 2) {
+				// Douple-Click: Open file, create editor
+				ofm.setOpenFileIndex(newObj);
+			} else if (e.getButton() == 3) {
+				// right click: Rename selected file
+				SwatComponent uFile = ofm.getFile(ofm.getIndexOf(newObj));
+				new FileRenamer(uFile).showDialog();
+			}
+		}
+	}
+}
+
+/** To be deleted **/
+class TreeMouseListener implements MouseListener {
+
+	@Override
+	public void mouseClicked(java.awt.event.MouseEvent e) {
+		if (e.getSource() instanceof JTree) {
+			JTree tree = (JTree) e.getSource();
+			// Prepare to open the corresponding Tab (Editor for the clicked
+			// entry):
+			// get the object that the user selected
+			Object newObj = ((DefaultMutableTreeNode) (tree.getSelectionPath().getLastPathComponent())).getUserObject();
+			if (newObj == null) {
+				return; // nothing was selected by user
+			}
+
+			// get open file model
 			OpenFileModel ofm = OpenFileModel.getInstance();
 			if (e.getClickCount() == 2) {
 				// Douple-Click. Open File
 				ofm.setOpenFileIndex(newObj);
 			}
 
-			else if (e.getButton() == 2) {
+			else if (e.getButton() == 3) {
 				// Rename selected file
-				UserFile uFile = ofm.getFile(ofm.getIndexOf(newObj));
+				SwatComponent uFile = ofm.getFile(ofm.getIndexOf(newObj));
 			}
 		}
 	}
@@ -267,8 +308,7 @@ class TreeMouseListener implements MouseListener {
 }
 
 /**
- * UpdateListener adds itself automatically on creation to uFile. works on
- * JEditor only
+ * UpdateListener adds itself to uFile. works for JEditor only
  * 
  * @author richard
  * 
@@ -300,8 +340,9 @@ class updateListener implements DocumentListener {
 	}
 }
 
-/** State Listener for Edit / Analyze mode. MenuBar and Buttons */
+/** State Listener for Edit / Analyze mode. Useable for MenuBar and Buttons */
 class EditOrAnalyseListener implements ItemListener {
+	Logger log = BPLog.getLogger(SplitGui.class.getName());
 
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
@@ -327,7 +368,7 @@ class EditOrAnalyseListener implements ItemListener {
 		if (!rbtn.isSelected()) {
 			return;
 		}
-		Logger log = BPLog.getLogger(SplitGui.class.getName());
+
 		// which button was pressed? Check for action command
 		if (rbtn.getActionCommand().equals("analysis")) {
 			// activate analysis view
@@ -348,7 +389,6 @@ class EditOrAnalyseListener implements ItemListener {
 		if (!rbtn.isSelected()) {
 			return;
 		}
-		Logger log = BPLog.getLogger(SplitGui.class.getName());
 		// which button was pressed? Check for action command
 		if (rbtn.getActionCommand().equals("analysis")) {
 			// activate analysis view

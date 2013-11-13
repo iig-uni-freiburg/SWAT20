@@ -14,27 +14,29 @@ import javax.swing.event.ChangeListener;
 
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
-import de.unifreiburg.iig.bpworkbench2.model.files.UserFile;
+import de.unifreiburg.iig.bpworkbench2.model.files.SwatComponent;
 
 @SuppressWarnings("serial")
 public class TabView extends JTabbedPane implements Observer {
 	// private JTabbedPane tab;
-	private Logger log;
+	private Logger log = BPLog.getLogger(SplitGui.class.getName());
 
 	public JTabbedPane getTabView() {
 		return null;
 	}
 
 	public TabView() {
-		log = BPLog.getLogger(SplitGui.class.getName());
+
 		// tab = new JTabbedPane();
 		// this.setDoubleBuffered(true);
 		// this.setPreferredSize(new Dimension(50, 50));
+
+		// Change listener to react to when another tab is clicked (set active
+		// file in OpenFileModel)
 		this.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				// SplitGui.getGui().revalidate();
 				// synchronize active tab with active index in the Model
 				OpenFileModel ofm = OpenFileModel.getInstance();
 				int index = ((JTabbedPane) arg0.getSource()).getSelectedIndex();
@@ -56,7 +58,7 @@ public class TabView extends JTabbedPane implements Observer {
 		}
 	}
 
-	protected JComponent makeTextPanel(UserFile uFile) {
+	protected JComponent makeTextPanel(SwatComponent uFile) {
 		JPanel panel = new JPanel(false);
 		// JLabel filler = new JLabel(uFile.getName());
 		// JEditorPane editor = new JEditorPane();
@@ -103,7 +105,7 @@ public class TabView extends JTabbedPane implements Observer {
 		int curViewedTab = ofm.getOpenFileIndex();
 
 		// add tab for every uFile only if uFile carries a valid PNML editor
-		for (UserFile uFile : ofm.getFiles()) {
+		for (SwatComponent uFile : ofm.getFiles()) {
 			if (uFile.getEditor() != null) {
 				this.addTab(uFile.getName(), makeTextPanel(uFile));
 			}
