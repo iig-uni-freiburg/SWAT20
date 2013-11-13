@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.mxgraph.model.mxGeometry;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
@@ -45,8 +46,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		this.netContainer = netContainer;
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
-
-		setView(createCustomView());
+//		setView(createCustomView());
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
 		setCellsEditable(false);
@@ -57,6 +57,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		initialize();
 	}
 	
+
 	@SuppressWarnings("rawtypes")
 	private void initialize(){
 		// Check if net container is empty.
@@ -235,9 +236,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 				System.out.println(state.getAbsoluteOffset());
 			}
 		}
-		System.out.println("refresh start");
-		repaint();
-		System.out.println("refresh end");
+//		System.out.println("refresh start");
+//		System.out.println("refresh end");
 		System.out.println(getView().getState(nodeReferences.get(netContainer.getPetriNet().getPlace("p2"))).getAbsoluteOffset());
 	}
 	

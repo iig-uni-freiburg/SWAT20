@@ -53,7 +53,7 @@ public abstract class MXConstants {
         }
     }
 	
-	public static final String DEFAULT_PLACE_SHAPE = "shape=ellipse;"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
+	public static final String DEFAULT_PLACE_SHAPE = "shape=ellipse;"  +"spacingLeft=-50; fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 	public static final String DEFAULT_TRANSITION_SHAPE = "shape=rectangle;"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 	public static final String DEFAULT_ARC_SHAPE = "";
 	
@@ -67,6 +67,7 @@ public abstract class MXConstants {
 	public static final String PNLabelStyle ="shape=none;fontSize=12;fontColor="+ Integer.toHexString(MXConstants.bluelow.getRGB())+ ";";
 	
 	public static String getStyle(PNComponent type, NodeGraphics nodeGraphics){
+//		getCellStyle(cell).put(mxConstants.STYLE_SPACING_LEFT, -30);
 		//TODO:
 //		if(nodeGraphics == null){
 		if(true){
