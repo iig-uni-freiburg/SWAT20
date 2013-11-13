@@ -36,9 +36,6 @@ import com.mxgraph.view.mxGraphSelectionModel;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -142,9 +139,7 @@ public abstract class PNEditor extends JPanel {
 	public PNGraphComponent getGraphComponent(){
 		if(graphComponent == null){
 			graphComponent = createGraphComponent();
-			setUpGraph();
-			getGraph().setTransitionShape(getTransitionShape());
-			getGraph().setPlaceShape(getPlaceShape());
+			graphComponent.setPopupMenu(getPopupMenu());
 			graphComponent.getViewport().setOpaque(true);
 			graphComponent.getViewport().setBackground(MXConstants.blueBG);
 
@@ -200,7 +195,7 @@ public abstract class PNEditor extends JPanel {
 	
 	private JPanel getPalettePanel(){
 		if(palettePanel == null){
-			palettePanel = new PalettePanel(getPlaceShape(), getTransitionShape());
+			palettePanel = new PalettePanel();
 		}
 		return palettePanel;
 	}
@@ -248,35 +243,27 @@ public abstract class PNEditor extends JPanel {
 	
 	//TODO: Do same thing for transition label, place size, transition size
 
-	@SuppressWarnings("rawtypes") 
-	protected void setUpGraph() {
-		if(netContainer.getPetriNet().isEmpty())
-			return;
+//	@SuppressWarnings("rawtypes") 
+//	protected void setjUpGraph() {
+//		if(netContainer.getPetriNet().isEmpty())
+//			return;
+//
+//		getGraph().getModel().beginUpdate();
+//		
+//		for(AbstractPlace place: getNetContainer().getPetriNet().getPlaces()){
+//			getGraphComponent().addExistingPlaceToGraph(place, netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()));
+//		}
+//		for(AbstractTransition transition: getNetContainer().getPetriNet().getTransitions()){
+//			getGraphComponent().addExistingTransitionToGraph(transition, netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()));
+//		}
+//		for(AbstractFlowRelation relation: getNetContainer().getPetriNet().getFlowRelations()){
+//			getGraphComponent().addExistingRelation(relation, netContainer.getPetriNetGraphics().getArcGraphics().get(relation.getName()));
+//		}
+//		getGraph().getModel().endUpdate();
+//		
+//		getGraph().setLabelPositions();
+//	}
 
-		getGraph().getModel().beginUpdate();
-		
-		for(AbstractPlace place: getNetContainer().getPetriNet().getPlaces()){
-			getGraphComponent().addExistingPlaceToGraph(place, netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()));
-		}
-		for(AbstractTransition transition: getNetContainer().getPetriNet().getTransitions()){
-			getGraphComponent().addExistingTransitionToGraph(transition, netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()));
-		}
-		for(AbstractFlowRelation relation: getNetContainer().getPetriNet().getFlowRelations()){
-			getGraphComponent().addExistingRelation(relation, netContainer.getPetriNetGraphics().getArcGraphics().get(relation.getName()));
-		}
-		getGraph().getModel().endUpdate();
-		
-		getGraphComponent().setLabelPositions(netContainer.getPetriNetGraphics());
-	}
-
-	protected String getPlaceShape(){
-		return MXConstants.PNPlaceShape;
-	}
-	
-	protected String getTransitionShape(){
-		 return MXConstants.PNTransitionShape;
-	}
-	
 	public void setFileReference(File fileReference) throws ParameterException {
 		Validate.notNull(fileReference);
 		Validate.noDirectory(fileReference);

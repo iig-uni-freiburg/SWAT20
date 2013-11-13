@@ -22,8 +22,6 @@ import java.util.Map;
 
 import javax.swing.CellRendererPane;
 
-import com.mxgraph.shape.PNPlaceShape;
-import com.mxgraph.shape.PNTransitionShape;
 import com.mxgraph.shape.mxActorShape;
 import com.mxgraph.shape.mxArrowShape;
 import com.mxgraph.shape.mxCloudShape;
@@ -51,8 +49,6 @@ import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
-
-import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 
 /**
  * An implementation of a canvas that uses Graphics2D for painting.
@@ -108,10 +104,10 @@ public class mxGraphics2DCanvas extends mxBasicCanvas
 		putShape(mxConstants.SHAPE_TRIANGLE, new mxTriangleShape());
 		putTextShape(TEXT_SHAPE_DEFAULT, new mxDefaultTextShape());
 		putTextShape(TEXT_SHAPE_HTML, new mxHtmlTextShape());
-		
-		//customized shapes
-		putShape( MXConstants.PNPlace, new PNPlaceShape());
-		putShape(MXConstants.PNTransition, new PNTransitionShape());
+//		
+//		//customized shapes
+//		putShape( MXConstants.PNPlace, new PNPlaceShape());
+//		putShape(MXConstants.PNTransition, new PNTransitionShape());
 	}
 
 	/**

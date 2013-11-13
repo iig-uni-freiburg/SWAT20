@@ -6,9 +6,6 @@ import javax.swing.JOptionPane;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
 
 public class PTGraphComponent extends PNGraphComponent {
@@ -34,10 +31,8 @@ public class PTGraphComponent extends PNGraphComponent {
 		}
 
 		if (tokens != null) {
-			PTMarking initialMarking = getGraph().getNetContainer().getPetriNet().getInitialMarking();
 			try {
-				initialMarking.set(cell.getId(), new Integer(tokens));
-				getGraph().getNetContainer().getPetriNet().setInitialMarking(initialMarking);
+				getGraph().updatePlaceState(cell, tokens);
 			} catch (ParameterException e2) {
 				JOptionPane.showMessageDialog(PTGraphComponent.this, "Cannot set initial marking for place.\n Reason: " + e2.getMessage(), "Graph Exception", JOptionPane.ERROR_MESSAGE);
 			}
@@ -64,12 +59,6 @@ public class PTGraphComponent extends PNGraphComponent {
 			}
 		}
 		return true;
-	}
-	
-	@SuppressWarnings("rawtypes") 
-	@Override
-	protected String getArcConstraint(AbstractFlowRelation relation) {
-		return String.valueOf(((PTFlowRelation) relation).getWeight());
 	}
 	
 

@@ -32,7 +32,7 @@
         <name>
           <text>end</text>
           <graphics>
-            <offset x="1.0" y="-5.0"/>
+            <offset x="10.0" y="-50.0"/>
             <fill color="#FF0000" gradient-color="#FFFFFF" gradient-rotation="diagonal" image="http://www.some-url.com/image.png"/>
             <line color="black" shape="line" style="solid" width="1.5"/>
             <font align="left" decoration="underline" family="arial,sans-serif" rotation="0.0" size="medium" style="italic" weight="bold"/>

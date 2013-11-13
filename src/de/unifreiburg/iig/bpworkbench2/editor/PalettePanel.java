@@ -16,7 +16,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.TransferHandler;
 import javax.swing.border.LineBorder;
 
 import com.mxgraph.model.mxCell;
@@ -35,10 +34,10 @@ public class PalettePanel extends JPanel {
 	
 	protected JLabel selectedEntry = null;
 
-    public PalettePanel(String placeShape, String transitionShape) {
+    public PalettePanel() {
         setLayout(new GridLayout(getComponentCount(), 1));
-        addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), transitionShape, EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), null);
-		addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), placeShape, EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(), null);
+        addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), MXConstants.DEFAULT_TRANSITION_SHAPE, EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), null);
+		addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), MXConstants.DEFAULT_PLACE_SHAPE, EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(), null);
     }
 
     public void setSelectionEntry(JLabel entry, mxGraphTransferable t) {

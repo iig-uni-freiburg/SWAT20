@@ -5,8 +5,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
@@ -18,13 +16,6 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.util.mxUtils;
 
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractPNGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.unifreiburg.iig.bpworkbench2.editor.EditorPopupMenu;
 import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
@@ -36,9 +27,6 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	private static final long serialVersionUID = 1411737962538427287L;
 	
 	private EditorPopupMenu popupMenu = null;
-	
-	@SuppressWarnings("rawtypes")
-	protected Map<AbstractPNNode, PNGraphCell> nodeReferences = new HashMap<AbstractPNNode, PNGraphCell>();
 
 	public PNGraphComponent(PNGraph graph, PNEditor pnEditor) {
 		super(graph);
@@ -61,7 +49,6 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		Document doc = mxUtils.loadDocument(PNEditor.class.getResource("/default-style.xml").toString());
 		codec.decode(doc.getDocumentElement(), graph.getStylesheet());
 		setTransferHandler(new PaletteTransferHandler());
-		this.popupMenu = pnEditor.getPopupMenu();
 	}
 
 	@Override
@@ -73,34 +60,22 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		this.popupMenu = popupMenu;
 	}
 	
-	@SuppressWarnings("rawtypes") 
-	public void addExistingPlaceToGraph(AbstractPlace place, NodeGraphics nodeGraphics){
-		PNGraphCell newCell = getGraph().insertPNPlace(place.getName(), place.getLabel(), nodeGraphics);
-		nodeReferences.put(place, newCell);
-		//TODO: Notify listeners
-	}
+//	@SuppressWarnings("rawtypes") 
+//	public void addExistingPlaceToGraph(AbstractPlace place, NodeGraphics nodeGraphics){
+//		getGraph().insertPNPlace(place, nodeGraphics);
+//	}
+//	
+//	@SuppressWarnings("rawtypes") 
+//	public void addExistingTransitionToGraph(AbstractTransition transition, NodeGraphics nodeGraphics){
+//		getGraph().insertPNTransition(transition, nodeGraphics);
+//	}
+//	
+//	@SuppressWarnings("rawtypes")
+//	public void addExistingRelation(AbstractFlowRelation relation, ArcGraphics arcGraphics){
+//		getGraph().insertPNRelation(relation, getArcConstraint(relation), arcGraphics);
+//	}
+//	
 	
-	@SuppressWarnings("rawtypes") 
-	public void addExistingTransitionToGraph(AbstractTransition transition, NodeGraphics nodeGraphics){
-		PNGraphCell newCell = getGraph().insertPNTransition(transition.getName(), transition.getLabel(), nodeGraphics);
-		nodeReferences.put(transition, newCell);
-		//TODO: Notify listeners
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public void addExistingRelation(AbstractFlowRelation relation, ArcGraphics arcGraphics){
-		getGraph().insertPNRelation(relation.getName(), getArcConstraint(relation), nodeReferences.get(relation.getSource()), nodeReferences.get(relation.getTarget()), arcGraphics);
-		//TODO: Notify listeners
-	}
-	
-	@SuppressWarnings("rawtypes")
-	protected abstract String getArcConstraint(AbstractFlowRelation relation);
-	
-	
-	@SuppressWarnings("rawtypes")
-	public void setLabelPositions(AbstractPNGraphics pnGraphics){
-		
-	}
 	
 	protected void addNewPlace(Point point){
 //		String prefix = MXConstants.PlaceNamePrefix;
