@@ -46,6 +46,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
 
+		setView(createCustomView());
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
 		setCellsEditable(false);
@@ -95,9 +96,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 	 * Constructs a new customized view to be used in this graph, which also
 	 * writes label annotations in the PN-Model.
 	 */
-	@Override
-	protected GraphView createGraphView() {
-		view = new GraphView(this);
+	protected GraphView createCustomView() {
+		view = new GraphView(this, getNetContainer().getPetriNetGraphics());
 		return (GraphView) view;
 	}
 	
