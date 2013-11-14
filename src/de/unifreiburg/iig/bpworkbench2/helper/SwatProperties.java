@@ -1,110 +1,175 @@
 package de.unifreiburg.iig.bpworkbench2.helper;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
-import java.net.URL;
+import java.util.HashSet;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
-import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
-import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
+import de.invation.code.toval.misc.ArrayUtils;
+import de.invation.code.toval.misc.StringUtils;
+import de.invation.code.toval.properties.AbstractProperties;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcher;
 
-public class SwatProperties {
-	static Logger log = BPLog.getLogger(SplitGui.class.getName());
-	private static SwatProperties props = new SwatProperties();
-	private static Properties property;
-	private static URL propertyFile;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+public class SwatProperties extends AbstractProperties{
+	
+	protected static final String defaultWorkingDirectory = ".";
+	public static final String defaultWorkingDirectoryName = "SimulationDirectory";
+	
+	protected static final String propertyFileName = "GeneralProperties";
+	
+	private static SwatProperties instance = null;
+	
+	private String applicationPath = null;
+	
+	public SwatProperties() throws IOException {
+		try {
+			load(propertyFileName);
+		} catch (IOException e) {
+			// Create new property file.
+			loadDefaultProperties();
+			store();
+		}
+		applicationPath = new File (".").getCanonicalPath();
 	}
-
-	public static SwatProperties getInstance() {
-		return props;
+	
+	public String getApplicationPath(){
+		return applicationPath;
 	}
-
-	public String getProperty(String key) {
-		return property.getProperty(key);
-
+	
+	/**
+	 * 
+	 * @return
+	 * @throws IOException if there is no property file and a new one cannot be created.
+	 */
+	public static SwatProperties getInstance() throws IOException {
+		if(instance == null){
+			instance = new SwatProperties();
+		}
+		return instance;
 	}
-
-	public String getProperty(String key, String defaultValue) {
-		return property.getProperty(key, defaultValue);
+	
+	//------- Property setting -------------------------------------------------------------
+	
+	private void setProperty(SwatProperty property, Object value){
+		props.setProperty(property.toString(), value.toString());
 	}
-
-	private Object getObject(Object key) {
-		return property.get(key);
+	
+	private String getProperty(SwatProperty property){
+		return props.getProperty(property.toString());
 	}
-
-	public Object setProperty(String key, String value) {
-		// property.setProperty(key, value);
-		Object result = property.setProperty(key, value);
-		store();
+	
+	private void removeProperty(SwatProperty property){
+		props.remove(property.toString());
+	}
+	
+	//------- Working Directory ------------------------------------------------------------
+	
+	public void setWorkingDirectory(String directory) throws ParameterException, IOException, PropertyException {
+		validateWorkingDirectory(directory);
+		setProperty(SwatProperty.WORKING_DIRECTORY, directory);
+		File directoryFile = new File(directory);
+		if(!directoryFile.exists()){
+			directoryFile.mkdir();
+		}
+	}
+	
+	public String getWorkingDirectory() throws PropertyException, ParameterException {
+		String propertyValue = getProperty(SwatProperty.WORKING_DIRECTORY);
+		if(propertyValue == null)
+			throw new PropertyException(SwatProperty.WORKING_DIRECTORY, propertyValue);
+		validatePath(propertyValue);
+		return propertyValue;
+	}
+	
+	public void removeSimulationDirectory(){
+		removeProperty(SwatProperty.WORKING_DIRECTORY);
+	}
+	
+	//------- Known Working Directories ----------------------------------------------------
+	
+	public void addKnownWorkingDirectory(String workingDirectory) throws ParameterException{
+		validateWorkingDirectory(workingDirectory);
+		Set<String> currentDirectories = getKnownWorkingDirectories();
+		currentDirectories.add(workingDirectory);
+		setProperty(SwatProperty.KNOWN_WORKING_DIRECTORIES, ArrayUtils.toString(prepareWorkingDirectories(currentDirectories)));
+	}
+	
+	public void removeKnownWorkingDirectory(String simulationDirectory) throws ParameterException{
+		validateStringValue(simulationDirectory);
+		Set<String> currentDirectories = getKnownWorkingDirectories();
+		currentDirectories.remove(simulationDirectory);
+		setProperty(SwatProperty.KNOWN_WORKING_DIRECTORIES, ArrayUtils.toString(prepareWorkingDirectories(currentDirectories)));
+	}
+	
+	private String[] prepareWorkingDirectories(Set<String> directories){
+		String[] result = new String[directories.size()];
+		int count = 0;
+		for(String directory: directories)
+			result[count++] = "'"+directory+"'";
 		return result;
 	}
-
-	private SwatProperties() {
-		propertyFile = SWAT2Controller.class.getResource("../ressources/swat2config.properties");
-		System.out.println("Prop-File: " + propertyFile.getFile());
-		if (propertyFile == null) {
-			// create Property file
-			createPropFile();
+	
+	public Set<String> getKnownWorkingDirectories(){
+		Set<String> result = new HashSet<String>();
+		String propertyValue = getProperty(SwatProperty.KNOWN_WORKING_DIRECTORIES);
+		if(propertyValue == null)
+			return result;
+		StringTokenizer directoryTokens = StringUtils.splitArrayString(propertyValue, String.valueOf(ArrayUtils.VALUE_SEPARATION));
+		while(directoryTokens.hasMoreTokens()){
+			String nextToken = directoryTokens.nextToken();
+			result.add(nextToken.substring(1, nextToken.length()-1));
 		}
-		// load Properties
+		return result;
+	}
+	
+	//------- Prism Path -------------------------------------------------------------------
+	
+	public void setPrismPath(String directory) throws ParameterException, IOException, PropertyException {
+		PrismSearcher.validatePrismPath(directory);
+		setProperty(SwatProperty.PRISM_PATH, directory);
+	}
+	
+	public String getPrismPath() throws PropertyException, ParameterException {
+		String propertyValue = getProperty(SwatProperty.PRISM_PATH);
+		if(propertyValue == null)
+			throw new PropertyException(SwatProperty.PRISM_PATH, propertyValue);
+		PrismSearcher.validatePrismPath(propertyValue);
+		return propertyValue;
+	}
+	
+	//------- Validation -------------------------------------------------------------------
+	
+	private void validateWorkingDirectory(String path) throws ParameterException{
+		Validate.directory(path);
+	}
+	
+	
+	
+	//------- Default Properties -----------------------------------------------------------
+	
+	@Override
+	protected Properties getDefaultProperties(){
+		Properties defaultProperties = new Properties();
+		
+		//TODO:
+		
+		return defaultProperties;
+	}
+	
+	//--------------------------------------------------------------------------------------
+	
+	public void store() throws IOException {
 		try {
-			property = new Properties();
-			property.load(new FileReader(propertyFile.getFile()));
-			System.out.println("all good");
-			//
-		} catch (FileNotFoundException e) {
-			// Create Properties file
-			log.severe("Could not open property file. Creating empty one");
-			createPropFile();
-			try {
-				// try again to read the newly generated property file
-				property.load(new FileReader(propertyFile.getFile()));
-			} catch (FileNotFoundException e1) {
-				log.log(Level.SEVERE, "Could not load or create property file");
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				log.log(Level.SEVERE, "Could not load or create property file");
-				e1.printStackTrace();
-			}
+			store(propertyFileName);
 		} catch (IOException e) {
-			log.log(Level.SEVERE, "Could not load property file. IO Exception");
-			// e.printStackTrace();
+			throw new IOException("Cannot create/store swat properties file on disk.");
 		}
 	}
 
-	private void createPropFile() {
-		try {
-			Writer writer = new FileWriter("../ressources/swat2config.properties");
-			property.store(writer, "SWAT2.0 Config");
-			writer.flush();
-			writer.close();
-			writer = null;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			log.log(Level.SEVERE, "Could not create or store properties file");
-			e.printStackTrace();
-		}
-		propertyFile = SWAT2Controller.class.getResource("../ressources/swat2config.properties");
-	}
-
-	public void store() {
-		try {
-			FileWriter writer = new FileWriter(propertyFile.getFile());
-			property.store(writer, "SWAT2.0 Config");
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			log.log(Level.SEVERE, "Could not save to property file");
-			e.printStackTrace();
-		}
-	}
 }

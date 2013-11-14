@@ -1,6 +1,5 @@
 package de.unifreiburg.iig.bpworkbench2.gui;
 
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
@@ -18,6 +17,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
+import de.invation.code.toval.graphic.DisplayFrame;
 import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
@@ -30,17 +30,27 @@ import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
  * @author richard
  * 
  */
-@SuppressWarnings("serial")
-public class Buttons extends JToolBar implements Observer {
+public class SwatToolbar extends JToolBar implements Observer {
+
+	private static final long serialVersionUID = -4279345402764581310L;
+	
+	private static final String SAVE_BTN_NAME = "saveButton";
+	private static final String OPEN_BTN_NAME = "openButon";
+	private static final String HELP_BTN_NAME = "helpButon";
+	private static final String NEW_BTN_NAME = "newButton";
+	private static final String NEW_PROJECT_BTN_NAME = "newProjectButton";
+	private static final String NEW_FILE_BTN_NAME = "newFileButton";
+	private static final String ANALYSE_BTN_NAME = "analyseButton";
+	private static final String EDIT_BTN_NAME = "editButton";
+	
 	private LinkedHashMap<String, JButton> buttons = new LinkedHashMap<String, JButton>();
 	private Logger log = BPLog.getLogger(SplitGui.class.getName());
-	private static Buttons myButtons = new Buttons();
+	private static SwatToolbar myButtons = new SwatToolbar();
 	private JRadioButton edit = new JRadioButton("Edit");
 	private JRadioButton analysis = new JRadioButton("Analyse");
 
-	private Buttons() {
-
-		// set some properties
+	private SwatToolbar() {
+		
 		setFloatable(false);
 		setRollover(true);
 		// setPreferredSize(new Dimension(100, 50));
@@ -48,29 +58,25 @@ public class Buttons extends JToolBar implements Observer {
 		// create JButtons and put them into HashMap -------------------------
 
 		// new Button
-		buttons.put(ButtonName.NEW_BTN, new JButton(UIManager.getIcon("FileView.fileIcon")));
-		buttons.get(ButtonName.NEW_BTN).setToolTipText("Create or view single file");
-		add(buttons.get(ButtonName.NEW_BTN));
+		buttons.put(NEW_BTN_NAME, new JButton(UIManager.getIcon("FileView.fileIcon")));
+		buttons.get(NEW_BTN_NAME).setToolTipText("Create or view single file");
+		add(buttons.get(NEW_BTN_NAME));
 
 		// load Button
-		buttons.put(ButtonName.OPEN_BTN, new JButton(UIManager.getIcon("FileView.directoryIcon")));
-		buttons.get(ButtonName.OPEN_BTN).setToolTipText("Open a directory");
-		add(buttons.get(ButtonName.OPEN_BTN));
+		buttons.put(OPEN_BTN_NAME, new JButton(UIManager.getIcon("FileView.directoryIcon")));
+		buttons.get(OPEN_BTN_NAME).setToolTipText("Open a directory");
+		add(buttons.get(OPEN_BTN_NAME));
 
 		// save Button
-		buttons.put(ButtonName.SAVE_BTN, new JButton(UIManager.getIcon("FileView.floppyDriveIcon")));
-		buttons.get(ButtonName.SAVE_BTN).setToolTipText("Save current file");
-		add(buttons.get(ButtonName.SAVE_BTN));
+		buttons.put(SAVE_BTN_NAME, new JButton(UIManager.getIcon("FileView.floppyDriveIcon")));
+		buttons.get(SAVE_BTN_NAME).setToolTipText("Save current file");
+		add(buttons.get(SAVE_BTN_NAME));
 
 		// new File Button with logo
 		Icon newFileIcon = new ImageIcon(SWAT2Controller.class.getResource("../ressources/addFile.png"));
-		buttons.put(ButtonName.NEW_FILE_BTN, new JButton(newFileIcon) {
-			{
-				setToolTipText("Create new file");
-			}
-		});
-		// buttons.get(ButtonName.NEW_FILE_BTN).setToolTipText("create new file");
-		add(buttons.get(ButtonName.NEW_FILE_BTN));
+		buttons.put(NEW_FILE_BTN_NAME, new JButton(newFileIcon));
+		buttons.get(NEW_FILE_BTN_NAME).setToolTipText("Create new file");
+		add(buttons.get(NEW_FILE_BTN_NAME));
 
 		// create Analysis and Editor Mode RadioButtons -----------------------
 		// Listen to key 'e' and 'a'
@@ -86,10 +92,9 @@ public class Buttons extends JToolBar implements Observer {
 		ButtonGroup group = new ButtonGroup();
 		group.add(analysis);
 		group.add(edit);
-
 	}
 
-	public static Buttons getInstance() {
+	public static SwatToolbar getInstance() {
 		return myButtons;
 	}
 
@@ -99,16 +104,6 @@ public class Buttons extends JToolBar implements Observer {
 
 	public JRadioButton getAnalyseBtn() {
 		return analysis;
-	}
-
-	/**
-	 * If buttons should extend JComponent this will be handy...
-	 * 
-	 * @param g
-	 */
-	public void paint(Graphics g) {
-		buttons.get("saveButton").paint(g);
-
 	}
 
 	/**
@@ -156,23 +151,6 @@ public class Buttons extends JToolBar implements Observer {
 		return buttons.get(buttonName);
 	}
 
-	/**
-	 * Contains JButton Names (SAVE_BTN, OPEN_BTN...)
-	 * 
-	 * @author richard
-	 * 
-	 */
-	public class ButtonName {
-		public static final String SAVE_BTN = "saveButton";
-		public static final String OPEN_BTN = "openButon";
-		public static final String HELP_BTN = "helpButon";
-		public static final String NEW_BTN = "newButton";
-		public static final String NEW_PROJECT_BTN = "newProjectButton";
-		public static final String NEW_FILE_BTN = "newFileButton";
-		public static final String ANALYSE_BTN = "analyseButton";
-		public static final String EDIT_BTN = "editButton";
-	}
-
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		// Check if Mode changed:
@@ -183,5 +161,11 @@ public class Buttons extends JToolBar implements Observer {
 			analysis.setSelected(!eam.isInEditMode());
 		}
 
+	}
+	
+	public static void main(String[] args) {
+		JPanel panel = new JPanel();
+		panel.add(new SwatToolbar());
+		new DisplayFrame(panel, true);
 	}
 }

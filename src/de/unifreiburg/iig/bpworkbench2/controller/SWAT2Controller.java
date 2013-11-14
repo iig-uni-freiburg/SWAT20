@@ -23,14 +23,13 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import de.unifreiburg.iig.bpworkbench2.gui.Buttons;
-import de.unifreiburg.iig.bpworkbench2.gui.Buttons.ButtonName;
+import de.uni.freiburg.iig.telematik.swat.prism.PrismRunner;
 import de.unifreiburg.iig.bpworkbench2.gui.FileRenamer;
-import de.unifreiburg.iig.bpworkbench2.gui.MenuView;
-import de.unifreiburg.iig.bpworkbench2.gui.MenuView.MenuNames;
+import de.unifreiburg.iig.bpworkbench2.gui.SwatMenuBar;
+import de.unifreiburg.iig.bpworkbench2.gui.SwatMenuBar.MenuNames;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
+import de.unifreiburg.iig.bpworkbench2.gui.SwatToolbar;
 import de.unifreiburg.iig.bpworkbench2.gui.TreeView;
-import de.unifreiburg.iig.bpworkbench2.helper.PrismRunner;
 import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
@@ -62,7 +61,6 @@ public class SWAT2Controller {
 
 		/* ---add Handlers (Controller)--- */
 		addHandler();
-
 	}
 
 	private static void addHandler() {
@@ -73,19 +71,19 @@ public class SWAT2Controller {
 		TreeView.getTreeView().addMouseListener(new TMListener());
 
 		// add Handler to Buttons and Menu
-		Buttons bts = Buttons.getInstance();
-		MenuView mv = MenuView.getInstance();
+		SwatToolbar bts = SwatToolbar.getInstance();
+		SwatMenuBar mv = SwatMenuBar.getInstance();
 
 		// Open Button
-		bts.getButton(Buttons.ButtonName.OPEN_BTN).addActionListener(new OpenListener());
+		bts.getButton(SwatToolbar.ButtonName.OPEN_BTN_NAME).addActionListener(new OpenListener());
 		mv.getMenu(MenuNames.OPEN_MENU).addActionListener(new OpenListener());
 
 		// Save Button
-		bts.getButton(ButtonName.SAVE_BTN).addActionListener(new SaveListener());
+		bts.getButton(ButtonName.SAVE_BTN_NAME).addActionListener(new SaveListener());
 		mv.getMenu(MenuNames.SAVE_MENU).addActionListener(new SaveListener());
 
 		// New Button
-		bts.getButton(ButtonName.NEW_BTN).addActionListener(new NewFileListener());
+		bts.getButton(ButtonName.NEW_BTN_NAME).addActionListener(new NewFileListener());
 		mv.getMenu(MenuNames.NEW_FILE_MENU).addActionListener(new NewFileListener());
 
 		// Exit Menu
@@ -97,7 +95,7 @@ public class SWAT2Controller {
 		bts.getEditBtn().addItemListener(editAnalyseListener);
 
 		// Menu handler
-		MenuView menuView = MenuView.getInstance();
+		SwatMenuBar menuView = SwatMenuBar.getInstance();
 		menuView.getAnalyseMenuEntry().addItemListener(editAnalyseListener);
 		menuView.getEditMenuEntry().addItemListener(editAnalyseListener);
 	}

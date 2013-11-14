@@ -32,21 +32,37 @@ public class SplitGui implements Serializable, Observer {
 	public JFrame window;
 	private TreeView tv;
 	private TabView tabView;
-	private MenuView menuView; // menu
+	private SwatMenuBar menuView; // menu
 
 	private static SplitGui gui = new SplitGui();
+	
+	/**
+	 * Create Gui Object and models. The Gui object creates the needed views on
+	 * the models and registers them as observers: ({@link TreeView},
+	 * {@link TabView} , {@link SwatMenuBar}).
+	 */
+	private SplitGui() {
+		// generate Views
+		tv = TreeView.getTreeView();
+		tabView = new TabView();
+		SwatToolbar bts = SwatToolbar.getInstance();
+		menuView = SwatMenuBar.getInstance();
+
+		// add Views to the OpenFileModel's Observer list
+		OpenFileModel ofm = OpenFileModel.getInstance();
+		ofm.addObserver(tv);
+		ofm.addObserver(tabView);
+		ofm.addObserver(bts);
+
+		// add Views to the EditOrAnalyze Model
+		EditAnalyzeModel eam = EditAnalyzeModel.getModel();
+		eam.addObserver(menuView);
+		eam.addObserver(bts);
+	}
 
 	// private SplitGui mySplitGui = new SplitGui();
 
-	public static void main(String[] args) {
-		// SplitGui myGui = new SplitGui();
-		SplitGui myGui = gui;
-		myGui.show();
-		OpenFileModel.getInstance().addObserver(myGui);
-		OpenFileModel.getInstance().setFolder(new File("/tmp")); // TODO: just
-																	// for
-																	// testing
-	}
+
 
 	public static SplitGui getGui() {
 		return gui;
@@ -92,7 +108,7 @@ public class SplitGui implements Serializable, Observer {
 		// set the model behind the MultiSplitPane
 		msp.getMultiSplitLayout().setModel(getMSPModel());
 		// get Buttons
-		Buttons buttons = Buttons.getInstance();
+		SwatToolbar buttons = SwatToolbar.getInstance();
 
 		// add the buttons from the button-model
 		msp.add(buttons.getButtonPanel(), "iconLine");
@@ -214,29 +230,7 @@ public class SplitGui implements Serializable, Observer {
 		return new Leaf(name);
 	}
 
-	/**
-	 * Create Gui Object and models. The Gui object creates the needed views on
-	 * the models and registers them as observers: ({@link TreeView},
-	 * {@link TabView} , {@link MenuView}).
-	 */
-	private SplitGui() {
-		// generate Views
-		tv = TreeView.getTreeView();
-		tabView = new TabView();
-		Buttons bts = Buttons.getInstance();
-		menuView = MenuView.getInstance();
-
-		// add Views to the OpenFileModel's Observer list
-		OpenFileModel ofm = OpenFileModel.getInstance();
-		ofm.addObserver(tv);
-		ofm.addObserver(tabView);
-		ofm.addObserver(bts);
-
-		// add Views to the EditOrAnalyze Model
-		EditAnalyzeModel eam = EditAnalyzeModel.getModel();
-		eam.addObserver(menuView);
-		eam.addObserver(bts);
-	}
+	
 
 	private List<Node> getAsList(Node... leafs) {
 		return Arrays.asList(leafs);
@@ -254,6 +248,16 @@ public class SplitGui implements Serializable, Observer {
 		// window.pack();
 		// msp.revalidate();
 
+	}
+	
+	public static void main(String[] args) {
+		// SplitGui myGui = new SplitGui();
+		SplitGui myGui = gui;
+		myGui.show();
+		OpenFileModel.getInstance().addObserver(myGui);
+		OpenFileModel.getInstance().setFolder(new File("/tmp")); // TODO: just
+																	// for
+																	// testing
 	}
 
 }
