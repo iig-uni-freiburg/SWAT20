@@ -1,15 +1,26 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
+import com.mxgraph.canvas.mxGraphics2DCanvas;
+import com.mxgraph.canvas.mxICanvas;
+import com.mxgraph.canvas.mxImageCanvas;
 import com.mxgraph.model.mxGeometry;
+import com.mxgraph.shape.mxIShape;
+import com.mxgraph.swing.view.mxInteractiveCanvas;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
@@ -19,6 +30,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.TokenGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
@@ -29,7 +41,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNCompo
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertiesListener;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertyChangeEvent;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.GraphView;
+
 
 public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 
@@ -55,6 +67,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		setVertexLabelsMovable(true);
 		
 		initialize();
+		
 	}
 	
 
@@ -93,14 +106,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		return nodeReferences.get(pnNode);
 	}
 	
-	/**
-	 * Constructs a new customized view to be used in this graph, which also
-	 * writes label annotations in the PN-Model.
-	 */
-	protected GraphView createCustomView() {
-		view = new GraphView(this, getNetContainer().getPetriNetGraphics());
-		return (GraphView) view;
-	}
+
 	
 	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetContainer(){
 		return netContainer;
@@ -128,6 +134,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 	 * @param width The width of the vertex.
 	 * @param height The width of the vertex.
 	 * @param style The place style.
+	 * @param object 
+	 * @param map 
 	 * @return
 	 */
 	private PNGraphCell createPlaceCell(String name, String label, double posX, double posY, double width, double height, String style) {
@@ -194,8 +202,129 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 	}
 	
 	
-	public abstract void updatePlaceState(PNGraphCell cell, Object state) throws ParameterException;
+	public abstract void updatePlaceState(PNGraphCell cell, Object tokenInput) throws ParameterException;
 	
+
+	@Override
+	/**
+	 * Draws the cell state with the given label onto the canvas. No
+	 * children or descendants are painted here. This method invokes
+	 * cellDrawn after the cell, but not its descendants have been
+	 * painted.
+	 * 
+	 * @param canvas Canvas onto which the cell should be drawn.
+	 * @param state State of the cell to be drawn.
+	 * @param drawLabel Indicates if the label should be drawn.
+	 */
+	public void drawState(mxICanvas canvas, mxCellState state, boolean drawLabel)
+	{
+		Object cell = (state != null) ? state.getCell() : null;
+
+		if (cell != null && cell != view.getCurrentRoot()
+				&& cell != model.getRoot()
+				&& (model.isVertex(cell) || model.isEdge(cell)))
+		{	
+			
+			PNGraphCell customcell;
+
+			
+			Object obj = drawCell((mxGraphics2DCanvas)canvas, state);
+
+			Object lab = null;
+
+			// Holds the current clipping region in case the label will
+			// be clipped
+			Shape clip = null;
+			Rectangle newClip = state.getRectangle();
+
+			// Indirection for image canvas that contains a graphics canvas
+			mxICanvas clippedCanvas = (isLabelClipped(state.getCell())) ? canvas
+					: null;
+
+			if (clippedCanvas instanceof mxImageCanvas)
+			{
+				clippedCanvas = ((mxImageCanvas) clippedCanvas)
+						.getGraphicsCanvas();
+				// TODO: Shift newClip to match the image offset
+				//Point pt = ((mxImageCanvas) canvas).getTranslate();
+				//newClip.translate(-pt.x, -pt.y);
+			}
+
+			if (clippedCanvas instanceof mxGraphics2DCanvas)
+			{
+				Graphics g = ((mxGraphics2DCanvas) clippedCanvas).getGraphics();
+				clip = g.getClip();
+				
+				// Ensure that our new clip resides within our old clip
+				if (clip instanceof Rectangle)
+				{
+					g.setClip(newClip.intersection((Rectangle) clip));
+				}
+				// Otherwise, default to original implementation
+				else
+				{
+					g.setClip(newClip);
+				}
+			}
+
+			if (drawLabel)
+			{
+				String label = state.getLabel();
+
+				if (label != null && state.getLabelBounds() != null)
+				{
+					lab = canvas.drawLabel(label, state, isHtmlLabel(cell));
+				}
+			}
+
+			// Restores the previous clipping region
+			if (clippedCanvas instanceof mxGraphics2DCanvas)
+			{
+				((mxGraphics2DCanvas) clippedCanvas).getGraphics()
+						.setClip(clip);
+			}
+
+			// Invokes the cellDrawn callback with the object which was created
+			// by the canvas to represent the cell graphically
+			if (obj != null)
+			{
+				cellDrawn(canvas, state, obj, lab);
+			}
+		}
+	}
+	
+	public Object drawCell(mxGraphics2DCanvas canvas, mxCellState state)
+	{
+		Map<String, Object> style = state.getStyle();
+		mxIShape shape = canvas.getShape(style);
+		Graphics2D g;
+		if (canvas.getGraphics() != null && shape != null)
+		{
+			// Creates a temporary graphics instance for drawing this shape
+			float opacity = mxUtils.getFloat(style, mxConstants.STYLE_OPACITY,100);
+			Graphics2D previousGraphics = canvas.getGraphics();
+			g = ((mxGraphics2DCanvas) canvas).createTemporaryGraphics(style, opacity, state);
+
+			// Paints the shape and restores the graphics object
+			shape.paintShape(canvas, state);
+			if (state.getCell() instanceof PNGraphCell) {
+				PNGraphCell customcell = (PNGraphCell) state.getCell();
+				if (customcell.getType() == PNComponent.PLACE) {
+					drawAdditionalPlaceGrahpics(canvas, state);
+				}
+			}
+
+			g.dispose();
+			g = previousGraphics;
+		}
+
+		return shape;
+	}
+	
+	protected void drawAdditionalPlaceGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
+	}
+
+
 	/**
 	 * Sets the positions of place and transition labels according to the<br>
 	 * information contained in the corresponding annotation graphics.<br>
@@ -278,6 +407,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		
 	}
 	
+	
 	//------- Property change handling -------------------------------------------------------------------------
 	//------- These methods are called when some Petri net properties changed by other classes. ----------------
 	
@@ -337,5 +467,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 	protected boolean handleArcPropertyChange(String name, PNProperty property, Object oldValue, Object newValue) {
 		return false;
 	}
+
+
+	
+
+
+
+
+
+
 
 }

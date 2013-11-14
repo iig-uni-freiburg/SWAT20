@@ -15,6 +15,7 @@ import com.mxgraph.io.mxCodec;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.util.mxUtils;
+import com.mxgraph.view.mxCellState;
 
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.unifreiburg.iig.bpworkbench2.editor.EditorPopupMenu;
@@ -199,7 +200,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				}
 			}
 			if(refresh){
-				refresh();
+				mxCellState state = getGraph().getView().getState(cell);
+				redraw(state);
 			}
 		}
 		
