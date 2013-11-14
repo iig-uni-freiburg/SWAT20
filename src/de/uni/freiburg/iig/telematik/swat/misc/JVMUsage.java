@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.helper;
+package de.uni.freiburg.iig.telematik.swat.misc;
 
 public class JVMUsage {
 	
