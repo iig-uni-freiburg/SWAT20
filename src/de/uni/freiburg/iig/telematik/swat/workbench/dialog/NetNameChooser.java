@@ -1,8 +1,9 @@
-package de.uni.freiburg.iig.telematik.swat.workbench;
+package de.uni.freiburg.iig.telematik.swat.workbench.dialog;
 
 import java.awt.Window;
 
 import de.invation.code.toval.graphic.FileNameChooser;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 public class NetNameChooser extends FileNameChooser {
 	

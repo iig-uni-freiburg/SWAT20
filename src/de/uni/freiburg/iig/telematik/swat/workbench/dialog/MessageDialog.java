@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.workbench;
+package de.uni.freiburg.iig.telematik.swat.workbench.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

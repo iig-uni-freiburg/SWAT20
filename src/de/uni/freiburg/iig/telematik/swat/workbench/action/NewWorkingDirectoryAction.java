@@ -9,7 +9,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatProperties;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
 

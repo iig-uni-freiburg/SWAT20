@@ -8,7 +8,7 @@ import javax.swing.AbstractAction;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatProperties;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 
 public abstract class AbstractWorkingDirectoryAction extends AbstractAction {

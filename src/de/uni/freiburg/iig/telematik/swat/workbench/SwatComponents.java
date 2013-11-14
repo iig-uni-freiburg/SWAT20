@@ -14,6 +14,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class SwatComponents {
 	

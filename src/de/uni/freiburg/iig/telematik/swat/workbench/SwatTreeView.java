@@ -10,6 +10,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 
 @SuppressWarnings("serial")
 public class SwatTreeView extends JTree implements SwatStateListener {

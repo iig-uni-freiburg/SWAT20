@@ -23,6 +23,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 
 /**
  * Model for Buttons. Holds buttons like "open", "save", ... With

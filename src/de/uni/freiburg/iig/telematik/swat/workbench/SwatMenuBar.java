@@ -19,7 +19,8 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.prism.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
-import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /**
  * MenuBar for SWAT20. Observes the EditAnalyzeModel. Menu entries can be
@@ -61,7 +62,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		//TODO: Add appropriate actions.
 		JMenuItem saveAll = new JMenuItem("Save all");
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
-		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(SWAT2Controller.class.getResource("../ressources/addFile.png")));
+		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(getClass().getResource("../ressources/addFile.png")));
 		
 		JMenuItem exit = new JMenuItem("Exit");
 

@@ -5,21 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcherFactory;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatProperties;
-import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
-import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /**
  * Starts (and finds) Prism Model Checker. Use {@link #execPrism}
  **/
 public class PrismRunner {
-	private static Logger log = BPLog.getLogger(SplitGui.class.getName());
+	
 	private File prismPath;
 
 	/**
@@ -90,7 +86,7 @@ public class PrismRunner {
 			return result;
 
 		} catch (IOException e) {
-			log.log(Level.SEVERE, "Could not start PRISM Model Checker");
+//			log.log(Level.SEVERE, "Could not start PRISM Model Checker");
 			throw e;
 		} finally {
 			try {

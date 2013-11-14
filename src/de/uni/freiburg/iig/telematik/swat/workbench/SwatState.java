@@ -5,6 +5,7 @@ import java.util.Set;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 
 public class SwatState {
 

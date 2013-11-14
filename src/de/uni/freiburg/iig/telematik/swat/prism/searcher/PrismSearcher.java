@@ -7,15 +7,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatProperties;
-import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
-import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /**
  * Searches for prism executable. Depending on OS, the corresponding PrismSearch

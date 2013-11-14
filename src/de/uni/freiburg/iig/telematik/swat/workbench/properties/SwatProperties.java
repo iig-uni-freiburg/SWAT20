@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.workbench;
+package de.uni.freiburg.iig.telematik.swat.workbench.properties;
 
 import java.io.File;
 import java.io.IOException;
