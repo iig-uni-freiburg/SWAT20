@@ -15,17 +15,15 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
-import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
 
 @SuppressWarnings("serial")
-public class SwatTabView extends JTabbedPane implements SwatTreeViewListener{
+public class SwatTabView extends JTabbedPane {
 	
 	private Map<Object, Component> openedSwatComponents = new HashMap<Object, Component>();
 
 	public SwatTabView() {}
 
-	@Override
 	public void componentSelected(SwatTreeNode node) {
 		for(Object openedComponent: openedSwatComponents.keySet()){
 			if(openedComponent == node.getUserObject()){
@@ -34,12 +32,9 @@ public class SwatTabView extends JTabbedPane implements SwatTreeViewListener{
 			}
 		}
 	}
-
-	@Override
-	public void componentActivated(SwatTreeNode node) {
-		if(openedSwatComponents.keySet().contains(node.getUserObject()))
-			componentSelected(node);
-		addNewTab(node);
+	
+	public boolean containsComponent(SwatTreeNode node){
+		return openedSwatComponents.keySet().contains(node.getUserObject());
 	}
 	
 	private JTextArea getTextArea(String text){
@@ -60,9 +55,14 @@ public class SwatTabView extends JTabbedPane implements SwatTreeViewListener{
 		openedSwatComponents.put(petriNet, getComponentAt(getComponentCount()-1));
 		setSelectedIndex(getTabCount()-1);
 	}
+	
+	private void addSwatComponent(SwatComponent swatComponent, String tabName){
+		addTab(tabName, swatComponent.getMainComponent());
+		
+	}
 
 	@SuppressWarnings("rawtypes")
-	private void addNewTab(SwatTreeNode node) {
+	public void addNewTab(SwatTreeNode node) {
 		try {
 			switch (node.getObjectType()) {
 			case LABELING:

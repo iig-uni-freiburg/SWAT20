@@ -1,7 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
 
@@ -16,11 +15,18 @@ import javax.swing.WindowConstants;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.unifreiburg.iig.bpworkbench2.editor.CPNEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.IFNetEditor;
+import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
 
 public class Workbench extends JFrame implements SwatTreeViewListener{
 
@@ -213,7 +219,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 	
 	private JPanel getPropertiesPanel(){
 		if(properties == null){
-			properties = new JPanel();
+			properties = new JPanel(new BorderLayout());
 			properties.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 			properties.setMinimumSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 		}
@@ -241,7 +247,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 			treeView.setPreferredSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			treeView.setMinimumSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			treeView.addTreeViewListener(this);
-			treeView.addTreeViewListener(getTabView());
 		}
 		return treeView;
 	}
@@ -283,13 +288,32 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 
 	@Override
 	public void componentSelected(SwatTreeNode node) {
-		// TODO Auto-generated method stub
-		
+		getTabView().componentSelected(node);
 	}
 
 	@Override
 	public void componentActivated(SwatTreeNode node) {
-		// TODO Auto-generated method stub
-		
+		if(!getTabView().containsComponent(node)){
+			getTabView().addNewTab(node);
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private SwatComponent getSwatComponent(SwatTreeNode node){
+		switch (node.getObjectType()) {
+		case LABELING:
+			// TODO:
+			break;
+		case PETRI_NET:
+			AbstractGraphicalPN petriNet = (AbstractGraphicalPN) node.getUserObject();
+			if(petriNet instanceof GraphicalPTNet){
+				return new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
+			} else if(petriNet instanceof GraphicalCPN){
+				return new CPNEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
+			} else if(petriNet instanceof GraphicalIFNet){
+				return new IFNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
+			}
+			break;
+		}
 	}
 }
