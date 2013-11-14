@@ -24,8 +24,6 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
-import de.unifreiburg.iig.bpworkbench2.editor.CPNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.IFNetEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
 
 public class Workbench extends JFrame implements SwatTreeViewListener{
@@ -293,13 +291,21 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 
 	@Override
 	public void componentActivated(SwatTreeNode node) {
+		SwatComponent swatComponent = null;
+		try {
+			swatComponent = getSwatComponent(node);
+		} catch (ParameterException e) {
+			JOptionPane.showMessageDialog(this, "Cannot convert selected tree node to swat component", "SWAT Exception", JOptionPane.ERROR_MESSAGE);
+		}
 		if(!getTabView().containsComponent(node)){
 			getTabView().addNewTab(node);
+			getPropertiesPanel().removeAll();
+			getPropertiesPanel().add(swatComponent.getPropertiesView());
 		}
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private SwatComponent getSwatComponent(SwatTreeNode node){
+	private SwatComponent getSwatComponent(SwatTreeNode node) throws ParameterException{
 		switch (node.getObjectType()) {
 		case LABELING:
 			// TODO:
@@ -309,11 +315,12 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 			if(petriNet instanceof GraphicalPTNet){
 				return new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
 			} else if(petriNet instanceof GraphicalCPN){
-				return new CPNEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
+//				return new CPNEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
 			} else if(petriNet instanceof GraphicalIFNet){
-				return new IFNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
+//				return new IFNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
 			}
 			break;
 		}
+		return null;
 	}
 }
