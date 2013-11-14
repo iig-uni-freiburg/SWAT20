@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.gui;
+package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,11 +17,9 @@ import javax.swing.WindowConstants;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.prism.PrismPathChooser;
-import de.unifreiburg.iig.bpworkbench2.SwatState;
-import de.unifreiburg.iig.bpworkbench2.SwatState.OperatingMode;
-import de.unifreiburg.iig.bpworkbench2.SwatStateListener;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.unifreiburg.iig.bpworkbench2.controller.SWAT2Controller;
-import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
 
 /**
  * MenuBar for SWAT20. Observes the EditAnalyzeModel. Menu entries can be
@@ -31,17 +29,15 @@ import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
  * @author richard
  * 
  */
-public class SwatMenuBar extends JMenuBar implements ActionListener,SwatStateListener {
+public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateListener {
 
 	private static final long serialVersionUID = 4130953102523669184L;
 	
 	private static final String ACTION_COMMAND_EDIT_MODE = "editMode";
-	private static final String ACTION_COMMAND_ANALYSIS_MODE = "editMode";
+	private static final String ACTION_COMMAND_ANALYSIS_MODE = "analysisMode";
 	
 	JRadioButtonMenuItem editModeButton = null;
 	JRadioButtonMenuItem analysisModeButton = null;
-	
-//	private LinkedHashMap<String, JMenuItem> menus = new LinkedHashMap<String, JMenuItem>();
 
 	public SwatMenuBar() {
 		super();
@@ -54,21 +50,19 @@ public class SwatMenuBar extends JMenuBar implements ActionListener,SwatStateLis
 		add(getEditMenu());
 		add(getSettingsMenu());
 
-//		// put all entries into menus-map
-//		menus.put(MenuNames.OPEN_MENU, open);
-//		menus.put(MenuNames.SAVE_MENU, save);
-//		menus.put(MenuNames.NEW_FILE_MENU, addFile);
-//		menus.put(MenuNames.EXIT_MENU, exit);
-
 	}
 	
 	private JMenu getFileMenu(){
 		JMenu fileMenu = new JMenu("File");
 		
-		JMenuItem open = new JMenuItem("Open Dir...", UIManager.getIcon("FileView.directoryIcon"));
+		JMenuItem open = new JMenuItem("Switch working directory", UIManager.getIcon("FileView.directoryIcon"));
+		open.setAction(new SwitchWorkingDirectoryAction());
+		
+		//TODO: Add appropriate actions.
 		JMenuItem saveAll = new JMenuItem("Save all");
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
 		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(SWAT2Controller.class.getResource("../ressources/addFile.png")));
+		
 		JMenuItem exit = new JMenuItem("Exit");
 
 		fileMenu.add(open);
@@ -86,16 +80,16 @@ public class SwatMenuBar extends JMenuBar implements ActionListener,SwatStateLis
 		editModeButton = new JRadioButtonMenuItem("Edit Mode");
 		editModeButton.setActionCommand(ACTION_COMMAND_EDIT_MODE);
 		editModeButton.addActionListener(this);
+		editMenu.add(editModeButton);
+		
 		analysisModeButton = new JRadioButtonMenuItem("Analyse Mode");
 		analysisModeButton.setActionCommand(ACTION_COMMAND_ANALYSIS_MODE);
+		analysisModeButton.addActionListener(this);
+		editMenu.add(analysisModeButton);
+		
 		ButtonGroup editOrAnalyseGroup = new ButtonGroup();
 		editOrAnalyseGroup.add(editModeButton);
 		editOrAnalyseGroup.add(analysisModeButton);
-		editModeButton.setSelected(true);
-		editModeButton.setActionCommand("edit");
-		analysisModeButton.setActionCommand("analysis");
-		editMenu.add(editModeButton);
-		editMenu.add(analysisModeButton);
 		
 		return editMenu;
 	}
@@ -113,7 +107,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener,SwatStateLis
 					try {
 						SwatProperties.getInstance().setPrismPath(prismPath);
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(getParent(), "Cannot set Prism path.\n Reason: "+ e1.getMessage(), "Error while setting Prism path", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot set Prism path.\n Reason: "+ e1.getMessage(), "Error while setting Prism path", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -122,48 +116,6 @@ public class SwatMenuBar extends JMenuBar implements ActionListener,SwatStateLis
 		
 		return settings;
 	}
-
-//	@Override
-//	public void update(Observable o, Object arg) {
-//		if (o instanceof EditAnalyzeModel) {
-//			// The Mode (Analyze / Edit) changed
-//			EditAnalyzeModel eam = (EditAnalyzeModel) o;
-//			// set selected mode
-//			editMode.setSelected(eam.isInEditMode());
-//			analyseMode.setSelected(!eam.isInEditMode());
-//		}
-//
-//	}
-
-//	public JRadioButtonMenuItem getAnalyseMenuEntry() {
-//		return analyseMode;
-//	}
-//
-//	public JRadioButtonMenuItem getEditMenuEntry() {
-//		return editMode;
-//	}
-
-//	/**
-//	 * returns the menu entrie identified by key. Key is one of
-//	 * {@link MenuNames}.
-//	 **/
-//	public JMenuItem getMenu(String key) {
-//		return menus.get(key);
-//	}
-
-//	/** Statics as identifier for JMenuItem **/
-//	public class MenuNames {
-//		public static final String SAVE_MENU = "saveMenu";
-//		public static final String OPEN_MENU = "openButon";
-//		public static final String HELP_MENU = "helpButon";
-//		public static final String NEW_MENU = "newMenu";
-//		public static final String NEW_PROJECT_MENU = "newProjectMenu";
-//		public static final String NEW_FILE_MENU = "newFileMenu";
-//		public static final String ANALYSE_MENU = "analyseMenu";
-//		public static final String EDIT_MENU = "editMenu";
-//		public static final String SAVEALL_MENU = "saveAllMenu";
-//		public static final String EXIT_MENU = "exitMenu";
-//	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -180,6 +132,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener,SwatStateLis
 
 	@Override
 	public void operatingModeChanged() {
+		System.out.println("mode changed menu bar");
 		switch(SwatState.getInstance().getOperatingMode()){
 		case ANALYSIS_MODE:
 			analysisModeButton.setSelected(true);

@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2;
+package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 
 import java.awt.Window;
@@ -9,7 +9,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatProperties;
 
 public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
 

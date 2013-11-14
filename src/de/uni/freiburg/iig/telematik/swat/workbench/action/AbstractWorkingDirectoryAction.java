@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2;
+package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 
 import java.awt.Window;
@@ -8,7 +8,7 @@ import javax.swing.AbstractAction;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatProperties;
 
 
 public abstract class AbstractWorkingDirectoryAction extends AbstractAction {

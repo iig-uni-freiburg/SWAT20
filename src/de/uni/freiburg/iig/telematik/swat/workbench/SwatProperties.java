@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2.helper;
+package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +19,9 @@ import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcher;
 public class SwatProperties extends AbstractProperties{
 	
 	protected static final String defaultWorkingDirectory = ".";
-	public static final String defaultWorkingDirectoryName = "SimulationDirectory";
+	public static final String defaultWorkingDirectoryName = "SwatWorkingDirectory";
 	
-	protected static final String propertyFileName = "GeneralProperties";
+	protected static final String propertyFileName = "SwatProperties";
 	
 	private static SwatProperties instance = null;
 	
@@ -87,7 +87,7 @@ public class SwatProperties extends AbstractProperties{
 		return propertyValue;
 	}
 	
-	public void removeSimulationDirectory(){
+	public void removeWorkingDirectory(){
 		removeProperty(SwatProperty.WORKING_DIRECTORY);
 	}
 	
@@ -128,6 +128,42 @@ public class SwatProperties extends AbstractProperties{
 		return result;
 	}
 	
+	//------- PNML Parser properties -------------------------------------------------------
+	
+	public void setRequestNetType(boolean requestNetType) throws ParameterException{
+		Validate.notNull(requestNetType);
+		setProperty(SwatProperty.REQUIRE_NET_TYPE, requestNetType);
+	}
+	
+	public boolean getRequestNetType() throws PropertyException, ParameterException{
+		String propertyValueRequestNetType = getProperty(SwatProperty.REQUIRE_NET_TYPE);
+		
+		Boolean requestNetType = null;
+		try{
+			requestNetType = Boolean.valueOf(propertyValueRequestNetType);
+		}catch(Exception e){
+			throw new PropertyException(SwatProperty.REQUIRE_NET_TYPE, propertyValueRequestNetType);
+		}
+		return requestNetType;
+	}
+	
+	public void setPNValidation(boolean pnValidation) throws ParameterException{
+		Validate.notNull(pnValidation);
+		setProperty(SwatProperty.VERIFY_PNML_SCHEMA, pnValidation);
+	}
+	
+	public boolean getPNValidation() throws PropertyException, ParameterException{
+		String propertyValueValidation = getProperty(SwatProperty.VERIFY_PNML_SCHEMA);
+		
+		Boolean validation = null;
+		try{
+			validation = Boolean.valueOf(propertyValueValidation);
+		}catch(Exception e){
+			throw new PropertyException(SwatProperty.VERIFY_PNML_SCHEMA, propertyValueValidation);
+		}
+		return validation;
+	}
+	
 	//------- Prism Path -------------------------------------------------------------------
 	
 	public void setPrismPath(String directory) throws ParameterException, IOException, PropertyException {
@@ -157,7 +193,8 @@ public class SwatProperties extends AbstractProperties{
 	protected Properties getDefaultProperties(){
 		Properties defaultProperties = new Properties();
 		
-		//TODO:
+		defaultProperties.setProperty(SwatProperty.REQUIRE_NET_TYPE.toString(), "false");
+		defaultProperties.setProperty(SwatProperty.VERIFY_PNML_SCHEMA.toString(), "false");
 		
 		return defaultProperties;
 	}

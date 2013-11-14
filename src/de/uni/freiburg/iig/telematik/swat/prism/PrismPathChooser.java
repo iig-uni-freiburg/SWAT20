@@ -30,6 +30,8 @@ public class PrismPathChooser extends ConditionalFileChooser {
 		}
 		return true;
 	}
+	
+	
 	public static void main(String[] args) {
 		new PrismPathChooser(null).chooseFile();
 	}

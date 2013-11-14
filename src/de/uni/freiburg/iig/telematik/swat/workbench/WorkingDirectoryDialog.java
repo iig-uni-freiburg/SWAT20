@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2;
+package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -22,7 +22,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.AbstractWorkingDirectoryAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.NewWorkingDirectoryAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.OpenWorkingDirectoryAction;
 
 
 public class WorkingDirectoryDialog extends JDialog implements PropertyChangeListener {

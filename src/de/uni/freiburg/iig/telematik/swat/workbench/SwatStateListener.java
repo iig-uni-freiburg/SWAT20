@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2;
+package de.uni.freiburg.iig.telematik.swat.workbench;
 
 public interface SwatStateListener {
 	

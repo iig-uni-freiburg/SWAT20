@@ -13,8 +13,8 @@ import java.util.logging.Logger;
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatProperties;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
-import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 
 /**

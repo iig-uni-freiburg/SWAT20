@@ -24,13 +24,13 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.uni.freiburg.iig.telematik.swat.prism.PrismRunner;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatMenuBar;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatProperties;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatToolbar;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatMenuBar.MenuNames;
 import de.unifreiburg.iig.bpworkbench2.gui.FileRenamer;
-import de.unifreiburg.iig.bpworkbench2.gui.SwatMenuBar;
-import de.unifreiburg.iig.bpworkbench2.gui.SwatMenuBar.MenuNames;
 import de.unifreiburg.iig.bpworkbench2.gui.SplitGui;
-import de.unifreiburg.iig.bpworkbench2.gui.SwatToolbar;
-import de.unifreiburg.iig.bpworkbench2.gui.TreeView;
-import de.unifreiburg.iig.bpworkbench2.helper.SwatProperties;
 import de.unifreiburg.iig.bpworkbench2.logging.BPLog;
 import de.unifreiburg.iig.bpworkbench2.model.EditAnalyzeModel;
 import de.unifreiburg.iig.bpworkbench2.model.files.OpenFileModel;
@@ -68,14 +68,14 @@ public class SWAT2Controller {
 		// TreeView.getTreeView().addTreeSelectionListener(new
 		// SelectionListener());
 		// TreeView.getTreeView().addMouseListener(new TreeMouseListener());
-		TreeView.getTreeView().addMouseListener(new TMListener());
+		SwatTreeView.getTreeView().addMouseListener(new TMListener());
 
 		// add Handler to Buttons and Menu
 		SwatToolbar bts = SwatToolbar.getInstance();
 		SwatMenuBar mv = SwatMenuBar.getInstance();
 
 		// Open Button
-		bts.getButton(SwatToolbar.ButtonName.OPEN_BTN_NAME).addActionListener(new OpenListener());
+		bts.getButton(de.uni.freiburg.iig.telematik.swat.workbench.ButtonName.OPEN_BTN_NAME).addActionListener(new OpenListener());
 		mv.getMenu(MenuNames.OPEN_MENU).addActionListener(new OpenListener());
 
 		// Save Button

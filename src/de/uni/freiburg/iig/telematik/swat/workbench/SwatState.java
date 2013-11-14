@@ -1,4 +1,4 @@
-package de.unifreiburg.iig.bpworkbench2;
+package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +10,7 @@ public class SwatState {
 
 	private static SwatState instance = null;
 	
-	private OperatingMode operatingMode = OperatingMode.EDIT_MODE;
+	private OperatingMode operatingMode = null;
 	
 	private Set<SwatStateListener> listeners = new HashSet<SwatStateListener>();
 	
@@ -30,7 +30,7 @@ public class SwatState {
 		Validate.notNull(operatingMode);
 		if(getOperatingMode() == operatingMode)
 			return;
-		
+
 		this.operatingMode = operatingMode;
 		for(SwatStateListener listener: listeners){
 			if(listener != sender){
