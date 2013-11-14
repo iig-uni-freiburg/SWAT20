@@ -34,7 +34,7 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 		}
 		//TODO: Other components
 		
-		this.setSelectionInterval(0,0);
+//		this.setSelectionInterval(0,0);
 		addMouseListener(new TreeViewMouseAdapter());
 	}
 
@@ -104,6 +104,8 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 			if(!(e.getSource() instanceof SwatTreeView))
 				return;
 			
+			if(getSelectionPath() == null)
+				return;
 			Object selectedNode = getSelectionPath().getLastPathComponent();
 			if(selectedNode == null)
 				return;

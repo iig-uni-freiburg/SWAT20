@@ -185,7 +185,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	@Override
 	public void operatingModeChanged() {
-		System.out.println("mode changed tool bar");
 		switch(SwatState.getInstance().getOperatingMode()){
 		case ANALYSIS_MODE:
 			getAnalysisRadioButton().setSelected(true);

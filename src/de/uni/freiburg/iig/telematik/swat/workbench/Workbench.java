@@ -216,7 +216,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 			properties = new JPanel();
 			properties.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 			properties.setMinimumSize(PREFERRED_SIZE_PROPERTIES_PANEL);
-			properties.setBackground(Color.green);
 		}
 		return properties;
 	}
@@ -241,7 +240,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 			treeView = new SwatTreeView();
 			treeView.setPreferredSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			treeView.setMinimumSize(PREFERRED_SIZE_TREEVIEW_PANEL);
-			treeView.setBackground(Color.red);
 			treeView.addTreeViewListener(this);
 			treeView.addTreeViewListener(getTabView());
 		}

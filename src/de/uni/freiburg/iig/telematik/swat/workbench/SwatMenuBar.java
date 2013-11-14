@@ -62,7 +62,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		//TODO: Add appropriate actions.
 		JMenuItem saveAll = new JMenuItem("Save all");
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
-		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(getClass().getResource("../ressources/addFile.png")));
+		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(getClass().getResource("resources/addFile.png")));
 		
 		JMenuItem exit = new JMenuItem("Exit");
 
@@ -133,7 +133,6 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 	@Override
 	public void operatingModeChanged() {
-		System.out.println("mode changed menu bar");
 		switch(SwatState.getInstance().getOperatingMode()){
 		case ANALYSIS_MODE:
 			analysisModeButton.setSelected(true);
