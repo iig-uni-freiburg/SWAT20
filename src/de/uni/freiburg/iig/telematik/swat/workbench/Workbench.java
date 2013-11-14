@@ -301,6 +301,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 			getTabView().addNewTab(node);
 			getPropertiesPanel().removeAll();
 			getPropertiesPanel().add(swatComponent.getPropertiesView());
+			pack();
 		}
 	}
 	

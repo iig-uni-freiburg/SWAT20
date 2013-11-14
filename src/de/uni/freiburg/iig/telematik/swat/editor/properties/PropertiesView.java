@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class PropertiesView extends JPanel implements PNPropertiesListener{
 	protected PNProperties properties =  null;
 
 	public PropertiesView(PNProperties properties) throws ParameterException{
+		super();
 		Validate.notNull(properties);
 		this.properties = properties;
 		setUpGUI();
@@ -42,6 +44,7 @@ public class PropertiesView extends JPanel implements PNPropertiesListener{
 				createArcField(arcName, arcProperty);
 			}
 		}
+		setBackground(Color.green);
 	}
 	
 	private void createFieldsForPlace(String placeName) throws ParameterException{
