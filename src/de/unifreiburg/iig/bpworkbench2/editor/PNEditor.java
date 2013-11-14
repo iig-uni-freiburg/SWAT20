@@ -42,11 +42,12 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.PrintAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
 import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
 
-public abstract class PNEditor extends JPanel {
+public abstract class PNEditor extends JPanel implements SwatComponent{
 
 	private static final long serialVersionUID = 1023415244830760771L;
 	private static final String scaleMessageFormat = "Scale: %s %%";
@@ -191,6 +192,11 @@ public abstract class PNEditor extends JPanel {
 		undoManager = new mxUndoManager();
 		undoManager.addListener(mxEvent.UNDO, handler);
 		undoManager.addListener(mxEvent.REDO, handler);
+	}
+	
+	@Override
+	public JComponent getMainComponent() {
+		return this;
 	}
 	
 	private JPanel getPalettePanel(){
