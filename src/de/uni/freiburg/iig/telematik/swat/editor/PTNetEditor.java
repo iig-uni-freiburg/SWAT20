@@ -19,9 +19,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
-import de.unifreiburg.iig.bpworkbench2.editor.EditorPopupMenu;
 
 public class PTNetEditor extends PNEditor {
 

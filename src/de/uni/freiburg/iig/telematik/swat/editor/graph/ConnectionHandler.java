@@ -14,8 +14,8 @@ import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
-import de.unifreiburg.iig.bpworkbench2.editor.EditorProperties;
 import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
 
 /**
