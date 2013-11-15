@@ -14,9 +14,9 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
-import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
 
 public class PTNetEditorTests {
 	

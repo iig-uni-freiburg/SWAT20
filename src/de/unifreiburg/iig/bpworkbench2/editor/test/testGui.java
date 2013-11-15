@@ -15,9 +15,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.CPNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.IFNetEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
 
 public class testGui {
 	
