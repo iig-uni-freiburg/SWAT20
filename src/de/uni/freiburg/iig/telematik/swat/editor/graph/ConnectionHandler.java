@@ -16,7 +16,7 @@ import com.mxgraph.view.mxGraph;
 
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
-import de.unifreiburg.iig.bpworkbench2.editor.graph.Graph;
+
 
 /**
  * Connection handler creates new connections between cells. This control is used to display the connector icon, while the preview is used to draw the line.
@@ -114,7 +114,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 	private Object createTargetPlace(MouseEvent e) {
 		System.out.println("createTargetPlace");
 		mxPoint point = graphComponent.getPointForEvent(e);
-		PNGraphCell cell = new PNGraphCell(null, getPlaceDimension(point), ((Graph) graphComponent.getGraph()).getPlaceShape(), PNComponent.PLACE);
+		PNGraphCell cell = new PNGraphCell(null, getPlaceDimension(point),  MXConstants.DEFAULT_PLACE_SHAPE, PNComponent.PLACE);
 		cell.setVertex(true);
 		return cell;
 	}
@@ -127,7 +127,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 	private Object createTargetTransition(MouseEvent e) {
 		System.out.println("createTargetTransition");
 		mxPoint point = graphComponent.getPointForEvent(e);
-		PNGraphCell cell = new PNGraphCell(null, getTransitionDimension(point), ((Graph) graphComponent.getGraph()).getTransitionShape(), PNComponent.TRANSITION);
+		PNGraphCell cell = new PNGraphCell(null, getTransitionDimension(point), MXConstants.DEFAULT_TRANSITION_SHAPE, PNComponent.TRANSITION);
 		cell.setVertex(true);
 		return cell;
 	}
