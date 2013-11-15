@@ -174,8 +174,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		getGraph().getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener() {
 			@Override
 			public void invoke(Object sender, mxEventObject evt) {
-				System.out.println(((mxGraphSelectionModel) sender).getCell());
-				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
+//				System.out.println(((mxGraphSelectionModel) sender).getCell());
+//				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
 				//TODO: Notify properties view for highlighting
 			}
 		});
