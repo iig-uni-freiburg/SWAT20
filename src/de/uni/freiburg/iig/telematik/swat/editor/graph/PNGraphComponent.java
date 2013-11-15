@@ -17,9 +17,9 @@ import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.unifreiburg.iig.bpworkbench2.editor.EditorPopupMenu;
-import de.unifreiburg.iig.bpworkbench2.editor.PNEditor;
 import de.unifreiburg.iig.bpworkbench2.editor.PaletteIcon;
 import de.unifreiburg.iig.bpworkbench2.editor.PaletteIconDataFlavor;
 

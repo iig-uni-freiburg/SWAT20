@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 
 public class PTGraphComponent extends PNGraphComponent {
 
