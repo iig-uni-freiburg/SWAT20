@@ -53,8 +53,8 @@ public abstract class MXConstants {
         }
     }
 	
-	public static final String DEFAULT_PLACE_SHAPE = "shape=ellipse;"  +"spacingLeft=-50; fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
-	public static final String DEFAULT_TRANSITION_SHAPE = "shape=rectangle;"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
+	public static final String DEFAULT_PLACE_SHAPE = "shape=ellipse;"  +"spacingLeft=0;"+"spacingTop=30;"+ "fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
+	public static final String DEFAULT_TRANSITION_SHAPE = "shape=rectangle;"+"spacingLeft=0;"+"spacingTop=30;"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 	public static final String DEFAULT_ARC_SHAPE = "";
 	
 //	public static final String PNPlace = "pnPlace";
