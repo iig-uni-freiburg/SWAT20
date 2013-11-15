@@ -19,12 +19,12 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
-import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
 
 public class Workbench extends JFrame implements SwatTreeViewListener{
 

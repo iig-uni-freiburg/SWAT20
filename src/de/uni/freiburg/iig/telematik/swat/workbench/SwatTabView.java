@@ -14,8 +14,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
-import de.unifreiburg.iig.bpworkbench2.editor.PTNetEditor;
 
 @SuppressWarnings("serial")
 public class SwatTabView extends JTabbedPane {
