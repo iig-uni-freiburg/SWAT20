@@ -9,7 +9,7 @@ import com.mxgraph.swing.util.mxGraphActions;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoRedoAction;
 
 public class EditorPopupMenu extends JPopupMenu {
 	

@@ -36,6 +36,9 @@ import com.mxgraph.view.mxGraphSelectionModel;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.PrintAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoRedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -46,9 +49,6 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.PrintAction;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.SaveAction;
-import de.unifreiburg.iig.bpworkbench2.editor.actions.UndoRedoAction;
 
 public abstract class PNEditor extends JPanel implements SwatComponent{
 
