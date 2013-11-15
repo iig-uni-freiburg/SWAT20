@@ -53,7 +53,6 @@ public class PNTreeBuilder {
 			PNTreeNode placeNode) {
 		for(Entry<PNProperty, PropertiesField> o:placeField.getValue().entrySet()){
 			PNTreeNode propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue());
-		
 		placeNode.add(propNode);
 		}
 		return placeNode;

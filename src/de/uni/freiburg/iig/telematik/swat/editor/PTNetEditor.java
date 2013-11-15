@@ -97,14 +97,14 @@ public class PTNetEditor extends PNEditor {
 		return null;
 	}
 	
-	  private TreePath find(DefaultMutableTreeNode root, String s) {
+	  private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
 		    @SuppressWarnings("unchecked")
 		    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
 		    while (e.hasMoreElements()) {
 		        DefaultMutableTreeNode node = e.nextElement();
 		        if (node.toString().equalsIgnoreCase(s)) {
 		        	DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
-		            return new TreePath(child.getPath());
+		            return node;
 		        }
 		    }
 		    return null;
@@ -113,13 +113,24 @@ public class PTNetEditor extends PNEditor {
 	@Override
 	protected void actOnSelection(Object sender, mxEventObject evt) {
 		System.out.println("ROWS:" + getPropertiesView().getTree().getRowCount());
-		for (int i = getPropertiesView().getTree().getRowCount(); i > 0; i--) {
+		for (int i = getPropertiesView().getTree().getRowCount(); i >= 0; i--) {
 			getPropertiesView().getTree().collapseRow(i);
 		}
 		if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
 			PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
-			TreePath path = find((DefaultMutableTreeNode) getPropertiesView().getTree().getModel().getRoot(), cell.getId());
-			getPropertiesView().getTree().setSelectionPath(path);
+			DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getPropertiesView().getTree().getModel().getRoot(), cell.getId());
+//			getPropertiesView().getTree().getModel().get
+//   		DefaultMutableTreeNode selectedNode = node;
+   		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+//   		tree.getRowForPath(path)
+//   	TreeNode[] path = firstChild.getPath();
+//   	tree.expandRow(row);
+//       for (int i = 0; i < tree.getRowCount(); i++) {
+//   	System.out.println(new TreePath(firstChild.getPath()));
+   		TreePath propPath = new TreePath(firstChild.getPath());
+
+   getPropertiesView().getTree().setSelectionPath(propPath);
+			getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
 
 		}
 	}

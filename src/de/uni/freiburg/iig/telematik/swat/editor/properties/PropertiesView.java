@@ -35,7 +35,7 @@ import de.uni.freiburg.iig.telematik.jagal.ts.Event;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeBuilder;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeCellEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.PNCellEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeModel;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
@@ -91,12 +91,13 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 	     
 	        tree = new JTree(model);
 	        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+	        tree.setRootVisible(false);
+	        
 	        //Set Editor for Property Fields
 	        JTextField textField = new JTextField();
-	        TreeCellEditor editor = new PNTreeCellEditor(textField);
-	        tree.setEditable(true);
+	        PNCellEditor editor = new PNCellEditor(textField);  
 	        tree.setCellEditor(editor);
-	        
+	        tree.setEditable(true);
 	        PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
 	        tree.setCellRenderer(renderer);
 	        tree.addTreeSelectionListener(this);
@@ -276,10 +277,32 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
     @Override
     public void valueChanged(TreeSelectionEvent e) {
        Object node = tree.getLastSelectedPathComponent();
+//       System.out.println(node.getClass());
        System.out.println("HALLO");
-       if (node == null) {
-           return;
-       }
+//       if (node != null) {
+//    	   PNTreeNode selectedNode;
+//    	
+//		if(node instanceof DefaultMutableTreeNode){
+////    		 selectedNode =   (PNTreeNode) node;
+////    		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+//////    		tree.getRowForPath(path)
+////    	TreeNode[] path = firstChild.getPath();
+//////    	tree.expandRow(row);
+//////        for (int i = 0; i < tree.getRowCount(); i++) {
+////    	System.out.println(new TreePath(firstChild.getPath()));
+////    	tree.expandPath(new TreePath(firstChild.getPath()));
+////    		System.out.println(row);
+////            tree.expandRow(i);
+////        }
+////    	System.out.println(firstChild + "#" + row);
+////    	tree.expandRow(row);
+////((PNTreeNode) node).getRoot()		
+////		tree.getModel()
+////		selectedNode.getParent()
+////		tree.setSelectionPath(new TreePath(((DefaultMutableTreeNode)selectedNode.getParent()).getPath()));
+//		}
+////           return;
+//       }
         
 //       JOptionPane.showMessageDialog(this, "You have selected: " + node);
     }

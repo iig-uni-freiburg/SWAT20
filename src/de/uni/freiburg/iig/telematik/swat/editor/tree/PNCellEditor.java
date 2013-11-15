@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.tree;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 import javax.swing.DefaultCellEditor;
@@ -12,9 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.CellEditorListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellEditor;
+import javax.swing.tree.TreePath;
 
-public class PNTreeCellEditor extends DefaultCellEditor {
+public class PNCellEditor extends DefaultCellEditor {
+
 
 	private static final long serialVersionUID = -8137148608944410589L;
 
@@ -32,15 +36,15 @@ public class PNTreeCellEditor extends DefaultCellEditor {
 	       return result;
 	}
 
-	public PNTreeCellEditor(JTextField name) {
+	public PNCellEditor(JTextField name) {
 		super(name);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Object getCellEditorValue() {
-		// TODO Auto-generated method stub
-		return super.getCellEditorValue();
+System.out.println("jups");		
+return super.getCellEditorValue();
 	}
 
 	private Component getTextPanel(PNTreeNode node) {
@@ -53,6 +57,39 @@ public class PNTreeCellEditor extends DefaultCellEditor {
 		panel.add(node.getTextfield(), BorderLayout.LINE_END);
 		return panel;
 	}
-	
+	 @Override  
+	    public boolean isCellEditable(EventObject event)  
+	    {  
+		 System.out.println("isit?");
+		 
+		 JTree tree = (JTree)event.getSource();  
+		  PNTreeNode node = (PNTreeNode) tree.getLastSelectedPathComponent();
+
+	            if(node!= null){
+	            	switch(node.getFieldType()){
+					case ARC:
+						break;
+					case ARCS:
+						break;
+					case LEAF:
+						return true;
+					case PLACE:
+						break;
+					case PLACES:
+						break;
+					case ROOT:
+						break;
+					case TRANSITION:
+						break;
+					case TRANSITIONS:
+						break;
+					default:
+						break;
+	            	
+	            	}
+	            }
+
+		 return false;
+	    }
 
 }

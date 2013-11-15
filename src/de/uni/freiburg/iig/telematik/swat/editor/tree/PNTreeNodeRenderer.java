@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.editor.tree;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
@@ -39,26 +41,38 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
            int row,
            boolean hasFocus) {
        super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-       
        PNTreeNode node = (PNTreeNode) value;
        Component result = this;
        switch (node.getFieldType()) {
+
+	case ARCS:
+		setIcon(new ImageIcon(arcIcon.getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+		break;
+	case PLACES:
+		setIcon(new ImageIcon(placeIcon.getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+		break;
+	case TRANSITIONS:
+		setIcon(new ImageIcon(transitionIcon.getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+		break;
+	default:
+		break;
    	case ROOT:
    		setIcon(new ImageIcon(rootIcon.getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
 		break;
 	case PLACE:
 		setIcon(new ImageIcon(placeIcon.getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+		keepSelectionWhileEditing(tree, node);
 		break;
 	case TRANSITION:
 		setIcon(new ImageIcon(transitionIcon.getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+		keepSelectionWhileEditing(tree, node);
 		break;
 	case ARC:
 		setIcon(new ImageIcon(arcIcon.getImage().getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH)));
+		keepSelectionWhileEditing(tree, node);
 		break;
 	case LEAF:
 		result = getTextPanel(node);
-		break;
-	default:
 		break;
 
 
@@ -66,6 +80,16 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
        
        return result;
    }
+
+/**
+ * @param tree
+ * @param node
+ */
+public void keepSelectionWhileEditing(JTree tree, PNTreeNode node) {
+	DefaultMutableTreeNode child = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+	if(child != null && child.getParent() == node)
+		selected = true;
+}
 
 private Component getTextPanel(PNTreeNode node) {
 	JPanel panel = new JPanel();
