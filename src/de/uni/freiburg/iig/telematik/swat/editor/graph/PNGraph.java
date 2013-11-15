@@ -121,7 +121,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 	
 	@SuppressWarnings("rawtypes")
 	public PNGraphCell insertPNPlace(AbstractPlace place, NodeGraphics nodeGraphics){
-		PNGraphCell newCell = createPlaceCell(place.getName(), place.getName(), nodeGraphics.getPosition().getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension().getY(), MXConstants.getStyle(PNComponent.PLACE, nodeGraphics));
+		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), nodeGraphics.getPosition().getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics.getDimension().getY(), MXConstants.getStyle(PNComponent.PLACE, nodeGraphics));
 		addCell(newCell, getDefaultParent());
 		addNodeReference(place, newCell);
 		return newCell;
