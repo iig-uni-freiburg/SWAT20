@@ -46,7 +46,7 @@ public class PNTreeCellEditor extends DefaultCellEditor {
 	private Component getTextPanel(PNTreeNode node) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
-		JLabel label = new JLabel(node.getTitle());
+		JLabel label = new JLabel(node.toString());
 		label.setSize(new Dimension(200, 30));
 		panel.add(label, BorderLayout.LINE_START);
 		panel.add(new JLabel(":"), BorderLayout.CENTER);

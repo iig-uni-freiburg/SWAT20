@@ -2,6 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.editor;
 
 import java.io.File;
 
+import com.mxgraph.util.mxEventObject;
+
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
@@ -62,6 +64,12 @@ public class CPNEditor extends AbstractCPNEditor {
 	public EditorPopupMenu getPopupMenu() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected void actOnSelection(Object sender, mxEventObject evt) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

@@ -1,8 +1,13 @@
 package de.uni.freiburg.iig.telematik.swat.editor.tree;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
@@ -17,27 +22,29 @@ public class PNTreeBuilder {
 		PNTreeNode placesNode = new PNTreeNode("Places", PNTreeNodeType.PLACES);
 		for (Entry<String, HashMap<PNProperty, PropertiesField>> placeField : placeFields.entrySet()) {
 				PNTreeNode placeNode = new PNTreeNode(placeField.getKey(), PNTreeNodeType.PLACE);
-				placesNode.addChild(addPropertyNodes(placeField, placeNode));
+				placesNode.add(addPropertyNodes(placeField, placeNode));
 		}
 		
 		  //transitions
 		PNTreeNode transitionsNode = new PNTreeNode("transitions", PNTreeNodeType.TRANSITIONS);
 		for (Entry<String, HashMap<PNProperty, PropertiesField>> transitionField : transitionFields.entrySet()) {
 			PNTreeNode TransitionNode = new PNTreeNode(transitionField.getKey(), PNTreeNodeType.TRANSITION);	
-			transitionsNode.addChild(addPropertyNodes(transitionField, TransitionNode));
+			transitionsNode.add(addPropertyNodes(transitionField, TransitionNode));
 		}
 		
 		  //arcs
 		PNTreeNode arcsNode = new PNTreeNode("arcs", PNTreeNodeType.ARCS);
 		for (Entry<String, HashMap<PNProperty, PropertiesField>> arcField : arcFields.entrySet()) {
 			PNTreeNode ArcNode = new PNTreeNode(arcField.getKey(), PNTreeNodeType.ARC);	
-			arcsNode.addChild(addPropertyNodes(arcField, ArcNode));
+			arcsNode.add(addPropertyNodes(arcField, ArcNode));
 		
 		}
 		
-		rootNode.addChild(placesNode);
-		rootNode.addChild(transitionsNode);
-		rootNode.addChild(arcsNode);
+		rootNode.add(placesNode);
+		rootNode.add(transitionsNode);
+		rootNode.add(arcsNode);
+//		  System.out.println( new PNTreePath(placesNode.getPath()));
+		  
 		return rootNode;
 	}
 
@@ -47,10 +54,12 @@ public class PNTreeBuilder {
 		for(Entry<PNProperty, PropertiesField> o:placeField.getValue().entrySet()){
 			PNTreeNode propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue());
 		
-		placeNode.addChild(propNode);
+		placeNode.add(propNode);
 		}
 		return placeNode;
 		
 	}
+	
+
 
 }

@@ -6,12 +6,16 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
@@ -20,11 +24,15 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.swing.view.mxInteractiveCanvas;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
+import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphSelectionModel;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -43,6 +51,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNCompo
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertiesListener;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertyChangeEvent;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 
 
 public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
@@ -69,7 +78,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		setVertexLabelsMovable(true);
 		
 		initialize();
-		
+		// Add SelectionListener for graph
 	}
 	
 
@@ -484,7 +493,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 
 
 	
-
 
 
 

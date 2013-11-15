@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.tree.TreePath;
 
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
@@ -48,6 +50,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.PalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
 public abstract class PNEditor extends JPanel implements SwatComponent{
@@ -115,6 +118,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 	
 	protected abstract PNProperties createPNProperties();
 	
+
+	
 	//------- Set Up GUI -----------------------------------------------------------------------
 	
 	private void setUpGUI() {
@@ -126,8 +131,22 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		
 		rubberband = new mxRubberband(graphComponent);
 		keyboardHandler = new KeyboardHandler(graphComponent);
+		
+		
+		getGraph().getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener(){
+
+			@Override
+			public void invoke(Object sender, mxEventObject evt) {
+				actOnSelection(sender, evt);
+			}
+
+		});
+
 	}
 	
+	
+	protected abstract void actOnSelection(Object sender, mxEventObject evt);
+
 	private ToolBar getToolbar(){
 		if(toolbar == null){
 			try {
@@ -170,15 +189,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 					}
 		});
 
-		// Add SelectionListener for graph
-		getGraph().getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener() {
-			@Override
-			public void invoke(Object sender, mxEventObject evt) {
-//				System.out.println(((mxGraphSelectionModel) sender).getCell());
-//				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
-				//TODO: Notify properties view for highlighting
-			}
-		});
+
 	}
 
 	private void setUpUndo(){
@@ -487,5 +498,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 //
 //		return layout;
 //	}
+	
+
+
 
 }

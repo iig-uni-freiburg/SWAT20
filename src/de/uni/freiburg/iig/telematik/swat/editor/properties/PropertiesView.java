@@ -19,11 +19,14 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import de.invation.code.toval.graphic.RestrictedTextField;
 import de.invation.code.toval.validate.ParameterException;
@@ -47,9 +50,20 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 	protected Map<String, HashMap<PNProperty, PropertiesField>> transitionFields = new HashMap<String,HashMap<PNProperty,PropertiesField>>();
 	protected Map<String, HashMap<PNProperty, PropertiesField>> arcFields = new HashMap<String,HashMap<PNProperty,PropertiesField>>();
 	
-	private JTree tree;
+	public JTree tree;
 	
+	public JTree getTree() {
+		return tree;
+	}
+
+	public void setTree(JTree tree) {
+		this.tree = tree;
+	}
 	protected PNProperties properties =  null;
+
+	private PNTreeNode rootNode;
+
+
 
 	public PropertiesView(PNProperties properties) throws ParameterException{
 		Validate.notNull(properties);
@@ -72,10 +86,11 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 		}
 		
 
-	        final PNTreeNode rootNode = PNTreeBuilder.build(placeFields, transitionFields, arcFields);
+	         rootNode = PNTreeBuilder.build(placeFields, transitionFields, arcFields);
 	        TreeModel model = new PNTreeModel(rootNode);
+	     
 	        tree = new JTree(model);
-	       
+	        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 	        //Set Editor for Property Fields
 	        JTextField textField = new JTextField();
 	        TreeCellEditor editor = new PNTreeCellEditor(textField);
@@ -268,6 +283,13 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
         
 //       JOptionPane.showMessageDialog(this, "You have selected: " + node);
     }
+	public PNTreeNode getRootNode() {
+		return rootNode;
+	}
+
+	public void setRootNode(PNTreeNode rootNode) {
+		this.rootNode = rootNode;
+	}
 
 }
 
@@ -298,5 +320,7 @@ class CustomTreeModelListener implements TreeModelListener {
     }
     public void treeStructureChanged(TreeModelEvent e) {
     }
+    
+    
 
 }
