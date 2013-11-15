@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
@@ -20,6 +21,7 @@ import com.mxgraph.shape.mxIShape;
 import com.mxgraph.swing.view.mxInteractiveCanvas;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
@@ -336,20 +338,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		for(PNGraphCell cell: nodeReferences.values()){
 			mxCellState state = getView().getState(cell);
 			
-//			String horizontal = mxUtils.getString(state.getStyle(), mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
-//			if (horizontal.equals(mxConstants.ALIGN_LEFT)) {
-//				state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX() - state.getWidth());
-//			} else if (horizontal.equals(mxConstants.ALIGN_RIGHT)) {
-//				state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX() + state.getWidth());
-//			}
-//			
-//			String vertical = mxUtils.getString(state.getStyle(), mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
-//			if (vertical.equals(mxConstants.ALIGN_TOP)) {
-//				state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY() - state.getHeight());
-//			} else if (vertical.equals(mxConstants.ALIGN_BOTTOM)) {
-//				state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY() + state.getHeight());
-//			}
-			
 			AnnotationGraphics annotationGraphics = null;
 			if (cell.getType() == PNComponent.PLACE) {
 				annotationGraphics = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
@@ -361,13 +349,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 			if(annotationGraphics != null){
 				state.setAbsoluteOffset(new mxPoint(annotationGraphics.getOffset().getX(), annotationGraphics.getOffset().getY()));
 			}
-			if(cell.getId().equals("p2")){
-				System.out.println(state.getAbsoluteOffset());
-			}
+
 		}
-//		System.out.println("refresh start");
-//		System.out.println("refresh end");
-		System.out.println(getView().getState(nodeReferences.get(netContainer.getPetriNet().getPlace("p2"))).getAbsoluteOffset());
+
 	}
 	
 	/**
@@ -403,6 +387,24 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 
 	}
 	
+	@Override
+	public void cellsResized(Object[] cells, mxRectangle[] bounds) {
+		// TODO Auto-generated method stub
+		super.cellsResized(cells, bounds);
+		for (Object object : cells) {
+			if (object instanceof PNGraphCell) {
+				PNGraphCell cell = (PNGraphCell) object;
+				try {
+					properties.setPlaceSize(this, cell.getId(), (int) cell.getGeometry().getWidth());
+
+				} catch (ParameterException e) {
+					System.out.println("Placesize could not be changed");
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	protected void addTransitionToPetriNet(String name, String label){
 		
 	}
@@ -440,13 +442,25 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		}
 	}
 
+	
 	private boolean handlePlacePropertyChange(String name, PNProperty property, Object oldValue, Object newValue) {
-		switch(property){
+		PNGraphCell placeCell = null;
+		for (Entry<AbstractPNNode, PNGraphCell> nr : nodeReferences.entrySet()) {
+			if (nr.getKey().getName() == name) {
+				placeCell = nr.getValue();
+				break;
+			}
+		}
+		switch (property) {
 		case PLACE_LABEL:
-			//TODO:
+			System.out.println(getNetContainer().getPetriNet().getPlace(name));
+
+			placeCell.setValue(newValue);
 			return true;
 		case PLACE_SIZE:
-			//TODO:
+			System.out.println(getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(name).getDimension());
+			placeCell.getGeometry().setWidth(new Integer((Integer) newValue).doubleValue());
+			placeCell.getGeometry().setHeight(new Integer((Integer) newValue).doubleValue());
 			return true;
 		}
 		return false;
