@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -33,15 +35,32 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 
     
    public Component getTreeCellRendererComponent(
-           JTree tree,
+           final JTree tree,
            Object value,
            boolean sel,
            boolean expanded,
            boolean leaf,
            int row,
            boolean hasFocus) {
-       super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+     Component container = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
        PNTreeNode node = (PNTreeNode) value;
+       
+       container.addFocusListener(new FocusListener() {
+
+ 			@Override
+ 			public void focusGained(FocusEvent arg0) {
+
+ 			}
+
+ 			@Override
+ 			public void focusLost(FocusEvent arg0) {
+ 				System.out.println("stop");
+ 				tree.stopEditing();
+ 			}
+
+ 		});
+			
+
        Component result = this;
        switch (node.getFieldType()) {
 

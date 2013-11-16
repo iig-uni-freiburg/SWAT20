@@ -90,14 +90,16 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 	        TreeModel model = new PNTreeModel(rootNode);
 	     
 	        tree = new JTree(model);
+	        tree.setInvokesStopCellEditing(false);
 	        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 	        tree.setRootVisible(false);
-	        
+//	        tree.setInvokesStopCellEditing(false);
 	        //Set Editor for Property Fields
 	        JTextField textField = new JTextField();
 	        PNCellEditor editor = new PNCellEditor(textField);  
 	        tree.setCellEditor(editor);
 	        tree.setEditable(true);
+	        
 	        PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
 	        tree.setCellRenderer(renderer);
 	        tree.addTreeSelectionListener(this);
@@ -276,9 +278,10 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 		}
     @Override
     public void valueChanged(TreeSelectionEvent e) {
-       Object node = tree.getLastSelectedPathComponent();
+//       Object node = tree.getLastSelectedPathComponent();
 //       System.out.println(node.getClass());
        System.out.println("HALLO");
+//       tree.stopEditing();
 //       if (node != null) {
 //    	   PNTreeNode selectedNode;
 //    	

@@ -130,7 +130,7 @@ public class PTNetEditor extends PNEditor {
    		TreePath propPath = new TreePath(firstChild.getPath());
 
    getPropertiesView().getTree().setSelectionPath(propPath);
-			getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
+//			getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
 
 		}
 	}
