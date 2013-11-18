@@ -73,6 +73,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
 		this.properties.getPropertiesView().getTree().addTreeSelectionListener(this);
+		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
 //		setView(createCustomView());
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
@@ -82,20 +83,13 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		setVertexLabelsMovable(true);
 		initialize();
 		// Add SelectionListener for graph
-		getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener(){
-
-			@Override
-			public void invoke(Object sender, mxEventObject evt) {
-				actOnSelection(sender, evt);
-			}
-
-		});
 		
 	}
 	
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
+		System.out.println(e.getSource());
 		System.out.println("treeselection");
 		PNTreeNode node = (PNTreeNode) ((JTree)e.getSource()).getLastSelectedPathComponent();
 		switch(node.getFieldType()){
@@ -128,13 +122,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	}
 
 
-	protected void actOnSelection(Object sender, mxEventObject evt) {
-//		System.out.println(sender + "sender");
-//		if(!(sender instanceof JTree)){
+//	protected void actOnSelection(Object sender, mxEventObject evt) {
+////		System.out.println(evt.g);
 //		System.out.println("ROWS:" + getPNProperties().getPropertiesView().getTree().getRowCount());
-//		for (int i = getPNProperties().getPropertiesView().getTree().getRowCount(); i >= 0; i--) {
-//			getPNProperties().getPropertiesView().getTree().collapseRow(i);
-//		}
+////		for (int i = getPNProperties().getPropertiesView().getTree().getRowCount(); i >= 0; i--) {
+////			getPNProperties().getPropertiesView().getTree().collapseRow(i);
+////		}
 //		if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
 //			PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
 //			DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getPNProperties().getPropertiesView().getTree().getModel().getRoot(), cell.getId());
@@ -151,22 +144,22 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 //   		getPNProperties().getPropertiesView().getTree().setSelectionPath(propPath);
 //   		
 ////			getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
+//
 //		}
-//		}
-	}	
+//	}	
 	
-	  private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
-		    @SuppressWarnings("unchecked")
-		    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
-		    while (e.hasMoreElements()) {
-		        DefaultMutableTreeNode node = e.nextElement();
-		        if (node.toString().equalsIgnoreCase(s)) {
-		        	DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
-		            return node;
-		        }
-		    }
-		    return null;
-		}
+//	  private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
+//		    @SuppressWarnings("unchecked")
+//		    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+//		    while (e.hasMoreElements()) {
+//		        DefaultMutableTreeNode node = e.nextElement();
+//		        if (node.toString().equalsIgnoreCase(s)) {
+//		        	DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
+//		            return node;
+//		        }
+//		    }
+//		    return null;
+//		}
 	  
 
 

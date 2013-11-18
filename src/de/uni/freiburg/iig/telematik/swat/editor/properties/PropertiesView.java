@@ -5,6 +5,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,11 +34,18 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource.mxIEventListener;
+import com.mxgraph.view.mxGraphSelectionModel;
+
 import de.invation.code.toval.graphic.RestrictedTextField;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.jagal.graph.algorithm.coloring.GraphColoring;
 import de.uni.freiburg.iig.telematik.jagal.ts.Event;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeBuilder;
@@ -48,7 +56,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
 
 
 
-public class PropertiesView extends JPanel implements PNPropertiesListener, TreeSelectionListener{
+public class PropertiesView extends JPanel implements PNPropertiesListener, mxIEventListener{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -109,7 +117,7 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 	        
 	        PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
 	        tree.setCellRenderer(renderer);
-	        tree.addTreeSelectionListener(this);
+//	        tree.addTreeSelectionListener(this);
 	        add(new JScrollPane(tree), BorderLayout.CENTER);
 	        
 	        // expand all nodes in the tree to be visible
@@ -300,49 +308,49 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 		    return returnValue;
 		  }
 		}
-    @Override
-    public void valueChanged(TreeSelectionEvent e) {
-    	
-//       Object node = tree.getLastSelectedPathComponent();
-//       System.out.println(node.getClass());
-    	
-       System.out.println("HALLO" + e.getSource().getClass());
-       if(e.getSource() instanceof PropertiesField){
-    	   System.out.println("prop");
-       }
-//       PNGraph graph = properties.getPnGraph();
-//       graph.clearSelection();
-//       System.out.println((tree.getLastSelectedPathComponent() != e.getSource()) + "equals");
-       
-       
-//       tree.stopEditing();
-//       if (node != null) {
-//    	   PNTreeNode selectedNode;
+//    @Override
+//    public void valueChanged(TreeSelectionEvent e) {
 //    	
-//		if(node instanceof DefaultMutableTreeNode){
-////    		 selectedNode =   (PNTreeNode) node;
-////    		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
-//////    		tree.getRowForPath(path)
-////    	TreeNode[] path = firstChild.getPath();
-//////    	tree.expandRow(row);
-//////        for (int i = 0; i < tree.getRowCount(); i++) {
-////    	System.out.println(new TreePath(firstChild.getPath()));
-////    	tree.expandPath(new TreePath(firstChild.getPath()));
-////    		System.out.println(row);
-////            tree.expandRow(i);
-////        }
-////    	System.out.println(firstChild + "#" + row);
-////    	tree.expandRow(row);
-////((PNTreeNode) node).getRoot()		
-////		tree.getModel()
-////		selectedNode.getParent()
-////		tree.setSelectionPath(new TreePath(((DefaultMutableTreeNode)selectedNode.getParent()).getPath()));
-//		}
-////           return;
+////       Object node = tree.getLastSelectedPathComponent();
+////       System.out.println(node.getClass());
+//    	
+//       System.out.println("HALLO" + e.getSource().getClass());
+//       if(e.getSource() instanceof PropertiesField){
+//    	   System.out.println("prop");
 //       }
-        
-//       JOptionPane.showMessageDialog(this, "You have selected: " + node);
-    }
+////       PNGraph graph = properties.getPnGraph();
+////       graph.clearSelection();
+////       System.out.println((tree.getLastSelectedPathComponent() != e.getSource()) + "equals");
+//       
+//       
+////       tree.stopEditing();
+////       if (node != null) {
+////    	   PNTreeNode selectedNode;
+////    	
+////		if(node instanceof DefaultMutableTreeNode){
+//////    		 selectedNode =   (PNTreeNode) node;
+//////    		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+////////    		tree.getRowForPath(path)
+//////    	TreeNode[] path = firstChild.getPath();
+////////    	tree.expandRow(row);
+////////        for (int i = 0; i < tree.getRowCount(); i++) {
+//////    	System.out.println(new TreePath(firstChild.getPath()));
+//////    	tree.expandPath(new TreePath(firstChild.getPath()));
+//////    		System.out.println(row);
+//////            tree.expandRow(i);
+//////        }
+//////    	System.out.println(firstChild + "#" + row);
+//////    	tree.expandRow(row);
+//////((PNTreeNode) node).getRoot()		
+//////		tree.getModel()
+//////		selectedNode.getParent()
+//////		tree.setSelectionPath(new TreePath(((DefaultMutableTreeNode)selectedNode.getParent()).getPath()));
+////		}
+//////           return;
+////       }
+//        
+////       JOptionPane.showMessageDialog(this, "You have selected: " + node);
+//    }
 	public PNTreeNode getRootNode() {
 		return rootNode;
 	}
@@ -351,7 +359,53 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 		this.rootNode = rootNode;
 	}
 
+	@Override
+	public void invoke(Object sender, mxEventObject evt) {
+//			System.out.println(evt.g);
+		if(sender != this){
+			System.out.println("PropertiesVIEW");
+			
+			System.out.println("ROWS:" + tree.getRowCount());
+//			for (int i = getPNProperties().getPropertiesView().getTree().getRowCount(); i >= 0; i--) {
+//				getPNProperties().getPropertiesView().getTree().collapseRow(i);
+//			}
+			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
+				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
+				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) tree.getModel().getRoot(), cell.getId());
+//				getPropertiesView().getTree().getModel().get
+//	   		DefaultMutableTreeNode selectedNode = node;
+	   		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+//	   		tree.getRowForPath(path)
+//	   	TreeNode[] path = firstChild.getPath();
+//	   	tree.expandRow(row);
+//	       for (int i = 0; i < tree.getRowCount(); i++) {
+//	   	System.out.println(new TreePath(firstChild.getPath()));
+	   		
+	   		TreePath propPath = new TreePath(firstChild.getPath());
+	   		tree.setSelectionPath(propPath);
+	   		
+//				getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
+
+			}
+		}	}
+	  private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
+		    @SuppressWarnings("unchecked")
+		    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		    while (e.hasMoreElements()) {
+		        DefaultMutableTreeNode node = e.nextElement();
+		        if (node.toString().equalsIgnoreCase(s)) {
+		        	DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
+		            return node;
+		        }
+		    }
+		    return null;
+		}
+	  
+
 }
+
+
+//mxEvent.CHANGE
 
 class CustomTreeModelListener implements TreeModelListener {
     public void treeNodesChanged(TreeModelEvent e) {
