@@ -112,6 +112,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		properties = createPNProperties();
 		propertiesView = new PropertiesView(properties);
 		properties.addPNPropertiesListener(propertiesView);
+		properties.setPropertiesView(propertiesView);
 	}
 	
 	protected abstract AbstractGraphicalPN<?, ?, ?, ?, ?,?,?> createNetContainer();
@@ -132,20 +133,9 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		rubberband = new mxRubberband(graphComponent);
 		keyboardHandler = new KeyboardHandler(graphComponent);
 		
-		
-		getGraph().getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener(){
-
-			@Override
-			public void invoke(Object sender, mxEventObject evt) {
-				actOnSelection(sender, evt);
-			}
-
-		});
 
 	}
 	
-	
-	protected abstract void actOnSelection(Object sender, mxEventObject evt);
 
 	private ToolBar getToolbar(){
 		if(toolbar == null){

@@ -12,6 +12,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
 /**
  * This class allows to change properties of an underlying Petri net<br>
@@ -35,6 +37,9 @@ public abstract class PNProperties {
 	 * which returns a net container of the expected type.
 	 */
 	private AbstractGraphicalPN<?,?,?,?,?,?,?> netContainer = null;
+	private PNEditor pnEditor;
+	private PNGraph pnGraph;
+	private PropertiesView propertiesView;
 	
 	/**
 	 * Creates a new PNProperties object with the given net container.<br>
@@ -501,6 +506,7 @@ public abstract class PNProperties {
 		changeSupport.addListener(listener);
 	}
 
+
 	/**
 	 * Removes a {@link PNPropertiesListener}.
 	 * @param listener The listener to remove.
@@ -518,4 +524,15 @@ public abstract class PNProperties {
 	public enum PNComponent {
 		PLACE, TRANSITION, ARC;
 	}
+
+	public PropertiesView getPropertiesView() {
+		return propertiesView;
+	}
+
+	public void setPropertiesView(PropertiesView propertiesView) {
+		this.propertiesView = propertiesView;
+	}
+
+
+
 }

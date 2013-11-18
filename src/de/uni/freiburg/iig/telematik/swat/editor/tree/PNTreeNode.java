@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
+
 public class PNTreeNode extends DefaultMutableTreeNode {
 
 
@@ -20,17 +22,28 @@ public class PNTreeNode extends DefaultMutableTreeNode {
 	private JTextField textfield =null;
 
 	private PNTreeNodeType fieldType;
+	private PNProperty propertyType;
   
     
-    public PNTreeNode(String title, PNTreeNodeType type) {
+    public PNProperty getPropertyType() {
+		return propertyType;
+	}
+
+	public void setPropertyType(PNProperty propertyType) {
+		this.propertyType = propertyType;
+	}
+
+	public PNTreeNode(String title, PNTreeNodeType type) {
         super(title);
         this.fieldType = type;
+        
     }
     
-    public PNTreeNode(String title, PNTreeNodeType type, JTextField field) {
+    public PNTreeNode(String title, PNTreeNodeType type, JTextField field, PNProperty pnProperty) {
     	super(title);
     	this.fieldType = type;
         this.textfield  = field;
+        this.propertyType = pnProperty;
     }
 //    
 //    public void addChild(TreeNode child) {

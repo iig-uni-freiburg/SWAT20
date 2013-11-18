@@ -1,6 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
 import java.awt.BorderLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.border.Border;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -32,6 +37,7 @@ import de.invation.code.toval.graphic.RestrictedTextField;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.jagal.ts.Event;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeBuilder;
@@ -96,6 +102,7 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 //	        tree.setInvokesStopCellEditing(false);
 	        //Set Editor for Property Fields
 	        JTextField textField = new JTextField();
+	        textField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 	        PNCellEditor editor = new PNCellEditor(textField);  
 	        tree.setCellEditor(editor);
 	        tree.setEditable(true);
@@ -197,6 +204,8 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 	
 	public class PropertiesField extends RestrictedTextField {
 		
+		
+		
 		private static final long serialVersionUID = -2791152505686200734L;
 		
 		private PNComponent type = null;
@@ -208,11 +217,26 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 			this.type = type;
 			this.property = property;
 			this.name = name;
+//			this.addMouseListener(new java.awt.event.MouseAdapter() {
+//			    public void mouseClicked(java.awt.event.MouseEvent evt) {
+//			        System.out.println("juhu");
+//			    }
+//			});
+
+//			private void jTextFieldMyTextMouseClicked(java.awt.event.MouseEvent evt) {
+//			    jTextFieldMyText.setText("");
+//			}
+	     
 		}
 
 		@Override
 		protected void valueChanged(String oldValue, String newValue) {
 			propertiesFieldValueChanged(type, name, property, oldValue, newValue);
+		}
+
+		@Override
+		public void setBorder(Border border) {
+			// Remove Border from Textfield
 		}
 		
 	}
@@ -278,9 +302,19 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, Tree
 		}
     @Override
     public void valueChanged(TreeSelectionEvent e) {
+    	
 //       Object node = tree.getLastSelectedPathComponent();
 //       System.out.println(node.getClass());
-       System.out.println("HALLO");
+    	
+       System.out.println("HALLO" + e.getSource().getClass());
+       if(e.getSource() instanceof PropertiesField){
+    	   System.out.println("prop");
+       }
+//       PNGraph graph = properties.getPnGraph();
+//       graph.clearSelection();
+//       System.out.println((tree.getLastSelectedPathComponent() != e.getSource()) + "equals");
+       
+       
 //       tree.stopEditing();
 //       if (node != null) {
 //    	   PNTreeNode selectedNode;

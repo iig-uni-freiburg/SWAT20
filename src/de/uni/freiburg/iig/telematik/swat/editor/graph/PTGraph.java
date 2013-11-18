@@ -6,11 +6,16 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
@@ -19,8 +24,10 @@ import com.mxgraph.shape.mxEllipseShape;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.shape.mxStencilRegistry;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
+import com.mxgraph.view.mxGraphSelectionModel;
 
 import de.invation.code.toval.graphic.CircularPointGroup;
 import de.invation.code.toval.graphic.GraphicUtils;
@@ -35,6 +42,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 
 public class PTGraph extends PNGraph {
 
@@ -125,5 +133,47 @@ public class PTGraph extends PNGraph {
 		}
 		return g;
 	}
+
+
+
+
+//		protected void actOnSelection(Object sender, mxEventObject evt) {
+//			System.out.println("ROWS:" + getPNProperties().getPropertiesView().getTree().getRowCount());
+//			for (int i = getPNProperties().getPropertiesView().getTree().getRowCount(); i >= 0; i--) {
+//				getPNProperties().getPropertiesView().getTree().collapseRow(i);
+//			}
+//			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
+//				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
+//				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getPNProperties().getPropertiesView().getTree().getModel().getRoot(), cell.getId());
+////				getPropertiesView().getTree().getModel().get
+////	   		DefaultMutableTreeNode selectedNode = node;
+//	   		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+////	   		tree.getRowForPath(path)
+////	   	TreeNode[] path = firstChild.getPath();
+////	   	tree.expandRow(row);
+////	       for (int i = 0; i < tree.getRowCount(); i++) {
+////	   	System.out.println(new TreePath(firstChild.getPath()));
+//	   		
+//	   		TreePath propPath = new TreePath(firstChild.getPath());
+//	   		getPNProperties().getPropertiesView().getTree().setSelectionPath(propPath);
+//	   		
+////				getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
+//
+//			}
+//		}		
+//		  private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
+//			    @SuppressWarnings("unchecked")
+//			    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+//			    while (e.hasMoreElements()) {
+//			        DefaultMutableTreeNode node = e.nextElement();
+//			        if (node.toString().equalsIgnoreCase(s)) {
+//			        	DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
+//			            return node;
+//			        }
+//			    }
+//			    return null;
+//			}
+//		  
+		  
 
 }

@@ -66,11 +66,5 @@ public class IFNetEditor extends AbstractCPNEditor {
 		return null;
 	}
 
-	@Override
-	protected void actOnSelection(Object sender, mxEventObject evt) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 
 }

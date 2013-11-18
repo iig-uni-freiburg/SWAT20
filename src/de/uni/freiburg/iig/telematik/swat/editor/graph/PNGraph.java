@@ -14,6 +14,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -54,7 +57,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertyChangeEven
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 
 
-public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
+public abstract class PNGraph extends mxGraph implements PNPropertiesListener, TreeSelectionListener{
 
 	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
 	private PNProperties properties = null;
@@ -69,6 +72,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		this.netContainer = netContainer;
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
+		this.properties.getPropertiesView().getTree().addTreeSelectionListener(this);
 //		setView(createCustomView());
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
@@ -76,11 +80,95 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener{
 		setDisconnectOnMove(false);
 		setExtendParents(false); // disables extending parents after adding
 		setVertexLabelsMovable(true);
-		
 		initialize();
 		// Add SelectionListener for graph
+		getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener(){
+
+			@Override
+			public void invoke(Object sender, mxEventObject evt) {
+				actOnSelection(sender, evt);
+			}
+
+		});
+		
 	}
 	
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		System.out.println("treeselection");
+		PNTreeNode node = (PNTreeNode) ((JTree)e.getSource()).getLastSelectedPathComponent();
+		switch(node.getFieldType()){
+		case ARC:
+			break;
+		case ARCS:
+			break;
+		case LEAF:
+			break;
+		case PLACE:
+			PNGraphCell cell = nodeReferences.get(getNetContainer().getPetriNet().getPlace(node.toString()));
+			System.out.println(cell.getId() + "#" + node.toString());
+			setSelectionCell(cell);
+			break;
+		case PLACES:
+			break;
+		case ROOT:
+			break;
+		case TRANSITION:
+			break;
+		case TRANSITIONS:
+			break;
+		default:
+			break;
+		
+		}
+
+//		setSelectionCell(nodeReferences);
+		
+	}
+
+
+	protected void actOnSelection(Object sender, mxEventObject evt) {
+//		System.out.println(sender + "sender");
+//		if(!(sender instanceof JTree)){
+//		System.out.println("ROWS:" + getPNProperties().getPropertiesView().getTree().getRowCount());
+//		for (int i = getPNProperties().getPropertiesView().getTree().getRowCount(); i >= 0; i--) {
+//			getPNProperties().getPropertiesView().getTree().collapseRow(i);
+//		}
+//		if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
+//			PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
+//			DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getPNProperties().getPropertiesView().getTree().getModel().getRoot(), cell.getId());
+////			getPropertiesView().getTree().getModel().get
+////   		DefaultMutableTreeNode selectedNode = node;
+//   		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+////   		tree.getRowForPath(path)
+////   	TreeNode[] path = firstChild.getPath();
+////   	tree.expandRow(row);
+////       for (int i = 0; i < tree.getRowCount(); i++) {
+////   	System.out.println(new TreePath(firstChild.getPath()));
+//   		
+//   		TreePath propPath = new TreePath(firstChild.getPath());
+//   		getPNProperties().getPropertiesView().getTree().setSelectionPath(propPath);
+//   		
+////			getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
+//		}
+//		}
+	}	
+	
+	  private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
+		    @SuppressWarnings("unchecked")
+		    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		    while (e.hasMoreElements()) {
+		        DefaultMutableTreeNode node = e.nextElement();
+		        if (node.toString().equalsIgnoreCase(s)) {
+		        	DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
+		            return node;
+		        }
+		    }
+		    return null;
+		}
+	  
+
 
 	@SuppressWarnings("rawtypes")
 	private void initialize(){
