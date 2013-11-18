@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,13 +92,32 @@ public class SwatComponents {
 	}
 	
 	public boolean containsNetWithID(String name){
-		//TODO:
+		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> pn : getPetriNets()) {
+			if (name.equals(pn.getPetriNet().getName()))
+				return true;
+		}
 		return false;
 	}
 	
 	public boolean containsNetWithFileName(String name){
-		//TODO
-		return false;
+		return nets.containsValue(new File(name));
+	}
+
+	/** Stores every {@link AbstractGraphicalPN} within the project */
+	public void storeAllPetriNets() throws ParameterException {
+		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> pn : getPetriNets()) {
+			try {
+				storePetriNet(pn);
+			} catch (ParameterException e) {
+				try {
+					throw new ParameterException("Cannot store Petri net " + nets.get(pn).getCanonicalPath() + "\nReason: "
+							+ e.getMessage());
+				} catch (IOException e1) {
+					MessageDialog.getInstance().addMessage("Could not get (canonical) filepath for: " + pn.getPetriNet().getName());
+				}
+			}
+		}
+
 	}
 
 }

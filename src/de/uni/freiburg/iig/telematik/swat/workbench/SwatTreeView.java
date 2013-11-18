@@ -121,7 +121,7 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 					// Left click on tree node
 					notifyComponentSelected(swatNode);
 				}
-			} else if(e.getClickCount() == 2 && !e.isPopupTrigger()){
+			} else if (e.getClickCount() == 2 && e.getButton() == 1 && !e.isPopupTrigger()) {
 				// Double click on tree node
 				notifyComponentActivated(swatNode);
 			}

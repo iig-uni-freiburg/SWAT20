@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.prism.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -33,10 +34,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateListener {
 
 	private static final long serialVersionUID = 4130953102523669184L;
-	
+
 	private static final String ACTION_COMMAND_EDIT_MODE = "editMode";
 	private static final String ACTION_COMMAND_ANALYSIS_MODE = "analysisMode";
-	
+
 	JRadioButtonMenuItem editModeButton = null;
 	JRadioButtonMenuItem analysisModeButton = null;
 
@@ -52,18 +53,18 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		add(getSettingsMenu());
 
 	}
-	
-	private JMenu getFileMenu(){
+
+	private JMenu getFileMenu() {
 		JMenu fileMenu = new JMenu("File");
-		
+
 		JMenuItem open = new JMenuItem("Switch working directory", UIManager.getIcon("FileView.directoryIcon"));
 		open.setAction(new SwitchWorkingDirectoryAction());
-		
-		//TODO: Add appropriate actions.
-		JMenuItem saveAll = new JMenuItem("Save all");
+
+		// TODO: Add appropriate actions.
+		JMenuItem saveAll = getSaveAllEntry();
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
-		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(getClass().getResource("resources/addFile.png")));
-		
+		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(getClass().getResource("../resources/addFile.png")));
+
 		JMenuItem exit = new JMenuItem("Exit");
 
 		fileMenu.add(open);
@@ -71,50 +72,57 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		fileMenu.add(save);
 		fileMenu.add(addFile);
 		fileMenu.add(exit);
-		
+
 		return fileMenu;
 	}
-	
-	private JMenu getEditMenu(){
+
+	private JMenuItem getSaveAllEntry() {
+		JMenuItem saveAll = new JMenuItem("Save all");
+		saveAll.addActionListener(new SaveAllAction());
+		return saveAll;
+	}
+
+	private JMenu getEditMenu() {
 		JMenu editMenu = new JMenu("Edit");
-		
+
 		editModeButton = new JRadioButtonMenuItem("Edit Mode");
 		editModeButton.setActionCommand(ACTION_COMMAND_EDIT_MODE);
 		editModeButton.addActionListener(this);
 		editMenu.add(editModeButton);
-		
+
 		analysisModeButton = new JRadioButtonMenuItem("Analyse Mode");
 		analysisModeButton.setActionCommand(ACTION_COMMAND_ANALYSIS_MODE);
 		analysisModeButton.addActionListener(this);
 		editMenu.add(analysisModeButton);
-		
+
 		ButtonGroup editOrAnalyseGroup = new ButtonGroup();
 		editOrAnalyseGroup.add(editModeButton);
 		editOrAnalyseGroup.add(analysisModeButton);
-		
+
 		return editMenu;
 	}
-	
-	private JMenu getSettingsMenu(){
+
+	private JMenu getSettingsMenu() {
 		JMenu settings = new JMenu("Settings");
-		
+
 		JMenuItem prismPathSetting = new JMenuItem("Set Prism Model Checker Path...");
 		prismPathSetting.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PrismPathChooser chooser = new PrismPathChooser(SwingUtilities.getWindowAncestor(getParent()));
 				String prismPath = chooser.chooseFile();
-				if(prismPath != null){
+				if (prismPath != null) {
 					try {
 						SwatProperties.getInstance().setPrismPath(prismPath);
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot set Prism path.\n Reason: "+ e1.getMessage(), "Error while setting Prism path", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot set Prism path.\n Reason: "
+								+ e1.getMessage(), "Error while setting Prism path", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 		});
 		settings.add(prismPathSetting);
-		
+
 		return settings;
 	}
 
@@ -133,7 +141,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 	@Override
 	public void operatingModeChanged() {
-		switch(SwatState.getInstance().getOperatingMode()){
+		switch (SwatState.getInstance().getOperatingMode()) {
 		case ANALYSIS_MODE:
 			analysisModeButton.setSelected(true);
 			break;
@@ -142,7 +150,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 			break;
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

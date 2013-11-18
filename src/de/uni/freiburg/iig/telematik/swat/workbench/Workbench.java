@@ -34,7 +34,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 	private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200,768);
 	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(200,768);
 	private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(300,80);
-	private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(300,550);
+	private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(300, 550);
 	
 //	private MultiSplitPane splitPane = null;
 	private SwatToolbar toolbar = null;

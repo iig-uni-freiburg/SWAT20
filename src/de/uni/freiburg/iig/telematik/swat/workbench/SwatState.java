@@ -40,6 +40,7 @@ public class SwatState {
 		}
 	}
 	
+
 	public void addListener(SwatStateListener listener) throws ParameterException{
 		Validate.notNull(listener);
 		listeners.add(listener);
