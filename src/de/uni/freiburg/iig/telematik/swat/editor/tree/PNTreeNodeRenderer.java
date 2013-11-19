@@ -68,6 +68,7 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 			setIcon(new ImageIcon(rootIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
 			break;
 		case PLACE:
+			System.out.println("place");
 			setIcon(new ImageIcon(placeIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
 //			setText("ulf");
 //			System.out.println(node.getTextfield());
@@ -85,9 +86,28 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 //			keepSelectionWhileEditing(tree, node);
 			break;
 		case LEAF:
-PNTreeNode parrentNode = (PNTreeNode) node.getParent();
+			System.out.println("leaf");
+//PNTreeNode parrentNode = (PNTreeNode) node.getParent();
 //parrentNode.setUserObject(userObject);
 			result = getTextPanel(node);
+			PNTreeNode parent = (PNTreeNode) node.getParent();
+			switch(node.getPropertyType()){
+			case ARC_WEIGHT:
+				break;
+			case PLACE_LABEL:
+							
+				break;
+			case PLACE_SIZE:
+				break;
+			case TRANSITION_LABEL:
+				break;
+			case TRANSITION_SIZE:
+				break;
+			default:
+				break;
+			
+			}
+			
 			break;
 
 		}

@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.HashMap;
@@ -102,6 +104,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		 PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
 		 setCellRenderer(renderer);
 		 addTreeSelectionListener(this);
+		 getModel().addTreeModelListener(new CustomTreeModelListener());
 //		 add(new JScrollPane(this), BorderLayout.CENTER);
 		
 		 // expand all nodes in the tree to be visible
@@ -323,6 +326,21 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 			this.type = type;
 			this.property = property;
 			this.name = name;
+			this.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					super.keyTyped(e);
+					if(e.getKeyCode() == KeyEvent.VK_ENTER){
+						validateInput();
+						stopEditing();
+						//Repaint ParentNode
+						getPropertyField().getParent().getParent().getParent().repaint();
+						
+					}
+				
+				}
+				
+			});
 			// this.addMouseListener(new java.awt.event.MouseAdapter() {
 			// public void mouseClicked(java.awt.event.MouseEvent evt) {
 			// System.out.println("juhu");
@@ -334,6 +352,11 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 			// jTextFieldMyText.setText("");
 			// }
 
+		}
+
+		protected PropertiesField getPropertyField() {	
+			return this;
+			
 		}
 
 		public PNProperty getPNProperty() {
@@ -478,9 +501,29 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 class CustomTreeModelListener implements TreeModelListener {
 	public void treeNodesChanged(TreeModelEvent e) {
+		System.out.println(e.getSource() + "nodechanged");
 		PNTreeNode node;
 		node = (PNTreeNode) (e.getTreePath().getLastPathComponent());
-
+		PNTreeNode parent = (PNTreeNode) node.getParent();
+//		switch(node.getPropertyType()){
+//		case ARC_WEIGHT:
+//			break;
+//		case PLACE_LABEL:
+//			System.out.println("juhu");
+//			parent.setUserObject(node.getTextfield().getText());
+//			break;
+//		case PLACE_SIZE:
+//			break;
+//		case TRANSITION_LABEL:
+//			break;
+//		case TRANSITION_SIZE:
+//			break;
+//		default:
+//			break;
+//
+//		
+//		}
+		
 		/*
 		 * If the event lists children, then the changed node is the child of
 		 * the node we have already gotten. Otherwise, the changed node and the

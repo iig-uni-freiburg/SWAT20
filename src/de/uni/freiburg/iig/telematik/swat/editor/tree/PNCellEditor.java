@@ -125,16 +125,17 @@ public class PNCellEditor extends DefaultCellEditor {
 					MouseEvent mouseEvent = (MouseEvent) event;
 					Point mouseLocation = mouseEvent.getPoint();
 					Rectangle rectLastSelected = tree.getPathBounds(new TreePath(node.getPath()));
+					System.out.println("jau");
 					return rectContainsPoint(new Point((int) rectLastSelected.getMinX(), (int) rectLastSelected.getMinY()),
 							new Point((int) rectLastSelected.getMaxX(), (int) rectLastSelected.getMaxY()), mouseLocation);
-				case PLACE:
-				case TRANSITION:
-				case ARC:
-					MouseEvent mouseEventPlace = (MouseEvent) event;
-					Point mouseLocationPlace = mouseEventPlace.getPoint();
-					Rectangle rectLastSelectedPlace = tree.getPathBounds(new TreePath(node.getPath()));
-					return rectContainsPoint(new Point((int) rectLastSelectedPlace.getMinX(), (int) rectLastSelectedPlace.getMinY()), new Point((int) rectLastSelectedPlace.getMaxX(),
-							(int) rectLastSelectedPlace.getMaxY()), mouseLocationPlace);
+//				case PLACE:
+//				case TRANSITION:
+//				case ARC:
+//					MouseEvent mouseEventPlace = (MouseEvent) event;
+//					Point mouseLocationPlace = mouseEventPlace.getPoint();
+//					Rectangle rectLastSelectedPlace = tree.getPathBounds(new TreePath(node.getPath()));
+//					return rectContainsPoint(new Point((int) rectLastSelectedPlace.getMinX(), (int) rectLastSelectedPlace.getMinY()), new Point((int) rectLastSelectedPlace.getMaxX(),
+//							(int) rectLastSelectedPlace.getMaxY()), mouseLocationPlace);
 				case PLACES:
 					break;
 				case ROOT:
