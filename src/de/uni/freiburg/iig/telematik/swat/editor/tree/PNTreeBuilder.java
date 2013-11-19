@@ -30,16 +30,13 @@ public class PNTreeBuilder {
 		  //transitions
 		PNTreeNode transitionsNode = new PNTreeNode("transitions", PNTreeNodeType.TRANSITIONS);
 		for (Entry<String, HashMap<PNProperty, PropertiesField>> transitionField : transitionFields.entrySet()) {
-			PNTreeNode TransitionNode = new PNTreeNode(transitionField.getKey(), PNTreeNodeType.TRANSITION);	
-			transitionsNode.add(addPropertyNodes(transitionField, TransitionNode));
+			transitionsNode.add(addPropertyNodes2(transitionField, PNTreeNodeType.TRANSITION));
 		}
 		
 		  //arcs
 		PNTreeNode arcsNode = new PNTreeNode("arcs", PNTreeNodeType.ARCS);
 		for (Entry<String, HashMap<PNProperty, PropertiesField>> arcField : arcFields.entrySet()) {
-			PNTreeNode ArcNode = new PNTreeNode(arcField.getKey(), PNTreeNodeType.ARC);	
-			arcsNode.add(addPropertyNodes(arcField, ArcNode));
-		
+			arcsNode.add(addPropertyNodes2(arcField, PNTreeNodeType.ARC));
 		}
 		
 		rootNode.add(placesNode);
@@ -51,24 +48,28 @@ public class PNTreeBuilder {
 	}
 
 	private static MutableTreeNode addPropertyNodes2(Entry<String, HashMap<PNProperty, PropertiesField>> placeField, PNTreeNodeType place) {
-		PNTreeNode placeNode = new PNTreeNode(placeField.getKey(), place);
+		PNTreeNode node = new PNTreeNode(placeField.getKey(), place);
 		for(Entry<PNProperty, PropertiesField> o:placeField.getValue().entrySet()){
 			PNTreeNode propNode = null;
 		
 		switch(o.getKey()){
 		case ARC_WEIGHT:
+			propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue(), o.getKey());
+			node.add(propNode);
 			break;
 		case PLACE_LABEL:
-			placeNode.setTextfield(o.getValue());
+			node.setTextfield(o.getValue());
 			break;
 		case PLACE_SIZE:
 			propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue(), o.getKey());
-			placeNode.add(propNode);
+			node.add(propNode);
 			break;
 		case TRANSITION_LABEL:
-//			placeNode.setUserObject(o.getValue().getText());
+			node.setTextfield(o.getValue());
 			break;
 		case TRANSITION_SIZE:
+			propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue(), o.getKey());
+			node.add(propNode);
 			break;
 		default:
 	
@@ -78,7 +79,7 @@ public class PNTreeBuilder {
 		
 		
 		}
-		return placeNode;
+		return node;
 	}
 
 	private static PNTreeNode addPropertyNodes(

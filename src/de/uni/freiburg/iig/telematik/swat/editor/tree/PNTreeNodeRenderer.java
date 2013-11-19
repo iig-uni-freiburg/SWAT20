@@ -69,17 +69,18 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 		case PLACE:
 			setIcon(new ImageIcon(placeIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
 			setText(node.getTextfield().getText());
-			keepSelectionWhileEditing(tree, node);
+//			keepSelectionWhileEditing(tree, node);
 		case TRANSITION:
 			setIcon(new ImageIcon(transitionIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
-			keepSelectionWhileEditing(tree, node);
+			setText(node.getTextfield().getText());
+//			keepSelectionWhileEditing(tree, node);
 			break;
 		case ARC:
 			setIcon(new ImageIcon(arcIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
-			keepSelectionWhileEditing(tree, node);
+//			setText(node.getTextfield().getText());
+//			keepSelectionWhileEditing(tree, node);
 			break;
 		case LEAF:
-			// appendLabel(tree, node);
 			result = getTextPanel(node);
 			break;
 
@@ -88,17 +89,27 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 		return result;
 	}
 
+	
+	//Überdenken wann genau Node highlighted sein soll
 	/**
 	 * @param tree
 	 * @param node
 	 */
 	public void keepSelectionWhileEditing(JTree tree, PNTreeNode node) {
 		DefaultMutableTreeNode child = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		if (child != null && child.getParent() == node){
+		System.out.println("ISCALLED" + child + "TRUE?" + (child != null && child.getParent() == node));
+		if (child != null && child.isLeaf() && child.getParent() == node){
 			selected = true;
 			}
-//		else
+//		if (child != null && child.isLeaf() && child.getParent() != node){
 //			selected = false;
+//			}
+//		if (child != null && !child.isLeaf() && child == node){
+//			selected = true;
+//			}
+//		if (child != null && !child.isLeaf() && child != node){
+//			selected = false;
+//			}
 	}
 
 	private Component getTextPanel(PNTreeNode node) {

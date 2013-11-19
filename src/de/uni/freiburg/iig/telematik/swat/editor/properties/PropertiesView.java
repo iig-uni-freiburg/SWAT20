@@ -54,18 +54,16 @@ import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeModel;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
 
-
-
-public class PropertiesView extends JPanel implements PNPropertiesListener, mxIEventListener{
+public class PropertiesView extends JPanel implements PNPropertiesListener, mxIEventListener, TreeSelectionListener {
 
 	private static final long serialVersionUID = 1L;
-	
-	protected Map<String, HashMap<PNProperty, PropertiesField>> placeFields = new HashMap<String,HashMap<PNProperty,PropertiesField>>();
-	protected Map<String, HashMap<PNProperty, PropertiesField>> transitionFields = new HashMap<String,HashMap<PNProperty,PropertiesField>>();
-	protected Map<String, HashMap<PNProperty, PropertiesField>> arcFields = new HashMap<String,HashMap<PNProperty,PropertiesField>>();
-	
+
+	protected Map<String, HashMap<PNProperty, PropertiesField>> placeFields = new HashMap<String, HashMap<PNProperty, PropertiesField>>();
+	protected Map<String, HashMap<PNProperty, PropertiesField>> transitionFields = new HashMap<String, HashMap<PNProperty, PropertiesField>>();
+	protected Map<String, HashMap<PNProperty, PropertiesField>> arcFields = new HashMap<String, HashMap<PNProperty, PropertiesField>>();
+
 	public JTree tree;
-	
+
 	public JTree getTree() {
 		return tree;
 	}
@@ -73,101 +71,101 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 	public void setTree(JTree tree) {
 		this.tree = tree;
 	}
-	protected PNProperties properties =  null;
+
+	protected PNProperties properties = null;
 
 	private PNTreeNode rootNode;
 
-
-
-	public PropertiesView(PNProperties properties) throws ParameterException{
+	public PropertiesView(PNProperties properties) throws ParameterException {
 		Validate.notNull(properties);
 		this.properties = properties;
 		setUpGUI();
 	}
-	
-	protected void setUpGUI() throws ParameterException{
-		for(String placeName: properties.getPlaceNames()){
-			createFieldsForPlace(placeName);
-	
-		}
-		for(String transitionName: properties.getTransitionNames()){
-				createFieldsForTransition(transitionName);
-			
-		}
-		for(String arcName: properties.getArcNames()){
-				createFieldsForArc(arcName);
-			
-		}
-		
 
-	         rootNode = PNTreeBuilder.build(placeFields, transitionFields, arcFields);
-	        TreeModel model = new PNTreeModel(rootNode);
-	     
-	        tree = new JTree(model);
-	        tree.setInvokesStopCellEditing(false);
-	        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-	        tree.setRootVisible(false);
-//	        tree.setInvokesStopCellEditing(false);
-	        //Set Editor for Property Fields
-	        JTextField textField = new JTextField();
-	        textField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-	        PNCellEditor editor = new PNCellEditor(textField);  
-	        tree.setCellEditor(editor);
-	        tree.setEditable(true);
-	        
-	        PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
-	        tree.setCellRenderer(renderer);
-//	        tree.addTreeSelectionListener(this);
-	        add(new JScrollPane(tree), BorderLayout.CENTER);
-	        
-	        // expand all nodes in the tree to be visible
-	        for (int i = 0; i < tree.getRowCount(); i++) {
-	            tree.expandRow(i);
-	        }
-		
+	protected void setUpGUI() throws ParameterException {
+		for (String placeName : properties.getPlaceNames()) {
+			createFieldsForPlace(placeName);
+
+		}
+		for (String transitionName : properties.getTransitionNames()) {
+			createFieldsForTransition(transitionName);
+
+		}
+		for (String arcName : properties.getArcNames()) {
+			createFieldsForArc(arcName);
+
+		}
+
+		rootNode = PNTreeBuilder.build(placeFields, transitionFields, arcFields);
+		TreeModel model = new PNTreeModel(rootNode);
+
+		tree = new JTree(model);
+		tree.setInvokesStopCellEditing(false);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.setRootVisible(false);
+
+		// tree.setInvokesStopCellEditing(false);
+		// Set Editor for Property Fields
+		JTextField textField = new JTextField();
+		textField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		PNCellEditor editor = new PNCellEditor(textField);
+		tree.setCellEditor(editor);
+		tree.setEditable(true);
+
+		PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
+		tree.setCellRenderer(renderer);
+		 tree.addTreeSelectionListener(this);
+		add(new JScrollPane(tree), BorderLayout.CENTER);
+
+		// expand all nodes in the tree to be visible
+		for (int i = 0; i < tree.getRowCount(); i++) {
+			tree.expandRow(i);
+		}
+
 	}
-	
-	private void createFieldsForPlace(String placeName) throws ParameterException{
+
+	private void createFieldsForPlace(String placeName) throws ParameterException {
 		HashMap<PNProperty, PropertiesField> placeField = new HashMap<PNProperty, PropertiesField>();
-		for(PNProperty placeProperty: properties.getPlaceProperties()){
+		for (PNProperty placeProperty : properties.getPlaceProperties()) {
 			createPlaceField(placeName, placeProperty, placeField);
 		}
 	}
-	
-	private void createFieldsForTransition(String transitionName) throws ParameterException{
+
+	private void createFieldsForTransition(String transitionName) throws ParameterException {
 		HashMap<PNProperty, PropertiesField> transitionField = new HashMap<PNProperty, PropertiesField>();
-		for(PNProperty transitionProperty: properties.getTransitionProperties()){
+		for (PNProperty transitionProperty : properties.getTransitionProperties()) {
 			createTransitionField(transitionName, transitionProperty, transitionField);
 		}
 	}
-	
-	private void createFieldsForArc(String arcName) throws ParameterException{
+
+	private void createFieldsForArc(String arcName) throws ParameterException {
 		HashMap<PNProperty, PropertiesField> arcField = new HashMap<PNProperty, PropertiesField>();
-		for(PNProperty arcProperty: properties.getArcProperties()){
+		for (PNProperty arcProperty : properties.getArcProperties()) {
 			createArcField(arcName, arcProperty, arcField);
 		}
 	}
 
-	private void createPlaceField(String placeName, PNProperty placeProperty, HashMap<PNProperty, PropertiesField> placeField) throws ParameterException{
+	private void createPlaceField(String placeName, PNProperty placeProperty, HashMap<PNProperty, PropertiesField> placeField) throws ParameterException {
 		placeField.put(placeProperty, new PropertiesField(PNComponent.PLACE, placeName, properties.getValue(PNComponent.PLACE, placeName, placeProperty), placeProperty));
-		placeFields.put(placeName,placeField);
+		placeFields.put(placeName, placeField);
 
 	}
-	
-	private void createTransitionField(String transitionName, PNProperty transitionProperty, HashMap<PNProperty, PropertiesField> transitionField) throws ParameterException{
-		transitionField.put(transitionProperty, new PropertiesField(PNComponent.TRANSITION, transitionName, properties.getValue(PNComponent.TRANSITION, transitionName, transitionProperty), transitionProperty));
+
+	private void createTransitionField(String transitionName, PNProperty transitionProperty, HashMap<PNProperty, PropertiesField> transitionField) throws ParameterException {
+		transitionField.put(transitionProperty, new PropertiesField(PNComponent.TRANSITION, transitionName, properties.getValue(PNComponent.TRANSITION, transitionName, transitionProperty),
+				transitionProperty));
 		transitionFields.put(transitionName, transitionField);
 	}
-	
-	private void createArcField(String arcName, PNProperty arcProperty, HashMap<PNProperty, PropertiesField> arcField) throws ParameterException{
-		arcField.put(arcProperty, new PropertiesField(PNComponent.ARC, arcName, properties.getValue(PNComponent.ARC, arcName, arcProperty), arcProperty));	
+
+	private void createArcField(String arcName, PNProperty arcProperty, HashMap<PNProperty, PropertiesField> arcField) throws ParameterException {
+		arcField.put(arcProperty, new PropertiesField(PNComponent.ARC, arcName, properties.getValue(PNComponent.ARC, arcName, arcProperty), arcProperty));
 		arcFields.put(arcName, arcField);
 	}
-		
-		
-	
+
 	/**
-	 * This method is called each time a value is changed within one of the textfields.
+	 * This method is called each time a value is changed within one of the
+	 * textfields.
+	 * 
 	 * @param fieldType
 	 * @param name
 	 * @param property
@@ -178,7 +176,7 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 		try {
 			properties.setValue(this, fieldType, name, property, newValue);
 		} catch (ParameterException e1) {
-			switch(fieldType){
+			switch (fieldType) {
 			case PLACE:
 				placeFields.get(name).get(property).setText(oldValue);
 				break;
@@ -191,12 +189,12 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 			}
 		}
 	}
-	
+
 	@Override
 	public void propertyChange(PNPropertyChangeEvent event) {
-		if(event.getSource() != this){
-			switch(event.getFieldType()){
-			case PLACE:				
+		if (event.getSource() != this) {
+			switch (event.getFieldType()) {
+			case PLACE:
 				placeFields.get(event.getName()).get(event.getProperty()).setText(event.getNewValue().toString());
 				tree.repaint();
 				break;
@@ -209,13 +207,11 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 			}
 		}
 	}
-	
+
 	public class PropertiesField extends RestrictedTextField {
-		
-		
-		
+
 		private static final long serialVersionUID = -2791152505686200734L;
-		
+
 		private PNComponent type = null;
 		private PNProperty property = null;
 		private String name = null;
@@ -225,16 +221,17 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 			this.type = type;
 			this.property = property;
 			this.name = name;
-//			this.addMouseListener(new java.awt.event.MouseAdapter() {
-//			    public void mouseClicked(java.awt.event.MouseEvent evt) {
-//			        System.out.println("juhu");
-//			    }
-//			});
+			// this.addMouseListener(new java.awt.event.MouseAdapter() {
+			// public void mouseClicked(java.awt.event.MouseEvent evt) {
+			// System.out.println("juhu");
+			// }
+			// });
 
-//			private void jTextFieldMyTextMouseClicked(java.awt.event.MouseEvent evt) {
-//			    jTextFieldMyText.setText("");
-//			}
-	     
+			// private void
+			// jTextFieldMyTextMouseClicked(java.awt.event.MouseEvent evt) {
+			// jTextFieldMyText.setText("");
+			// }
+
 		}
 
 		@Override
@@ -246,7 +243,7 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 		public void setBorder(Border border) {
 			// Remove Border from Textfield
 		}
-		
+
 	}
 
 	@Override
@@ -273,84 +270,42 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 
 	@Override
 	public void componentRemoved(PNComponent component, String name) {
-		switch(component){
+		switch (component) {
 		case PLACE:
 			placeFields.remove(name);
-			//TODO: Remove place fields from GUI
+			// TODO: Remove place fields from GUI
 			break;
 		case TRANSITION:
 			transitionFields.remove(name);
-			//TODO: Remove transition fields from GUI
+			// TODO: Remove transition fields from GUI
 			break;
 		case ARC:
 			arcFields.remove(name);
-			//TODO: Remove arc fields from GUI
+			// TODO: Remove arc fields from GUI
 			break;
 		}
 	}
-	
-	
+
 	class LeafCellEditor extends DefaultTreeCellEditor {
 
-		  public LeafCellEditor(JTree tree, DefaultTreeCellRenderer renderer, TreeCellEditor editor) {
-		    super(tree, renderer, editor);
-		  }
-
-		  public boolean isCellEditable(EventObject event) {
-		    boolean returnValue = super.isCellEditable(event);
-		    if (returnValue) {
-		      Object node = tree.getLastSelectedPathComponent();
-		      if ((node != null) && (node instanceof TreeNode)) {
-		        TreeNode treeNode = (TreeNode) node;
-		        returnValue = treeNode.isLeaf();
-		      }
-		    }
-		    return returnValue;
-		  }
+		public LeafCellEditor(JTree tree, DefaultTreeCellRenderer renderer, TreeCellEditor editor) {
+			super(tree, renderer, editor);
 		}
-//    @Override
-//    public void valueChanged(TreeSelectionEvent e) {
-//    	
-////       Object node = tree.getLastSelectedPathComponent();
-////       System.out.println(node.getClass());
-//    	
-//       System.out.println("HALLO" + e.getSource().getClass());
-//       if(e.getSource() instanceof PropertiesField){
-//    	   System.out.println("prop");
-//       }
-////       PNGraph graph = properties.getPnGraph();
-////       graph.clearSelection();
-////       System.out.println((tree.getLastSelectedPathComponent() != e.getSource()) + "equals");
-//       
-//       
-////       tree.stopEditing();
-////       if (node != null) {
-////    	   PNTreeNode selectedNode;
-////    	
-////		if(node instanceof DefaultMutableTreeNode){
-//////    		 selectedNode =   (PNTreeNode) node;
-//////    		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
-////////    		tree.getRowForPath(path)
-//////    	TreeNode[] path = firstChild.getPath();
-////////    	tree.expandRow(row);
-////////        for (int i = 0; i < tree.getRowCount(); i++) {
-//////    	System.out.println(new TreePath(firstChild.getPath()));
-//////    	tree.expandPath(new TreePath(firstChild.getPath()));
-//////    		System.out.println(row);
-//////            tree.expandRow(i);
-//////        }
-//////    	System.out.println(firstChild + "#" + row);
-//////    	tree.expandRow(row);
-//////((PNTreeNode) node).getRoot()		
-//////		tree.getModel()
-//////		selectedNode.getParent()
-//////		tree.setSelectionPath(new TreePath(((DefaultMutableTreeNode)selectedNode.getParent()).getPath()));
-////		}
-//////           return;
-////       }
-//        
-////       JOptionPane.showMessageDialog(this, "You have selected: " + node);
-//    }
+
+		public boolean isCellEditable(EventObject event) {
+			boolean returnValue = super.isCellEditable(event);
+			if (returnValue) {
+				Object node = tree.getLastSelectedPathComponent();
+				if ((node != null) && (node instanceof TreeNode)) {
+					TreeNode treeNode = (TreeNode) node;
+					returnValue = treeNode.isLeaf();
+				}
+			}
+			return returnValue;
+		}
+	}
+
+	
 	public PNTreeNode getRootNode() {
 		return rootNode;
 	}
@@ -361,80 +316,82 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-//			System.out.println(evt.g);
-		if(sender != this){
+		System.out.println("THE Sender:" + sender);
+		if (sender instanceof JTree) {
+			System.out.println(tree.getSelectionPath());
+		}
+		if (sender instanceof mxGraphSelectionModel) {
 			System.out.println("PropertiesVIEW");
-			
+
 			System.out.println("ROWS:" + tree.getRowCount());
-//			for (int i = getPNProperties().getPropertiesView().getTree().getRowCount(); i >= 0; i--) {
-//				getPNProperties().getPropertiesView().getTree().collapseRow(i);
-//			}
+			for (int i = getTree().getRowCount(); i >= 0; i--) {
+				getTree().collapseRow(i);
+			}
 			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
 				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
 				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) tree.getModel().getRoot(), cell.getId());
-//				getPropertiesView().getTree().getModel().get
-//	   		DefaultMutableTreeNode selectedNode = node;
-	   		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
-//	   		tree.getRowForPath(path)
-//	   	TreeNode[] path = firstChild.getPath();
-//	   	tree.expandRow(row);
-//	       for (int i = 0; i < tree.getRowCount(); i++) {
-//	   	System.out.println(new TreePath(firstChild.getPath()));
-	   		
-	   		TreePath propPath = new TreePath(firstChild.getPath());
-	   		tree.setSelectionPath(propPath);
-	   		
-//				getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
+
+				PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+
+				TreePath propPath = new TreePath(firstChild.getPath());
+tree.collapsePath(propPath);
+				tree.setSelectionPath(new TreePath(node.getPath()));
 
 			}
-		}	}
-	  private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
-		    @SuppressWarnings("unchecked")
-		    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
-		    while (e.hasMoreElements()) {
-		        DefaultMutableTreeNode node = e.nextElement();
-		        if (node.toString().equalsIgnoreCase(s)) {
-		        	DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
-		            return node;
-		        }
-		    }
-		    return null;
 		}
-	  
+	}
+
+	private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
+		@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		while (e.hasMoreElements()) {
+			DefaultMutableTreeNode node = e.nextElement();
+			if (node.toString().equalsIgnoreCase(s)) {
+				DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
+				return node;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		// TODO Auto-generated method stub
+	JTree 	tree = (JTree) e.getSource();
+		
+	}
 
 }
 
-
-//mxEvent.CHANGE
+// mxEvent.CHANGE
 
 class CustomTreeModelListener implements TreeModelListener {
-    public void treeNodesChanged(TreeModelEvent e) {
-    	PNTreeNode node;
-        node = (PNTreeNode)
-                 (e.getTreePath().getLastPathComponent());
+	public void treeNodesChanged(TreeModelEvent e) {
+		PNTreeNode node;
+		node = (PNTreeNode) (e.getTreePath().getLastPathComponent());
 
-        /*
-         * If the event lists children, then the changed
-         * node is the child of the node we have already
-         * gotten.  Otherwise, the changed node and the
-         * specified node are the same.
-         */
-        try {
-            int index = e.getChildIndices()[0];
-            node = (PNTreeNode)
-                   (node.getChildAt(index));
-        } catch (NullPointerException exc) {}
+		/*
+		 * If the event lists children, then the changed node is the child of
+		 * the node we have already gotten. Otherwise, the changed node and the
+		 * specified node are the same.
+		 */
+		try {
+			int index = e.getChildIndices()[0];
+			node = (PNTreeNode) (node.getChildAt(index));
+		} catch (NullPointerException exc) {
+		}
 
-        System.out.println("The user has finished editing the node.");
-//        System.out.println("New value: " + node.getUserObject());
-    }
-    public void treeNodesInserted(TreeModelEvent e) {
-    }
-    public void treeNodesRemoved(TreeModelEvent e) {
-    }
-    public void treeStructureChanged(TreeModelEvent e) {
-    }
-    
-    
+		System.out.println("The user has finished editing the node.");
+		// System.out.println("New value: " + node.getUserObject());
+	}
+
+	public void treeNodesInserted(TreeModelEvent e) {
+	}
+
+	public void treeNodesRemoved(TreeModelEvent e) {
+	}
+
+	public void treeStructureChanged(TreeModelEvent e) {
+	}
 
 }

@@ -18,6 +18,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
@@ -63,6 +64,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	private PNProperties properties = null;
 	@SuppressWarnings("rawtypes")
 	protected Map<AbstractPNNode, PNGraphCell> nodeReferences = new HashMap<AbstractPNNode, PNGraphCell>();
+	private Map<AbstractFlowRelation, PNGraphCell> arcReferences = new HashMap<AbstractFlowRelation, PNGraphCell>();
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
@@ -89,19 +91,60 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		System.out.println(e.getSource());
-		System.out.println("treeselection");
+		getSelectionModel().setEventSource(e.getSource());
 		PNTreeNode node = (PNTreeNode) ((JTree)e.getSource()).getLastSelectedPathComponent();
+
+		PNGraphCell currentSelectionCell;
+		boolean executeSelection = true;
+		if(getSelectionCell() instanceof PNGraphCell){
+		currentSelectionCell = (PNGraphCell) getSelectionCell();
+		if(node != null && currentSelectionCell.getId() == node.toString())
+			executeSelection = false;
+		}
+
+
+		selectCellbyTreeSelection(node, executeSelection);
+//		setSelectionCell(nodeReferences);
+		
+		//reset Event source to default
+		getSelectionModel().setEventSource(getSelectionModel());
+
+		
+	}
+
+
+	/**
+	 * @param node
+	 * @param executeSelection
+	 */
+	public void selectCellbyTreeSelection(PNTreeNode node, boolean executeSelection) {
+		if(node != null &&  executeSelection){
+			PNGraphCell cell = null;
 		switch(node.getFieldType()){
 		case ARC:
+			cell = arcReferences.get(getNetContainer().getPetriNet().getFlowRelation(node.toString()));
+			setSelectionCell(cell);
 			break;
 		case ARCS:
 			break;
 		case LEAF:
+			PNTreeNode parent = (PNTreeNode) node.getParent();
+			switch(parent.getFieldType()){
+			case PLACE:
+				selectCellbyTreeSelection(parent, executeSelection);
+				break;
+			case TRANSITION:
+				selectCellbyTreeSelection(parent, executeSelection);
+				break;
+			case ARC:
+				selectCellbyTreeSelection(parent, executeSelection);
+				break;
+			}
 			break;
 		case PLACE:
-			PNGraphCell cell = nodeReferences.get(getNetContainer().getPetriNet().getPlace(node.toString()));
-			System.out.println(cell.getId() + "#" + node.toString());
+			cell = nodeReferences.get(getNetContainer().getPetriNet().getPlace(node.toString()));
+//			getSelectionModel().setEventsEnabled(false);
+			
 			setSelectionCell(cell);
 			break;
 		case PLACES:
@@ -109,6 +152,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		case ROOT:
 			break;
 		case TRANSITION:
+			cell = nodeReferences.get(getNetContainer().getPetriNet().getTransition(node.toString()));
+//			getSelectionModel().setEventsEnabled(true);
+			setSelectionCell(cell);
 			break;
 		case TRANSITIONS:
 			break;
@@ -116,51 +162,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			break;
 		
 		}
-
-//		setSelectionCell(nodeReferences);
-		
+		}
 	}
 
-
-//	protected void actOnSelection(Object sender, mxEventObject evt) {
-////		System.out.println(evt.g);
-//		System.out.println("ROWS:" + getPNProperties().getPropertiesView().getTree().getRowCount());
-////		for (int i = getPNProperties().getPropertiesView().getTree().getRowCount(); i >= 0; i--) {
-////			getPNProperties().getPropertiesView().getTree().collapseRow(i);
-////		}
-//		if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
-//			PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
-//			DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getPNProperties().getPropertiesView().getTree().getModel().getRoot(), cell.getId());
-////			getPropertiesView().getTree().getModel().get
-////   		DefaultMutableTreeNode selectedNode = node;
-//   		PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
-////   		tree.getRowForPath(path)
-////   	TreeNode[] path = firstChild.getPath();
-////   	tree.expandRow(row);
-////       for (int i = 0; i < tree.getRowCount(); i++) {
-////   	System.out.println(new TreePath(firstChild.getPath()));
-//   		
-//   		TreePath propPath = new TreePath(firstChild.getPath());
-//   		getPNProperties().getPropertiesView().getTree().setSelectionPath(propPath);
-//   		
-////			getPropertiesView().getTree().setSelectionPath(new TreePath(node.getPath()));
-//
-//		}
-//	}	
-	
-//	  private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
-//		    @SuppressWarnings("unchecked")
-//		    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
-//		    while (e.hasMoreElements()) {
-//		        DefaultMutableTreeNode node = e.nextElement();
-//		        if (node.toString().equalsIgnoreCase(s)) {
-//		        	DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(0);
-//		            return node;
-//		        }
-//		    }
-//		    return null;
-//		}
-	  
 
 
 	@SuppressWarnings("rawtypes")
@@ -191,6 +195,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	@SuppressWarnings("rawtypes")
 	private void addNodeReference(AbstractPNNode pnNode, PNGraphCell cell){
 		nodeReferences.put(pnNode, cell);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void addArcReference(AbstractFlowRelation pnArc, PNGraphCell cell){
+		arcReferences.put(pnArc, cell);
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -274,6 +283,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		Vector<Position> positions = arcGraphics == null ? new Vector<Position>() : arcGraphics.getPositions();
 		PNGraphCell newCell = createArcCell(relation.getName(), getArcConstraint(relation), positions, MXConstants.getStyle(arcGraphics));
 		addEdge(newCell, getDefaultParent(), getCell(relation.getSource()), getCell(relation.getTarget()), null);
+		addArcReference(relation, newCell);
 		return newCell;
 	}
 	
@@ -543,12 +553,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		}
 		switch (property) {
 		case PLACE_LABEL:
-			System.out.println(getNetContainer().getPetriNet().getPlace(name));
-
 			placeCell.setValue(newValue);
 			return true;
 		case PLACE_SIZE:
-			System.out.println(getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(name).getDimension());
 			placeCell.getGeometry().setWidth(new Integer((Integer) newValue).doubleValue());
 			placeCell.getGeometry().setHeight(new Integer((Integer) newValue).doubleValue());
 			return true;
