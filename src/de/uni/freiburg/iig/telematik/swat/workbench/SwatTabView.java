@@ -77,6 +77,10 @@ public class SwatTabView extends JTabbedPane {
 		}
 	}
 	
+	public void removeAll() {
+		super.removeAll();
+		openedSwatComponents.clear();
+	}
 	
 
 }

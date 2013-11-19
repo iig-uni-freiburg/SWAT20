@@ -34,6 +34,11 @@ public class SwatComponents {
 		}
 	}
 	
+	public void reload() throws ParameterException {
+		nets.clear();
+		loadSwatComponents();
+	}
+
 	public static SwatComponents getInstance(){
 		if(instance == null){
 			instance = new SwatComponents();
@@ -101,6 +106,12 @@ public class SwatComponents {
 	
 	public boolean containsNetWithFileName(String name){
 		return nets.containsValue(new File(name));
+	}
+
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetWithFileName(String name) {
+		// TODO: unimplemented
+		System.out.println("UNIMPLEMENTED: getNetWithFileName");
+		return null;
 	}
 
 	/** Stores every {@link AbstractGraphicalPN} within the project */

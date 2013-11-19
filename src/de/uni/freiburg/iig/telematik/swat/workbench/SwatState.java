@@ -13,6 +13,8 @@ public class SwatState {
 	
 	private OperatingMode operatingMode = null;
 	
+	private String activeFile = null;
+
 	private Set<SwatStateListener> listeners = new HashSet<SwatStateListener>();
 	
 	public static SwatState getInstance(){
@@ -40,6 +42,13 @@ public class SwatState {
 		}
 	}
 	
+	public void setActiveFile(String file) {
+		this.activeFile = file;
+	}
+
+	public String getActiveFile() {
+		return activeFile;
+	}
 
 	public void addListener(SwatStateListener listener) throws ParameterException{
 		Validate.notNull(listener);

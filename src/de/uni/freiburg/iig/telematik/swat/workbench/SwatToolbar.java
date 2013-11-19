@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import de.invation.code.toval.graphic.DisplayFrame;
 import de.invation.code.toval.graphic.FileNameChooser;
@@ -24,7 +23,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 
 /**
@@ -47,6 +45,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private JRadioButton rdbtnEdit = null;
 	private JRadioButton rdbtnAnalysis = null;
 
+	private JButton openButton = null;
+
 	public SwatToolbar() {
 		setFloatable(false);
 		setRollover(true);
@@ -54,7 +54,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		
 		add(new SwatToolbarButton(ToolbarButtonType.SAVE));
 		add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
-		add(new SwatToolbarButton(ToolbarButtonType.SWITCH_DIRECTORY));
+		add(getSwitchworkingDirectoryButton());
 		add(getNewPTNetButton());
 		add(getNewCPNButton());
 		add(getNewIFNetButton());
@@ -92,6 +92,15 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		}
 		return rdbtnEdit;
 	}
+	
+	private JButton getSwitchworkingDirectoryButton(){
+		if (openButton == null)
+			openButton = new SwatToolbarButton(ToolbarButtonType.SWITCH_DIRECTORY);
+		// newButton.addActionListener(new
+		// OpenWorkingDirectoryAction(SwingUtilities.getWindowAncestor(this)));
+		return openButton;
+	}
+	
 	
 	private JButton getNewPTNetButton(){
 		//TODO Adjust Icon
@@ -178,6 +187,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		}
 		repaint();
 	}
+
+	public void addOpenActionListener(ActionListener listener) {
+		getSwitchworkingDirectoryButton().addActionListener(listener);
+	}
+
 	
 	private class SwatToolbarButton extends JButton{
 
@@ -202,7 +216,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				addActionListener(new SaveAllAction());
 				break;
 			case SWITCH_DIRECTORY:
-				addActionListener(new SwitchWorkingDirectoryAction());
+				// addActionListener(new SwitchWorkingDirectoryAction());
 				break;
 			}
 		}

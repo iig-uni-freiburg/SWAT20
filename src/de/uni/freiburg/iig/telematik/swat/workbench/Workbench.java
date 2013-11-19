@@ -2,6 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JComponent;
@@ -26,7 +28,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialo
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class Workbench extends JFrame implements SwatTreeViewListener{
+public class Workbench extends JFrame implements SwatTreeViewListener {
 
 	private static final long serialVersionUID = 6109154620023481119L;
 	
@@ -211,6 +213,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 	private SwatToolbar getSwatToolbar(){
 		if(toolbar == null){
 			toolbar = new SwatToolbar();
+			toolbar.addOpenActionListener(new openActionListener());
 		}
 		return toolbar;
 	}
@@ -286,6 +289,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 
 	@Override
 	public void componentSelected(SwatTreeNode node) {
+		// Or: Let SwatTabView implement SwatTreeChangeListener and add it to
+		// SwatTreeView.addTreeViewListener
 		getTabView().componentSelected(node);
 	}
 
@@ -324,4 +329,44 @@ public class Workbench extends JFrame implements SwatTreeViewListener{
 		}
 		return null;
 	}
+
+	class openActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			WorkingDirectoryDialog dialog = new WorkingDirectoryDialog(Workbench.this);
+			String workingDirectory = dialog.getSimulationDirectory();
+			// JFileChooser fileChooser = new JFileChooser();
+			// fileChooser.setDialogTitle("Choose existing working directory");
+			// fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			// int returnVal = fileChooser.showOpenDialog(Workbench.this);
+
+
+			// File file = fileChooser.getSelectedFile();
+			// String workingDirectory = file.getAbsolutePath() +
+			// System.getProperty("file.separator");
+				try {
+					// Update Properties and reload SwatComponents.
+				SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
+					SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory);
+					SwatComponents.getInstance().reload();
+					// Inform TabView, etc...
+					tabView.removeAll();
+					treeView.removeAndUpdateSwatComponents();
+				} catch (ParameterException e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage(), "Parameter Exception", JOptionPane.ERROR_MESSAGE);
+					e2.printStackTrace();
+				} catch (IOException e3) {
+					JOptionPane.showMessageDialog(null, e3.getMessage(), "IO Exception", JOptionPane.ERROR_MESSAGE);
+					e3.printStackTrace();
+			} catch (PropertyException e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+				}
+
+
+		}
+
+	}
+
 }

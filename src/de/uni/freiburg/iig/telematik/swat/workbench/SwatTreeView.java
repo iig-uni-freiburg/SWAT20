@@ -28,14 +28,25 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 		this.setModel(treeModel);
 		this.setShowsRootHandles(true);
 		this.setEditable(false);
-		
+		createChildren();
+
+		// this.setSelectionInterval(0,0);
+		addMouseListener(new TreeViewMouseAdapter());
+	}
+
+	public void removeAndUpdateSwatComponents() {
+		root.removeAllChildren();
+		createChildren();
+		treeModel.reload();
+		repaint();
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void createChildren() {
 		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNets()){
 			root.add(new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET));
 		}
 		//TODO: Other components
-		
-//		this.setSelectionInterval(0,0);
-		addMouseListener(new TreeViewMouseAdapter());
 	}
 
 

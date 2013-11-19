@@ -14,6 +14,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcher;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatPropertyChangeListener;
 
 
 public class SwatProperties extends AbstractProperties{
@@ -27,6 +28,8 @@ public class SwatProperties extends AbstractProperties{
 	
 	private String applicationPath = null;
 	
+	private Set<SwatPropertyChangeListener> listeners = new HashSet<SwatPropertyChangeListener>();
+
 	public SwatProperties() throws IOException {
 		try {
 			load(propertyFileName);
@@ -77,6 +80,8 @@ public class SwatProperties extends AbstractProperties{
 		if(!directoryFile.exists()){
 			directoryFile.mkdir();
 		}
+
+
 	}
 	
 	public String getWorkingDirectory() throws PropertyException, ParameterException {
@@ -208,5 +213,4 @@ public class SwatProperties extends AbstractProperties{
 			throw new IOException("Cannot create/store swat properties file on disk.");
 		}
 	}
-
 }
