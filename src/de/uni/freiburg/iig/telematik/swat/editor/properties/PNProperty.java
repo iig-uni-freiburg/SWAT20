@@ -4,8 +4,17 @@ import de.invation.code.toval.graphic.RestrictedTextField.Restriction;
 
 public enum PNProperty {
 	
-	PLACE_LABEL(Restriction.NOT_EMPTY),
-	TRANSITION_LABEL(Restriction.NOT_EMPTY), 
+	PLACE_LABEL(Restriction.NOT_EMPTY){
+		public String toString() {
+			return "label";
+		}
+	},
+	TRANSITION_LABEL(Restriction.NOT_EMPTY)
+	{
+		public String toString() {
+			return "label";
+		}
+	}, 
 	PLACE_SIZE(Restriction.POSITIVE_INTEGER) {
 		public String toString() {
 			return "size";
