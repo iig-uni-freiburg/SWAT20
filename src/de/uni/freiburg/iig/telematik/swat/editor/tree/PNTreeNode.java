@@ -8,7 +8,12 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.Prope
 
 public class PNTreeNode extends DefaultMutableTreeNode {
 
-	private PropertiesField textfield =null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6517382720076787324L;
+
+	private PropertiesField textfield;
 
 	private PNTreeNodeType fieldType;
     
@@ -89,6 +94,11 @@ public class PNTreeNode extends DefaultMutableTreeNode {
 	
 	public PNTreeNodeType getFieldType() {
 		return fieldType;
+	}
+
+	public void setTextField(PropertiesField field) {
+		this.textfield = field;
+		
 	}
    
 }

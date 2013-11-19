@@ -69,11 +69,14 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 			break;
 		case PLACE:
 			setIcon(new ImageIcon(placeIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
+//			setText("ulf");
+//			System.out.println(node.getTextfield());
 			setText(node.getTextfield().getText());
 //			keepSelectionWhileEditing(tree, node);
+			break;
 		case TRANSITION:
 			setIcon(new ImageIcon(transitionIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
-			setText(node.getTextfield().getText());
+//			setText(node.getTextfield().getText());
 //			keepSelectionWhileEditing(tree, node);
 			break;
 		case ARC:
@@ -82,6 +85,8 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 //			keepSelectionWhileEditing(tree, node);
 			break;
 		case LEAF:
+PNTreeNode parrentNode = (PNTreeNode) node.getParent();
+//parrentNode.setUserObject(userObject);
 			result = getTextPanel(node);
 			break;
 

@@ -2,23 +2,11 @@ package de.uni.freiburg.iig.telematik.swat.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.view.mxGraphSelectionModel;
 
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
@@ -27,16 +15,12 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.PTGraphics;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeModel;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreePath;
 
 public class PTNetEditor extends PNEditor {
 

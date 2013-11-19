@@ -74,7 +74,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.netContainer = netContainer;
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
-		this.properties.getPropertiesView().getTree().addTreeSelectionListener(this);
+		this.properties.getPropertiesView().addTreeSelectionListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
 //		setView(createCustomView());
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");

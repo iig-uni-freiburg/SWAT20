@@ -1,23 +1,11 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
-import java.awt.BorderLayout;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.Set;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.border.Border;
@@ -29,12 +17,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraphSelectionModel;
@@ -42,125 +28,241 @@ import com.mxgraph.view.mxGraphSelectionModel;
 import de.invation.code.toval.graphic.RestrictedTextField;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.jagal.graph.algorithm.coloring.GraphColoring;
-import de.uni.freiburg.iig.telematik.jagal.ts.Event;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeBuilder;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNCellEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeModel;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeType;
 
-public class PropertiesView extends JPanel implements PNPropertiesListener, mxIEventListener, TreeSelectionListener {
+public class PropertiesView extends JTree implements PNPropertiesListener, mxIEventListener, TreeSelectionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	protected Map<String, HashMap<PNProperty, PropertiesField>> placeFields = new HashMap<String, HashMap<PNProperty, PropertiesField>>();
-	protected Map<String, HashMap<PNProperty, PropertiesField>> transitionFields = new HashMap<String, HashMap<PNProperty, PropertiesField>>();
-	protected Map<String, HashMap<PNProperty, PropertiesField>> arcFields = new HashMap<String, HashMap<PNProperty, PropertiesField>>();
-
-	public JTree tree;
-
-	public JTree getTree() {
-		return tree;
-	}
-
-	public void setTree(JTree tree) {
-		this.tree = tree;
-	}
+	protected Map<String, PropertiesField> placeFields = new HashMap<String, PropertiesField>();
+	protected Map<String,PropertiesField> transitionFields = new HashMap<String, PropertiesField>();
+	protected Map<String,PropertiesField> arcFields = new HashMap<String, PropertiesField>();
+	//
+	// public JTree tree;
+	//
+	// public JTree getTree() {
+	// return tree;
+	// }
+	//
+	// public void setTree(JTree tree) {
+	// this.tree = tree;
+	// }
 
 	protected PNProperties properties = null;
 
 	private PNTreeNode rootNode;
 
+	private PNTreeNode root;
+	private PNTreeModel treeModel;
+
 	public PropertiesView(PNProperties properties) throws ParameterException {
 		Validate.notNull(properties);
+		root = new PNTreeNode("root", PNTreeNodeType.ROOT);
+		
+		
+
+		// for(AbstractGraphicalPN petriNet:
+		// SwatComponents.getInstance().getPetriNets()){
+		// root.add(new PNTreeNode(petriNet, PNTreeNodeType.));
+		// }
+
+
+
+		addTreeSelectionListener(this);
+//		add(new JScrollPane(this), BorderLayout.CENTER);
+
+		// expand all nodes in the tree to be visible
+		for (int i = 0; i < this.getRowCount(); i++) {
+			this.expandRow(i);
+		}
+
 		this.properties = properties;
 		setUpGUI();
+
+		treeModel = new PNTreeModel(root);
+		this.setModel(treeModel);
+		 setInvokesStopCellEditing(false);
+		 getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		 setRootVisible(false);
+		
+		 // tree.setInvokesStopCellEditing(false);
+		 // Set Editor for Property Fields
+		 JTextField textField = new JTextField();
+		 textField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		 PNCellEditor editor = new PNCellEditor(textField);
+		 setCellEditor(editor);
+		 setEditable(true);
+		
+		 PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
+		 setCellRenderer(renderer);
+		 addTreeSelectionListener(this);
+//		 add(new JScrollPane(this), BorderLayout.CENTER);
+		
+		 // expand all nodes in the tree to be visible
+		 for (int i = 0; i < getRowCount(); i++) {
+		 expandRow(i);
+		 }
+
 	}
 
 	protected void setUpGUI() throws ParameterException {
+		PNTreeNode placesNode = new PNTreeNode("Places", PNTreeNodeType.PLACES);
+		PNTreeNode transitionsNode = new PNTreeNode("Transitions", PNTreeNodeType.TRANSITIONS);
+		PNTreeNode arcsNode = new PNTreeNode("Arcs", PNTreeNodeType.ARCS);
+		
 		for (String placeName : properties.getPlaceNames()) {
-			createFieldsForPlace(placeName);
-
+			placesNode.add(createFields(placeName, PNComponent.PLACE, placeFields,  PNTreeNodeType.PLACE ));
 		}
 		for (String transitionName : properties.getTransitionNames()) {
-			createFieldsForTransition(transitionName);
-
+			transitionsNode.add(createFields(transitionName, PNComponent.TRANSITION, transitionFields,  PNTreeNodeType.TRANSITION ));
 		}
 		for (String arcName : properties.getArcNames()) {
-			createFieldsForArc(arcName);
-
+			arcsNode.add(createFields(arcName, PNComponent.ARC, arcFields,  PNTreeNodeType.ARC ));
 		}
+		
+		root.add(placesNode);
+		root.add(transitionsNode);
+		root.add(arcsNode);
+		// for (String transitionName : properties.getTransitionNames()) {
+		// createFieldsForTransition(transitionName);
+		//
+		// }
+		// for (String arcName : properties.getArcNames()) {
+		// createFieldsForArc(arcName);
+		//
+		// }
 
-		rootNode = PNTreeBuilder.build(placeFields, transitionFields, arcFields);
-		TreeModel model = new PNTreeModel(rootNode);
+		// rootNode = PNTreeBuilder.build(placeFields, transitionFields,
+		// arcFields);
 
-		tree = new JTree(model);
-		tree.setInvokesStopCellEditing(false);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setRootVisible(false);
+//		 tree.setInvokesStopCellEditing(false);
+//		 tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+//		 tree.setRootVisible(false);
+//		
+//		 // tree.setInvokesStopCellEditing(false);
+//		 // Set Editor for Property Fields
+//		 JTextField textField = new JTextField();
+//		 textField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+//		 PNCellEditor editor = new PNCellEditor(textField);
+//		 tree.setCellEditor(editor);
+//		 tree.setEditable(true);
+//		
+//		 PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
+//		 tree.setCellRenderer(renderer);
+//		 tree.addTreeSelectionListener(this);
+//		 add(new JScrollPane(tree), BorderLayout.CENTER);
+//		
+//		 // expand all nodes in the tree to be visible
+//		 for (int i = 0; i < tree.getRowCount(); i++) {
+//		 tree.expandRow(i);
+//		 }
 
-		// tree.setInvokesStopCellEditing(false);
-		// Set Editor for Property Fields
-		JTextField textField = new JTextField();
-		textField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		PNCellEditor editor = new PNCellEditor(textField);
-		tree.setCellEditor(editor);
-		tree.setEditable(true);
+	}
 
-		PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
-		tree.setCellRenderer(renderer);
-		 tree.addTreeSelectionListener(this);
-		add(new JScrollPane(tree), BorderLayout.CENTER);
-
-		// expand all nodes in the tree to be visible
-		for (int i = 0; i < tree.getRowCount(); i++) {
-			tree.expandRow(i);
+//	private PNTreeNode createFieldsForPlace(String placeName, PNTreeNode node) throws ParameterException {
+//		for (PNProperty placeProperty : properties.getPlaceProperties()) {
+//			PropertiesField field = new PropertiesField(PNComponent.PLACE, placeName, properties.getValue(PNComponent.PLACE, placeName, placeProperty), placeProperty);
+//			node.add(new PNTreeNode(placeProperty.toString(), PNTreeNodeType.PLACE, field));
+//			placeFields.put(placeName, field);
+//		}
+//		return node;
+//	}
+//	
+//	private PNTreeNode createFieldsForTransition(String transitionName, PNTreeNode node) throws ParameterException {
+//		for (PNProperty transitionProperty : properties.getTransitionProperties()) {
+//			PropertiesField field = new PropertiesField(PNComponent.TRANSITION, transitionName, properties.getValue(PNComponent.TRANSITION, transitionName, transitionProperty), transitionProperty);
+//			node.add(new PNTreeNode(transitionProperty.toString(), PNTreeNodeType.TRANSITION, field));
+//			transitionFields.put(transitionName, field);
+//		}
+//		return node;
+//	}
+//	
+//	private PNTreeNode createFieldsForArc(String arcName, PNTreeNode node) throws ParameterException {
+//		for (PNProperty arcProperty : properties.getArcProperties()) {
+//			PropertiesField field = new PropertiesField(PNComponent.ARC, arcName, properties.getValue(PNComponent.ARC, arcName, arcProperty), arcProperty);
+//			node.add(new PNTreeNode(arcProperty.toString(), PNTreeNodeType.ARC, field));
+//			arcFields.put(arcName, field);
+//		}
+//		return node;
+	
+	private PNTreeNode createFields(String nodeName, PNComponent pnProperty, Map<String, PropertiesField> fieldMap, PNTreeNodeType nodeType) throws ParameterException {
+		PNTreeNode node = new PNTreeNode(nodeName, nodeType);
+		Set<PNProperty> propertiesSet = null;
+		switch (pnProperty) {
+		case ARC:
+			propertiesSet = properties.getArcProperties();
+			break;
+		case PLACE:
+			propertiesSet = properties.getPlaceProperties();
+			break;
+		case TRANSITION:
+			propertiesSet = properties.getTransitionProperties();
+			break;
 		}
-
-	}
-
-	private void createFieldsForPlace(String placeName) throws ParameterException {
-		HashMap<PNProperty, PropertiesField> placeField = new HashMap<PNProperty, PropertiesField>();
-		for (PNProperty placeProperty : properties.getPlaceProperties()) {
-			createPlaceField(placeName, placeProperty, placeField);
+		for (PNProperty property : propertiesSet) {
+			PropertiesField field = new PropertiesField(pnProperty, nodeName, properties.getValue(pnProperty, nodeName, property), property);
+			node.add(new PNTreeNode(property.toString(), PNTreeNodeType.LEAF, field));
+			switch(property){
+			case ARC_WEIGHT:
+				break;
+			case PLACE_LABEL:
+				node.setTextField(field);
+				break;
+			case PLACE_SIZE:
+				break;
+			case TRANSITION_LABEL:
+				break;
+			case TRANSITION_SIZE:
+				break;
+			default:
+				break;
+			
+			}
+			fieldMap.put(nodeName, field);
 		}
+		return node;
 	}
 
-	private void createFieldsForTransition(String transitionName) throws ParameterException {
-		HashMap<PNProperty, PropertiesField> transitionField = new HashMap<PNProperty, PropertiesField>();
-		for (PNProperty transitionProperty : properties.getTransitionProperties()) {
-			createTransitionField(transitionName, transitionProperty, transitionField);
-		}
-	}
+//	private void createFieldsForTransition(String transitionName) throws ParameterException {
+//		HashMap<PNProperty, PropertiesField> transitionField = new HashMap<PNProperty, PropertiesField>();
+//		for (PNProperty transitionProperty : properties.getTransitionProperties()) {
+//			createTransitionField(transitionName, transitionProperty, transitionField);
+//		}
+//	}
+//
+//	private void createFieldsForArc(String arcName) throws ParameterException {
+//		HashMap<PNProperty, PropertiesField> arcField = new HashMap<PNProperty, PropertiesField>();
+//		for (PNProperty arcProperty : properties.getArcProperties()) {
+//			createArcField(arcName, arcProperty, arcField);
+//		}
+//	}
 
-	private void createFieldsForArc(String arcName) throws ParameterException {
-		HashMap<PNProperty, PropertiesField> arcField = new HashMap<PNProperty, PropertiesField>();
-		for (PNProperty arcProperty : properties.getArcProperties()) {
-			createArcField(arcName, arcProperty, arcField);
-		}
-	}
+	// private void createPlaceField(String placeName, PNProperty placeProperty,
+	// HashMap<PNProperty, PropertiesField> placeField) throws
+	// ParameterException {
+	// placeField.put(placeProperty, new PropertiesField(PNComponent.PLACE,
+	// placeName, properties.getValue(PNComponent.PLACE, placeName,
+	// placeProperty), placeProperty));
+	// placeFields.put(placeName, placeField);
+	//
+	// }
 
-	private void createPlaceField(String placeName, PNProperty placeProperty, HashMap<PNProperty, PropertiesField> placeField) throws ParameterException {
-		placeField.put(placeProperty, new PropertiesField(PNComponent.PLACE, placeName, properties.getValue(PNComponent.PLACE, placeName, placeProperty), placeProperty));
-		placeFields.put(placeName, placeField);
-
-	}
-
-	private void createTransitionField(String transitionName, PNProperty transitionProperty, HashMap<PNProperty, PropertiesField> transitionField) throws ParameterException {
-		transitionField.put(transitionProperty, new PropertiesField(PNComponent.TRANSITION, transitionName, properties.getValue(PNComponent.TRANSITION, transitionName, transitionProperty),
-				transitionProperty));
-		transitionFields.put(transitionName, transitionField);
-	}
-
-	private void createArcField(String arcName, PNProperty arcProperty, HashMap<PNProperty, PropertiesField> arcField) throws ParameterException {
-		arcField.put(arcProperty, new PropertiesField(PNComponent.ARC, arcName, properties.getValue(PNComponent.ARC, arcName, arcProperty), arcProperty));
-		arcFields.put(arcName, arcField);
-	}
+//	private void createTransitionField(String transitionName, PNProperty transitionProperty, HashMap<PNProperty, PropertiesField> transitionField) throws ParameterException {
+//		transitionField.put(transitionProperty, new PropertiesField(PNComponent.TRANSITION, transitionName, properties.getValue(PNComponent.TRANSITION, transitionName, transitionProperty),
+//				transitionProperty));
+//		transitionFields.put(transitionName, transitionField);
+//	}
+//
+//	private void createArcField(String arcName, PNProperty arcProperty, HashMap<PNProperty, PropertiesField> arcField) throws ParameterException {
+//		arcField.put(arcProperty, new PropertiesField(PNComponent.ARC, arcName, properties.getValue(PNComponent.ARC, arcName, arcProperty), arcProperty));
+//		arcFields.put(arcName, arcField);
+//	}
 
 	/**
 	 * This method is called each time a value is changed within one of the
@@ -178,13 +280,13 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 		} catch (ParameterException e1) {
 			switch (fieldType) {
 			case PLACE:
-				placeFields.get(name).get(property).setText(oldValue);
+				placeFields.get(name).setText(oldValue);
 				break;
 			case TRANSITION:
-				transitionFields.get(name).get(property).setText(oldValue);
+				transitionFields.get(name).setText(oldValue);
 				break;
 			case ARC:
-				arcFields.get(name).get(property).setText(oldValue);
+				arcFields.get(name).setText(oldValue);
 				break;
 			}
 		}
@@ -195,14 +297,14 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 		if (event.getSource() != this) {
 			switch (event.getFieldType()) {
 			case PLACE:
-				placeFields.get(event.getName()).get(event.getProperty()).setText(event.getNewValue().toString());
-				tree.repaint();
+				placeFields.get(event.getName()).setText(event.getNewValue().toString());
+				repaint();
 				break;
 			case TRANSITION:
-				transitionFields.get(event.getName()).get(event.getProperty()).setText(event.getNewValue().toString());
+				transitionFields.get(event.getName()).setText(event.getNewValue().toString());
 				break;
 			case ARC:
-				arcFields.get(event.getName()).get(event.getProperty()).setText(event.getNewValue().toString());
+				arcFields.get(event.getName()).setText(event.getNewValue().toString());
 				break;
 			}
 		}
@@ -233,8 +335,8 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 			// }
 
 		}
-		
-		public PNProperty getPNProperty(){
+
+		public PNProperty getPNProperty() {
 			return property;
 		}
 
@@ -250,27 +352,27 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 
 	}
 
-	@Override
-	public void componentAdded(PNComponent component, String name) {
-		try {
-			switch (component) {
-			case PLACE:
-				createFieldsForPlace(name);
-				// TODO: Add place fields to GUI
-				break;
-			case TRANSITION:
-				createFieldsForTransition(name);
-				// TODO: Add transition fields to GUI
-				break;
-			case ARC:
-				createFieldsForArc(name);
-				// TODO: Add arc fields to GUI
-				break;
-			}
-		} catch (ParameterException e) {
-			e.printStackTrace();
-		}
-	}
+//	@Override
+//	public void componentAdded(PNComponent component, String name) {
+//		try {
+//			switch (component) {
+//			case PLACE:
+//				createFieldsForPlace(name);
+//				// TODO: Add place fields to GUI
+//				break;
+//			case TRANSITION:
+//				createFieldsForTransition(name);
+//				// TODO: Add transition fields to GUI
+//				break;
+//			case ARC:
+//				createFieldsForArc(name);
+//				// TODO: Add arc fields to GUI
+//				break;
+//			}
+//		} catch (ParameterException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Override
 	public void componentRemoved(PNComponent component, String name) {
@@ -309,7 +411,6 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 		}
 	}
 
-	
 	public PNTreeNode getRootNode() {
 		return rootNode;
 	}
@@ -322,24 +423,24 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 	public void invoke(Object sender, mxEventObject evt) {
 		System.out.println("THE Sender:" + sender);
 		if (sender instanceof JTree) {
-			System.out.println(tree.getSelectionPath());
+			System.out.println(getSelectionPath());
 		}
 		if (sender instanceof mxGraphSelectionModel) {
 			System.out.println("PropertiesVIEW");
 
-			System.out.println("ROWS:" + tree.getRowCount());
-			for (int i = getTree().getRowCount(); i >= 0; i--) {
-				getTree().collapseRow(i);
+			System.out.println("ROWS:" + getRowCount());
+			for (int i = getRowCount(); i >= 0; i--) {
+				collapseRow(i);
 			}
 			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
 				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
-				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) tree.getModel().getRoot(), cell.getId());
+				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getModel().getRoot(), cell.getId());
 
 				PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
 
 				TreePath propPath = new TreePath(firstChild.getPath());
-tree.collapsePath(propPath);
-				tree.setSelectionPath(new TreePath(node.getPath()));
+				collapsePath(propPath);
+				setSelectionPath(new TreePath(node.getPath()));
 
 			}
 		}
@@ -361,7 +462,13 @@ tree.collapsePath(propPath);
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		// TODO Auto-generated method stub
-	JTree 	tree = (JTree) e.getSource();
+		JTree tree = (JTree) e.getSource();
+
+	}
+
+	@Override
+	public void componentAdded(PNComponent component, String name) {
+		// TODO Auto-generated method stub
 		
 	}
 
