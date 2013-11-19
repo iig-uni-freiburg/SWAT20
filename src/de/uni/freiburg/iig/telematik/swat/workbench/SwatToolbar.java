@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -37,9 +39,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	private static final long serialVersionUID = -4279345402764581310L;
 	
-	private static final Dimension PREFERRED_SIZE = new Dimension(100,50);
 	private static final String ACTION_COMMAND_EDIT_MODE = "editMode";
 	private static final String ACTION_COMMAND_ANALYSIS_MODE = "analysisMode";
+	private static final int ICON_SIZE = 32;
+	private static final int ICON_SPACING = 5;
 	
 	private JRadioButton rdbtnEdit = null;
 	private JRadioButton rdbtnAnalysis = null;
@@ -47,11 +50,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	public SwatToolbar() {
 		setFloatable(false);
 		setRollover(true);
-		setPreferredSize(PREFERRED_SIZE);
+		setPreferredSize(new Dimension(200,ICON_SIZE+10));
 		
-		add(getSwitchworkingDirectoryButton());
-		add(getSaveActiveComponentButton());
-		add(getSaveAllButton());
+		add(new SwatToolbarButton(ToolbarButtonType.SAVE));
+		add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
+		add(new SwatToolbarButton(ToolbarButtonType.SWITCH_DIRECTORY));
 		add(getNewPTNetButton());
 		add(getNewCPNButton());
 		add(getNewIFNetButton());
@@ -90,30 +93,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		return rdbtnEdit;
 	}
 	
-	private JButton getSwitchworkingDirectoryButton(){
-		JButton newButton = new JButton(UIManager.getIcon("FileView.directoryIcon"));
-		newButton.addActionListener(new SwitchWorkingDirectoryAction());
-		return newButton;
-	}
-	
-	private JButton getSaveActiveComponentButton(){
-		JButton newButton = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
-		newButton.addActionListener(new SaveActiveComponentAction());
-		return newButton;
-	}
-	
-	private JButton getSaveAllButton(){
-		//TODO Adjust Icon
-		JButton newButton = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
-		newButton.addActionListener(new SaveAllAction());
-		return newButton;
-	}
-	
 	private JButton getNewPTNetButton(){
 		//TODO Adjust Icon
-		JButton newButton = new JButton(UIManager.getIcon("FileView.fileIcon"));
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
 		newButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
@@ -128,7 +111,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private JButton getNewCPNButton(){
 		//TODO Adjust Icon
-		JButton newButton = new JButton(UIManager.getIcon("FileView.fileIcon"));
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
 		newButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -145,7 +128,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private JButton getNewIFNetButton(){
 		//TODO Adjust Icon
-		JButton newButton = new JButton(UIManager.getIcon("FileView.fileIcon"));
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
 		newButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -194,5 +177,39 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			break;
 		}
 		repaint();
+	}
+	
+	private class SwatToolbarButton extends JButton{
+
+		private static final long serialVersionUID = 9184814296174960480L;
+		private static final String iconNameFormat = "../resources/icons/%s-%s.png";
+		
+		public SwatToolbarButton(ToolbarButtonType type){
+			super(new ImageIcon(SwatToolbar.this.getClass().getResource(String.format(iconNameFormat, type.toString().toLowerCase(), ICON_SIZE))));
+			setBorder(BorderFactory.createEmptyBorder(0, ICON_SPACING, 0, ICON_SPACING));
+			setBorderPainted(false);
+			switch(type){
+			case IMPORT:
+				break;
+			case NEW:
+				break;
+			case OPEN:
+				break;
+			case SAVE:
+				addActionListener(new SaveActiveComponentAction());
+				break;
+			case SAVE_ALL:
+				addActionListener(new SaveAllAction());
+				break;
+			case SWITCH_DIRECTORY:
+				addActionListener(new SwitchWorkingDirectoryAction());
+				break;
+			}
+		}
+		
+	}
+	
+	private enum ToolbarButtonType {
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY;
 	}
 }

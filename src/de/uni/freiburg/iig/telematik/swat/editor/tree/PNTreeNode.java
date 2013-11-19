@@ -1,36 +1,19 @@
 package de.uni.freiburg.iig.telematik.swat.editor.tree;
 
-import java.awt.Component;
-import java.util.Enumeration;
-import java.util.Vector;
-
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
 
 public class PNTreeNode extends DefaultMutableTreeNode {
 
-
-
-
-    
-
-
-	private JTextField textfield =null;
+	private PropertiesField textfield =null;
 
 	private PNTreeNodeType fieldType;
-	private PNProperty propertyType;
-  
     
     public PNProperty getPropertyType() {
-		return propertyType;
-	}
-
-	public void setPropertyType(PNProperty propertyType) {
-		this.propertyType = propertyType;
+		return textfield.getPNProperty();
 	}
 
 	public PNTreeNode(String title, PNTreeNodeType type) {
@@ -39,11 +22,10 @@ public class PNTreeNode extends DefaultMutableTreeNode {
         
     }
     
-    public PNTreeNode(String title, PNTreeNodeType type, JTextField field, PNProperty pnProperty) {
+    public PNTreeNode(String title, PNTreeNodeType type, PropertiesField field) {
     	super(title);
     	this.fieldType = type;
         this.textfield  = field;
-        this.propertyType = pnProperty;
     }
 //    
 //    public void addChild(TreeNode child) {
@@ -104,15 +86,9 @@ public class PNTreeNode extends DefaultMutableTreeNode {
     public JTextField getTextfield() {
 		return textfield;
 	}
-
-	public void setTextfield(JTextField textfield) {
-		this.textfield = textfield;
-	}
 	
 	public PNTreeNodeType getFieldType() {
 		return fieldType;
 	}
-
-
    
 }

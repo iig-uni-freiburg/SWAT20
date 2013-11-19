@@ -64,7 +64,6 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		JMenuItem saveAll = getSaveAllEntry();
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
 		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(getClass().getResource("../resources/addFile.png")));
-
 		JMenuItem exit = new JMenuItem("Exit");
 
 		fileMenu.add(open);

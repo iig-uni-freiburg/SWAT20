@@ -54,14 +54,14 @@ public class PNTreeBuilder {
 		
 		switch(o.getKey()){
 		case ARC_WEIGHT:
-			propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue(), o.getKey());
+			propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue());
 			node.add(propNode);
 			break;
 		case PLACE_LABEL:
 			node.setTextfield(o.getValue());
 			break;
 		case PLACE_SIZE:
-			propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue(), o.getKey());
+			propNode = new PNTreeNode(o.getKey().toString(), PNTreeNodeType.LEAF,o.getValue());
 			node.add(propNode);
 			break;
 		case TRANSITION_LABEL:

@@ -31,6 +31,7 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 	private ImageIcon arcIcon = new ImageIcon(getClass().getResource("/images/arrow.png"));
 	private ImageIcon rootIcon = new ImageIcon(getClass().getResource("/images/cloud.png"));
 
+	@Override
 	public Component getTreeCellRendererComponent(final JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 		Component container = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		PNTreeNode node = (PNTreeNode) value;

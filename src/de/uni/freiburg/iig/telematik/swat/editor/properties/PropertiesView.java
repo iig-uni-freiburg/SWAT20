@@ -233,6 +233,10 @@ public class PropertiesView extends JPanel implements PNPropertiesListener, mxIE
 			// }
 
 		}
+		
+		public PNProperty getPNProperty(){
+			return property;
+		}
 
 		@Override
 		protected void valueChanged(String oldValue, String newValue) {
