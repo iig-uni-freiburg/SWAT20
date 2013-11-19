@@ -38,7 +38,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeType;
 
-public class PropertiesView extends JTree implements PNPropertiesListener, mxIEventListener, TreeSelectionListener {
+public class PropertiesView extends JTree implements PNPropertiesListener, mxIEventListener, TreeSelectionListener, TreeModelListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -104,7 +104,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		 PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
 		 setCellRenderer(renderer);
 		 addTreeSelectionListener(this);
-		 getModel().addTreeModelListener(new CustomTreeModelListener());
+		 getModel().addTreeModelListener(this);
 //		 add(new JScrollPane(this), BorderLayout.CENTER);
 		
 		 // expand all nodes in the tree to be visible
@@ -332,25 +332,12 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 					super.keyTyped(e);
 					if(e.getKeyCode() == KeyEvent.VK_ENTER){
 						validateInput();
-						stopEditing();
-						//Repaint ParentNode
-						getPropertyField().getParent().getParent().getParent().repaint();
-						
+						stopEditing();						
 					}
 				
 				}
 				
 			});
-			// this.addMouseListener(new java.awt.event.MouseAdapter() {
-			// public void mouseClicked(java.awt.event.MouseEvent evt) {
-			// System.out.println("juhu");
-			// }
-			// });
-
-			// private void
-			// jTextFieldMyTextMouseClicked(java.awt.event.MouseEvent evt) {
-			// jTextFieldMyText.setText("");
-			// }
 
 		}
 
@@ -495,57 +482,87 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		
 	}
 
+	@Override
+	public void treeNodesChanged(TreeModelEvent e) {
+		repaint();
+		
+	}
+
+	@Override
+	public void treeNodesInserted(TreeModelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeNodesRemoved(TreeModelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeStructureChanged(TreeModelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 
 // mxEvent.CHANGE
 
-class CustomTreeModelListener implements TreeModelListener {
-	public void treeNodesChanged(TreeModelEvent e) {
-		System.out.println(e.getSource() + "nodechanged");
-		PNTreeNode node;
-		node = (PNTreeNode) (e.getTreePath().getLastPathComponent());
-		PNTreeNode parent = (PNTreeNode) node.getParent();
-//		switch(node.getPropertyType()){
-//		case ARC_WEIGHT:
-//			break;
-//		case PLACE_LABEL:
-//			System.out.println("juhu");
-//			parent.setUserObject(node.getTextfield().getText());
-//			break;
-//		case PLACE_SIZE:
-//			break;
-//		case TRANSITION_LABEL:
-//			break;
-//		case TRANSITION_SIZE:
-//			break;
-//		default:
-//			break;
+//class CustomTreeModelListener() implements TreeModelListener {
+////	public CustomTreeModelListener(PropertiesView propertiesView) {
+////		super.
+////	}
 //
+//	public void treeNodesChanged(TreeModelEvent e) {
+//		System.out.println(e.getSource() + "nodechanged");
+//		PNTreeNode node;
+//		node = (PNTreeNode) (e.getTreePath().getLastPathComponent());
 //		
+//		
+////		PNTreeNode parent = (PNTreeNode) node.getParent();
+////		switch(node.getPropertyType()){
+////		case ARC_WEIGHT:
+////			break;
+////		case PLACE_LABEL:
+////			System.out.println("juhu");
+////			parent.setUserObject(node.getTextfield().getText());
+////			break;
+////		case PLACE_SIZE:
+////			break;
+////		case TRANSITION_LABEL:
+////			break;
+////		case TRANSITION_SIZE:
+////			break;
+////		default:
+////			break;
+////
+////		
+////		}
+//		
+//		/*
+//		 * If the event lists children, then the changed node is the child of
+//		 * the node we have already gotten. Otherwise, the changed node and the
+//		 * specified node are the same.
+//		 */
+//		try {
+//			int index = e.getChildIndices()[0];
+//			node = (PNTreeNode) (node.getChildAt(index));
+//		} catch (NullPointerException exc) {
 //		}
-		
-		/*
-		 * If the event lists children, then the changed node is the child of
-		 * the node we have already gotten. Otherwise, the changed node and the
-		 * specified node are the same.
-		 */
-		try {
-			int index = e.getChildIndices()[0];
-			node = (PNTreeNode) (node.getChildAt(index));
-		} catch (NullPointerException exc) {
-		}
-
-		System.out.println("The user has finished editing the node.");
-		// System.out.println("New value: " + node.getUserObject());
-	}
-
-	public void treeNodesInserted(TreeModelEvent e) {
-	}
-
-	public void treeNodesRemoved(TreeModelEvent e) {
-	}
-
-	public void treeStructureChanged(TreeModelEvent e) {
-	}
-
-}
+//
+//		System.out.println("The user has finished editing the node.");
+//		// System.out.println("New value: " + node.getUserObject());
+//	}
+//
+//	public void treeNodesInserted(TreeModelEvent e) {
+//	}
+//
+//	public void treeNodesRemoved(TreeModelEvent e) {
+//	}
+//
+//	public void treeStructureChanged(TreeModelEvent e) {
+//	}
+//
+//}
