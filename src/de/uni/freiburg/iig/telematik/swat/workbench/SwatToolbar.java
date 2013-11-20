@@ -196,10 +196,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private class SwatToolbarButton extends JButton{
 
 		private static final long serialVersionUID = 9184814296174960480L;
-		private static final String iconNameFormat = "../resources/icons/%s-%s.png";
+		private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
 		
 		public SwatToolbarButton(ToolbarButtonType type){
-			super(new ImageIcon(SwatToolbar.this.getClass().getResource(String.format(iconNameFormat, type.toString().toLowerCase(), ICON_SIZE))));
+			super(new ImageIcon(SwatToolbar.this.getClass().getResource(
+					String.format(iconNameFormat, ICON_SIZE, type.toString().toLowerCase(), ICON_SIZE))));
 			setBorder(BorderFactory.createEmptyBorder(0, ICON_SPACING, 0, ICON_SPACING));
 			setBorderPainted(false);
 			switch(type){
