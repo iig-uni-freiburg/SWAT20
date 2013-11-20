@@ -4,11 +4,13 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
@@ -16,6 +18,7 @@ import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.graphic.DisplayFrame;
 import de.invation.code.toval.graphic.FileNameChooser;
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
@@ -23,7 +26,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /**
  * Model for Buttons. Holds buttons like "open", "save", ... With
@@ -47,7 +52,13 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	private JButton openButton = null;
 
-	public SwatToolbar() {
+	private SwatTabView tabView = null;
+	private SwatTreeView treeView = null;
+
+	public SwatToolbar(SwatTabView tabView, SwatTreeView treeView) {
+		this.tabView = tabView;
+		this.treeView = treeView;
+
 		setFloatable(false);
 		setRollover(true);
 		setPreferredSize(new Dimension(200,ICON_SIZE+10));
@@ -171,7 +182,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	public static void main(String[] args) {
 		JPanel panel = new JPanel();
-		panel.add(new SwatToolbar());
+		panel.add(new SwatToolbar(new SwatTabView(), new SwatTreeView()));
 		new DisplayFrame(panel, true);
 	}
 
@@ -190,6 +201,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	public void addOpenActionListener(ActionListener listener) {
 		getSwitchworkingDirectoryButton().addActionListener(listener);
+	}
+
+	public void addSaveListener(ActionListener listener) {
+		// TODO: Implement
 	}
 
 	
@@ -211,13 +226,13 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case OPEN:
 				break;
 			case SAVE:
-				addActionListener(new SaveActiveComponentAction());
+				addActionListener(new SaveActiveComponentAction(tabView));
 				break;
 			case SAVE_ALL:
 				addActionListener(new SaveAllAction());
 				break;
 			case SWITCH_DIRECTORY:
-				// addActionListener(new SwitchWorkingDirectoryAction());
+				addActionListener(new openActionListener());
 				break;
 			}
 		}
@@ -226,5 +241,34 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private enum ToolbarButtonType {
 		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY;
+	}
+
+	class openActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			WorkingDirectoryDialog dialog = new WorkingDirectoryDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this));
+			String workingDirectory = dialog.getSimulationDirectory();
+			try {
+				// Update Properties and reload SwatComponents.
+				SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
+				SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory);
+				SwatComponents.getInstance().reload();
+				// Inform TabView, etc...
+				tabView.removeAll();
+				treeView.removeAndUpdateSwatComponents();
+			} catch (ParameterException e2) {
+				JOptionPane.showMessageDialog(null, e2.getMessage(), "Parameter Exception", JOptionPane.ERROR_MESSAGE);
+				e2.printStackTrace();
+			} catch (IOException e3) {
+				JOptionPane.showMessageDialog(null, e3.getMessage(), "IO Exception", JOptionPane.ERROR_MESSAGE);
+				e3.printStackTrace();
+			} catch (PropertyException e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+			}
+
+		}
+
 	}
 }

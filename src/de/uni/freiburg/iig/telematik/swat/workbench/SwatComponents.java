@@ -108,9 +108,9 @@ public class SwatComponents {
 		return nets.containsValue(new File(name));
 	}
 
-	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetWithFileName(String name) {
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetFromFileName(String name) {
 		// TODO: unimplemented
-		System.out.println("UNIMPLEMENTED: getNetWithFileName");
+		System.out.println("UNIMPLEMENTED: getNetFromFileName");
 		return null;
 	}
 
