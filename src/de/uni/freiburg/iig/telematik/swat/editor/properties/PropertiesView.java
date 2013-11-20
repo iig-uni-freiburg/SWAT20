@@ -1,23 +1,33 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
+import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.border.Border;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -33,35 +43,21 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNCellEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeModel;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeType;
 
 public class PropertiesView extends JTree implements PNPropertiesListener, mxIEventListener, TreeSelectionListener, TreeModelListener {
 
-	private static final long serialVersionUID = 1L;
 
-	protected Map<String, PropertiesField> placeFields = new HashMap<String, PropertiesField>();
-	protected Map<String,PropertiesField> transitionFields = new HashMap<String, PropertiesField>();
-	protected Map<String,PropertiesField> arcFields = new HashMap<String, PropertiesField>();
-	//
-	// public JTree tree;
-	//
-	// public JTree getTree() {
-	// return tree;
-	// }
-	//
-	// public void setTree(JTree tree) {
-	// this.tree = tree;
-	// }
+	private static final long serialVersionUID = -23504178961013201L;
 
 	protected PNProperties properties = null;
 
 	private PNTreeNode rootNode;
 
 	private PNTreeNode root;
-	private PNTreeModel treeModel;
+	private DefaultTreeModel treeModel;
 
 	public PropertiesView(PNProperties properties) throws ParameterException {
 		Validate.notNull(properties);
@@ -69,16 +65,10 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		
 		
 
-		// for(AbstractGraphicalPN petriNet:
-		// SwatComponents.getInstance().getPetriNets()){
-		// root.add(new PNTreeNode(petriNet, PNTreeNodeType.));
-		// }
-
 
 
 		addTreeSelectionListener(this);
-//		add(new JScrollPane(this), BorderLayout.CENTER);
-
+		
 		// expand all nodes in the tree to be visible
 		for (int i = 0; i < this.getRowCount(); i++) {
 			this.expandRow(i);
@@ -87,7 +77,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		this.properties = properties;
 		setUpGUI();
 
-		treeModel = new PNTreeModel(root);
+		treeModel = new DefaultTreeModel(root);
 		this.setModel(treeModel);
 		 setInvokesStopCellEditing(false);
 		 getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -120,81 +110,22 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		PNTreeNode arcsNode = new PNTreeNode("Arcs", PNTreeNodeType.ARCS);
 		
 		for (String placeName : properties.getPlaceNames()) {
-			placesNode.add(createFields(placeName, PNComponent.PLACE, placeFields,  PNTreeNodeType.PLACE ));
+			placesNode.add(createFields(placeName, PNComponent.PLACE,  PNTreeNodeType.PLACE ));
 		}
 		for (String transitionName : properties.getTransitionNames()) {
-			transitionsNode.add(createFields(transitionName, PNComponent.TRANSITION, transitionFields,  PNTreeNodeType.TRANSITION ));
+			transitionsNode.add(createFields(transitionName, PNComponent.TRANSITION,  PNTreeNodeType.TRANSITION ));
 		}
 		for (String arcName : properties.getArcNames()) {
-			arcsNode.add(createFields(arcName, PNComponent.ARC, arcFields,  PNTreeNodeType.ARC ));
+			arcsNode.add(createFields(arcName, PNComponent.ARC,  PNTreeNodeType.ARC ));
 		}
 		
 		root.add(placesNode);
 		root.add(transitionsNode);
 		root.add(arcsNode);
-		// for (String transitionName : properties.getTransitionNames()) {
-		// createFieldsForTransition(transitionName);
-		//
-		// }
-		// for (String arcName : properties.getArcNames()) {
-		// createFieldsForArc(arcName);
-		//
-		// }
-
-		// rootNode = PNTreeBuilder.build(placeFields, transitionFields,
-		// arcFields);
-
-//		 tree.setInvokesStopCellEditing(false);
-//		 tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-//		 tree.setRootVisible(false);
-//		
-//		 // tree.setInvokesStopCellEditing(false);
-//		 // Set Editor for Property Fields
-//		 JTextField textField = new JTextField();
-//		 textField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-//		 PNCellEditor editor = new PNCellEditor(textField);
-//		 tree.setCellEditor(editor);
-//		 tree.setEditable(true);
-//		
-//		 PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
-//		 tree.setCellRenderer(renderer);
-//		 tree.addTreeSelectionListener(this);
-//		 add(new JScrollPane(tree), BorderLayout.CENTER);
-//		
-//		 // expand all nodes in the tree to be visible
-//		 for (int i = 0; i < tree.getRowCount(); i++) {
-//		 tree.expandRow(i);
-//		 }
-
+		
 	}
-
-//	private PNTreeNode createFieldsForPlace(String placeName, PNTreeNode node) throws ParameterException {
-//		for (PNProperty placeProperty : properties.getPlaceProperties()) {
-//			PropertiesField field = new PropertiesField(PNComponent.PLACE, placeName, properties.getValue(PNComponent.PLACE, placeName, placeProperty), placeProperty);
-//			node.add(new PNTreeNode(placeProperty.toString(), PNTreeNodeType.PLACE, field));
-//			placeFields.put(placeName, field);
-//		}
-//		return node;
-//	}
-//	
-//	private PNTreeNode createFieldsForTransition(String transitionName, PNTreeNode node) throws ParameterException {
-//		for (PNProperty transitionProperty : properties.getTransitionProperties()) {
-//			PropertiesField field = new PropertiesField(PNComponent.TRANSITION, transitionName, properties.getValue(PNComponent.TRANSITION, transitionName, transitionProperty), transitionProperty);
-//			node.add(new PNTreeNode(transitionProperty.toString(), PNTreeNodeType.TRANSITION, field));
-//			transitionFields.put(transitionName, field);
-//		}
-//		return node;
-//	}
-//	
-//	private PNTreeNode createFieldsForArc(String arcName, PNTreeNode node) throws ParameterException {
-//		for (PNProperty arcProperty : properties.getArcProperties()) {
-//			PropertiesField field = new PropertiesField(PNComponent.ARC, arcName, properties.getValue(PNComponent.ARC, arcName, arcProperty), arcProperty);
-//			node.add(new PNTreeNode(arcProperty.toString(), PNTreeNodeType.ARC, field));
-//			arcFields.put(arcName, field);
-//		}
-//		return node;
 	
-	private PNTreeNode createFields(String nodeName, PNComponent pnProperty, Map<String, PropertiesField> fieldMap, PNTreeNodeType nodeType) throws ParameterException {
+	private PNTreeNode createFields(String nodeName, PNComponent pnProperty, PNTreeNodeType nodeType) throws ParameterException {
 		PNTreeNode node = new PNTreeNode(nodeName, nodeType);
 		Set<PNProperty> propertiesSet = null;
 		switch (pnProperty) {
@@ -208,64 +139,43 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 			propertiesSet = properties.getTransitionProperties();
 			break;
 		}
+		DefaultTableModel tableModel = 	new DefaultTableModel();
+		HashMap<PNProperty, PropertiesField> map = new HashMap<PNProperty, PropertiesField>();
+		tableModel.setColumnCount(2);
 		for (PNProperty property : propertiesSet) {
-			PropertiesField field = new PropertiesField(pnProperty, nodeName, properties.getValue(pnProperty, nodeName, property), property);
-			node.add(new PNTreeNode(property.toString(), PNTreeNodeType.LEAF, field));
-			switch(property){
-			case ARC_WEIGHT:
-				break;
-			case PLACE_LABEL:
-				node.setTextField(field);
-				break;
-			case PLACE_SIZE:
-				break;
-			case TRANSITION_LABEL:
-				break;
-			case TRANSITION_SIZE:
-				break;
-			default:
-				break;
-			
-			}
-			fieldMap.put(nodeName, field);
+		PropertiesField field = new PropertiesField(pnProperty, nodeName, properties.getValue(pnProperty, nodeName, property), property);
+		tableModel.addRow(new Object[]{property, field});
+		map.put(property, field);
+		switch(property){
+		case ARC_WEIGHT:
+			break;
+		case PLACE_LABEL:
+			node.setTextField(field);
+			break;
+		case PLACE_SIZE:
+			break;
+		case TRANSITION_LABEL:
+			node.setTextField(field);
+			break;
+		case TRANSITION_SIZE:
+			break;
+		default:
+			break;
+		
 		}
+	}
+		
+		
+		JTable table = new JTable(tableModel);
+        TableColumnModel colModel = table.getColumnModel();
+        TableColumn col = colModel.getColumn(1);
+        col.setCellRenderer(new CustomRenderer());
+        col.setCellEditor(new CustomEditor());
+        table.setPreferredScrollableViewportSize(table.getPreferredSize());
+        node.add(new PNTreeNode(table, PNTreeNodeType.LEAF));
+				
 		return node;
 	}
-
-//	private void createFieldsForTransition(String transitionName) throws ParameterException {
-//		HashMap<PNProperty, PropertiesField> transitionField = new HashMap<PNProperty, PropertiesField>();
-//		for (PNProperty transitionProperty : properties.getTransitionProperties()) {
-//			createTransitionField(transitionName, transitionProperty, transitionField);
-//		}
-//	}
-//
-//	private void createFieldsForArc(String arcName) throws ParameterException {
-//		HashMap<PNProperty, PropertiesField> arcField = new HashMap<PNProperty, PropertiesField>();
-//		for (PNProperty arcProperty : properties.getArcProperties()) {
-//			createArcField(arcName, arcProperty, arcField);
-//		}
-//	}
-
-	// private void createPlaceField(String placeName, PNProperty placeProperty,
-	// HashMap<PNProperty, PropertiesField> placeField) throws
-	// ParameterException {
-	// placeField.put(placeProperty, new PropertiesField(PNComponent.PLACE,
-	// placeName, properties.getValue(PNComponent.PLACE, placeName,
-	// placeProperty), placeProperty));
-	// placeFields.put(placeName, placeField);
-	//
-	// }
-
-//	private void createTransitionField(String transitionName, PNProperty transitionProperty, HashMap<PNProperty, PropertiesField> transitionField) throws ParameterException {
-//		transitionField.put(transitionProperty, new PropertiesField(PNComponent.TRANSITION, transitionName, properties.getValue(PNComponent.TRANSITION, transitionName, transitionProperty),
-//				transitionProperty));
-//		transitionFields.put(transitionName, transitionField);
-//	}
-//
-//	private void createArcField(String arcName, PNProperty arcProperty, HashMap<PNProperty, PropertiesField> arcField) throws ParameterException {
-//		arcField.put(arcProperty, new PropertiesField(PNComponent.ARC, arcName, properties.getValue(PNComponent.ARC, arcName, arcProperty), arcProperty));
-//		arcFields.put(arcName, arcField);
-//	}
 
 	/**
 	 * This method is called each time a value is changed within one of the
@@ -283,34 +193,41 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		} catch (ParameterException e1) {
 			switch (fieldType) {
 			case PLACE:
-				placeFields.get(name).setText(oldValue);
-				break;
 			case TRANSITION:
-				transitionFields.get(name).setText(oldValue);
-				break;
 			case ARC:
-				arcFields.get(name).setText(oldValue);
-				break;
+				setPropertiesFieldValue(name, property, oldValue);
 			}
 		}
 	}
+
+
 
 	@Override
 	public void propertyChange(PNPropertyChangeEvent event) {
 		if (event.getSource() != this) {
 			switch (event.getFieldType()) {
 			case PLACE:
-				placeFields.get(event.getName()).setText(event.getNewValue().toString());
-				repaint();
-				break;
 			case TRANSITION:
-				transitionFields.get(event.getName()).setText(event.getNewValue().toString());
-				break;
 			case ARC:
-				arcFields.get(event.getName()).setText(event.getNewValue().toString());
+				setPropertiesFieldValue(event.getName(), event.getProperty(), event.getNewValue().toString());
+				repaint();
 				break;
 			}
 		}
+	}
+	/**
+	 * @param name
+	 * @param property
+	 * @param oldValue
+	 */
+	protected void setPropertiesFieldValue(String name, PNProperty property, String oldValue) {
+		PNTreeNode child = (PNTreeNode) find((DefaultMutableTreeNode) getModel().getRoot(), name).getFirstChild();
+		int i =0;
+		for(i=0; i < child.getTable().getColumnCount(); i++){
+			if(property == child.getTable().getValueAt(i, 0))
+				break;
+		}
+		((JTextField)child.getTable().getValueAt(i, 1)).setText(oldValue);
 	}
 
 	public class PropertiesField extends RestrictedTextField {
@@ -327,20 +244,19 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 			this.property = property;
 			this.name = name;
 			this.addKeyListener(new KeyAdapter() {
+				
 				@Override
-				public void keyPressed(KeyEvent e) {
-					super.keyTyped(e);
+				public void keyReleased(KeyEvent e) {
+					super.keyReleased(e);
 					if(e.getKeyCode() == KeyEvent.VK_ENTER){
-						validateInput();
 						stopEditing();						
 					}
-				
 				}
 				
 			});
 
 		}
-
+		
 		protected PropertiesField getPropertyField() {	
 			return this;
 			
@@ -362,44 +278,34 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	}
 
-//	@Override
-//	public void componentAdded(PNComponent component, String name) {
+	@Override
+	public void componentAdded(PNComponent component, String name) {
 //		try {
-//			switch (component) {
-//			case PLACE:
+			switch (component) {
+			case PLACE:
 //				createFieldsForPlace(name);
-//				// TODO: Add place fields to GUI
-//				break;
-//			case TRANSITION:
+				// TODO: Add place fields to GUI
+				break;
+			case TRANSITION:
 //				createFieldsForTransition(name);
-//				// TODO: Add transition fields to GUI
-//				break;
-//			case ARC:
+				// TODO: Add transition fields to GUI
+				break;
+			case ARC:
 //				createFieldsForArc(name);
-//				// TODO: Add arc fields to GUI
-//				break;
-//			}
+				// TODO: Add arc fields to GUI
+				break;
+			}
 //		} catch (ParameterException e) {
 //			e.printStackTrace();
 //		}
-//	}
+	}
 
 	@Override
 	public void componentRemoved(PNComponent component, String name) {
-		switch (component) {
-		case PLACE:
-			placeFields.remove(name);
-			// TODO: Remove place fields from GUI
-			break;
-		case TRANSITION:
-			transitionFields.remove(name);
-			// TODO: Remove transition fields from GUI
-			break;
-		case ARC:
-			arcFields.remove(name);
-			// TODO: Remove arc fields from GUI
-			break;
-		}
+		
+		DefaultMutableTreeNode comp =  find((DefaultMutableTreeNode) getModel().getRoot(), name);
+		treeModel.removeNodeFromParent(comp);
+
 	}
 
 	class LeafCellEditor extends DefaultTreeCellEditor {
@@ -477,12 +383,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	}
 
 	@Override
-	public void componentAdded(PNComponent component, String name) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void treeNodesChanged(TreeModelEvent e) {
 		repaint();
 		
@@ -507,6 +407,75 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	}
 
 }
+
+class CustomRenderer implements TableCellRenderer {
+	JScrollPane scrollPane;
+	JTextField textField;
+
+	public CustomRenderer() {
+		textField = new JTextField();
+
+		scrollPane = new JScrollPane(textField);
+	}
+
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+		table.setBorder(BorderFactory.createLineBorder(table.getSelectionBackground()));
+		table.setGridColor(table.getSelectionBackground());
+
+		if (value instanceof JTextField)
+			textField = (JTextField) value;
+		else
+			textField.setText((String) value);
+		return textField;
+	}
+}
+
+class CustomEditor implements TableCellEditor {
+	JTextField textField;
+	JScrollPane scrollPane;
+
+	public CustomEditor() {
+		textField = new JTextField();
+		scrollPane = new JScrollPane(textField);
+	}
+
+	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+		table.setBorder(BorderFactory.createLineBorder(table.getSelectionBackground()));
+		table.setGridColor(table.getSelectionBackground());
+		if (value instanceof JTextField)
+			textField = (JTextField) value;
+		else
+			textField.setText((String) value);
+		return textField;
+	}
+
+	public void addCellEditorListener(CellEditorListener l) {
+	}
+
+	public void cancelCellEditing() {
+	}
+
+	public Object getCellEditorValue() {
+		return textField.getText();
+	}
+
+	public boolean isCellEditable(EventObject anEvent) {
+		System.out.println();
+		return true;
+	}
+
+	public void removeCellEditorListener(CellEditorListener l) {
+	}
+
+	public boolean shouldSelectCell(EventObject anEvent) {
+		return true;
+	}
+
+	public boolean stopCellEditing() {
+		return true;
+	}
+}
+
 
 // mxEvent.CHANGE
 

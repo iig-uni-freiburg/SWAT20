@@ -7,21 +7,32 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeNode;
 
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
 
 public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 
@@ -34,7 +45,7 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 	@Override
 	public Component getTreeCellRendererComponent(final JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 		Component container = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-		PNTreeNode node = (PNTreeNode) value;
+		final PNTreeNode node = (PNTreeNode) value;
 
 		container.addFocusListener(new FocusListener() {
 
@@ -74,7 +85,7 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 			break;
 		case TRANSITION:
 			setIcon(new ImageIcon(transitionIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
-//			setText(node.getTextfield().getText());
+			setText(node.getTextfield().getText());
 //			keepSelectionWhileEditing(tree, node);
 			break;
 		case ARC:
@@ -83,24 +94,7 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 //			keepSelectionWhileEditing(tree, node);
 			break;
 		case LEAF:
-			result = getTextPanel(node);
-			switch(node.getPropertyType()){
-			case ARC_WEIGHT:
-				break;
-			case PLACE_LABEL:
-							
-				break;
-			case PLACE_SIZE:
-				break;
-			case TRANSITION_LABEL:
-				break;
-			case TRANSITION_SIZE:
-				break;
-			default:
-				break;
-			
-			}
-			
+			result = node.getTable();
 			break;
 
 		}

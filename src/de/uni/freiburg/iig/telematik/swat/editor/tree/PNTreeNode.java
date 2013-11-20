@@ -1,5 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.editor.tree;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -16,6 +20,10 @@ public class PNTreeNode extends DefaultMutableTreeNode {
 	private PropertiesField textfield;
 
 	private PNTreeNodeType fieldType;
+
+	private Map<PNProperty, PropertiesField> fieldMap;
+
+	private JTable table;
     
     public PNProperty getPropertyType() {
 		return textfield.getPNProperty();
@@ -32,63 +40,28 @@ public class PNTreeNode extends DefaultMutableTreeNode {
     	this.fieldType = type;
         this.textfield  = field;
     }
-//    
-//    public void addChild(TreeNode child) {
-//        children.add(child);
-//    }
-//    
-//    public void setParent(TreeNode parent) {
-//        this.parent = parent;
-//    }
-//    
-//    @Override
-//    public Enumeration<TreeNode> children() {
-//        return children.elements();
-//    }
-// 
-//    @Override
-//    public boolean getAllowsChildren() {
-//        return true;
-//    }
-// 
-//    @Override
-//    public TreeNode getChildAt(int childIndex) {
-//        return children.elementAt(childIndex);
-//    }
-// 
-//    @Override
-//    public int getChildCount() {
-//        return children.size();
-//    }
-// 
-//    @Override
-//    public int getIndex(TreeNode node) {
-//        return children.indexOf(node);
-//    }
-// 
-//    @Override
-//    public TreeNode getParent() {
-//        return this.parent;
-//    }
-// 
-//    @Override
-//    public boolean isLeaf() {
-//        return (children.size() == 0);
-//    }
-// 
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-// 
-//    public String getTitle() {
-//        return title;
-//    }
-//    
-//    public String toString() {
-//        return title;
-//    }
-    
-    public JTextField getTextfield() {
+
+    public PNTreeNode(HashMap<PNProperty, PropertiesField> fieldMap, PNTreeNodeType type) {
+    	super("leaf");
+    	this.setFieldMap(fieldMap);
+    	this.fieldType = type;
+	}
+
+	public PNTreeNode(JTable table, PNTreeNodeType type) {
+    	super("leaf");
+    	this.table = table;
+    	this.fieldType = type;
+	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+
+	public JTextField getTextfield() {
 		return textfield;
 	}
 	
@@ -99,6 +72,14 @@ public class PNTreeNode extends DefaultMutableTreeNode {
 	public void setTextField(PropertiesField field) {
 		this.textfield = field;
 		
+	}
+
+	public Map<PNProperty, PropertiesField> getFieldMap() {
+		return fieldMap;
+	}
+
+	public void setFieldMap(HashMap<PNProperty, PropertiesField> fieldMap2) {
+		this.fieldMap = fieldMap2;
 	}
    
 }

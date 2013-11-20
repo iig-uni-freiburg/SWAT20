@@ -9,19 +9,33 @@ import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.EventObject;
+import java.util.List;
+import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.CellEditorListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreePath;
+
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
 
 public class PNCellEditor extends DefaultCellEditor {
 
@@ -33,7 +47,7 @@ public class PNCellEditor extends DefaultCellEditor {
 	@Override
 	public Component getTreeCellEditorComponent(final JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
 		Component container = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
-		PNTreeNode node = (PNTreeNode) value;
+		final PNTreeNode node = (PNTreeNode) value;
 		Component result = null;
 		container.addFocusListener(new FocusListener() {
 
@@ -51,13 +65,9 @@ public class PNCellEditor extends DefaultCellEditor {
 
 		switch (node.getFieldType()) {
 		case LEAF:
-			result = getPropertyPanel(node);
+			result = node.getTable();
 			break;
-		case PLACE:
-		case TRANSITION:
-		case ARC:
-			result = getNodePanel(node);
-			break;
+
 
 		}
 
@@ -73,43 +83,6 @@ public class PNCellEditor extends DefaultCellEditor {
 	public Object getCellEditorValue() {
 		return super.getCellEditorValue();
 	}
-
-	private Component getPropertyPanel(PNTreeNode node) {
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-		panel.setLayout(new BorderLayout());
-		JLabel label = new JLabel(node.toString() + ": ");
-		label.setSize(new Dimension(200, 30));
-		panel.add(label, BorderLayout.LINE_START);
-		panel.add(node.getTextfield(), BorderLayout.LINE_END);
-		return panel;
-	}
-
-	private Component getNodePanel(PNTreeNode node) {
-
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-
-		panel.setLayout(new BorderLayout());
-		JLabel label = new JLabel();
-		switch(node.getFieldType()){
-		case PLACE:
-			label.setIcon(new ImageIcon(placeIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
-			break;
-		case TRANSITION:
-			label.setIcon(new ImageIcon(transitionIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
-			break;
-		case ARC:
-			label.setIcon(new ImageIcon(arcIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
-			break;
-
-		}
-		panel.add(label, BorderLayout.LINE_START);
-		panel.add(new JLabel(" "), BorderLayout.CENTER);
-		panel.add(node.getTextfield(), BorderLayout.LINE_END);
-		return panel;
-	}
-
 
 	@Override
 	public boolean isCellEditable(EventObject event) {
@@ -128,14 +101,6 @@ public class PNCellEditor extends DefaultCellEditor {
 					System.out.println("jau");
 					return rectContainsPoint(new Point((int) rectLastSelected.getMinX(), (int) rectLastSelected.getMinY()),
 							new Point((int) rectLastSelected.getMaxX(), (int) rectLastSelected.getMaxY()), mouseLocation);
-//				case PLACE:
-//				case TRANSITION:
-//				case ARC:
-//					MouseEvent mouseEventPlace = (MouseEvent) event;
-//					Point mouseLocationPlace = mouseEventPlace.getPoint();
-//					Rectangle rectLastSelectedPlace = tree.getPathBounds(new TreePath(node.getPath()));
-//					return rectContainsPoint(new Point((int) rectLastSelectedPlace.getMinX(), (int) rectLastSelectedPlace.getMinY()), new Point((int) rectLastSelectedPlace.getMaxX(),
-//							(int) rectLastSelectedPlace.getMaxY()), mouseLocationPlace);
 				case PLACES:
 					break;
 				case ROOT:

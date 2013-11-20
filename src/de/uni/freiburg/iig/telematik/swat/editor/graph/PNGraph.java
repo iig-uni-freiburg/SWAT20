@@ -76,7 +76,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.properties.addPNPropertiesListener(this);
 		this.properties.getPropertiesView().addTreeSelectionListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
-//		setView(createCustomView());
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
 		setCellsEditable(false);
@@ -84,7 +83,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		setExtendParents(false); // disables extending parents after adding
 		setVertexLabelsMovable(true);
 		initialize();
-		// Add SelectionListener for graph
 		
 	}
 	
@@ -495,7 +493,18 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			if (object instanceof PNGraphCell) {
 				PNGraphCell cell = (PNGraphCell) object;
 				try {
-					properties.setPlaceSize(this, cell.getId(), (int) cell.getGeometry().getWidth());
+					switch(cell.getType()){
+					case ARC:
+						break;
+					case PLACE:
+						properties.setPlaceSize(this, cell.getId(), (int) cell.getGeometry().getWidth());
+						break;
+					case TRANSITION:
+						properties.setTransitionSize(this, cell.getId(), (int) cell.getGeometry().getWidth());
+						break;
+						
+					}
+					
 
 				} catch (ParameterException e) {
 					System.out.println("Placesize could not be changed");
