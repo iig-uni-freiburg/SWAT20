@@ -90,7 +90,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		 PNCellEditor editor = new PNCellEditor(textField);
 		 setCellEditor(editor);
 		 setEditable(true);
-		
+		 setRowHeight(0);
 		 PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
 		 setCellRenderer(renderer);
 		 addTreeSelectionListener(this);
