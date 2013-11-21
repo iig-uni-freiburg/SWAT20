@@ -3,10 +3,15 @@ package de.uni.freiburg.iig.telematik.swat.editor.properties;
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -139,25 +144,22 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 			propertiesSet = properties.getTransitionProperties();
 			break;
 		}
+		List<PNProperty> list = new ArrayList<PNProperty>(propertiesSet);
+		 Collections.sort(list);
+//		Util.asSortedList(propertiesSet);
 		DefaultTableModel tableModel = 	new DefaultTableModel();
-		HashMap<PNProperty, PropertiesField> map = new HashMap<PNProperty, PropertiesField>();
 		tableModel.setColumnCount(2);
-		for (PNProperty property : propertiesSet) {
+		for (PNProperty property : list) {
 		PropertiesField field = new PropertiesField(pnProperty, nodeName, properties.getValue(pnProperty, nodeName, property), property);
 		tableModel.addRow(new Object[]{property, field});
-		map.put(property, field);
 		switch(property){
 		case ARC_WEIGHT:
 			break;
 		case PLACE_LABEL:
 			node.setTextField(field);
 			break;
-		case PLACE_SIZE:
-			break;
 		case TRANSITION_LABEL:
 			node.setTextField(field);
-			break;
-		case TRANSITION_SIZE:
 			break;
 		default:
 			break;
@@ -188,6 +190,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	 * @param newValue
 	 */
 	protected void propertiesFieldValueChanged(PNComponent fieldType, String name, PNProperty property, String oldValue, String newValue) {
+		System.out.println(property + "Propchanged");
 		try {
 			properties.setValue(this, fieldType, name, property, newValue);
 		} catch (ParameterException e1) {
@@ -204,6 +207,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	@Override
 	public void propertyChange(PNPropertyChangeEvent event) {
+		System.out.println(event);
 		if (event.getSource() != this) {
 			switch (event.getFieldType()) {
 			case PLACE:
@@ -221,13 +225,16 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	 * @param oldValue
 	 */
 	protected void setPropertiesFieldValue(String name, PNProperty property, String oldValue) {
+		System.out.println(property + "before set" + oldValue);
 		PNTreeNode child = (PNTreeNode) find((DefaultMutableTreeNode) getModel().getRoot(), name).getFirstChild();
 		int i =0;
-		for(i=0; i < child.getTable().getColumnCount(); i++){
+		for(i=0; i <= child.getTable().getRowCount(); i++){
+			System.out.println(property + "#-#" + child.getTable().getValueAt(i, 0));
 			if(property == child.getTable().getValueAt(i, 0))
 				break;
 		}
 		((JTextField)child.getTable().getValueAt(i, 1)).setText(oldValue);
+		System.out.println(property + "after set" + oldValue + "#" + i);
 	}
 
 	public class PropertiesField extends RestrictedTextField {

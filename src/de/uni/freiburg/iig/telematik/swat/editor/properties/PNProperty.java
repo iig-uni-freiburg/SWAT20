@@ -4,33 +4,39 @@ import de.invation.code.toval.graphic.RestrictedTextField.Restriction;
 
 public enum PNProperty {
 	
-	PLACE_LABEL(Restriction.NOT_EMPTY){
-		public String toString() {
-			return "label";
-		}
-	},
-	TRANSITION_LABEL(Restriction.NOT_EMPTY)
-	{
-		public String toString() {
-			return "label";
-		}
-	}, 
-	PLACE_SIZE(Restriction.POSITIVE_INTEGER) {
-		public String toString() {
-			return "size";
-		}
-	}
-	, 
-	TRANSITION_SIZE(Restriction.POSITIVE_INTEGER) {
-		public String toString() {
-			return "size";
-		}
-	}, 
-	ARC_WEIGHT(Restriction.POSITIVE_INTEGER) {
-		public String toString() {
-			return "weight";
-		}
-	};
+	//Place Property Order
+	PLACE_LABEL(Restriction.NOT_EMPTY)						{public String toString() {return 
+	"height"
+																					;}}, 
+	PLACE_SIZE(Restriction.POSITIVE_INTEGER)				{public String toString() {return 
+	"size"
+																					;}}, 
+	PLACE_POSITION_X(Restriction.POSITIVE_INTEGER)			{public String toString() {return 
+	"x"
+																					;}}, 
+	PLACE_POSITION_Y(Restriction.POSITIVE_INTEGER)			{public String toString() {return 
+	"y"
+																					;}}, 
+	//Transition Property Order
+	TRANSITION_LABEL(Restriction.NOT_EMPTY)					{public String toString() {return 
+	"label"
+																					;}}, 
+	TRANSITION_SIZE_X(Restriction.POSITIVE_INTEGER)			{public String toString() {return 
+	"width"
+																					;}}, 
+	TRANSITION_SIZE_Y(Restriction.POSITIVE_INTEGER)			{public String toString() {return 
+	"height"
+																					;}}, 
+	TRANSITION_POSITION_X(Restriction.POSITIVE_INTEGER)		{public String toString() {return 
+	"x"
+																					;}}, 
+	TRANSITION_POSITION_Y(Restriction.POSITIVE_INTEGER)		{public String toString() {return 
+	"y"
+																					;}}, 
+																
+	//Arc Property Order
+	ARC_WEIGHT(Restriction.POSITIVE_INTEGER) 				{public String toString() {return 
+	"weight"																		;}};
 	
 	Restriction restriction = null;
 	
@@ -42,19 +48,5 @@ public enum PNProperty {
 		return restriction;
 	}
 	
-
-//	public enum MyType {
-//		ONE {
-//		    public String toString() {
-//		        return "this is one";
-//		    }
-//		},
-//		 
-//		TWO {
-//		    public String toString() {
-//		        return "this is two";
-//		    }
-//		}
-//		}
 
 }

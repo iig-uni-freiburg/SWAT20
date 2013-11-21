@@ -12,10 +12,18 @@ import javax.swing.TransferHandler;
 import org.w3c.dom.Document;
 
 import com.mxgraph.io.mxCodec;
+import com.mxgraph.shape.mxActorShape;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
+import com.mxgraph.swing.handler.mxCellHandler;
+import com.mxgraph.swing.handler.mxEdgeHandler;
+import com.mxgraph.swing.handler.mxElbowEdgeHandler;
+import com.mxgraph.swing.handler.mxVertexHandler;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
+import com.mxgraph.view.mxEdgeStyle;
+import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
@@ -38,6 +46,48 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	public PNGraph getGraph() {
 		return (PNGraph) super.getGraph();
 	}
+	
+	@Override
+	/**
+	 * 
+	 * @param state
+	 *            Cell state for which a handler should be created.
+	 * @return Returns the handler to be used for the given cell state.
+	 */
+	public mxCellHandler createHandler(mxCellState state)
+	{
+		if (graph.getModel().isVertex(state.getCell()))
+		{
+			if(state.getCell() instanceof PNGraphCell){
+			PNGraphCell cell = (PNGraphCell) state.getCell();
+			switch(cell.getType()){
+			case PLACE:
+				return	new VertexHandler(this, state);
+			case TRANSITION:
+			return	new mxVertexHandler(this, state);
+			default:
+				break;
+			
+			}
+			}
+		}
+		else if (graph.getModel().isEdge(state.getCell()))
+		{
+			mxEdgeStyleFunction style = graph.getView().getEdgeStyle(state,
+					null, null, null);
+
+			if (graph.isLoop(state) || style == mxEdgeStyle.ElbowConnector
+					|| style == mxEdgeStyle.SideToSide
+					|| style == mxEdgeStyle.TopToBottom)
+			{
+				return new mxElbowEdgeHandler(this, state);
+			}
+
+			return new mxEdgeHandler(this, state);
+		}
+
+		return new mxCellHandler(this, state);
+	}
 
 	private void initialize(PNEditor pnEditor){
 		setGridStyle(mxGraphComponent.GRID_STYLE_LINE);
@@ -50,6 +100,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		Document doc = mxUtils.loadDocument(PNEditor.class.getResource("/default-style.xml").toString());
 		codec.decode(doc.getDocumentElement(), graph.getStylesheet());
 		setTransferHandler(new PaletteTransferHandler());
+
 	}
 
 	@Override

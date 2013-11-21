@@ -94,6 +94,8 @@ public abstract class PNProperties {
 		Set<PNProperty> result = new HashSet<PNProperty>();
 		result.add(PNProperty.PLACE_LABEL);
 		result.add(PNProperty.PLACE_SIZE);
+		result.add(PNProperty.PLACE_POSITION_X);
+		result.add(PNProperty.PLACE_POSITION_Y);
 		return result;
 	}
 	
@@ -117,6 +119,10 @@ public abstract class PNProperties {
 			return getPlaceLabel(name);
 		case PLACE_SIZE:
 			return getPlaceSize(name).toString();
+		case PLACE_POSITION_X:
+			return getPlacePositionX(name).toString();
+		case PLACE_POSITION_Y:
+			return getPlacePositionY(name).toString();
 		}
 		return null;
 	}
@@ -140,12 +146,19 @@ public abstract class PNProperties {
 	 */
 	@SuppressWarnings("incomplete-switch")
 	protected boolean setPlaceProperty(Object sender, String name, PNProperty property, String value) throws ParameterException{
+		System.out.println(property + "#placeprop");
 		switch(property){
 		case PLACE_LABEL:
 			setPlaceLabel(sender, name, value);
 			return true;
 		case PLACE_SIZE:
 			setPlaceSize(sender, name, value);
+			return true;
+		case PLACE_POSITION_X:
+			setPlacePositionX(sender, name, value);
+			return true;
+		case PLACE_POSITION_Y:
+			setPlacePositionY(sender, name, value);
 			return true;
 		}
 		return false;
@@ -198,6 +211,32 @@ public abstract class PNProperties {
 	}
 	
 	/**
+	 * Returns the size of a place.
+	 * @param placeName The name of the place whose size is requested.
+	 * @return The size of the place with the given name.
+	 * @throws ParameterException If the given place name is <code>null</code> or the net does not contain a place with the given name.
+	 */
+	public Integer getPlacePositionX(String placeName) throws ParameterException{
+		Validate.notNull(placeName);
+		if(!getNetContainer().getPetriNet().containsPlace(placeName))
+			throw new ParameterException("Unknown Place");
+		return (int) getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getPosition().getX();
+	}
+	
+	/**
+	 * Returns the size of a place.
+	 * @param placeName The name of the place whose size is requested.
+	 * @return The size of the place with the given name.
+	 * @throws ParameterException If the given place name is <code>null</code> or the net does not contain a place with the given name.
+	 */
+	public Integer getPlacePositionY(String placeName) throws ParameterException{
+		Validate.notNull(placeName);
+		if(!getNetContainer().getPetriNet().containsPlace(placeName))
+			throw new ParameterException("Unknown Place");
+		return (int) getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getPosition().getY();
+	}
+	
+	/**
 	 * Sets the size of a place.<br>
 	 * This method notifies all listeners about the label change.<br>
 	 * Note: The sender of the change request is not notified!
@@ -230,7 +269,82 @@ public abstract class PNProperties {
 		
 		Integer oldSize = (int) getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getDimension().getX();
 		getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getDimension().setX(size);
+		getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getDimension().setY(size);
 		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.PLACE, placeName, PNProperty.PLACE_SIZE, oldSize , size);
+		changeSupport.fireChangeEvent(this, event);
+	}
+	
+	/**
+	 * Sets the size of a place.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param placeName The name of the place whose size is changed.
+	 * @param size The new size for the place.
+	 * @throws ParameterException If the given place size is invalid or the net does not contain a place with the given name.
+	 * @see {@link #setPlaceSize(Object, String, Integer)}
+	 */
+	public void setPlacePositionX(Object sender, String placeName, String size) throws ParameterException{
+		Validate.positiveInteger(size);
+		setPlacePositionX(sender, placeName, Integer.parseInt(size));
+	}
+	
+	/**
+	 * Sets the size of a place.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param placeName The name of the place whose size is changed.
+	 * @param position The new size for the place.
+	 * @throws ParameterException If the given place size is invalid or the net does not contain a place with the given name.
+	 */
+	public void setPlacePositionX(Object sender, String placeName, Integer position) throws ParameterException{
+		Validate.notNull(placeName);
+		Validate.notNull(position);
+		Validate.bigger(position, 0);
+		if(!getNetContainer().getPetriNet().containsPlace(placeName))
+			throw new ParameterException("Unknown Place");
+		
+		Integer oldSize = (int) getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getPosition().getX();
+		getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getPosition().setX(position);
+		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.PLACE, placeName, PNProperty.PLACE_POSITION_X, oldSize , position);
+		changeSupport.fireChangeEvent(this, event);
+	}
+	
+	/**
+	 * Sets the size of a place.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param placeName The name of the place whose size is changed.
+	 * @param size The new size for the place.
+	 * @throws ParameterException If the given place size is invalid or the net does not contain a place with the given name.
+	 * @see {@link #setPlaceSize(Object, String, Integer)}
+	 */
+	public void setPlacePositionY(Object sender, String placeName, String size) throws ParameterException{
+		Validate.positiveInteger(size);
+		setPlacePositionY(sender, placeName, Integer.parseInt(size));
+	}
+	
+	/**
+	 * Sets the size of a place.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param placeName The name of the place whose size is changed.
+	 * @param position The new size for the place.
+	 * @throws ParameterException If the given place size is invalid or the net does not contain a place with the given name.
+	 */
+	public void setPlacePositionY(Object sender, String placeName, Integer position) throws ParameterException{
+		Validate.notNull(placeName);
+		Validate.notNull(position);
+		Validate.bigger(position, 0);
+		if(!getNetContainer().getPetriNet().containsPlace(placeName))
+			throw new ParameterException("Unknown Place");
+		
+		Integer oldSize = (int) getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getPosition().getY();
+		getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getPosition().setY(position);
+		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.PLACE, placeName, PNProperty.PLACE_POSITION_Y, oldSize , position);
 		changeSupport.fireChangeEvent(this, event);
 	}
 	
@@ -261,7 +375,10 @@ public abstract class PNProperties {
 	public Set<PNProperty> getTransitionProperties(){
 		Set<PNProperty> result = new HashSet<PNProperty>();
 		result.add(PNProperty.TRANSITION_LABEL);
-		result.add(PNProperty.TRANSITION_SIZE);
+		result.add(PNProperty.TRANSITION_SIZE_X);
+		result.add(PNProperty.TRANSITION_SIZE_Y);
+		result.add(PNProperty.TRANSITION_POSITION_X);
+		result.add(PNProperty.TRANSITION_POSITION_Y);
 		return result;
 	}
 	
@@ -282,8 +399,14 @@ public abstract class PNProperties {
 		switch(property){
 		case TRANSITION_LABEL:
 			return getTransitionLabel(name);
-		case TRANSITION_SIZE:
-			return getTransitionSize(name).toString();
+		case TRANSITION_SIZE_X:
+			return getTransitionSizeX(name).toString();
+		case TRANSITION_SIZE_Y:
+			return getTransitionSizeY(name).toString();
+		case TRANSITION_POSITION_X:
+			return getTransitionPositionX(name).toString();
+		case TRANSITION_POSITION_Y:
+			return getTransitionPositionY(name).toString();
 		}
 		return null;
 	}
@@ -311,8 +434,17 @@ public abstract class PNProperties {
 		case TRANSITION_LABEL:
 			setTransitionLabel(sender, name, value);
 			return true;
-		case TRANSITION_SIZE:
-			setTransitionSize(sender, name, value);
+		case TRANSITION_SIZE_X:
+			setTransitionSizeX(sender, name, value);
+			return true;
+		case TRANSITION_SIZE_Y:
+			setTransitionSizeY(sender, name, value);
+			return true;
+		case TRANSITION_POSITION_X:
+			setTransitionPositionX(sender, name, value);
+			return true;
+		case TRANSITION_POSITION_Y:
+			setTransitionPositionY(sender, name, value);
 			return true;
 		}
 		return false;
@@ -357,11 +489,50 @@ public abstract class PNProperties {
 	 * @return The size of the transition with the given name.
 	 * @throws ParameterException If the given transition name is <code>null</code> or the net does not contain a transition with the given name.
 	 */
-	public Integer getTransitionSize(String transitionName) throws ParameterException{
+	public Integer getTransitionSizeX(String transitionName) throws ParameterException{
 		Validate.notNull(transitionName);
 		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
 			throw new ParameterException("Unknown Transition");
 		return (int) getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getDimension().getX();
+	}
+	
+	/**
+	 * Returns the size of a transition.
+	 * @param transitionName The name of the transition whose size is requested.
+	 * @return The size of the transition with the given name.
+	 * @throws ParameterException If the given transition name is <code>null</code> or the net does not contain a transition with the given name.
+	 */
+	public Integer getTransitionSizeY(String transitionName) throws ParameterException{
+		Validate.notNull(transitionName);
+		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
+			throw new ParameterException("Unknown Transition");
+		return (int) getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getDimension().getY();
+	}
+	
+	/**
+	 * Returns the size of a transition.
+	 * @param transitionName The name of the transition whose size is requested.
+	 * @return The size of the transition with the given name.
+	 * @throws ParameterException If the given transition name is <code>null</code> or the net does not contain a transition with the given name.
+	 */
+	public Integer getTransitionPositionX(String transitionName) throws ParameterException{
+		Validate.notNull(transitionName);
+		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
+			throw new ParameterException("Unknown Transition");
+		return (int) getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getPosition().getX();
+	}
+	
+	/**
+	 * Returns the size of a transition.
+	 * @param transitionName The name of the transition whose size is requested.
+	 * @return The size of the transition with the given name.
+	 * @throws ParameterException If the given transition name is <code>null</code> or the net does not contain a transition with the given name.
+	 */
+	public Integer getTransitionPositionY(String transitionName) throws ParameterException{
+		Validate.notNull(transitionName);
+		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
+			throw new ParameterException("Unknown Transition");
+		return (int) getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getPosition().getY();
 	}
 	
 	/**
@@ -374,9 +545,9 @@ public abstract class PNProperties {
 	 * @throws ParameterException If the given transition size is invalid or the net does not contain a transition with the given name.
 	 * @see {@link #setTransitionSize(Object, String, Integer)}
 	 */
-	public void setTransitionSize(Object sender, String transitionName, String size) throws ParameterException{
+	public void setTransitionSizeX(Object sender, String transitionName, String size) throws ParameterException{
 		Validate.positiveInteger(size);
-		setTransitionSize(sender, transitionName, Integer.parseInt(size));
+		setTransitionSizeX(sender, transitionName, Integer.parseInt(size));
 	}
 	
 	/**
@@ -388,7 +559,7 @@ public abstract class PNProperties {
 	 * @param size The new size for the transition.
 	 * @throws ParameterException If the given transition size is invalid or the net does not contain a transition with the given name.
 	 */
-	public void setTransitionSize(Object sender, String transitionName, Integer size) throws ParameterException{
+	public void setTransitionSizeX(Object sender, String transitionName, Integer size) throws ParameterException{
 		Validate.notNull(transitionName);
 		Validate.notNull(size);
 		Validate.bigger(size, 0);
@@ -397,7 +568,118 @@ public abstract class PNProperties {
 		
 		Integer oldSize = (int) getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getDimension().getX();
 		getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getDimension().setX(size);
-		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.TRANSITION, transitionName, PNProperty.TRANSITION_SIZE, oldSize , size);
+		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.TRANSITION, transitionName, PNProperty.TRANSITION_SIZE_X, oldSize , size);
+		changeSupport.fireChangeEvent(this, event);
+	}
+	
+	/**
+	 * Sets the size of a transition.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param transitionName The name of the transition whose size is changed.
+	 * @param size The new size for the transition.
+	 * @throws ParameterException If the given transition size is invalid or the net does not contain a transition with the given name.
+	 * @see {@link #setTransitionSize(Object, String, Integer)}
+	 */
+	public void setTransitionSizeY(Object sender, String transitionName, String size) throws ParameterException{
+		Validate.positiveInteger(size);
+		setTransitionSizeY(sender, transitionName, Integer.parseInt(size));
+	}
+	
+	/**
+	 * Sets the size of a transition.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param transitionName The name of the transition whose size is changed.
+	 * @param size The new size for the transition.
+	 * @throws ParameterException If the given transition size is invalid or the net does not contain a transition with the given name.
+	 */
+	public void setTransitionSizeY(Object sender, String transitionName, Integer size) throws ParameterException{
+		Validate.notNull(transitionName);
+		Validate.notNull(size);
+		Validate.bigger(size, 0);
+		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
+			throw new ParameterException("Unknown Transition");
+		
+		Integer oldSize = (int) getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getDimension().getY();
+		getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getDimension().setY(size);
+		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.TRANSITION, transitionName, PNProperty.TRANSITION_SIZE_Y, oldSize , size);
+		changeSupport.fireChangeEvent(this, event);
+	}
+	
+	/**
+	 * Sets the size of a transition.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param transitionName The name of the transition whose size is changed.
+	 * @param size The new size for the transition.
+	 * @throws ParameterException If the given transition size is invalid or the net does not contain a transition with the given name.
+	 * @see {@link #setTransitionSize(Object, String, Integer)}
+	 */
+	public void setTransitionPositionX(Object sender, String transitionName, String size) throws ParameterException{
+		Validate.positiveInteger(size);
+		setTransitionPositionX(sender, transitionName, Integer.parseInt(size));
+	}
+	
+	/**
+	 * Sets the size of a transition.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param transitionName The name of the transition whose size is changed.
+	 * @param position The new size for the transition.
+	 * @throws ParameterException If the given transition size is invalid or the net does not contain a transition with the given name.
+	 */
+	public void setTransitionPositionX(Object sender, String transitionName, Integer position) throws ParameterException{
+		Validate.notNull(transitionName);
+		Validate.notNull(position);
+		Validate.bigger(position, 0);
+		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
+			throw new ParameterException("Unknown Transition");
+		
+		Integer oldSize = (int) getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getPosition().getX();
+		getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getPosition().setX(position);
+		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.TRANSITION, transitionName, PNProperty.TRANSITION_POSITION_X, oldSize , position);
+		changeSupport.fireChangeEvent(this, event);
+	}
+	
+	/**
+	 * Sets the size of a transition.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param transitionName The name of the transition whose size is changed.
+	 * @param size The new size for the transition.
+	 * @throws ParameterException If the given transition size is invalid or the net does not contain a transition with the given name.
+	 * @see {@link #setTransitionSize(Object, String, Integer)}
+	 */
+	public void setTransitionPositionY(Object sender, String transitionName, String size) throws ParameterException{
+		Validate.positiveInteger(size);
+		setTransitionPositionY(sender, transitionName, Integer.parseInt(size));
+	}
+	
+	/**
+	 * Sets the size of a transition.<br>
+	 * This method notifies all listeners about the label change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting a size change.
+	 * @param transitionName The name of the transition whose size is changed.
+	 * @param position The new size for the transition.
+	 * @throws ParameterException If the given transition size is invalid or the net does not contain a transition with the given name.
+	 */
+	public void setTransitionPositionY(Object sender, String transitionName, Integer position) throws ParameterException{
+		Validate.notNull(transitionName);
+		Validate.notNull(position);
+		Validate.bigger(position, 0);
+		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
+			throw new ParameterException("Unknown Transition");
+		
+		Integer oldSize = (int) getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getPosition().getY();
+		getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(transitionName).getPosition().setY(position);
+		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.TRANSITION, transitionName, PNProperty.TRANSITION_POSITION_Y, oldSize , position);
 		changeSupport.fireChangeEvent(this, event);
 	}
 	

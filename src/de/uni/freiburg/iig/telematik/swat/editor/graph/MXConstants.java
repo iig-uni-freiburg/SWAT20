@@ -4,14 +4,18 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
+import com.mxgraph.view.mxCellState;
+import com.mxgraph.view.mxStylesheet;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Dimension;
@@ -53,33 +57,40 @@ public abstract class MXConstants {
         }
     }
 	
-	public static final String DEFAULT_PLACE_SHAPE = "shape=ellipse;"  +"spacingLeft=0;"+"spacingTop=30;"+ "fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
-	public static final String DEFAULT_TRANSITION_SHAPE = "shape=rectangle;"+"spacingLeft=0;"+"spacingTop=30;"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
+	public static final String DEFAULT_PLACE_SHAPE = "shape=ellipse;" + "fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
+	public static final String DEFAULT_TRANSITION_SHAPE = "shape=rectangle;"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 	public static final String DEFAULT_ARC_SHAPE = "";
-	
-//	public static final String PNPlace = "pnPlace";
-//	public static final String PNPlaceShape = "shape=" + PNPlace + ";"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";"  + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";" + "labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
-//	public static final String PNTransition = "pnTransition";
-//	public static final String PNTransitionShape = "shape=" + PNTransition + ";"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 //	
-	public static final String PlaceNamePrefix = "p";
-	public static final String TransitionNamePrefix = "t";
-	public static final String PNLabelStyle ="shape=none;fontSize=12;fontColor="+ Integer.toHexString(MXConstants.bluelow.getRGB())+ ";";
+//	public static final String PlaceNamePrefix = "p";
+//	public static final String TransitionNamePrefix = "t";
+//	public static final String PNLabelStyle ="shape=none;fontSize=12;fontColor="+ Integer.toHexString(MXConstants.bluelow.getRGB())+ ";";
+//	public static final String SHAPE_CIRCLE = "circle";
 	
-	public static String getStyle(PNComponent type, NodeGraphics nodeGraphics){
-//		getCellStyle(cell).put(mxConstants.STYLE_SPACING_LEFT, -30);
-		//TODO:
-//		if(nodeGraphics == null){
-		if(true){
-			if (type == PNComponent.PLACE)
-				return DEFAULT_PLACE_SHAPE;
-			if (type == PNComponent.TRANSITION)
-				return DEFAULT_TRANSITION_SHAPE;
+	public static String getStyle(PNComponent type, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics){
+		Hashtable<String, Object> style = new Hashtable<String, Object>(){};
+		switch(type){
+		case PLACE:
+			style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
+			break;
+		case TRANSITION:
+			style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+			break;
+
+		
 		}
-		return null;
+		style.put(mxConstants.STYLE_SPACING_LEFT, Double.toString(annotationGraphics.getOffset().getX()));
+		style.put(mxConstants.STYLE_SPACING_TOP, Double.toString(annotationGraphics.getOffset().getY()));
+
+		style.put(mxConstants.STYLE_FILLCOLOR, Integer.toHexString(MXConstants.bluehigh.getRGB()));
+		style.put(mxConstants.STYLE_STROKEWIDTH,2.0);
+		style.put(mxConstants.STYLE_STROKECOLOR, Integer.toHexString(MXConstants.bluelow.getRGB()));
+		style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, Integer.toHexString(MXConstants.blueBG.getRGB()));
+		String convertedStyle = style.toString().replaceAll(", ",";");
+		String shortendStyle = convertedStyle.substring(1, convertedStyle.length()-1);
+		return shortendStyle;
 	}
 	
-	public static String getStyle(ArcGraphics arcGraphics){
+	public static String getStyle(ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics){
 		//TODO: Only line attributes!
 //		if(arcGraphics == null){
 		if(true){
@@ -89,20 +100,20 @@ public abstract class MXConstants {
 	}
 	
 	
-	public static NodeGraphics getNodeGraphics(PNGraphCell cell) throws ParameterException{
-		Position position = new Position(cell.getGeometry().getX(), cell.getGeometry().getY());
-		Dimension dimension = new Dimension(cell.getGeometry().getWidth(), cell.getGeometry().getHeight());
+	public static NodeGraphics getNodeGraphics(mxCellState state) throws ParameterException{
+		Position position = new Position(state.getCenterX(), state.getCenterY());
+		Dimension dimension = new Dimension(state.getWidth(), state.getHeight());
 		Fill fill = new Fill();
-		String fillColor = cell.getAttribute(mxConstants.STYLE_FILLCOLOR);
+		String fillColor = (String) state.getStyle().get(mxConstants.STYLE_FILLCOLOR);
 		if(fillColor != null){
 			fill.setColor(fillColor);
 		}
-		String gradientColor = cell.getAttribute(mxConstants.STYLE_GRADIENTCOLOR);
+		String gradientColor = (String) state.getStyle().get(mxConstants.STYLE_GRADIENTCOLOR);
 		if(gradientColor != null){
 			fill.setGradientColor(gradientColor);
 		}
 		GradientRotation gradientRotation = null;
-		String gradientDirecion = cell.getAttribute(mxConstants.STYLE_GRADIENT_DIRECTION);
+		String gradientDirecion = (String) state.getStyle().get(mxConstants.STYLE_GRADIENT_DIRECTION);
 		if(gradientDirecion != null){
 		if(gradientDirecion.equals(mxConstants.DIRECTION_EAST) || gradientDirecion.equals(mxConstants.DIRECTION_WEST)){
 			gradientRotation = GradientRotation.HORIZONTAL;
@@ -113,7 +124,7 @@ public abstract class MXConstants {
 		if(gradientRotation != null){
 			fill.setGradientRotation(gradientRotation);
 		}
-		String image = cell.getAttribute(mxConstants.STYLE_IMAGE);
+		String image = (String) state.getStyle().get(mxConstants.STYLE_IMAGE);
 		if(image != null){
 			try {
 				fill.setImage(new URI(image));
@@ -122,31 +133,31 @@ public abstract class MXConstants {
 			}
 		}
 		
-		return new NodeGraphics(position, dimension, fill, getLine(cell));
+		return new NodeGraphics(position, dimension, fill, getLine(state));
 	}
 	
-	private static Line getLine(PNGraphCell cell) throws ParameterException{
+	private static Line getLine(mxCellState state) throws ParameterException{
 		Line line = new Line();
 		line.setShape(Line.Shape.LINE);
-		String strokeStyle = cell.getAttribute(mxConstants.STYLE_DASHED);
+		String strokeStyle = (String) state.getStyle().get(mxConstants.STYLE_DASHED);
 		boolean dashed = new Boolean(strokeStyle);
 		if(dashed){
 			line.setStyle(Line.Style.DASH);
 		} else {
 			line.setStyle(Line.Style.SOLID);
 		}
-		String lineWidth = cell.getAttribute(mxConstants.STYLE_STROKEWIDTH);
-		Validate.positiveInteger(lineWidth);
+		String lineWidth = (String) state.getStyle().get(mxConstants.STYLE_STROKEWIDTH);
+//		Validate.positiveInteger(lineWidth);
 		line.setWidth(Double.parseDouble(lineWidth));
 		return line;
 	}
 	
-	public static ArcGraphics getArcGraphics(PNGraphCell cell) throws ParameterException{
-		List<mxPoint> points = cell.getGeometry().getPoints();
+	public static ArcGraphics getArcGraphics(mxCellState state) throws ParameterException{
+		List<mxPoint> points = ((PNGraphCell)state.getCell()).getGeometry().getPoints();
 		Vector<Position> positions = new Vector<Position>();
 		for(mxPoint point: points){
 			positions.add(new Position(point.getX(), point.getY()));
 		}
-		return new ArcGraphics(positions, getLine(cell));
+		return new ArcGraphics(positions, getLine(state));
 	}
 }
