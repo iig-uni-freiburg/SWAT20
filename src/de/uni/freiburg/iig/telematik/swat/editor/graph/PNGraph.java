@@ -689,16 +689,18 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 * Fires a repaint event. The optional region is the rectangle that needs
 	 * to be repainted.
 	 */
-	public void repaint(mxRectangle region)
-	{
+	public void repaint(mxRectangle region) {
 		fireEvent(new mxEventObject(mxEvent.REPAINT, "region", region));
-		Object cell = getSelectionCell();
-		if(cell instanceof PNGraphCell){
-			System.out.println(((PNGraphCell) cell).getGeometry().getOffset());
+		Object[] cells = getSelectionCells();
+		for (Object cell : cells) {
+			if (cell instanceof PNGraphCell) {
+				System.out.println(((PNGraphCell) cell).getGeometry()
+						.getOffset());
+				System.out.println(getModel().getStyle(((PNGraphCell) cell)));
+				System.out.println(((PNGraphCell) cell).getStyle());
+			}
 		}
 	}
-
-
 
 	protected void setOffset(mxCellState state, AnnotationGraphics annotationGraphics)
 	{
