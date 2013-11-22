@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import com.mxgraph.swing.util.mxSwingConstants;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
@@ -67,6 +68,18 @@ public abstract class MXConstants {
 //	public static final String TransitionNamePrefix = "t";
 //	public static final String PNLabelStyle ="shape=none;fontSize=12;fontColor="+ Integer.toHexString(MXConstants.bluelow.getRGB())+ ";";
 //	public static final String SHAPE_CIRCLE = "circle";
+public static final Color SHADOW_COLOR = Color.gray;
+public static final Color DEFAULT_VALID_COLOR = MXConstants.bluehigh;
+public static final Color DEFAULT_INVALID_COLOR = Color.RED;
+public static final Color RUBBERBAND_BORDERCOLOR = new Color(51, 153, 255);
+public static final Color RUBBERBAND_FILLCOLOR = new Color(51, 153, 255, 80);
+public static final Color HANDLE_BORDERCOLOR = Color.black;
+public static final Color HANDLE_FILLCOLOR = MXConstants.bluelow;
+public static final Color LABEL_HANDLE_FILLCOLOR = Color.orange;
+public static final Color LOCKED_HANDLE_FILLCOLOR = MXConstants.bluelow;
+public static final Color CONNECT_HANDLE_FILLCOLOR = MXConstants.bluelow;
+public static final Color EDGE_SELECTION_COLOR = MXConstants.bluelow;
+public static final Color VERTEX_SELECTION_COLOR = MXConstants.bluelow;
 	
 	public static String getStyle(PNComponent type, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics){
 		Hashtable<String, Object> style = new Hashtable<String, Object>(){};

@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
@@ -7,6 +8,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxCellHandler;
 import com.mxgraph.swing.handler.mxVertexHandler;
+import com.mxgraph.swing.util.mxSwingConstants;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxCellState;
@@ -80,5 +82,25 @@ protected void resizeCell(MouseEvent e)
 			graph.resizeCell(cell, new mxRectangle(rect));
 		}
 	}
+}
+
+@Override
+protected Color getHandleFillColor(int index)
+{
+	if (isLabel(index))
+	{
+		return MXConstants.LABEL_HANDLE_FILLCOLOR;
+	}
+
+	return MXConstants.HANDLE_FILLCOLOR;
+}
+
+@Override
+/**
+ * 
+ */
+public Color getSelectionColor()
+{
+	return MXConstants.VERTEX_SELECTION_COLOR;
 }
 }
