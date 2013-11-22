@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import java.util.Vector;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
@@ -187,18 +187,15 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	@SuppressWarnings("rawtypes")
 	protected abstract String getArcConstraint(AbstractFlowRelation relation);
 	
-	@SuppressWarnings("rawtypes")
-	private void addNodeReference(AbstractPNNode pnNode, PNGraphCell cell){
+	@SuppressWarnings("rawtypes") void addNodeReference(AbstractPNNode pnNode, PNGraphCell cell){
 		nodeReferences.put(pnNode, cell);
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private void addArcReference(AbstractFlowRelation pnArc, PNGraphCell cell){
+	@SuppressWarnings("rawtypes") void addArcReference(AbstractFlowRelation pnArc, PNGraphCell cell){
 		arcReferences.put(pnArc, cell);
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private PNGraphCell getCell(AbstractPNNode pnNode){
+	@SuppressWarnings("rawtypes") PNGraphCell getCell(AbstractPNNode pnNode){
 		return nodeReferences.get(pnNode);
 	}
 	
@@ -234,7 +231,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 * @param map 
 	 * @return
 	 */
-	private PNGraphCell createPlaceCell(String name, String label, double posX, double posY, double width, double height, String style) {
+	PNGraphCell createPlaceCell(String name, String label, double posX, double posY, double width, double height, String style) {
 		mxGeometry geometry = new mxGeometry(posX, posY, width, height);
 		geometry.setRelative(false);
 		PNGraphCell vertex = new PNGraphCell(label, geometry, style, PNComponent.PLACE);
@@ -243,6 +240,21 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		vertex.setConnectable(true);
 		return vertex;
 	}
+	
+//	protected void addNewPlace(Point point){
+//		String prefix = MXConstants.PlaceNamePrefix;
+//		Integer index = 0;
+//		while(getNetContainer().getPetriNet().containsPlace(prefix+index)){
+//			index++;
+//		}
+//		String nodeName = prefix+index;
+//		
+//		if(getNetContainer().getPetriNet().addPlace(nodeName)){
+//			AbstractPlace newPlace = 
+//					addNodeReference(newPlace, newCell);
+//			
+//		}
+//	}
 	
 	@SuppressWarnings("rawtypes")
 	public PNGraphCell insertPNTransition(AbstractTransition transition, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics){
@@ -263,7 +275,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 * @param style The transition style.
 	 * @return
 	 */
-	private PNGraphCell createTransitionCell(String name, String label, double posX, double posY, double width, double height, String style) {
+	PNGraphCell createTransitionCell(String name, String label, double posX, double posY, double width, double height, String style) {
 		mxGeometry geometry = new mxGeometry(posX, posY, width, height);
 		geometry.setRelative(false);
 		PNGraphCell vertex = new PNGraphCell(label, geometry, style, PNComponent.TRANSITION);
@@ -282,7 +294,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		return newCell;
 	}
 	
-	private PNGraphCell createArcCell(String name, String label, Collection<Position> positions, String style) {
+	PNGraphCell createArcCell(String name, String label, Collection<Position> positions, String style) {
 		mxGeometry geometry = new mxGeometry();
 		List<mxPoint> points = new ArrayList<mxPoint>();
 		for(Position position: positions){
@@ -589,11 +601,18 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			if (object instanceof PNGraphCell) {
 				PNGraphCell cell = (PNGraphCell) object;
 				mxCellState state = getView().getState(cell);
+				if(state == null)
+					state = getView().getState(cell, true);
 				Offset offset = null;
-				double x = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_LEFT));
-				double y = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_TOP));
+				double x = 0;
+				double y = 0;
+				if(state.getStyle().get(mxConstants.STYLE_SPACING_LEFT) != null){
+				x = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_LEFT));
+				y = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_TOP));
+				}
 				state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX() + x);
 				state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY() + y);
+				
 				switch (cell.getType()) {
 				case PLACE:
 					if (getNetContainer().getPetriNet().containsPlace(cell.getId())) {
@@ -606,12 +625,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 					}
 					break;
 				case ARC:
+					if(netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(((PNGraphCell) cell).getId()) != null)
 					offset = netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
 					break;
 				}
+				if(offset != null){
 				offset.setX(state.getAbsoluteOffset().getX());
 				offset.setY(state.getAbsoluteOffset().getY());
-			}
+			}}
 		}
 	}
 	

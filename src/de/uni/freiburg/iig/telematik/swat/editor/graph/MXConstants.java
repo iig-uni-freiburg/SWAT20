@@ -64,10 +64,10 @@ public abstract class MXConstants {
 	public static final String DEFAULT_TRANSITION_SHAPE = "shape=rectangle;"  +"fillColor="+Integer.toHexString(MXConstants.bluehigh.getRGB())+ ";" + "strokeWidth=2.0;"+ "strokeColor="+Integer.toHexString(MXConstants.bluelow.getRGB())+ ";"+"labelBackgroundColor="+Integer.toHexString(MXConstants.blueBG.getRGB())+";";
 	public static final String DEFAULT_ARC_SHAPE = "";
 //	
-//	public static final String PlaceNamePrefix = "p";
-//	public static final String TransitionNamePrefix = "t";
-//	public static final String PNLabelStyle ="shape=none;fontSize=12;fontColor="+ Integer.toHexString(MXConstants.bluelow.getRGB())+ ";";
-//	public static final String SHAPE_CIRCLE = "circle";
+	public static final String PlaceNamePrefix = "p";
+	public static final String TransitionNamePrefix = "t";
+	public static final String PNLabelStyle ="shape=none;fontSize=12;fontColor="+ Integer.toHexString(MXConstants.bluelow.getRGB())+ ";";
+	public static final String SHAPE_CIRCLE = "circle";
 public static final Color SHADOW_COLOR = Color.gray;
 public static final Color DEFAULT_VALID_COLOR = MXConstants.bluehigh;
 public static final Color DEFAULT_INVALID_COLOR = Color.RED;
@@ -93,9 +93,10 @@ public static final Color VERTEX_SELECTION_COLOR = MXConstants.bluelow;
 
 		
 		}
+		if(annotationGraphics != null){
 		style.put(mxConstants.STYLE_SPACING_LEFT, Double.toString(annotationGraphics.getOffset().getX()));
 		style.put(mxConstants.STYLE_SPACING_TOP, Double.toString(annotationGraphics.getOffset().getY()));
-
+		}
 		style.put(mxConstants.STYLE_FILLCOLOR, Integer.toHexString(MXConstants.bluehigh.getRGB()));
 		style.put(mxConstants.STYLE_STROKEWIDTH,2.0);
 		style.put(mxConstants.STYLE_STROKECOLOR, Integer.toHexString(MXConstants.bluelow.getRGB()));

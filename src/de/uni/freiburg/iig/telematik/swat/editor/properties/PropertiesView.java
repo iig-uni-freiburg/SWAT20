@@ -344,29 +344,29 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-		System.out.println("THE Sender:" + sender);
-		if (sender instanceof JTree) {
-			System.out.println(getSelectionPath());
-		}
-		if (sender instanceof mxGraphSelectionModel) {
-			System.out.println("PropertiesVIEW");
-
-			System.out.println("ROWS:" + getRowCount());
-			for (int i = getRowCount(); i >= 0; i--) {
-				collapseRow(i);
-			}
-			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
-				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
-				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getModel().getRoot(), cell.getId());
-
-				PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
-
-				TreePath propPath = new TreePath(firstChild.getPath());
-				collapsePath(propPath);
-				setSelectionPath(new TreePath(node.getPath()));
-
-			}
-		}
+//		System.out.println("THE Sender:" + sender);
+//		if (sender instanceof JTree) {
+//			System.out.println(getSelectionPath());
+//		}
+//		if (sender instanceof mxGraphSelectionModel) {
+//			System.out.println("PropertiesVIEW");
+//
+//			System.out.println("ROWS:" + getRowCount());
+//			for (int i = getRowCount(); i >= 0; i--) {
+//				collapseRow(i);
+//			}
+//			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
+//				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
+//				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getModel().getRoot(), cell.getId());
+//
+//				PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+//
+//				TreePath propPath = new TreePath(firstChild.getPath());
+//				collapsePath(propPath);
+//				setSelectionPath(new TreePath(node.getPath()));
+//
+//			}
+//		}
 	}
 
 	private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {

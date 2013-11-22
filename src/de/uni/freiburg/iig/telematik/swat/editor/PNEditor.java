@@ -67,8 +67,6 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 	protected mxUndoManager undoManager;
 	protected mxIEventListener undoHandler = new mxIEventListener() {
 		public void invoke(Object source, mxEventObject evt) {
-			// MatrixHolder.createMatrix();
-			// ControlPanel.updateTables();
 			undoManager.undoableEditHappened((mxUndoableEdit) evt.getProperty("edit"));
 		}
 	};
