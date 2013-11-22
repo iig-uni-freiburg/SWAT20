@@ -579,10 +579,13 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		PNGraphCell cell = (PNGraphCell) state.getCell();
 		if(cell.getType() == PNComponent.PLACE){
 			netContainer.getPetriNetGraphics().getPlaceGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
+			netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().put(cell.getId(), MXConstants.getAnnotationGraphics(state));
 		} else if(cell.getType() == PNComponent.TRANSITION){
 			netContainer.getPetriNetGraphics().getTransitionGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
+			netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().put(cell.getId(), MXConstants.getAnnotationGraphics(state));
 		} else if(cell.getType() == PNComponent.ARC){
 			netContainer.getPetriNetGraphics().getArcGraphics().put(cell.getId(), MXConstants.getArcGraphics(state));
+			netContainer.getPetriNetGraphics().getArcAnnotationGraphics().put(cell.getId(), MXConstants.getAnnotationGraphics(state));
 
 		}
 		

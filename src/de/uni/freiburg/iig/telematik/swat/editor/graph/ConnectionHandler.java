@@ -155,10 +155,11 @@ public class ConnectionHandler extends mxConnectionHandler {
 		if (isActive()) {
 			if (error == null && first != null) {
 				PNGraph graph = getGraphComponent().getGraph();
-				mxCellState state = null;
+				PNGraphCell newCell = null;
 				double dx = first.getX() - e.getX();
 				double dy = first.getY() - e.getY();
 
+				mxCellState state;
 				if (connectPreview.isActive() && (marker.hasValidState() || isCreateTarget() || graph.isAllowDanglingEdges())) {
 					graph.getModel().beginUpdate();
 
@@ -206,6 +207,8 @@ public class ConnectionHandler extends mxConnectionHandler {
 							connectPreview.update(e, targetState, e.getX(), e.getY());
 							
 							state = targetState;
+							newCell = (PNGraphCell) vertex;
+						
 						}
 
 						Object cell = connectPreview.stop(graphComponent.isSignificant(dx, dy), e);
@@ -236,6 +239,8 @@ public class ConnectionHandler extends mxConnectionHandler {
 				}
 				
 				try {
+		//creates new state and sets values of PN-Model
+				state  =	getGraphComponent().getGraph().getView().getState(newCell, true);
 					getGraphComponent().getGraph().setGraphics(state);
 				} catch (ParameterException e1) {
 					// TODO Auto-generated catch block
