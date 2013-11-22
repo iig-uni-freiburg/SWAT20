@@ -103,7 +103,7 @@ public abstract class MXConstants {
 	
 	
 	public static NodeGraphics getNodeGraphics(mxCellState state) throws ParameterException{
-		Position position = new Position(state.getCenterX(), state.getCenterY());
+		Position position = new Position(state.getX(), state.getY());
 		Dimension dimension = new Dimension(state.getWidth(), state.getHeight());
 		Fill fill = new Fill();
 		String fillColor = (String) state.getStyle().get(mxConstants.STYLE_FILLCOLOR);

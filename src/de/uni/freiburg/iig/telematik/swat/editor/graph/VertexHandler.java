@@ -12,133 +12,14 @@ import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
+import de.invation.code.toval.validate.Validate;
+
 public class VertexHandler extends mxVertexHandler {
 
 	public VertexHandler(mxGraphComponent graphComponent, mxCellState state) {
 		super(graphComponent, state);
 		// TODO Auto-generated constructor stub
 	}
-	//TODO: Right behaviour when moving labels
-@Override
-/**
- * 
- */
-public void mouseDragged(MouseEvent e)
-{
-	if (!e.isConsumed() && first != null)
-	{
-		gridEnabledEvent = graphComponent.isGridEnabledEvent(e);
-		constrainedEvent = graphComponent.isConstrainedEvent(e);
-
-		double dx = e.getX() - first.x;
-		double dy = e.getY() - first.y;
-		double size = Math.min(dx, dy);
-		dx = size;
-		dy = size;
-		System.out.println("1");
-		if (isLabel(index))
-		{
-			System.out.println("index");
-			mxPoint pt = new mxPoint(e.getPoint());
-
-			if (gridEnabledEvent)
-			{
-				System.out.println("grid");
-				pt = graphComponent.snapScaledPoint(pt);
-			}
-
-			int idx = (int) Math.round(pt.getX() - first.x);
-			int idy = (int) Math.round(pt.getY() - first.y);
-
-			if (constrainedEvent)
-				System.out.println("constr");
-			{
-				if (Math.abs(idx) > Math.abs(idy))
-				{
-					idy = 0;
-				}
-				else
-				{
-					idx = 0;
-				}
-			}
-
-			Rectangle rect = state.getLabelBounds().getRectangle();
-			rect.translate(idx, idy);
-			preview.setBounds(rect);
-		}
-		else
-		{
-			System.out.println("else");
-			mxGraph graph = graphComponent.getGraph();
-			double scale = graph.getView().getScale();
-
-			if (gridEnabledEvent)
-			{
-				dx = graph.snap(dx / scale) * scale;
-				dy = graph.snap(dy / scale) * scale;
-			}
-
-			mxRectangle bounds = union(getState(), dx, dy, index);
-			bounds.setWidth(bounds.getWidth() + 1);
-			bounds.setHeight(bounds.getHeight() + 1);
-			preview.setBounds(bounds.getRectangle());
-		}
-
-		if (!preview.isVisible() && graphComponent.isSignificant(dx, dy))
-		{
-			preview.setVisible(true);
-		}
-
-		e.consume();
-	}
-}
-@Override
-protected void moveLabel(MouseEvent e)
-{
-	mxGraph graph = graphComponent.getGraph();
-	mxGeometry geometry = graph.getModel().getGeometry(state.getCell());
-
-	if (geometry != null)
-	{
-		double scale = graph.getView().getScale();
-		mxPoint pt = new mxPoint(e.getPoint());
-
-		if (gridEnabledEvent)
-		{
-			pt = graphComponent.snapScaledPoint(pt);
-		}
-
-		double dx = (pt.getX() - first.x) / scale;
-		double dy = (pt.getY() - first.y) / scale;
-
-		if (constrainedEvent)
-		{
-			if (Math.abs(dx) > Math.abs(dy))
-			{
-				dy = 0;
-			}
-			else
-			{
-				dx = 0;
-			}
-		}
-
-		mxPoint offset = geometry.getOffset();
-
-		if (offset == null)
-		{
-			offset = new mxPoint();
-		}
-
-		dx += offset.getX();
-		dy += offset.getY();
-
-		geometry = (mxGeometry) geometry.clone();
-		geometry.setOffset(new mxPoint(Math.round(dx), Math.round(dy)));
-		graph.getModel().setGeometry(state.getCell(), geometry);
-	}
-}
 
 @Override
 protected void resizeCell(MouseEvent e)
@@ -153,9 +34,7 @@ protected void resizeCell(MouseEvent e)
 	{
 		double dx = (e.getX() - first.x) / scale;
 		double dy = (e.getY() - first.y) / scale;
-		double size = Math.min(dx, dy);
-		dx = size;
-		dy = size;
+
 		if (isLabel(index))
 		{
 			geometry = (mxGeometry) geometry.clone();
@@ -177,6 +56,13 @@ protected void resizeCell(MouseEvent e)
 		}
 		else
 		{
+			
+			//keeps aspect ratio
+			double size = Math.min(dx, dy);
+			dx = size;
+			dy = size;
+			//
+			
 			mxRectangle bounds = union(geometry, dx, dy, index);
 			Rectangle rect = bounds.getRectangle();
 

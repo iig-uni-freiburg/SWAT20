@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-import org.w3c.dom.Element;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
@@ -73,88 +71,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.properties.addPNPropertiesListener(this);
 		this.properties.getPropertiesView().addTreeSelectionListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
-//		this.addListener(eventName, listener);
-//		this.addListener(mxEvent.CELLS_MOVED, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.ADD, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.ADD, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.CONTINUE										
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.DONE											
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.DOWN											
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.END_UPDATE										
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.EXECUTE										
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.FIRED										
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.FLIP_EDGE										
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.FOLD_CELLS											
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.GROUP_CELLS									
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.INSERT										
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.LABEL_CHANGED										
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.LAYOUT_CELLS											
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.MARK									
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.MOVE_CELLS									
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.NOTIFY											
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.ORDER_CELLS									
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.PAINT											
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.REDO									
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.REMOVE_CELLS										
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.REMOVE_CELLS_FROM_PARENT											
-//		, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.REMOVE_OVERLAY											
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.REPAINT										
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.RESIZE_CELLS										
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.ROOT									
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.SCALE										
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.SCALE_AND_TRANSLATE									
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.SELECT									
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.SPLIT_EDGE										
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.START										
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.START_EDITING								
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.STOP								
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.TOGGLE_CELLS									
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.TRANSLATE									
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.UNDO								
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.UNGROUP_CELLS									
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.UP									
-//				, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.UPDATE_CELL_SIZE									
-//				, this.properties.getPropertiesView());
-		
-		
-		
+
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
 		setCellsEditable(false);
@@ -648,37 +565,13 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 */
 	public void setGraphics(mxCellState state) throws ParameterException {
 		PNGraphCell cell = (PNGraphCell) state.getCell();
-		
-//		getView().validate();
 		if(cell.getType() == PNComponent.PLACE){
 			netContainer.getPetriNetGraphics().getPlaceGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
-//			setOffset(state);
-			setOffset(state, netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()));
-//			getView().updateLabel(state);
-//			getView().validateBounds(state, cell);
-			System.out.println(state.getAbsoluteOffset()+"ha");
-//			state.getAbsoluteOffset()
-//			System.out.println(state.getAbsoluteOffset().getX() + "#" + state.getStyle());
-//			String x = (String) state.getStyle().get(mxConstants.STYLE_SPACING_LEFT);
-//			String y = (String) state.getStyle().get(mxConstants.STYLE_SPACING_TOP);
-//			state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY()
-//netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().getX();
-//			state.getAbsoluteOffset().setX(netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().getX());
-//			state.getAbsoluteOffset().setY(netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().getY());
-//			netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).setOffset(new Offset((int) state.getAbsoluteOffset().getX(), (int) state.getAbsoluteOffset().getY()));
-			
-			netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().setX(state.getAbsoluteOffset().getX());
-			netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().setY(state.getAbsoluteOffset().getY());
-			//TODO: Set annotation graphics
 		} else if(cell.getType() == PNComponent.TRANSITION){
 			netContainer.getPetriNetGraphics().getTransitionGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
-//			netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId()).setOffset(new Offset((int) state.getAbsoluteOffset().getX(), (int) state.getAbsoluteOffset().getY()));
-			//TODO: Set annotation graphics
 		} else if(cell.getType() == PNComponent.ARC){
 			netContainer.getPetriNetGraphics().getArcGraphics().put(cell.getId(), MXConstants.getArcGraphics(state));
-//			netContainer.getPetriNetGraphics().getArcAnnotationGraphics().put(cell.getId(), MXConstants.getAnnotationGraphics(state));
 
-			//TODO: Set annotation graphics
 		}
 		
 	
@@ -686,21 +579,43 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	
 	@Override
 	/**
-	 * Fires a repaint event. The optional region is the rectangle that needs
-	 * to be repainted.
-	 */
+	* Fires a repaint event. The optional region is the rectangle that needs
+	* to be repainted.
+	*/
 	public void repaint(mxRectangle region) {
 		fireEvent(new mxEventObject(mxEvent.REPAINT, "region", region));
 		Object[] cells = getSelectionCells();
-		for (Object cell : cells) {
-			if (cell instanceof PNGraphCell) {
-				System.out.println(((PNGraphCell) cell).getGeometry()
-						.getOffset());
-				System.out.println(getModel().getStyle(((PNGraphCell) cell)));
-				System.out.println(((PNGraphCell) cell).getStyle());
+		for (Object object : cells) {
+			if (object instanceof PNGraphCell) {
+				PNGraphCell cell = (PNGraphCell) object;
+				mxCellState state = getView().getState(cell);
+				Offset offset = null;
+				double x = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_LEFT));
+				double y = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_TOP));
+				state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX() + x);
+				state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY() + y);
+				switch (cell.getType()) {
+				case PLACE:
+					if (getNetContainer().getPetriNet().containsPlace(cell.getId())) {
+						offset = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
+					}
+					break;
+				case TRANSITION:
+					if (getNetContainer().getPetriNet().containsTransition(cell.getId())) {
+						offset = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
+					}
+					break;
+				case ARC:
+					offset = netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
+					break;
+				}
+				offset.setX(state.getAbsoluteOffset().getX());
+				offset.setY(state.getAbsoluteOffset().getY());
 			}
 		}
 	}
+	
+
 
 	protected void setOffset(mxCellState state, AnnotationGraphics annotationGraphics)
 	{
@@ -923,12 +838,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 					case ARC:
 						break;
 					case PLACE:
-						properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getCenterX());
-						properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getCenterY());
+						properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
+						properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());
 						break;
 					case TRANSITION:
-						properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getCenterX());
-						properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getCenterY());
+						properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
+						properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getY());
 						break;
 						
 					}
