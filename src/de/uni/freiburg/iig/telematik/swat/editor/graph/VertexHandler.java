@@ -93,6 +93,52 @@ public void mouseDragged(MouseEvent e)
 		e.consume();
 	}
 }
+@Override
+protected void moveLabel(MouseEvent e)
+{
+	mxGraph graph = graphComponent.getGraph();
+	mxGeometry geometry = graph.getModel().getGeometry(state.getCell());
+
+	if (geometry != null)
+	{
+		double scale = graph.getView().getScale();
+		mxPoint pt = new mxPoint(e.getPoint());
+
+		if (gridEnabledEvent)
+		{
+			pt = graphComponent.snapScaledPoint(pt);
+		}
+
+		double dx = (pt.getX() - first.x) / scale;
+		double dy = (pt.getY() - first.y) / scale;
+
+		if (constrainedEvent)
+		{
+			if (Math.abs(dx) > Math.abs(dy))
+			{
+				dy = 0;
+			}
+			else
+			{
+				dx = 0;
+			}
+		}
+
+		mxPoint offset = geometry.getOffset();
+
+		if (offset == null)
+		{
+			offset = new mxPoint();
+		}
+
+		dx += offset.getX();
+		dy += offset.getY();
+
+		geometry = (mxGeometry) geometry.clone();
+		geometry.setOffset(new mxPoint(Math.round(dx), Math.round(dy)));
+		graph.getModel().setGeometry(state.getCell(), geometry);
+	}
+}
 
 @Override
 protected void resizeCell(MouseEvent e)

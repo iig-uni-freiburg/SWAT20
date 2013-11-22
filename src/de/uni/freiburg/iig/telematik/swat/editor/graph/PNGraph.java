@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +16,8 @@ import java.util.Vector;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+
+import org.w3c.dom.Element;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
@@ -35,6 +38,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
@@ -68,6 +72,87 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.properties.addPNPropertiesListener(this);
 		this.properties.getPropertiesView().addTreeSelectionListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.CELLS_MOVED, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.ADD, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.ADD, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.CONTINUE										
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.DONE											
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.DOWN											
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.END_UPDATE										
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.EXECUTE										
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.FIRED										
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.FLIP_EDGE										
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.FOLD_CELLS											
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.GROUP_CELLS									
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.INSERT										
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.LABEL_CHANGED										
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.LAYOUT_CELLS											
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.MARK									
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.MOVE_CELLS									
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.NOTIFY											
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.ORDER_CELLS									
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.PAINT											
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.REDO									
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.REMOVE_CELLS										
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.REMOVE_CELLS_FROM_PARENT											
+//		, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.REMOVE_OVERLAY											
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.REPAINT										
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.RESIZE_CELLS										
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.ROOT									
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.SCALE										
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.SCALE_AND_TRANSLATE									
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.SELECT									
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.SPLIT_EDGE										
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.START										
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.START_EDITING								
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.STOP								
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.TOGGLE_CELLS									
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.TRANSLATE									
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.UNDO								
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.UNGROUP_CELLS									
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.UP									
+//				, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.UPDATE_CELL_SIZE									
+//				, this.properties.getPropertiesView());
+		
+		
+		
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
 		setCellsEditable(false);
@@ -311,6 +396,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 */
 	public void drawState(mxICanvas canvas, mxCellState state, boolean drawLabel)
 	{
+	
 		Object cell = (state != null) ? state.getCell() : null;
 
 		if (cell != null && cell != view.getCurrentRoot()
@@ -366,7 +452,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 
 				if (label != null && state.getLabelBounds() != null)
 				{
+//					System.out.println("THE LABEL IS DRAWN" + label +"#" + state.getAbsoluteOffset());
 					lab = canvas.drawLabel(label, state, isHtmlLabel(cell));
+//					canvas.
 				}
 			}
 
@@ -382,6 +470,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			if (obj != null)
 			{
 				cellDrawn(canvas, state, obj, lab);
+//				if(state.getCell() instanceof PNGraphCell)
+//					System.out.println("test" + state + "#" + state.getAbsoluteOffset() + "#" +((PNGraphCell)state.getCell()).getType());
 			}
 		}
 	}
@@ -428,6 +518,23 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	public void updateGraphicalInfosFromCells(){
 		for(PNGraphCell cell: nodeReferences.values()){
 			mxCellState state = getView().getState(cell);
+//			AnnotationGraphics annotationGraphics = null;
+//			if (cell.getType() == PNComponent.PLACE) {
+//				annotationGraphics = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
+//			} else if (cell.getType() == PNComponent.TRANSITION) {
+//				annotationGraphics = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
+//			} else if(cell.getType() == PNComponent.ARC){
+//				annotationGraphics = netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(cell.getId());
+//			}
+//			if(annotationGraphics != null){
+////				state.getAbsoluteOffset().setX(annotationGraphics.getOffset().getX());
+////				state.getAbsoluteOffset().setY(annotationGraphics.getOffset().getY());
+////				annotationGraphics.getOffset().setX(state.getAbsoluteOffset().getX());
+////				annotationGraphics.getOffset().setY(state.getAbsoluteOffset().getY());
+////				state.getAbsoluteOffset().setX(annotationGraphics.getOffset().getX());
+////				state.getAbsoluteOffset().setY(annotationGraphics.getOffset().getY());
+////				state.setAbsoluteOffset(new mxPoint(annotationGraphics.getOffset().getX(), annotationGraphics.getOffset().getY()));
+//			}
 			try {
 				setGraphics(state);
 			} catch (ParameterException e) {
@@ -436,10 +543,101 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			}
 		}
 	
-		
+//		public void setLabelPositions(){
+//			for(PNGraphCell cell: nodeReferences.values()){
+//				mxCellState state = getView().getState(cell);
+//				
+//				AnnotationGraphics annotationGraphics = null;
+//				if (cell.getType() == PNComponent.PLACE) {
+//					annotationGraphics = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
+//				} else if (cell.getType() == PNComponent.TRANSITION) {
+//					annotationGraphics = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
+//				} else if(cell.getType() == PNComponent.ARC){
+//					annotationGraphics = netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(cell.getId());
+//				}
+//				if(annotationGraphics != null){
+//					state.setAbsoluteOffset(new mxPoint(annotationGraphics.getOffset().getX(), annotationGraphics.getOffset().getY()));
+//				}
+//
+//			}
+//
+//		}
 
 	}
 	
+//	@Override
+//
+//	/**
+//	 * Called when a cell has been painted as the specified object, typically a
+//	 * DOM node that represents the given cell graphically in a document.
+//	 */
+//	protected void cellDrawn(mxICanvas canvas, mxCellState state,
+//			Object element, Object labelElement)
+//	{
+//		System.out.println("lucky");
+//		if (element instanceof Element)
+//		{
+//System.out.println("1#");
+//			String link = getLinkForCell(state.getCell());
+//
+//			if (link != null)
+//			{
+//				System.out.println("2#");
+//				String title = getToolTipForCell(state.getCell());
+//				Element elem = (Element) element;
+//
+//				if (elem.getNodeName().startsWith("v:"))
+//				{
+//					elem.setAttribute("href", link.toString());
+//
+//					if (title != null)
+//					{
+//						elem.setAttribute("title", title);
+//					}
+//				}
+//				else if (elem.getOwnerDocument().getElementsByTagName("svg")
+//						.getLength() > 0)
+//				{
+//					Element xlink = elem.getOwnerDocument().createElement("a");
+//					xlink.setAttribute("xlink:href", link.toString());
+//
+//					elem.getParentNode().replaceChild(xlink, elem);
+//					xlink.appendChild(elem);
+//
+//					if (title != null)
+//					{
+//						xlink.setAttribute("xlink:title", title);
+//					}
+//
+//					elem = xlink;
+//				}
+//				else
+//				{System.out.println("3#");
+//					Element a = elem.getOwnerDocument().createElement("a");
+//					a.setAttribute("href", link.toString());
+//					a.setAttribute("style", "text-decoration:none;");
+//
+//					elem.getParentNode().replaceChild(a, elem);
+//					a.appendChild(elem);
+//
+//					if (title != null)
+//					{
+//						a.setAttribute("title", title);
+//					}
+//
+//					elem = a;
+//				}
+//
+//				String target = getTargetForCell(state.getCell());
+//
+//				if (target != null)
+//				{
+//					System.out.println("end");
+//					elem.setAttribute("target", target);
+//				}
+//			}
+//		}
+//	}
 	/**
 	 * Sets the annotation graphics of a Petri net place/transition<br>
 	 * according to the properties of the corresponding graph cell.
@@ -448,18 +646,92 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 */
 	public void setGraphics(mxCellState state) throws ParameterException {
 		PNGraphCell cell = (PNGraphCell) state.getCell();
-
+		
+//		getView().validate();
 		if(cell.getType() == PNComponent.PLACE){
 			netContainer.getPetriNetGraphics().getPlaceGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
+//			setOffset(state);
+			setOffset(state, netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()));
+//			getView().updateLabel(state);
+//			getView().validateBounds(state, cell);
+			System.out.println(state.getAbsoluteOffset()+"ha");
+//			state.getAbsoluteOffset()
+//			System.out.println(state.getAbsoluteOffset().getX() + "#" + state.getStyle());
+//			String x = (String) state.getStyle().get(mxConstants.STYLE_SPACING_LEFT);
+//			String y = (String) state.getStyle().get(mxConstants.STYLE_SPACING_TOP);
+//			state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY()
+//netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().getX();
+//			state.getAbsoluteOffset().setX(netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().getX());
+//			state.getAbsoluteOffset().setY(netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().getY());
+//			netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).setOffset(new Offset((int) state.getAbsoluteOffset().getX(), (int) state.getAbsoluteOffset().getY()));
+			
+			netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().setX(state.getAbsoluteOffset().getX());
+			netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId()).getOffset().setY(state.getAbsoluteOffset().getY());
 			//TODO: Set annotation graphics
 		} else if(cell.getType() == PNComponent.TRANSITION){
 			netContainer.getPetriNetGraphics().getTransitionGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
+//			netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId()).setOffset(new Offset((int) state.getAbsoluteOffset().getX(), (int) state.getAbsoluteOffset().getY()));
 			//TODO: Set annotation graphics
 		} else if(cell.getType() == PNComponent.ARC){
 			netContainer.getPetriNetGraphics().getArcGraphics().put(cell.getId(), MXConstants.getArcGraphics(state));
+//			netContainer.getPetriNetGraphics().getArcAnnotationGraphics().put(cell.getId(), MXConstants.getAnnotationGraphics(state));
+
 			//TODO: Set annotation graphics
 		}
+		
+	
 	}
+	
+	protected void setOffset(mxCellState state, AnnotationGraphics annotationGraphics)
+	{
+//		mxGraph graph = graphComponent.getGraph();
+		
+		mxGeometry geometry = getModel().getGeometry(state.getCell());
+
+		if (geometry != null)
+		{
+			double scale = getView().getScale();
+//			mxPoint pt = new mxPoint(e.getPoint());
+
+//			if (gridEnabledEvent)
+//			{
+//				pt = graphComponent.snapScaledPoint(pt);
+//			}
+
+//			double dx = (pt.getX() - first.x) / scale;
+//			double dy = (pt.getY() - first.y) / scale;
+//
+//			if (constrainedEvent)
+//			{
+//				if (Math.abs(dx) > Math.abs(dy))
+//				{
+//					dy = 0;
+//				}
+//				else
+//				{
+//					dx = 0;
+//				}
+//			}
+			double dx = annotationGraphics.getOffset().getX();
+			double dy = annotationGraphics.getOffset().getY();
+
+
+			mxPoint offset = geometry.getOffset();
+
+			if (offset == null)
+			{
+				offset = new mxPoint();
+			}
+
+			dx += offset.getX();
+			dy += offset.getY();
+
+			geometry = (mxGeometry) geometry.clone();
+			geometry.setOffset(new mxPoint(Math.round(dx), Math.round(dy)));
+			getModel().setGeometry(state.getCell(), geometry);
+		}
+	}
+
 	
 	//------- GUI events that represent changes on Petri net components ----------------------------------------
 	
@@ -649,17 +921,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			}
 		}
 	}
-
-
-	@Override
-	public void cellLabelChanged(Object cell, Object value, boolean autoSize) {
-		// TODO Auto-generated method stub
-		super.cellLabelChanged(cell, value, autoSize);
-		System.out.println("label");
-	}
-
-
-	
 
 
 

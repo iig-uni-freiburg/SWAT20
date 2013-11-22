@@ -4,24 +4,26 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
-import com.mxgraph.view.mxStylesheet;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Dimension;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
@@ -135,6 +137,30 @@ public abstract class MXConstants {
 		
 		return new NodeGraphics(position, dimension, fill, getLine(state));
 	}
+	
+	/**
+	 * @param state
+	 * @param n
+	 * @param annotation
+	 * @return 
+	 * @throws ParameterException 
+	 */
+		public static AnnotationGraphics getAnnotationGraphics(mxCellState state) throws ParameterException {
+
+
+		
+				mxPoint offset = state.getAbsoluteOffset();
+				AnnotationGraphics annotation = null;
+
+					annotation = new AnnotationGraphics(new Offset((int) offset.getX(), (int) offset.getY()), new Fill(), new Line(), new Font());
+
+
+return annotation;
+			}
+
+		
+
+	
 	
 	private static Line getLine(mxCellState state) throws ParameterException{
 		Line line = new Line();
