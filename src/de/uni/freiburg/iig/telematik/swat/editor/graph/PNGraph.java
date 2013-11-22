@@ -26,6 +26,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
@@ -72,6 +73,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.properties.addPNPropertiesListener(this);
 		this.properties.getPropertiesView().addTreeSelectionListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
+//		this.addListener(eventName, listener);
 //		this.addListener(mxEvent.CELLS_MOVED, this.properties.getPropertiesView());
 //		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
 //		this.addListener(mxEvent.ADD, this.properties.getPropertiesView());
@@ -682,6 +684,22 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	
 	}
 	
+	@Override
+	/**
+	 * Fires a repaint event. The optional region is the rectangle that needs
+	 * to be repainted.
+	 */
+	public void repaint(mxRectangle region)
+	{
+		fireEvent(new mxEventObject(mxEvent.REPAINT, "region", region));
+		Object cell = getSelectionCell();
+		if(cell instanceof PNGraphCell){
+			System.out.println(((PNGraphCell) cell).getGeometry().getOffset());
+		}
+	}
+
+
+
 	protected void setOffset(mxCellState state, AnnotationGraphics annotationGraphics)
 	{
 //		mxGraph graph = graphComponent.getGraph();
