@@ -635,6 +635,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 				if(offset != null){
 				offset.setX(state.getAbsoluteOffset().getX());
 				offset.setY(state.getAbsoluteOffset().getY());
+				}
+			try {
+				setGraphics(state);
+			} catch (ParameterException e) {
+				System.out.println("Problem while setting state graphics!");
+				e.printStackTrace();
 			}}
 		}
 	}
