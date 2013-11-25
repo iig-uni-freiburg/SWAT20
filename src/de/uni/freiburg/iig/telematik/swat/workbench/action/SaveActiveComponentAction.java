@@ -5,9 +5,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
 public class SaveActiveComponentAction extends AbstractAction {
 
@@ -20,14 +22,31 @@ public class SaveActiveComponentAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
+			SwatComponent component = (SwatComponent) tabView.getComponent(tabView.getSelectedIndex());
+			if (component.getMainComponent() instanceof PNEditor) {
+				savePN((PNEditor) component.getMainComponent());
+			}
+//			SwatComponents.getInstance().storePetriNet(
+//					SwatComponents.getInstance().getNetFromFileName(SwatState.getInstance().getActiveFile()));
+//			// get active component through SwatTabView.getComponent();
+//		} catch (ParameterException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+	}
+	
+
+	private void savePN(PNEditor mainComponent) {
 		try {
-			SwatComponents.getInstance().storePetriNet(
-					SwatComponents.getInstance().getNetFromFileName(SwatState.getInstance().getActiveFile()));
-			// get active component through SwatTabView.getComponent();
+			SwatComponents.getInstance().storePetriNet(mainComponent.getNetContainer());
+			MessageDialog.getInstance().addMessage("Saved Petri Net");
 		} catch (ParameterException e1) {
-			// TODO Auto-generated catch block
+			MessageDialog.getInstance().addMessage("ERROR: Could not save Petri Net");
 			e1.printStackTrace();
 		}
+		
 	}
+
+
 
 }

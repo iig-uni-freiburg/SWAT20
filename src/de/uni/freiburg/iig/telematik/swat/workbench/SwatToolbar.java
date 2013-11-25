@@ -203,9 +203,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		getSwitchworkingDirectoryButton().addActionListener(listener);
 	}
 
-	public void addSaveListener(ActionListener listener) {
-		// TODO: Implement
-	}
 
 	
 	private class SwatToolbarButton extends JButton{
