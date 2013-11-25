@@ -576,6 +576,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 * @throws ParameterException 
 	 */
 	public void setGraphics(mxCellState state) throws ParameterException {
+		System.out.println("hello");
 		PNGraphCell cell = (PNGraphCell) state.getCell();
 		if(cell.getType() == PNComponent.PLACE){
 			netContainer.getPetriNetGraphics().getPlaceGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
@@ -586,7 +587,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		} else if(cell.getType() == PNComponent.ARC){
 			netContainer.getPetriNetGraphics().getArcGraphics().put(cell.getId(), MXConstants.getArcGraphics(state));
 			netContainer.getPetriNetGraphics().getArcAnnotationGraphics().put(cell.getId(), MXConstants.getAnnotationGraphics(state));
-
 		}
 		
 	
