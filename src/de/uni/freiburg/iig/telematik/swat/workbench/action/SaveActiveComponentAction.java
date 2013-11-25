@@ -27,12 +27,6 @@ public class SaveActiveComponentAction extends AbstractAction {
 			if (component.getMainComponent() instanceof PNEditor) {
 				savePN((PNEditor) component.getMainComponent());
 			}
-//			SwatComponents.getInstance().storePetriNet(
-//					SwatComponents.getInstance().getNetFromFileName(SwatState.getInstance().getActiveFile()));
-//			// get active component through SwatTabView.getComponent();
-//		} catch (ParameterException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
 	}
 	
 

@@ -15,15 +15,16 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
+import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
-
 public class SwatComponents {
 	
 	private static SwatComponents instance = null;
 	
 	@SuppressWarnings("rawtypes")
 	private Map<AbstractGraphicalPN, File> nets = new HashMap<AbstractGraphicalPN, File>();
+	private Map<LogFileViewer, File> logs = new HashMap<LogFileViewer, File>();
 	
 	private SwatComponents(){
 		try {
@@ -47,7 +48,7 @@ public class SwatComponents {
 	}
 	
 	private void loadSwatComponents() throws ParameterException {
-		// 3. Load Petri nets
+		// 1. Load Petri nets
 		MessageDialog.getInstance().addMessage("1. Searching for Petri nets:");
 		List<File> pnmlFiles = null;
 		try {
@@ -68,6 +69,25 @@ public class SwatComponents {
 			}
 		}
 		MessageDialog.getInstance().newLine();
+
+		// 2. Load logfiles
+		MessageDialog.getInstance().addMessage("1. Searching for mxml log files:");
+		List<File> mxmlFiles = null;
+		try {
+			mxmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "mxml");
+		} catch (Exception e) {
+			throw new ParameterException("Cannot access working directory.\nReason: " + e.getMessage());
+		}
+		for (File logFile : mxmlFiles) {
+			try {
+				logs.put(new LogFileViewer(logFile), logFile);
+				MessageDialog.getInstance().addMessage("Done.");
+			} catch (IOException e) {
+				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
 	}
 	
 	
@@ -76,6 +96,9 @@ public class SwatComponents {
 		return nets.keySet();
 	}
 	
+	public Set<LogFileViewer> getLogFiles() {
+		return logs.keySet();
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void storePetriNet(AbstractGraphicalPN net) throws ParameterException {
