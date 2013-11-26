@@ -25,10 +25,11 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class Workbench extends JFrame implements SwatTreeViewListener {
+public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener {
 
 	private static final long serialVersionUID = 6109154620023481119L;
 	
@@ -156,6 +157,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener {
 		if(tabView == null){
 			tabView = new SwatTabView();
 			tabView.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
+			tabView.addTabViewListener(this);
 		}
 		return tabView;
 	}
@@ -232,6 +234,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener {
 			getPropertiesPanel().removeAll();
 			getPropertiesPanel().add(swatComponent.getPropertiesView());
 			pack();
+			getPropertiesPanel().repaint();
 			// update currently viewed "file"
 			// SwatState.getInstance().setActiveFile(getPathForSwatComponent(swatComponent));
 		}
@@ -274,6 +277,19 @@ public class Workbench extends JFrame implements SwatTreeViewListener {
 			return null;
 	}
 
+	@Override
+	public void activeTabChanged(int index, SwatComponent component) {
+		// Update Properties Panel
+		getPropertiesPanel().removeAll();
+		getPropertiesPanel().add(component.getPropertiesView());
+		// if (component instanceof LogFileViewer)
+		// getPropertiesPanel().add(component.getPropertiesView());
+		// if (component instanceof PTNetEditor)
+		// getPropertiesPanel().add(((PTNetEditor)
+		// component).getPropertiesView());
+		pack();
+		getPropertiesPanel().repaint();
+	}
 
 
 }

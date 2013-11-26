@@ -2,12 +2,16 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.Component;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -17,13 +21,18 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 
 @SuppressWarnings("serial")
 public class SwatTabView extends JTabbedPane {
 	
 	private Map<Object, Component> openedSwatComponents = new HashMap<Object, Component>();
 
-	public SwatTabView() {}
+	private Set<SwatTabViewListener> listeners = new HashSet<SwatTabViewListener>();
+
+	public SwatTabView() {
+		addChangeListener(new SwatTabViewAdapter());
+	}
 
 	public void componentSelected(SwatTreeNode node) {
 		for(Object openedComponent: openedSwatComponents.keySet()){
@@ -34,6 +43,10 @@ public class SwatTabView extends JTabbedPane {
 		}
 	}
 	
+	public void addTabViewListener(SwatTabViewListener listener) {
+		listeners.add(listener);
+	}
+
 	public boolean containsComponent(SwatTreeNode node){
 		return openedSwatComponents.keySet().contains(node.getUserObject());
 	}
@@ -73,12 +86,20 @@ public class SwatTabView extends JTabbedPane {
 				addPNEditor((AbstractGraphicalPN) node.getUserObject(), node.getDisplayName());
 				break;
 			case LOG_FILE:
-				addTab(((LogFileViewer) node.getUserObject()).getName(), ((LogFileViewer) node.getUserObject()).getMainComponent());
+				addLogFile(node);
+				break;
 
 			}
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	private void addLogFile(SwatTreeNode node) {
+		// addTab(((LogFileViewer) node.getUserObject()).getName(),
+		// ((LogFileViewer) node.getUserObject()).getMainComponent());
+		addTab(node.getDisplayName(), ((LogFileViewer) node.getUserObject()).getMainComponent());
+		setSelectedIndex(getTabCount() - 1);
 	}
 	
 	public void removeAll() {
@@ -86,5 +107,17 @@ public class SwatTabView extends JTabbedPane {
 		openedSwatComponents.clear();
 	}
 	
+	public class SwatTabViewAdapter implements ChangeListener {
+
+		@Override
+		public void stateChanged(ChangeEvent arg0) {
+			for (SwatTabViewListener listener : listeners) {
+				listener.activeTabChanged(((SwatTabView) arg0.getSource()).getSelectedIndex(),
+						(SwatComponent) ((SwatTabView) arg0.getSource()).getSelectedComponent());
+			}
+
+		}
+
+	}
 
 }

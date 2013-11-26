@@ -10,20 +10,20 @@ import javax.swing.JPanel;
 
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
-public class LogFileViewer implements SwatComponent {
+public class LogFileViewer extends JEditorPane implements SwatComponent {
 	private File file = null;
-	JEditorPane editor = null;
 	JComponent properties = null;
 
 	public LogFileViewer(File file) throws IOException {
+		super(file.toURI().toURL());
 		this.file = file;
-		editor = new JEditorPane(file.toURI().toURL());
-		editor.setEditable(false);
+		// editor = new JEditorPane(file.toURI().toURL());
+		setEditable(false);
 	}
 
 	@Override
 	public JComponent getMainComponent() {
-		return editor;
+		return this;
 	}
 
 
