@@ -16,6 +16,7 @@ import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
@@ -106,9 +107,9 @@ public abstract class MXConstants {
 				Font font = annotationGraphics.getFont();
 				style.put(mxConstants.STYLE_ALIGN, font.getAlign());
 				if(font.getFamily() != null)
-//				style.put(mxConstants.STYLE_FONTFAMILY, font.getFamily());
-//				if(font.getSize() != null) //TODO: Not working, except integer
-				style.put(mxConstants.STYLE_FONTSIZE, font.getSize());
+				style.put(mxConstants.STYLE_FONTFAMILY, font.getFamily());
+				if(font.getSize() != null) //TODO: Not working, except integer
+				style.put(mxConstants.STYLE_FONTSIZE, checkCSS(font.getSize()));
 				int fontStyle = 0;
 				if (font.getWeight() != null && font.getWeight().equals("bold"))
 					fontStyle += mxConstants.FONT_BOLD;
@@ -139,6 +140,16 @@ public abstract class MXConstants {
 		String shortendStyle = convertedStyle.substring(1, convertedStyle.length() - 1);
 		System.out.println(shortendStyle);
 		return shortendStyle;
+	}
+
+	private static Object checkCSS(String size) {
+		if(size.equals("medium"))
+			return mxConstants.DEFAULT_FONTSIZE;
+//		if(size.equals("small"))
+//			return mxConstants.DEFAULT_FONTSIZE;...
+		//What else cases with medium
+
+		return size;
 	}
 
 	public static String getStyle(ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) {
