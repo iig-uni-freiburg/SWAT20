@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.properties;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -19,11 +20,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.event.CellEditorListener;
@@ -179,7 +183,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	}
 		
 		
-		JTable table = new JTable(tableModel);
+		final JTable table = new JTable(tableModel);
         TableColumnModel colModel = table.getColumnModel();
         TableColumn col1 = colModel.getColumn(1);
         col1.setCellRenderer(new CustomRenderer());
@@ -188,6 +192,28 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 //        col0.setCellRenderer(new CustomRenderer());
         col0.setCellEditor(new CustomEditor2());
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
+        
+        Object key = table.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .get(KeyStroke.getKeyStroke("ENTER"));
+            final Action action = table.getActionMap().get(key);
+            Action custom = new AbstractAction("wrap") {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                	
+                	//Default behaviour on Enter
+//                    int row = table.getSelectionModel().getLeadSelectionIndex();
+//                    if (row == table.getRowCount() - 1) {
+//                        // do custom stuff
+//                        // return if default shouldn't happen or call default after
+//                        return;
+//                    }
+//                    action.actionPerformed(e);
+                }
+      
+
+            };
+            table.getActionMap().put(key, custom);
 //        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 //        table.addMouseListener(new MouseListener() {
 //			
@@ -561,24 +587,27 @@ class CustomEditor implements TableCellEditor {
 		scrollPane = new JScrollPane(textField);
 	}
 
-	public Component getTableCellEditorComponent(final JTable table, Object value, boolean isSelected, int row, int column) {
+	public Component getTableCellEditorComponent(final JTable table, Object value, boolean isSelected, final int row, int column) {
 
 		if (value instanceof JTextField)
 			textField = (PropertiesField) value;
 		else
 			textField.setText((String) value);
-		
+//		table.clearSelection();
 		textField.addFocusListener(new FocusListener() {
 			
 			@Override
 			public void focusLost(FocusEvent e) {
-				table.clearSelection();
+//				table.clearSelection();
+				System.out.println(row);
+				table.removeRowSelectionInterval(row, row);
 
 			}
 			
 			@Override
 			public void focusGained(FocusEvent e) {
-				
+				System.out.println(row);
+				table.setRowSelectionInterval(row, row);
 				//select whole row
 			}
 		});
