@@ -12,6 +12,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 
 public class SciffAnalyzeAction extends AbstractAction {
 
+	private static final long serialVersionUID = 9111775745565090191L;
 	private File file;
 
 	public SciffAnalyzeAction(File file) {

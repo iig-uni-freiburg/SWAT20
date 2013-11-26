@@ -72,7 +72,7 @@ public class SwatComponents {
 		MessageDialog.getInstance().newLine();
 
 		// 2. Load logfiles
-		MessageDialog.getInstance().addMessage("1. Searching for mxml log files:");
+		MessageDialog.getInstance().addMessage("2. Searching for mxml log files:");
 		List<File> mxmlFiles = null;
 		try {
 			mxmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "mxml");

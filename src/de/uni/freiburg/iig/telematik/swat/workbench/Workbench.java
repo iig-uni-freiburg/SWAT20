@@ -217,7 +217,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	@Override
 	public void componentSelected(SwatTreeNode node) {
 		// Or: Let SwatTabView implement SwatTreeChangeListener and add it to
-		// SwatTreeView.addTreeViewListener
 		getTabView().componentSelected(node);
 	}
 
@@ -235,8 +234,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			getPropertiesPanel().add(swatComponent.getPropertiesView());
 			pack();
 			getPropertiesPanel().repaint();
-			// update currently viewed "file"
-			// SwatState.getInstance().setActiveFile(getPathForSwatComponent(swatComponent));
 		}
 	}
 	
@@ -282,11 +279,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		// Update Properties Panel
 		getPropertiesPanel().removeAll();
 		getPropertiesPanel().add(component.getPropertiesView());
-		// if (component instanceof LogFileViewer)
-		// getPropertiesPanel().add(component.getPropertiesView());
-		// if (component instanceof PTNetEditor)
-		// getPropertiesPanel().add(((PTNetEditor)
-		// component).getPropertiesView());
 		pack();
 		getPropertiesPanel().repaint();
 	}

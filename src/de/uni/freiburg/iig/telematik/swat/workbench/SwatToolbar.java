@@ -258,6 +258,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				// Update Properties and reload SwatComponents.
 				SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
 				SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory);
+				SwatProperties.getInstance().store();
 				SwatComponents.getInstance().reload();
 				// Inform TabView, etc...
 				tabView.removeAll();
