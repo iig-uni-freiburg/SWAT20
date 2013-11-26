@@ -13,6 +13,7 @@ import java.util.Vector;
 import com.mxgraph.swing.util.mxSwingConstants;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.validate.ParameterException;
@@ -97,57 +98,94 @@ public abstract class MXConstants {
 			break;
 
 		}
+		if (nodeGraphics != null) {
+			Fill fill = nodeGraphics.getFill();
+			if (fill.getColor() != null)
+				style.put(mxConstants.STYLE_FILLCOLOR, fill.getColor());
+
+			// Diagonal direction Missing
+			if (fill.getGradientRotation() != null) {
+				style.put(mxConstants.STYLE_GRADIENTCOLOR, fill.getGradientColor());
+				if (fill.getGradientRotation().equals(GradientRotation.HORIZONTAL)) {
+					style.put(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_EAST);
+				} else if (fill.getGradientRotation().equals(GradientRotation.VERTICAL)) {
+					style.put(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_SOUTH);
+				}
+			}
+			if (fill.getImage() != null)
+				style.put(mxConstants.STYLE_IMAGE, fill.getImage());
+
+			Line line = nodeGraphics.getLine();
+			if (line.getColor() != null)
+				style.put(mxConstants.STYLE_STROKECOLOR, line.getColor());
+			style.put(mxConstants.STYLE_STROKEWIDTH, line.getWidth());
+			// Dotted Style Missing
+			if (line.getStyle() != null) {
+				if (line.getStyle().equals(Line.Style.DASH))
+					style.put(mxConstants.STYLE_DASHED, "true");
+				if (line.getStyle().equals(Line.Style.SOLID))
+					style.put(mxConstants.STYLE_DASHED, "false");
+			}
+
+		} else {
+			style.put(mxConstants.STYLE_FILLCOLOR, Integer.toHexString(MXConstants.bluehigh.getRGB()));
+			style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
+			style.put(mxConstants.STYLE_STROKECOLOR, Integer.toHexString(MXConstants.bluelow.getRGB()));
+		}
+
 		if (annotationGraphics != null) {
 			style.put(mxConstants.STYLE_SPACING_LEFT, Double.toString(annotationGraphics.getOffset().getX()));
 			style.put(mxConstants.STYLE_SPACING_TOP, Double.toString(annotationGraphics.getOffset().getY()));
-			if(annotationGraphics.getFill() != null)
-			style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, annotationGraphics.getFill());
-			
-			if(annotationGraphics.getFont() != null){
-				Font font = annotationGraphics.getFont();
-				style.put(mxConstants.STYLE_ALIGN, font.getAlign());
-				if(font.getFamily() != null)
-				style.put(mxConstants.STYLE_FONTFAMILY, font.getFamily());
-				if(font.getSize() != null) //TODO: Not working, except integer
-				style.put(mxConstants.STYLE_FONTSIZE, checkCSS(font.getSize()));
-				int fontStyle = 0;
-				if (font.getWeight() != null && font.getWeight().equals("bold"))
-					fontStyle += mxConstants.FONT_BOLD;
-				if (font.getStyle() != null && font.getStyle().equals("italic"))
-					fontStyle += mxConstants.FONT_ITALIC;
-				if (font.getDecoration() != null && font.getDecoration().equals(Decoration.UNDERLINE))
-					fontStyle += mxConstants.FONT_UNDERLINE;
-				style.put(mxConstants.STYLE_FONTSTYLE, fontStyle);	
-					
-				
-			}
-			
-			if(annotationGraphics.getLine() != null){
-			
+			if (annotationGraphics.getFill() != null)
+
+				if (annotationGraphics.getFont() != null) {
+					Font font = annotationGraphics.getFont();
+					System.out.println(font.getAlign() + "#align");
+					style.put(mxConstants.STYLE_ALIGN, font.getAlign());
+					style.put(mxConstants.STYLE_SHADOW, font.getAlign());
+					if (font.getFamily() != null)
+						style.put(mxConstants.STYLE_FONTFAMILY, font.getFamily());
+					if (font.getSize() != null) // TODO: Not working, except
+												// integer
+						style.put(mxConstants.STYLE_FONTSIZE, getSizeFromCSS(font.getSize()));
+					int fontStyle = 0;
+					if (font.getWeight() != null && font.getWeight().equals("bold"))
+						fontStyle += mxConstants.FONT_BOLD;
+					if (font.getStyle() != null && font.getStyle().equals("italic"))
+						fontStyle += mxConstants.FONT_ITALIC;
+					// if (font.getDecoration() != null &&
+					// font.getDecoration().equals(Decoration.UNDERLINE)) TODO:
+					// Implement Underline not working when set
+					// fontStyle += mxConstants.FONT_UNDERLINE;
+					style.put(mxConstants.STYLE_FONTSTYLE, fontStyle);
+
+				}
+
+			if (annotationGraphics.getLine() != null) {
+
 				Line line = annotationGraphics.getLine();
-				if(line.getColor() != null)
+				if (line.getColor() != null)
 					style.put(mxConstants.STYLE_LABEL_BORDERCOLOR, line.getColor());
 
-			
+			}
+
 		}
-			
-		}
-		style.put(mxConstants.STYLE_FILLCOLOR, Integer.toHexString(MXConstants.bluehigh.getRGB()));
-		style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
-		style.put(mxConstants.STYLE_STROKECOLOR, Integer.toHexString(MXConstants.bluelow.getRGB()));
+
 		style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, Integer.toHexString(MXConstants.blueBG.getRGB()));
+
+		//Maybe there is a mxUtil Method for this TODO:CHECK IF
 		String convertedStyle = style.toString().replaceAll(", ", ";");
 		String shortendStyle = convertedStyle.substring(1, convertedStyle.length() - 1);
-		System.out.println(shortendStyle);
+		
 		return shortendStyle;
 	}
 
-	private static Object checkCSS(String size) {
-		if(size.equals("medium"))
+	private static Object getSizeFromCSS(String size) {
+		if (size.equals("medium"))
 			return mxConstants.DEFAULT_FONTSIZE;
-//		if(size.equals("small"))
-//			return mxConstants.DEFAULT_FONTSIZE;...
-		//What else cases with medium
+		// if(size.equals("small"))
+		// return mxConstants.DEFAULT_FONTSIZE;...
+		// What else cases with medium
 
 		return size;
 	}
@@ -205,65 +243,68 @@ public abstract class MXConstants {
 	 * @throws ParameterException
 	 */
 	public static AnnotationGraphics getAnnotationGraphics(mxCellState state) throws ParameterException {
-System.out.println(((PNGraphCell) state.getCell()).getGeometry().getOffset());
-mxPoint offset = new mxPoint();	
-if(((PNGraphCell) state.getCell()).getGeometry().getOffset() != null)
-		offset = state.getAbsoluteOffset();
-else {offset.setX(Double.parseDouble((String) state.getStyle().get(mxConstants.STYLE_SPACING_LEFT)));
-offset.setY(Double.parseDouble((String) state.getStyle().get(mxConstants.STYLE_SPACING_TOP)));
-}
+		mxPoint offset = new mxPoint();
+		if (((PNGraphCell) state.getCell()).getGeometry().getOffset() != null)
+			offset = state.getAbsoluteOffset();
+		else {
+			offset.setX(Double.parseDouble((String) state.getStyle().get(mxConstants.STYLE_SPACING_LEFT)));
+			offset.setY(Double.parseDouble((String) state.getStyle().get(mxConstants.STYLE_SPACING_TOP)));
+		}
 		AnnotationGraphics annotation = null;
-		
 		Fill fill = new Fill();
 		String fillColor = (String) state.getStyle().get(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR);
 		if (fillColor != null) {
 			fill.setColor(fillColor);
 		}
-		
-		
 		Font font = new Font();
 		String alignStr = (String) state.getStyle().get(mxConstants.STYLE_ALIGN);
 		Align align = Align.getAlign(alignStr);
-		font.setAlign(align );
+		font.setAlign(align);
 		String family = (String) state.getStyle().get(mxConstants.STYLE_FONTFAMILY);
 		font.setFamily(family);
-		String size = (String) state.getStyle().get(mxConstants.STYLE_FONTSIZE);;
+		String size = (String) state.getStyle().get(mxConstants.STYLE_FONTSIZE);
 		font.setSize(size);
-//		String color = (String) state.getStyle().get(mxConstants.STYLE_FONTCOLOR);;
-//		font.setColor(size); TODO: Where should font color be set in pnml standard?
-		if(state.getStyle().containsKey(mxConstants.STYLE_FONTSTYLE)){
-		int style = new Integer((String) state.getStyle().get(mxConstants.STYLE_FONTSTYLE));
-		if(style == mxConstants.FONT_BOLD){
-			font.setWeight("bold");
-			font.setStyle("normal");}
-		if(style == mxConstants.FONT_ITALIC){
-			font.setWeight("normal");
-			font.setStyle("italic");
-			}
-		if(style ==  mxConstants.FONT_UNDERLINE){
-			font.setDecoration(Decoration.UNDERLINE);
-			font.setWeight("normal");
-			font.setStyle("normal");
-			}
-		if(style ==  mxConstants.FONT_BOLD +  mxConstants.FONT_ITALIC){
-			font.setWeight("bold");
-			font.setStyle("italic");
-			}
-		if(style ==  mxConstants.FONT_UNDERLINE + mxConstants.FONT_BOLD){
-			font.setDecoration(Decoration.UNDERLINE);
-			font.setWeight("bold");
-			font.setStyle("normal");
-			}
-		
-		if(style ==  mxConstants.FONT_UNDERLINE +  mxConstants.FONT_ITALIC){
-			font.setDecoration(Decoration.UNDERLINE);
-			font.setWeight("normal");
-			font.setStyle("italic");
-			}
-		}
-		//decoration missing: overline and Line-through
+		// TODO: text-rotation?
+		// String color = (String)
+		// state.getStyle().get(mxConstants.STYLE_FONTCOLOR);;
+		// font.setColor(size); TODO: Where should font color be set in pnml standard?
+		if (state.getStyle().containsKey(mxConstants.STYLE_FONTSTYLE)) {
 
-			//Line at the moment expresses same like line in NodeGraphics
+			int style = new Integer((String) state.getStyle().get(mxConstants.STYLE_FONTSTYLE));
+			if (style == mxConstants.FONT_BOLD) {
+				font.setWeight("bold");
+				font.setStyle("normal");
+			}
+			if (style == mxConstants.FONT_ITALIC) {
+				font.setWeight("normal");
+				font.setStyle("italic");
+			}
+			// if (style == mxConstants.FONT_UNDERLINE) {
+			// font.setDecoration(Decoration.UNDERLINE);
+			// font.setWeight("normal");
+			// font.setStyle("normal");
+			// }
+			if (style == mxConstants.FONT_BOLD + mxConstants.FONT_ITALIC) {
+				font.setWeight("bold");
+				font.setStyle("italic");
+			}
+			// if (style == mxConstants.FONT_UNDERLINE + mxConstants.FONT_BOLD)
+			// {
+			// font.setDecoration(Decoration.UNDERLINE);
+			// font.setWeight("bold");
+			// font.setStyle("normal");
+			// }
+
+			// if (style == mxConstants.FONT_UNDERLINE +
+			// mxConstants.FONT_ITALIC) {
+			// font.setDecoration(Decoration.UNDERLINE);
+			// font.setWeight("normal");
+			// font.setStyle("italic");
+			// }
+		}
+		// decoration missing: overline and Line-through
+
+		// Line at the moment expresses same like line in NodeGraphics
 		annotation = new AnnotationGraphics(new Offset((int) offset.getX(), (int) offset.getY()), fill, getLineAnnotation(state), font);
 
 		return annotation;
@@ -271,6 +312,8 @@ offset.setY(Double.parseDouble((String) state.getStyle().get(mxConstants.STYLE_S
 
 	private static Line getLine(mxCellState state) throws ParameterException {
 		Line line = new Line();
+		String color = (String) state.getStyle().get(mxConstants.STYLE_STROKECOLOR);
+		line.setColor(color);
 		line.setShape(Line.Shape.LINE);
 		String strokeStyle = (String) state.getStyle().get(mxConstants.STYLE_DASHED);
 		boolean dashed = new Boolean(strokeStyle);
@@ -284,22 +327,23 @@ offset.setY(Double.parseDouble((String) state.getStyle().get(mxConstants.STYLE_S
 		line.setWidth(Double.parseDouble(lineWidth));
 		return line;
 	}
-	
-	//What means Line in Annotationgraphics?
-	
+
+	// What means Line in Annotationgraphics?
+
 	private static Line getLineAnnotation(mxCellState state) throws ParameterException {
 		Line line = new Line();
 		line.setShape(Line.Shape.LINE);
 		String color;
-		if(state.getStyle().containsKey(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)){
-			color = (String) state.getStyle().get(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR);
-		line.setColor(color);
-		line.setStyle(Line.Style.SOLID);
-		String lineWidth = "1";
-		line.setWidth(Double.parseDouble(lineWidth));
-		return line;}
+		if (state.getStyle().containsKey(mxConstants.STYLE_LABEL_BORDERCOLOR)) {
+			color = (String) state.getStyle().get(mxConstants.STYLE_LABEL_BORDERCOLOR);
+			line.setColor(color);
+			line.setStyle(Line.Style.SOLID);
+			String lineWidth = "1";
+			line.setWidth(Double.parseDouble(lineWidth));
+			return line;
+		}
 		return null;
-		
+
 	}
 
 	public static ArcGraphics getArcGraphics(mxCellState state) throws ParameterException {
