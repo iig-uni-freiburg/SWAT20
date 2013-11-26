@@ -98,7 +98,6 @@ public class PNCellEditor extends DefaultCellEditor {
 					MouseEvent mouseEvent = (MouseEvent) event;
 					Point mouseLocation = mouseEvent.getPoint();
 					Rectangle rectLastSelected = tree.getPathBounds(new TreePath(node.getPath()));
-					System.out.println("jau");
 					return rectContainsPoint(new Point((int) rectLastSelected.getMinX(), (int) rectLastSelected.getMinY()),
 							new Point((int) rectLastSelected.getMaxX(), (int) rectLastSelected.getMaxY()), mouseLocation);
 				case PLACES:

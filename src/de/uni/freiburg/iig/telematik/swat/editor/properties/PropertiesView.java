@@ -1,8 +1,14 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -18,8 +24,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -47,6 +57,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNCellEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
@@ -170,13 +181,126 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		
 		JTable table = new JTable(tableModel);
         TableColumnModel colModel = table.getColumnModel();
-        TableColumn col = colModel.getColumn(1);
-        col.setCellRenderer(new CustomRenderer());
-        col.setCellEditor(new CustomEditor());
+        TableColumn col1 = colModel.getColumn(1);
+        col1.setCellRenderer(new CustomRenderer());
+        col1.setCellEditor(new CustomEditor());
+        TableColumn col0 = colModel.getColumn(0);
+//        col0.setCellRenderer(new CustomRenderer());
+        col0.setCellEditor(new CustomEditor2());
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
+//        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//        table.addMouseListener(new MouseListener() {
+//			
+//			private boolean isOutside;
+//
+//			@Override
+//			public void mouseReleased(MouseEvent arg0) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void mousePressed(MouseEvent event) {
+//				System.out.println("released");
+//				MouseEvent mouseEvent = (MouseEvent) event;
+//				Point mouseLocation = mouseEvent.getPoint();
+//				if(isOutside){
+//					Rectangle rectLastSelected = table.getBounds();
+//				System.out.println(rectContainsPoint(new Point((int) rectLastSelected.getMinX(), (int) rectLastSelected.getMinY()),
+//						new Point((int) rectLastSelected.getMaxX(), (int) rectLastSelected.getMaxY()), mouseLocation));
+//				}
+//				
+//			}
+//			
+//			@Override
+//			public void mouseExited(MouseEvent arg0) {
+//				isOutside = true;
+//System.out.println("exit");				
+//			}
+//			
+//			@Override
+//			public void mouseEntered(MouseEvent event) {
+//				System.out.println("entered");
+//				MouseEvent mouseEvent = (MouseEvent) event;
+//				Point mouseLocation = mouseEvent.getPoint();
+//				if(isOutside){
+//					Rectangle rectLastSelected = table.getBounds();
+//				System.out.println(rectContainsPoint(new Point((int) rectLastSelected.getMinX(), (int) rectLastSelected.getMinY()),
+//						new Point((int) rectLastSelected.getMaxX(), (int) rectLastSelected.getMaxY()), mouseLocation));
+//				}				
+//			}
+//			
+//			@Override
+//			public void mouseClicked(MouseEvent event) {
+//				System.out.println("Mouseclicked");
+//				MouseEvent mouseEvent = (MouseEvent) event;
+//				Point mouseLocation = mouseEvent.getPoint();
+//				if(isOutside){
+//					Rectangle rectLastSelected = table.getBounds();
+//				System.out.println(rectContainsPoint(new Point((int) rectLastSelected.getMinX(), (int) rectLastSelected.getMinY()),
+//						new Point((int) rectLastSelected.getMaxX(), (int) rectLastSelected.getMaxY()), mouseLocation));
+//				}
+//			}
+//		});
+    	table.addFocusListener(new FocusListener() {
+    		
+    		
+
+			private Object gainedSource;
+
+			@Override
+    		public void focusLost(FocusEvent e) {
+				System.out.println("GAIN:" + gainedSource);
+				System.out.println("LOST:" + e.getSource());
+    			if(gainedSource == e.getSource())
+    				System.out.println("SAME");
+    System.out.println("lost" + e.getSource());	
+    
+//    table.getSelectionModel().isSelectionEmpty();
+//    System.out.println((table.getSelectedColumn() == 1));
+
+//    table.clearSelection();
+    		}
+    		
+    		@Override
+    		public void focusGained(FocusEvent e) {
+    			gainedSource = e.getSource();
+    System.out.println("gain");
+
+    		}
+    	});
+
+
+//table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+//	
+//	@Override
+//	public void valueChanged(ListSelectionEvent e) {
+//		System.out.println("TABLE:"+e.getSource());
+//		
+//	}
+//});
+        table.setColumnSelectionAllowed(false);
+        table.setRowSelectionAllowed(true);
+
+//        table.clearSelection();
+		table.setBorder(BorderFactory.createLineBorder(table.getSelectionBackground()));
+		table.setGridColor(table.getSelectionBackground());
         node.add(new PNTreeNode(table, PNTreeNodeType.LEAF));
 				
 		return node;
+	}
+	
+	// Check if cursor location lies in edited field
+	private boolean rectContainsPoint(Point start, Point end, Point point) {
+		return point.equals(max(start, min(end, point)));
+	}
+
+	private Point min(Point p1, Point p2) {
+		return new Point(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y));
+	}
+
+	private Point max(Point p1, Point p2) {
+		return new Point(Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
 	}
 
 	/**
@@ -190,7 +314,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	 * @param newValue
 	 */
 	protected void propertiesFieldValueChanged(PNComponent fieldType, String name, PNProperty property, String oldValue, String newValue) {
-		System.out.println(property + "Propchanged");
 		try {
 			properties.setValue(this, fieldType, name, property, newValue);
 		} catch (ParameterException e1) {
@@ -207,7 +330,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	@Override
 	public void propertyChange(PNPropertyChangeEvent event) {
-		System.out.println(event);
 		if (event.getSource() != this) {
 			switch (event.getFieldType()) {
 			case PLACE:
@@ -225,16 +347,13 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	 * @param oldValue
 	 */
 	protected void setPropertiesFieldValue(String name, PNProperty property, String oldValue) {
-		System.out.println(property + "before set" + oldValue);
 		PNTreeNode child = (PNTreeNode) find((DefaultMutableTreeNode) getModel().getRoot(), name).getFirstChild();
 		int i =0;
 		for(i=0; i <= child.getTable().getRowCount(); i++){
-			System.out.println(property + "#-#" + child.getTable().getValueAt(i, 0));
 			if(property == child.getTable().getValueAt(i, 0))
 				break;
 		}
 		((JTextField)child.getTable().getValueAt(i, 1)).setText(oldValue);
-		System.out.println(property + "after set" + oldValue + "#" + i);
 	}
 
 	public class PropertiesField extends RestrictedTextField {
@@ -256,7 +375,8 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 				public void keyReleased(KeyEvent e) {
 					super.keyReleased(e);
 					if(e.getKeyCode() == KeyEvent.VK_ENTER){
-						stopEditing();						
+						stopEditing();
+						clearSelection();
 					}
 				}
 				
@@ -344,29 +464,25 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-//		System.out.println("THE Sender:" + sender);
-//		if (sender instanceof JTree) {
-//			System.out.println(getSelectionPath());
-//		}
-//		if (sender instanceof mxGraphSelectionModel) {
-//			System.out.println("PropertiesVIEW");
-//
-//			System.out.println("ROWS:" + getRowCount());
-//			for (int i = getRowCount(); i >= 0; i--) {
-//				collapseRow(i);
-//			}
-//			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
-//				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
-//				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getModel().getRoot(), cell.getId());
-//
-//				PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
-//
-//				TreePath propPath = new TreePath(firstChild.getPath());
-//				collapsePath(propPath);
-//				setSelectionPath(new TreePath(node.getPath()));
-//
-//			}
-//		}
+		if (sender instanceof JTree) {
+		}
+		if (sender instanceof mxGraphSelectionModel) {
+
+			for (int i = getRowCount(); i >= 0; i--) {
+				collapseRow(i);
+			}
+			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
+				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
+				DefaultMutableTreeNode node = find((DefaultMutableTreeNode) getModel().getRoot(), cell.getId());
+
+				PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+
+				TreePath propPath = new TreePath(firstChild.getPath());
+				collapsePath(propPath);
+				setSelectionPath(new TreePath(node.getPath()));
+
+			}
+		}
 	}
 
 	private DefaultMutableTreeNode find(DefaultMutableTreeNode root, String s) {
@@ -423,16 +539,15 @@ class CustomRenderer implements TableCellRenderer {
 		textField = new JTextField();
 
 		scrollPane = new JScrollPane(textField);
+		
 	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		table.setBorder(BorderFactory.createLineBorder(table.getSelectionBackground()));
-		table.setGridColor(table.getSelectionBackground());
 
 		if (value instanceof JTextField)
 			textField = (JTextField) value;
 		else
-			textField.setText((String) value);
+			textField.setText((String) value);		
 		return textField;
 	}
 }
@@ -446,13 +561,27 @@ class CustomEditor implements TableCellEditor {
 		scrollPane = new JScrollPane(textField);
 	}
 
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		table.setBorder(BorderFactory.createLineBorder(table.getSelectionBackground()));
-		table.setGridColor(table.getSelectionBackground());
+	public Component getTableCellEditorComponent(final JTable table, Object value, boolean isSelected, int row, int column) {
+
 		if (value instanceof JTextField)
-			textField = (JTextField) value;
+			textField = (PropertiesField) value;
 		else
 			textField.setText((String) value);
+		
+		textField.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				table.clearSelection();
+
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				
+				//select whole row
+			}
+		});
 		return textField;
 	}
 
@@ -467,7 +596,7 @@ class CustomEditor implements TableCellEditor {
 	}
 
 	public boolean isCellEditable(EventObject anEvent) {
-		System.out.println();
+		
 		return true;
 	}
 
@@ -475,12 +604,92 @@ class CustomEditor implements TableCellEditor {
 	}
 
 	public boolean shouldSelectCell(EventObject anEvent) {
-		return true;
+	
+		return false;
 	}
 
 	public boolean stopCellEditing() {
 		return true;
 	}
+
+//	@Override
+//	public boolean isCellEditable(EventObject anEvent) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public void removeCellEditorListener(CellEditorListener l) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public boolean shouldSelectCell(EventObject anEvent) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean stopCellEditing() {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+}
+
+
+class CustomEditor2 implements TableCellEditor {
+
+	@Override
+	public void addCellEditorListener(CellEditorListener l) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cancelCellEditing() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Object getCellEditorValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isCellEditable(EventObject anEvent) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void removeCellEditorListener(CellEditorListener l) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean shouldSelectCell(EventObject anEvent) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean stopCellEditing() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 }
 
 

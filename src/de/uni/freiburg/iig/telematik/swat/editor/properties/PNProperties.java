@@ -146,7 +146,6 @@ public abstract class PNProperties {
 	 */
 	@SuppressWarnings("incomplete-switch")
 	protected boolean setPlaceProperty(Object sender, String name, PNProperty property, String value) throws ParameterException{
-		System.out.println(property + "#placeprop");
 		switch(property){
 		case PLACE_LABEL:
 			setPlaceLabel(sender, name, value);

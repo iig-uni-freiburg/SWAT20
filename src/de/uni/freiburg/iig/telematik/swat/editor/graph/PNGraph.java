@@ -576,7 +576,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 * @throws ParameterException 
 	 */
 	public void setGraphics(mxCellState state) throws ParameterException {
-		System.out.println("hello");
 		PNGraphCell cell = (PNGraphCell) state.getCell();
 		if(cell.getType() == PNComponent.PLACE){
 			netContainer.getPetriNetGraphics().getPlaceGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
@@ -761,7 +760,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 
 	@Override
 	public void propertyChange(PNPropertyChangeEvent event) {
-		System.out.println(event.getProperty() + "<----------");
 		if(event.getSource() != this){
 			switch(event.getFieldType()){
 			case PLACE:
@@ -781,7 +779,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	
 	private boolean handlePlacePropertyChange(String name, PNProperty property, Object oldValue, Object newValue) {
 		PNGraphCell placeCell = null;
-		System.out.println(property);
 		for (Entry<AbstractPNNode, PNGraphCell> nr : nodeReferences.entrySet()) {
 			if (nr.getKey().getName() == name) {
 				placeCell = nr.getValue();
@@ -798,7 +795,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			placeCell.getGeometry().setHeight(new Integer((Integer) newValue).doubleValue());
 			return true;
 		case PLACE_POSITION_X:
-			System.out.println("jau");
 			placeCell.getGeometry().setX(new Integer((Integer) newValue).doubleValue());
 			return true;
 		case PLACE_POSITION_Y:
