@@ -44,7 +44,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private static final String ACTION_COMMAND_EDIT_MODE = "editMode";
 	private static final String ACTION_COMMAND_ANALYSIS_MODE = "analysisMode";
-	private static final int ICON_SIZE = 32;
+	private static int ICON_SIZE = 32;
 	private static final int ICON_SPACING = 5;
 	
 	private JRadioButton rdbtnEdit = null;
@@ -82,6 +82,14 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		} catch (ParameterException e) {
 			// Cannot happen, since this is never null.
 		}
+
+		// try to get ICONSize
+		try {
+			ICON_SIZE = SwatProperties.getInstance().getIconSize();
+		} catch (Exception e) {
+			// Cannot read property. Ignore and stay with default value
+		}
+
 	}
 	
 	private JRadioButton getAnalysisRadioButton(){

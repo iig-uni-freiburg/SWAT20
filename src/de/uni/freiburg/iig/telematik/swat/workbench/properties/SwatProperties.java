@@ -38,6 +38,7 @@ public class SwatProperties extends AbstractProperties{
 			loadDefaultProperties();
 			store();
 		}
+		// get current working dir
 		applicationPath = new File (".").getCanonicalPath();
 	}
 	
@@ -190,7 +191,34 @@ public class SwatProperties extends AbstractProperties{
 		Validate.directory(path);
 	}
 	
+	// ------- Icon
+	// Size-------------------------------------------------------------------
+
+	public int getIconSize() throws PropertyException {
+		String propertyValue = getProperty(SwatProperty.ICON_SIZE);
+		if (propertyValue == null || propertyValue.equals("")) {
+			throw new PropertyException(SwatProperty.PRISM_PATH, propertyValue);
+		}
+		try {
+			int result = Integer.parseInt(propertyValue);
+			if (!(result == 16 || result == 32 || result == 48)) {
+				// throw new PropertyException(SwatProperty.ICON_SIZE, result,
+				// "Invalid value. Must be 16 or 32 or 48");
+				return 32; // default value
+			}
+			return result;
+		} catch (Exception e) {
+			// throw new PropertyException(SwatProperty.PRISM_PATH,
+			// propertyValue);
+			return 32;// default value
+		}
+	}
 	
+	public void setIconSize(int size) throws PropertyException {
+		if (!(size == 16 || size == 32 || size == 48))
+			throw new PropertyException(SwatProperty.ICON_SIZE, size, "Invalid value. Must be 16 or 32 or 48");
+		setProperty(SwatProperty.ICON_SIZE, size);
+	}
 	
 	//------- Default Properties -----------------------------------------------------------
 	
@@ -200,6 +228,7 @@ public class SwatProperties extends AbstractProperties{
 		
 		defaultProperties.setProperty(SwatProperty.REQUIRE_NET_TYPE.toString(), "false");
 		defaultProperties.setProperty(SwatProperty.VERIFY_PNML_SCHEMA.toString(), "false");
+		defaultProperties.setProperty(SwatProperty.ICON_SIZE.toString(), "32");
 		
 		return defaultProperties;
 	}

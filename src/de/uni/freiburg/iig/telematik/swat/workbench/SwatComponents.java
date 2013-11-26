@@ -37,6 +37,7 @@ public class SwatComponents {
 	
 	public void reload() throws ParameterException {
 		nets.clear();
+		logs.clear();
 		loadSwatComponents();
 	}
 

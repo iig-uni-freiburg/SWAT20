@@ -61,7 +61,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		SwatComponents.getInstance();
 		
 		setUpGUI();
-		
+
 		try {
 			SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
 		} catch (ParameterException e) {}
