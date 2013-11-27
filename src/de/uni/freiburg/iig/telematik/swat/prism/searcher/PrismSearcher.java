@@ -114,6 +114,6 @@ public abstract class PrismSearcher {
 //		log.log(Level.INFO, "Found possible Prism Model Checker: " + directory);
 		
 		if (!testFile.canExecute())
-			throw new ParameterException("");
+			throw new ParameterException("Cannot execute prism");
 	}
 }

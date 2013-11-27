@@ -2,10 +2,11 @@ package de.uni.freiburg.iig.telematik.swat.prism;
 
 import java.awt.Window;
 import java.io.File;
+import java.io.IOException;
 
 import de.invation.code.toval.graphic.ConditionalFileChooser;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcher;
+import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcherFactory;
 
 public class PrismPathChooser extends ConditionalFileChooser {
 
@@ -24,8 +25,10 @@ public class PrismPathChooser extends ConditionalFileChooser {
 	@Override
 	protected boolean isValid(File path){
 		try {
-			PrismSearcher.validatePrismPath(path.getAbsolutePath());
+			PrismSearcherFactory.getPrismSearcher().validatePrismPath(path.getAbsolutePath());
 		} catch (ParameterException e) {
+			return false;
+		} catch (IOException e) {
 			return false;
 		}
 		return true;
