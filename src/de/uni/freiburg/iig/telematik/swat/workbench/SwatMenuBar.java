@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.prism.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -38,16 +39,23 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	private static final String ACTION_COMMAND_EDIT_MODE = "editMode";
 	private static final String ACTION_COMMAND_ANALYSIS_MODE = "analysisMode";
 
+	private SwatTabView tabView;
+	private SwatTreeView treeView;
+
 	JRadioButtonMenuItem editModeButton = null;
 	JRadioButtonMenuItem analysisModeButton = null;
 
-	public SwatMenuBar() {
+	public SwatMenuBar(SwatTabView swatTabView, SwatTreeView swatTreeView) {
 		super();
 		try {
 			SwatState.getInstance().addListener(this);
 		} catch (ParameterException e) {
 			// Cannot happen, since this is never null.
 		}
+
+		this.tabView = swatTabView;
+		this.treeView = swatTreeView;
+
 		add(getFileMenu());
 		add(getEditMenu());
 		add(getSettingsMenu());
@@ -58,11 +66,12 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		JMenu fileMenu = new JMenu("File");
 
 		JMenuItem open = new JMenuItem("Switch working directory", UIManager.getIcon("FileView.directoryIcon"));
-		open.setAction(new SwitchWorkingDirectoryAction());
+		open.addActionListener(new SwitchWorkingDirectoryAction(treeView, tabView));
 
 		// TODO: Add appropriate actions.
 		JMenuItem saveAll = getSaveAllEntry();
-		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
+		JMenuItem save = getSaveEntry();
+
 		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(getClass().getResource("../resources/addFile.png")));
 		JMenuItem exit = new JMenuItem("Exit");
 
@@ -73,6 +82,12 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		fileMenu.add(exit);
 
 		return fileMenu;
+	}
+
+	private JMenuItem getSaveEntry() {
+		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
+		save.addActionListener(new SaveActiveComponentAction(tabView));
+		return save;
 	}
 
 	private JMenuItem getSaveAllEntry() {
@@ -153,7 +168,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frame.setJMenuBar(new SwatMenuBar());
+		frame.setJMenuBar(new SwatMenuBar(new SwatTabView(), new SwatTreeView()));
 		frame.pack();
 		frame.setVisible(true);
 	}
