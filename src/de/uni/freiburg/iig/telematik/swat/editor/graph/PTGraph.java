@@ -77,43 +77,43 @@ public class PTGraph extends PNGraph {
 
 	@Override
 	protected void drawAdditionalPlaceGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
-		Rectangle temp = state.getRectangle();
-		PNGraphCell cell = (PNGraphCell) state.getCell();
-		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(
-				cell.getId());
-			Integer k = (Integer) place.getState();
-
-			Double dotNumber = 0.0;
-			int circles = 0;
-			for (circles = 1; dotNumber < (k - 1); circles++) {
-				dotNumber += new Double(((2 * circles) * Math.PI)).intValue();
-			}
-
-			int diameter = Math.min(temp.height, temp.width);
-			diameter *= 0.3;
-			diameter = Math.max(diameter, 6);
-
-			if (circles > 1) {
-				diameter = Math.min(temp.height, temp.width);
-				diameter *= 0.8;
-				diameter /= (((circles - 1) * 2) + 1);
-			}// denominator:all circles in one row => (80% of the available inner CircleSize) / (maximal amount of dots) = size for one dot
-
-			CircularPointGroup circularPointGroup = new CircularPointGroup(1, diameter);
-			Map<String, Color> colors = null;
-				colors = new HashMap<String, Color>();
-				colors.put("black", new Color(0, 0, 0));
-				circularPointGroup.addPoints(PColor.black, k);		
-				Point center = new Point(temp.x + temp.width / 2, temp.y
-						+ temp.height / 2);
-				Object g = null;
-				try {
-				g = drawPoints(canvas, temp, circularPointGroup, center);
-				} catch (ParameterException e) {
-					System.out.println("Tokenposition could not be assigned!");
-
-					e.printStackTrace();
-				}
+//		Rectangle temp = state.getRectangle();
+//		PNGraphCell cell = (PNGraphCell) state.getCell();
+//		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(
+//				cell.getId());
+//			Integer k = (Integer) place.getState();
+//
+//			Double dotNumber = 0.0;
+//			int circles = 0;
+//			for (circles = 1; dotNumber < (k - 1); circles++) {
+//				dotNumber += new Double(((2 * circles) * Math.PI)).intValue();
+//			}
+//
+//			int diameter = Math.min(temp.height, temp.width);
+//			diameter *= 0.3;
+//			diameter = Math.max(diameter, 6);
+//
+//			if (circles > 1) {
+//				diameter = Math.min(temp.height, temp.width);
+//				diameter *= 0.8;
+//				diameter /= (((circles - 1) * 2) + 1);
+//			}// denominator:all circles in one row => (80% of the available inner CircleSize) / (maximal amount of dots) = size for one dot
+//
+//			CircularPointGroup circularPointGroup = new CircularPointGroup(1, diameter);
+//			Map<String, Color> colors = null;
+//				colors = new HashMap<String, Color>();
+//				colors.put("black", new Color(0, 0, 0));
+//				circularPointGroup.addPoints(PColor.black, k);		
+//				Point center = new Point(temp.x + temp.width / 2, temp.y
+//						+ temp.height / 2);
+//				Object g = null;
+//				try {
+//				g = drawPoints(canvas, temp, circularPointGroup, center);
+//				} catch (ParameterException e) {
+//					System.out.println("Tokenposition could not be assigned!");
+//
+//					e.printStackTrace();
+//				}
 		
 	}
 	

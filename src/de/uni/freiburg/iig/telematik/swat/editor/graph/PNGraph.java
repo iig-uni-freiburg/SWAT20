@@ -17,7 +17,6 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxImageCanvas;
@@ -71,6 +70,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.properties.getPropertiesView().addTreeSelectionListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
 		this.addListener(mxEvent.CELLS_ADDED, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.CELLS_MOVED, this.properties.getPropertiesView());
 		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
 		this.addListener(mxEvent.REPAINT, this.properties.getPropertiesView());
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
@@ -114,6 +114,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	protected abstract String getArcConstraint(AbstractFlowRelation relation);
 
 	@SuppressWarnings("rawtypes")
+	public
 	void addNodeReference(AbstractPNNode pnNode, PNGraphCell cell) {
 		nodeReferences.put(pnNode, cell);
 	}
@@ -165,7 +166,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 * @param map
 	 * @return
 	 */
-	PNGraphCell createPlaceCell(String name, String label, double posX, double posY, double width, double height, String style) {
+	public PNGraphCell createPlaceCell(String name, String label, double posX, double posY, double width, double height, String style) {
 		mxGeometry geometry = new mxGeometry(posX, posY, width, height);
 		geometry.setRelative(false);
 		PNGraphCell vertex = new PNGraphCell(label, geometry, style, PNComponent.PLACE);
@@ -217,7 +218,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 *            The transition style.
 	 * @return
 	 */
-	PNGraphCell createTransitionCell(String name, String label, double posX, double posY, double width, double height, String style) {
+	public PNGraphCell createTransitionCell(String name, String label, double posX, double posY, double width, double height, String style) {
 		mxGeometry geometry = new mxGeometry(posX, posY, width, height);
 		geometry.setRelative(false);
 		PNGraphCell vertex = new PNGraphCell(label, geometry, style, PNComponent.TRANSITION);
@@ -273,8 +274,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		if (cell != null && cell != view.getCurrentRoot() && cell != model.getRoot() && (model.isVertex(cell) || model.isEdge(cell))) {
 
 			PNGraphCell customcell;
-
-			Object obj = drawCell((mxGraphics2DCanvas) canvas, state);
+			Object  obj;
+if(canvas instanceof mxImageCanvas)
+	obj = canvas.drawCell(state);
+		else
+		obj = drawCell((mxGraphics2DCanvas) canvas, state);
 
 			Object lab = null;
 
@@ -700,8 +704,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 					case ARC:
 						break;
 					case PLACE:
+						if(getNetContainer().getPetriNet().containsPlace(cell.getId())){
 						properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-						properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());
+						properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());}
 						break;
 					case TRANSITION:
 						properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
@@ -717,6 +722,75 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		}
 	}
 	
+	
+	@Override
+	/**
+	 * Moves or clones the specified cells and moves the cells or clones by the
+	 * given amount, adding them to the optional target cell. The location is
+	 * the position of the mouse pointer as the mouse was released. The change
+	 * is carried out using cellsMoved. This method fires mxEvent.MOVE_CELLS
+	 * while the transaction is in progress.
+	 * 
+	 * @param cells Array of cells to be moved, cloned or added to the target.
+	 * @param dx Integer that specifies the x-coordinate of the vector.
+	 * @param dy Integer that specifies the y-coordinate of the vector.
+	 * @param clone Boolean indicating if the cells should be cloned.
+	 * @param target Cell that represents the new parent of the cells.
+	 * @param location Location where the mouse was released.
+	 * @return Returns the cells that were moved.
+	 */
+	public Object[] moveCells(Object[] cells, double dx, double dy,
+			boolean clone, Object target, Point location)
+	{System.out.println("MOVE");
+		if (cells != null && (dx != 0 || dy != 0 || clone || target != null))
+		{
+			model.beginUpdate();
+			try
+			{
+				if (clone)
+				{
+					System.out.println("MOVE2");
+					cells = cloneCells(cells, isCloneInvalidEdges());
+
+					if (target == null)
+					{
+						target = getDefaultParent();
+					}
+				}
+
+				// Need to disable allowNegativeCoordinates if target not null to
+				// allow for temporary negative numbers until cellsAdded is called.
+				boolean previous = isAllowNegativeCoordinates();
+				
+				if (target != null)
+				{
+					setAllowNegativeCoordinates(true);
+				}
+				
+				cellsMoved(cells, dx, dy, !clone && isDisconnectOnMove()
+						&& isAllowDanglingEdges(), target == null);
+				
+				setAllowNegativeCoordinates(previous);
+
+				if (target != null)
+				{
+					Integer index = model.getChildCount(target);
+					cellsAdded(cells, target, index, null, null, true);
+				}
+System.out.println("fire");
+				fireEvent(new mxEventObject(mxEvent.MOVE_CELLS, "cells", cells,
+						"dx", dx, "dy", dy, "clone", clone, "target", target,
+						"location", location));
+			}
+			finally
+			{
+				model.endUpdate();
+			}
+		}
+
+		return cells;
+	}
+
 	/**
 	 * This method notifies the graph, that some cells have been added.<br>
 	 * Note: Only by copy/pase actions on graph canvas!<br>

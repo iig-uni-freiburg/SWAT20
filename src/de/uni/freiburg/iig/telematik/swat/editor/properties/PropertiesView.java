@@ -356,12 +356,14 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	public void invoke(Object sender, mxEventObject evt) {
 		System.out.println(evt.getName() + "PV");
 		if (evt.getName().equals(mxEvent.CELLS_ADDED)) {
+			System.out.println("Added");
 			Object[] cells = (Object[]) evt.getProperty("cells");
 			for (Object object : cells) {
 				if (object instanceof PNGraphCell) {
 					PNGraphCell cell = (PNGraphCell) object;
 					switch (cell.getType()) {
 					case PLACE:
+						if(properties.getNetContainer().getPetriNet().containsPlace(cell.getId()))
 						treeModel.insertNodeInto(createFields(cell.getId(), PNComponent.PLACE, PNTreeNodeType.PLACE), placesNode, placesNode.getChildCount());
 						break;
 					case TRANSITION:
@@ -374,7 +376,41 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 				}
 			}
 		}
-
+		
+//		if (evt.getName().equals(mxEvent.CELLS_MOVED)) {
+//			Object[] cells = (Object[]) evt.getProperty("cells");
+//			for (Object object : cells) {
+//				if (object instanceof PNGraphCell) {
+//					PNGraphCell cell = (PNGraphCell) object;
+//					try {
+//						switch (cell.getType()) {
+//						case ARC:
+//							break;
+//						case PLACE:
+//							if(properties.getNetContainer().getPetriNet().containsPlace(cell.getId())){
+//							properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
+//							properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());}
+//							break;
+//						case TRANSITION:
+//							properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
+//							properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getY());
+//							break;
+//						}
+//
+//					} catch (ParameterException e) {
+//						System.out.println("Cells could not be moved");
+//						e.printStackTrace();
+//					}
+//					repaint();
+//				}
+//			}
+//	
+//
+//		
+//	}
+		
+		
+		
 		if (evt.getName().equals(mxEvent.CELLS_REMOVED)) {
 			Object[] cells = (Object[]) evt.getProperty("cells");
 			for (Object object : cells) {

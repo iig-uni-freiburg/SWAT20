@@ -37,11 +37,15 @@ public class PalettePanel extends JPanel {
 
     public PalettePanel() {
         setLayout(new GridLayout(getComponentCount(), 1));
+//        PaletteIcon trans = new PaletteIcon(PNComponent.TRANSITION, new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")));
+//        PaletteIcon place = new PaletteIcon(PNComponent.PLACE, new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")));
+//        add(trans);
+//        add(place);
         addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), MXConstants.DEFAULT_TRANSITION_SHAPE, EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), null);
 		addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), MXConstants.DEFAULT_PLACE_SHAPE, EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(), null);
     }
 
-    public void setSelectionEntry(JLabel entry, mxGraphTransferable t) {
+    public void setSelectionEntry(JLabel entry, GraphTransferable t) {
         if (!entry.isEnabled()) {
             return;
         }
@@ -88,7 +92,7 @@ public class PalettePanel extends JPanel {
 
     public void addTemplate(final String name, ImageIcon icon, mxCell cell) {
         mxRectangle bounds = (mxGeometry) cell.getGeometry().clone();
-        final mxGraphTransferable t = new mxGraphTransferable(new Object[]{cell}, bounds);
+        final GraphTransferable t = new GraphTransferable(new Object[]{cell}, bounds);
 
         if (icon != null) {
             if (icon.getIconWidth() > 32 || icon.getIconHeight() > 32) {
@@ -128,6 +132,7 @@ public class PalettePanel extends JPanel {
 
         DragSource dragSource = new DragSource();
         dragSource.createDefaultDragGestureRecognizer(entry, DnDConstants.ACTION_COPY, dragGestureListener);
+
         add(entry);
     }
     

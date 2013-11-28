@@ -77,6 +77,7 @@ public class PaletteIcon extends JLabel implements Transferable, DragSourceListe
 
 	@Override
 	public void dragDropEnd(DragSourceDropEvent dsde) {
+		System.out.println("end");
 		repaint();
 	}
 
