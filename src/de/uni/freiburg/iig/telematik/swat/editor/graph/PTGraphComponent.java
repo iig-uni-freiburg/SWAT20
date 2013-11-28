@@ -53,7 +53,7 @@ public class PTGraphComponent extends PNGraphComponent {
 		
 		if (weight != null) {
 			try {
-				getGraph().getNetContainer().getPetriNet().getFlowRelation(cell.getId()).setConstraint(new Integer(weight));
+				getGraph().getPNProperties().setArcWeight(this, cell.getId(), weight);
 			} catch (ParameterException e2) {
 				JOptionPane.showMessageDialog(PTGraphComponent.this, "Cannot set arc weight.\n Reason: " + e2.getMessage(), "Graph Exception", JOptionPane.ERROR_MESSAGE);
 			}
