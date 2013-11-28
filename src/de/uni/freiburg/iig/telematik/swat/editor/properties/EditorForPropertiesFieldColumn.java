@@ -34,15 +34,12 @@ public class EditorForPropertiesFieldColumn implements TableCellEditor {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				// table.clearSelection();
-				System.out.println(row);
 				table.removeRowSelectionInterval(row, row);
 
 			}
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				System.out.println(row);
 				table.setRowSelectionInterval(row, row);
 				// select whole row
 			}

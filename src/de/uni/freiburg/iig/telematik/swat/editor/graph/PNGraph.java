@@ -315,10 +315,9 @@ if(canvas instanceof mxImageCanvas)
 				String label = state.getLabel();
 
 				if (label != null && state.getLabelBounds() != null) {
-					// System.out.println("THE LABEL IS DRAWN" + label +"#" +
-					// state.getAbsoluteOffset());
+
 					lab = canvas.drawLabel(label, state, isHtmlLabel(cell));
-					// canvas.
+
 				}
 			}
 
@@ -458,7 +457,6 @@ if(canvas instanceof mxImageCanvas)
 					offset.setY(state.getAbsoluteOffset().getY());
 				}
 				try {
-					System.out.println(cell.getId());
 					setGraphics(state);
 				} catch (ParameterException e) {
 					System.out.println("Problem while setting state graphics!");
@@ -553,8 +551,6 @@ if(canvas instanceof mxImageCanvas)
 			placeCell.setValue(newValue);
 			return true;
 		case PLACE_SIZE:
-			System.out.println("SIZE");
-
 			bounds = getView().getState(placeCell).getBoundingBox();
 			bounds.setWidth(new Integer((Integer) newValue).doubleValue());
 			bounds.setHeight(new Integer((Integer) newValue).doubleValue());
@@ -723,73 +719,6 @@ if(canvas instanceof mxImageCanvas)
 	}
 	
 	
-	@Override
-	/**
-	 * Moves or clones the specified cells and moves the cells or clones by the
-	 * given amount, adding them to the optional target cell. The location is
-	 * the position of the mouse pointer as the mouse was released. The change
-	 * is carried out using cellsMoved. This method fires mxEvent.MOVE_CELLS
-	 * while the transaction is in progress.
-	 * 
-	 * @param cells Array of cells to be moved, cloned or added to the target.
-	 * @param dx Integer that specifies the x-coordinate of the vector.
-	 * @param dy Integer that specifies the y-coordinate of the vector.
-	 * @param clone Boolean indicating if the cells should be cloned.
-	 * @param target Cell that represents the new parent of the cells.
-	 * @param location Location where the mouse was released.
-	 * @return Returns the cells that were moved.
-	 */
-	public Object[] moveCells(Object[] cells, double dx, double dy,
-			boolean clone, Object target, Point location)
-	{System.out.println("MOVE");
-		if (cells != null && (dx != 0 || dy != 0 || clone || target != null))
-		{
-			model.beginUpdate();
-			try
-			{
-				if (clone)
-				{
-					System.out.println("MOVE2");
-					cells = cloneCells(cells, isCloneInvalidEdges());
-
-					if (target == null)
-					{
-						target = getDefaultParent();
-					}
-				}
-
-				// Need to disable allowNegativeCoordinates if target not null to
-				// allow for temporary negative numbers until cellsAdded is called.
-				boolean previous = isAllowNegativeCoordinates();
-				
-				if (target != null)
-				{
-					setAllowNegativeCoordinates(true);
-				}
-				
-				cellsMoved(cells, dx, dy, !clone && isDisconnectOnMove()
-						&& isAllowDanglingEdges(), target == null);
-				
-				setAllowNegativeCoordinates(previous);
-
-				if (target != null)
-				{
-					Integer index = model.getChildCount(target);
-					cellsAdded(cells, target, index, null, null, true);
-				}
-System.out.println("fire");
-				fireEvent(new mxEventObject(mxEvent.MOVE_CELLS, "cells", cells,
-						"dx", dx, "dy", dy, "clone", clone, "target", target,
-						"location", location));
-			}
-			finally
-			{
-				model.endUpdate();
-			}
-		}
-
-		return cells;
-	}
 
 	/**
 	 * This method notifies the graph, that some cells have been added.<br>

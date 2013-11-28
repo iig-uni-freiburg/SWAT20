@@ -42,8 +42,8 @@ import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphTransferHandler;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.PaletteIcon;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.PaletteIconDataFlavor;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.NotInUsePaletteIcon;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.NotInUsePaletteIconDataFlavor;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
@@ -135,21 +135,6 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		this.popupMenu = popupMenu;
 	}
 	
-//	@SuppressWarnings("rawtypes") 
-//	public void addExistingPlaceToGraph(AbstractPlace place, NodeGraphics nodeGraphics){
-//		getGraph().insertPNPlace(place, nodeGraphics);
-//	}
-//	
-//	@SuppressWarnings("rawtypes") 
-//	public void addExistingTransitionToGraph(AbstractTransition transition, NodeGraphics nodeGraphics){
-//		getGraph().insertPNTransition(transition, nodeGraphics);
-//	}
-//	
-//	@SuppressWarnings("rawtypes")
-//	public void addExistingRelation(AbstractFlowRelation relation, ArcGraphics arcGraphics){
-//		getGraph().insertPNRelation(relation, getArcConstraint(relation), arcGraphics);
-//	}
-//	
 	
 
 	
@@ -275,7 +260,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	        if (!support.isDrop()) {
 	            return false;
 	        }
-	        return support.isDataFlavorSupported(new PaletteIconDataFlavor());
+	        return support.isDataFlavorSupported(new NotInUsePaletteIconDataFlavor());
 	    }
 
 	    public boolean importData(TransferSupport support) {
@@ -285,9 +270,9 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	        }
 
 	        Transferable transferable = support.getTransferable();
-	        PaletteIcon icon;
+	        NotInUsePaletteIcon icon;
 	        try {
-	        	icon = (PaletteIcon) transferable.getTransferData(new PaletteIconDataFlavor());
+	        	icon = (NotInUsePaletteIcon) transferable.getTransferData(new NotInUsePaletteIconDataFlavor());
 	        } catch (Exception e) {
 	        	return false;
 	        }

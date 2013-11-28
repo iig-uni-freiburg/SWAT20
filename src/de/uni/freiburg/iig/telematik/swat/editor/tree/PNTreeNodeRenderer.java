@@ -110,7 +110,6 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 	 */
 	public void keepSelectionWhileEditing(JTree tree, PNTreeNode node) {
 		DefaultMutableTreeNode child = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		System.out.println("ISCALLED" + child + "TRUE?" + (child != null && child.getParent() == node));
 		if (child != null && child.isLeaf() && child.getParent() == node){
 			selected = true;
 			}

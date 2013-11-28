@@ -5,6 +5,7 @@ import java.awt.datatransfer.Transferable;
 import javax.swing.JComponent;
 
 import com.mxgraph.swing.handler.mxGraphTransferHandler;
+import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxCellState;
@@ -22,8 +23,8 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 
 	@Override
 	/**
-	 * Checks if the mxGraphTransferable data flavour is supported and calls
-	 * importGraphTransferable if possible.
+	 * Checks if the mxmxGraphTransferable data flavour is supported and calls
+	 * importmxGraphTransferable if possible.
 	 */
 	public boolean importData(JComponent c, Transferable t) {
 		boolean result = false;
@@ -38,11 +39,11 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 				if (c instanceof PNGraphComponent) {
 					PNGraphComponent graphComponent = (PNGraphComponent) c;
 
-					if (graphComponent.isEnabled() && t.isDataFlavorSupported(GraphTransferable.dataFlavor)) {
-						GraphTransferable gt = (GraphTransferable) t.getTransferData(GraphTransferable.dataFlavor);
+					if (graphComponent.isEnabled() && t.isDataFlavorSupported(mxGraphTransferable.dataFlavor)) {
+						mxGraphTransferable gt = (mxGraphTransferable) t.getTransferData(mxGraphTransferable.dataFlavor);
 
 						if (gt.getCells() != null) {
-							result = importGraphTransferable(graphComponent, gt);
+							result = importmxGraphTransferable(graphComponent, gt);
 						}
 
 					}
@@ -63,7 +64,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 	/**
 	 * Returns true if the cells have been imported using importCells.
 	 */
-	protected boolean importGraphTransferable(PNGraphComponent graphComponent, GraphTransferable gt) {
+	protected boolean importmxGraphTransferable(PNGraphComponent graphComponent, mxGraphTransferable gt) {
 		boolean result = false;
 
 		try {
@@ -115,7 +116,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 	 * mxGraph.isSplitTarget. Selects and returns the cells that have been
 	 * imported.
 	 */
-	protected Object[] importCells(PNGraphComponent graphComponent, GraphTransferable gt, double dx, double dy) {
+	protected Object[] importCells(PNGraphComponent graphComponent, mxGraphTransferable gt, double dx, double dy) {
 		Object target = getDropTarget(graphComponent, gt);
 		PNGraph graph = graphComponent.getGraph();
 		Object[] cells = gt.getCells();
@@ -126,7 +127,6 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 				cell = (PNGraphCell) object;
 				switch (cell.getType()) {
 				case PLACE:
-					System.out.println("PLACE" + dx + "#" + dy);
 					try {
 						cells = createTargetPlace(graph, dx, dy);
 					} catch (ParameterException e) {

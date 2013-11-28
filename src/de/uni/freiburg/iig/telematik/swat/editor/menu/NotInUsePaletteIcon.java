@@ -20,14 +20,14 @@ import javax.swing.TransferHandler;
 
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
-public class PaletteIcon extends JLabel implements Transferable, DragSourceListener, DragGestureListener{
+public class NotInUsePaletteIcon extends JLabel implements Transferable, DragSourceListener, DragGestureListener{
 
 	private static final long serialVersionUID = 4267632604793586610L;
 	
 	private DragSource dragSource = null;
 	private PNComponent type = null;
 
-	public PaletteIcon(PNComponent type, Icon image) {
+	public NotInUsePaletteIcon(PNComponent type, Icon image) {
 		super(image);
 		this.type = type;
         setTransferHandler(new TransferHandler(){
@@ -35,7 +35,7 @@ public class PaletteIcon extends JLabel implements Transferable, DragSourceListe
 
 			@Override
 			protected Transferable createTransferable(JComponent c) {
-				return PaletteIcon.this;
+				return NotInUsePaletteIcon.this;
 			}
         	
         });
@@ -50,7 +50,7 @@ public class PaletteIcon extends JLabel implements Transferable, DragSourceListe
 
 	@Override
 	public DataFlavor[] getTransferDataFlavors() {
-		return new DataFlavor[]{new PaletteIconDataFlavor()};
+		return new DataFlavor[]{new NotInUsePaletteIconDataFlavor()};
 	}
 
 	@Override
@@ -77,7 +77,6 @@ public class PaletteIcon extends JLabel implements Transferable, DragSourceListe
 
 	@Override
 	public void dragDropEnd(DragSourceDropEvent dsde) {
-		System.out.println("end");
 		repaint();
 	}
 

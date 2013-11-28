@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -316,7 +317,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	@Override
 	public void componentAdded(PNComponent component, String name) {
-		System.out.println("ADDED-Compoment");
 		// try {
 		switch (component) {
 		case PLACE:
@@ -350,20 +350,17 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	
 	
 	
-	//Listens to different Events from the Graph to update the tree
+	//Listens to different Events from the Graph to update the treestructure and selection
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-		System.out.println(evt.getName() + "PV");
 		if (evt.getName().equals(mxEvent.CELLS_ADDED)) {
-			System.out.println("Added");
 			Object[] cells = (Object[]) evt.getProperty("cells");
 			for (Object object : cells) {
 				if (object instanceof PNGraphCell) {
 					PNGraphCell cell = (PNGraphCell) object;
 					switch (cell.getType()) {
 					case PLACE:
-						if(properties.getNetContainer().getPetriNet().containsPlace(cell.getId()))
 						treeModel.insertNodeInto(createFields(cell.getId(), PNComponent.PLACE, PNTreeNodeType.PLACE), placesNode, placesNode.getChildCount());
 						break;
 					case TRANSITION:
@@ -376,38 +373,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 				}
 			}
 		}
-		
-//		if (evt.getName().equals(mxEvent.CELLS_MOVED)) {
-//			Object[] cells = (Object[]) evt.getProperty("cells");
-//			for (Object object : cells) {
-//				if (object instanceof PNGraphCell) {
-//					PNGraphCell cell = (PNGraphCell) object;
-//					try {
-//						switch (cell.getType()) {
-//						case ARC:
-//							break;
-//						case PLACE:
-//							if(properties.getNetContainer().getPetriNet().containsPlace(cell.getId())){
-//							properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-//							properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());}
-//							break;
-//						case TRANSITION:
-//							properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-//							properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getY());
-//							break;
-//						}
-//
-//					} catch (ParameterException e) {
-//						System.out.println("Cells could not be moved");
-//						e.printStackTrace();
-//					}
-//					repaint();
-//				}
-//			}
-//	
-//
-//		
-//	}
 		
 		
 		
@@ -428,21 +393,24 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 		if (sender instanceof JTree) {
 		}
-		if (sender instanceof mxGraphSelectionModel) {
+		
+		if (evt.getName().equals(mxEvent.CHANGE)) {
+			if (sender instanceof mxGraphSelectionModel) {
+				for (int i = getRowCount(); i >= 0; i--) {
+					collapseRow(i);
+				}
 
-			for (int i = getRowCount(); i >= 0; i--) {
-				collapseRow(i);
-			}
-			if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
-				PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
-				DefaultMutableTreeNode node = findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), cell.getId());
+				if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
+					PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
+					DefaultMutableTreeNode node = findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), cell.getId());
 
-				PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+					PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
 
-				TreePath propPath = new TreePath(firstChild.getPath());
-				collapsePath(propPath);
-				setSelectionPath(new TreePath(node.getPath()));
+					TreePath propPath = new TreePath(firstChild.getPath());
+					collapsePath(propPath);
+					setSelectionPath(new TreePath(node.getPath()));
 
+				}
 			}
 		}
 	}

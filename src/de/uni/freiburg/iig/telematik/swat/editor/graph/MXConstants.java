@@ -140,7 +140,6 @@ public abstract class MXConstants {
 
 				if (annotationGraphics.getFont() != null) {
 					Font font = annotationGraphics.getFont();
-					System.out.println(font.getAlign() + "#align");
 					style.put(mxConstants.STYLE_ALIGN, font.getAlign());
 					if (font.getFamily() != null)
 						style.put(mxConstants.STYLE_FONTFAMILY, font.getFamily());
@@ -220,7 +219,6 @@ public abstract class MXConstants {
 
 				if (annotationGraphics.getFont() != null) {
 					Font font = annotationGraphics.getFont();
-					System.out.println(font.getAlign() + "#align");
 					if (font.getAlign() != null)
 						style.put(mxConstants.STYLE_ALIGN, font.getAlign());
 					if (font.getFamily() != null)
