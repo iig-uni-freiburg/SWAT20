@@ -8,4 +8,6 @@ public interface SwatComponent {
 	
 	public JComponent getPropertiesView();
 
+	public String getName();
+
 }

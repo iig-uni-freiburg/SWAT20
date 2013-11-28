@@ -47,10 +47,14 @@ public class SwatTabView extends JTabbedPane {
 		listeners.add(listener);
 	}
 
-	public boolean containsComponent(SwatTreeNode node){
-		return openedSwatComponents.keySet().contains(node.getUserObject());
-	}
+	// public boolean containsComponent(SwatTreeNode node){
+	// return openedSwatComponents.keySet().contains(node.getUserObject());
+	// }
 	
+	public boolean containsComponent(Object swatComponent) {
+		return openedSwatComponents.keySet().contains(swatComponent);
+	}
+
 	private JTextArea getTextArea(String text){
 		JTextArea newArea = new JTextArea(text);
 		newArea.setEditable(false);
@@ -70,10 +74,11 @@ public class SwatTabView extends JTabbedPane {
 		setSelectedIndex(getTabCount()-1);
 	}
 	
-	private void addSwatComponent(SwatComponent swatComponent, String tabName){
-		addTab(tabName, swatComponent.getMainComponent());
-		
-	}
+	// private void addSwatComponent(SwatComponent swatComponent, String
+	// tabName){
+	// addTab(tabName, swatComponent.getMainComponent());
+	//
+	// }
 
 	@SuppressWarnings("rawtypes")
 	public void addNewTab(SwatTreeNode node) {
@@ -93,6 +98,21 @@ public class SwatTabView extends JTabbedPane {
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	public void addNewTab(SwatComponent swatComponent) {
+		// if (swatComponent instanceof PNEditor) {
+		// addTab(((PNEditor) swatComponent).getName(),
+		// swatComponent.getMainComponent());
+		// }
+		// if (swatComponent instanceof LogFileViewer) {
+		// addTab(((LogFileViewer) swatComponent).getName(),
+		// swatComponent.getMainComponent());
+		// }
+		addTab(swatComponent.getName(), swatComponent.getMainComponent());
+		openedSwatComponents.put(swatComponent, getComponentAt(getComponentCount() - 1));
+		setSelectedIndex(getTabCount() - 1);
+
 	}
 
 	private void addLogFile(SwatTreeNode node) {
@@ -119,5 +139,7 @@ public class SwatTabView extends JTabbedPane {
 		}
 
 	}
+
+
 
 }
