@@ -24,6 +24,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 		try {
 			SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
 			System.out.println("Analayze " + file.getCanonicalPath());
+			// TODO: implement system call to sciff
 		} catch (ParameterException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

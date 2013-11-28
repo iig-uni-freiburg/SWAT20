@@ -19,6 +19,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 
+/**
+ * presents view on mxml files. extends {@link JEditorPane}, implements
+ * {@link SwatComponent}
+ **/
 public class LogFileViewer extends JEditorPane implements SwatComponent {
 	private static final long serialVersionUID = 7051631037013916120L;
 	private File file = null;
