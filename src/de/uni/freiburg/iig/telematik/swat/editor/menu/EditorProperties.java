@@ -22,5 +22,14 @@ public class EditorProperties {
 	public int getDefaultTransitionHeight(){
 		return 30;
 	}
+	
+	public int getDefaultVerticalLabelOffset(){
+		return 30;
+	}
+	
+	public int getDefaultHorizontalLabelOffset(){
+		return 0;
+	}
+
 
 }

@@ -30,6 +30,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.D
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 public abstract class MXConstants {
@@ -89,6 +90,9 @@ public abstract class MXConstants {
 	public static String getStyle(PNComponent type, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) {
 		Hashtable<String, Object> style = new Hashtable<String, Object>() {
 		};
+		
+		style.put(mxConstants.STYLE_SPACING_LEFT, EditorProperties.getInstance().getDefaultHorizontalLabelOffset());
+		style.put(mxConstants.STYLE_SPACING_TOP, EditorProperties.getInstance().getDefaultVerticalLabelOffset());
 		switch (type) {
 		case PLACE:
 			style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
@@ -96,8 +100,15 @@ public abstract class MXConstants {
 		case TRANSITION:
 			style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
 			break;
+		case ARC:
+			style.put(mxConstants.STYLE_SPACING_LEFT, 0);
+			style.put(mxConstants.STYLE_SPACING_TOP, 0);
+			break;
+		default:
+			break;
 
 		}
+	
 
 		style.put(mxConstants.STYLE_FILLCOLOR, Integer.toHexString(MXConstants.bluehigh.getRGB()));
 		style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
@@ -132,6 +143,8 @@ public abstract class MXConstants {
 			}
 
 		}
+		
+
 
 		if (annotationGraphics != null) {
 			style.put(mxConstants.STYLE_SPACING_LEFT, Double.toString(annotationGraphics.getOffset().getX()));
