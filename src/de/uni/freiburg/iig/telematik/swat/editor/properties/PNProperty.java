@@ -16,7 +16,11 @@ public enum PNProperty {
 																					;}}, 
 	PLACE_POSITION_Y(Restriction.POSITIVE_INTEGER)			{public String toString() {return 
 	"y"
-																					;}}, 
+																					;}},
+	PLACE_CAPACITY(Restriction.POSITIVE_INTEGER)						{public String toString() {return 
+	"capacity"
+																					;}},
+																					
 	//Transition Property Order
 	TRANSITION_LABEL(Restriction.NOT_EMPTY)					{public String toString() {return 
 	"label"
@@ -38,6 +42,7 @@ public enum PNProperty {
 	ARC_WEIGHT(Restriction.POSITIVE_INTEGER) 				{public String toString() {return 
 	"weight"																		;}};
 	
+
 	Restriction restriction = null;
 	
 	private PNProperty(Restriction restriction){

@@ -129,6 +129,89 @@ public class PTProperties extends PNProperties {
 		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.ARC, arcName, PNProperty.ARC_WEIGHT, oldWeight , weight);
 		changeSupport.fireChangeEvent(this, event);
 	}
+
+	@Override
+	public Set<PNProperty> getPlaceProperties() {
+		Set<PNProperty> result =  super.getPlaceProperties();
+		result.add(PNProperty.PLACE_CAPACITY);
+		return result;
+	}
+
+	@Override
+	protected String getPlaceProperty(String name, PNProperty property)
+			throws ParameterException {
+		Validate.notNull(property);
+		String result = super.getPlaceProperty(name, property);
+		switch(property){
+		case PLACE_CAPACITY:
+			return getPlaceCapacity(name).toString();
+		}
+		return result;
+	}
+
+	/**
+	 * Returns an arc weight.
+	 * @param placeName The name of the arc whose weight is requested.
+	 * @return The weight of the arc with the given name.
+	 * @throws ParameterException If the given arc name is <code>null</code> or the net does not contain an arc with the given name.
+	 */
+	public Integer getPlaceCapacity(String placeName) throws ParameterException {
+		Validate.notNull(placeName);
+		if(!getNetContainer().getPetriNet().containsPlace(placeName))
+			throw new ParameterException("Unknown Place");
+		return getNetContainer().getPetriNet().getPlace(placeName).getCapacity();
+	}
+	
+	/**
+	 * Sets the weight of an arc.<br>
+	 * This method notifies all listeners about the arc weight change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting an arc weight change.
+	 * @param arcName The name of the arc whose weight is changed.
+	 * @param wight The new weight for the arc.
+	 * @throws ParameterException If the given arc name is <code>null</code> or the net does not contain an arc with the given name.
+	 * @see #setArcWeight(Object, String, Integer)
+	 */
+	public void setPlaceCapacity(Object sender, String arcName, String weight) throws ParameterException{
+		Validate.positiveInteger(weight);
+		setPlaceCapacity(sender, arcName, Integer.parseInt(weight));
+	}
+	
+	/**
+	 * Sets the weight of an arc.<br>
+	 * This method notifies all listeners about the arc weight change.<br>
+	 * Note: The sender of the change request is not notified!
+	 * @param sender The object which is requesting an arc weight change.
+	 * @param placeName The name of the arc whose weight is changed.
+	 * @param wight The new weight for the arc.
+	 * @throws ParameterException If the given arc name is <code>null</code> or the net does not contain an arc with the given name.
+	 */
+	public void setPlaceCapacity(Object sender, String placeName, Integer capacity) throws ParameterException{
+		Validate.notNull(placeName);
+		Validate.notNull(capacity);
+		Validate.bigger(capacity, -2);
+		if(!getNetContainer().getPetriNet().containsPlace(placeName))
+			throw new ParameterException("Unknown Place");
+		
+		Integer oldWeight = getPlaceCapacity(placeName);
+		getNetContainer().getPetriNet().getPlace(placeName).setCapacity(capacity);
+		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.PLACE, placeName, PNProperty.PLACE_CAPACITY, oldWeight , capacity);
+		changeSupport.fireChangeEvent(this, event);
+	}
+
+	@Override
+	protected boolean setPlaceProperty(Object sender, String name,
+			PNProperty property, String value) throws ParameterException {
+		// TODO Auto-generated method stub
+		boolean result = super.setPlaceProperty(sender, name, property, value);
+		switch(property){
+		case PLACE_CAPACITY:
+			setPlaceCapacity(sender, name, value);
+			return true;
+			}
+		return result;
+	}
+	
 	
 	
 }
