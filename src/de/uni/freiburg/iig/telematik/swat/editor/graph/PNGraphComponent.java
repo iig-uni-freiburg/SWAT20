@@ -15,6 +15,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.TooManyListenersException;
 
 import javax.swing.Icon;
@@ -49,28 +50,27 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNCompo
 public abstract class PNGraphComponent extends mxGraphComponent {
 
 	private static final long serialVersionUID = 1411737962538427287L;
-	
+
 	private EditorPopupMenu popupMenu = null;
 
 	public PNGraphComponent(PNGraph graph, PNEditor pnEditor) {
 		super(graph);
 		initialize(pnEditor);
 	}
-	
+
 	@Override
 	public PNGraph getGraph() {
 		return (PNGraph) super.getGraph();
 	}
-	
+
 	@Override
 	/**
 	 * 
 	 */
-	protected TransferHandler createTransferHandler()
-	{
+	protected TransferHandler createTransferHandler() {
 		return new GraphTransferHandler();
 	}
-	
+
 	@Override
 	/**
 	 * 
@@ -78,32 +78,24 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	 *            Cell state for which a handler should be created.
 	 * @return Returns the handler to be used for the given cell state.
 	 */
-	public mxCellHandler createHandler(mxCellState state)
-	{
-		if (graph.getModel().isVertex(state.getCell()))
-		{
-			if(state.getCell() instanceof PNGraphCell){
-			PNGraphCell cell = (PNGraphCell) state.getCell();
-			switch(cell.getType()){
-			case PLACE:
-				return	new VertexHandler(this, state);
-			case TRANSITION:
-			return	new mxVertexHandler(this, state);
-			default:
-				break;
-			
-			}
-			}
-		}
-		else if (graph.getModel().isEdge(state.getCell()))
-		{
-			mxEdgeStyleFunction style = graph.getView().getEdgeStyle(state,
-					null, null, null);
+	public mxCellHandler createHandler(mxCellState state) {
+		if (graph.getModel().isVertex(state.getCell())) {
+			if (state.getCell() instanceof PNGraphCell) {
+				PNGraphCell cell = (PNGraphCell) state.getCell();
+				switch (cell.getType()) {
+				case PLACE:
+					return new VertexHandler(this, state);
+				case TRANSITION:
+					return new mxVertexHandler(this, state);
+				default:
+					break;
 
-			if (graph.isLoop(state) || style == mxEdgeStyle.ElbowConnector
-					|| style == mxEdgeStyle.SideToSide
-					|| style == mxEdgeStyle.TopToBottom)
-			{
+				}
+			}
+		} else if (graph.getModel().isEdge(state.getCell())) {
+			mxEdgeStyleFunction style = graph.getView().getEdgeStyle(state, null, null, null);
+
+			if (graph.isLoop(state) || style == mxEdgeStyle.ElbowConnector || style == mxEdgeStyle.SideToSide || style == mxEdgeStyle.TopToBottom) {
 				return new mxElbowEdgeHandler(this, state);
 			}
 
@@ -113,17 +105,17 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		return new mxCellHandler(this, state);
 	}
 
-	private void initialize(PNEditor pnEditor){
+	private void initialize(PNEditor pnEditor) {
 		setGridStyle(mxGraphComponent.GRID_STYLE_LINE);
 		setGridColor(MXConstants.bluehigh);
 		setBackground(MXConstants.blueBG);
 		setGridVisible(true);
 		getGraphControl().addMouseListener(new GCMouseAdapter());
+		addMouseWheelListener(new GCMouseWheelListener());
 		getConnectionHandler().setCreateTarget(true);
 		mxCodec codec = new mxCodec();
 		Document doc = mxUtils.loadDocument(PNEditor.class.getResource("/default-style.xml").toString());
 		codec.decode(doc.getDocumentElement(), graph.getStylesheet());
-		
 	}
 
 	@Override
@@ -131,53 +123,87 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		return new ConnectionHandler(this);
 	}
 
-	public void setPopupMenu(EditorPopupMenu popupMenu){
+	public void setPopupMenu(EditorPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;
 	}
-	
-	
 
-	
-	
-	//------- MouseListener support ------------------------------------------------------------------
+	// ------- MouseListener support
+	// ------------------------------------------------------------------
 
-	protected boolean rightClickOnCanvas(MouseEvent e){
+	protected boolean rightClickOnCanvas(MouseEvent e) {
 		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), this);
 		popupMenu.show(PNGraphComponent.this, pt.x, pt.y);
 		return false;
 	}
-	
-	protected boolean rightClickOnPlace(PNGraphCell cell, MouseEvent e){
+
+	protected boolean rightClickOnPlace(PNGraphCell cell, MouseEvent e) {
 		return false;
 	}
-	
-	protected boolean rightClickOnTransition(PNGraphCell cell, MouseEvent e){
+
+	protected boolean rightClickOnTransition(PNGraphCell cell, MouseEvent e) {
 		return false;
 	}
-	
-	protected boolean rightClickOnArc(PNGraphCell cell, MouseEvent e){
+
+	protected boolean rightClickOnArc(PNGraphCell cell, MouseEvent e) {
 		return false;
 	}
-	
-	protected boolean doubleClickOnCanvas(MouseEvent e){
+
+	protected boolean doubleClickOnCanvas(MouseEvent e) {
 		return false;
 	}
-	
-	protected boolean doubleClickOnPlace(PNGraphCell cell, MouseEvent e){
+
+	protected boolean mouseWheelOnCanvas(MouseEvent e) {
 		return false;
 	}
-	
-	protected boolean doubleClickOnTransition(PNGraphCell cell, MouseEvent e){
+
+	protected boolean doubleClickOnPlace(PNGraphCell cell, MouseEvent e) {
 		return false;
 	}
-	
-	protected boolean doubleClickOnArc(PNGraphCell cell, MouseEvent e){
+
+	protected boolean mouseWheelOnPlace(PNGraphCell cell, MouseWheelEvent e) {
 		return false;
 	}
-	
+
+	protected boolean doubleClickOnTransition(PNGraphCell cell, MouseEvent e) {
+		return false;
+	}
+
+	protected boolean doubleClickOnArc(PNGraphCell cell, MouseEvent e) {
+		return false;
+	}
+
+	private class GCMouseWheelListener implements MouseWheelListener {
+
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			Object object = getGraph().getSelectionCell();
+			PNGraphCell cell = null;
+			if (object != null) {
+				cell = (PNGraphCell) object;
+			}
+			boolean refresh = false;
+
+			// Double click on graph component.
+			if (object == null) {
+				refresh = mouseWheelOnCanvas(e);
+			} else {
+				switch (cell.getType()) {
+				case PLACE:
+					refresh = mouseWheelOnPlace(cell, e);
+					break;
+				}
+			}
+
+			if (refresh) {
+				mxCellState state = getGraph().getView().getState(cell);
+				redraw(state);
+			}
+
+		}
+
+	}
+
 	private class GCMouseAdapter extends MouseAdapter {
-		
-		
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -187,22 +213,22 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				} else {
 					zoomOut();
 				}
-//				displayStatusMessage(String.format(scaleMessageFormat, (int) (100 * getGraph().getView().getScale())));
+				// displayStatusMessage(String.format(scaleMessageFormat, (int)
+				// (100 * getGraph().getView().getScale())));
 			}
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
 			Object object = getCellAt(e.getX(), e.getY());
 			PNGraphCell cell = null;
-			if(object != null){
+			if (object != null) {
 				cell = (PNGraphCell) object;
 			}
 			boolean refresh = false;
-			
-			if(e.getClickCount()==1){
-				if(e.isPopupTrigger()){
+
+			if (e.getClickCount() == 1) {
+				if (e.isPopupTrigger()) {
 					// Right click on graph component.
 					if (object == null) {
 						refresh = rightClickOnCanvas(e);
@@ -222,70 +248,66 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				} else {
 					// Left click on graph component.
 				}
-			} else if(e.getClickCount() == 2 && !e.isPopupTrigger()){
+			} else if (e.getClickCount() == 2 && !e.isPopupTrigger()) {
 				// Double click on graph component.
-				if(object == null){
+				if (object == null) {
 					refresh = doubleClickOnCanvas(e);
 				} else {
-					switch(cell.getType()){
+					switch (cell.getType()) {
 					case PLACE:
-						refresh = doubleClickOnPlace(cell,e);
+						refresh = doubleClickOnPlace(cell, e);
 						break;
 					case TRANSITION:
-						refresh = doubleClickOnTransition(cell,e);
+						refresh = doubleClickOnTransition(cell, e);
 						break;
 					case ARC:
-						refresh = doubleClickOnArc(cell,e);
+						refresh = doubleClickOnArc(cell, e);
 						break;
 					}
 				}
 			}
-			if(refresh){
+			if (refresh) {
 				mxCellState state = getGraph().getView().getState(cell);
 				redraw(state);
 			}
 		}
-		
+
 	}
-	
-	public class PaletteTransferHandler extends TransferHandler {
 
+//	public class PaletteTransferHandler extends TransferHandler {
+//
+//		private static final long serialVersionUID = -6764630859491349189L;
+//
+//		public boolean canImport(TransferSupport support) {
+//			if (!support.isDrop()) {
+//				return false;
+//			}
+//			return support.isDataFlavorSupported(new NotInUsePaletteIconDataFlavor());
+//		}
+//
+//		public boolean importData(TransferSupport support) {
+//
+//			if (!canImport(support)) {
+//				return false;
+//			}
+//
+//			Transferable transferable = support.getTransferable();
+//			NotInUsePaletteIcon icon;
+//			try {
+//				icon = (NotInUsePaletteIcon) transferable.getTransferData(new NotInUsePaletteIconDataFlavor());
+//			} catch (Exception e) {
+//				return false;
+//			}
+//
+//			if (icon.getType() == PNComponent.PLACE) {
+//				// addNewPlace(support.getDropLocation().getDropPoint());
+//			} else if (icon.getType() == PNComponent.TRANSITION) {
+//				// addNewTransition(support.getDropLocation().getDropPoint());
+//			}
+//
+//			return true;
+//		}
+//
+//	}
 
-
-	
-		private static final long serialVersionUID = -6764630859491349189L;
-		
-		
-		public boolean canImport(TransferSupport support) {
-	        if (!support.isDrop()) {
-	            return false;
-	        }
-	        return support.isDataFlavorSupported(new NotInUsePaletteIconDataFlavor());
-	    }
-
-	    public boolean importData(TransferSupport support) {
-	    	
-	        if (!canImport(support)) {
-	          return false;
-	        }
-
-	        Transferable transferable = support.getTransferable();
-	        NotInUsePaletteIcon icon;
-	        try {
-	        	icon = (NotInUsePaletteIcon) transferable.getTransferData(new NotInUsePaletteIconDataFlavor());
-	        } catch (Exception e) {
-	        	return false;
-	        }
-	        
-	        if(icon.getType() == PNComponent.PLACE){
-//	        	addNewPlace(support.getDropLocation().getDropPoint());
-	        } else if(icon.getType() == PNComponent.TRANSITION){
-//	        	addNewTransition(support.getDropLocation().getDropPoint());
-	        }
-	        
-	        return true;
-	    }
-		
-	}
-	
 }

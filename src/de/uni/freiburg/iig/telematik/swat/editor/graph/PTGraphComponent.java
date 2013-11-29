@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JOptionPane;
 
@@ -60,6 +61,21 @@ public class PTGraphComponent extends PNGraphComponent {
 		}
 		return true;
 	}
+
+	@Override
+	protected boolean mouseWheelOnPlace(PNGraphCell cell, MouseWheelEvent e) {
+		try {
+			
+		 getGraph().inOrDecrementPlaceState(cell, e.getWheelRotation());
+		} catch (ParameterException e1) {
+			System.out.println("Error while changing number of via mouseWheel");
+			e1.printStackTrace();
+		}
+		return true;
+	}
+
 	
+	
+
 
 }

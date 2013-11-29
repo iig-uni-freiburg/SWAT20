@@ -30,6 +30,14 @@ public class EditorProperties {
 	public int getDefaultHorizontalLabelOffset(){
 		return 0;
 	}
+	
+	public int getDefaultTokenSize(){
+		return 8;
+	}
+
+	public int getDefaultTokenDistance(){
+		return 1;
+	}
 
 
 }

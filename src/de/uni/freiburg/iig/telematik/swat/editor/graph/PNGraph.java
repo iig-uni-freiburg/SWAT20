@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -8,8 +10,11 @@ import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.Vector;
 
@@ -32,18 +37,27 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
+import de.invation.code.toval.graphic.CircularPointGroup;
+import de.invation.code.toval.graphic.GraphicUtils;
+import de.invation.code.toval.graphic.PColor;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.TokenGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTPlace;
+//import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent.GCMouseAdapter;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertiesListener;
@@ -70,7 +84,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.properties.getPropertiesView().addTreeSelectionListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
 		this.addListener(mxEvent.CELLS_ADDED, this.properties.getPropertiesView());
-//		this.addListener(mxEvent.CELLS_MOVED, this.properties.getPropertiesView());
 		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
 		this.addListener(mxEvent.REPAINT, this.properties.getPropertiesView());
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
@@ -349,7 +362,12 @@ if(canvas instanceof mxImageCanvas)
 			if (state.getCell() instanceof PNGraphCell) {
 				PNGraphCell customcell = (PNGraphCell) state.getCell();
 				if (customcell.getType() == PNComponent.PLACE) {
-					drawAdditionalPlaceGrahpics(canvas, state);
+					try {
+						drawAdditionalPlaceGrahpics(canvas, state);
+					} catch (ParameterException e) {
+						System.out.println("PlaceGraphics could not be drawn");
+						e.printStackTrace();
+					}
 				}
 			}
 
@@ -360,11 +378,71 @@ if(canvas instanceof mxImageCanvas)
 		return shape;
 	}
 
-	
-	//Currently used in PTGraph
-	protected void drawAdditionalPlaceGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
+
+	protected void drawAdditionalPlaceGrahpics(mxGraphics2DCanvas canvas, mxCellState state) throws ParameterException {
+		Rectangle temp = state.getRectangle();
+		PNGraphCell cell = (PNGraphCell) state.getCell();
+
+		int minDistance = (int) (EditorProperties.getInstance().getDefaultTokenDistance() * getView().getScale());
+		int pointDiameter = (int) (EditorProperties.getInstance().getDefaultTokenSize() * getView().getScale());
+		CircularPointGroup circularPointGroup = new CircularPointGroup(minDistance, pointDiameter);
+		Integer k = getPlaceStateForCell(cell, circularPointGroup);
+
+		Point center = new Point(temp.x + temp.width / 2, temp.y + temp.height / 2);
+		int requiredWidth = 0;
+		if (k == 1)
+			requiredWidth = circularPointGroup.getPointDiameter();
+		if (k == 2 || k == 3)
+			requiredWidth = (circularPointGroup.getPointDiameter() + minDistance) * 2;
+		if (k == 4)
+			requiredWidth = (circularPointGroup.getPointDiameter() + minDistance * 2) * 2;
+		if (k == 2)
+			requiredWidth = (circularPointGroup.getPointDiameter() + minDistance) * 2;
+		if (k >= 5)
+			requiredWidth = circularPointGroup.getRequiredDiameter();
+		if (state.getWidth() >= requiredWidth)
+			drawPoints(canvas, temp, circularPointGroup, center);
+		else
+			drawNumbers(k.toString(), canvas, temp, center);
+
 	}
 
+
+	/**
+	 * @param cell
+	 * @param circularPointGroup
+	 * @return
+	 */
+	protected abstract Integer getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup);
+
+	private void drawNumbers(String numbers, mxGraphics2DCanvas canvas, Rectangle temp, Point center) {
+		Graphics g = canvas.getGraphics();
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setFont(new Font("Serif", Font.PLAIN, (int) (10 * getView().getScale())));
+		g2.setPaint(Color.black);
+		drawString(g2, numbers + "\n", center.x - (int) (temp.width * 0.1), center.y - (int) (g.getFontMetrics().getHeight() * 0.8));
+	}
+
+private void drawString(Graphics g, String text, int x, int y) {
+    for (String line : text.split("\n"))
+        g.drawString(line, x, y+= g.getFontMetrics().getHeight());
+}
+
+
+	protected void drawPoints(mxGraphics2DCanvas canvas, Rectangle temp, CircularPointGroup circularPointGroup, Point center) throws ParameterException {
+		Graphics g = canvas.getGraphics();
+		Iterator<PColor> iter = circularPointGroup.getColors().iterator();
+		PColor actColor;
+		Set<TokenGraphics> tgSet = new HashSet<TokenGraphics>();
+
+		while (iter.hasNext()) {
+			actColor = iter.next();
+			g.setColor(new Color(actColor.getRGB()));
+			for (de.invation.code.toval.graphic.Position p : circularPointGroup.getCoordinatesFor(actColor)) {
+				GraphicUtils.fillCircle(g, (int) (center.getX() + p.getX()),(int) (center.getY() + p.getY()),circularPointGroup.getPointDiameter());
+			}
+		}
+	}
 	/**
 	 * Sets the positions of place and transition labels according to the<br>
 	 * information contained in the corresponding annotation graphics.<br>

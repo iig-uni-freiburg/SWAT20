@@ -44,6 +44,10 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 
+/**
+ * @author julius
+ *
+ */
 public class PTGraph extends PNGraph {
 
 	public PTGraph(GraphicalPTNet netContainer, PTProperties properties) throws ParameterException {
@@ -73,66 +77,40 @@ public class PTGraph extends PNGraph {
 		initialMarking.set(cell.getId(), new Integer(tokens));
 		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
 	}
-
-
+	
 	@Override
-	protected void drawAdditionalPlaceGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
-		Rectangle temp = state.getRectangle();
-		PNGraphCell cell = (PNGraphCell) state.getCell();
-		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(
-				cell.getId());
-			Integer k = (Integer) place.getState();
+	/**
+	 * @param cell
+	 * @param circularPointGroup
+	 * @return
+	 */
+	protected Integer getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup) {
+		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(cell.getId());
+		circularPointGroup.addPoints(PColor.black, place.getState());
+		return place.getState() ;
+	}
 
-			Double dotNumber = 0.0;
-			int circles = 0;
-			for (circles = 1; dotNumber < (k - 1); circles++) {
-				dotNumber += new Double(((2 * circles) * Math.PI)).intValue();
-			}
+	
 
-			int diameter = Math.min(temp.height, temp.width);
-			diameter *= 0.3;
-			diameter = Math.max(diameter, 6);
-
-			if (circles > 1) {
-				diameter = Math.min(temp.height, temp.width);
-				diameter *= 0.8;
-				diameter /= (((circles - 1) * 2) + 1);
-			}// denominator:all circles in one row => (80% of the available inner CircleSize) / (maximal amount of dots) = size for one dot
-
-			CircularPointGroup circularPointGroup = new CircularPointGroup(1, diameter);
-			Map<String, Color> colors = null;
-				colors = new HashMap<String, Color>();
-				colors.put("black", new Color(0, 0, 0));
-				circularPointGroup.addPoints(PColor.black, k);		
-				Point center = new Point(temp.x + temp.width / 2, temp.y
-						+ temp.height / 2);
-				Object g = null;
-				try {
-				g = drawPoints(canvas, temp, circularPointGroup, center);
-				} catch (ParameterException e) {
-					System.out.println("Tokenposition could not be assigned!");
-
-					e.printStackTrace();
-				}
+	/** Method for incrementing or decrementing the current #PTMarking of the given #PTPlace
+	 * @param cell
+	 * @param wheelRotation
+	 * @throws ParameterException
+	 */
+	public void inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException {
+		PTMarking initialMarking = getNetContainer().getPetriNet().getInitialMarking();
+		Integer current = initialMarking.get(cell.getId());
+		int capacity = getNetContainer().getPetriNet().getPlace(cell.getId()).getCapacity();	
+		if(current != null && (capacity<0 ^ capacity>=(current - wheelRotation))) // null means here that the value "zero" has been set before / capacity -1 means infinite
+		initialMarking.set(cell.getId(),  current - wheelRotation);
+		else if(current == null && wheelRotation < 0 ) // create new Marking
+		initialMarking.set(cell.getId(),  1);
+	
+		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
 		
 	}
-	
-	
-	protected Graphics drawPoints(mxGraphics2DCanvas canvas, Rectangle temp, CircularPointGroup circularPointGroup, Point center) throws ParameterException {
-		Graphics g = canvas.getGraphics();
-		Iterator<PColor> iter = circularPointGroup.getColors().iterator();
-		PColor actColor;
-		Set<TokenGraphics> tgSet = new HashSet<TokenGraphics>();
 
-		while (iter.hasNext()) {
-			actColor = iter.next();
-			g.setColor(new Color(actColor.getRGB()));
-			for (Position p : circularPointGroup.getCoordinatesFor(actColor)) {
-				GraphicUtils.fillCircle(g, (int) (center.getX() + p.getX()),(int) (center.getY() + p.getY()),circularPointGroup.getPointDiameter());
-			}
-		}
-		return g;
-	}
+
 
 		  
 
