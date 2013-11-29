@@ -37,6 +37,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.TokenGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
@@ -89,7 +90,6 @@ public class PTGraph extends PNGraph {
 		circularPointGroup.addPoints(PColor.black, place.getState());
 		return place.getState() ;
 	}
-
 	
 
 	/** Method for incrementing or decrementing the current #PTMarking of the given #PTPlace
@@ -108,6 +108,26 @@ public class PTGraph extends PNGraph {
 	
 		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
 		
+	}
+
+
+
+	@Override
+	protected String getPlaceToolTip(PNGraphCell cell) {
+		PTPlace ptPlace = getNetContainer().getPetriNet().getPlace(cell.getId());
+
+		return  "Cap:"+ ptPlace.getCapacity();
+	}
+
+	
+	@Override
+	protected String getTransitionToolTip(PNGraphCell cell) {
+		return "";
+	}
+
+	@Override
+	protected String getArcToolTip(PNGraphCell cell) {
+		return "";
 	}
 
 

@@ -267,6 +267,31 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	}
 
 	public abstract void updatePlaceState(PNGraphCell cell, Object tokenInput) throws ParameterException;
+	
+	
+	@Override
+	/**
+	 * Returns the tooltip to be used for the given cell.
+	 */
+	public String getToolTipForCell(Object object) {
+		if (object instanceof PNGraphCell) {
+			PNGraphCell cell = (PNGraphCell) object;
+
+			switch (cell.getType()) {
+			case ARC:
+				return getArcToolTip(cell);
+			case PLACE:
+				return getPlaceToolTip(cell);
+			case TRANSITION:
+				return getTransitionToolTip(cell);
+
+			}
+		}
+		return "";
+	}
+
+
+
 
 	// Needs to boe overriden for Token-Painting
 	@Override
@@ -386,6 +411,8 @@ if(canvas instanceof mxImageCanvas)
 		int minDistance = (int) (EditorProperties.getInstance().getDefaultTokenDistance() * getView().getScale());
 		int pointDiameter = (int) (EditorProperties.getInstance().getDefaultTokenSize() * getView().getScale());
 		CircularPointGroup circularPointGroup = new CircularPointGroup(minDistance, pointDiameter);
+		
+		//TODO Making method more general to be able to handle colored marking in cpn
 		Integer k = getPlaceStateForCell(cell, circularPointGroup);
 
 		Point center = new Point(temp.x + temp.width / 2, temp.y + temp.height / 2);
@@ -873,5 +900,11 @@ private void drawString(Graphics g, String text, int x, int y) {
 			
 		}
 	}
+
+
+	
+	protected abstract String getPlaceToolTip(PNGraphCell cell) ;
+	protected abstract String getTransitionToolTip(PNGraphCell cell) ;
+	protected abstract String getArcToolTip(PNGraphCell cell) ;
 
 }
