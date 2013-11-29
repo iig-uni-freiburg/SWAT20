@@ -14,6 +14,8 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 public class SaveActiveComponentAction extends AbstractAction {
 
 	private static final long serialVersionUID = 7231652730616663333L;
+
+	/** to know the currently active tab **/
 	private SwatTabView tabView = null;
 
 	public SaveActiveComponentAction(SwatTabView tabView) {
@@ -33,7 +35,7 @@ public class SaveActiveComponentAction extends AbstractAction {
 	private void savePN(PNEditor mainComponent) {
 		try {
 			SwatComponents.getInstance().storePetriNet(mainComponent.getNetContainer());
-			MessageDialog.getInstance().addMessage("Saved Petri Net");
+			MessageDialog.getInstance().addMessage("Successfully saved Petri Net");
 		} catch (ParameterException e1) {
 			MessageDialog.getInstance().addMessage("ERROR: Could not save Petri Net");
 			e1.printStackTrace();

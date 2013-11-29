@@ -223,15 +223,17 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	@Override
 	public void componentActivated(SwatTreeNode node) {
 		SwatComponent swatComponent = null;
+		// Test if SwatTreeNode has valid SwatComponent in it
 		try {
-			swatComponent = getSwatComponent(node);
+			getSwatComponent(node);
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(this, "Cannot convert selected tree node to swat component", "SWAT Exception", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
-		if (!getTabView().containsComponent(swatComponent)) {
-			// if(!getTabView().containsComponent(node)){
-			// getTabView().addNewTab(node);
-			getTabView().addNewTab(swatComponent);
+		if (!getTabView().containsComponent(node)) {
+			// add SwatTreeNode to tab and get its swatComponent to make its
+			// propertyView
+			swatComponent = getTabView().addNewTab(node);
 			getPropertiesPanel().removeAll();
 			getPropertiesPanel().add(swatComponent.getPropertiesView());
 			pack();

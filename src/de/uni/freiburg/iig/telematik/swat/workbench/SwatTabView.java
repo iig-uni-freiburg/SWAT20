@@ -18,6 +18,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
@@ -47,13 +48,18 @@ public class SwatTabView extends JTabbedPane {
 		listeners.add(listener);
 	}
 
-	// public boolean containsComponent(SwatTreeNode node){
-	// return openedSwatComponents.keySet().contains(node.getUserObject());
-	// }
-	
-	public boolean containsComponent(Object swatComponent) {
-		return openedSwatComponents.keySet().contains(swatComponent);
+	public boolean containsComponent(SwatTreeNode node) {
+		return openedSwatComponents.keySet().contains(node.getUserObject());
 	}
+	
+	// public boolean containsComponent(SwatComponent swatComponent) {
+	// for (SwatComponent component : openedSwatComponents.values()) {
+	// // TODO: Search for same object
+	// }
+	//
+	// return openedSwatComponents.values().contains(swatComponent.getName());
+	//
+	// }
 
 	private JTextArea getTextArea(String text){
 		JTextArea newArea = new JTextArea(text);
@@ -81,7 +87,7 @@ public class SwatTabView extends JTabbedPane {
 	// }
 
 	@SuppressWarnings("rawtypes")
-	public void addNewTab(SwatTreeNode node) {
+	public SwatComponent addNewTab(SwatTreeNode node) {
 		try {
 			switch (node.getObjectType()) {
 			case LABELING:
@@ -95,22 +101,24 @@ public class SwatTabView extends JTabbedPane {
 				break;
 
 			}
+			return (SwatComponent) getComponentAt(getComponentCount() - 1);
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
+			return null;
 		}
 	}
 
-	public void addNewTab(SwatComponent swatComponent) {
-		// if (swatComponent instanceof PNEditor) {
-		// addTab(((PNEditor) swatComponent).getName(),
-		// swatComponent.getMainComponent());
-		// }
-		// if (swatComponent instanceof LogFileViewer) {
-		// addTab(((LogFileViewer) swatComponent).getName(),
-		// swatComponent.getMainComponent());
-		// }
-		addTab(swatComponent.getName(), swatComponent.getMainComponent());
-		openedSwatComponents.put(swatComponent, getComponentAt(getComponentCount() - 1));
+	private void addNewTab(SwatComponent swatComponent) {
+		if (swatComponent instanceof PNEditor) {
+			addTab(((PNEditor) swatComponent).getName(), swatComponent.getMainComponent());
+		}
+		if (swatComponent instanceof LogFileViewer) {
+			addTab(((LogFileViewer) swatComponent).getName(), swatComponent.getMainComponent());
+		}
+		// addTab(swatComponent.getName(), swatComponent.getMainComponent());
+		// openedSwatComponents.put(swatComponent.getName(),
+		// getComponentAt(getComponentCount() - 1));
+
 		setSelectedIndex(getTabCount() - 1);
 
 	}
@@ -120,6 +128,7 @@ public class SwatTabView extends JTabbedPane {
 		// ((LogFileViewer) node.getUserObject()).getMainComponent());
 		addTab(node.getDisplayName(), ((LogFileViewer) node.getUserObject()).getMainComponent());
 		setSelectedIndex(getTabCount() - 1);
+		openedSwatComponents.put((LogFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
 	}
 	
 	public void removeAll() {
