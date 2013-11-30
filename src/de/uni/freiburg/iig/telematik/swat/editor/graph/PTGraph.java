@@ -116,7 +116,7 @@ public class PTGraph extends PNGraph {
 	protected String getPlaceToolTip(PNGraphCell cell) {
 		PTPlace ptPlace = getNetContainer().getPetriNet().getPlace(cell.getId());
 
-		return  "Cap:"+ ptPlace.getCapacity();
+		return  "Cap:"+ ((ptPlace.getCapacity() == -1)?"\u221e":ptPlace.getCapacity());
 	}
 
 	

@@ -430,7 +430,7 @@ if(canvas instanceof mxImageCanvas)
 		if (state.getWidth() >= requiredWidth)
 			drawPoints(canvas, temp, circularPointGroup, center);
 		else
-			drawNumbers(k.toString(), canvas, temp, center);
+			drawNumbers(cell,k.toString(), canvas, temp, center);
 
 	}
 
@@ -442,10 +442,11 @@ if(canvas instanceof mxImageCanvas)
 	 */
 	protected abstract Integer getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup);
 
-	private void drawNumbers(String numbers, mxGraphics2DCanvas canvas, Rectangle temp, Point center) {
+	private void drawNumbers(PNGraphCell cell, String numbers, mxGraphics2DCanvas canvas, Rectangle temp, Point center) {
 		Graphics g = canvas.getGraphics();
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setFont(new Font("Arial", Font.PLAIN, (int) (10 * getView().getScale())));
+		String family = (getCellStyle(cell).get(mxConstants.STYLE_FONTFAMILY) != null)? getCellStyle(cell).get(mxConstants.STYLE_FONTFAMILY).toString():mxConstants.DEFAULT_FONTFAMILY;
+		g2.setFont(new Font(family, Font.PLAIN, (int) (10 * getView().getScale())));
 		g2.setPaint(Color.black);
 		drawString(g2, numbers + "\n", center.x - (int) (temp.width * 0.1), center.y - (int) (g.getFontMetrics().getHeight() * 0.8));
 	}
