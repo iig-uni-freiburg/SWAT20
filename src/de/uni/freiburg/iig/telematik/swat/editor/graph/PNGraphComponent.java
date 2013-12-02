@@ -190,25 +190,15 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 
 	private class GCMouseAdapter extends MouseAdapter {
-		
+
 		@Override
 		/**
 		 * 
 		 */
-		public void mousePressed(MouseEvent e)
-		{
-			// Handles context menu on the Mac where the trigger is on mousepressed
+		public void mouseReleased(MouseEvent e) {
+			System.out.println(e.isPopupTrigger() + "#mr");// ispopupmenu alvays
+															// false
 			mouseClicked(e);
-
-		}
-
-		@Override
-		/**
-		 * 
-		 */
-		public void mouseReleased(MouseEvent e)
-		{
-
 		}
 
 		@Override
@@ -232,8 +222,9 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				cell = (PNGraphCell) object;
 			}
 			boolean refresh = false;
-			
-		System.out.println(e.isPopupTrigger() + "#pmt");//ispopupmenu alvays false
+
+			System.out.println(e.isPopupTrigger() + "#pmt");// ispopupmenu
+															// alvays false
 			if (e.getClickCount() == 1) {
 				System.out.println("right1");
 				if (e.isPopupTrigger()) {
