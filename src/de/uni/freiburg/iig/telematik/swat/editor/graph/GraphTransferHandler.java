@@ -8,15 +8,14 @@ import com.mxgraph.swing.handler.mxGraphTransferHandler;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
-import com.mxgraph.view.mxCellState;
-
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 public class GraphTransferHandler extends mxGraphTransferHandler {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8521142091923475876L;
 
 	@Override
 	/**
@@ -51,11 +50,6 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 		}
 
 		return result;
-	}
-
-	public GraphTransferHandler() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -125,14 +119,14 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 				switch (cell.getType()) {
 				case PLACE:
 					try {
-						cells = new Object[] {graph.addNewPlace(new mxPoint(dx, dy))};
+						cells = new Object[] { graph.addNewPlace(new mxPoint(dx, dy)) };
 					} catch (ParameterException e) {
 						e.printStackTrace();
 					}
 					break;
 				case TRANSITION:
 					try {
-						cells = new Object[] { graph.addNewTransition(new mxPoint(dx,dy))};
+						cells = new Object[] { graph.addNewTransition(new mxPoint(dx, dy)) };
 					} catch (ParameterException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -154,6 +148,5 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 
 		return cells;
 	}
-
 
 }

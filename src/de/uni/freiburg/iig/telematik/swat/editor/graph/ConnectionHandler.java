@@ -47,9 +47,6 @@ public class ConnectionHandler extends mxConnectionHandler {
 	}
 
 	@Override
-	/**
-	 * 
-	 */
 	protected mxConnectPreview createConnectPreview() {
 		return new mxConnectPreview(getGraphComponent()) {
 			@Override

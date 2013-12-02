@@ -63,11 +63,11 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
-public abstract class PNEditor extends JPanel implements SwatComponent{
+public abstract class PNEditor extends JPanel implements SwatComponent {
 
 	private static final long serialVersionUID = 1023415244830760771L;
 	private static final String scaleMessageFormat = "Scale: %s %%";
-	
+
 	protected JPanel statusPanel = null;
 	protected PalettePanel palettePanel = null;
 	protected PNGraphComponent graphComponent;
@@ -85,37 +85,36 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 			setModified(true);
 		}
 	};
-	
+
 	protected boolean modified = false;
-	
+
 	protected File fileReference = null;
 	protected PNProperties properties = null;
 	protected PropertiesView propertiesView = null;
-	public AbstractGraphicalPN<?, ?, ?, ?, ?,?,?>  netContainer = null;
-	
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
 
-	//------- Constructors --------------------------------------------------------------------
+	// ------- Constructors
+	// --------------------------------------------------------------------
 
-
-	public PNEditor(File fileReference) throws ParameterException{
+	public PNEditor(File fileReference) throws ParameterException {
 		super();
 		initialize(null, fileReference);
 		setUpGUI();
 	}
-	
-	public PNEditor(AbstractGraphicalPN<?, ?, ?, ?, ?,?,?> netContainer, File fileReference) throws ParameterException{
+
+	public PNEditor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) throws ParameterException {
 		super();
 		Validate.notNull(netContainer);
 		initialize(netContainer, fileReference);
 		setUpGUI();
 	}
-	
+
 	public String getName() {
 		return fileReference.getName();
 	}
 
-	private void initialize(AbstractGraphicalPN<?, ?, ?, ?, ?,?,?> netContainer, File fileReference) throws ParameterException{
-		if(netContainer == null){
+	private void initialize(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) throws ParameterException {
+		if (netContainer == null) {
 			this.netContainer = createNetContainer();
 		} else {
 			this.netContainer = netContainer;
@@ -126,31 +125,28 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		properties.addPNPropertiesListener(propertiesView);
 		properties.setPropertiesView(propertiesView);
 	}
-	
-	protected abstract AbstractGraphicalPN<?, ?, ?, ?, ?,?,?> createNetContainer();
-	
-	protected abstract PNProperties createPNProperties();
-	
 
-	
-	//------- Set Up GUI -----------------------------------------------------------------------
-	
+	protected abstract AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> createNetContainer();
+
+	protected abstract PNProperties createPNProperties();
+
+	// ------- Set Up GUI
+	// -----------------------------------------------------------------------
+
 	private void setUpGUI() {
 		setLayout(new BorderLayout());
 		add(getToolbar(), BorderLayout.NORTH);
 		add(getPalettePanel(), BorderLayout.LINE_START);
 		add(getGraphComponent(), BorderLayout.CENTER);
-//		add(getStatusPanel(), BorderLayout.SOUTH);
-		
+		// add(getStatusPanel(), BorderLayout.SOUTH);
+
 		rubberband = new mxRubberband(graphComponent);
 		keyboardHandler = new KeyboardHandler(graphComponent);
-		
 
 	}
-	
 
-	private ToolBar getToolbar(){
-		if(toolbar == null){
+	private ToolBar getToolbar() {
+		if (toolbar == null) {
 			try {
 				toolbar = new ToolBar(this, JToolBar.HORIZONTAL);
 			} catch (ParameterException e) {
@@ -160,9 +156,9 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		}
 		return toolbar;
 	}
-	
-	public PNGraphComponent getGraphComponent(){
-		if(graphComponent == null){
+
+	public PNGraphComponent getGraphComponent() {
+		if (graphComponent == null) {
 			graphComponent = createGraphComponent();
 			graphComponent.setPopupMenu(getPopupMenu());
 			graphComponent.getViewport().setOpaque(true);
@@ -171,30 +167,29 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 			Map<String, Object> style = getGraph().getStylesheet().getDefaultEdgeStyle();
 			style.put("strokeWidth", 2.0);
 			style.put("strokeColor", Integer.toHexString(MXConstants.bluelow.getRGB()));
-			
+
 			addGraphComponentListeners();
 			setUpUndo();
 		}
 		return graphComponent;
 	}
-	
+
 	protected abstract PNGraphComponent createGraphComponent();
-	
+
 	private void addGraphComponentListeners() {
 
-		graphComponent.getGraphControl().addMouseMotionListener(
-				new MouseMotionListener() {
-					public void mouseDragged(MouseEvent e) {}
-					
-					public void mouseMoved(MouseEvent e) {
-						displayStatusMessage(e.getX() + ", " + e.getY());
-					}
-		});
+		graphComponent.getGraphControl().addMouseMotionListener(new MouseMotionListener() {
+			public void mouseDragged(MouseEvent e) {
+			}
 
+			public void mouseMoved(MouseEvent e) {
+				displayStatusMessage(e.getX() + ", " + e.getY());
+			}
+		});
 
 	}
 
-	private void setUpUndo(){
+	private void setUpUndo() {
 		getGraph().getModel().addListener(mxEvent.CHANGE, changeTracker); // S.T.A.R.S.
 		getGraph().getModel().addListener(mxEvent.UNDO, undoHandler);
 		getGraph().getView().addListener(mxEvent.UNDO, undoHandler);
@@ -209,21 +204,21 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		undoManager.addListener(mxEvent.UNDO, handler);
 		undoManager.addListener(mxEvent.REDO, handler);
 	}
-	
+
 	@Override
 	public JComponent getMainComponent() {
 		return this;
 	}
-	
-	private JPanel getPalettePanel(){
-		if(palettePanel == null){
+
+	private JPanel getPalettePanel() {
+		if (palettePanel == null) {
 			palettePanel = new PalettePanel();
 		}
 		return palettePanel;
 	}
-	
-	private JPanel getStatusPanel(){
-		if(statusPanel == null) {
+
+	private JPanel getStatusPanel() {
+		if (statusPanel == null) {
 			statusPanel = new JPanel();
 			JLabel statusBar = new JLabel();
 			statusBar.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
@@ -231,60 +226,38 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		}
 		return statusPanel;
 	}
-	
-	//------- Functionality --------------------------------------------------------------------
-	
-	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetContainer(){
+
+	// ------- Functionality
+	// --------------------------------------------------------------------
+
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetContainer() {
 		return netContainer;
 	}
 
 	public PropertiesView getPropertiesView() {
 		return propertiesView;
 	}
-	
-	protected PNProperties getPNProperties(){
+
+	protected PNProperties getPNProperties() {
 		return properties;
 	}
-	
-	private PNGraph getGraph(){
+
+	private PNGraph getGraph() {
 		return graphComponent.getGraph();
 	}
-	
-	public void setPlaceLabel(String placeName, String placeLabel) throws ParameterException{
+
+	public void setPlaceLabel(String placeName, String placeLabel) throws ParameterException {
 		Validate.notNull(placeName);
 		Validate.notNull(placeLabel);
 		Validate.notEmpty(placeName);
 		Validate.notEmpty(placeLabel);
-		if(!getNetContainer().getPetriNet().containsPlace(placeName))
+		if (!getNetContainer().getPetriNet().containsPlace(placeName))
 			throw new ParameterException("Unknown place.");
-		
+
 		properties.setPlaceLabel(this, placeName, placeLabel);
 	}
-	
-	public abstract EditorPopupMenu getPopupMenu();
-	
-	//TODO: Do same thing for transition label, place size, transition size
 
-//	@SuppressWarnings("rawtypes") 
-//	protected void setjUpGraph() {
-//		if(netContainer.getPetriNet().isEmpty())
-//			return;
-//
-//		getGraph().getModel().beginUpdate();
-//		
-//		for(AbstractPlace place: getNetContainer().getPetriNet().getPlaces()){
-//			getGraphComponent().addExistingPlaceToGraph(place, netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()));
-//		}
-//		for(AbstractTransition transition: getNetContainer().getPetriNet().getTransitions()){
-//			getGraphComponent().addExistingTransitionToGraph(transition, netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()));
-//		}
-//		for(AbstractFlowRelation relation: getNetContainer().getPetriNet().getFlowRelations()){
-//			getGraphComponent().addExistingRelation(relation, netContainer.getPetriNetGraphics().getArcGraphics().get(relation.getName()));
-//		}
-//		getGraph().getModel().endUpdate();
-//		
-//		getGraph().setLabelPositions();
-//	}
+	public abstract EditorPopupMenu getPopupMenu();
 
 	public void setFileReference(File fileReference) throws ParameterException {
 		Validate.notNull(fileReference);
@@ -326,7 +299,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 	public void displayStatusMessage(String msg) {
 		// TODO: Do something
 	}
-	
+
 	protected class KeyboardHandler extends mxKeyboardHandler {
 
 		public KeyboardHandler(mxGraphComponent graphComponent) {
@@ -363,59 +336,48 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 				// Cannot happen, since this is not null
 				e.printStackTrace();
 			}
-			
+
 			map.put("selectVertices", mxGraphActions.getSelectVerticesAction());
 			map.put("selectEdges", mxGraphActions.getSelectEdgesAction());
 			map.put("delete", new DeleteAction("delete"));
 			return map;
 		}
 	}
-	
+
 	/**
 	 * Creates an action that executes the specified layout.
 	 * 
-	 * @param key Key to be used for getting the label from mxResources and also
-	 * to create the layout instance for the commercial graph editor example.
+	 * @param key
+	 *            Key to be used for getting the label from mxResources and also
+	 *            to create the layout instance for the commercial graph editor
+	 *            example.
 	 * @return an action that executes the specified layout
 	 */
 	@SuppressWarnings("serial")
-	public Action graphLayout(final String key, boolean animate)
-	{
+	public Action graphLayout(final String key, boolean animate) {
 		final mxIGraphLayout layout = createLayout(key, animate);
 
-		if (layout != null)
-		{
-			return new AbstractAction(mxResources.get(key))
-			{
-				public void actionPerformed(ActionEvent e)
-				{
+		if (layout != null) {
+			return new AbstractAction(mxResources.get(key)) {
+				public void actionPerformed(ActionEvent e) {
 					final mxGraph graph = graphComponent.getGraph();
 					Object cell = graph.getSelectionCell();
 
-					if (cell == null
-							|| graph.getModel().getChildCount(cell) == 0)
-					{
+					if (cell == null || graph.getModel().getChildCount(cell) == 0) {
 						cell = graph.getDefaultParent();
 					}
 
 					graph.getModel().beginUpdate();
-					try
-					{
+					try {
 						long t0 = System.currentTimeMillis();
 						layout.execute(cell);
-						status("Layout: " + (System.currentTimeMillis() - t0)
-								+ " ms");
-					}
-					finally
-					{
-						mxMorphing morph = new mxMorphing(graphComponent, 20,
-								1.2, 20);
+						status("Layout: " + (System.currentTimeMillis() - t0) + " ms");
+					} finally {
+						mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
 
-						morph.addListener(mxEvent.DONE, new mxIEventListener()
-						{
+						morph.addListener(mxEvent.DONE, new mxIEventListener() {
 
-							public void invoke(Object sender, mxEventObject evt)
-							{
+							public void invoke(Object sender, mxEventObject evt) {
 								graph.getModel().endUpdate();
 								getGraph().updatePositionPropertiesFromCells();
 							}
@@ -428,266 +390,95 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 				}
 
 			};
-		}
-		else
-		{
-			return new AbstractAction(mxResources.get(key))
-			{
+		} else {
+			return new AbstractAction(mxResources.get(key)) {
 
-				public void actionPerformed(ActionEvent e)
-				{
-					JOptionPane.showMessageDialog(graphComponent,
-							mxResources.get("noLayout"));
+				public void actionPerformed(ActionEvent e) {
+					JOptionPane.showMessageDialog(graphComponent, mxResources.get("noLayout"));
 				}
 
 			};
 		}
 	}
+
 	/**
 	 * Creates a layout instance for the given identifier.
 	 */
-	protected mxIGraphLayout createLayout(String ident, boolean animate)
-	{
+	protected mxIGraphLayout createLayout(String ident, boolean animate) {
 		mxIGraphLayout layout = null;
 
-		if (ident != null)
-		{
+		if (ident != null) {
 			mxGraph graph = graphComponent.getGraph();
 
-			if (ident.equals("verticalHierarchical"))
-			{
+			if (ident.equals("verticalHierarchical")) {
 				layout = new mxHierarchicalLayout(graph);
-			}
-			else if (ident.equals("horizontalHierarchical"))
-			{
+			} else if (ident.equals("horizontalHierarchical")) {
 				layout = new mxHierarchicalLayout(graph, JLabel.WEST);
-			}
-			else if (ident.equals("verticalTree"))
-			{
+			} else if (ident.equals("verticalTree")) {
 				layout = new mxCompactTreeLayout(graph, false);
-			}
-			else if (ident.equals("horizontalTree"))
-			{
+			} else if (ident.equals("horizontalTree")) {
 				layout = new mxCompactTreeLayout(graph, true);
-			}
-			else if (ident.equals("parallelEdges"))
-			{
+			} else if (ident.equals("parallelEdges")) {
 				layout = new mxParallelEdgeLayout(graph);
-			}
-			else if (ident.equals("placeEdgeLabels"))
-			{
+			} else if (ident.equals("placeEdgeLabels")) {
 				layout = new mxEdgeLabelLayout(graph);
-			}
-			else if (ident.equals("organicLayout"))
-			{
+			} else if (ident.equals("organicLayout")) {
 				layout = new mxOrganicLayout(graph);
 			}
-			if (ident.equals("verticalPartition"))
-			{
-				layout = new mxPartitionLayout(graph, false)
-				{
+			if (ident.equals("verticalPartition")) {
+				layout = new mxPartitionLayout(graph, false) {
 					/**
-					 * Overrides the empty implementation to return the size of the
-					 * graph control.
+					 * Overrides the empty implementation to return the size of
+					 * the graph control.
 					 */
-					public mxRectangle getContainerSize()
-					{
+					public mxRectangle getContainerSize() {
 						return graphComponent.getLayoutAreaSize();
 					}
 				};
-			}
-			else if (ident.equals("horizontalPartition"))
-			{
-				layout = new mxPartitionLayout(graph, true)
-				{
+			} else if (ident.equals("horizontalPartition")) {
+				layout = new mxPartitionLayout(graph, true) {
 					/**
-					 * Overrides the empty implementation to return the size of the
-					 * graph control.
+					 * Overrides the empty implementation to return the size of
+					 * the graph control.
 					 */
-					public mxRectangle getContainerSize()
-					{
+					public mxRectangle getContainerSize() {
 						return graphComponent.getLayoutAreaSize();
 					}
 				};
-			}
-			else if (ident.equals("verticalStack"))
-			{
-				layout = new mxStackLayout(graph, false)
-				{
+			} else if (ident.equals("verticalStack")) {
+				layout = new mxStackLayout(graph, false) {
 					/**
-					 * Overrides the empty implementation to return the size of the
-					 * graph control.
+					 * Overrides the empty implementation to return the size of
+					 * the graph control.
 					 */
-					public mxRectangle getContainerSize()
-					{
+					public mxRectangle getContainerSize() {
 						return graphComponent.getLayoutAreaSize();
 					}
 				};
-			}
-			else if (ident.equals("horizontalStack"))
-			{
-				layout = new mxStackLayout(graph, true)
-				{
+			} else if (ident.equals("horizontalStack")) {
+				layout = new mxStackLayout(graph, true) {
 					/**
-					 * Overrides the empty implementation to return the size of the
-					 * graph control.
+					 * Overrides the empty implementation to return the size of
+					 * the graph control.
 					 */
-					public mxRectangle getContainerSize()
-					{
+					public mxRectangle getContainerSize() {
 						return graphComponent.getLayoutAreaSize();
 					}
 				};
-			}
-			else if (ident.equals("circleLayout"))
-			{
+			} else if (ident.equals("circleLayout")) {
 				layout = new mxCircleLayout(graph);
 			}
 		}
 
 		return layout;
 	}
+
 	/**
 	 * 
 	 * @param msg
 	 */
-	public void status(String msg)
-	{
-//		statusBar.setText(msg);
+	public void status(String msg) {
+		// statusBar.setText(msg);
 	}
-
-
-//	
-//	private void setLayoutOrganic(final Graph graph) {
-//	mxOrganicLayout layout = new mxOrganicLayout(graph);
-//	// Execute layout
-//	// final mxGraph graph =graph;
-//	Object cell = graph.getSelectionCell();
-//
-//	if (cell == null || graph.getModel().getChildCount(cell) == 0) {
-//		cell = graph.getDefaultParent();
-//	}
-//
-//	graph.getModel().beginUpdate();
-//	try {
-//		long t0 = System.currentTimeMillis();
-//		layout.execute(cell);
-//		// status("Layout: " + (System.currentTimeMillis() - t0)
-//		// + " ms");
-//	} finally {
-//		mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
-//
-//		morph.addListener(mxEvent.DONE, new mxIEventListener() {
-//
-//			public void invoke(Object sender, mxEventObject evt) {
-//				graph.getModel().endUpdate();
-//			}
-//
-//		});
-//
-//		morph.startAnimation();
-//	}
-//}
-//	public Action graphLayout(final String key, boolean animate) {
-//		final mxIGraphLayout layout = createLayout(key, animate);
-//
-//		if (layout != null) {
-//			return new AbstractAction(mxResources.get(key)) {
-//
-//				public void actionPerformed(ActionEvent e) {
-//					final Graph graph = (Graph) graphComponent.getGraph();
-//					Object cell = graph.getSelectionCell();
-//
-//					if (cell == null
-//							|| graph.getModel().getChildCount(cell) == 0) {
-//						cell = graph.getDefaultParent();
-//					}
-//
-//					graph.getModel().beginUpdate();
-//					try {
-//						long t0 = System.currentTimeMillis();
-//						layout.execute(cell);
-//						displayStatusMessage("Layout: " + (System.currentTimeMillis() - t0)
-//								+ " ms");
-//					} finally {
-//						mxMorphing morph = new mxMorphing(graphComponent, 20,
-//								1.2, 20);
-//
-//						morph.addListener(mxEvent.DONE, new mxIEventListener() {
-//
-//							public void invoke(Object sender, mxEventObject evt) {
-//								graph.getModel().endUpdate();
-//							}
-//						});
-//
-//						morph.startAnimation();
-//					}
-//
-//				}
-//			};
-//		} else {
-//			return new AbstractAction(mxResources.get(key)) {
-//
-//				public void actionPerformed(ActionEvent e) {
-//					JOptionPane.showMessageDialog(graphComponent, "No Layout");
-//				}
-//			};
-//		}
-//	}
-//
-//	protected mxIGraphLayout createLayout(String ident, boolean animate) {
-//		mxIGraphLayout layout = null;
-//
-//		if (ident != null) {
-//			Graph graph = (Graph) graphComponent.getGraph();
-//
-//			if (ident.equals("verticalHierarchical")) {
-//				layout = new mxHierarchicalLayout(graph);
-//			} else if (ident.equals("horizontalHierarchical")) {
-//				layout = new mxHierarchicalLayout(graph, JLabel.WEST);
-//			} else if (ident.equals("verticalTree")) {
-//				layout = new mxCompactTreeLayout(graph, false);
-//			} else if (ident.equals("horizontalTree")) {
-//				layout = new mxCompactTreeLayout(graph, true);
-//			} else if (ident.equals("parallelEdges")) {
-//				layout = new mxParallelEdgeLayout(graph);
-//			} else if (ident.equals("placeEdgeLabels")) {
-//				layout = new mxEdgeLabelLayout(graph);
-//			} else if (ident.equals("organicLayout")) {
-//				layout = new mxOrganicLayout(graph);
-//			}
-//			if (ident.equals("verticalStack")) {
-//				layout = new mxStackLayout(graph, false) {
-//
-//					/**
-//					 * Overrides the empty implementation to return the size of
-//					 * the graph control.
-//					 */
-//					@Override
-//					public mxRectangle getContainerSize() {
-//						return graphComponent.getLayoutAreaSize();
-//					}
-//				};
-//			} else if (ident.equals("horizontalStack")) {
-//				layout = new mxStackLayout(graph, true) {
-//
-//					/**
-//					 * Overrides the empty implementation to return the size of
-//					 * the graph control.
-//					 */
-//					@Override
-//					public mxRectangle getContainerSize() {
-//						return graphComponent.getLayoutAreaSize();
-//					}
-//				};
-//			} else if (ident.equals("circleLayout")) {
-//				layout = new mxCircleLayout(graph);
-//			}
-//		}
-//
-//		return layout;
-//	}
-	
-
-
 
 }

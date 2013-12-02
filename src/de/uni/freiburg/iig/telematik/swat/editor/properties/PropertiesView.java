@@ -71,6 +71,11 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	}
 
+	/**
+	 * Configures the tree, and adds the trees basic nodes {@link #placesNode},{@link #transitionsNode} and {@link #arcsNode} <br>
+	 * and assigns the renderer and and editor.
+	 * @throws ParameterException
+	 */
 	protected void setUpGUI() throws ParameterException {
 		root = new PNTreeNode("root", PNTreeNodeType.ROOT);
 

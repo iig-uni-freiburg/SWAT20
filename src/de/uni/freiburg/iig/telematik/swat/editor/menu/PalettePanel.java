@@ -32,107 +32,104 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNCompo
 public class PalettePanel extends JPanel {
 
 	private static final long serialVersionUID = -1156941541375286369L;
-	
+
 	protected JLabel selectedEntry = null;
 
-    public PalettePanel() {
-//        setLayout(new GridLayout(getComponentCount(), 1));
-    	setLayout(new GridLayout(6, 1)); // smaller Icons
-        addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), MXConstants.getNodeStyle(PNComponent.TRANSITION,null,null), EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), null);
-		addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), MXConstants.getNodeStyle(PNComponent.PLACE, null, null), EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(), null);
-   
-    }
+	public PalettePanel() {
+		// setLayout(new GridLayout(getComponentCount(), 1));
+		setLayout(new GridLayout(6, 1)); // smaller Icons
+		addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), MXConstants.getNodeStyle(PNComponent.TRANSITION, null, null), EditorProperties
+				.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), null);
+		addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), MXConstants.getNodeStyle(PNComponent.PLACE, null, null), EditorProperties.getInstance()
+				.getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(), null);
 
-    public void setSelectionEntry(JLabel entry, mxGraphTransferable t) {
-        if (!entry.isEnabled()) {
-            return;
-        }
-        JLabel previous = selectedEntry;
-        selectedEntry = entry;
+	}
 
-        if (previous != null) {
-            previous.setBorder(null);
-            previous.setOpaque(false);
-        }
+	public void setSelectionEntry(JLabel entry, mxGraphTransferable t) {
+		if (!entry.isEnabled()) {
+			return;
+		}
+		JLabel previous = selectedEntry;
+		selectedEntry = entry;
 
-        if (selectedEntry != null) {
-            selectedEntry.setBorder(BorderFactory.createCompoundBorder(
-                    new LineBorder(new Color(218, 186, 133).darker(), 1, true),
-                    new LineBorder(new Color(218, 186, 133), 1, true)));
-            selectedEntry.setBackground(new Color(255, 223, 113));
-            selectedEntry.setOpaque(true);
-        }
-    }
+		if (previous != null) {
+			previous.setBorder(null);
+			previous.setOpaque(false);
+		}
 
-    public void addEdgeTemplate(final String name, ImageIcon icon, String style, int width, int height, Object value) {
-        mxGeometry geometry = new mxGeometry(0, 0, width, height);
-        geometry.setTerminalPoint(new mxPoint(0, height), true);
-        geometry.setTerminalPoint(new mxPoint(width, 0), false);
-        geometry.setRelative(true);
+		if (selectedEntry != null) {
+			selectedEntry.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(218, 186, 133).darker(), 1, true), new LineBorder(new Color(218, 186, 133), 1, true)));
+			selectedEntry.setBackground(new Color(255, 223, 113));
+			selectedEntry.setOpaque(true);
+		}
+	}
 
-        mxCell cell = new mxCell(value, geometry, style);
-        cell.setEdge(true);
+	public void addEdgeTemplate(final String name, ImageIcon icon, String style, int width, int height, Object value) {
+		mxGeometry geometry = new mxGeometry(0, 0, width, height);
+		geometry.setTerminalPoint(new mxPoint(0, height), true);
+		geometry.setTerminalPoint(new mxPoint(width, 0), false);
+		geometry.setRelative(true);
 
-        addTemplate(name, icon, cell);
-    }
+		mxCell cell = new mxCell(value, geometry, style);
+		cell.setEdge(true);
 
-    public void addPlaceTemplate(String name, ImageIcon icon, String style, int width, int height, Object value) {
-        PNGraphCell cell = new PNGraphCell(value, new mxGeometry(0, 0, width, height), style, PNComponent.PLACE);
-        cell.setVertex(true);
-        addTemplate(name, icon, cell);
-    }
-    
-    public void addTransitionTemplate(String name, ImageIcon icon, String style, int width, int height, Object value) {
-        PNGraphCell cell = new PNGraphCell(value, new mxGeometry(0, 0, width, height), style, PNComponent.TRANSITION);
-        cell.setVertex(true);
-        addTemplate(name, icon, cell);
-    }
+		addTemplate(name, icon, cell);
+	}
 
-    public void addTemplate(final String name, ImageIcon icon, mxCell cell) {
-        mxRectangle bounds = (mxGeometry) cell.getGeometry().clone();
-        final mxGraphTransferable t = new mxGraphTransferable(new Object[]{cell}, bounds);
+	public void addPlaceTemplate(String name, ImageIcon icon, String style, int width, int height, Object value) {
+		PNGraphCell cell = new PNGraphCell(value, new mxGeometry(0, 0, width, height), style, PNComponent.PLACE);
+		cell.setVertex(true);
+		addTemplate(name, icon, cell);
+	}
 
-        if (icon != null) {
-            if (icon.getIconWidth() > 32 || icon.getIconHeight() > 32) {
-                icon = new ImageIcon(icon.getImage().
-                        getScaledInstance(32, 32, 0));
-            }
-        }
+	public void addTransitionTemplate(String name, ImageIcon icon, String style, int width, int height, Object value) {
+		PNGraphCell cell = new PNGraphCell(value, new mxGeometry(0, 0, width, height), style, PNComponent.TRANSITION);
+		cell.setVertex(true);
+		addTemplate(name, icon, cell);
+	}
 
-        final JLabel entry = new JLabel(icon);
-        entry.setPreferredSize(new Dimension(50, 50));
-        entry.setBackground(PalettePanel.this.getBackground().brighter());
-        entry.setFont(new Font(entry.getFont().getFamily(), 0, 10));
+	public void addTemplate(final String name, ImageIcon icon, mxCell cell) {
+		mxRectangle bounds = (mxGeometry) cell.getGeometry().clone();
+		final mxGraphTransferable t = new mxGraphTransferable(new Object[] { cell }, bounds);
 
-        entry.setVerticalTextPosition(JLabel.BOTTOM);
-        entry.setHorizontalTextPosition(JLabel.CENTER);
-        entry.setIconTextGap(0);
+		if (icon != null) {
+			if (icon.getIconWidth() > 32 || icon.getIconHeight() > 32) {
+				icon = new ImageIcon(icon.getImage().getScaledInstance(32, 32, 0));
+			}
+		}
 
-        entry.setToolTipText(name);
-        entry.setText(name);
-        entry.addMouseListener(new MouseAdapter() {
+		final JLabel entry = new JLabel(icon);
+		entry.setPreferredSize(new Dimension(50, 50));
+		entry.setBackground(PalettePanel.this.getBackground().brighter());
+		entry.setFont(new Font(entry.getFont().getFamily(), 0, 10));
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                setSelectionEntry(entry, t);
-            }
-        });
-      
+		entry.setVerticalTextPosition(JLabel.BOTTOM);
+		entry.setHorizontalTextPosition(JLabel.CENTER);
+		entry.setIconTextGap(0);
 
-        DragGestureListener dragGestureListener = new DragGestureListener() {
-            public void dragGestureRecognized(DragGestureEvent e) {
-                if (!entry.isEnabled()) {
-                    return;
-                }
-                e.startDrag(null, MXConstants.EMPTY_IMAGE, new Point(), t, null);
-            }
-        };
+		entry.setToolTipText(name);
+		entry.setText(name);
+		entry.addMouseListener(new MouseAdapter() {
 
-        DragSource dragSource = new DragSource();
-        dragSource.createDefaultDragGestureRecognizer(entry, DnDConstants.ACTION_COPY, dragGestureListener);
+			@Override
+			public void mousePressed(MouseEvent e) {
+				setSelectionEntry(entry, t);
+			}
+		});
 
-        add(entry);
-    }
-    
-    
+		DragGestureListener dragGestureListener = new DragGestureListener() {
+			public void dragGestureRecognized(DragGestureEvent e) {
+				if (!entry.isEnabled()) {
+					return;
+				}
+				e.startDrag(null, MXConstants.EMPTY_IMAGE, new Point(), t, null);
+			}
+		};
+
+		DragSource dragSource = new DragSource();
+		dragSource.createDefaultDragGestureRecognizer(entry, DnDConstants.ACTION_COPY, dragGestureListener);
+
+		add(entry);
+	}
+
 }

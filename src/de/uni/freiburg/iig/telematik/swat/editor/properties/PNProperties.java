@@ -12,8 +12,6 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
 /**
  * This class allows to change properties of an underlying Petri net<br>
@@ -37,8 +35,6 @@ public abstract class PNProperties {
 	 * which returns a net container of the expected type.
 	 */
 	private AbstractGraphicalPN<?,?,?,?,?,?,?> netContainer = null;
-	private PNEditor pnEditor;
-	private PNGraph pnGraph;
 	private PropertiesView propertiesView;
 	
 	/**
