@@ -272,8 +272,9 @@ public abstract class MXConstants {
 	}
 
 	public static NodeGraphics getNodeGraphics(mxCellState state) throws ParameterException {
-		Position position = new Position(state.getX(), state.getY());
-		Dimension dimension = new Dimension(state.getWidth(), state.getHeight());
+		PNGraphCell cell = (PNGraphCell) state.getCell();
+		Position position = new Position(cell.getGeometry().getX(), cell.getGeometry().getY());
+		Dimension dimension = new Dimension(cell.getGeometry().getWidth(), cell.getGeometry().getHeight());
 		Fill fill = new Fill();
 		String fillColor = (String) state.getStyle().get(mxConstants.STYLE_FILLCOLOR);
 		if (fillColor != null) {
@@ -303,7 +304,7 @@ public abstract class MXConstants {
 				throw new ParameterException(e.getMessage());
 			}
 		}
-
+System.out.println(dimension);
 		return new NodeGraphics(position, dimension, fill, getLine(state));
 	}
 

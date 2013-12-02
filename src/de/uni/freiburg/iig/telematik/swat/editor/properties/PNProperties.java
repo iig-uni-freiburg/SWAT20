@@ -300,7 +300,7 @@ public abstract class PNProperties {
 	public void setPlacePositionX(Object sender, String placeName, Integer position) throws ParameterException{
 		Validate.notNull(placeName);
 		Validate.notNull(position);
-		Validate.bigger(position, 0);
+		Validate.bigger(position, -1);
 		if(!getNetContainer().getPetriNet().containsPlace(placeName))
 			throw new ParameterException("Unknown Place");
 		
@@ -335,9 +335,10 @@ public abstract class PNProperties {
 	 * @throws ParameterException If the given place size is invalid or the net does not contain a place with the given name.
 	 */
 	public void setPlacePositionY(Object sender, String placeName, Integer position) throws ParameterException{
+		System.out.println(position);
 		Validate.notNull(placeName);
 		Validate.notNull(position);
-		Validate.bigger(position, 0);
+		Validate.bigger(position, -1);
 		if(!getNetContainer().getPetriNet().containsPlace(placeName))
 			throw new ParameterException("Unknown Place");
 		
@@ -635,7 +636,7 @@ public abstract class PNProperties {
 	public void setTransitionPositionX(Object sender, String transitionName, Integer position) throws ParameterException{
 		Validate.notNull(transitionName);
 		Validate.notNull(position);
-		Validate.bigger(position, 0);
+		Validate.bigger(position, -1);
 		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
 			throw new ParameterException("Unknown Transition");
 		
@@ -672,7 +673,7 @@ public abstract class PNProperties {
 	public void setTransitionPositionY(Object sender, String transitionName, Integer position) throws ParameterException{
 		Validate.notNull(transitionName);
 		Validate.notNull(position);
-		Validate.bigger(position, 0);
+		Validate.bigger(position, -1);
 		if(!getNetContainer().getPetriNet().containsTransition(transitionName))
 			throw new ParameterException("Unknown Transition");
 		

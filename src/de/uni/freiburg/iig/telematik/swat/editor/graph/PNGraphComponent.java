@@ -192,11 +192,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		 * 
 		 */
 		public void mousePressed(MouseEvent e) {
-			System.out.println(e.isPopupTrigger() + "#mp");// ispopupmenu alvays
-															// false
 
-			// Handles context menu on the Mac where the trigger is on
-			// mousepressed
+			// Handles context menu on the Mac where the trigger is on mousepressed
 			mouseClicked(e);
 
 		}
@@ -206,6 +203,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		 * 
 		 */
 		public void mouseReleased(MouseEvent e) {
+			// Handles context menu on Windows where the trigger is on mousereleased
+			//TODO also working on Linux?
 			mouseClicked(e);
 		}
 

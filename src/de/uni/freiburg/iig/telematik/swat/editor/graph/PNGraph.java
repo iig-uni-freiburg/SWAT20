@@ -98,7 +98,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	
 
 	@SuppressWarnings("rawtypes")
-	private void initialize() {
+	private void initialize() throws ParameterException {
 		// Check if net container is empty.
 		// If not, add all PN components to the graph.
 		if (!netContainer.getPetriNet().isEmpty()) {
@@ -118,7 +118,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			}
 			getModel().endUpdate();
 
-			updateGraphicalInfosFromCells();
+			setGraphicalInfosFromCells();
 
 		}
 	}
@@ -151,9 +151,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	}
 
 	@SuppressWarnings("rawtypes")
-	public PNGraphCell insertPNPlace(AbstractPlace place, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) {
-		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), nodeGraphics.getPosition().getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension().getX(), nodeGraphics
-				.getDimension().getY(), MXConstants.getStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
+	public PNGraphCell insertPNPlace(AbstractPlace place, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
+		double x = (nodeGraphics == null)?0: nodeGraphics.getPosition().getX();
+		double y = (nodeGraphics == null)?0:nodeGraphics.getPosition().getY();
+		double dimX = (nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize():nodeGraphics.getDimension().getX();
+		double dimY =(nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize(): nodeGraphics.getDimension().getY();
+		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), x,y, dimX, dimY , MXConstants.getStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
+		if(nodeGraphics == null || annotationGraphics == null){
+			mxCellState state = getView().getState(newCell, true);
+			setGraphics(state);
+		}
 		addCell(newCell, getDefaultParent());
 		addNodeReference(place, newCell);
 		return newCell;
@@ -205,9 +212,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	// }
 
 	@SuppressWarnings("rawtypes")
-	public PNGraphCell insertPNTransition(AbstractTransition transition, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) {
-		PNGraphCell newCell = createTransitionCell(transition.getName(), transition.getLabel(), nodeGraphics.getPosition().getX(), nodeGraphics.getPosition().getY(), nodeGraphics.getDimension()
-				.getX(), nodeGraphics.getDimension().getY(), MXConstants.getStyle(PNComponent.TRANSITION, nodeGraphics, annotationGraphics));
+	public PNGraphCell insertPNTransition(AbstractTransition transition, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
+		double x = (nodeGraphics == null)?0: nodeGraphics.getPosition().getX();
+		double y = (nodeGraphics == null)?0:nodeGraphics.getPosition().getY();
+		double dimX = (nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize():nodeGraphics.getDimension().getX();
+		double dimY =(nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize(): nodeGraphics.getDimension().getY();
+		PNGraphCell newCell = createTransitionCell(transition.getName(), transition.getLabel(), x,y, dimX, dimY, MXConstants.getStyle(PNComponent.TRANSITION, nodeGraphics, annotationGraphics));
+		if(nodeGraphics == null || annotationGraphics == null){
+			mxCellState state = getView().getState(newCell, true);
+			setGraphics(state);
+		}
 		addCell(newCell, getDefaultParent());
 		addNodeReference(transition, newCell);
 		return newCell;
@@ -479,7 +493,7 @@ private void drawString(Graphics g, String text, int x, int y) {
 	 * @param pnGraphics
 	 *            The Petri net graphics
 	 */
-	public void updateGraphicalInfosFromCells() {
+	public void setGraphicalInfosFromCells() {
 		for (PNGraphCell cell : nodeReferences.values()) {
 			mxCellState state = getView().getState(cell);
 
@@ -492,6 +506,49 @@ private void drawString(Graphics g, String text, int x, int y) {
 		}
 
 
+	}
+	
+	/**
+	 * Sets the positions of place and transition labels according to the<br>
+	 * information contained in the corresponding annotation graphics.<br>
+	 * This method is called when a graph is created with a non-empty Petri net.
+	 * 
+	 * @param pnGraphics
+	 *            The Petri net graphics
+	 */
+	public void updatePositionPropertiesFromCells() {
+		for (PNGraphCell cell : nodeReferences.values()) {
+			mxCellState state = getView().getState(cell);
+
+			try {
+				setPositionProperties((PNGraphCell)state.getCell());
+			} catch (ParameterException e) {
+				System.out.println("Graphics could not be set");
+				e.printStackTrace();
+			}
+		}
+
+
+	}
+
+
+	private void setPositionProperties(PNGraphCell cell) throws ParameterException {
+		switch (cell.getType()) {
+		case ARC:
+			break;
+		case PLACE:
+			if(cell.getGeometry().getX() >=0)
+			properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
+			if(cell.getGeometry().getY() >=0)
+			properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());
+			break;
+		case TRANSITION:
+			if(cell.getGeometry().getX() >=0)
+			properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
+			if(cell.getGeometry().getY() >=0)
+			properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getY());
+			break;
+		}
 	}
 
 
@@ -798,23 +855,12 @@ private void drawString(Graphics g, String text, int x, int y) {
 	@Override
 	public void cellsMoved(Object[] cells, double dx, double dy, boolean disconnect, boolean constrain) {
 		super.cellsMoved(cells, dx, dy, disconnect, constrain);
+		System.out.println("jau");
 		for (Object object : cells) {
 			if (object instanceof PNGraphCell) {
 				PNGraphCell cell = (PNGraphCell) object;
 				try {
-					switch (cell.getType()) {
-					case ARC:
-						break;
-					case PLACE:
-						if(getNetContainer().getPetriNet().containsPlace(cell.getId())){
-						properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-						properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());}
-						break;
-					case TRANSITION:
-						properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-						properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getY());
-						break;
-					}
+					setPositionProperties(cell);
 
 				} catch (ParameterException e) {
 					System.out.println("Cells could not be moved");
@@ -904,8 +950,10 @@ private void drawString(Graphics g, String text, int x, int y) {
 
 
 	
-	protected abstract String getPlaceToolTip(PNGraphCell cell) ;
-	protected abstract String getTransitionToolTip(PNGraphCell cell) ;
-	protected abstract String getArcToolTip(PNGraphCell cell) ;
+	protected abstract String getPlaceToolTip(PNGraphCell cell);
+	
+	protected abstract String getTransitionToolTip(PNGraphCell cell);
+	
+	protected abstract String getArcToolTip(PNGraphCell cell);
 
 }

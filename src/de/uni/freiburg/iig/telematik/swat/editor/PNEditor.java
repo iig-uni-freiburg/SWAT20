@@ -417,6 +417,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 							public void invoke(Object sender, mxEventObject evt)
 							{
 								graph.getModel().endUpdate();
+								getGraph().updatePositionPropertiesFromCells();
 							}
 
 						});
