@@ -1,40 +1,23 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.TooManyListenersException;
 
-import javax.swing.Icon;
-import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 
 import org.w3c.dom.Document;
 
 import com.mxgraph.io.mxCodec;
-import com.mxgraph.shape.mxActorShape;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxCellHandler;
 import com.mxgraph.swing.handler.mxEdgeHandler;
 import com.mxgraph.swing.handler.mxElbowEdgeHandler;
-import com.mxgraph.swing.handler.mxGraphTransferHandler;
 import com.mxgraph.swing.handler.mxVertexHandler;
-import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxEdgeStyle;
@@ -43,9 +26,6 @@ import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphTransferHandler;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.NotInUsePaletteIcon;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.NotInUsePaletteIconDataFlavor;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
 
@@ -117,7 +97,10 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		mxCodec codec = new mxCodec();
 		Document doc = mxUtils.loadDocument(PNEditor.class.getResource("/default-style.xml").toString());
 		codec.decode(doc.getDocumentElement(), graph.getStylesheet());
+
 	}
+	
+
 
 	@Override
 	protected ConnectionHandler createConnectionHandler() {
@@ -203,8 +186,30 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		}
 
 	}
+	
+
 
 	private class GCMouseAdapter extends MouseAdapter {
+		
+		@Override
+		/**
+		 * 
+		 */
+		public void mousePressed(MouseEvent e)
+		{
+			// Handles context menu on the Mac where the trigger is on mousepressed
+			mouseClicked(e);
+
+		}
+
+		@Override
+		/**
+		 * 
+		 */
+		public void mouseReleased(MouseEvent e)
+		{
+
+		}
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -227,9 +232,12 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				cell = (PNGraphCell) object;
 			}
 			boolean refresh = false;
-
+			
+		System.out.println(e.isPopupTrigger() + "#pmt");//ispopupmenu alvays false
 			if (e.getClickCount() == 1) {
+				System.out.println("right1");
 				if (e.isPopupTrigger()) {
+					System.out.println("rightclick");
 					// Right click on graph component.
 					if (object == null) {
 						refresh = rightClickOnCanvas(e);

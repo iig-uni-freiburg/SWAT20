@@ -92,9 +92,9 @@ public class PTNetEditor extends PNEditor {
 
 	public static void main(String[] args) throws IOException, ParserException, ParameterException {
 		JFrame frame = new JFrame();
-		// testEmptyNet();
+		 testEmptyNet(frame);
 		// openSampleNet();
-		openSampleNetWithProperties(frame);
+//		openSampleNetWithProperties(frame);
 		
 		// show all
 		frame.setVisible(true);

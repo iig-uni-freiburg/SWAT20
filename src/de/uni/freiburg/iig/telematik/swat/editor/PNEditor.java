@@ -16,21 +16,36 @@ import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
+import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.layout.mxCompactTreeLayout;
+import com.mxgraph.layout.mxEdgeLabelLayout;
+import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.layout.mxOrganicLayout;
+import com.mxgraph.layout.mxParallelEdgeLayout;
+import com.mxgraph.layout.mxPartitionLayout;
+import com.mxgraph.layout.mxStackLayout;
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.swing.util.mxGraphActions;
+import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.swing.util.mxGraphActions.DeleteAction;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxRectangle;
+import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
+import com.mxgraph.view.mxGraph;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -356,6 +371,191 @@ public abstract class PNEditor extends JPanel implements SwatComponent{
 		}
 	}
 	
+	/**
+	 * Creates an action that executes the specified layout.
+	 * 
+	 * @param key Key to be used for getting the label from mxResources and also
+	 * to create the layout instance for the commercial graph editor example.
+	 * @return an action that executes the specified layout
+	 */
+	@SuppressWarnings("serial")
+	public Action graphLayout(final String key, boolean animate)
+	{
+		final mxIGraphLayout layout = createLayout(key, animate);
+
+		if (layout != null)
+		{
+			return new AbstractAction(mxResources.get(key))
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					final mxGraph graph = graphComponent.getGraph();
+					Object cell = graph.getSelectionCell();
+
+					if (cell == null
+							|| graph.getModel().getChildCount(cell) == 0)
+					{
+						cell = graph.getDefaultParent();
+					}
+
+					graph.getModel().beginUpdate();
+					try
+					{
+						long t0 = System.currentTimeMillis();
+						layout.execute(cell);
+						status("Layout: " + (System.currentTimeMillis() - t0)
+								+ " ms");
+					}
+					finally
+					{
+						mxMorphing morph = new mxMorphing(graphComponent, 20,
+								1.2, 20);
+
+						morph.addListener(mxEvent.DONE, new mxIEventListener()
+						{
+
+							public void invoke(Object sender, mxEventObject evt)
+							{
+								graph.getModel().endUpdate();
+							}
+
+						});
+
+						morph.startAnimation();
+					}
+
+				}
+
+			};
+		}
+		else
+		{
+			return new AbstractAction(mxResources.get(key))
+			{
+
+				public void actionPerformed(ActionEvent e)
+				{
+					JOptionPane.showMessageDialog(graphComponent,
+							mxResources.get("noLayout"));
+				}
+
+			};
+		}
+	}
+	/**
+	 * Creates a layout instance for the given identifier.
+	 */
+	protected mxIGraphLayout createLayout(String ident, boolean animate)
+	{
+		mxIGraphLayout layout = null;
+
+		if (ident != null)
+		{
+			mxGraph graph = graphComponent.getGraph();
+
+			if (ident.equals("verticalHierarchical"))
+			{
+				layout = new mxHierarchicalLayout(graph);
+			}
+			else if (ident.equals("horizontalHierarchical"))
+			{
+				layout = new mxHierarchicalLayout(graph, JLabel.WEST);
+			}
+			else if (ident.equals("verticalTree"))
+			{
+				layout = new mxCompactTreeLayout(graph, false);
+			}
+			else if (ident.equals("horizontalTree"))
+			{
+				layout = new mxCompactTreeLayout(graph, true);
+			}
+			else if (ident.equals("parallelEdges"))
+			{
+				layout = new mxParallelEdgeLayout(graph);
+			}
+			else if (ident.equals("placeEdgeLabels"))
+			{
+				layout = new mxEdgeLabelLayout(graph);
+			}
+			else if (ident.equals("organicLayout"))
+			{
+				layout = new mxOrganicLayout(graph);
+			}
+			if (ident.equals("verticalPartition"))
+			{
+				layout = new mxPartitionLayout(graph, false)
+				{
+					/**
+					 * Overrides the empty implementation to return the size of the
+					 * graph control.
+					 */
+					public mxRectangle getContainerSize()
+					{
+						return graphComponent.getLayoutAreaSize();
+					}
+				};
+			}
+			else if (ident.equals("horizontalPartition"))
+			{
+				layout = new mxPartitionLayout(graph, true)
+				{
+					/**
+					 * Overrides the empty implementation to return the size of the
+					 * graph control.
+					 */
+					public mxRectangle getContainerSize()
+					{
+						return graphComponent.getLayoutAreaSize();
+					}
+				};
+			}
+			else if (ident.equals("verticalStack"))
+			{
+				layout = new mxStackLayout(graph, false)
+				{
+					/**
+					 * Overrides the empty implementation to return the size of the
+					 * graph control.
+					 */
+					public mxRectangle getContainerSize()
+					{
+						return graphComponent.getLayoutAreaSize();
+					}
+				};
+			}
+			else if (ident.equals("horizontalStack"))
+			{
+				layout = new mxStackLayout(graph, true)
+				{
+					/**
+					 * Overrides the empty implementation to return the size of the
+					 * graph control.
+					 */
+					public mxRectangle getContainerSize()
+					{
+						return graphComponent.getLayoutAreaSize();
+					}
+				};
+			}
+			else if (ident.equals("circleLayout"))
+			{
+				layout = new mxCircleLayout(graph);
+			}
+		}
+
+		return layout;
+	}
+	/**
+	 * 
+	 * @param msg
+	 */
+	public void status(String msg)
+	{
+//		statusBar.setText(msg);
+	}
+
+
+//	
 //	private void setLayoutOrganic(final Graph graph) {
 //	mxOrganicLayout layout = new mxOrganicLayout(graph);
 //	// Execute layout

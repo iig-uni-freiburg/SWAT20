@@ -5,6 +5,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.TransferHandler;
 
 import com.mxgraph.swing.util.mxGraphActions;
+import com.mxgraph.util.mxResources;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -30,13 +31,46 @@ public class EditorPopupMenu extends JPopupMenu {
 		add(pnEditor.bind("Delete", mxGraphActions.getDeleteAction(), "/images/delete.gif")).setEnabled(selected);
 
 		addSeparator();
+		
+		
 
-		JMenu menu = (JMenu) add(new JMenu("Format"));
+//		JMenu menu = (JMenu) add(new JMenu("Format"));
 		// MenuBar.populateFormatMenu(menu, ptnEditor);
 		add(pnEditor.bind("Edit", mxGraphActions.getEditAction())).setEnabled(selected);
 
 		addSeparator();
 		add(pnEditor.bind("selectVertices", mxGraphActions.getSelectVerticesAction()));
 		add(pnEditor.bind("selectEdges", mxGraphActions.getSelectEdgesAction()));
+		
+//		JMenu submenu = (JMenu) add(new JMenu(mxResources.get("layout")));
+		JMenu submenu = (JMenu) add(new JMenu("Layout"));
+
+		submenu.add(pnEditor.bind("verticalHierarchical",pnEditor.graphLayout("verticalHierarchical", true)));
+		submenu.add(pnEditor.bind("horizontalHierarchical",pnEditor.graphLayout("horizontalHierarchical", true)));
+
+		submenu.addSeparator();
+
+		submenu.add(pnEditor.bind("verticalPartition",pnEditor.graphLayout("verticalPartition", false)));
+		submenu.add(pnEditor.bind("horizontalPartition",pnEditor.graphLayout("horizontalPartition", false)));
+
+		submenu.addSeparator();
+
+		submenu.add(pnEditor.bind("verticalStack",pnEditor.graphLayout("verticalStack", false)));
+		submenu.add(pnEditor.bind("horizontalStack",pnEditor.graphLayout("horizontalStack", false)));
+
+		submenu.addSeparator();
+
+		submenu.add(pnEditor.bind("verticalTree",pnEditor.graphLayout("verticalTree", true)));
+		submenu.add(pnEditor.bind("horizontalTree",pnEditor.graphLayout("horizontalTree", true)));
+
+		submenu.addSeparator();
+
+		submenu.add(pnEditor.bind("placeEdgeLabels",pnEditor.graphLayout("placeEdgeLabels", false)));
+		submenu.add(pnEditor.bind("parallelEdges",pnEditor.graphLayout("parallelEdges", false)));
+
+		submenu.addSeparator();
+
+		submenu.add(pnEditor.bind("organicLayout",pnEditor.graphLayout("organicLayout", true)));
+		submenu.add(pnEditor.bind("circleLayout",pnEditor.graphLayout("circleLayout", true)));
 	}
 }
