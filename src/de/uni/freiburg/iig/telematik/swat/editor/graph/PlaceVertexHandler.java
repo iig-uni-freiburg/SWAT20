@@ -16,9 +16,9 @@ import com.mxgraph.view.mxGraph;
 
 import de.invation.code.toval.validate.Validate;
 
-public class VertexHandler extends mxVertexHandler {
+public class PlaceVertexHandler extends mxVertexHandler {
 
-	public VertexHandler(mxGraphComponent graphComponent, mxCellState state) {
+	public PlaceVertexHandler(mxGraphComponent graphComponent, mxCellState state) {
 		super(graphComponent, state);
 		// TODO Auto-generated constructor stub
 	}

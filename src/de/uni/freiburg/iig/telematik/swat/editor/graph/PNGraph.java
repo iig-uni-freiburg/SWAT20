@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -95,7 +96,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		initialize();
 
 	}
-	
 
 	@SuppressWarnings("rawtypes")
 	private void initialize() throws ParameterException {
@@ -127,8 +127,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	protected abstract String getArcConstraint(AbstractFlowRelation relation);
 
 	@SuppressWarnings("rawtypes")
-	public
-	void addNodeReference(AbstractPNNode pnNode, PNGraphCell cell) {
+	public void addNodeReference(AbstractPNNode pnNode, PNGraphCell cell) {
 		nodeReferences.put(pnNode, cell);
 	}
 
@@ -149,15 +148,34 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	protected PNProperties getPNProperties() {
 		return properties;
 	}
+	
+	public Object addNewPlace(mxPoint mxPoint) throws ParameterException {
+		mxPoint point = mxPoint;
+		String prefix = MXConstants.PlaceNamePrefix;
+		PNGraphCell newCell = null;
+		Integer index = 0;
+		while (getNetContainer().getPetriNet().containsPlace(prefix + index)) {
+			index++;
+		}
+		String nodeName = prefix + index;
+		if (getNetContainer().getPetriNet().addPlace(nodeName)) {
+			AbstractPlace place = getNetContainer().getPetriNet().getPlace(nodeName);
+			NodeGraphics nodeGraphicsWithPousePosition = new NodeGraphics();
+			nodeGraphicsWithPousePosition.setPosition( new Position(point.getX(), point.getY()));
+			newCell = insertPNPlace(place,nodeGraphicsWithPousePosition, null);
+
+		}
+		return newCell;
+	}
 
 	@SuppressWarnings("rawtypes")
 	public PNGraphCell insertPNPlace(AbstractPlace place, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
-		double x = (nodeGraphics == null)?0: nodeGraphics.getPosition().getX();
-		double y = (nodeGraphics == null)?0:nodeGraphics.getPosition().getY();
-		double dimX = (nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize():nodeGraphics.getDimension().getX();
-		double dimY =(nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize(): nodeGraphics.getDimension().getY();
-		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), x,y, dimX, dimY , MXConstants.getNodeStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
-		if(nodeGraphics == null || annotationGraphics == null){
+		double x = (nodeGraphics == null) ? 0 : nodeGraphics.getPosition().getX();
+		double y = (nodeGraphics == null) ? 0 : nodeGraphics.getPosition().getY();
+		double dimX = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultPlaceSize() : nodeGraphics.getDimension().getX();
+		double dimY = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultPlaceSize() : nodeGraphics.getDimension().getY();
+		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), x, y, dimX, dimY, MXConstants.getNodeStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
+		if (nodeGraphics == null || annotationGraphics == null) {
 			mxCellState state = getView().getState(newCell, true);
 			setGraphics(state);
 		}
@@ -195,30 +213,33 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		vertex.setConnectable(true);
 		return vertex;
 	}
-
-	// protected void addNewPlace(Point point){
-	// String prefix = MXConstants.PlaceNamePrefix;
-	// Integer index = 0;
-	// while(getNetContainer().getPetriNet().containsPlace(prefix+index)){
-	// index++;
-	// }
-	// String nodeName = prefix+index;
-	//
-	// if(getNetContainer().getPetriNet().addPlace(nodeName)){
-	// AbstractPlace newPlace =
-	// addNodeReference(newPlace, newCell);
-	//
-	// }
-	// }
+	
+	public Object addNewTransition(mxPoint mxPoint) throws ParameterException {
+		mxPoint point = mxPoint;
+		String prefix = MXConstants.TransitionNamePrefix;
+		PNGraphCell newCell = null;
+		Integer index = 0;
+		while (getNetContainer().getPetriNet().containsTransition(prefix + index)) {
+			index++;
+		}
+		String nodeName = prefix + index;
+		if (getNetContainer().getPetriNet().addTransition(nodeName)) {
+			AbstractTransition transition = getNetContainer().getPetriNet().getTransition(nodeName);
+			NodeGraphics nodeGraphicsWithPousePosition = new NodeGraphics();
+			nodeGraphicsWithPousePosition.setPosition( new Position(point.getX(), point.getY()));
+			newCell = insertPNTransition(transition,nodeGraphicsWithPousePosition, null);
+		}
+		return newCell;
+	}
 
 	@SuppressWarnings("rawtypes")
 	public PNGraphCell insertPNTransition(AbstractTransition transition, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
-		double x = (nodeGraphics == null)?0: nodeGraphics.getPosition().getX();
-		double y = (nodeGraphics == null)?0:nodeGraphics.getPosition().getY();
-		double dimX = (nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize():nodeGraphics.getDimension().getX();
-		double dimY =(nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize(): nodeGraphics.getDimension().getY();
-		PNGraphCell newCell = createTransitionCell(transition.getName(), transition.getLabel(), x,y, dimX, dimY, MXConstants.getNodeStyle(PNComponent.TRANSITION, nodeGraphics, annotationGraphics));
-		if(nodeGraphics == null || annotationGraphics == null){
+		double x = (nodeGraphics == null) ? 0 : nodeGraphics.getPosition().getX();
+		double y = (nodeGraphics == null) ? 0 : nodeGraphics.getPosition().getY();
+		double dimX = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultPlaceSize() : nodeGraphics.getDimension().getX();
+		double dimY = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultPlaceSize() : nodeGraphics.getDimension().getY();
+		PNGraphCell newCell = createTransitionCell(transition.getName(), transition.getLabel(), x, y, dimX, dimY, MXConstants.getNodeStyle(PNComponent.TRANSITION, nodeGraphics, annotationGraphics));
+		if (nodeGraphics == null || annotationGraphics == null) {
 			mxCellState state = getView().getState(newCell, true);
 			setGraphics(state);
 		}
@@ -281,8 +302,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	}
 
 	public abstract void updatePlaceState(PNGraphCell cell, Object tokenInput) throws ParameterException;
-	
-	
+
 	@Override
 	/**
 	 * Returns the tooltip to be used for the given cell.
@@ -303,9 +323,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		}
 		return "";
 	}
+	
+	protected abstract String getPlaceToolTip(PNGraphCell cell);
 
+	protected abstract String getTransitionToolTip(PNGraphCell cell);
 
-
+	protected abstract String getArcToolTip(PNGraphCell cell);
 
 	// Needs to boe overriden for Token-Painting
 	@Override
@@ -326,11 +349,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		if (cell != null && cell != view.getCurrentRoot() && cell != model.getRoot() && (model.isVertex(cell) || model.isEdge(cell))) {
 
 			PNGraphCell customcell;
-			Object  obj;
-if(canvas instanceof mxImageCanvas)
-	obj = canvas.drawCell(state);
-		else
-		obj = drawCell((mxGraphics2DCanvas) canvas, state);
+			Object obj;
+			if (canvas instanceof mxImageCanvas)
+				obj = canvas.drawCell(state);
+			else
+				obj = drawCell((mxGraphics2DCanvas) canvas, state);
 
 			Object lab = null;
 
@@ -417,7 +440,6 @@ if(canvas instanceof mxImageCanvas)
 		return shape;
 	}
 
-
 	protected void drawAdditionalPlaceGrahpics(mxGraphics2DCanvas canvas, mxCellState state) throws ParameterException {
 		Rectangle temp = state.getRectangle();
 		PNGraphCell cell = (PNGraphCell) state.getCell();
@@ -425,8 +447,9 @@ if(canvas instanceof mxImageCanvas)
 		int minDistance = (int) (EditorProperties.getInstance().getDefaultTokenDistance() * getView().getScale());
 		int pointDiameter = (int) (EditorProperties.getInstance().getDefaultTokenSize() * getView().getScale());
 		CircularPointGroup circularPointGroup = new CircularPointGroup(minDistance, pointDiameter);
-		
-		//TODO Making method more general to be able to handle colored marking in cpn
+
+		// TODO Making method more general to be able to handle colored marking
+		// in cpn
 		Integer k = getPlaceStateForCell(cell, circularPointGroup);
 
 		Point center = new Point(temp.x + temp.width / 2, temp.y + temp.height / 2);
@@ -444,10 +467,9 @@ if(canvas instanceof mxImageCanvas)
 		if (state.getWidth() >= requiredWidth)
 			drawPoints(canvas, temp, circularPointGroup, center);
 		else
-			drawNumbers(cell,k.toString(), canvas, temp, center);
+			drawNumbers(cell, k.toString(), canvas, temp, center);
 
 	}
-
 
 	/**
 	 * @param cell
@@ -459,17 +481,16 @@ if(canvas instanceof mxImageCanvas)
 	private void drawNumbers(PNGraphCell cell, String numbers, mxGraphics2DCanvas canvas, Rectangle temp, Point center) {
 		Graphics g = canvas.getGraphics();
 		Graphics2D g2 = (Graphics2D) g;
-		String family = (getCellStyle(cell).get(mxConstants.STYLE_FONTFAMILY) != null)? getCellStyle(cell).get(mxConstants.STYLE_FONTFAMILY).toString():mxConstants.DEFAULT_FONTFAMILY;
+		String family = (getCellStyle(cell).get(mxConstants.STYLE_FONTFAMILY) != null) ? getCellStyle(cell).get(mxConstants.STYLE_FONTFAMILY).toString() : mxConstants.DEFAULT_FONTFAMILY;
 		g2.setFont(new Font(family, Font.PLAIN, (int) (10 * getView().getScale())));
 		g2.setPaint(Color.black);
 		drawString(g2, numbers + "\n", center.x - (int) (temp.width * 0.1), center.y - (int) (g.getFontMetrics().getHeight() * 0.8));
 	}
 
-private void drawString(Graphics g, String text, int x, int y) {
-    for (String line : text.split("\n"))
-        g.drawString(line, x, y+= g.getFontMetrics().getHeight());
-}
-
+	private void drawString(Graphics g, String text, int x, int y) {
+		for (String line : text.split("\n"))
+			g.drawString(line, x, y += g.getFontMetrics().getHeight());
+	}
 
 	protected void drawPoints(mxGraphics2DCanvas canvas, Rectangle temp, CircularPointGroup circularPointGroup, Point center) throws ParameterException {
 		Graphics g = canvas.getGraphics();
@@ -481,10 +502,11 @@ private void drawString(Graphics g, String text, int x, int y) {
 			actColor = iter.next();
 			g.setColor(new Color(actColor.getRGB()));
 			for (de.invation.code.toval.graphic.Position p : circularPointGroup.getCoordinatesFor(actColor)) {
-				GraphicUtils.fillCircle(g, (int) (center.getX() + p.getX()),(int) (center.getY() + p.getY()),circularPointGroup.getPointDiameter());
+				GraphicUtils.fillCircle(g, (int) (center.getX() + p.getX()), (int) (center.getY() + p.getY()), circularPointGroup.getPointDiameter());
 			}
 		}
 	}
+
 	/**
 	 * Sets the positions of place and transition labels according to the<br>
 	 * information contained in the corresponding annotation graphics.<br>
@@ -505,9 +527,8 @@ private void drawString(Graphics g, String text, int x, int y) {
 			}
 		}
 
-
 	}
-	
+
 	/**
 	 * Sets the positions of place and transition labels according to the<br>
 	 * information contained in the corresponding annotation graphics.<br>
@@ -521,36 +542,33 @@ private void drawString(Graphics g, String text, int x, int y) {
 			mxCellState state = getView().getState(cell);
 
 			try {
-				setPositionProperties((PNGraphCell)state.getCell());
+				setPositionProperties((PNGraphCell) state.getCell());
 			} catch (ParameterException e) {
 				System.out.println("Graphics could not be set");
 				e.printStackTrace();
 			}
 		}
 
-
 	}
-
 
 	private void setPositionProperties(PNGraphCell cell) throws ParameterException {
 		switch (cell.getType()) {
 		case ARC:
 			break;
 		case PLACE:
-			if(cell.getGeometry().getX() >=0)
-			properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-			if(cell.getGeometry().getY() >=0)
-			properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());
+			if (cell.getGeometry().getX() >= 0)
+				properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
+			if (cell.getGeometry().getY() >= 0)
+				properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());
 			break;
 		case TRANSITION:
-			if(cell.getGeometry().getX() >=0)
-			properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-			if(cell.getGeometry().getY() >=0)
-			properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getY());
+			if (cell.getGeometry().getX() >= 0)
+				properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
+			if (cell.getGeometry().getY() >= 0)
+				properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getY());
 			break;
 		}
 	}
-
 
 	/**
 	 * Sets the annotation graphics of a Petri net place/transition<br>
@@ -629,33 +647,9 @@ private void drawString(Graphics g, String text, int x, int y) {
 		}
 	}
 
-//	protected void setOffset(mxCellState state, AnnotationGraphics annotationGraphics) {
-//		mxGeometry geometry = getModel().getGeometry(state.getCell());
-//
-//		if (geometry != null) {
-//			double scale = getView().getScale();
-//			double dx = annotationGraphics.getOffset().getX();
-//			double dy = annotationGraphics.getOffset().getY();
-//
-//			mxPoint offset = geometry.getOffset();
-//
-//			if (offset == null) {
-//				offset = new mxPoint();
-//			}
-//
-//			dx += offset.getX();
-//			dy += offset.getY();
-//
-//			geometry = (mxGeometry) geometry.clone();
-//			geometry.setOffset(new mxPoint(Math.round(dx), Math.round(dy)));
-//			getModel().setGeometry(state.getCell(), geometry);
-//		}
-//	}
 
 	// ------- GUI events that represent changes on Petri net components
 	// ----------------------------------------
-
-
 
 	protected void addTransitionToPetriNet(String name, String label) {
 
@@ -775,8 +769,9 @@ private void drawString(Graphics g, String text, int x, int y) {
 
 		return false;
 	}
-	
-	//TREESELECTIONLISTENER - This Method is called when nodes of the PropertiesView Tree are selected
+
+	// TREESELECTIONLISTENER - This Method is called when nodes of the
+	// PropertiesView Tree are selected
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
@@ -851,7 +846,6 @@ private void drawString(Graphics g, String text, int x, int y) {
 		}
 	}
 
-
 	@Override
 	public void cellsMoved(Object[] cells, double dx, double dy, boolean disconnect, boolean constrain) {
 		super.cellsMoved(cells, dx, dy, disconnect, constrain);
@@ -868,8 +862,6 @@ private void drawString(Graphics g, String text, int x, int y) {
 			}
 		}
 	}
-	
-	
 
 	/**
 	 * This method notifies the graph, that some cells have been added.<br>
@@ -912,11 +904,10 @@ private void drawString(Graphics g, String text, int x, int y) {
 		}
 	}
 
-
 	@Override
 	public void cellsRemoved(Object[] cells) {
 		super.cellsRemoved(cells);
-		
+
 		for (Object object : cells) {
 			if (object instanceof PNGraphCell) {
 				PNGraphCell cell = (PNGraphCell) object;
@@ -943,16 +934,10 @@ private void drawString(Graphics g, String text, int x, int y) {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 	}
 
 
-	
-	protected abstract String getPlaceToolTip(PNGraphCell cell);
-	
-	protected abstract String getTransitionToolTip(PNGraphCell cell);
-	
-	protected abstract String getArcToolTip(PNGraphCell cell);
 
 }

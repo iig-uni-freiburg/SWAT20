@@ -11,11 +11,11 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 public class SaveAction extends AbstractPNEditorAction {
 
 	private static final long serialVersionUID = 7716993627349722001L;
-	
+
 	protected boolean success = false;
 	protected String errorMessage = null;
 
-    public SaveAction(PNEditor editor) throws ParameterException {
+	public SaveAction(PNEditor editor) throws ParameterException {
 		super(editor);
 	}
 
@@ -32,11 +32,11 @@ public class SaveAction extends AbstractPNEditorAction {
 		}
 	}
 
-    public boolean isSuccess() {
-        return success;
-    }
-    
-    public String getErrorMessage(){
-    	return errorMessage;
-    }
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 }

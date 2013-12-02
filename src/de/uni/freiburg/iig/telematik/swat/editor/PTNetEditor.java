@@ -93,7 +93,6 @@ public class PTNetEditor extends PNEditor {
 	public static void main(String[] args) throws IOException, ParserException, ParameterException {
 		JFrame frame = new JFrame();
 //		 testEmptyNet(frame);
-		// openSampleNet();
 		openSampleNetWithProperties(frame);
 		
 		// show all
@@ -101,19 +100,15 @@ public class PTNetEditor extends PNEditor {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	private static void testEmptyNet(JFrame frame) throws ParameterException {
-		String userHome = System.getProperty("user.home");
-		File file = new File(userHome + "test");
-		JPanel panel = new PTNetEditor(file);
-		frame.add(panel);
+	private static void testEmptyNet(JFrame frame) throws IOException, ParserException, ParameterException {
+		JPanel panel = createFrameEpmtyNet(frame);
+		PropertiesView pV = ((PNEditor) panel).getPropertiesView();
+		frame.setLayout(new BorderLayout());
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		frame.getContentPane().add(pV, BorderLayout.LINE_END);
 
 	}
 
-	private static void openSampleNet(JFrame frame) throws IOException, ParserException, ParameterException {
-		
-		JPanel panel = createFrame(new JFrame());
-		frame.add(panel);
-	}
 
 	private static void openSampleNetWithProperties(JFrame frame) throws IOException, ParserException, ParameterException {
 		JPanel panel = createFrame(frame);
@@ -124,9 +119,21 @@ public class PTNetEditor extends PNEditor {
 
 	}
 	
+
 	public static JPanel createFrame(JFrame frame) throws IOException, ParserException, ParameterException {
 		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML, false,false);
 		JPanel panel = new PTNetEditor(((GraphicalPTNet) netContainer), new File(PNML));
+		frame.setTitle("PTNet Editor");
+		frame.setSize(800, 500);
+		panel.setBackground(Color.black);
+		return panel;
+	}
+
+	
+	public static JPanel createFrameEpmtyNet(JFrame frame) throws IOException, ParserException, ParameterException {
+		String userHome = System.getProperty("user.home");
+		File file = new File(userHome + "test");
+		JPanel panel = new PTNetEditor(file);
 		frame.setTitle("PTNet Editor");
 		frame.setSize(800, 500);
 		panel.setBackground(Color.black);

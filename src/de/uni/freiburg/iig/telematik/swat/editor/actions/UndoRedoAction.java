@@ -8,21 +8,21 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 public class UndoRedoAction extends AbstractPNEditorAction {
 
 	private static final long serialVersionUID = 4315293729223367039L;
-	
+
 	protected boolean undo;
 
-    public UndoRedoAction(PNEditor pnEditor, boolean undo) throws ParameterException {
-    	super(pnEditor);
-        this.undo = undo;
-    }
+	public UndoRedoAction(PNEditor pnEditor, boolean undo) throws ParameterException {
+		super(pnEditor);
+		this.undo = undo;
+	}
 
-    public void actionPerformed(ActionEvent e) {
-        if (editor != null) {
-            if (undo) {
-                editor.getUndoManager().undo();
-            } else {
-                editor.getUndoManager().redo();
-            }
-        }
-    }
+	public void actionPerformed(ActionEvent e) {
+		if (editor != null) {
+			if (undo) {
+				editor.getUndoManager().undo();
+			} else {
+				editor.getUndoManager().redo();
+			}
+		}
+	}
 }

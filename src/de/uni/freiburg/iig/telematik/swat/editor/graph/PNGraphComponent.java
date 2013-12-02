@@ -25,7 +25,6 @@ import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphTransferHandler;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
 
@@ -64,7 +63,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				PNGraphCell cell = (PNGraphCell) state.getCell();
 				switch (cell.getType()) {
 				case PLACE:
-					return new VertexHandler(this, state);
+					return new PlaceVertexHandler(this, state);
 				case TRANSITION:
 					return new mxVertexHandler(this, state);
 				default:

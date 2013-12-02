@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.properties;
+package de.uni.freiburg.iig.telematik.swat.editor.tree;
 
 import java.awt.Component;
 

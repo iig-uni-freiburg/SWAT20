@@ -16,8 +16,7 @@ import com.mxgraph.view.mxGraph;
 *
 */
 @SuppressWarnings("serial")
-public class ColorAction extends AbstractAction
-{
+public class ColorAction extends AbstractAction {
 	/**
 	 * 
 	 */
@@ -27,8 +26,7 @@ public class ColorAction extends AbstractAction
 	 * 
 	 * @param key
 	 */
-	public ColorAction(String name, String key)
-	{
+	public ColorAction(String name, String key) {
 		this.name = name;
 		this.key = key;
 	}
@@ -36,21 +34,15 @@ public class ColorAction extends AbstractAction
 	/**
 	 * 
 	 */
-	public void actionPerformed(ActionEvent e)
-	{
-		if (e.getSource() instanceof mxGraphComponent)
-		{
-			mxGraphComponent graphComponent = (mxGraphComponent) e
-					.getSource();
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() instanceof mxGraphComponent) {
+			mxGraphComponent graphComponent = (mxGraphComponent) e.getSource();
 			mxGraph graph = graphComponent.getGraph();
 
-			if (!graph.isSelectionEmpty())
-			{
-				Color newColor = JColorChooser.showDialog(graphComponent,
-						name, null);
+			if (!graph.isSelectionEmpty()) {
+				Color newColor = JColorChooser.showDialog(graphComponent, name, null);
 
-				if (newColor != null)
-				{
+				if (newColor != null) {
 					graph.setCellStyles(key, mxUtils.hexString(newColor));
 				}
 			}

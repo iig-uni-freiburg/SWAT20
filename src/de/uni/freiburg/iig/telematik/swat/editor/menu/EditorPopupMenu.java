@@ -32,17 +32,12 @@ public class EditorPopupMenu extends JPopupMenu {
 
 		addSeparator();
 		
-		
-
-//		JMenu menu = (JMenu) add(new JMenu("Format"));
-		// MenuBar.populateFormatMenu(menu, ptnEditor);
 		add(pnEditor.bind("Edit", mxGraphActions.getEditAction())).setEnabled(selected);
 
 		addSeparator();
 		add(pnEditor.bind("selectVertices", mxGraphActions.getSelectVerticesAction()));
 		add(pnEditor.bind("selectEdges", mxGraphActions.getSelectEdgesAction()));
 		
-//		JMenu submenu = (JMenu) add(new JMenu(mxResources.get("layout")));
 		JMenu submenu = (JMenu) add(new JMenu("Layout"));
 
 		submenu.add(pnEditor.bind("verticalHierarchical",pnEditor.graphLayout("verticalHierarchical", true)));

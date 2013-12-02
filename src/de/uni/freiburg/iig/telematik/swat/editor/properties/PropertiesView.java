@@ -35,6 +35,9 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.EditorForFirstColumn;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.EditorForPropertiesFieldColumn;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.JTableRenderer;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNCellEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
@@ -95,8 +98,8 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	}
 
-	//Creates PropertiesFields of for the given Name
-	
+	// Creates PropertiesFields of for the given Name
+
 	private PNTreeNode createFields(String nodeName, PNComponent pnProperty, PNTreeNodeType nodeType) {
 		PNTreeNode node = new PNTreeNode(nodeName, nodeType);
 		Set<PNProperty> propertiesSet = null;
@@ -231,9 +234,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		((JTextField) child.getTable().getValueAt(i, 1)).setText(oldValue);
 	}
 
-	
-	
-	
 	public class PropertiesField extends RestrictedTextField {
 
 		private static final long serialVersionUID = -2791152505686200734L;
@@ -317,10 +317,8 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 	}
 
-	
-	
-	
-	//Listens to different Events from the Graph to update the treestructure and selection
+	// Listens to different Events from the Graph to update the treestructure
+	// and selection
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
@@ -343,9 +341,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 				}
 			}
 		}
-		
-		
-		
+
 		if (evt.getName().equals(mxEvent.CELLS_REMOVED)) {
 			Object[] cells = (Object[]) evt.getProperty("cells");
 			for (Object object : cells) {
@@ -363,7 +359,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 
 		if (sender instanceof JTree) {
 		}
-		
+
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 			if (sender instanceof mxGraphSelectionModel) {
 				for (int i = getRowCount(); i >= 0; i--) {
@@ -399,5 +395,3 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	}
 
 }
-
-

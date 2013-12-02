@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.properties;
+package de.uni.freiburg.iig.telematik.swat.editor.tree;
 
 import java.awt.Component;
 import java.awt.event.FocusEvent;
@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView.PropertiesField;
 
 public class EditorForPropertiesFieldColumn implements TableCellEditor {

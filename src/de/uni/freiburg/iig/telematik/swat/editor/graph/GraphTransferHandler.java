@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.menu;
+package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.datatransfer.Transferable;
 
@@ -13,10 +13,7 @@ import com.mxgraph.view.mxCellState;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 public class GraphTransferHandler extends mxGraphTransferHandler {
@@ -128,14 +125,14 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 				switch (cell.getType()) {
 				case PLACE:
 					try {
-						cells = createTargetPlace(graph, dx, dy);
+						cells = new Object[] {graph.addNewPlace(new mxPoint(dx, dy))};
 					} catch (ParameterException e) {
 						e.printStackTrace();
 					}
 					break;
 				case TRANSITION:
 					try {
-						cells = createTargetPlace(graph, dx, dy);
+						cells = new Object[] { graph.addNewTransition(new mxPoint(dx,dy))};
 					} catch (ParameterException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -158,62 +155,5 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 		return cells;
 	}
 
-	private Object[] createTargetPlace(PNGraph graph, double dx, double dy) throws ParameterException {
-		String prefix = MXConstants.PlaceNamePrefix;
-		PNGraphCell newCell = null;
-		Integer index = 0;
-		while (graph.getNetContainer().getPetriNet().containsPlace(prefix + index)) {
-			index++;
-		}
-		String nodeName = prefix + index;
-		if (graph.getNetContainer().getPetriNet().addPlace(nodeName)) {
-			AbstractPlace place = graph.getNetContainer().getPetriNet().getPlace(nodeName);
-			newCell = graph.createPlaceCell(place.getName(), place.getLabel(), dx, dy, EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(),
-					MXConstants.getNodeStyle(PNComponent.PLACE, null, null));
-			graph.addNodeReference(place, newCell);
-		}
-
-		setGraphicsOfNewCell(dx, dy, newCell, graph);
-		graph.addCell(newCell, graph.getDefaultParent());
-		newCell.setVertex(true);
-		return new Object[] { newCell };
-	}
-
-	private Object createTargetTransition(PNGraph graph, double dx, double dy) throws ParameterException {
-		String prefix = MXConstants.TransitionNamePrefix;
-		PNGraphCell newCell = null;
-		Integer index = 0;
-		while (graph.getNetContainer().getPetriNet().containsTransition(prefix + index)) {
-			index++;
-		}
-		String nodeName = prefix + index;
-		if (graph.getNetContainer().getPetriNet().addTransition(nodeName)) {
-			AbstractTransition transition = graph.getNetContainer().getPetriNet().getTransition(nodeName);
-			newCell = graph.createTransitionCell(transition.getName(), transition.getLabel(), dx, dy, EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance()
-					.getDefaultTransitionHeight(), MXConstants.getNodeStyle(PNComponent.TRANSITION, null, null));
-			graph.addNodeReference(transition, newCell);
-
-		}
-		setGraphicsOfNewCell(dx, dy, newCell, graph);
-		graph.addCell(newCell, graph.getDefaultParent());
-		newCell.setVertex(true);
-		return newCell;
-	}
-
-	/**
-	 * @param point
-	 * @param dy
-	 * @param newCell
-	 * @param graph
-	 * @throws ParameterException
-	 */
-	protected void setGraphicsOfNewCell(double dx, double dy, PNGraphCell newCell, PNGraph graph) throws ParameterException {
-		mxCellState state = graph.getView().getState(newCell, true);
-		state.setX(dx);
-		state.setY(dy);
-		state.setWidth(EditorProperties.getInstance().getDefaultTransitionWidth());
-		state.setHeight(EditorProperties.getInstance().getDefaultTransitionHeight());
-		graph.setGraphics(state);
-	}
 
 }

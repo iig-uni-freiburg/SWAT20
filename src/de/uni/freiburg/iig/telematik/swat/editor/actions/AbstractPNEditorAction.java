@@ -9,16 +9,16 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 public abstract class AbstractPNEditorAction extends AbstractAction {
 
 	private static final long serialVersionUID = -308657344513249134L;
-	
+
 	protected PNEditor editor = null;
-	
+
 	public AbstractPNEditorAction(PNEditor editor) throws ParameterException {
 		super();
 		Validate.notNull(editor);
 		this.editor = editor;
 	}
-	
-	protected PNEditor getEditor(){
+
+	protected PNEditor getEditor() {
 		return editor;
 	}
 

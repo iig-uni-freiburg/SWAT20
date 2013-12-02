@@ -4,11 +4,8 @@
  */
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
-import java.awt.Component;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-
 import java.util.Vector;
 
 import com.mxgraph.model.mxGeometry;
@@ -19,15 +16,11 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
-import com.mxgraph.view.mxGraph;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 /**
  * Connection handler creates new connections between cells. This control is
@@ -84,25 +77,17 @@ public class ConnectionHandler extends mxConnectionHandler {
 						}
 
 						if (commit) {
-							// result = graph.addCell(cell, null, null, src,
-							// trg);
 							AbstractFlowRelation relation = null;
-							try {
-								switch (getSource().getType()) {
-								case PLACE:
-									relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationPT(((mxICell) src).getId(), ((mxICell) trg).getId());
-									break;
-								case TRANSITION:
-									relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationTP(((mxICell) src).getId(), ((mxICell) trg).getId());
-									break;
-								}
-							} catch (ParameterException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
 
-							PNGraphCell newCell = getGraphComponent().getGraph().createArcCell(relation.getName(), getGraphComponent().getGraph().getArcConstraint(relation), new Vector<Position>(),
-									MXConstants.getNodeStyle(PNComponent.ARC, null, null));
+							switch (getSource().getType()) {
+							case PLACE:
+								relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationPT(((mxICell) src).getId(), ((mxICell) trg).getId());
+								break;
+							case TRANSITION:
+								relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationTP(((mxICell) src).getId(), ((mxICell) trg).getId());
+								break;
+							}
+							PNGraphCell newCell = getGraphComponent().getGraph().createArcCell(relation.getName(), getGraphComponent().getGraph().getArcConstraint(relation), new Vector<Position>(), MXConstants.getNodeStyle(PNComponent.ARC, null, null));
 							getGraphComponent().getGraph().addArcReference(relation, newCell);
 							result = graph.addEdge(newCell, graph.getDefaultParent(), graph.getCell(relation.getSource()), graph.getCell(relation.getTarget()), null);
 
@@ -120,6 +105,9 @@ public class ConnectionHandler extends mxConnectionHandler {
 								getGraphComponent().getGraphControl().repaint(dirty);
 							}
 						}
+					} catch (ParameterException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					} finally {
 						graph.getModel().endUpdate();
 					}
@@ -155,10 +143,10 @@ public class ConnectionHandler extends mxConnectionHandler {
 
 							switch (getSource().getType()) {
 							case PLACE:
-								vertex = createTargetTransition(e);
+								vertex = ((PNGraph) graphComponent.getGraph()).addNewTransition(graphComponent.getPointForEvent(e));
 								break;
 							case TRANSITION:
-								vertex = createTargetPlace(e);
+								vertex = ((PNGraph) graphComponent.getGraph()).addNewPlace(graphComponent.getPointForEvent(e));
 								break;
 							}
 
@@ -216,75 +204,6 @@ public class ConnectionHandler extends mxConnectionHandler {
 		}
 
 		reset();
-	}
-
-	private Object createTargetPlace(MouseEvent e) throws ParameterException {
-		mxPoint point = graphComponent.getPointForEvent(e);
-		String prefix = MXConstants.PlaceNamePrefix;
-		PNGraphCell newCell = null;
-		Integer index = 0;
-		while (getGraphComponent().getGraph().getNetContainer().getPetriNet().containsPlace(prefix + index)) {
-			index++;
-		}
-		String nodeName = prefix + index;
-		if (getGraphComponent().getGraph().getNetContainer().getPetriNet().addPlace(nodeName)) {
-			AbstractPlace place = getGraphComponent().getGraph().getNetContainer().getPetriNet().getPlace(nodeName);
-			newCell = getGraphComponent().getGraph().createPlaceCell(place.getName(), place.getLabel(), point.getX(), point.getY(), EditorProperties.getInstance().getDefaultPlaceSize(),
-					EditorProperties.getInstance().getDefaultPlaceSize(), MXConstants.getNodeStyle(PNComponent.PLACE, null, null));
-			getGraphComponent().getGraph().addNodeReference(place, newCell);
-			setGraphicsOfNewCell(point, newCell);
-
-		}
-		newCell.setVertex(true);
-		return newCell;
-	}
-
-	private mxGeometry getPlaceDimension(mxPoint point) {
-		int placeSize = EditorProperties.getInstance().getDefaultPlaceSize();
-		return new mxGeometry(graphComponent.getGraph().snap(point.getX() - placeSize / 2), graphComponent.getGraph().snap(point.getY() - placeSize / 2), placeSize, placeSize);
-	}
-
-	private Object createTargetTransition(MouseEvent e) throws ParameterException {
-		mxPoint point = graphComponent.getPointForEvent(e);
-		String prefix = MXConstants.TransitionNamePrefix;
-		PNGraphCell newCell = null;
-		Integer index = 0;
-		while (getGraphComponent().getGraph().getNetContainer().getPetriNet().containsTransition(prefix + index)) {
-			index++;
-		}
-		String nodeName = prefix + index;
-		if (getGraphComponent().getGraph().getNetContainer().getPetriNet().addTransition(nodeName)) {
-			AbstractTransition transition = getGraphComponent().getGraph().getNetContainer().getPetriNet().getTransition(nodeName);
-			newCell = getGraphComponent().getGraph().createTransitionCell(transition.getName(), transition.getLabel(), point.getX(), point.getY(),
-					EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), MXConstants.getNodeStyle(PNComponent.TRANSITION, null, null));
-			getGraphComponent().getGraph().addNodeReference(transition, newCell);
-			setGraphicsOfNewCell(point, newCell);
-
-		}
-		newCell.setVertex(true);
-
-		return newCell;
-	}
-
-	/**
-	 * @param point
-	 * @param newCell
-	 * @throws ParameterException
-	 */
-	protected void setGraphicsOfNewCell(mxPoint point, PNGraphCell newCell) throws ParameterException {
-		mxCellState state = getGraphComponent().getGraph().getView().getState(newCell, true);
-		state.setX(point.getX());
-		state.setY(point.getY());
-		state.setWidth(EditorProperties.getInstance().getDefaultTransitionWidth());
-		state.setHeight(EditorProperties.getInstance().getDefaultTransitionHeight());
-		getGraphComponent().getGraph().setGraphics(state);
-	}
-
-	private mxGeometry getTransitionDimension(mxPoint point) {
-		int transitionWidth = EditorProperties.getInstance().getDefaultTransitionWidth();
-		int transitionHeight = EditorProperties.getInstance().getDefaultTransitionHeight();
-		return new mxGeometry(graphComponent.getGraph().snap(point.getX() - transitionWidth / 2), graphComponent.getGraph().snap(point.getY() - transitionHeight / 2), transitionWidth,
-				transitionHeight);
 	}
 
 }

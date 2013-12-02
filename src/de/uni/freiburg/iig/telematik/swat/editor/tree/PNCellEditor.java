@@ -68,7 +68,6 @@ public class PNCellEditor extends DefaultCellEditor {
 			result = node.getTable();
 			break;
 
-
 		}
 
 		return result;
