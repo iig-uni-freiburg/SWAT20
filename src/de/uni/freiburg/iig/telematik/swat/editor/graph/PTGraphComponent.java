@@ -2,8 +2,13 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.util.List;
 
 import javax.swing.JOptionPane;
+
+import com.mxgraph.model.mxGeometry;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.graphic.PColor;
 import de.invation.code.toval.types.Multiset;
@@ -79,7 +84,29 @@ public class PTGraphComponent extends PNGraphComponent {
 		return true;
 	}
 
-	
+
+	/**
+	 * Resets the control points of the given edge.
+	 */
+	public Object resetEdge(Object edge)
+	{
+		mxGeometry geo = getGraph().getModel().getGeometry(edge);
+
+		if (geo != null)
+		{
+			// Resets the control points
+			List<mxPoint> points = geo.getPoints();
+
+			if (points != null && !points.isEmpty())
+			{
+				geo = (mxGeometry) geo.clone();
+				geo.setPoints(null);
+				getGraph().getModel().setGeometry(edge, geo);
+			}
+		}
+
+		return edge;
+	}
 	
 
 

@@ -88,7 +88,11 @@ public class CPNEditor extends AbstractCPNEditor {
 
 	@Override
 	public EditorPopupMenu getPopupMenu() {
-		// TODO Auto-generated method stub
+		try {
+			return new EditorPopupMenu(this);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
