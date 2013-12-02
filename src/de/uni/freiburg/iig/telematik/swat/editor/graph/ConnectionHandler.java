@@ -102,7 +102,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 							}
 
 							PNGraphCell newCell = getGraphComponent().getGraph().createArcCell(relation.getName(), getGraphComponent().getGraph().getArcConstraint(relation), new Vector<Position>(),
-									MXConstants.getStyle(PNComponent.ARC, null, null));
+									MXConstants.getNodeStyle(PNComponent.ARC, null, null));
 							getGraphComponent().getGraph().addArcReference(relation, newCell);
 							result = graph.addEdge(newCell, graph.getDefaultParent(), graph.getCell(relation.getSource()), graph.getCell(relation.getTarget()), null);
 
@@ -230,7 +230,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 		if (getGraphComponent().getGraph().getNetContainer().getPetriNet().addPlace(nodeName)) {
 			AbstractPlace place = getGraphComponent().getGraph().getNetContainer().getPetriNet().getPlace(nodeName);
 			newCell = getGraphComponent().getGraph().createPlaceCell(place.getName(), place.getLabel(), point.getX(), point.getY(), EditorProperties.getInstance().getDefaultPlaceSize(),
-					EditorProperties.getInstance().getDefaultPlaceSize(), MXConstants.getStyle(PNComponent.PLACE, null, null));
+					EditorProperties.getInstance().getDefaultPlaceSize(), MXConstants.getNodeStyle(PNComponent.PLACE, null, null));
 			getGraphComponent().getGraph().addNodeReference(place, newCell);
 			setGraphicsOfNewCell(point, newCell);
 
@@ -256,7 +256,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 		if (getGraphComponent().getGraph().getNetContainer().getPetriNet().addTransition(nodeName)) {
 			AbstractTransition transition = getGraphComponent().getGraph().getNetContainer().getPetriNet().getTransition(nodeName);
 			newCell = getGraphComponent().getGraph().createTransitionCell(transition.getName(), transition.getLabel(), point.getX(), point.getY(),
-					EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), MXConstants.getStyle(PNComponent.TRANSITION, null, null));
+					EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), MXConstants.getNodeStyle(PNComponent.TRANSITION, null, null));
 			getGraphComponent().getGraph().addNodeReference(transition, newCell);
 			setGraphicsOfNewCell(point, newCell);
 

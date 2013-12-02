@@ -230,12 +230,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 			}
 			boolean refresh = false;
 
-			System.out.println(e.isPopupTrigger() + "#pmt");// ispopupmenu
-															// alvays false
 			if (e.getClickCount() == 1) {
-				System.out.println("right1");
 				if (e.isPopupTrigger()) {
-					System.out.println("rightclick");
 					// Right click on graph component.
 					if (object == null) {
 						refresh = rightClickOnCanvas(e);

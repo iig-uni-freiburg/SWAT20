@@ -169,7 +169,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 		if (graph.getNetContainer().getPetriNet().addPlace(nodeName)) {
 			AbstractPlace place = graph.getNetContainer().getPetriNet().getPlace(nodeName);
 			newCell = graph.createPlaceCell(place.getName(), place.getLabel(), dx, dy, EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(),
-					MXConstants.getStyle(PNComponent.PLACE, null, null));
+					MXConstants.getNodeStyle(PNComponent.PLACE, null, null));
 			graph.addNodeReference(place, newCell);
 		}
 
@@ -190,7 +190,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 		if (graph.getNetContainer().getPetriNet().addTransition(nodeName)) {
 			AbstractTransition transition = graph.getNetContainer().getPetriNet().getTransition(nodeName);
 			newCell = graph.createTransitionCell(transition.getName(), transition.getLabel(), dx, dy, EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance()
-					.getDefaultTransitionHeight(), MXConstants.getStyle(PNComponent.TRANSITION, null, null));
+					.getDefaultTransitionHeight(), MXConstants.getNodeStyle(PNComponent.TRANSITION, null, null));
 			graph.addNodeReference(transition, newCell);
 
 		}

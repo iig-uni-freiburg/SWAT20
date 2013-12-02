@@ -64,16 +64,9 @@ public abstract class MXConstants {
 		}
 	}
 
-	public static final String DEFAULT_PLACE_SHAPE = "shape=ellipse;" + "fillColor=" + Integer.toHexString(MXConstants.bluehigh.getRGB()) + ";" + "strokeWidth=2.0;" + "strokeColor="
-			+ Integer.toHexString(MXConstants.bluelow.getRGB()) + ";" + "labelBackgroundColor=" + Integer.toHexString(MXConstants.blueBG.getRGB()) + ";";
-	public static final String DEFAULT_TRANSITION_SHAPE = "shape=rectangle;" + "fillColor=" + Integer.toHexString(MXConstants.bluehigh.getRGB()) + ";" + "strokeWidth=2.0;" + "strokeColor="
-			+ Integer.toHexString(MXConstants.bluelow.getRGB()) + ";" + "labelBackgroundColor=" + Integer.toHexString(MXConstants.blueBG.getRGB()) + ";";
-	public static final String DEFAULT_ARC_SHAPE = "";
-	//
 	public static final String PlaceNamePrefix = "p";
 	public static final String TransitionNamePrefix = "t";
-	public static final String PNLabelStyle = "shape=none;fontSize=12;fontColor=" + Integer.toHexString(MXConstants.bluelow.getRGB()) + ";";
-	public static final String SHAPE_CIRCLE = "circle";
+
 	public static final Color SHADOW_COLOR = Color.gray;
 	public static final Color DEFAULT_VALID_COLOR = MXConstants.bluehigh;
 	public static final Color DEFAULT_INVALID_COLOR = Color.RED;
@@ -87,10 +80,12 @@ public abstract class MXConstants {
 	public static final Color EDGE_SELECTION_COLOR = MXConstants.bluelow;
 	public static final Color VERTEX_SELECTION_COLOR = MXConstants.bluelow;
 
-	public static String getStyle(PNComponent type, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) {
+	
+	
+	public static String getNodeStyle(PNComponent type, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) {
 		Hashtable<String, Object> style = new Hashtable<String, Object>() {
 		};
-		
+
 		style.put(mxConstants.STYLE_SPACING_LEFT, EditorProperties.getInstance().getDefaultHorizontalLabelOffset());
 		style.put(mxConstants.STYLE_SPACING_TOP, EditorProperties.getInstance().getDefaultVerticalLabelOffset());
 		switch (type) {
@@ -108,7 +103,6 @@ public abstract class MXConstants {
 			break;
 
 		}
-	
 
 		style.put(mxConstants.STYLE_FILLCOLOR, Integer.toHexString(MXConstants.bluehigh.getRGB()));
 		style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
@@ -143,8 +137,6 @@ public abstract class MXConstants {
 			}
 
 		}
-		
-
 
 		if (annotationGraphics != null) {
 			style.put(mxConstants.STYLE_SPACING_LEFT, Double.toString(annotationGraphics.getOffset().getX()));
@@ -190,21 +182,9 @@ public abstract class MXConstants {
 
 		return shortendStyle;
 	}
-
-	private static Object getSizeFromCSS(String size) {
-		if (size.equals("medium"))
-			return mxConstants.DEFAULT_FONTSIZE;
-		// if(size.equals("small"))
-		// return mxConstants.DEFAULT_FONTSIZE;...
-		// What else cases with medium
-
-		return size;
-	}
-
-	public static String getStyle(ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) {
-		Hashtable<String, Object> style = new Hashtable<String, Object>() {
-		};
-
+	
+	public static String getArcStyle(ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) {
+		Hashtable<String, Object> style = new Hashtable<String, Object>();
 		if (arcGraphics != null) {
 			if (arcGraphics.getLine() != null) {
 
@@ -270,7 +250,7 @@ public abstract class MXConstants {
 
 		return shortendStyle;
 	}
-
+	
 	public static NodeGraphics getNodeGraphics(mxCellState state) throws ParameterException {
 		PNGraphCell cell = (PNGraphCell) state.getCell();
 		Position position = new Position(cell.getGeometry().getX(), cell.getGeometry().getY());
@@ -304,17 +284,32 @@ public abstract class MXConstants {
 				throw new ParameterException(e.getMessage());
 			}
 		}
-System.out.println(dimension);
 		return new NodeGraphics(position, dimension, fill, getLine(state));
 	}
-
-	/**
-	 * @param state
-	 * @param n
-	 * @param annotation
-	 * @return
-	 * @throws ParameterException
-	 */
+	
+	private static Line getLine(mxCellState state) throws ParameterException {
+		Line line = new Line();
+		String color = (String) state.getStyle().get(mxConstants.STYLE_STROKECOLOR);
+		line.setColor(color);
+		line.setShape(Line.Shape.LINE);
+		String strokeStyle = (String) state.getStyle().get(mxConstants.STYLE_DASHED);
+		boolean dashed = new Boolean(strokeStyle);
+		if (dashed) {
+			line.setStyle(Line.Style.DASH);
+		} else {
+			line.setStyle(Line.Style.SOLID);
+		}
+		String lineWidth;
+		if (state.getStyle().get(mxConstants.STYLE_STROKEWIDTH) instanceof String) {
+			lineWidth = (String) state.getStyle().get(mxConstants.STYLE_STROKEWIDTH);
+		} else
+			lineWidth = Double.toString((Double) state.getStyle().get(mxConstants.STYLE_STROKEWIDTH));
+			
+		
+		line.setWidth(Double.parseDouble(lineWidth));
+		return line;
+	}
+	
 	public static AnnotationGraphics getAnnotationGraphics(mxCellState state) throws ParameterException {
 		mxPoint offset = new mxPoint();
 		if (((PNGraphCell) state.getCell()).getGeometry().getOffset() != null)
@@ -389,30 +384,7 @@ System.out.println(dimension);
 		return annotation;
 	}
 
-	private static Line getLine(mxCellState state) throws ParameterException {
-		Line line = new Line();
-		String color = (String) state.getStyle().get(mxConstants.STYLE_STROKECOLOR);
-		line.setColor(color);
-		line.setShape(Line.Shape.LINE);
-		String strokeStyle = (String) state.getStyle().get(mxConstants.STYLE_DASHED);
-		boolean dashed = new Boolean(strokeStyle);
-		if (dashed) {
-			line.setStyle(Line.Style.DASH);
-		} else {
-			line.setStyle(Line.Style.SOLID);
-		}
-		String lineWidth;
-		if (state.getStyle().get(mxConstants.STYLE_STROKEWIDTH) instanceof String) {
-			lineWidth = (String) state.getStyle().get(mxConstants.STYLE_STROKEWIDTH);
-		} else
-			lineWidth = Double.toString((Double) state.getStyle().get(mxConstants.STYLE_STROKEWIDTH));
-		// Validate.positiveInteger(lineWidth);
-		line.setWidth(Double.parseDouble(lineWidth));
-		return line;
-	}
-
 	// What means Line in Annotationgraphics?
-
 	private static Line getLineAnnotation(mxCellState state) throws ParameterException {
 		Line line = new Line();
 		line.setShape(Line.Shape.LINE);
@@ -439,8 +411,19 @@ System.out.println(dimension);
 		return new ArcGraphics(positions, getLine(state));
 	}
 
-	public static AnnotationGraphics getArcAnnotationGraphics(mxCellState state) {
-		// TODO Auto-generated method stub
-		return null;
+	public static AnnotationGraphics getArcAnnotationGraphics(mxCellState state) throws ParameterException {
+		
+		return getAnnotationGraphics(state);
 	}
+	
+	private static Object getSizeFromCSS(String size) {
+		if (size.equals("medium"))
+			return mxConstants.DEFAULT_FONTSIZE;
+		// if(size.equals("small"))
+		// return mxConstants.DEFAULT_FONTSIZE;...
+		// Other cases...
+
+		return size;
+	}
+
 }

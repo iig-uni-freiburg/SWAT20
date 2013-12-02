@@ -156,7 +156,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		double y = (nodeGraphics == null)?0:nodeGraphics.getPosition().getY();
 		double dimX = (nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize():nodeGraphics.getDimension().getX();
 		double dimY =(nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize(): nodeGraphics.getDimension().getY();
-		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), x,y, dimX, dimY , MXConstants.getStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
+		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), x,y, dimX, dimY , MXConstants.getNodeStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
 		if(nodeGraphics == null || annotationGraphics == null){
 			mxCellState state = getView().getState(newCell, true);
 			setGraphics(state);
@@ -217,7 +217,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		double y = (nodeGraphics == null)?0:nodeGraphics.getPosition().getY();
 		double dimX = (nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize():nodeGraphics.getDimension().getX();
 		double dimY =(nodeGraphics == null)?EditorProperties.getInstance().getDefaultPlaceSize(): nodeGraphics.getDimension().getY();
-		PNGraphCell newCell = createTransitionCell(transition.getName(), transition.getLabel(), x,y, dimX, dimY, MXConstants.getStyle(PNComponent.TRANSITION, nodeGraphics, annotationGraphics));
+		PNGraphCell newCell = createTransitionCell(transition.getName(), transition.getLabel(), x,y, dimX, dimY, MXConstants.getNodeStyle(PNComponent.TRANSITION, nodeGraphics, annotationGraphics));
 		if(nodeGraphics == null || annotationGraphics == null){
 			mxCellState state = getView().getState(newCell, true);
 			setGraphics(state);
@@ -258,7 +258,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	@SuppressWarnings("rawtypes")
 	public Object insertPNRelation(AbstractFlowRelation relation, String value, ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) {
 		Vector<Position> positions = arcGraphics == null ? new Vector<Position>() : arcGraphics.getPositions();
-		PNGraphCell newCell = createArcCell(relation.getName(), getArcConstraint(relation), positions, MXConstants.getStyle(arcGraphics, annotationGraphics));
+		PNGraphCell newCell = createArcCell(relation.getName(), getArcConstraint(relation), positions, MXConstants.getArcStyle(arcGraphics, annotationGraphics));
 		addEdge(newCell, getDefaultParent(), getCell(relation.getSource()), getCell(relation.getTarget()), null);
 		addArcReference(relation, newCell);
 		return newCell;
@@ -855,7 +855,6 @@ private void drawString(Graphics g, String text, int x, int y) {
 	@Override
 	public void cellsMoved(Object[] cells, double dx, double dy, boolean disconnect, boolean constrain) {
 		super.cellsMoved(cells, dx, dy, disconnect, constrain);
-		System.out.println("jau");
 		for (Object object : cells) {
 			if (object instanceof PNGraphCell) {
 				PNGraphCell cell = (PNGraphCell) object;

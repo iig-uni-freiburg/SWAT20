@@ -335,7 +335,6 @@ public abstract class PNProperties {
 	 * @throws ParameterException If the given place size is invalid or the net does not contain a place with the given name.
 	 */
 	public void setPlacePositionY(Object sender, String placeName, Integer position) throws ParameterException{
-		System.out.println(position);
 		Validate.notNull(placeName);
 		Validate.notNull(position);
 		Validate.bigger(position, -1);

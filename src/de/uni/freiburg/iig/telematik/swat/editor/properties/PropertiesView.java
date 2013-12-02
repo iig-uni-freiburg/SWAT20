@@ -119,7 +119,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 			PropertiesField field = null;
 			try {
 				field = new PropertiesField(pnProperty, nodeName, properties.getValue(pnProperty, nodeName, property), property);
-				System.out.println(pnProperty + "#" + nodeName + property);
 			} catch (ParameterException e1) {
 				System.out.println("properties.getValue(...) Values could not be called");
 				e1.printStackTrace();

@@ -38,8 +38,8 @@ public class PalettePanel extends JPanel {
     public PalettePanel() {
 //        setLayout(new GridLayout(getComponentCount(), 1));
     	setLayout(new GridLayout(6, 1)); // smaller Icons
-        addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), MXConstants.DEFAULT_TRANSITION_SHAPE, EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), null);
-		addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), MXConstants.DEFAULT_PLACE_SHAPE, EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(), null);
+        addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), MXConstants.getNodeStyle(PNComponent.TRANSITION,null,null), EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight(), null);
+		addPlaceTemplate("Place", new ImageIcon(PNEditor.class.getResource("/images/ellipse.png")), MXConstants.getNodeStyle(PNComponent.PLACE, null, null), EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize(), null);
    
     }
 
