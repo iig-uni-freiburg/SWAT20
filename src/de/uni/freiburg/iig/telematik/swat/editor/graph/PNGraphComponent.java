@@ -193,7 +193,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		public void mousePressed(MouseEvent e) {
 
 			// Handles context menu on the Mac where the trigger is on mousepressed
-			mouseClicked(e);
+//			mouseClicked(e.getModifiers());
 
 		}
 
@@ -204,7 +204,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		public void mouseReleased(MouseEvent e) {
 			// Handles context menu on Windows where the trigger is on mousereleased
 			//TODO also working on Linux?
-			mouseClicked(e);
+//			mouseClicked(e);
 		}
 
 		@Override
@@ -228,9 +228,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				cell = (PNGraphCell) object;
 			}
 			boolean refresh = false;
-
 			if (e.getClickCount() == 1) {
-				if (e.isPopupTrigger()) {
+				if (e.getModifiers() == 4) {
 					// Right click on graph component.
 					if (object == null) {
 						refresh = rightClickOnCanvas(e);
@@ -250,7 +249,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				} else {
 					// Left click on graph component.
 				}
-			} else if (e.getClickCount() == 2 && !e.isPopupTrigger()) {
+			} else if (e.getClickCount() == 2 && !(e.getModifiers() == 4)) {
+				System.out.println("double");
 				// Double click on graph component.
 				if (object == null) {
 					refresh = doubleClickOnCanvas(e);

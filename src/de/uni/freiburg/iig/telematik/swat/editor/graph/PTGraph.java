@@ -1,49 +1,15 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-
-import com.mxgraph.canvas.mxGraphics2DCanvas;
-import com.mxgraph.canvas.mxICanvas;
-import com.mxgraph.canvas.mxImageCanvas;
-import com.mxgraph.shape.mxEllipseShape;
-import com.mxgraph.shape.mxIShape;
-import com.mxgraph.shape.mxStencilRegistry;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxCellState;
-import com.mxgraph.view.mxGraphSelectionModel;
-
 import de.invation.code.toval.graphic.CircularPointGroup;
-import de.invation.code.toval.graphic.GraphicUtils;
 import de.invation.code.toval.graphic.PColor;
-import de.invation.code.toval.graphic.Position;
+import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.TokenGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 
 /**
  * @author julius
@@ -72,8 +38,8 @@ public class PTGraph extends PNGraph {
 	}
 
 	@Override
-	public void updatePlaceState(PNGraphCell cell, Object state) throws ParameterException {
-		Integer tokens =  new Integer((String) state);
+	public void updatePlaceState(PNGraphCell cell, Multiset<String> state) throws ParameterException {
+		Integer tokens =  state.multiplicity("black");
 		PTMarking initialMarking = getNetContainer().getPetriNet().getInitialMarking();
 		initialMarking.set(cell.getId(), new Integer(tokens));
 		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
@@ -85,10 +51,12 @@ public class PTGraph extends PNGraph {
 	 * @param circularPointGroup
 	 * @return
 	 */
-	protected Integer getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup) {
+	protected Multiset<String> getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup) {
 		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(cell.getId());
 		circularPointGroup.addPoints(PColor.black, place.getState());
-		return place.getState() ;
+		Multiset<String> multiSet = new Multiset<String>();
+		multiSet.setMultiplicity("black", place.getState());
+		return multiSet;
 	}
 	
 

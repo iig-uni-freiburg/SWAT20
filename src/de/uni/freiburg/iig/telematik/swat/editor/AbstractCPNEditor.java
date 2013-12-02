@@ -5,6 +5,7 @@ import java.io.File;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.CPNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 
 public abstract class AbstractCPNEditor extends PNEditor {
@@ -34,8 +35,7 @@ public abstract class AbstractCPNEditor extends PNEditor {
 
 	@Override
 	protected PNProperties getPNProperties() {
-		//TODO:		return (CPNProperties) super.getPNProperties();
-		return null;
+		return (CPNProperties) super.getPNProperties();
 	}
 	
 	

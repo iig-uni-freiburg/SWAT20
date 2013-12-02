@@ -5,8 +5,11 @@ import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JOptionPane;
 
+import de.invation.code.toval.graphic.PColor;
+import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 
 public class PTGraphComponent extends PNGraphComponent {
@@ -33,7 +36,9 @@ public class PTGraphComponent extends PNGraphComponent {
 
 		if (tokens != null) {
 			try {
-				getGraph().updatePlaceState(cell, tokens);
+				Multiset<String> multiSet = new Multiset<String>();
+				multiSet.setMultiplicity("black", new Integer(tokens));
+				getGraph().updatePlaceState(cell, multiSet);
 			} catch (ParameterException e2) {
 				JOptionPane.showMessageDialog(PTGraphComponent.this, "Cannot set initial marking for place.\n Reason: " + e2.getMessage(), "Graph Exception", JOptionPane.ERROR_MESSAGE);
 			}

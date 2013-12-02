@@ -16,7 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -35,13 +34,13 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.swing.util.mxGraphActions;
-import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.swing.util.mxGraphActions.DeleteAction;
+import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxResources;
-import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
@@ -93,8 +92,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent {
 	protected PropertiesView propertiesView = null;
 	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
 
-	// ------- Constructors
-	// --------------------------------------------------------------------
+	// ------- Constructors --------------------------------------------------------------------
 
 	public PNEditor(File fileReference) throws ParameterException {
 		super();
@@ -130,8 +128,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent {
 
 	protected abstract PNProperties createPNProperties();
 
-	// ------- Set Up GUI
-	// -----------------------------------------------------------------------
+	// ------- Set Up GUI -----------------------------------------------------------------------
 
 	private void setUpGUI() {
 		setLayout(new BorderLayout());
