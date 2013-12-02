@@ -99,8 +99,6 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		codec.decode(doc.getDocumentElement(), graph.getStylesheet());
 
 	}
-	
-
 
 	@Override
 	protected ConnectionHandler createConnectionHandler() {
@@ -186,8 +184,6 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		}
 
 	}
-	
-
 
 	private class GCMouseAdapter extends MouseAdapter {
 
@@ -195,9 +191,21 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		/**
 		 * 
 		 */
-		public void mouseReleased(MouseEvent e) {
-			System.out.println(e.isPopupTrigger() + "#mr");// ispopupmenu alvays
+		public void mousePressed(MouseEvent e) {
+			System.out.println(e.isPopupTrigger() + "#mp");// ispopupmenu alvays
 															// false
+
+			// Handles context menu on the Mac where the trigger is on
+			// mousepressed
+			mouseClicked(e);
+
+		}
+
+		@Override
+		/**
+		 * 
+		 */
+		public void mouseReleased(MouseEvent e) {
 			mouseClicked(e);
 		}
 
@@ -274,40 +282,42 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 	}
 
-//	public class PaletteTransferHandler extends TransferHandler {
-//
-//		private static final long serialVersionUID = -6764630859491349189L;
-//
-//		public boolean canImport(TransferSupport support) {
-//			if (!support.isDrop()) {
-//				return false;
-//			}
-//			return support.isDataFlavorSupported(new NotInUsePaletteIconDataFlavor());
-//		}
-//
-//		public boolean importData(TransferSupport support) {
-//
-//			if (!canImport(support)) {
-//				return false;
-//			}
-//
-//			Transferable transferable = support.getTransferable();
-//			NotInUsePaletteIcon icon;
-//			try {
-//				icon = (NotInUsePaletteIcon) transferable.getTransferData(new NotInUsePaletteIconDataFlavor());
-//			} catch (Exception e) {
-//				return false;
-//			}
-//
-//			if (icon.getType() == PNComponent.PLACE) {
-//				// addNewPlace(support.getDropLocation().getDropPoint());
-//			} else if (icon.getType() == PNComponent.TRANSITION) {
-//				// addNewTransition(support.getDropLocation().getDropPoint());
-//			}
-//
-//			return true;
-//		}
-//
-//	}
+	// public class PaletteTransferHandler extends TransferHandler {
+	//
+	// private static final long serialVersionUID = -6764630859491349189L;
+	//
+	// public boolean canImport(TransferSupport support) {
+	// if (!support.isDrop()) {
+	// return false;
+	// }
+	// return support.isDataFlavorSupported(new
+	// NotInUsePaletteIconDataFlavor());
+	// }
+	//
+	// public boolean importData(TransferSupport support) {
+	//
+	// if (!canImport(support)) {
+	// return false;
+	// }
+	//
+	// Transferable transferable = support.getTransferable();
+	// NotInUsePaletteIcon icon;
+	// try {
+	// icon = (NotInUsePaletteIcon) transferable.getTransferData(new
+	// NotInUsePaletteIconDataFlavor());
+	// } catch (Exception e) {
+	// return false;
+	// }
+	//
+	// if (icon.getType() == PNComponent.PLACE) {
+	// // addNewPlace(support.getDropLocation().getDropPoint());
+	// } else if (icon.getType() == PNComponent.TRANSITION) {
+	// // addNewTransition(support.getDropLocation().getDropPoint());
+	// }
+	//
+	// return true;
+	// }
+	//
+	// }
 
 }
