@@ -6,7 +6,7 @@ public enum PNProperty {
 	
 	//Place Property Order
 	PLACE_LABEL(Restriction.NOT_EMPTY)						{public String toString() {return 
-	"height"
+	"label"
 																					;}}, 
 	PLACE_SIZE(Restriction.POSITIVE_INTEGER)				{public String toString() {return 
 	"size"
