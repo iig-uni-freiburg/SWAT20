@@ -145,6 +145,7 @@ public abstract class MXConstants {
 
 				if (annotationGraphics.getFont() != null) {
 					Font font = annotationGraphics.getFont();
+					if(font.getAlign() != null)
 					style.put(mxConstants.STYLE_ALIGN, font.getAlign());
 					if (font.getFamily() != null)
 						style.put(mxConstants.STYLE_FONTFAMILY, font.getFamily());
