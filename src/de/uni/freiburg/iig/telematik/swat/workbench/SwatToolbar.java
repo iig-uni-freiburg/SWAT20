@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -16,6 +18,7 @@ import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.graphic.DisplayFrame;
 import de.invation.code.toval.graphic.FileNameChooser;
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
@@ -161,7 +164,23 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
 				if(netName != null){
 					IFNet newNet = new IFNet();
-					//TODO Put net in components
+					// Generate corresponding file
+					try {
+						File file = new File(SwatProperties.getInstance().getWorkingDirectory(), netName);
+						// TODO:
+						// SwatComponents.getInstance().putIntoSwatComponent(newNet,
+						// file);
+					} catch (PropertyException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ParameterException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
 				}
 			}
 		});

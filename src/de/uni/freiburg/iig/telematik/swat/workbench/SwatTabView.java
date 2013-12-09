@@ -86,6 +86,15 @@ public class SwatTabView extends JTabbedPane {
 	//
 	// }
 
+	/**
+	 * Adds node to the tab view. Additionally, returns the swat component that
+	 * the PNEditor generated
+	 * 
+	 * @param node
+	 *            from SwatTreeView
+	 * @return The {@link SwatComponents} that the {@link PNEditor} generated
+	 *         out of the node
+	 */
 	@SuppressWarnings("rawtypes")
 	public SwatComponent addNewTab(SwatTreeNode node) {
 		try {

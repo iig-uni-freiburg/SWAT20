@@ -39,6 +39,9 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	private static final String ACTION_COMMAND_EDIT_MODE = "editMode";
 	private static final String ACTION_COMMAND_ANALYSIS_MODE = "analysisMode";
 
+	private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
+	private static int ICON_SIZE = 26;
+
 	private SwatTabView tabView;
 	private SwatTreeView treeView;
 
@@ -68,17 +71,17 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		JMenuItem open = new JMenuItem("Switch working directory", UIManager.getIcon("FileView.directoryIcon"));
 		open.addActionListener(new SwitchWorkingDirectoryAction(treeView, tabView));
 
-		// TODO: Add appropriate actions.
 		JMenuItem saveAll = getSaveAllEntry();
 		JMenuItem save = getSaveEntry();
 
-		JMenuItem addFile = new JMenuItem("Add file...", new ImageIcon(getClass().getResource("../resources/addFile.png")));
-		JMenuItem exit = new JMenuItem("Exit");
+		// JMenuItem addFile = new JMenuItem("Add file...", new
+		// ImageIcon(getClass().getResource("../resources/addFile.png")));
+		JMenuItem exit = getExitEntry();
 
 		fileMenu.add(open);
 		fileMenu.add(saveAll);
 		fileMenu.add(save);
-		fileMenu.add(addFile);
+		// fileMenu.add(addFile);
 		fileMenu.add(exit);
 
 		return fileMenu;
@@ -88,6 +91,24 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
 		save.addActionListener(new SaveActiveComponentAction(tabView));
 		return save;
+	}
+
+	private JMenuItem getExitEntry() {
+		JMenuItem exit = new JMenuItem("Exit");
+		ImageIcon icon = new ImageIcon(SwatMenuBar.this.getClass().getResource(
+				String.format(iconNameFormat, ICON_SIZE, "close_window", ICON_SIZE)));
+		exit.setIcon(icon);
+		exit.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Save all Components
+				new SaveAllAction().actionPerformed(new ActionEvent(this, 0, "save"));
+				System.exit(0);
+			}
+		});
+
+		return exit;
 	}
 
 	private JMenuItem getSaveAllEntry() {
