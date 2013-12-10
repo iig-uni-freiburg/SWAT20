@@ -11,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
@@ -20,11 +21,7 @@ import de.invation.code.toval.graphic.DisplayFrame;
 import de.invation.code.toval.graphic.FileNameChooser;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPTNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
@@ -126,79 +123,84 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private JButton getNewPTNetButton(){
 		//TODO Adjust Icon
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
-		newButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
-				if(netName != null){
-					try {
-						File file = getAbsolutePathToWorkingDir(netName);
-						PTNet newNet = new PTNet();
-						AbstractGraphicalPTNet<?, ?, ?, ?, ?, ?> test;
-					} catch (PropertyException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (ParameterException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
-					//TODO Put net in components
-				}
-			}
-		});
+		newButton.addActionListener(new createNewAction());
+		//		newButton.addActionListener(new ActionListener() {
+		//			@Override
+		//			public void actionPerformed(ActionEvent e) {
+		//				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
+		//				if(netName != null){
+		//					try {
+		//						File file = getAbsolutePathToWorkingDir(netName);
+		//						PTNet newNet = new PTNet();
+		//						AbstractGraphicalPTNet<?, ?, ?, ?, ?, ?> test;
+		//					} catch (PropertyException e1) {
+		//						// TODO Auto-generated catch block
+		//						e1.printStackTrace();
+		//					} catch (ParameterException e1) {
+		//						// TODO Auto-generated catch block
+		//						e1.printStackTrace();
+		//					} catch (IOException e1) {
+		//						// TODO Auto-generated catch block
+		//						e1.printStackTrace();
+		//					}
+		//
+		//					//TODO Put net in components
+		//				}
+		//			}
+		//		});
 		return newButton;
 	}
 	
 	private JButton getNewCPNButton(){
 		//TODO Adjust Icon
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
-		newButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
-				if(netName != null){
-					CPN newNet = new CPN();
-					//TODO Put net in components
-				}
-			}
-		});
+		newButton.addActionListener(new createNewAction());
+		//		newButton.addActionListener(new ActionListener() {
+		//			
+		//			@Override
+		//			public void actionPerformed(ActionEvent e) {
+		//				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
+		//				if(netName != null){
+		//					CPN newNet = new CPN();
+		//					//TODO Put net in components
+		//				}
+		//			}
+		//		});
 		return newButton;
 	}
 	
 	private JButton getNewIFNetButton(){
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
-		newButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
-				if(netName != null){
-					IFNet newNet = new IFNet();
-					try {
-						// Generate corresponding file
-						File file = getAbsolutePathToWorkingDir(netName);
-						// TODO:
-						PTNetEditor editor = new PTNetEditor(file);
-						SwatComponents.getInstance().putIntoSwatComponent(editor.getNetContainer(), file);
-					} catch (PropertyException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (ParameterException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
-				}
-			}
-		});
+		newButton.addActionListener(new createNewAction());
+		//		newButton.addActionListener(new ActionListener() {
+		//			
+		//			@Override
+		//			public void actionPerformed(ActionEvent e) {
+		//				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
+		//				if(netName != null){
+		//					//IFNet newNet = new IFNet();
+		//					try {
+		//						// Test new file name
+		//						File file = getAbsolutePathToWorkingDir(netName);
+		//						GraphicalPTNet newNet = new GraphicalPTNet();
+		//						SwatComponents.getInstance().putIntoSwatComponent(newNet, file);
+		//						//Inform Tree View of changed components
+		//						treeView.removeAndUpdateSwatComponents();
+		//					} catch (PropertyException e1) {
+		//						// TODO Auto-generated catch block
+		//						e1.printStackTrace();
+		//					} catch (ParameterException e1) {
+		//						// TODO Auto-generated catch block
+		//						e1.printStackTrace();
+		//					} catch (IOException e1) {
+		//						// TODO Auto-generated catch block
+		//						e1.printStackTrace();
+		//					}
+		//
+		//				}
+		//			}
+		//		});
+		newButton.setToolTipText("Create new IFnet");
 		return newButton;
 	}
 	
@@ -319,4 +321,46 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	//
 	// }
 
+
+	class createNewAction implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
+		if(netName != null){
+			//IFNet newNet = new IFNet();
+			try {
+				// Test new file name
+				File file = getAbsolutePathToWorkingDir(netName);
+				GraphicalPTNet newNet = new GraphicalPTNet();
+				SwatComponents.getInstance().putIntoSwatComponent(newNet, file);
+				//Inform Tree View of changed components
+				treeView.removeAndUpdateSwatComponents();
+			} catch (PropertyException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ParameterException e1) {
+					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this), e1.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	private String requestFileName(String message, String title){
+			return new FileNameChooser(SwingUtilities.getWindowAncestor(SwatToolbar.this.getParent()), message, title, false)
+					.requestInput();
+	}
+
+		private File getAbsolutePathToWorkingDir(String name) throws PropertyException, ParameterException, IOException {
+			File file = new File(SwatProperties.getInstance().getWorkingDirectory(), name + ".pnml");
+			if (file.exists())
+				throw new ParameterException("File already exists");
+			//TODO: Validate, test if SWATComponent already contains net with same name... etc?
+			return file;
+	}
+}
 }
