@@ -20,9 +20,11 @@ import de.invation.code.toval.graphic.DisplayFrame;
 import de.invation.code.toval.graphic.FileNameChooser;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
@@ -129,7 +131,21 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			public void actionPerformed(ActionEvent e) {
 				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
 				if(netName != null){
-					PTNet newNet = new PTNet();
+					try {
+						File file = getAbsolutePathToWorkingDir(netName);
+						PTNet newNet = new PTNet();
+						AbstractGraphicalPTNet<?, ?, ?, ?, ?, ?> test;
+					} catch (PropertyException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ParameterException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
 					//TODO Put net in components
 				}
 			}
@@ -155,7 +171,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private JButton getNewIFNetButton(){
-		//TODO Adjust Icon
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
 		newButton.addActionListener(new ActionListener() {
 			
@@ -164,12 +179,12 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
 				if(netName != null){
 					IFNet newNet = new IFNet();
-					// Generate corresponding file
 					try {
-						File file = new File(SwatProperties.getInstance().getWorkingDirectory(), netName);
+						// Generate corresponding file
+						File file = getAbsolutePathToWorkingDir(netName);
 						// TODO:
-						// SwatComponents.getInstance().putIntoSwatComponent(newNet,
-						// file);
+						PTNetEditor editor = new PTNetEditor(file);
+						SwatComponents.getInstance().putIntoSwatComponent(editor.getNetContainer(), file);
 					} catch (PropertyException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -191,6 +206,14 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		return new FileNameChooser(SwingUtilities.getWindowAncestor(getParent()), message, title, false).requestInput();
 	}
 	
+	private File getAbsolutePathToWorkingDir(String name) throws PropertyException, ParameterException, IOException {
+		File file = new File(SwatProperties.getInstance().getWorkingDirectory(), name);
+		if (file.exists())
+			throw new ParameterException("File already exists");
+		//TODO: Validate, test if SWATComponent already contains net with same name... etc?
+		return file;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
