@@ -185,14 +185,28 @@ public class SwatProperties extends AbstractProperties{
 		return propertyValue;
 	}
 	
+	//------- SCIFF Path -------------------------------------------------------------------
+
+	public void setSciffPath(String directory) throws ParameterException, IOException, PropertyException {
+		//PrismSearcher.validatePrismPath(directory);
+		setProperty(SwatProperty.SCIFF_PATH, directory);
+	}
+
+	public String getSciffPath() throws PropertyException, ParameterException {
+		String propertyValue = getProperty(SwatProperty.SCIFF_PATH);
+		if (propertyValue == null)
+			throw new PropertyException(SwatProperty.SCIFF_PATH, propertyValue);
+		//PrismSearcher.validatePrismPath(propertyValue);
+		return propertyValue;
+	}
+
 	//------- Validation -------------------------------------------------------------------
 	
 	private void validateWorkingDirectory(String path) throws ParameterException{
 		Validate.directory(path);
 	}
 	
-	// ------- Icon
-	// Size-------------------------------------------------------------------
+	// ------- Icon Size--------------------------------------------------------------------
 
 	public int getIconSize() throws PropertyException {
 		String propertyValue = getProperty(SwatProperty.ICON_SIZE);
