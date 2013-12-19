@@ -30,7 +30,7 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraphSelectionModel;
 
-import de.invation.code.toval.graphic.RestrictedTextField;
+import de.invation.code.toval.graphic.component.RestrictedTextField;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;

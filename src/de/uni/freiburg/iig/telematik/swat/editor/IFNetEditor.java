@@ -2,8 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.editor;
 
 import java.io.File;
 
-import com.mxgraph.util.mxEventObject;
-
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;

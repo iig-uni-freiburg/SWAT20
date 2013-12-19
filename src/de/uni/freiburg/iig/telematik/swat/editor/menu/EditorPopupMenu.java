@@ -5,7 +5,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.TransferHandler;
 
 import com.mxgraph.swing.util.mxGraphActions;
-import com.mxgraph.util.mxResources;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;

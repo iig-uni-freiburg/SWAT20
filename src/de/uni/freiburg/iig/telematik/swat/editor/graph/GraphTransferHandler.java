@@ -8,6 +8,7 @@ import com.mxgraph.swing.handler.mxGraphTransferHandler;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
+
 import de.invation.code.toval.validate.ParameterException;
 
 public class GraphTransferHandler extends mxGraphTransferHandler {

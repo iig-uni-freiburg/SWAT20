@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
-import de.invation.code.toval.graphic.RestrictedTextField.Restriction;
+import de.invation.code.toval.graphic.component.RestrictedTextField.Restriction;
 
 public enum PNProperty {
 	

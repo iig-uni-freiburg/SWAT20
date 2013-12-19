@@ -2,10 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.editor.actions;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JEditorPane;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;

@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,8 +14,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JTree;
@@ -26,7 +25,6 @@ import javax.swing.event.TreeSelectionListener;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxImageCanvas;
-import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
@@ -38,9 +36,9 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
-import de.invation.code.toval.graphic.CircularPointGroup;
-import de.invation.code.toval.graphic.GraphicUtils;
-import de.invation.code.toval.graphic.PColor;
+import de.invation.code.toval.graphic.misc.CircularPointGroup;
+import de.invation.code.toval.graphic.misc.PColor;
+import de.invation.code.toval.graphic.util.GraphicUtils;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -56,9 +54,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTPlace;
 //import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent.GCMouseAdapter;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
@@ -531,7 +526,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		while (iter.hasNext()) {
 			actColor = iter.next();
 			g.setColor(new Color(actColor.getRGB()));
-			for (de.invation.code.toval.graphic.Position p : circularPointGroup.getCoordinatesFor(actColor)) {
+			for (de.invation.code.toval.graphic.misc.Position p : circularPointGroup.getCoordinatesFor(actColor)) {
 				GraphicUtils.fillCircle(g, (int) (center.getX() + p.getX()), (int) (center.getY() + p.getY()), circularPointGroup.getPointDiameter());
 			}
 		}

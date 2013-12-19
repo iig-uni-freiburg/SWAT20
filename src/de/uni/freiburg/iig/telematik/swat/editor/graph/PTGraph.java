@@ -1,7 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
-import de.invation.code.toval.graphic.CircularPointGroup;
-import de.invation.code.toval.graphic.PColor;
+import de.invation.code.toval.graphic.misc.CircularPointGroup;
+import de.invation.code.toval.graphic.misc.PColor;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;

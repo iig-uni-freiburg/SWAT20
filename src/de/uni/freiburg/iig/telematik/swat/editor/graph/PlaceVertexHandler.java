@@ -6,15 +6,11 @@ import java.awt.event.MouseEvent;
 
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.swing.handler.mxCellHandler;
 import com.mxgraph.swing.handler.mxVertexHandler;
-import com.mxgraph.swing.util.mxSwingConstants;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
-
-import de.invation.code.toval.validate.Validate;
 
 public class PlaceVertexHandler extends mxVertexHandler {
 

@@ -3,12 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import javax.swing.JOptionPane;
-
-import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.CPNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 
 public class CPNGraphComponent extends PNGraphComponent {
 
