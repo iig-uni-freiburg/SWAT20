@@ -63,7 +63,7 @@ public class PTNetEditor extends PNEditor {
 	@Override
 	protected PNGraphComponent createGraphComponent() {
 		try {
-			return new PTGraphComponent(new PTGraph(getNetContainer(), getPNProperties()), this);
+			return new PTGraphComponent(new PTGraph(getNetContainer(), getPNProperties()));
 		} catch (ParameterException e) {
 			// Should not happen, since getNetContainer() and getPNProperties() never return null;
 			e.printStackTrace();

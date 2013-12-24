@@ -4,9 +4,11 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -15,189 +17,279 @@ import javax.swing.JToolBar;
 import javax.swing.TransferHandler;
 
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxResources;
-import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ColorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.FontStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoRedoAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 public class ToolBar extends JToolBar {
 
 	private static final long serialVersionUID = -6491749112943066366L;
 
 	private boolean ignoreZoomChange = false;
+	
+	private SaveAction saveAction = null;
+	private CutAction cutAction = null;
+	private CopyAction copyAction = null;
+	private PasteAction pasteAction = null;
+	private UndoAction undoAction = null;
+	private RedoAction redoAction = null;
+	private JComboBox fontBox = null;
+	private JComboBox fontSizeBox = null;
+	private JComboBox zoomBox = null;
+	
+	private PNEditor pnEditor = null;
+	
+	private PNGraphCell selectedCell = null;
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
 		Validate.notNull(pnEditor);
+		this.pnEditor = pnEditor;
+		
+		try {
+			saveAction = new SaveAction(pnEditor);
+			cutAction = new CutAction(pnEditor, TransferHandler.getCutAction());
+			copyAction = new CopyAction(pnEditor, TransferHandler.getCopyAction());
+			pasteAction = new PasteAction(pnEditor, TransferHandler.getPasteAction());
+			undoAction = new UndoAction(pnEditor);
+			redoAction = new RedoAction(pnEditor);
+			
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3), getBorder()));
 		setFloatable(false);
 
-		add(pnEditor.bind("Save", new SaveAction(pnEditor), "/images/save.gif"));
+//		BoxLayout layout = new BoxLayout(this, BoxLayout.LINE_AXIS);
+//		setLayout(layout);
+	
+		add(saveAction);
 		addSeparator();
 
-		add(pnEditor.bind("Cut", TransferHandler.getCutAction(), "/images/cut.gif"));
-		add(pnEditor.bind("Copy", TransferHandler.getCopyAction(), "/images/copy.gif"));
-		add(pnEditor.bind("Paste", TransferHandler.getPasteAction(), "/images/paste.gif"));
+		add(cutAction);
+		add(copyAction);
+		add(pasteAction);
 		addSeparator();
 		addSeparator();
-
-		add(pnEditor.bind("Undo", new UndoRedoAction(pnEditor, true), "/images/undo.gif"));
-		add(pnEditor.bind("Redo", new UndoRedoAction(pnEditor, false), "/images/redo.gif"));
-
-		addSeparator();
-
-		// Gets the list of available fonts from the local graphics environment
-		// and adds some frequently used fonts at the beginning of the list
-		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		List<String> fonts = new ArrayList<String>();
-		fonts.addAll(Arrays.asList(new String[] { "Helvetica", "Verdana", "Times New Roman", "Garamond", "Courier New", "-" }));
-		fonts.addAll(Arrays.asList(env.getAvailableFontFamilyNames()));
-
-		final JComboBox fontCombo = new JComboBox(fonts.toArray());
-		fontCombo.setEditable(true);
-		fontCombo.setMinimumSize(new Dimension(120, 0));
-		fontCombo.setPreferredSize(new Dimension(120, 0));
-		fontCombo.setMaximumSize(new Dimension(120, 100));
-		add(fontCombo);
-
-		// private PNEditor editor =pnEditor;
-
-		fontCombo.addActionListener(new ActionListener() {
-
-			/**
-			 * 
-			 */
-			public void actionPerformed(ActionEvent e) {
-				String font = fontCombo.getSelectedItem().toString();
-
-				if (font != null && !font.equals("-")) {
-					mxGraph graph = pnEditor.getGraphComponent().getGraph();
-					graph.setCellStyles(mxConstants.STYLE_FONTFAMILY, font);
-				}
-			}
-		});
-
-		final JComboBox sizeCombo = new JComboBox(new Object[] { "6pt", "8pt", "9pt", "10pt", "12pt", "14pt", "18pt", "24pt", "30pt", "36pt", "48pt", "60pt" });
-		sizeCombo.setEditable(true);
-		sizeCombo.setMinimumSize(new Dimension(65, 0));
-		sizeCombo.setPreferredSize(new Dimension(65, 0));
-		sizeCombo.setMaximumSize(new Dimension(65, 100));
-		add(sizeCombo);
-
-		sizeCombo.addActionListener(new ActionListener() {
-			/**
-			 * 
-			 */
-			public void actionPerformed(ActionEvent e) {
-				mxGraph graph = pnEditor.getGraphComponent().getGraph();
-				graph.setCellStyles(mxConstants.STYLE_FONTSIZE, sizeCombo.getSelectedItem().toString().replace("pt", ""));
-			}
-		});
+	
+		add(undoAction);
+		add(redoAction);
 
 		addSeparator();
+		
+		add(getFontBox());
 
-		add(pnEditor.bind("Bold", new FontStyleAction(true), "/images/bold.gif"));
-		add(pnEditor.bind("Italic", new FontStyleAction(false), "/images/italic.gif"));
-
-		addSeparator();
-
-		// add(pnEditor.bind("Left", new KeyValueAction(mxConstants.STYLE_ALIGN,
-		// mxConstants.ALIGN_LEFT),
-		// "/images/left.gif"));
-		// add(pnEditor.bind("Center", new
-		// KeyValueAction(mxConstants.STYLE_ALIGN,
-		// mxConstants.ALIGN_CENTER),
-		// "/images/center.gif"));
-		// add(pnEditor.bind("Right", new
-		// KeyValueAction(mxConstants.STYLE_ALIGN,
-		// mxConstants.ALIGN_RIGHT),
-		// "/images/right.gif"));
-		//
-		// addSeparator();
-
-		add(pnEditor.bind("Font", new ColorAction("Font", mxConstants.STYLE_FONTCOLOR), "/images/fontcolor.gif"));
-		add(pnEditor.bind("Stroke", new ColorAction("Stroke", mxConstants.STYLE_STROKECOLOR), "/images/linecolor.gif"));
-		add(pnEditor.bind("Fill", new ColorAction("Fill", mxConstants.STYLE_FILLCOLOR), "/images/fillcolor.gif"));
+		add(getFontSizeBox());
 
 		addSeparator();
-
-		final mxGraphView view = pnEditor.getGraphComponent().getGraph().getView();
-		final JComboBox zoomCombo = new JComboBox(new Object[] { "400%", "200%", "150%", "100%", "75%", "50%", mxResources.get("page"), mxResources.get("width"), mxResources.get("actualSize") });
-		zoomCombo.setEditable(true);
-		zoomCombo.setMinimumSize(new Dimension(75, 0));
-		zoomCombo.setPreferredSize(new Dimension(75, 0));
-		zoomCombo.setMaximumSize(new Dimension(75, 100));
-		zoomCombo.setMaximumRowCount(9);
-		add(zoomCombo);
-
-		// Sets the zoom in the zoom combo the current value
-		mxIEventListener scaleTracker = new mxIEventListener() {
-			/**
-			 * 
-			 */
-			public void invoke(Object sender, mxEventObject evt) {
-				ignoreZoomChange = true;
-
-				try {
-					zoomCombo.setSelectedItem((int) Math.round(100 * view.getScale()) + "%");
-				} finally {
-					ignoreZoomChange = false;
-				}
-			}
-		};
-
-		// Installs the scale tracker to update the value in the combo box
-		// if the zoom is changed from outside the combo box
-		view.getGraph().getView().addListener(mxEvent.SCALE, scaleTracker);
-		view.getGraph().getView().addListener(mxEvent.SCALE_AND_TRANSLATE, scaleTracker);
-
-		// Invokes once to sync with the actual zoom value
-		scaleTracker.invoke(null, null);
-
-		zoomCombo.addActionListener(new ActionListener() {
-			/**
-			 * 
-			 */
-			public void actionPerformed(ActionEvent e) {
-				mxGraphComponent graphComponent = pnEditor.getGraphComponent();
-
-				// Zoomcombo is changed when the scale is changed in the diagram
-				// but the change is ignored here
-				if (!ignoreZoomChange) {
-					String zoom = zoomCombo.getSelectedItem().toString();
-
-					if (zoom.equals(mxResources.get("page"))) {
-						graphComponent.setPageVisible(true);
-						graphComponent.setZoomPolicy(mxGraphComponent.ZOOM_POLICY_PAGE);
-					} else if (zoom.equals(mxResources.get("width"))) {
-						graphComponent.setPageVisible(true);
-						graphComponent.setZoomPolicy(mxGraphComponent.ZOOM_POLICY_WIDTH);
-					} else if (zoom.equals(mxResources.get("actualSize"))) {
-						graphComponent.zoomActual();
-					} else {
+		
+//
+////		add(pnEditor.bind("Bold", new FontStyleAction(true), "/images/bold.gif"));
+////		add(pnEditor.bind("Italic", new FontStyleAction(false), "/images/italic.gif"));
+//
+//		addSeparator();
+//
+//		// add(pnEditor.bind("Left", new KeyValueAction(mxConstants.STYLE_ALIGN,
+//		// mxConstants.ALIGN_LEFT),
+//		// "/images/left.gif"));
+//		// add(pnEditor.bind("Center", new
+//		// KeyValueAction(mxConstants.STYLE_ALIGN,
+//		// mxConstants.ALIGN_CENTER),
+//		// "/images/center.gif"));
+//		// add(pnEditor.bind("Right", new
+//		// KeyValueAction(mxConstants.STYLE_ALIGN,
+//		// mxConstants.ALIGN_RIGHT),
+//		// "/images/right.gif"));
+//		//
+//		// addSeparator();
+//
+////		add(pnEditor.bind("Font", new ColorAction("Font", mxConstants.STYLE_FONTCOLOR), "/images/fontcolor.gif"));
+////		add(pnEditor.bind("Stroke", new ColorAction("Stroke", mxConstants.STYLE_STROKECOLOR), "/images/linecolor.gif"));
+////		add(pnEditor.bind("Fill", new ColorAction("Fill", mxConstants.STYLE_FILLCOLOR), "/images/fillcolor.gif"));
+//
+//		addSeparator();
+//
+		
+		add(getZoomBox());
+		
+		deactivate();
+	}
+	
+	private JComboBox getFontBox(){
+		if(fontBox == null){
+			// Gets the list of available fonts from the local graphics environment
+			// and adds some frequently used fonts at the beginning of the list
+			GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			List<String> fonts = new ArrayList<String>();
+			fonts.addAll(Arrays.asList(new String[] { "Helvetica", "Verdana", "Times New Roman", "Garamond", "Courier New", "-" }));
+			fonts.addAll(Arrays.asList(env.getAvailableFontFamilyNames()));
+			fontBox = new JComboBox(fonts.toArray());
+			fontBox.setMinimumSize(new Dimension(200, 24));
+			fontBox.setPreferredSize(new Dimension(200, 24));
+			fontBox.setMaximumSize(new Dimension(200, 24));
+	
+			fontBox.addActionListener(new ActionListener() {
+	
+				public void actionPerformed(ActionEvent e) {
+					if(selectedCell != null){
+						String font = fontBox.getSelectedItem().toString();
+						PNGraph graph = ToolBar.this.pnEditor.getGraphComponent().getGraph();
 						try {
-							zoom = zoom.replace("%", "");
-							double scale = Math.min(16, Math.max(0.01, Double.parseDouble(zoom) / 100));
-							graphComponent.zoomTo(scale, graphComponent.isCenterZoom());
-						} catch (Exception ex) {
-							JOptionPane.showMessageDialog(pnEditor, ex.getMessage());
+							graph.setFontOfSelectedCellLabel(font);
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(ToolBar.this.pnEditor, "Cannot set cell-font: " + e1.getMessage(), "Graph Exception", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
-			}
-		});
+			});
+		}
+		return fontBox;
 	}
+	
+	private JComboBox getFontSizeBox(){
+		if(fontSizeBox == null){
+			fontSizeBox = new JComboBox(new Object[] { "6pt", "8pt", "9pt", "10pt", "12pt", "14pt", "18pt", "24pt", "30pt", "36pt", "48pt", "60pt" });
+			fontSizeBox.setMinimumSize(new Dimension(100, 24));
+			fontSizeBox.setPreferredSize(new Dimension(100, 24));
+			fontSizeBox.setMaximumSize(new Dimension(100, 24));
+			add(fontSizeBox);
+	
+			fontSizeBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(selectedCell != null){
+						String fontSize = fontSizeBox.getSelectedItem().toString().replace("pt", "");
+						PNGraph graph = ToolBar.this.pnEditor.getGraphComponent().getGraph();
+						try {
+							graph.setFontSizeOfSelectedCellLabel(fontSize);
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(ToolBar.this.pnEditor, "Cannot set cell-font size: " + e1.getMessage(), "Graph Exception", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+			});
+		}
+		return fontSizeBox;
+	}
+	
+	private JComboBox getZoomBox(){
+		if(zoomBox == null){
+			final mxGraphView view = pnEditor.getGraphComponent().getGraph().getView();
+			zoomBox = new JComboBox(new Object[] { "400%", "200%", "150%", "100%", "75%", "50%", mxResources.get("page"), mxResources.get("width"), mxResources.get("actualSize") });
+			zoomBox.setMinimumSize(new Dimension(100, 24));
+			zoomBox.setPreferredSize(new Dimension(100, 24));
+			zoomBox.setMaximumSize(new Dimension(100, 24));
+			zoomBox.setMaximumRowCount(9);
+	
+			// Sets the zoom in the zoom combo the current value
+			mxIEventListener scaleTracker = new mxIEventListener() {
+				public void invoke(Object sender, mxEventObject evt) {
+					ignoreZoomChange = true;
+	
+					try {
+						zoomBox.setSelectedItem((int) Math.round(100 * view.getScale()) + "%");
+					} finally {
+						ignoreZoomChange = false;
+					}
+				}
+			};
+	
+			// Installs the scale tracker to update the value in the combo box
+			// if the zoom is changed from outside the combo box
+			view.getGraph().getView().addListener(mxEvent.SCALE, scaleTracker);
+			view.getGraph().getView().addListener(mxEvent.SCALE_AND_TRANSLATE, scaleTracker);
+	
+			// Invokes once to sync with the actual zoom value
+			scaleTracker.invoke(null, null);
+	
+			zoomBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					mxGraphComponent graphComponent = pnEditor.getGraphComponent();
+	
+					// Zoomcombo is changed when the scale is changed in the diagram
+					// but the change is ignored here
+					if (!ignoreZoomChange) {
+						String zoom = zoomBox.getSelectedItem().toString();
+	
+						if (zoom.equals(mxResources.get("page"))) {
+							graphComponent.setPageVisible(true);
+							graphComponent.setZoomPolicy(mxGraphComponent.ZOOM_POLICY_PAGE);
+						} else if (zoom.equals(mxResources.get("width"))) {
+							graphComponent.setPageVisible(true);
+							graphComponent.setZoomPolicy(mxGraphComponent.ZOOM_POLICY_WIDTH);
+						} else if (zoom.equals(mxResources.get("actualSize"))) {
+							graphComponent.zoomActual();
+						} else {
+							try {
+								zoom = zoom.replace("%", "");
+								double scale = Math.min(16, Math.max(0.01, Double.parseDouble(zoom) / 100));
+								graphComponent.zoomTo(scale, graphComponent.isCenterZoom());
+							} catch (Exception ex) {
+								JOptionPane.showMessageDialog(pnEditor, ex.getMessage());
+							}
+						}
+					}
+				}
+			});
+		}
+		return zoomBox;
+	}
+	
+	public void deactivate(){
+		copyAction.setEnabled(false);
+		pasteAction.setEnabled(false);
+		cutAction.setEnabled(false);
+		getFontBox().setEnabled(false);
+		getFontSizeBox().setEnabled(false);
+	}
+	
+	public void updateView(Set<PNGraphCell> selectedComponents){
+		if(selectedComponents == null){
+			deactivate();
+			this.selectedCell = null;
+			return;
+		}
+		if(!selectedComponents.isEmpty()){
+			copyAction.setEnabled(true);
+			pasteAction.setEnabled(true);
+			cutAction.setEnabled(true);
+			if(selectedComponents.size() == 1){
+				this.selectedCell = selectedComponents.iterator().next();
+				boolean isPlaceCell = selectedCell.getType() == PNComponent.PLACE;
+				boolean isTransitionCell = selectedCell.getType() == PNComponent.TRANSITION;
+				boolean isArcCell = selectedCell.getType() == PNComponent.ARC;
+				boolean labelSelected = pnEditor.getGraphComponent().getGraph().isLabelSelected();
+				getFontBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				getFontSizeBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				
+				// Initialize fields.
+			} else {
+				getFontBox().setEnabled(false);
+				getFontSizeBox().setEnabled(false);
+				this.selectedCell = null;
+			}
+		}
+	}
+
 	
 }

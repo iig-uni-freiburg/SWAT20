@@ -14,14 +14,10 @@ import org.w3c.dom.Document;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
-import com.mxgraph.swing.handler.mxCellHandler;
-import com.mxgraph.swing.handler.mxEdgeHandler;
-import com.mxgraph.swing.handler.mxElbowEdgeHandler;
-import com.mxgraph.swing.handler.mxVertexHandler;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
-import com.mxgraph.view.mxEdgeStyle;
-import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
@@ -32,9 +28,9 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 	private EditorPopupMenu popupMenu = null;
 
-	public PNGraphComponent(PNGraph graph, PNEditor pnEditor) {
+	public PNGraphComponent(PNGraph graph) {
 		super(graph);
-		initialize(pnEditor);
+		initialize();
 	}
 
 	@Override
@@ -50,41 +46,41 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		return new GraphTransferHandler();
 	}
 
-	@Override
-	/**
-	 * 
-	 * @param state
-	 *            Cell state for which a handler should be created.
-	 * @return Returns the handler to be used for the given cell state.
-	 */
-	public mxCellHandler createHandler(mxCellState state) {
-		if (graph.getModel().isVertex(state.getCell())) {
-			if (state.getCell() instanceof PNGraphCell) {
-				PNGraphCell cell = (PNGraphCell) state.getCell();
-				switch (cell.getType()) {
-				case PLACE:
-					return new PlaceVertexHandler(this, state);
-				case TRANSITION:
-					return new mxVertexHandler(this, state);
-				default:
-					break;
+//	@Override
+//	/**
+//	 * 
+//	 * @param state
+//	 *            Cell state for which a handler should be created.
+//	 * @return Returns the handler to be used for the given cell state.
+//	 */
+//	public mxCellHandler createHandler(mxCellState state) {
+//		if (graph.getModel().isVertex(state.getCell())) {
+//			if (state.getCell() instanceof PNGraphCell) {
+//				PNGraphCell cell = (PNGraphCell) state.getCell();
+//				switch (cell.getType()) {
+//				case PLACE:
+//					return new PlaceVertexHandler(this, state);
+//				case TRANSITION:
+//					return new mxVertexHandler(this, state);
+//				default:
+//					break;
+//
+//				}
+//			}
+//		} else if (graph.getModel().isEdge(state.getCell())) {
+//			mxEdgeStyleFunction style = graph.getView().getEdgeStyle(state, null, null, null);
+//
+//			if (graph.isLoop(state) || style == mxEdgeStyle.ElbowConnector || style == mxEdgeStyle.SideToSide || style == mxEdgeStyle.TopToBottom) {
+//				return new mxElbowEdgeHandler(this, state);
+//			}
+//
+//			return new mxEdgeHandler(this, state);
+//		}
+//
+//		return new mxCellHandler(this, state);
+//	}
 
-				}
-			}
-		} else if (graph.getModel().isEdge(state.getCell())) {
-			mxEdgeStyleFunction style = graph.getView().getEdgeStyle(state, null, null, null);
-
-			if (graph.isLoop(state) || style == mxEdgeStyle.ElbowConnector || style == mxEdgeStyle.SideToSide || style == mxEdgeStyle.TopToBottom) {
-				return new mxElbowEdgeHandler(this, state);
-			}
-
-			return new mxEdgeHandler(this, state);
-		}
-
-		return new mxCellHandler(this, state);
-	}
-
-	private void initialize(PNEditor pnEditor) {
+	private void initialize() {
 		setGridStyle(mxGraphComponent.GRID_STYLE_LINE);
 		setGridColor(MXConstants.bluehigh);
 		setBackground(MXConstants.blueBG);
@@ -96,7 +92,6 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		mxCodec codec = new mxCodec();
 		Document doc = mxUtils.loadDocument(PNEditor.class.getResource("/default-style.xml").toString());
 		codec.decode(doc.getDocumentElement(), graph.getStylesheet());
-
 	}
 
 	@Override
@@ -248,9 +243,15 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 					}
 				} else {
 					// Left click on graph component.
+					mxCellState cellState = getGraph().getView().getState(cell);
+					if(cellState != null){
+						getGraph().setLabelSelected(cellState.getLabelBounds().contains(e.getX(), e.getY()));
+					} else {
+						getGraph().setLabelSelected(false);
+					}
+					getGraph().invoke(PNGraphComponent.this, new mxEventObject(mxEvent.CHANGE));
 				}
 			} else if (e.getClickCount() == 2 && !(e.getModifiers() == 4)) {
-				System.out.println("double");
 				// Double click on graph component.
 				if (object == null) {
 					refresh = doubleClickOnCanvas(e);

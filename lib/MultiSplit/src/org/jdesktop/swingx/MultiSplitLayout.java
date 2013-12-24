@@ -1332,13 +1332,13 @@ public class MultiSplitLayout implements LayoutManager {
     private static void printModel(String indent, Node root) {
 	if (root instanceof Split) {
 	    Split split = (Split)root;
-	    System.out.println(indent + split);
+//	    System.out.println(indent + split);
 	    for(Node child : split.getChildren()) {
 		printModel(indent + "  ", child);
 	    }
 	}
 	else {
-	    System.out.println(indent + root);
+//	    System.out.println(indent + root);
 	}
     }
 

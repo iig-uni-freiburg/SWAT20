@@ -72,7 +72,7 @@ public class CPNEditor extends AbstractCPNEditor {
 	@Override
 	protected PNGraphComponent createGraphComponent() {
 		try {
-			return new CPNGraphComponent(new CPNGraph(getNetContainer(), getPNProperties()), this);
+			return new CPNGraphComponent(new CPNGraph(getNetContainer(), getPNProperties()));
 		} catch (ParameterException e) {
 			// Should not happen, since getNetContainer() and getPNProperties() never return null;
 			e.printStackTrace();

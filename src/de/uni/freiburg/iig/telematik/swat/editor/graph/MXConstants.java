@@ -321,6 +321,7 @@ public abstract class MXConstants {
 		AnnotationGraphics annotation = null;
 		Fill fill = new Fill();
 		String fillColor = (String) state.getStyle().get(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR);
+		System.out.println(fillColor);
 		if (fillColor != null) {
 			fill.setColor(fillColor);
 		}

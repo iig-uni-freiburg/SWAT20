@@ -25,15 +25,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxEventSource.mxIEventListener;
-import com.mxgraph.view.mxGraphSelectionModel;
-
 import de.invation.code.toval.graphic.component.RestrictedTextField;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.EditorForFirstColumn;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.EditorForPropertiesFieldColumn;
@@ -43,7 +37,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
 import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeType;
 
-public class PropertiesView extends JTree implements PNPropertiesListener, mxIEventListener {
+public class PropertiesView extends JTree implements PNPropertiesListener {
 
 	private static final long serialVersionUID = -23504178961013201L;
 
@@ -53,8 +47,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 	PNTreeNode placesNode = new PNTreeNode("Places", PNTreeNodeType.PLACES);
 	PNTreeNode transitionsNode = new PNTreeNode("Transitions", PNTreeNodeType.TRANSITIONS);
 	PNTreeNode arcsNode = new PNTreeNode("Arcs", PNTreeNodeType.ARCS);
-
-	private PNTreeNode rootNode;
 
 	private PNTreeNode root;
 	private DefaultTreeModel treeModel;
@@ -68,7 +60,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		for (int i = 0; i < getRowCount(); i++) {
 			expandRow(i);
 		}
-
 	}
 
 	/**
@@ -98,8 +89,25 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		setRowHeight(0);
 		PNTreeNodeRenderer renderer = new PNTreeNodeRenderer();
 		setCellRenderer(renderer);
-
-		// add(new JScrollPane(this), BorderLayout.CENTER);
+		
+		// Add PN information
+		List<String> placeNames =  properties.getPlaceNames();
+		Collections.sort(placeNames);
+		for(String placeName: placeNames){
+			insertPlaceNode(placeName);
+		}
+		
+		List<String> transitionNames =  properties.getTransitionNames();
+		Collections.sort(transitionNames);
+		for(String transitionName: transitionNames){
+			insertTransitionNode(transitionName);
+		}
+		
+		List<String> arcNames =  properties.getArcNames();
+		Collections.sort(arcNames);
+		for(String arcName: arcNames){
+			insertArcNode(arcName);
+		}
 
 	}
 
@@ -259,7 +267,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 					super.keyReleased(e);
 					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 						stopEditing();
-						clearSelection();
+//						clearSelection();
 					}
 				}
 
@@ -295,94 +303,52 @@ public class PropertiesView extends JTree implements PNPropertiesListener, mxIEv
 		// try {
 		switch (component) {
 		case PLACE:
-			// createFieldsForPlace(name);
-			// TODO: Add place fields to GUI
+			insertPlaceNode(name);
 			break;
 		case TRANSITION:
-			// createFieldsForTransition(name);
-			// TODO: Add transition fields to GUI
+			insertTransitionNode(name);
 			break;
 		case ARC:
-			// createFieldsForArc(name);
-			// TODO: Add arc fields to GUI
+			insertArcNode(name);
 			break;
 		}
-		// } catch (ParameterException e) {
-		// e.printStackTrace();
-		// }
+	}
+
+	private void insertArcNode(String name) {
+		treeModel.insertNodeInto(createFields(name, PNComponent.ARC, PNTreeNodeType.ARC), arcsNode, arcsNode.getChildCount());
+	}
+
+	private void insertTransitionNode(String name) {
+		treeModel.insertNodeInto(createFields(name, PNComponent.TRANSITION, PNTreeNodeType.TRANSITION), transitionsNode, transitionsNode.getChildCount());
+	}
+
+	private void insertPlaceNode(String name) {
+		treeModel.insertNodeInto(createFields(name, PNComponent.PLACE, PNTreeNodeType.PLACE), placesNode, placesNode.getChildCount());
 	}
 
 	// CURRENTLY NOT IN USE
 
 	@Override
 	public void componentRemoved(PNComponent component, String name) {
-
 		DefaultMutableTreeNode comp = findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), name);
 		treeModel.removeNodeFromParent(comp);
-
 	}
-
-	// Listens to different Events from the Graph to update the treestructure
-	// and selection
-
-	@Override
-	public void invoke(Object sender, mxEventObject evt) {
-		if (evt.getName().equals(mxEvent.CELLS_ADDED)) {
-			Object[] cells = (Object[]) evt.getProperty("cells");
-			for (Object object : cells) {
-				if (object instanceof PNGraphCell) {
-					PNGraphCell cell = (PNGraphCell) object;
-					switch (cell.getType()) {
-					case PLACE:
-						treeModel.insertNodeInto(createFields(cell.getId(), PNComponent.PLACE, PNTreeNodeType.PLACE), placesNode, placesNode.getChildCount());
-						break;
-					case TRANSITION:
-						treeModel.insertNodeInto(createFields(cell.getId(), PNComponent.TRANSITION, PNTreeNodeType.TRANSITION), transitionsNode, transitionsNode.getChildCount());
-						break;
-					case ARC:
-						treeModel.insertNodeInto(createFields(cell.getId(), PNComponent.ARC, PNTreeNodeType.ARC), arcsNode, arcsNode.getChildCount());
-						break;
-					}
-				}
-			}
+	
+	public void selectNode(String name) {
+		DefaultMutableTreeNode node = findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), name);
+		if(node != null){
+			PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
+			TreePath propPath = new TreePath(firstChild.getPath());
+			collapsePath(propPath);
+			setSelectionPath(new TreePath(node.getPath()));
+		} else {
+			deselect();
 		}
-
-		if (evt.getName().equals(mxEvent.CELLS_REMOVED)) {
-			Object[] cells = (Object[]) evt.getProperty("cells");
-			for (Object object : cells) {
-				if (object instanceof PNGraphCell) {
-					PNGraphCell cell = (PNGraphCell) object;
-					treeModel.removeNodeFromParent(findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), cell.getId()));
-				}
-			}
-
-		}
-
-		if (evt.getName().equals(mxEvent.REPAINT)) {
-			repaint();
-		}
-
-		if (sender instanceof JTree) {
-		}
-
-		if (evt.getName().equals(mxEvent.CHANGE)) {
-			if (sender instanceof mxGraphSelectionModel) {
-				for (int i = getRowCount(); i >= 0; i--) {
-					collapseRow(i);
-				}
-
-				if (((mxGraphSelectionModel) sender).getCell() instanceof PNGraphCell) {
-					PNGraphCell cell = (PNGraphCell) ((mxGraphSelectionModel) sender).getCell();
-					DefaultMutableTreeNode node = findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), cell.getId());
-
-					PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
-
-					TreePath propPath = new TreePath(firstChild.getPath());
-					collapsePath(propPath);
-					setSelectionPath(new TreePath(node.getPath()));
-
-				}
-			}
+	}
+	
+	public void deselect(){
+		for (int i = getRowCount(); i >= 0; i--) {
+			collapseRow(i);
 		}
 	}
 

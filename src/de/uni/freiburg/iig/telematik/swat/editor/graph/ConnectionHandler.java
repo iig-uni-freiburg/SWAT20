@@ -6,21 +6,15 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.util.Vector;
 
-import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.handler.mxConnectPreview;
 import com.mxgraph.swing.handler.mxConnectionHandler;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 /**
  * Connection handler creates new connections between cells. This control is
@@ -60,7 +54,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 					PNGraph graph = getGraphComponent().getGraph();
 
 					graph.getModel().beginUpdate();
-					try {
+//					try {
 						mxICell cell = (mxICell) previewState.getCell();
 						Object src = cell.getTerminal(true);
 						Object trg = cell.getTerminal(false);
@@ -73,22 +67,22 @@ public class ConnectionHandler extends mxConnectionHandler {
 							((mxICell) trg).removeEdge(cell, false);
 						}
 
-						if (commit) {
-							AbstractFlowRelation relation = null;
-
-							switch (getSource().getType()) {
-							case PLACE:
-								relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationPT(((mxICell) src).getId(), ((mxICell) trg).getId());
-								break;
-							case TRANSITION:
-								relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationTP(((mxICell) src).getId(), ((mxICell) trg).getId());
-								break;
-							}
-							PNGraphCell newCell = getGraphComponent().getGraph().createArcCell(relation.getName(), getGraphComponent().getGraph().getArcConstraint(relation), new Vector<Position>(), MXConstants.getNodeStyle(PNComponent.ARC, null, null));
-							getGraphComponent().getGraph().addArcReference(relation, newCell);
-							result = graph.addEdge(newCell, graph.getDefaultParent(), graph.getCell(relation.getSource()), graph.getCell(relation.getTarget()), null);
-
-						}
+//						if (commit) {
+//							AbstractFlowRelation relation = null;
+//
+//							switch (getSource().getType()) {
+//							case PLACE:
+//								relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationPT(((mxICell) src).getId(), ((mxICell) trg).getId());
+//								break;
+//							case TRANSITION:
+//								relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationTP(((mxICell) src).getId(), ((mxICell) trg).getId());
+//								break;
+//							}
+//							PNGraphCell newCell = getGraphComponent().getGraph().createArcCell(relation.getName(), getGraphComponent().getGraph().getArcConstraint(relation), new Vector<Position>(), MXConstants.getNodeStyle(PNComponent.ARC, null, null));
+//							getGraphComponent().getGraph().addArcReference(relation, newCell);
+//							result = graph.addEdge(newCell, graph.getDefaultParent(), graph.getCell(relation.getSource()), graph.getCell(relation.getTarget()), null);
+//
+//						}
 
 						fireEvent(new mxEventObject(mxEvent.STOP, "event", e, "commit", commit, "cell", (commit) ? result : null));
 
@@ -102,12 +96,13 @@ public class ConnectionHandler extends mxConnectionHandler {
 								getGraphComponent().getGraphControl().repaint(dirty);
 							}
 						}
-					} catch (ParameterException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} finally {
+//					} catch (ParameterException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					} finally {
+//						graph.getModel().endUpdate();
+//					}
 						graph.getModel().endUpdate();
-					}
 				}
 
 				sourceState = null;
@@ -124,50 +119,54 @@ public class ConnectionHandler extends mxConnectionHandler {
 	public void mouseReleased(MouseEvent e) {
 		if (isActive()) {
 			if (error == null && first != null) {
+				
 				PNGraph graph = getGraphComponent().getGraph();
 				double dx = first.getX() - e.getX();
 				double dy = first.getY() - e.getY();
+				
+				PNGraphCell selectionCell = null;
 
-				Object edge = null;
+
 				if (connectPreview.isActive() && (marker.hasValidState() || isCreateTarget() || graph.isAllowDanglingEdges())) {
 					graph.getModel().beginUpdate();
 
 					try {
-						Object dropTarget = null;
 
 						if (!marker.hasValidState() && isCreateTarget()) {
-							Object vertex = null;
-
+							
+							PNGraphCell targetCell = null;
 							switch (getSource().getType()) {
 							case PLACE:
-								vertex = ((PNGraph) graphComponent.getGraph()).addNewTransition(graphComponent.getPointForEvent(e));
+								targetCell = (PNGraphCell) ((PNGraph) graphComponent.getGraph()).addNewTransition(graphComponent.getPointForEvent(e));
 								break;
 							case TRANSITION:
-								vertex = ((PNGraph) graphComponent.getGraph()).addNewPlace(graphComponent.getPointForEvent(e));
+								targetCell = (PNGraphCell) ((PNGraph) graphComponent.getGraph()).addNewPlace(graphComponent.getPointForEvent(e));
 								break;
 							}
-
-							dropTarget = graph.getDropTarget(new Object[] { vertex }, e.getPoint(), graphComponent.getCellAt(e.getX(), e.getY()));
-
-							if (vertex != null) {
-								// Disables edges as drop targets if the target
-								// cell was created
-								if (dropTarget == null || !graph.getModel().isEdge(dropTarget)) {
-									mxCellState pstate = graph.getView().getState(dropTarget);
-
-									if (pstate != null) {
-										mxGeometry geo = graph.getModel().getGeometry(vertex);
-
-										mxPoint origin = pstate.getOrigin();
-										geo.setX(geo.getX() - origin.getX());
-										geo.setY(geo.getY() - origin.getY());
-									}
-								} else {
-									dropTarget = graph.getDefaultParent();
-								}
-
-								graph.addCells(new Object[] { vertex }, dropTarget);
-							}
+							selectionCell = targetCell;
+							
+							Object edge = ((PNGraph) graphComponent.getGraph()).addNewFlowRelation(getSource(), targetCell);
+							
+//							dropTarget = graph.getDropTarget(new Object[] { targetCell }, e.getPoint(), graphComponent.getCellAt(e.getX(), e.getY()));
+//							if (targetCell != null) {
+//								// Disables edges as drop targets if the target
+//								// cell was created
+//								if (dropTarget == null || !graph.getModel().isEdge(dropTarget)) {
+//									mxCellState pstate = graph.getView().getState(dropTarget);
+//
+//									if (pstate != null) {
+//										mxGeometry geo = graph.getModel().getGeometry(targetCell);
+//
+//										mxPoint origin = pstate.getOrigin();
+//										geo.setX(geo.getX() - origin.getX());
+//										geo.setY(geo.getY() - origin.getY());
+//									}
+//								} else {
+//									dropTarget = graph.getDefaultParent();
+//								}
+//
+//								graph.addCells(new Object[] { targetCell }, dropTarget);
+//							}
 
 							// FIXME: Here we pre-create the state for the
 							// vertex to be
@@ -176,24 +175,22 @@ public class ConnectionHandler extends mxConnectionHandler {
 							// This means we have a cell state which should be
 							// created
 							// after the model.update, so this should be fixed.
-							mxCellState targetState = graph.getView().getState(vertex, true);
+							mxCellState targetState = graph.getView().getState(targetCell, true);
 							connectPreview.update(e, targetState, e.getX(), e.getY());
 
+							eventSource.fireEvent(new mxEventObject(mxEvent.CONNECT, "cell", edge, "event", e, "target", targetCell));
 						}
 
-						edge = connectPreview.stop(graphComponent.isSignificant(dx, dy), e);
-
-						if (edge != null) {
-							graphComponent.getGraph().setSelectionCell(edge);
-							eventSource.fireEvent(new mxEventObject(mxEvent.CONNECT, "cell", edge, "event", e, "target", dropTarget));
-						}
-
+						connectPreview.stop(graphComponent.isSignificant(dx, dy), e);
 						e.consume();
 					} catch (ParameterException e1) {
 						System.out.println(getSource().getType() + "-Vertex could not be created");
 						e1.printStackTrace();
 					} finally {
 						graph.getModel().endUpdate();
+						if(selectionCell != null){
+							((PNGraph) graphComponent.getGraph()).setSelectionCell(selectionCell);
+						}
 					}
 				}
 

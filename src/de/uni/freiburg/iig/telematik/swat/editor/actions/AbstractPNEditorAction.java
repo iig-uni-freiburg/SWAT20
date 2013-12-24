@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -14,9 +15,25 @@ public abstract class AbstractPNEditorAction extends AbstractAction {
 
 	public AbstractPNEditorAction(PNEditor editor) throws ParameterException {
 		super();
+		setEditor(editor);
+	}
+	
+	
+	public AbstractPNEditorAction(PNEditor editor, String name) throws ParameterException {
+		super(name);
+		setEditor(editor);
+	}
+	
+	public AbstractPNEditorAction(PNEditor editor, String name, Icon icon) throws ParameterException {
+		super(name, icon);
+		setEditor(editor);
+	}
+	
+	private void setEditor(PNEditor editor) throws ParameterException{
 		Validate.notNull(editor);
 		this.editor = editor;
 	}
+
 
 	protected PNEditor getEditor() {
 		return editor;

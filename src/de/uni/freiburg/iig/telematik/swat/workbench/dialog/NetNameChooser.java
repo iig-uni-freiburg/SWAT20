@@ -2,10 +2,10 @@ package de.uni.freiburg.iig.telematik.swat.workbench.dialog;
 
 import java.awt.Window;
 
-import de.invation.code.toval.graphic.FileNameChooser;
+import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
-public class NetNameChooser extends FileNameChooser {
+public class NetNameChooser extends FileNameDialog {
 	
 	private static final String NET_NAME_ALREADY_IN_USE = "This net name is already in use";
 

@@ -17,8 +17,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import de.invation.code.toval.graphic.DisplayFrame;
-import de.invation.code.toval.graphic.FileNameChooser;
+import de.invation.code.toval.graphic.component.DisplayFrame;
+import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
@@ -84,7 +84,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 		// try to get ICONSize
 		try {
-			ICON_SIZE = SwatProperties.getInstance().getIconSize();
+			ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
 		} catch (Exception e) {
 			// Cannot read property. Ignore and stay with default value
 		}
@@ -205,7 +205,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private String requestFileName(String message, String title){
-		return new FileNameChooser(SwingUtilities.getWindowAncestor(getParent()), message, title, false).requestInput();
+		return new FileNameDialog(SwingUtilities.getWindowAncestor(getParent()), message, title, false).requestInput();
 	}
 	
 	private File getAbsolutePathToWorkingDir(String name) throws PropertyException, ParameterException, IOException {
@@ -351,7 +351,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private String requestFileName(String message, String title){
-			return new FileNameChooser(SwingUtilities.getWindowAncestor(SwatToolbar.this.getParent()), message, title, false)
+			return new FileNameDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this.getParent()), message, title, false)
 					.requestInput();
 	}
 

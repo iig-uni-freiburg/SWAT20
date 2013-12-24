@@ -4,16 +4,16 @@ import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
 
-import de.invation.code.toval.graphic.ConditionalFileChooser;
+import de.invation.code.toval.graphic.dialog.ConditionalFileDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcherFactory;
 
-public class PrismPathChooser extends ConditionalFileChooser {
+public class PrismPathChooser extends ConditionalFileDialog {
 
 	private static final String errorMessage = "Cannot find prism executables in chosen directory.\n Please choose another directory.";
 
 	public PrismPathChooser(Window parent) {
-		super(parent, ConditionalFileChooser.FileChooserType.DIRECTORY, "Choose Prism directory");
+		super(parent, ConditionalFileDialog.FileChooserType.DIRECTORY, "Choose Prism directory");
 
 	}
 

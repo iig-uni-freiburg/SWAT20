@@ -18,23 +18,22 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxImageCanvas;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphSelectionModel;
 
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
 import de.invation.code.toval.graphic.misc.PColor;
@@ -54,22 +53,25 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-//import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent.GCMouseAdapter;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertiesListener;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertyChangeEvent;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
+//import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent.GCMouseAdapter;
 
-public abstract class PNGraph extends mxGraph implements PNPropertiesListener, TreeSelectionListener {
+public abstract class PNGraph extends mxGraph implements PNPropertiesListener, mxIEventListener {
 
 	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
 	private PNProperties properties = null;
 	@SuppressWarnings("rawtypes")
 	protected Map<AbstractPNNode, PNGraphCell> nodeReferences = new HashMap<AbstractPNNode, PNGraphCell>();
 	private Map<AbstractFlowRelation, PNGraphCell> arcReferences = new HashMap<AbstractFlowRelation, PNGraphCell>();
+	
+	private Set<PNGraphListener> listeners = new HashSet<PNGraphListener>();
+	
+	private boolean labelSelected = false;
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
@@ -79,11 +81,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		this.netContainer = netContainer;
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
-		this.properties.getPropertiesView().addTreeSelectionListener(this);
-		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
-		this.addListener(mxEvent.CELLS_ADDED, this.properties.getPropertiesView());
-		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
-		this.addListener(mxEvent.REPAINT, this.properties.getPropertiesView());
+		this.getSelectionModel().addListener(mxEvent.CHANGE, this);
+		this.addListener(mxEvent.RESIZE_CELLS, this);
+		
+//		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.CELLS_ADDED, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
+//		this.addListener(mxEvent.REPAINT, this.properties.getPropertiesView());
+		
 		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
 		setCellsEditable(false);
@@ -91,7 +96,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		setExtendParents(false); // disables extending parents after adding
 		setVertexLabelsMovable(true);
 		initialize();
-
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -110,14 +114,99 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 						.getTransitionLabelAnnotationGraphics().get(transition.getName()));
 			}
 			for (AbstractFlowRelation relation : getNetContainer().getPetriNet().getFlowRelations()) {
-				insertPNRelation(relation, getArcConstraint(relation), netContainer.getPetriNetGraphics().getArcGraphics().get(relation.getName()), netContainer.getPetriNetGraphics()
+				insertPNRelation(relation, netContainer.getPetriNetGraphics().getArcGraphics().get(relation.getName()), netContainer.getPetriNetGraphics()
 						.getArcAnnotationGraphics().get(relation.getName()));
 			}
 			getModel().endUpdate();
 
-			setGraphicalInfosFromCells();
-
+			setPNGraphicsFromCellStates();
 		}
+	}
+	
+	public void setLabelSelected(boolean selected){
+		this.labelSelected = selected;
+	}
+	
+	public boolean isLabelSelected(){
+		return labelSelected;
+	}
+	
+	public void addPNGraphListener(PNGraphListener listener){
+		listeners.add(listener);
+	}
+	
+	public void removePNGraphListener(PNGraphListener listener){
+		listeners.remove(listener);
+	}
+	
+	private void notifyPlaceAdded(AbstractPlace place){
+		for(PNGraphListener listener: listeners){
+			listener.placeAdded(place);
+		}
+	}
+	
+	private void notifyTransitionAdded(AbstractTransition transition){
+		for(PNGraphListener listener: listeners){
+			listener.transitionAdded(transition);
+		}
+	}
+	
+	private void notifyRelationAdded(AbstractFlowRelation relation){
+		for(PNGraphListener listener: listeners){
+			listener.relationAdded(relation);
+		}
+	}
+	
+	private void notifyPlaceRemoved(AbstractPlace place){
+		for(PNGraphListener listener: listeners){
+			listener.placeRemoved(place);
+		}
+	}
+	
+	private void notifyTransitionRemoved(AbstractTransition transition){
+		for(PNGraphListener listener: listeners){
+			listener.transitionRemoved(transition);
+		}
+	}
+	
+	private void notifyRelationRemoved(AbstractFlowRelation relation){
+		for(PNGraphListener listener: listeners){
+			listener.relationRemoved(relation);
+		}
+	}
+	
+	private void notifyComponentsSelected(){
+		Set<PNGraphCell> selectedCells = getSelectedGraphCells();
+		for(PNGraphListener listener: listeners){
+			listener.componentsSelected(selectedCells);
+		}
+	}
+	
+	private void ensureValidPlaceSize() {
+		for(PNGraphCell selectedCell: getSelectedGraphCells()){
+			if(selectedCell.getType() == PNComponent.PLACE){
+				Rectangle bounds = selectedCell.getGeometry().getRectangle();
+				if(bounds.getHeight() == bounds.getWidth()){
+					return;
+				}
+				int tagetSize = (int) Math.round(Math.min(bounds.getWidth(), bounds.getHeight()));
+				mxRectangle targetBounds = getView().getState(selectedCell).getBoundingBox();
+				targetBounds.setWidth(tagetSize);
+				targetBounds.setHeight(tagetSize);
+				resizeCell(selectedCell, targetBounds);
+				setSelectionCell(selectedCell);
+			}
+		}
+	}
+	
+	private Set<PNGraphCell> getSelectedGraphCells(){
+		Set<PNGraphCell> placeCells = new HashSet<PNGraphCell>();
+		for(Object selectedObject: getSelectionCells()){
+			if(selectedObject instanceof PNGraphCell){
+				placeCells.add((PNGraphCell) selectedObject);
+			}
+		}
+		return placeCells;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -160,7 +249,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			NodeGraphics nodeGraphicsWithPousePosition = new NodeGraphics();
 			nodeGraphicsWithPousePosition.setPosition(new Position(point.getX(), point.getY()));
 			newCell = insertPNPlace(place, nodeGraphicsWithPousePosition, null);
-
 		}
 		return newCell;
 	}
@@ -174,10 +262,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), x, y, dimX, dimY, MXConstants.getNodeStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
 		if (nodeGraphics == null || annotationGraphics == null) {
 			mxCellState state = getView().getState(newCell, true);
-			setGraphics(state);
+			setPNGraphics(state);
 		}
 		addCell(newCell, getDefaultParent());
 		addNodeReference(place, newCell);
+		notifyPlaceAdded(place);
 		return newCell;
 	}
 
@@ -210,6 +299,30 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		vertex.setConnectable(true);
 		return vertex;
 	}
+	
+	public Object addNewFlowRelation(PNGraphCell sourceCell, PNGraphCell targetCell) throws ParameterException{
+		AbstractFlowRelation relation = null;
+		if(sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION){
+			relation = getNetContainer().getPetriNet().addFlowRelationPT(sourceCell.getId(), targetCell.getId());
+		} else if(sourceCell.getType() == PNComponent.TRANSITION && targetCell.getType() == PNComponent.PLACE){
+			relation = getNetContainer().getPetriNet().addFlowRelationTP(sourceCell.getId(), targetCell.getId());
+		}
+		PNGraphCell newCell = null;
+		if(relation != null){
+			newCell = insertPNRelation(relation, null, null);
+		}
+		return newCell;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public PNGraphCell insertPNRelation(AbstractFlowRelation relation, ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
+		Vector<Position> positions = arcGraphics == null ? new Vector<Position>() : arcGraphics.getPositions();
+		PNGraphCell newCell = createArcCell(relation.getName(), getArcConstraint(relation), positions, MXConstants.getArcStyle(arcGraphics, annotationGraphics));
+		addEdge(newCell, getDefaultParent(), getCell(relation.getSource()), getCell(relation.getTarget()), null);
+		addArcReference(relation, newCell);
+		notifyRelationAdded(relation);
+		return newCell;
+	}
 
 	public Object addNewTransition(mxPoint mxPoint) throws ParameterException {
 		mxPoint point = mxPoint;
@@ -222,9 +335,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		String nodeName = prefix + index;
 		if (getNetContainer().getPetriNet().addTransition(nodeName)) {
 			AbstractTransition transition = getNetContainer().getPetriNet().getTransition(nodeName);
-			NodeGraphics nodeGraphicsWithPousePosition = new NodeGraphics();
-			nodeGraphicsWithPousePosition.setPosition(new Position(point.getX(), point.getY()));
-			newCell = insertPNTransition(transition, nodeGraphicsWithPousePosition, null);
+			NodeGraphics nodeGraphicsWithMousePosition = new NodeGraphics();
+			nodeGraphicsWithMousePosition.setPosition(new Position(point.getX(), point.getY()));
+			newCell = insertPNTransition(transition, nodeGraphicsWithMousePosition, null);
 		}
 		return newCell;
 	}
@@ -238,10 +351,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		PNGraphCell newCell = createTransitionCell(transition.getName(), transition.getLabel(), x, y, dimX, dimY, MXConstants.getNodeStyle(PNComponent.TRANSITION, nodeGraphics, annotationGraphics));
 		if (nodeGraphics == null || annotationGraphics == null) {
 			mxCellState state = getView().getState(newCell, true);
-			setGraphics(state);
+			setPNGraphics(state);
 		}
 		addCell(newCell, getDefaultParent());
 		addNodeReference(transition, newCell);
+		notifyTransitionAdded(transition);
 		return newCell;
 	}
 
@@ -273,16 +387,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 		return vertex;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public Object insertPNRelation(AbstractFlowRelation relation, String value, ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
-		Vector<Position> positions = arcGraphics == null ? new Vector<Position>() : arcGraphics.getPositions();
-		PNGraphCell newCell = createArcCell(relation.getName(), getArcConstraint(relation), positions, MXConstants.getArcStyle(arcGraphics, annotationGraphics));
-		addEdge(newCell, getDefaultParent(), getCell(relation.getSource()), getCell(relation.getTarget()), null);
-		addArcReference(relation, newCell);
-		return newCell;
-	}
-
-	PNGraphCell createArcCell(String name, String label, Collection<Position> positions, String style) {
+	public PNGraphCell createArcCell(String name, String label, Collection<Position> positions, String style) {
 		mxGeometry geometry = new mxGeometry();
 		List<mxPoint> points = new ArrayList<mxPoint>();
 		for (Position position : positions) {
@@ -540,12 +645,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 * @param pnGraphics
 	 *            The Petri net graphics
 	 */
-	public void setGraphicalInfosFromCells() {
+	public void setPNGraphicsFromCellStates() {
 		for (PNGraphCell cell : nodeReferences.values()) {
 			mxCellState state = getView().getState(cell);
 
 			try {
-				setGraphics(state);
+				setPNGraphics(state);
 			} catch (ParameterException e) {
 				System.out.println("Graphics could not be set");
 				e.printStackTrace();
@@ -603,7 +708,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 	 *            The cell state
 	 * @throws ParameterException
 	 */
-	public void setGraphics(mxCellState state) throws ParameterException {
+	public void setPNGraphics(mxCellState state) throws ParameterException {
 		PNGraphCell cell = (PNGraphCell) state.getCell();
 		if (cell.getType() == PNComponent.PLACE) {
 			netContainer.getPetriNetGraphics().getPlaceGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
@@ -615,7 +720,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			netContainer.getPetriNetGraphics().getArcGraphics().put(cell.getId(), MXConstants.getArcGraphics(state));
 			netContainer.getPetriNetGraphics().getArcAnnotationGraphics().put(cell.getId(), MXConstants.getArcAnnotationGraphics(state));
 		}
-
 	}
 
 	@Override
@@ -662,12 +766,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 					offset.setX(state.getAbsoluteOffset().getX());
 					offset.setY(state.getAbsoluteOffset().getY());
 				}
-				try {
-					setGraphics(state);
-				} catch (ParameterException e) {
-					System.out.println("Problem while setting state graphics!");
-					e.printStackTrace();
-				}
+//				try {
+//					setPNGraphics(state);
+//				} catch (ParameterException e) {
+//					System.out.println("Problem while setting state graphics!");
+//					e.printStackTrace();
+//				}
 			}
 		}
 	}
@@ -736,14 +840,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			bounds.setWidth(new Integer((Integer) newValue).doubleValue());
 			bounds.setHeight(new Integer((Integer) newValue).doubleValue());
 			resizeCell(placeCell, bounds);
+			setSelectionCell(placeCell);
 			return true;
 		case PLACE_POSITION_X:
 			moveCells(new Object[] { placeCell }, new Integer((Integer) newValue).doubleValue() - new Integer((Integer) oldValue).doubleValue(), 0);
+			setSelectionCell(placeCell);
 			return true;
 		case PLACE_POSITION_Y:
 			moveCells(new Object[] { placeCell }, 0, new Integer((Integer) newValue).doubleValue() - new Integer((Integer) oldValue).doubleValue());
+			setSelectionCell(placeCell);
 			return true;
-
 		}
 		return false;
 	}
@@ -762,15 +868,19 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			return true;
 		case TRANSITION_POSITION_X:
 			transitionCell.getGeometry().setX(new Integer((Integer) newValue).doubleValue());
+			setSelectionCell(transitionCell);
 			return true;
 		case TRANSITION_POSITION_Y:
 			transitionCell.getGeometry().setY(new Integer((Integer) newValue).doubleValue());
+			setSelectionCell(transitionCell);
 			return true;
 		case TRANSITION_SIZE_X:
 			transitionCell.getGeometry().setWidth(new Integer((Integer) newValue).doubleValue());
+			setSelectionCell(transitionCell);
 			return true;
 		case TRANSITION_SIZE_Y:
 			transitionCell.getGeometry().setHeight(new Integer((Integer) newValue).doubleValue());
+			setSelectionCell(transitionCell);
 			return true;
 		}
 		return false;
@@ -793,81 +903,39 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 
 		return false;
 	}
-
-	// TREESELECTIONLISTENER - This Method is called when nodes of the
-	// PropertiesView Tree are selected
-
-	@Override
-	public void valueChanged(TreeSelectionEvent e) {
-		getSelectionModel().setEventSource(e.getSource());
-		PNTreeNode node = (PNTreeNode) ((JTree) e.getSource()).getLastSelectedPathComponent();
-
-		PNGraphCell currentSelectionCell;
-		boolean executeSelection = true;
-		if (getSelectionCell() instanceof PNGraphCell) {
-			currentSelectionCell = (PNGraphCell) getSelectionCell();
-			if (node != null && currentSelectionCell.getId() == node.toString())
-				executeSelection = false;
+	
+	public void selectPlace(String name) {
+		if(!isCellSelected(name)){
+			PNGraphCell cell = nodeReferences.get(getNetContainer().getPetriNet().getPlace(name));
+			setSelectionCell(cell);
 		}
-
-		selectCellbyTreeSelection(node, executeSelection);
-		// setSelectionCell(nodeReferences);
-
-		// reset Event source to default
-		getSelectionModel().setEventSource(getSelectionModel());
-
 	}
 
-	/**
-	 * @param node
-	 * @param executeSelection
-	 */
-	public void selectCellbyTreeSelection(PNTreeNode node, boolean executeSelection) {
-		if (node != null && executeSelection) {
-			PNGraphCell cell = null;
-			switch (node.getFieldType()) {
-			case PLACE:
-				cell = nodeReferences.get(getNetContainer().getPetriNet().getPlace(node.toString()));
-				setSelectionCell(cell);
-				break;
-			case TRANSITION:
-				cell = nodeReferences.get(getNetContainer().getPetriNet().getTransition(node.toString()));
-				setSelectionCell(cell);
-				break;
-			case ARC:
-				cell = arcReferences.get(getNetContainer().getPetriNet().getFlowRelation(node.toString()));
-				setSelectionCell(cell);
-				break;
+	public void selectTransition(String name) {
+		if(!isCellSelected(name)){
+			PNGraphCell cell = nodeReferences.get(getNetContainer().getPetriNet().getTransition(name));
+			setSelectionCell(cell);
+		}
+	}
 
-			case LEAF:
-
-				// Select Parent when working on Leafs Properties
-				PNTreeNode parent = (PNTreeNode) node.getParent();
-				switch (parent.getFieldType()) {
-				case PLACE:
-					selectCellbyTreeSelection(parent, executeSelection);
-					break;
-				case TRANSITION:
-					selectCellbyTreeSelection(parent, executeSelection);
-					break;
-				case ARC:
-					selectCellbyTreeSelection(parent, executeSelection);
-					break;
-				}
-				break;
-			case PLACES:
-				// TODO Select all Places by clicking on Root of Places
-				break;
-			case TRANSITIONS:
-				break;
-			case ARCS:
-				break;
-			case ROOT:
-				// Root is currently hidden
-				break;
-
+	public void selectArc(String name) {
+		if(!isCellSelected(name)){
+			PNGraphCell cell = arcReferences.get(getNetContainer().getPetriNet().getFlowRelation(name));
+			setSelectionCell(cell);
+		}
+	}
+	
+	private boolean isCellSelected(String id){
+		PNGraphCell currentSelectionCell = null;
+		if (getSelectionCell() instanceof PNGraphCell) {
+			currentSelectionCell = (PNGraphCell) getSelectionCell();
+		}
+		if(currentSelectionCell != null){
+			if(currentSelectionCell.getId() == id){
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@Override
@@ -938,17 +1006,13 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 				try {
 					switch (cell.getType()) {
 					case ARC:
-						netContainer.getPetriNet().removeFlowRelation(cell.getId());
+						removeFlowRelation(cell.getId());
 						break;
 					case PLACE:
-						netContainer.getPetriNet().removePlace(cell.getId());
-						netContainer.getPetriNetGraphics().getPlaceGraphics().remove(cell.getId());
-						netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().remove(cell.getId());
+						removePlace(cell.getId());
 						break;
 					case TRANSITION:
-						netContainer.getPetriNet().removeTransition(cell.getId());
-						netContainer.getPetriNetGraphics().getTransitionGraphics().remove(cell.getId());
-						netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().remove(cell.getId());
+						removeTransition(cell.getId());
 						break;
 
 					}
@@ -960,6 +1024,75 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, T
 			}
 
 		}
+	}
+	
+	private void removeFlowRelation(String name) throws ParameterException{
+		AbstractFlowRelation relation = netContainer.getPetriNet().getFlowRelation(name);
+		if (relation != null) {
+			netContainer.getPetriNet().removeFlowRelation(name);
+			netContainer.getPetriNetGraphics().getArcGraphics().remove(name);
+			netContainer.getPetriNetGraphics().getArcAnnotationGraphics().remove(name);
+			notifyRelationRemoved(relation);
+		}
+	}
+	
+	private void removeTransition(String name) throws ParameterException{
+		AbstractTransition transition = netContainer.getPetriNet().getTransition(name);
+		if(transition != null){
+			Set<AbstractFlowRelation> relations = new HashSet<AbstractFlowRelation>();
+			relations.addAll(transition.getIncomingRelations());
+			relations.addAll(transition.getOutgoingRelations());
+			netContainer.getPetriNet().removeTransition(name);
+			netContainer.getPetriNetGraphics().getTransitionGraphics().remove(name);
+			netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().remove(name);
+			notifyTransitionRemoved(transition);
+			for(AbstractFlowRelation removedRelation: relations){
+				notifyRelationRemoved(removedRelation);
+			}
+		}
+	}
+	
+	private void removePlace(String name) throws ParameterException{
+		AbstractPlace place = netContainer.getPetriNet().getPlace(name);
+		if(place != null){
+			Set<AbstractFlowRelation> relations = new HashSet<AbstractFlowRelation>();
+			relations.addAll(place.getIncomingRelations());
+			relations.addAll(place.getOutgoingRelations());
+			netContainer.getPetriNet().removePlace(name);
+			netContainer.getPetriNetGraphics().getPlaceGraphics().remove(name);
+			netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().remove(name);
+			notifyPlaceRemoved(place);
+			for(AbstractFlowRelation removedRelation: relations){
+				notifyRelationRemoved(removedRelation);
+			}
+		}
+	}
+
+	
+	@Override
+	public void invoke(Object sender, mxEventObject evt) {
+
+		if (evt.getName().equals(mxEvent.CHANGE)) {
+			if (sender instanceof mxGraphSelectionModel || sender instanceof PNGraphComponent) {
+				notifyComponentsSelected();
+			}
+		} 
+		if (evt.getName().equals(mxEvent.RESIZE_CELLS)) {
+			ensureValidPlaceSize();
+		}
+	}
+	
+	
+	public void setFontOfSelectedCellLabel(String font) throws ParameterException{
+		Validate.notNull(font);
+		
+		if (font != null && !font.equals("-")) {
+			setCellStyles(mxConstants.STYLE_FONTFAMILY, font);
+		}
+	}
+	
+	public void setFontSizeOfSelectedCellLabel(String font){
+		setCellStyles(mxConstants.STYLE_FONTSIZE, font);
 	}
 
 }

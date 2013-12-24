@@ -12,14 +12,13 @@ import com.mxgraph.util.mxPoint;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 
 public class PTGraphComponent extends PNGraphComponent {
 
 	private static final long serialVersionUID = -1698182711658593407L;
 
-	public PTGraphComponent(PTGraph graph, PTNetEditor ptEditor) {
-		super(graph, ptEditor);
+	public PTGraphComponent(PTGraph graph) {
+		super(graph);
 	}
 
 	@Override

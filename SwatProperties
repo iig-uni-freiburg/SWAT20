@@ -1,6 +1,7 @@
 #
-#Thu Nov 14 14:08:06 CET 2013
+#Mon Dec 23 16:57:50 CET 2013
 VERIFY_PNML_SCHEMA=false
 KNOWN_WORKING_DIRECTORIES=['/Users/stocker/Desktop/SwatWorkingDirectory/']
+ICON_SIZE=MEDIUM
 REQUIRE_NET_TYPE=false
 WORKING_DIRECTORY=/Users/stocker/Desktop/SwatWorkingDirectory/

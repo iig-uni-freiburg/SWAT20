@@ -3,14 +3,12 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import de.uni.freiburg.iig.telematik.swat.editor.CPNEditor;
-
 public class CPNGraphComponent extends PNGraphComponent {
 
 	private static final long serialVersionUID = -1698182711658593407L;
 
-	public CPNGraphComponent(CPNGraph cpnGraph, CPNEditor cpnEditor) {
-		super(cpnGraph, cpnEditor);
+	public CPNGraphComponent(CPNGraph cpnGraph) {
+		super(cpnGraph);
 	}
 
 	@Override

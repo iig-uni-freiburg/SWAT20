@@ -7,19 +7,22 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxCompactTreeLayout;
@@ -49,20 +52,28 @@ import com.mxgraph.view.mxGraph;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PrintAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoRedoAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphListener;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.PalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
+import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
-public abstract class PNEditor extends JPanel implements SwatComponent {
+public abstract class PNEditor extends JPanel implements SwatComponent, TreeSelectionListener, PNGraphListener {
 
 	private static final long serialVersionUID = 1023415244830760771L;
 	private static final String scaleMessageFormat = "Scale: %s %%";
@@ -120,6 +131,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent {
 		setFileReference(fileReference);
 		properties = createPNProperties();
 		propertiesView = new PropertiesView(properties);
+		propertiesView.addTreeSelectionListener(this);
 		properties.addPNPropertiesListener(propertiesView);
 		properties.setPropertiesView(propertiesView);
 	}
@@ -183,7 +195,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent {
 				displayStatusMessage(e.getX() + ", " + e.getY());
 			}
 		});
-
+		
+		graphComponent.getGraph().addPNGraphListener(this);
 	}
 
 	private void setUpUndo() {
@@ -281,17 +294,6 @@ public abstract class PNEditor extends JPanel implements SwatComponent {
 		return undoManager;
 	}
 
-	public Action bind(String name, final Action action) {
-		return bind(name, action, null);
-	}
-
-	public Action bind(String name, final Action action, String iconUrl) {
-		return new AbstractAction(name, (iconUrl != null) ? new ImageIcon(PNEditor.class.getResource(iconUrl)) : null) {
-			public void actionPerformed(ActionEvent e) {
-				action.actionPerformed(new ActionEvent(getGraphComponent(), e.getID(), e.getActionCommand()));
-			}
-		};
-	}
 
 	public void displayStatusMessage(String msg) {
 		// TODO: Do something
@@ -326,10 +328,10 @@ public abstract class PNEditor extends JPanel implements SwatComponent {
 			ActionMap map = super.createActionMap();
 			try {
 				map.put("save", new SaveAction(PNEditor.this));
-				map.put("undo", new UndoRedoAction(PNEditor.this, true));
-				map.put("redo", new UndoRedoAction(PNEditor.this, false));
+				map.put("undo", new UndoAction(PNEditor.this));
+				map.put("redo", new RedoAction(PNEditor.this));
 				map.put("printNet", new PrintAction(PNEditor.this));
-			} catch (ParameterException e) {
+			} catch (Exception e) {
 				// Cannot happen, since this is not null
 				e.printStackTrace();
 			}
@@ -468,6 +470,98 @@ public abstract class PNEditor extends JPanel implements SwatComponent {
 		}
 
 		return layout;
+	}
+	
+	
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		if(e.getSource() == null || e.getSource() == this)
+			return;
+		JTree sourceTree = null;
+		try{
+			sourceTree = (JTree) e.getSource();
+		} catch(Exception ex){
+			return;
+		}
+		PNTreeNode node = null;
+		try{
+			node = (PNTreeNode) sourceTree.getLastSelectedPathComponent();
+		}catch(Exception ex){
+			return;
+		}
+		treeNodeSelected(node);
+	}
+	
+	private void treeNodeSelected(PNTreeNode node){
+		if(node == null){
+			return;
+		}
+		switch(node.getFieldType()){
+		case ARC:
+			getGraph().selectArc(node.toString());
+			break;
+		case TRANSITION:
+			getGraph().selectTransition(node.toString());
+			break;
+		case PLACE:
+			getGraph().selectPlace(node.toString());
+			break;
+		case LEAF:
+			PNTreeNode parentNode = null;
+			try{
+				parentNode = (PNTreeNode) node.getParent();
+			}catch(Exception ex){
+				return;
+			}
+			treeNodeSelected(parentNode);
+			break;
+		default:
+			getGraph().clearSelection();
+		}
+	}
+	
+	
+
+	@Override
+	public void placeAdded(AbstractPlace place) {
+		propertiesView.componentAdded(PNComponent.PLACE, place.getName());
+	}
+
+	@Override
+	public void transitionAdded(AbstractTransition transition) {
+		propertiesView.componentAdded(PNComponent.TRANSITION, transition.getName());
+	}
+
+	@Override
+	public void relationAdded(AbstractFlowRelation relation) {
+		propertiesView.componentAdded(PNComponent.ARC, relation.getName());
+	}
+
+	@Override
+	public void placeRemoved(AbstractPlace place) {
+		propertiesView.componentRemoved(PNComponent.PLACE, place.getName());
+	}
+
+	@Override
+	public void transitionRemoved(AbstractTransition transition) {
+		propertiesView.componentRemoved(PNComponent.TRANSITION, transition.getName());
+	}
+
+	@Override
+	public void relationRemoved(AbstractFlowRelation relation) {
+		propertiesView.componentRemoved(PNComponent.ARC, relation.getName());
+	}
+
+	@Override
+	public void componentsSelected(Set<PNGraphCell> selectedComponents) {
+		if(selectedComponents == null || selectedComponents.isEmpty() || selectedComponents.size() > 1){
+			propertiesView.deselect();
+		} else {
+			PNGraphCell selectedCell = selectedComponents.iterator().next();
+			propertiesView.selectNode(selectedCell.getId());
+		}
+		toolbar.updateView(selectedComponents);
 	}
 
 	/**

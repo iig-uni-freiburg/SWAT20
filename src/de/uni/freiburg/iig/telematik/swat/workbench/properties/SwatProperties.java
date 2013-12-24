@@ -14,6 +14,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcher;
+import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatPropertyChangeListener;
 
 
@@ -208,30 +209,22 @@ public class SwatProperties extends AbstractProperties{
 	
 	// ------- Icon Size--------------------------------------------------------------------
 
-	public int getIconSize() throws PropertyException {
+	public IconSize getIconSize() throws PropertyException {
 		String propertyValue = getProperty(SwatProperty.ICON_SIZE);
 		if (propertyValue == null || propertyValue.equals("")) {
-			throw new PropertyException(SwatProperty.PRISM_PATH, propertyValue);
+			throw new PropertyException(SwatProperty.ICON_SIZE, propertyValue);
 		}
 		try {
-			int result = Integer.parseInt(propertyValue);
-			if (!(result == 16 || result == 32 || result == 48)) {
-				// throw new PropertyException(SwatProperty.ICON_SIZE, result,
-				// "Invalid value. Must be 16 or 32 or 48");
-				return 32; // default value
-			}
+			IconSize result = IconSize.valueOf(propertyValue);
 			return result;
 		} catch (Exception e) {
-			// throw new PropertyException(SwatProperty.PRISM_PATH,
-			// propertyValue);
-			return 32;// default value
+			throw new PropertyException(SwatProperty.ICON_SIZE, propertyValue);
 		}
 	}
 	
-	public void setIconSize(int size) throws PropertyException {
-		if (!(size == 16 || size == 32 || size == 48))
-			throw new PropertyException(SwatProperty.ICON_SIZE, size, "Invalid value. Must be 16 or 32 or 48");
-		setProperty(SwatProperty.ICON_SIZE, size);
+	public void setIconSize(IconSize size) throws PropertyException, ParameterException {
+		Validate.notNull(size);
+		setProperty(SwatProperty.ICON_SIZE, size.toString());
 	}
 	
 	//------- Default Properties -----------------------------------------------------------
@@ -242,7 +235,7 @@ public class SwatProperties extends AbstractProperties{
 		
 		defaultProperties.setProperty(SwatProperty.REQUIRE_NET_TYPE.toString(), "false");
 		defaultProperties.setProperty(SwatProperty.VERIFY_PNML_SCHEMA.toString(), "false");
-		defaultProperties.setProperty(SwatProperty.ICON_SIZE.toString(), "32");
+		defaultProperties.setProperty(SwatProperty.ICON_SIZE.toString(), IconSize.MEDIUM.toString());
 		
 		return defaultProperties;
 	}
