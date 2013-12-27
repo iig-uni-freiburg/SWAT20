@@ -4,7 +4,9 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.JEditorPane;
+import javax.swing.JToolBar;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -14,33 +16,29 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.view.mxCellEditor;
 import com.mxgraph.util.mxConstants;
 
-public class FontStyleAction extends AbstractAction {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7450908146578160638L;
-	/**
-	 * 
-	 */
-	protected boolean bold;
+import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 
-	/**
-	 * 
-	 */
-	public FontStyleAction(boolean bold) {
-		this.bold = bold;
+public class FontStyleAction extends AbstractPNEditorAction {
+	
+	private static final long serialVersionUID = 7450908146578160638L;
+	protected boolean bold = false;
+	
+	public FontStyleAction(PNEditor editor, String name, Icon icon) throws ParameterException {
+		super(editor, name, icon);
+		if(name.equals("Bold"))
+			this.bold = true;
+		
 	}
 
-	/**
-	 * 
-	 */
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() instanceof mxGraphComponent) {
-			mxGraphComponent graphComponent = (mxGraphComponent) e.getSource();
+		
+			PNGraphComponent graphComponent = getEditor().getGraphComponent();
 			Component editorComponent = null;
-
-			if (graphComponent.getCellEditor() instanceof mxCellEditor) {
-				editorComponent = ((mxCellEditor) graphComponent.getCellEditor()).getEditor();
+			if (getEditor().getGraphComponent().getCellEditor() instanceof mxCellEditor) {
+				editorComponent = getEditor();
+				
 			}
 
 			if (editorComponent instanceof JEditorPane) {
@@ -75,5 +73,5 @@ public class FontStyleAction extends AbstractAction {
 				}
 			}
 		}
-	}
+	
 }

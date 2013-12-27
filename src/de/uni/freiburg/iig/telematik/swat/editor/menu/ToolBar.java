@@ -29,6 +29,7 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
@@ -36,6 +37,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
+import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 public class ToolBar extends JToolBar {
 
@@ -57,6 +59,10 @@ public class ToolBar extends JToolBar {
 	
 	private PNGraphCell selectedCell = null;
 
+	private FontStyleAction boldFontAction;
+
+	private FontStyleAction italicFontAction;
+
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
 		Validate.notNull(pnEditor);
@@ -69,6 +75,8 @@ public class ToolBar extends JToolBar {
 			pasteAction = new PasteAction(pnEditor, TransferHandler.getPasteAction());
 			undoAction = new UndoAction(pnEditor);
 			redoAction = new RedoAction(pnEditor);
+			boldFontAction = new FontStyleAction(pnEditor, "Bold", IconFactory.getIcon("chisel_tip_marker"));
+			italicFontAction = new FontStyleAction(pnEditor, "Italic", IconFactory.getIcon("edit"));
 			
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
@@ -104,8 +112,11 @@ public class ToolBar extends JToolBar {
 
 		addSeparator();
 		
+		add(boldFontAction);
+		add(italicFontAction);
+		addSeparator();		
 //
-////		add(pnEditor.bind("Bold", new FontStyleAction(true), "/images/bold.gif"));
+//		add(pnEditor.bind("Bold", new FontStyleAction(true), "/images/bold.gif"));
 ////		add(pnEditor.bind("Italic", new FontStyleAction(false), "/images/italic.gif"));
 //
 //		addSeparator();
@@ -261,6 +272,8 @@ public class ToolBar extends JToolBar {
 		cutAction.setEnabled(false);
 		getFontBox().setEnabled(false);
 		getFontSizeBox().setEnabled(false);
+		boldFontAction.setEnabled(false);
+		italicFontAction.setEnabled(false);
 	}
 	
 	public void updateView(Set<PNGraphCell> selectedComponents){
@@ -281,7 +294,8 @@ public class ToolBar extends JToolBar {
 				boolean labelSelected = pnEditor.getGraphComponent().getGraph().isLabelSelected();
 				getFontBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 				getFontSizeBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				
+				boldFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				italicFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 				// Initialize fields.
 			} else {
 				getFontBox().setEnabled(false);
