@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.actions;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -12,6 +13,8 @@ public abstract class AbstractPNEditorAction extends AbstractAction {
 	private static final long serialVersionUID = -308657344513249134L;
 
 	protected PNEditor editor = null;
+
+	private ImageIcon icon;
 
 	public AbstractPNEditorAction(PNEditor editor) throws ParameterException {
 		super();
@@ -27,8 +30,17 @@ public abstract class AbstractPNEditorAction extends AbstractAction {
 	public AbstractPNEditorAction(PNEditor editor, String name, Icon icon) throws ParameterException {
 		super(name, icon);
 		setEditor(editor);
+		setIcon(icon);
 	}
 	
+	protected void setIcon(Icon icon) throws ParameterException {
+		Validate.notNull(icon);
+		this.icon = (ImageIcon) icon;
+	}
+	protected ImageIcon getIcon() {
+		return icon;
+	}
+
 	private void setEditor(PNEditor editor) throws ParameterException{
 		Validate.notNull(editor);
 		this.editor = editor;

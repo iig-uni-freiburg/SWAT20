@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -7,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,7 +79,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		super();
 		Validate.notNull(netContainer);
 		Validate.notNull(properties);
-
 		this.netContainer = netContainer;
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
@@ -89,12 +90,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 //		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
 //		this.addListener(mxEvent.REPAINT, this.properties.getPropertiesView());
 		
-		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
+		setHtmlLabels(true);
+		
+//		setLabelsVisible(false);
+//		setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		setMultigraph(true);
 		setCellsEditable(false);
 		setDisconnectOnMove(false);
 		setExtendParents(false); // disables extending parents after adding
 		setVertexLabelsMovable(true);
+		
 		initialize();
 	}
 
@@ -492,7 +497,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 				String label = state.getLabel();
 
 				if (label != null && state.getLabelBounds() != null) {
-
+					if(canvas instanceof mxGraphics2DCanvas){
+					Map<String, Object> style = state.getStyle();
+					Graphics2D g = ((mxGraphics2DCanvas)canvas).getGraphics();
+					Color color = mxUtils.getColor(state.getStyle(), mxConstants.STYLE_STROKECOLOR);
+					g.setColor(color);
+					g.setStroke(createLabelStroke(style));}
 					lab = canvas.drawLabel(label, state, isHtmlLabel(cell));
 
 				}
@@ -510,6 +520,65 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 			}
 		}
 	}
+	
+	
+
+	private Stroke createLabelStroke(Map<String, Object> style) {
+		double width= mxUtils
+				.getFloat(style, "labelStrokeWidth", 1) * getView().getScale();
+
+		boolean dashed = mxUtils.isTrue(style, mxConstants.STYLE_DASHED);
+		if (dashed)
+		{
+			float[] dashPattern = mxUtils.getFloatArray(style,
+					mxConstants.STYLE_DASH_PATTERN,
+					mxConstants.DEFAULT_DASHED_PATTERN, " ");
+			float[] scaledDashPattern = new float[dashPattern.length];
+
+			for (int i = 0; i < dashPattern.length; i++)
+			{
+				scaledDashPattern[i] = (float) (dashPattern[i] * getView().getScale() * width);
+			}
+
+			return new BasicStroke((float) width, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER, 10.0f, scaledDashPattern, 0.0f);
+		}
+		else
+		{
+			return new BasicStroke((float) width);
+		}
+	}
+	
+
+	/**
+	 * 
+//	 */
+//	public Stroke createStroke(Map<String, Object> style)
+//	{
+//		double width= mxUtils
+//				.getFloat(style, mxConstants.STYLE_STROKEWIDTH, 1) * scale;
+//
+//		boolean dashed = mxUtils.isTrue(style, mxConstants.STYLE_DASHED);
+//		if (dashed)
+//		{
+//			float[] dashPattern = mxUtils.getFloatArray(style,
+//					mxConstants.STYLE_DASH_PATTERN,
+//					mxConstants.DEFAULT_DASHED_PATTERN, " ");
+//			float[] scaledDashPattern = new float[dashPattern.length];
+//
+//			for (int i = 0; i < dashPattern.length; i++)
+//			{
+//				scaledDashPattern[i] = (float) (dashPattern[i] * scale * width);
+//			}
+//
+//			return new BasicStroke((float) width, BasicStroke.CAP_BUTT,
+//					BasicStroke.JOIN_MITER, 10.0f, scaledDashPattern, 0.0f);
+//		}
+//		else
+//		{
+//			return new BasicStroke((float) width);
+//		}
+//	}
 
 	public Object drawCell(mxGraphics2DCanvas canvas, mxCellState state) {
 		Map<String, Object> style = state.getStyle();
@@ -1094,5 +1163,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	public void setFontSizeOfSelectedCellLabel(String font){
 		setCellStyles(mxConstants.STYLE_FONTSIZE, font);
 	}
+
+	public void setStrokeWeightOfSelectedCell(String strokeWeight) {
+			if (isLabelSelected()) {
+				setCellStyles("labelStrokeWidth", strokeWeight);
+			} else {
+				setCellStyles(mxConstants.STYLE_STROKEWIDTH, strokeWeight);
+			}
+	}
+	
 
 }

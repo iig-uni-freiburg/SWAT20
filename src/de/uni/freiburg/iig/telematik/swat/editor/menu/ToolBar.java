@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -27,17 +28,30 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AddImageAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AlignCenterAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AlignLeftAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AlignRightAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.BackgroundColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.BoldStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.FontStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.GradientDirectionAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.GradientColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ItalicStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.LineCurveAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.LineThroughStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ShowHideLabelsAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.StrokeColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.UnderlineStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 public class ToolBar extends JToolBar {
 
@@ -59,9 +73,38 @@ public class ToolBar extends JToolBar {
 	
 	private PNGraphCell selectedCell = null;
 
-	private FontStyleAction boldFontAction;
+	private BoldStyleAction boldFontAction;
 
-	private FontStyleAction italicFontAction;
+	private ItalicStyleAction italicFontAction;
+
+	private UnderlineStyleAction underlineFontAction;
+
+	private LineThroughStyleAction lineThroughFontaction;
+
+	private AlignLeftAction alignLeftAction;
+
+	private Action alignRightAction;
+
+	private Action alignCenterAction;
+
+	private Action strokeColorAction;
+
+	private BackgroundColorAction backgroundColorAction;
+
+
+	private JComboBox strokeWeightBox;
+
+	private LineStyleAction lineStyleAction;
+
+	private GradientDirectionAction gradientDirectionAction;
+
+	private GradientColorAction gradientColor;
+
+	private ShowHideLabelsAction showHideLabelsAction;
+
+	private LineCurveAction lineCurveAction;
+
+	private AddImageAction addImageAction;
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
@@ -75,9 +118,21 @@ public class ToolBar extends JToolBar {
 			pasteAction = new PasteAction(pnEditor, TransferHandler.getPasteAction());
 			undoAction = new UndoAction(pnEditor);
 			redoAction = new RedoAction(pnEditor);
-			boldFontAction = new FontStyleAction(pnEditor, "Bold", IconFactory.getIcon("chisel_tip_marker"));
-			italicFontAction = new FontStyleAction(pnEditor, "Italic", IconFactory.getIcon("edit"));
-			
+			boldFontAction = new BoldStyleAction(pnEditor);
+			italicFontAction = new ItalicStyleAction(pnEditor);
+			underlineFontAction = new UnderlineStyleAction(pnEditor);
+			lineThroughFontaction = new LineThroughStyleAction(pnEditor);
+			alignLeftAction = new AlignLeftAction(pnEditor);
+			alignCenterAction = new AlignCenterAction(pnEditor);
+			alignRightAction = new AlignRightAction(pnEditor);
+			strokeColorAction = new StrokeColorAction(pnEditor);
+			backgroundColorAction = new BackgroundColorAction(pnEditor);
+			lineStyleAction = new LineStyleAction(pnEditor);
+			gradientDirectionAction = new GradientDirectionAction(pnEditor);
+			gradientColor = new GradientColorAction(pnEditor);
+			showHideLabelsAction = new ShowHideLabelsAction(pnEditor);
+			lineCurveAction = new LineCurveAction(pnEditor);
+			addImageAction = new AddImageAction(pnEditor);
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -103,7 +158,7 @@ public class ToolBar extends JToolBar {
 	
 		add(undoAction);
 		add(redoAction);
-
+		add(addImageAction);
 		addSeparator();
 		
 		add(getFontBox());
@@ -114,33 +169,29 @@ public class ToolBar extends JToolBar {
 		
 		add(boldFontAction);
 		add(italicFontAction);
+		add(underlineFontAction);
+		add(lineThroughFontaction);
 		addSeparator();		
-//
-//		add(pnEditor.bind("Bold", new FontStyleAction(true), "/images/bold.gif"));
-////		add(pnEditor.bind("Italic", new FontStyleAction(false), "/images/italic.gif"));
-//
-//		addSeparator();
-//
-//		// add(pnEditor.bind("Left", new KeyValueAction(mxConstants.STYLE_ALIGN,
-//		// mxConstants.ALIGN_LEFT),
-//		// "/images/left.gif"));
-//		// add(pnEditor.bind("Center", new
-//		// KeyValueAction(mxConstants.STYLE_ALIGN,
-//		// mxConstants.ALIGN_CENTER),
-//		// "/images/center.gif"));
-//		// add(pnEditor.bind("Right", new
-//		// KeyValueAction(mxConstants.STYLE_ALIGN,
-//		// mxConstants.ALIGN_RIGHT),
-//		// "/images/right.gif"));
-//		//
-//		// addSeparator();
-//
-////		add(pnEditor.bind("Font", new ColorAction("Font", mxConstants.STYLE_FONTCOLOR), "/images/fontcolor.gif"));
-////		add(pnEditor.bind("Stroke", new ColorAction("Stroke", mxConstants.STYLE_STROKECOLOR), "/images/linecolor.gif"));
-////		add(pnEditor.bind("Fill", new ColorAction("Fill", mxConstants.STYLE_FILLCOLOR), "/images/fillcolor.gif"));
-//
-//		addSeparator();
-//
+		
+		add(alignLeftAction);
+		add(alignCenterAction);
+		add(alignRightAction);
+
+		addSeparator();
+		
+		add(strokeColorAction);
+		add(getStrokeWeightBox());
+		add(backgroundColorAction);
+		
+add(lineStyleAction);
+
+add(gradientDirectionAction);
+add(gradientColor);
+add(showHideLabelsAction);
+add(lineCurveAction);
+
+
+		addSeparator();
 		
 		add(getZoomBox());
 		
@@ -201,6 +252,32 @@ public class ToolBar extends JToolBar {
 			});
 		}
 		return fontSizeBox;
+	}
+	
+	
+	private JComboBox getStrokeWeightBox(){
+		if(strokeWeightBox == null){
+			strokeWeightBox = new JComboBox(new Object[] { "0px", "1px", "2px", "4px", "5px", "6px", "7px", "8px", "9px", "10px", "11px", "12px" });
+			strokeWeightBox.setMinimumSize(new Dimension(100, 24));
+			strokeWeightBox.setPreferredSize(new Dimension(100, 24));
+			strokeWeightBox.setMaximumSize(new Dimension(100, 24));
+			add(strokeWeightBox);
+	
+			strokeWeightBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(selectedCell != null){
+						String strokeWeight = strokeWeightBox.getSelectedItem().toString().replace("px", "");
+						PNGraph graph = ToolBar.this.pnEditor.getGraphComponent().getGraph();
+						try {
+							graph.setStrokeWeightOfSelectedCell(strokeWeight);
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(ToolBar.this.pnEditor, "Cannot set cell-font size: " + e1.getMessage(), "Graph Exception", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+			});
+		}
+		return strokeWeightBox;
 	}
 	
 	private JComboBox getZoomBox(){
@@ -274,10 +351,19 @@ public class ToolBar extends JToolBar {
 		getFontSizeBox().setEnabled(false);
 		boldFontAction.setEnabled(false);
 		italicFontAction.setEnabled(false);
+		underlineFontAction.setEnabled(false);
+		lineThroughFontaction.setEnabled(false);
+		alignLeftAction.setEnabled(false);
+		alignCenterAction.setEnabled(false);
+		alignRightAction.setEnabled(false);
+		strokeColorAction.setEnabled(false);
+//		getStrokeWeightBox().setEnabled(false);
+		backgroundColorAction.setEnabled(false);
 	}
 	
 	public void updateView(Set<PNGraphCell> selectedComponents){
-		if(selectedComponents == null){
+		System.out.println(selectedComponents);
+		if(selectedComponents == null || selectedComponents.isEmpty()){
 			deactivate();
 			this.selectedCell = null;
 			return;
@@ -286,6 +372,9 @@ public class ToolBar extends JToolBar {
 			copyAction.setEnabled(true);
 			pasteAction.setEnabled(true);
 			cutAction.setEnabled(true);
+			strokeColorAction.setEnabled(true);
+			backgroundColorAction.setEnabled(true);
+			getStrokeWeightBox().setEnabled(true);
 			if(selectedComponents.size() == 1){
 				this.selectedCell = selectedComponents.iterator().next();
 				boolean isPlaceCell = selectedCell.getType() == PNComponent.PLACE;
@@ -296,6 +385,13 @@ public class ToolBar extends JToolBar {
 				getFontSizeBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 				boldFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 				italicFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				underlineFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				lineThroughFontaction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				alignLeftAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				alignCenterAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				alignRightAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+//				getStrokeWeightBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+
 				// Initialize fields.
 			} else {
 				getFontBox().setEnabled(false);

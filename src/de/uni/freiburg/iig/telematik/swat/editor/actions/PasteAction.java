@@ -17,7 +17,7 @@ public class PasteAction extends AbstractPNEditorAction {
 	private Action transferAction = null;
 
 	public PasteAction(PNEditor editor, Action transferAction) throws ParameterException, PropertyException, IOException {
-		super(editor, "Paste", IconFactory.getIcon("copy"));
+		super(editor, "Paste", IconFactory.getIcon("down"));
 		this.transferAction = transferAction;
 	}
 
