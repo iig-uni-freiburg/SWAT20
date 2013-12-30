@@ -47,6 +47,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ShowHideLabelsAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.StrokeColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.TextRotationAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.UnderlineStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
@@ -106,6 +107,8 @@ public class ToolBar extends JToolBar {
 
 	private AddImageAction addImageAction;
 
+	private TextRotationAction textRotationAction;
+
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
 		Validate.notNull(pnEditor);
@@ -133,6 +136,7 @@ public class ToolBar extends JToolBar {
 			showHideLabelsAction = new ShowHideLabelsAction(pnEditor);
 			lineCurveAction = new LineCurveAction(pnEditor);
 			addImageAction = new AddImageAction(pnEditor);
+			textRotationAction = new TextRotationAction(pnEditor);
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -164,13 +168,14 @@ public class ToolBar extends JToolBar {
 		add(getFontBox());
 
 		add(getFontSizeBox());
+		
+		
 
 		addSeparator();
 		
 		add(boldFontAction);
 		add(italicFontAction);
 		add(underlineFontAction);
-//		add(lineThroughFontaction);
 		addSeparator();		
 		
 		add(alignLeftAction);
@@ -178,6 +183,10 @@ public class ToolBar extends JToolBar {
 		add(alignRightAction);
 
 		addSeparator();
+		
+		add(textRotationAction);
+
+		addSeparator();	
 		
 		add(addImageAction);
 		add(backgroundColorAction);

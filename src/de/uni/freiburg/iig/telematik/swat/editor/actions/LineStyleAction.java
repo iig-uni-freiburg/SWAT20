@@ -42,23 +42,36 @@ public class LineStyleAction extends AbstractPNEditorAction {
 		double width = mxUtils.getDouble(style, mxConstants.STYLE_STROKEWIDTH);
 
 		iterator = iterator%3;
-		System.out.println(iterator);
 		if(iterator == 0){
-			graph.setCellStyles(mxConstants.STYLE_DASHED, "0");	
+			if (graph.isLabelSelected()) {
+				graph.setCellStyles("labeldashed", "0");
+			} else {
+				graph.setCellStyles(mxConstants.STYLE_DASHED, "0");	
+			}
 			super.getIcon().setImage(this.line);	
 		}
 			
 			
 		if(iterator == 1){
-			graph.setCellStyles(mxConstants.STYLE_DASHED, "1");
-			graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width*4 + " " + width*2);
+			if (graph.isLabelSelected()) {
+				graph.setCellStyles("labeldashed", "1");
+				graph.setCellStyles("labeldashedpattern", width*4 + " " + width*2);
+			} else {
+				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
+				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width*4 + " " + width*2);
+			}
 			super.getIcon().setImage(this.dash);	
 			}
 
 			
 		if(iterator == 2){
-			graph.setCellStyles(mxConstants.STYLE_DASHED, "1");
-			graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width +" "+ width);
+			if (graph.isLabelSelected()) {
+				graph.setCellStyles("labeldashed", "1");
+				graph.setCellStyles("labeldashedpattern", width +" "+ width);
+			} else {
+				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
+				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width +" "+ width);
+			}
 			super.getIcon().setImage(this.dot);	
 			}
 		iterator++;

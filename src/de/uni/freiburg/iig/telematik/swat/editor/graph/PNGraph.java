@@ -36,6 +36,7 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphSelectionModel;
+import com.mxgraph.view.mxGraphView;
 
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
 import de.invation.code.toval.graphic.misc.PColor;
@@ -409,8 +410,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	}
 
 	public abstract void updatePlaceState(PNGraphCell cell, Multiset<String> input) throws ParameterException;
-
+	
 	@Override
+	/**
+	 * Constructs a new view to be used in this graph.
+	 */
+	protected mxGraphView createGraphView()
+	{
+		return new GraphView(this);
+	}
+		@Override
 	/**
 	 * Returns the tooltip to be used for the given cell.
 	 */
@@ -497,13 +506,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 				String label = state.getLabel();
 
 				if (label != null && state.getLabelBounds() != null) {
+					Graphics2D g = null ;
 					if(canvas instanceof mxGraphics2DCanvas){
 					Map<String, Object> style = state.getStyle();
-					Graphics2D g = ((mxGraphics2DCanvas)canvas).getGraphics();
+			g	= ((mxGraphics2DCanvas)canvas).getGraphics();
 					Color color = mxUtils.getColor(state.getStyle(), mxConstants.STYLE_STROKECOLOR);
 					g.setColor(color);
 					g.setStroke(createLabelStroke(style));}
 					lab = canvas.drawLabel(label, state, isHtmlLabel(cell));
+					if(g != null)
+					g.setStroke(new BasicStroke((float) 2));
 
 				}
 			}
@@ -527,12 +539,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		double width= mxUtils
 				.getFloat(style, "labelStrokeWidth", 1) * getView().getScale();
 
-		boolean dashed = mxUtils.isTrue(style, mxConstants.STYLE_DASHED);
+		boolean dashed = mxUtils.isTrue(style, "labeldashed");
 		if (dashed)
 		{
 			float[] dashPattern = mxUtils.getFloatArray(style,
-					mxConstants.STYLE_DASH_PATTERN,
-					mxConstants.DEFAULT_DASHED_PATTERN, " ");
+					"labeldashedpattern" ,
+					null, " ");
 			float[] scaledDashPattern = new float[dashPattern.length];
 
 			for (int i = 0; i < dashPattern.length; i++)

@@ -73,6 +73,7 @@ public abstract class MXConstants {
 	public static final Color CONNECT_HANDLE_FILLCOLOR = MXConstants.bluelow;
 	public static final Color EDGE_SELECTION_COLOR = MXConstants.bluelow;
 	public static final Color VERTEX_SELECTION_COLOR = MXConstants.bluelow;
+	public static final String TEXT_ROTATION_DEGREE ="180";
 
 	
 	

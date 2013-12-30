@@ -11,9 +11,15 @@ import javax.swing.TransferHandler;
 
 import org.w3c.dom.Document;
 
+import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.io.mxCodec;
+import com.mxgraph.shape.mxDefaultTextShape;
+import com.mxgraph.shape.mxEllipseShape;
+import com.mxgraph.shape.mxHtmlTextShape;
+import com.mxgraph.shape.mxRectangleShape;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxUtils;
@@ -31,6 +37,10 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	public PNGraphComponent(PNGraph graph) {
 		super(graph);
 		initialize();
+		getCanvas().putShape(mxConstants.SHAPE_RECTANGLE, new RectangleShape());
+		getCanvas().putShape(mxConstants.SHAPE_ELLIPSE, new EllipseShape());
+		getCanvas().putTextShape(mxGraphics2DCanvas.TEXT_SHAPE_DEFAULT, new DefaultTextShape());
+		getCanvas().putTextShape(mxGraphics2DCanvas.TEXT_SHAPE_HTML, new HtmlTextShape());
 	}
 
 	@Override
