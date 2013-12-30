@@ -6,10 +6,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.validate.ParameterException;
@@ -74,6 +76,9 @@ public abstract class MXConstants {
 	public static final Color EDGE_SELECTION_COLOR = MXConstants.bluelow;
 	public static final Color VERTEX_SELECTION_COLOR = MXConstants.bluelow;
 	public static final String TEXT_ROTATION_DEGREE ="180";
+	public static final String LABEL_POSITION_X ="labelposotionx";
+	public static final String LABEL_POSITION_Y = "labelpositiony";
+	private static final String DEFAULT_STOKEWIDTH = "1";
 
 	
 	
@@ -81,8 +86,8 @@ public abstract class MXConstants {
 		Hashtable<String, Object> style = new Hashtable<String, Object>() {
 		};
 
-		style.put(mxConstants.STYLE_SPACING_LEFT, EditorProperties.getInstance().getDefaultHorizontalLabelOffset());
-		style.put(mxConstants.STYLE_SPACING_TOP, EditorProperties.getInstance().getDefaultVerticalLabelOffset());
+		style.put(MXConstants.LABEL_POSITION_X, EditorProperties.getInstance().getDefaultHorizontalLabelOffset());
+		style.put(MXConstants.LABEL_POSITION_Y, EditorProperties.getInstance().getDefaultVerticalLabelOffset());
 		switch (type) {
 		case PLACE:
 			style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
@@ -91,8 +96,8 @@ public abstract class MXConstants {
 			style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
 			break;
 		case ARC:
-			style.put(mxConstants.STYLE_SPACING_LEFT, 0);
-			style.put(mxConstants.STYLE_SPACING_TOP, 0);
+			style.put(MXConstants.LABEL_POSITION_X, 0);
+			style.put(MXConstants.LABEL_POSITION_Y, 0);
 			break;
 		default:
 			break;
@@ -134,8 +139,11 @@ public abstract class MXConstants {
 		}
 
 		if (annotationGraphics != null) {
-			style.put(mxConstants.STYLE_SPACING_LEFT, Double.toString(annotationGraphics.getOffset().getX()));
-			style.put(mxConstants.STYLE_SPACING_TOP, Double.toString(annotationGraphics.getOffset().getY()));
+			style.put(MXConstants.LABEL_POSITION_X, Double.toString(annotationGraphics.getOffset().getX()));
+			style.put(MXConstants.LABEL_POSITION_Y, Double.toString(annotationGraphics.getOffset().getY()));
+			System.out.println(style.get(MXConstants.LABEL_POSITION_X) + "#"+ style.get(MXConstants.LABEL_POSITION_Y) + annotationGraphics.getOffset().getX() + "#" + annotationGraphics.getOffset().getY());
+			
+
 			if (annotationGraphics.getFill() != null)
 
 				if (annotationGraphics.getFont() != null) {
@@ -202,8 +210,8 @@ public abstract class MXConstants {
 		}
 
 		if (annotationGraphics != null) {
-			style.put(mxConstants.STYLE_SPACING_LEFT, Double.toString(annotationGraphics.getOffset().getX()));
-			style.put(mxConstants.STYLE_SPACING_TOP, Double.toString(annotationGraphics.getOffset().getY()));
+			style.put(MXConstants.LABEL_POSITION_X, Double.toString(annotationGraphics.getOffset().getX()));
+			style.put(MXConstants.LABEL_POSITION_Y, Double.toString(annotationGraphics.getOffset().getY()));
 			if (annotationGraphics.getFill() != null)
 
 				if (annotationGraphics.getFont() != null) {
@@ -298,55 +306,56 @@ public abstract class MXConstants {
 		String lineWidth;
 		if (state.getStyle().get(mxConstants.STYLE_STROKEWIDTH) instanceof String) {
 			lineWidth = (String) state.getStyle().get(mxConstants.STYLE_STROKEWIDTH);
-		} else
+		} else if(state.getStyle().get(mxConstants.STYLE_STROKEWIDTH) != null)
 			lineWidth = Double.toString((Double) state.getStyle().get(mxConstants.STYLE_STROKEWIDTH));
-			
+		else lineWidth = MXConstants.DEFAULT_STOKEWIDTH;
 		
 		line.setWidth(Double.parseDouble(lineWidth));
 		return line;
 	}
 	
 	public static AnnotationGraphics getAnnotationGraphics(mxCellState state) throws ParameterException {
+		Map<String, Object> style = state.getStyle();
 		mxPoint offset = new mxPoint();
-		if (((PNGraphCell) state.getCell()).getGeometry().getOffset() != null)
-			offset = state.getAbsoluteOffset();
+		double offsetX;
+		double offsetY;
+		if(state.getLabelBounds() !=null){
+		offsetX = state.getLabelBounds().getX()-state.getCenterX();
+		offsetY = state.getLabelBounds().getY() -state.getCenterY();}
 		else {
-			if (state.getStyle().get(mxConstants.STYLE_SPACING_LEFT) != null) {
-				offset.setX(Double.parseDouble((String) state.getStyle().get(mxConstants.STYLE_SPACING_LEFT)));
-				offset.setY(Double.parseDouble((String) state.getStyle().get(mxConstants.STYLE_SPACING_TOP)));
-			} else {
-				offset.setX(0);
-				offset.setY(0);
-			}
+			offsetX = 0;
+			offsetY = 0;
 		}
+				offset.setX(offsetX);
+				offset.setY(offsetY);
 		AnnotationGraphics annotation = null;
 		Fill fill = new Fill();
-		String fillColor = (String) state.getStyle().get(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR);
+		String fillColor = (String) style.get(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR);
 		System.out.println(fillColor);
 		if (fillColor != null) {
 			fill.setColor(fillColor);
 		}
 		Font font = new Font();
-		String alignStr = (String) state.getStyle().get(mxConstants.STYLE_ALIGN);
+		String alignStr = (String) style.get(mxConstants.STYLE_ALIGN);
 		Align align = Align.getAlign(alignStr);
 		font.setAlign(align);
-		String family = (String) state.getStyle().get(mxConstants.STYLE_FONTFAMILY);
+		String family = (String) style.get(mxConstants.STYLE_FONTFAMILY);
 		font.setFamily(family);
-		String size = (String) state.getStyle().get(mxConstants.STYLE_FONTSIZE);
+		String size = (String) style.get(mxConstants.STYLE_FONTSIZE);
 		font.setSize(size);
 		// TODO: text-rotation?
 		// String color = (String)
 		// state.getStyle().get(mxConstants.STYLE_FONTCOLOR);;
 		// font.setColor(size); TODO: Where should font color be set in pnml
 		// standard?
-		if (state.getStyle().containsKey(mxConstants.STYLE_FONTSTYLE)) {
+		if (style.containsKey(mxConstants.STYLE_FONTSTYLE)) {
 
-			int style = new Integer((String) state.getStyle().get(mxConstants.STYLE_FONTSTYLE));
-			if (style == mxConstants.FONT_BOLD) {
+			int fontstyle = new Integer((String) state.getStyle().get(mxConstants.STYLE_FONTSTYLE));
+			if (fontstyle == mxConstants.FONT_BOLD) {
 				font.setWeight("bold");
 				font.setStyle("normal");
 			}
-			if (style == mxConstants.FONT_ITALIC) {
+			if (fontstyle == mxConstants.FONT_ITALIC) {
 				font.setWeight("normal");
 				font.setStyle("italic");
 			}
@@ -355,7 +364,7 @@ public abstract class MXConstants {
 			// font.setWeight("normal");
 			// font.setStyle("normal");
 			// }
-			if (style == mxConstants.FONT_BOLD + mxConstants.FONT_ITALIC) {
+			if (fontstyle == mxConstants.FONT_BOLD + mxConstants.FONT_ITALIC) {
 				font.setWeight("bold");
 				font.setStyle("italic");
 			}
@@ -402,9 +411,10 @@ public abstract class MXConstants {
 	public static ArcGraphics getArcGraphics(mxCellState state) throws ParameterException {
 		List<mxPoint> points = ((PNGraphCell) state.getCell()).getGeometry().getPoints();
 		Vector<Position> positions = new Vector<Position>();
+		if(points != null){
 		for (mxPoint point : points) {
 			positions.add(new Position(point.getX(), point.getY()));
-		}
+		}}
 		return new ArcGraphics(positions, getLine(state));
 	}
 

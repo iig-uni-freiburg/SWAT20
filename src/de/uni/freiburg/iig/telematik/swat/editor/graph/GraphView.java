@@ -9,6 +9,8 @@ import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 
+import de.invation.code.toval.validate.ParameterException;
+
 public class GraphView extends mxGraphView {
 
 	public GraphView(mxGraph graph) {
@@ -36,8 +38,17 @@ public class GraphView extends mxGraphView {
 			mxRectangle vertexBounds = (!graph.getModel().isEdge(cell)) ? state
 					: null;
 			state.setLabelBounds(Utils.getLabelPaintBounds(state.getLabel(),
-					style, graph.isHtmlLabel(cell), state.getAbsoluteOffset(),
+					style, graph.isHtmlLabel(cell), state.getAbsoluteOffset(),state.getCenterX(),state.getCenterY(),
 					vertexBounds, scale));
+//			double offsetX = state.getLabelBounds().getX()-state.getCenterX();
+//			double offsetY = state.getLabelBounds().getY() -state.getCenterY();
+			
+			try {
+				((PNGraph) graph).setPNGraphics(state);
+			} catch (ParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

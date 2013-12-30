@@ -790,6 +790,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	 * @throws ParameterException
 	 */
 	public void setPNGraphics(mxCellState state) throws ParameterException {
+		if(state.getCell() instanceof PNGraphCell){
 		PNGraphCell cell = (PNGraphCell) state.getCell();
 		if (cell.getType() == PNComponent.PLACE) {
 			netContainer.getPetriNetGraphics().getPlaceGraphics().put(cell.getId(), MXConstants.getNodeGraphics(state));
@@ -800,62 +801,62 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		} else if (cell.getType() == PNComponent.ARC) {
 			netContainer.getPetriNetGraphics().getArcGraphics().put(cell.getId(), MXConstants.getArcGraphics(state));
 			netContainer.getPetriNetGraphics().getArcAnnotationGraphics().put(cell.getId(), MXConstants.getArcAnnotationGraphics(state));
-		}
+		}}
 	}
 
-	@Override
-	/**
-	 * Fires a repaint event. The optional region is the rectangle that needs
-	 * to be repainted.
-	 */
-	public void repaint(mxRectangle region) {
-		fireEvent(new mxEventObject(mxEvent.REPAINT, "region", region));
-		Object[] cells = getSelectionCells();
-		for (Object object : cells) {
-			if (object instanceof PNGraphCell) {
-				PNGraphCell cell = (PNGraphCell) object;
-				mxCellState state = getView().getState(cell);
-				if (state == null)
-					state = getView().getState(cell, true);
-				Offset offset = null;
-				double x = 0;
-				double y = 0;
-				if (state.getStyle().get(mxConstants.STYLE_SPACING_LEFT) != null) {
-					x = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_LEFT));
-					y = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_TOP));
-				}
-				state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX() + x);
-				state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY() + y);
-
-				switch (cell.getType()) {
-				case PLACE:
-					if (getNetContainer().getPetriNet().containsPlace(cell.getId())) {
-						offset = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
-					}
-					break;
-				case TRANSITION:
-					if (getNetContainer().getPetriNet().containsTransition(cell.getId())) {
-						offset = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
-					}
-					break;
-				case ARC:
-					if (netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(((PNGraphCell) cell).getId()) != null)
-						offset = netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
-					break;
-				}
-				if (offset != null) {
-					offset.setX(state.getAbsoluteOffset().getX());
-					offset.setY(state.getAbsoluteOffset().getY());
-				}
-//				try {
-//					setPNGraphics(state);
-//				} catch (ParameterException e) {
-//					System.out.println("Problem while setting state graphics!");
-//					e.printStackTrace();
+//	@Override
+//	/**
+//	 * Fires a repaint event. The optional region is the rectangle that needs
+//	 * to be repainted.
+//	 */
+//	public void repaint(mxRectangle region) {
+//		fireEvent(new mxEventObject(mxEvent.REPAINT, "region", region));
+//		Object[] cells = getSelectionCells();
+//		for (Object object : cells) {
+//			if (object instanceof PNGraphCell) {
+//				PNGraphCell cell = (PNGraphCell) object;
+//				mxCellState state = getView().getState(cell);
+//				if (state == null)
+//					state = getView().getState(cell, true);
+//				Offset offset = null;
+//				double x = 0;
+//				double y = 0;
+//				if (state.getStyle().get(mxConstants.STYLE_SPACING_LEFT) != null) {
+//					x = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_LEFT));
+//					y = Double.parseDouble((String) getView().getState(cell).getStyle().get(mxConstants.STYLE_SPACING_TOP));
 //				}
-			}
-		}
-	}
+//				state.getAbsoluteOffset().setX(state.getAbsoluteOffset().getX() + x);
+//				state.getAbsoluteOffset().setY(state.getAbsoluteOffset().getY() + y);
+//
+//				switch (cell.getType()) {
+//				case PLACE:
+//					if (getNetContainer().getPetriNet().containsPlace(cell.getId())) {
+//						offset = netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
+//					}
+//					break;
+//				case TRANSITION:
+//					if (getNetContainer().getPetriNet().containsTransition(cell.getId())) {
+//						offset = netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
+//					}
+//					break;
+//				case ARC:
+//					if (netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(((PNGraphCell) cell).getId()) != null)
+//						offset = netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(((PNGraphCell) cell).getId()).getOffset();
+//					break;
+//				}
+//				if (offset != null) {
+//					offset.setX(state.getAbsoluteOffset().getX());
+//					offset.setY(state.getAbsoluteOffset().getY());
+//				}
+////				try {
+////					setPNGraphics(state);
+////				} catch (ParameterException e) {
+////					System.out.println("Problem while setting state graphics!");
+////					e.printStackTrace();
+////				}
+//			}
+//		}
+//	}
 
 	// ------- GUI events that represent changes on Petri net components
 	// ----------------------------------------
