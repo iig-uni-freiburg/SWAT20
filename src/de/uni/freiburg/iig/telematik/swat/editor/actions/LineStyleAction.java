@@ -29,8 +29,8 @@ public class LineStyleAction extends AbstractPNEditorAction {
 	int iterator = 1; 
 
 	public LineStyleAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
-		super(editor, "Line", IconFactory.getIcon("line"));
-		line = IconFactory.getIcon("line").getImage();
+		super(editor, "Line", IconFactory.getIcon("solid"));
+		line = IconFactory.getIcon("solid").getImage();
 		dash = IconFactory.getIcon("dash").getImage();
 		dot = IconFactory.getIcon("dot").getImage();
 	}

@@ -158,7 +158,7 @@ public class ToolBar extends JToolBar {
 	
 		add(undoAction);
 		add(redoAction);
-		add(addImageAction);
+		
 		addSeparator();
 		
 		add(getFontBox());
@@ -170,7 +170,7 @@ public class ToolBar extends JToolBar {
 		add(boldFontAction);
 		add(italicFontAction);
 		add(underlineFontAction);
-		add(lineThroughFontaction);
+//		add(lineThroughFontaction);
 		addSeparator();		
 		
 		add(alignLeftAction);
@@ -179,16 +179,19 @@ public class ToolBar extends JToolBar {
 
 		addSeparator();
 		
+		add(addImageAction);
+		add(backgroundColorAction);
+		add(gradientDirectionAction);
+		add(gradientColor);
 		add(strokeColorAction);
 		add(getStrokeWeightBox());
-		add(backgroundColorAction);
 		
 add(lineStyleAction);
-
-add(gradientDirectionAction);
-add(gradientColor);
-add(showHideLabelsAction);
 add(lineCurveAction);
+addSeparator();
+
+add(showHideLabelsAction);
+
 
 
 		addSeparator();
@@ -257,7 +260,8 @@ add(lineCurveAction);
 	
 	private JComboBox getStrokeWeightBox(){
 		if(strokeWeightBox == null){
-			strokeWeightBox = new JComboBox(new Object[] { "0px", "1px", "2px", "4px", "5px", "6px", "7px", "8px", "9px", "10px", "11px", "12px" });
+			strokeWeightBox = new JComboBox(new Object[] { "0px", "1px", "2px","3px", "4px", "5px", "6px", "7px", "8px", "9px", "10px", "11px", "12px" });
+			strokeWeightBox.setSelectedIndex(1);
 			strokeWeightBox.setMinimumSize(new Dimension(100, 24));
 			strokeWeightBox.setPreferredSize(new Dimension(100, 24));
 			strokeWeightBox.setMaximumSize(new Dimension(100, 24));
@@ -357,8 +361,14 @@ add(lineCurveAction);
 		alignCenterAction.setEnabled(false);
 		alignRightAction.setEnabled(false);
 		strokeColorAction.setEnabled(false);
-//		getStrokeWeightBox().setEnabled(false);
+		getStrokeWeightBox().setEnabled(false);
 		backgroundColorAction.setEnabled(false);
+		lineStyleAction.setEnabled(false);
+		gradientDirectionAction.setEnabled(false);
+		gradientColor.setEnabled(false);
+		showHideLabelsAction.setEnabled(false);
+		lineCurveAction.setEnabled(false);
+		addImageAction.setEnabled(false);
 	}
 	
 	public void updateView(Set<PNGraphCell> selectedComponents){
@@ -375,6 +385,12 @@ add(lineCurveAction);
 			strokeColorAction.setEnabled(true);
 			backgroundColorAction.setEnabled(true);
 			getStrokeWeightBox().setEnabled(true);
+			lineStyleAction.setEnabled(true);
+			gradientDirectionAction.setEnabled(true);
+			gradientColor.setEnabled(true);
+			showHideLabelsAction.setEnabled(true);
+			lineCurveAction.setEnabled(true);
+			addImageAction.setEnabled(true);
 			if(selectedComponents.size() == 1){
 				this.selectedCell = selectedComponents.iterator().next();
 				boolean isPlaceCell = selectedCell.getType() == PNComponent.PLACE;

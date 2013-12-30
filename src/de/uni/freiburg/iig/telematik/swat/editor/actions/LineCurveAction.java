@@ -24,12 +24,12 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 public class LineCurveAction extends AbstractPNEditorAction {
 	private Image curve;
 	private Image line;
-	int iterator = 0; 
+	int iterator = 1; 
 
 	public LineCurveAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "LineCurve", IconFactory.getIcon("line"));
 		line = IconFactory.getIcon("line").getImage();
-		curve = IconFactory.getIcon("visible").getImage();
+		curve = IconFactory.getIcon("round").getImage();
 	}
 
 	public void actionPerformed(ActionEvent e) {
