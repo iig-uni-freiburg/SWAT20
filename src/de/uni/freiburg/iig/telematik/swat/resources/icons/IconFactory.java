@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.resources.icons;
 
+import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
 
@@ -27,6 +28,20 @@ public class IconFactory {
 		URL imageURL = IconFactory.class.getResource(imagePath);
 		try {
 			return new ImageIcon(imageURL);
+		} catch(Exception e){
+			throw new ParameterException("Cannot load icon with name \""+name+"\": " + e.getMessage());
+		}
+	}
+	
+	private static Image getIconImage(String name, IconSize size) throws ParameterException{
+		Validate.notNull(name);
+		Validate.notEmpty(name);
+		Validate.notNull(size);
+		
+		String imagePath = String.format(imagePathFormat, size.getSize(), name, size.getSize());
+		URL imageURL = IconFactory.class.getResource(imagePath);
+		try {
+			return new ImageIcon(imageURL).getImage();
 		} catch(Exception e){
 			throw new ParameterException("Cannot load icon with name \""+name+"\": " + e.getMessage());
 		}
