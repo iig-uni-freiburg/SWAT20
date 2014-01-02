@@ -36,9 +36,6 @@ public class BackgroundColorAction extends AbstractPNEditorAction{
 					selectedCellState.getStyle().put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(newColor));
 					graph.getModel().endUpdate();
 				} else {
-					
-					//TODO:Destinguish between Ellipse and Rectangle
-		        	getEditor().getGraphComponent().getGraph().setCellStyles("shape", mxConstants.SHAPE_ELLIPSE);
 					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(newColor));
 				}
 

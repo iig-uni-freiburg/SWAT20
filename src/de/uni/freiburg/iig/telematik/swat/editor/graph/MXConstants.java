@@ -120,6 +120,8 @@ public abstract class MXConstants {
 					style.put(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_EAST);
 				} else if (fill.getGradientRotation().equals(GradientRotation.VERTICAL)) {
 					style.put(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_SOUTH);
+				} else if (fill.getGradientRotation().equals(GradientRotation.DIAGONAL)) {
+					style.put(mxConstants.STYLE_GRADIENT_DIRECTION, "south_east");
 				}
 			}
 			if (fill.getImage() != null)
@@ -268,18 +270,19 @@ public abstract class MXConstants {
 		if (gradientColor != null) {
 			fill.setGradientColor(gradientColor);
 		}
+		String gradientDirection = (String) state.getStyle().get(mxConstants.STYLE_GRADIENT_DIRECTION);
 		GradientRotation gradientRotation = null;
-		String gradientDirecion = (String) state.getStyle().get(mxConstants.STYLE_GRADIENT_DIRECTION);
-		if (gradientDirecion != null) {
-			if (gradientDirecion.equals(mxConstants.DIRECTION_EAST) || gradientDirecion.equals(mxConstants.DIRECTION_WEST)) {
+		if (gradientDirection != null) {
+			if (gradientDirection.equals(mxConstants.DIRECTION_EAST) || gradientDirection.equals(mxConstants.DIRECTION_WEST)) {
 				gradientRotation = GradientRotation.HORIZONTAL;
-			} else if (gradientDirecion.equals(mxConstants.DIRECTION_SOUTH) || gradientDirecion.equals(mxConstants.DIRECTION_NORTH)) {
+			} else if (gradientDirection.equals(mxConstants.DIRECTION_SOUTH) || gradientDirection.equals(mxConstants.DIRECTION_NORTH)) {
 				gradientRotation = GradientRotation.VERTICAL;
+			} else if (gradientDirection.equals("south_east")) {
+				gradientRotation = GradientRotation.DIAGONAL;
 			}
-		}
-		if (gradientRotation != null) {
 			fill.setGradientRotation(gradientRotation);
 		}
+
 		String image = (String) state.getStyle().get(mxConstants.STYLE_IMAGE);
 		if (image != null) {
 			try {
