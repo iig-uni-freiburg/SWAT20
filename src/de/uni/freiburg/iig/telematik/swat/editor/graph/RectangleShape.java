@@ -13,6 +13,8 @@ import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
+
 public class RectangleShape extends mxRectangleShape {
 
 @Override
@@ -61,56 +63,41 @@ protected boolean configureGraphics(mxGraphics2DCanvas canvas,
 	}
 }
 
-public Paint createFillPaint(mxRectangle bounds, Map<String, Object> style)
-{
-	Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
-	Paint fillPaint = null;
+	public Paint createFillPaint(mxRectangle bounds, Map<String, Object> style) {
+		Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
+		Paint fillPaint = null;
 
-	if (fillColor != null)
-	{
-		Color gradientColor = mxUtils.getColor(style,
-				mxConstants.STYLE_GRADIENTCOLOR);
+		if (fillColor != null) {
+			Color gradientColor = mxUtils.getColor(style, mxConstants.STYLE_GRADIENTCOLOR);
 
-		if (gradientColor != null)
-		{
-			String gradientDirection = mxUtils.getString(style,
-					mxConstants.STYLE_GRADIENT_DIRECTION);
+			if (gradientColor != null) {
+			GradientRotation gradientRotation = GradientRotation.getGradientRotation(mxUtils.getString(style, "Gradient_Rotation"));
 
-			float x1 = (float) bounds.getX();
-			float y1 = (float) bounds.getY();
-			float x2 = (float) bounds.getX();
-			float y2 = (float) bounds.getY();
+				float x1 = (float) bounds.getX();
+				float y1 = (float) bounds.getY();
+				float x2 = (float) bounds.getX();
+				float y2 = (float) bounds.getY();
 
-			if (gradientDirection == null
-					|| gradientDirection
-							.equals(mxConstants.DIRECTION_SOUTH))
-			{
-				y2 = (float) (bounds.getY() + bounds.getHeight());
-			}
-			else if (gradientDirection.equals(mxConstants.DIRECTION_EAST))
-			{
-				x2 = (float) (bounds.getX() + bounds.getWidth());
-			}
-			else if (gradientDirection.equals(mxConstants.DIRECTION_NORTH))
-			{
-				y1 = (float) (bounds.getY() + bounds.getHeight());
-			}
-			else if (gradientDirection.equals(mxConstants.DIRECTION_WEST))
-			{
-				x1 = (float) (bounds.getX() + bounds.getWidth());
-			}
-			else if (gradientDirection.equals("south_east"))
-			{
-				y2 = (float) (bounds.getY() + bounds.getHeight());
-				x2 = (float) (bounds.getX() + bounds.getWidth());
-			}
+				switch(gradientRotation){
+				case DIAGONAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case HORIZONTAL:
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case VERTICAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					break;
+				default:
+					break;
+				
+				}
 
-			fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2,
-					gradientColor, true);
+				fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, true);
+			}
 		}
+		return fillPaint;
 	}
-
-	return fillPaint;
-}
 
 }

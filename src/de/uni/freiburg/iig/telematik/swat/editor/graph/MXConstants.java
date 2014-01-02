@@ -113,16 +113,9 @@ public abstract class MXConstants {
 			if (fill.getColor() != null)
 				style.put(mxConstants.STYLE_FILLCOLOR, fill.getColor());
 
-			// Diagonal direction Missing
 			if (fill.getGradientRotation() != null) {
 				style.put(mxConstants.STYLE_GRADIENTCOLOR, fill.getGradientColor());
-				if (fill.getGradientRotation().equals(GradientRotation.HORIZONTAL)) {
-					style.put(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_EAST);
-				} else if (fill.getGradientRotation().equals(GradientRotation.VERTICAL)) {
-					style.put(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_SOUTH);
-				} else if (fill.getGradientRotation().equals(GradientRotation.DIAGONAL)) {
-					style.put(mxConstants.STYLE_GRADIENT_DIRECTION, "south_east");
-				}
+					style.put("Gradient_Rotation", fill.getGradientRotation());	
 			}
 			if (fill.getImage() != null)
 				style.put(mxConstants.STYLE_IMAGE, fill.getImage());
@@ -270,17 +263,10 @@ public abstract class MXConstants {
 		if (gradientColor != null) {
 			fill.setGradientColor(gradientColor);
 		}
-		String gradientDirection = (String) state.getStyle().get(mxConstants.STYLE_GRADIENT_DIRECTION);
+		String gradientDirection = (String) state.getStyle().get("Gradient_Rotation");
 		GradientRotation gradientRotation = null;
 		if (gradientDirection != null) {
-			if (gradientDirection.equals(mxConstants.DIRECTION_EAST) || gradientDirection.equals(mxConstants.DIRECTION_WEST)) {
-				gradientRotation = GradientRotation.HORIZONTAL;
-			} else if (gradientDirection.equals(mxConstants.DIRECTION_SOUTH) || gradientDirection.equals(mxConstants.DIRECTION_NORTH)) {
-				gradientRotation = GradientRotation.VERTICAL;
-			} else if (gradientDirection.equals("south_east")) {
-				gradientRotation = GradientRotation.DIAGONAL;
-			}
-			fill.setGradientRotation(gradientRotation);
+			fill.setGradientRotation(GradientRotation.getGradientRotation(gradientDirection));
 		}
 
 		String image = (String) state.getStyle().get(mxConstants.STYLE_IMAGE);

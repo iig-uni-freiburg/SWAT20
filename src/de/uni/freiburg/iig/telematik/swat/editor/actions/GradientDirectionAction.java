@@ -16,6 +16,7 @@ import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
@@ -45,19 +46,19 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 			iterator = iterator%3;
 			if(iterator == 0){
-				graph.setCellStyles(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_SOUTH);	
+				graph.setCellStyles("Gradient_Rotation", GradientRotation.HORIZONTAL.toString());	
 				super.getIcon().setImage(this.horizontal);	
 			}
 				
 				
 			if(iterator == 1){
-				graph.setCellStyles(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_EAST);	
+				graph.setCellStyles("Gradient_Rotation", GradientRotation.VERTICAL.toString());	
 				super.getIcon().setImage(this.vertical);	
 				}
 
 				
 			if(iterator == 2){
-				graph.setCellStyles(mxConstants.STYLE_GRADIENT_DIRECTION, "south_east");	
+				graph.setCellStyles("Gradient_Rotation", GradientRotation.DIAGONAL.toString());	
 				super.getIcon().setImage(this.diagonal);	
 				}
 			iterator++;
