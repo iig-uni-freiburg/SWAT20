@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +13,11 @@ import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.TransferHandler;
 
@@ -36,15 +40,15 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.BackgroundColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.BoldStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.GradientDirectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.GradientColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.GradientDirectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ItalicStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineCurveAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineThroughStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ShowHideLabelsAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.StrokeColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.TextRotationAction;
@@ -75,10 +79,13 @@ public class ToolBar extends JToolBar {
 	private PNGraphCell selectedCell = null;
 
 	private BoldStyleAction boldFontAction;
+	private JToggleButton boldFontButton = null;
 
 	private ItalicStyleAction italicFontAction;
+	private JToggleButton italicFontButton = null;
 
 	private UnderlineStyleAction underlineFontAction;
+	private JToggleButton underlineFontButton = null;
 
 	private LineThroughStyleAction lineThroughFontaction;
 
@@ -91,7 +98,6 @@ public class ToolBar extends JToolBar {
 	private Action strokeColorAction;
 
 	private BackgroundColorAction backgroundColorAction;
-
 
 	private JComboBox strokeWeightBox;
 
@@ -173,9 +179,9 @@ public class ToolBar extends JToolBar {
 
 		addSeparator();
 		
-		add(boldFontAction);
-		add(italicFontAction);
-		add(underlineFontAction);
+		boldFontButton = (JToggleButton) add(boldFontAction, true);
+		italicFontButton = (JToggleButton) add(italicFontAction, true);
+		underlineFontButton = (JToggleButton) add(underlineFontAction, true);
 		addSeparator();		
 		
 		add(alignLeftAction);
@@ -195,11 +201,11 @@ public class ToolBar extends JToolBar {
 		add(strokeColorAction);
 		add(getStrokeWeightBox());
 		
-add(lineStyleAction);
-add(lineCurveAction);
-addSeparator();
+		add(lineStyleAction);
+		add(lineCurveAction);
+		addSeparator();
 
-add(showHideLabelsAction);
+		add(showHideLabelsAction);
 
 
 
@@ -208,6 +214,30 @@ add(showHideLabelsAction);
 		add(getZoomBox());
 		
 		deactivate();
+	}
+	
+	private JComponent add(Action action, boolean asToggleButton){
+		if(!asToggleButton)
+			return super.add(action);
+		JToggleButton b = createToggleActionComponent(action);
+		b.setAction(action);
+	    add(b);
+	    return b;
+	}
+	
+	protected JToggleButton createToggleActionComponent(Action a) {
+		JToggleButton b = new JToggleButton() {
+			private static final long serialVersionUID = -3143341784881719155L;
+			protected PropertyChangeListener createActionPropertyChangeListener(Action a) {
+				return super.createActionPropertyChangeListener(a);
+			}
+		};
+		if (a != null && (a.getValue(Action.SMALL_ICON) != null || a.getValue(Action.LARGE_ICON_KEY) != null)) {
+			b.setHideActionText(true);
+		}
+		b.setHorizontalTextPosition(JButton.CENTER);
+		b.setVerticalTextPosition(JButton.BOTTOM);
+		return b;
 	}
 	
 	private JComboBox getFontBox(){
@@ -416,6 +446,15 @@ add(showHideLabelsAction);
 				alignCenterAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 				alignRightAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 //				getStrokeWeightBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+				int strokeWeight = 0;
+				if(isArcCell){
+					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getArcGraphics().get(selectedCell.getId()).getLine().getWidth();
+				} else if(isTransitionCell){
+					
+				} else if(isPlaceCell){
+					
+				}
+				getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
 
 				// Initialize fields.
 			} else {
