@@ -419,7 +419,6 @@ public class ToolBar extends JToolBar {
 	}
 	
 	public void updateView(Set<PNGraphCell> selectedComponents){
-		System.out.println(selectedComponents);
 		if(selectedComponents == null || selectedComponents.isEmpty()){
 			deactivate();
 			this.selectedCell = null;

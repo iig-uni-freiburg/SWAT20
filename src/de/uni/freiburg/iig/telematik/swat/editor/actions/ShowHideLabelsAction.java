@@ -39,7 +39,6 @@ public class ShowHideLabelsAction extends AbstractPNEditorAction {
 		double width = mxUtils.getDouble(style, mxConstants.STYLE_STROKEWIDTH);
 
 		iterator = iterator%2;
-		System.out.println(iterator);
 		if(iterator == 0){
 			graph.setCellStyles("noLabel", "1");
 			super.getIcon().setImage(this.invisible);	

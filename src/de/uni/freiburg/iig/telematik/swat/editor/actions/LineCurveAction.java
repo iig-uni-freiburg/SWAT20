@@ -39,7 +39,6 @@ public class LineCurveAction extends AbstractPNEditorAction {
 		double width = mxUtils.getDouble(style, mxConstants.STYLE_STROKEWIDTH);
 
 		iterator = iterator%2;
-		System.out.println(iterator);
 		if(iterator == 0){
 			graph.setCellStyles(mxConstants.STYLE_ROUNDED,"true");
 			graph.setCellStyles(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ENTITY_RELATION);

@@ -44,9 +44,6 @@ public class ConnectionHandler extends mxConnectionHandler {
 	protected mxConnectPreview createConnectPreview() {
 		return new mxConnectPreview(getGraphComponent()) {
 			@Override
-			/**
-			 *
-			 */
 			public Object stop(boolean commit, MouseEvent e) {
 				Object result = (sourceState != null) ? sourceState.getCell() : null;
 
@@ -54,55 +51,40 @@ public class ConnectionHandler extends mxConnectionHandler {
 					PNGraph graph = getGraphComponent().getGraph();
 
 					graph.getModel().beginUpdate();
-//					try {
-						mxICell cell = (mxICell) previewState.getCell();
-						Object src = cell.getTerminal(true);
-						Object trg = cell.getTerminal(false);
+					// try {
+					mxICell cell = (mxICell) previewState.getCell();
+					Object src = cell.getTerminal(true);
+					Object trg = cell.getTerminal(false);
 
-						if (src != null) {
-							((mxICell) src).removeEdge(cell, true);
+					if (src != null) {
+						((mxICell) src).removeEdge(cell, true);
+					}
+
+					if (trg != null) {
+						((mxICell) trg).removeEdge(cell, false);
+					}
+
+					if (commit) {
+						try {
+							result = ((PNGraph) graphComponent.getGraph()).addNewFlowRelation((PNGraphCell) src, (PNGraphCell) trg);
+						} catch (ParameterException e1) {
+							e1.printStackTrace();
 						}
+					}
 
-						if (trg != null) {
-							((mxICell) trg).removeEdge(cell, false);
+					fireEvent(new mxEventObject(mxEvent.STOP, "event", e, "commit", commit, "cell", (commit) ? result : null));
+
+					// Clears the state before the model commits
+					if (previewState != null) {
+						Rectangle dirty = getDirtyRect();
+						graph.getView().clear(cell, false, true);
+						previewState = null;
+
+						if (!commit && dirty != null) {
+							getGraphComponent().getGraphControl().repaint(dirty);
 						}
-
-//						if (commit) {
-//							AbstractFlowRelation relation = null;
-//
-//							switch (getSource().getType()) {
-//							case PLACE:
-//								relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationPT(((mxICell) src).getId(), ((mxICell) trg).getId());
-//								break;
-//							case TRANSITION:
-//								relation = getGraphComponent().getGraph().getNetContainer().getPetriNet().addFlowRelationTP(((mxICell) src).getId(), ((mxICell) trg).getId());
-//								break;
-//							}
-//							PNGraphCell newCell = getGraphComponent().getGraph().createArcCell(relation.getName(), getGraphComponent().getGraph().getArcConstraint(relation), new Vector<Position>(), MXConstants.getNodeStyle(PNComponent.ARC, null, null));
-//							getGraphComponent().getGraph().addArcReference(relation, newCell);
-//							result = graph.addEdge(newCell, graph.getDefaultParent(), graph.getCell(relation.getSource()), graph.getCell(relation.getTarget()), null);
-//
-//						}
-
-						fireEvent(new mxEventObject(mxEvent.STOP, "event", e, "commit", commit, "cell", (commit) ? result : null));
-
-						// Clears the state before the model commits
-						if (previewState != null) {
-							Rectangle dirty = getDirtyRect();
-							graph.getView().clear(cell, false, true);
-							previewState = null;
-
-							if (!commit && dirty != null) {
-								getGraphComponent().getGraphControl().repaint(dirty);
-							}
-						}
-//					} catch (ParameterException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					} finally {
-//						graph.getModel().endUpdate();
-//					}
-						graph.getModel().endUpdate();
+					}
+					graph.getModel().endUpdate();
 				}
 
 				sourceState = null;
@@ -124,8 +106,9 @@ public class ConnectionHandler extends mxConnectionHandler {
 				double dx = first.getX() - e.getX();
 				double dy = first.getY() - e.getY();
 				
-				PNGraphCell selectionCell = null;
-
+				
+				PNGraphCell targetCell = null;
+				Object edgeCell = null;
 
 				if (connectPreview.isActive() && (marker.hasValidState() || isCreateTarget() || graph.isAllowDanglingEdges())) {
 					graph.getModel().beginUpdate();
@@ -133,8 +116,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 					try {
 
 						if (!marker.hasValidState() && isCreateTarget()) {
-							
-							PNGraphCell targetCell = null;
+
 							switch (getSource().getType()) {
 							case PLACE:
 								targetCell = (PNGraphCell) ((PNGraph) graphComponent.getGraph()).addNewTransition(graphComponent.getPointForEvent(e));
@@ -143,54 +125,30 @@ public class ConnectionHandler extends mxConnectionHandler {
 								targetCell = (PNGraphCell) ((PNGraph) graphComponent.getGraph()).addNewPlace(graphComponent.getPointForEvent(e));
 								break;
 							}
-							selectionCell = targetCell;
-							
-							Object edge = ((PNGraph) graphComponent.getGraph()).addNewFlowRelation(getSource(), targetCell);
-							
-//							dropTarget = graph.getDropTarget(new Object[] { targetCell }, e.getPoint(), graphComponent.getCellAt(e.getX(), e.getY()));
-//							if (targetCell != null) {
-//								// Disables edges as drop targets if the target
-//								// cell was created
-//								if (dropTarget == null || !graph.getModel().isEdge(dropTarget)) {
-//									mxCellState pstate = graph.getView().getState(dropTarget);
-//
-//									if (pstate != null) {
-//										mxGeometry geo = graph.getModel().getGeometry(targetCell);
-//
-//										mxPoint origin = pstate.getOrigin();
-//										geo.setX(geo.getX() - origin.getX());
-//										geo.setY(geo.getY() - origin.getY());
-//									}
-//								} else {
-//									dropTarget = graph.getDefaultParent();
-//								}
-//
-//								graph.addCells(new Object[] { targetCell }, dropTarget);
-//							}
 
-							// FIXME: Here we pre-create the state for the
-							// vertex to be
-							// inserted in order to invoke update in the
-							// connectPreview.
-							// This means we have a cell state which should be
-							// created
-							// after the model.update, so this should be fixed.
 							mxCellState targetState = graph.getView().getState(targetCell, true);
 							connectPreview.update(e, targetState, e.getX(), e.getY());
-
-							eventSource.fireEvent(new mxEventObject(mxEvent.CONNECT, "cell", edge, "event", e, "target", targetCell));
 						}
 
-						connectPreview.stop(graphComponent.isSignificant(dx, dy), e);
+						edgeCell = connectPreview.stop(graphComponent.isSignificant(dx, dy), e);
+
+						if (edgeCell != null) {
+							eventSource.fireEvent(new mxEventObject(mxEvent.CONNECT, "cell", edgeCell, "event", e, "target", targetCell));
+						}
+
 						e.consume();
 					} catch (ParameterException e1) {
 						System.out.println(getSource().getType() + "-Vertex could not be created");
 						e1.printStackTrace();
 					} finally {
 						graph.getModel().endUpdate();
-						if(selectionCell != null){
-							((PNGraph) graphComponent.getGraph()).setSelectionCell(selectionCell);
+						if(targetCell != null){
+							((PNGraph) graphComponent.getGraph()).setSelectionCell(targetCell);
 						}
+						else {
+							((PNGraph) graphComponent.getGraph()).setSelectionCell(edgeCell);
+						}
+
 					}
 				}
 

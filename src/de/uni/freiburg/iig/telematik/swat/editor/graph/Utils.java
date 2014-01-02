@@ -95,7 +95,6 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 		mxRectangle size, double outerWidth, double outerHeight,
 		Map<String, Object> style, double scale)
 {
-	System.out.println("i am slb");
 	double inset = mxConstants.LABEL_INSET * scale;
 
 	// Scales the size of the label
@@ -186,7 +185,6 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 		int labelPositionY = (int) (getInt(style, MXConstants.LABEL_POSITION_Y) * scale);
 //		labelPositionX = 20;
 //		labelPositionY = 50;
-		System.out.println(labelPositionX + "#" + labelPositionY + "## " + x+"#"+y);
 		
 	return new mxRectangle(x + labelPositionX, y+labelPositionY, width, height);
 }

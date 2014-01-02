@@ -107,6 +107,7 @@ public abstract class MXConstants {
 		style.put(mxConstants.STYLE_FILLCOLOR, Integer.toHexString(MXConstants.bluehigh.getRGB()));
 		style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
 		style.put(mxConstants.STYLE_STROKECOLOR, Integer.toHexString(MXConstants.bluelow.getRGB()));
+		style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
 		if (nodeGraphics != null) {
 			Fill fill = nodeGraphics.getFill();
 			if (fill.getColor() != null)
@@ -141,7 +142,6 @@ public abstract class MXConstants {
 		if (annotationGraphics != null) {
 			style.put(MXConstants.LABEL_POSITION_X, Double.toString(annotationGraphics.getOffset().getX()));
 			style.put(MXConstants.LABEL_POSITION_Y, Double.toString(annotationGraphics.getOffset().getY()));
-			System.out.println(style.get(MXConstants.LABEL_POSITION_X) + "#"+ style.get(MXConstants.LABEL_POSITION_Y) + annotationGraphics.getOffset().getX() + "#" + annotationGraphics.getOffset().getY());
 			
 
 			if (annotationGraphics.getFill() != null)
@@ -294,6 +294,7 @@ public abstract class MXConstants {
 	private static Line getLine(mxCellState state) throws ParameterException {
 		Line line = new Line();
 		String color = (String) state.getStyle().get(mxConstants.STYLE_STROKECOLOR);
+		state.getStyle().put(mxConstants.STYLE_FONTCOLOR, "#000000");
 		line.setColor(color);
 		line.setShape(Line.Shape.LINE);
 		String strokeStyle = (String) state.getStyle().get(mxConstants.STYLE_DASHED);
@@ -331,7 +332,6 @@ public abstract class MXConstants {
 		AnnotationGraphics annotation = null;
 		Fill fill = new Fill();
 		String fillColor = (String) style.get(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR);
-		System.out.println(fillColor);
 		if (fillColor != null) {
 			fill.setColor(fillColor);
 		}

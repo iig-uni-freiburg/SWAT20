@@ -22,7 +22,6 @@ public class DefaultTextShape extends mxDefaultTextShape {
 public void paintShape(mxGraphics2DCanvas canvas, String text,
 		mxCellState state, Map<String, Object> style)
 {
-	System.out.println("test");
 	Rectangle rect = state.getLabelBounds().getRectangle();
 	Graphics2D g = canvas.getGraphics();
 
@@ -40,7 +39,6 @@ public void paintShape(mxGraphics2DCanvas canvas, String text,
 		if (!horizontal)
 		{
 		     degree = (String) style.get(MXConstants.TEXT_ROTATION_DEGREE);
-		     System.out.println("not horizontal");
 		     if (degree != null) {
 		        if (degree.equals("90")) {
 		            g.rotate(Math.PI / 2, x + w / 2, y + h / 2);
@@ -54,10 +52,8 @@ public void paintShape(mxGraphics2DCanvas canvas, String text,
 
 		if (horizontal) {
 		    degree = (String) style.get(MXConstants.TEXT_ROTATION_DEGREE);
-		    System.out.println("horizontal");
 
 		    if (degree != null) {
-		        System.out.println("horizontal");
 
 		        if (degree.equals("180")) {
 		            g.rotate(Math.PI, x + w / 2, y + h / 2);

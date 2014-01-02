@@ -44,7 +44,6 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 			double width = mxUtils.getDouble(style, mxConstants.STYLE_STROKEWIDTH);
 
 			iterator = iterator%3;
-			System.out.println(iterator);
 			if(iterator == 0){
 				graph.setCellStyles(mxConstants.STYLE_GRADIENT_DIRECTION, mxConstants.DIRECTION_SOUTH);	
 				super.getIcon().setImage(this.horizontal);	
