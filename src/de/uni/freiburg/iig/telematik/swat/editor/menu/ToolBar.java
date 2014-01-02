@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -90,10 +91,13 @@ public class ToolBar extends JToolBar {
 	private LineThroughStyleAction lineThroughFontaction;
 
 	private AlignLeftAction alignLeftAction;
-
+	private JToggleButton alignLeftButton = null;
+	
 	private Action alignRightAction;
+	private JToggleButton alignRightButton = null;
 
 	private Action alignCenterAction;
+	private JToggleButton alignCenterButton = null;
 
 	private Action strokeColorAction;
 
@@ -184,9 +188,13 @@ public class ToolBar extends JToolBar {
 		underlineFontButton = (JToggleButton) add(underlineFontAction, true);
 		addSeparator();		
 		
-		add(alignLeftAction);
-		add(alignCenterAction);
-		add(alignRightAction);
+		alignLeftButton = (JToggleButton) add(alignLeftAction, true);
+		alignCenterButton = (JToggleButton) add(alignCenterAction, true);
+		alignRightButton = (JToggleButton) add(alignRightAction, true);
+		ButtonGroup alignmentGroup = new ButtonGroup();
+		alignmentGroup.add(alignLeftButton);
+		alignmentGroup.add(alignCenterButton);
+		alignmentGroup.add(alignRightButton);
 
 		addSeparator();
 		
