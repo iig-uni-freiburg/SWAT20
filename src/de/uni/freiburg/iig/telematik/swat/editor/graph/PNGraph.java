@@ -230,6 +230,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@SuppressWarnings("rawtypes")
 	PNGraphCell getCell(AbstractPNNode pnNode) {
+		for (Entry<AbstractPNNode, PNGraphCell> nodeset : nodeReferences.entrySet()) {
+			if (nodeset.getKey() == pnNode) {
+				return nodeset.getValue();
+			}
+			}
+		//Strange Nullpointer after editing and connecting cells
 		return nodeReferences.get(pnNode);
 	}
 
