@@ -29,6 +29,9 @@ public class SwitchWorkingDirectoryAction implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		WorkingDirectoryDialog dialog = new WorkingDirectoryDialog(SwingUtilities.getWindowAncestor(treeView));
 		String workingDirectory = dialog.getSimulationDirectory();
+		if(workingDirectory == null)
+			return;
+		
 		try {
 			// Update Properties and reload SwatComponents.
 			SwatProperties.getInstance().setWorkingDirectory(workingDirectory);

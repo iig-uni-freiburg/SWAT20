@@ -39,7 +39,7 @@ public class LogFileViewer extends JEditorPane implements SwatComponent {
 
 		// get icon size
 		try {
-			ICON_SIZE = SwatProperties.getInstance().getIconSize();
+			ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
 		} catch (PropertyException e) {
 			// Stay with default value
 		}
