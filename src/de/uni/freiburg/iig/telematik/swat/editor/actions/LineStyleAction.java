@@ -11,6 +11,7 @@ import com.mxgraph.util.mxUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
@@ -38,23 +39,23 @@ public class LineStyleAction extends AbstractPNEditorAction {
 		iterator = iterator%3;
 		if(iterator == 0){
 			if (graph.isLabelSelected()) {
-				graph.setCellStyles("Label_Line_Style", "solid");
+				graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "solid");
 			} else{
-			graph.setCellStyles("Line_Style", "solid");}
+			graph.setCellStyles(MXConstants.LINE_STYLE, "solid");}
 			super.getIcon().setImage(this.solid);	
 		}
 		if(iterator == 1){
 			if (graph.isLabelSelected()) {
-				graph.setCellStyles("Label_Line_Style", "dash");
+				graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "dash");
 			} else{
-			graph.setCellStyles("Line_Style", "dash");}
+			graph.setCellStyles(MXConstants.LINE_STYLE, "dash");}
 			super.getIcon().setImage(this.dash);	
 		}
 		if(iterator == 2){
 			if (graph.isLabelSelected()) {
-				graph.setCellStyles("Label_Line_Style", "dot");
+				graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "dot");
 			} else{
-			graph.setCellStyles("Line_Style", "dot");}
+			graph.setCellStyles(MXConstants.LINE_STYLE, "dot");}
 			super.getIcon().setImage(this.dot);	
 		}
 			

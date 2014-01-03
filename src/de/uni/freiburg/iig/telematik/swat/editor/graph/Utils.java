@@ -205,13 +205,14 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 
 public static Object createFillPaint(mxRectangle bounds, Map<String, Object> style) {
 		Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
+		
 		Paint fillPaint = null;
 
 		if (fillColor != null) {
 			Color gradientColor = mxUtils.getColor(style, mxConstants.STYLE_GRADIENTCOLOR);
 
 			if (gradientColor != null) {
-				GradientRotation gradientRotation = GradientRotation.getGradientRotation(mxUtils.getString(style, "Gradient_Rotation"));
+				GradientRotation gradientRotation = GradientRotation.getGradientRotation(mxUtils.getString(style, MXConstants.GRADIENT_ROTATION));
 
 				float x1 = (float) bounds.getX();
 				float y1 = (float) bounds.getY();
@@ -242,14 +243,14 @@ public static Object createFillPaint(mxRectangle bounds, Map<String, Object> sty
 	}
 
 public static Stroke createStroke(Map<String, Object> style, double scale) {
-	String lineStyleString = mxUtils.getString(style, "Line_Style");
+	String lineStyleString = mxUtils.getString(style, MXConstants.LINE_STYLE);
 	double width = mxUtils.getFloat(style, mxConstants.STYLE_STROKEWIDTH, 1) * scale;
 	return getStrokeForLineStyle(style, scale, lineStyleString, width);
 }
 
 public static Stroke createLabelStroke(Map<String, Object> style, double scale) {
-	String lineStyleString = mxUtils.getString(style, "Label_Line_Style");
-	double width = mxUtils.getFloat(style, "labelStrokeWidth", 1) * scale;
+	String lineStyleString = mxUtils.getString(style, MXConstants.LABEL_LINE_STYLE);
+	double width = mxUtils.getFloat(style, MXConstants.LABEL_LINE_WIDTH, 1) * scale;
 	return getStrokeForLineStyle(style, scale, lineStyleString, width);
 	}
 

@@ -18,6 +18,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
@@ -46,19 +47,17 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 			iterator = iterator%3;
 			if(iterator == 0){
-				graph.setCellStyles("Gradient_Rotation", GradientRotation.HORIZONTAL.toString());	
+				graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.HORIZONTAL.toString());	
 				super.getIcon().setImage(this.horizontal);	
 			}
-				
-				
+	
 			if(iterator == 1){
-				graph.setCellStyles("Gradient_Rotation", GradientRotation.VERTICAL.toString());	
+				graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.VERTICAL.toString());	
 				super.getIcon().setImage(this.vertical);	
 				}
 
-				
 			if(iterator == 2){
-				graph.setCellStyles("Gradient_Rotation", GradientRotation.DIAGONAL.toString());	
+				graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.DIAGONAL.toString());	
 				super.getIcon().setImage(this.diagonal);	
 				}
 			iterator++;

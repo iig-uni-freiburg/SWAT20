@@ -1114,7 +1114,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	public void setStrokeWeightOfSelectedCell(String strokeWeight) {
 			if (isLabelSelected()) {
-				setCellStyles("labelStrokeWidth", strokeWeight);
+				setCellStyles(MXConstants.LABEL_LINE_WIDTH, strokeWeight);
 			} else {
 				setCellStyles(mxConstants.STYLE_STROKEWIDTH, strokeWeight);
 			}

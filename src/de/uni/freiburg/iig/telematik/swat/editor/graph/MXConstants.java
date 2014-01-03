@@ -79,6 +79,10 @@ public abstract class MXConstants {
 	public static final String LABEL_POSITION_X ="labelposotionx";
 	public static final String LABEL_POSITION_Y = "labelpositiony";
 	private static final String DEFAULT_STOKEWIDTH = "1";
+	public static final String GRADIENT_ROTATION = "Gradient_Rotation";
+	public static final String LABEL_LINE_STYLE = "Label_Line_Style";
+	public static final String LABEL_LINE_WIDTH = "labelStrokeWidth";
+	public static final String LINE_STYLE = "Line_Style";
 
 	
 	
@@ -103,7 +107,6 @@ public abstract class MXConstants {
 			break;
 
 		}
-System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 		style.put(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(MXConstants.bluehigh));
 		style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
 		style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(MXConstants.bluelow));
@@ -125,7 +128,7 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 				style.put(mxConstants.STYLE_STROKECOLOR, line.getColor());
 			style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
 			if (line.getStyle() != null) {
-					style.put("Line_Style",line.getStyle());
+					style.put(MXConstants.LINE_STYLE,line.getStyle());
 			}
 
 		}
@@ -189,7 +192,7 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 					style.put(mxConstants.STYLE_STROKECOLOR, line.getColor());
 				style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
 				if (line.getStyle() != null) {
-						style.put("Line_Style", line.getStyle());
+						style.put(MXConstants.LINE_STYLE, line.getStyle());
 				}
 
 			}
@@ -278,7 +281,7 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 		state.getStyle().put(mxConstants.STYLE_FONTCOLOR, "#000000");
 		line.setColor(color);
 		line.setShape(Line.Shape.LINE);
-		line.setStyle(Line.Style.getStyle((String) state.getStyle().get("Line_Style")));
+		line.setStyle(Line.Style.getStyle((String) state.getStyle().get(MXConstants.LINE_STYLE)));
 
 		String lineWidth;
 		if (state.getStyle().get(mxConstants.STYLE_STROKEWIDTH) instanceof String) {
@@ -370,7 +373,7 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 		Line line = new Line();
 		line.setShape(Line.Shape.LINE);
 		String color;
-		line.setStyle(Line.Style.getStyle((String) state.getStyle().get("Line_Style")));
+		line.setStyle(Line.Style.getStyle((String) state.getStyle().get(MXConstants.LINE_STYLE)));
 		String lineWidth = "1";
 		line.setWidth(Double.parseDouble(lineWidth));
 		if (state.getStyle().containsKey(mxConstants.STYLE_LABEL_BORDERCOLOR)) {
@@ -386,7 +389,7 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 		Line line = new Line();
 		line.setShape(Line.Shape.LINE);
 		String color;
-		String linestyle = (String) state.getStyle().get("Label_Line_Style");
+		String linestyle = (String) state.getStyle().get(MXConstants.LABEL_LINE_STYLE);
 		if(linestyle != null)
 		line.setStyle(Line.Style.getStyle(linestyle));
 		else line.setStyle(Line.Style.SOLID);
