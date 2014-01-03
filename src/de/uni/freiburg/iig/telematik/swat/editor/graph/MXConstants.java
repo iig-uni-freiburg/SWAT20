@@ -103,10 +103,10 @@ public abstract class MXConstants {
 			break;
 
 		}
-
-		style.put(mxConstants.STYLE_FILLCOLOR, Integer.toHexString(MXConstants.bluehigh.getRGB()));
+System.out.println(mxUtils.hexString(MXConstants.bluehigh));
+		style.put(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(MXConstants.bluehigh));
 		style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
-		style.put(mxConstants.STYLE_STROKECOLOR, Integer.toHexString(MXConstants.bluelow.getRGB()));
+		style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(MXConstants.bluelow));
 		style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
 		if (nodeGraphics != null) {
 			Fill fill = nodeGraphics.getFill();
@@ -173,7 +173,7 @@ public abstract class MXConstants {
 
 		}
 
-		style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, Integer.toHexString(MXConstants.blueBG.getRGB()));
+		style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(MXConstants.blueBG));
 
 		// Maybe there is a mxUtil Method for this TODO:CHECK IF
 		String convertedStyle = style.toString().replaceAll(", ", ";");
@@ -241,7 +241,7 @@ public abstract class MXConstants {
 
 		}
 
-		style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, Integer.toHexString(MXConstants.blueBG.getRGB()));
+		style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(MXConstants.blueBG));
 
 		// Maybe there is a mxUtil Method for this TODO:CHECK IF
 		String convertedStyle = style.toString().replaceAll(", ", ";");

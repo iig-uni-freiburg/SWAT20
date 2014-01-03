@@ -46,6 +46,7 @@ import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
 import com.mxgraph.view.mxGraph;
 
@@ -175,7 +176,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 			Map<String, Object> style = getGraph().getStylesheet().getDefaultEdgeStyle();
 			style.put("strokeWidth", 2.0);
-			style.put("strokeColor", Integer.toHexString(MXConstants.bluelow.getRGB()));
+			style.put("strokeColor", mxUtils.hexString(MXConstants.bluelow));
 
 			addGraphComponentListeners();
 			setUpUndo();
