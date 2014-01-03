@@ -1,11 +1,20 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Paint;
+import java.awt.Stroke;
 import java.util.Map;
 
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
+
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 
 public class Utils extends mxUtils {
 	/**
@@ -106,11 +115,11 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 //	boolean horizontal = isTrue(style, mxConstants.STYLE_HORIZONTAL, true);
 //	int spacing = (int) (getInt(style, mxConstants.STYLE_SPACING) * scale);
 
-//	// Gets the alignment settings
-//	Object align = getString(style, mxConstants.STYLE_ALIGN,
-//			mxConstants.ALIGN_CENTER);
-//	Object valign = getString(style, mxConstants.STYLE_VERTICAL_ALIGN,
-//			mxConstants.ALIGN_MIDDLE);
+	// Gets the alignment settings
+	Object align = getString(style, mxConstants.STYLE_ALIGN,
+			mxConstants.ALIGN_CENTER);
+	Object valign = getString(style, mxConstants.STYLE_VERTICAL_ALIGN,
+			mxConstants.ALIGN_MIDDLE);
 
 //	// Gets the vertical spacing
 //	int top = (int) (getInt(style, mxConstants.STYLE_SPACING_TOP) * scale);
@@ -188,5 +197,99 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 		
 	return new mxRectangle(x + labelPositionX, y+labelPositionY, width, height);
 }
+
+
+
+
+
+
+public static Object createFillPaint(mxRectangle bounds, Map<String, Object> style) {
+		Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
+		Paint fillPaint = null;
+
+		if (fillColor != null) {
+			Color gradientColor = mxUtils.getColor(style, mxConstants.STYLE_GRADIENTCOLOR);
+
+			if (gradientColor != null) {
+				GradientRotation gradientRotation = GradientRotation.getGradientRotation(mxUtils.getString(style, "Gradient_Rotation"));
+
+				float x1 = (float) bounds.getX();
+				float y1 = (float) bounds.getY();
+				float x2 = (float) bounds.getX();
+				float y2 = (float) bounds.getY();
+
+				switch (gradientRotation) {
+				case DIAGONAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case HORIZONTAL:
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case VERTICAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					break;
+				default:
+					break;
+
+				}
+
+				fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, true);
+			}
+		}
+
+		return fillPaint;
+	}
+
+public static Stroke createStroke(Map<String, Object> style, double scale) {
+	String lineStyleString = mxUtils.getString(style, "Line_Style");
+	double width = mxUtils.getFloat(style, mxConstants.STYLE_STROKEWIDTH, 1) * scale;
+	return getStrokeForLineStyle(style, scale, lineStyleString, width);
+}
+
+public static Stroke createLabelStroke(Map<String, Object> style, double scale) {
+	String lineStyleString = mxUtils.getString(style, "Label_Line_Style");
+	double width = mxUtils.getFloat(style, "labelStrokeWidth", 1) * scale;
+	return getStrokeForLineStyle(style, scale, lineStyleString, width);
+	}
+
+
+
+/**
+ * @param style
+ * @param scale
+ * @param lineStyleString
+ * @param width
+ * @return
+ */
+protected static Stroke getStrokeForLineStyle(Map<String, Object> style, double scale, String lineStyleString, double width) {
+	Style linestyle;
+	if(lineStyleString!=null)
+	linestyle = Line.Style.getStyle(lineStyleString);
+	else linestyle = Line.Style.SOLID;
+
+	float f;
+	switch (linestyle) {
+	case DASH:
+		float[] dashPattern = mxUtils.getFloatArray(style, mxConstants.STYLE_DASH_PATTERN, mxConstants.DEFAULT_DASHED_PATTERN, " ");
+		float[] scaledDashPattern = new float[dashPattern.length];
+		f = (width>0)?(float) width:1;
+		for (int i = 0; i < dashPattern.length; i++) {
+			scaledDashPattern[i] = (float) (dashPattern[i] * scale * f);
+		}
+		return new BasicStroke((float) width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 10.0f, scaledDashPattern, 0.0f);
+	case DOT:
+		f = (width>0)?(float) width:1;
+		float[] dash = { 0.0f, f * 2 };
+		return new BasicStroke((float) width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 1.0f, dash, 10.0f);
+	case SOLID:
+		return new BasicStroke((float) width);
+	}
+	return null;
+}
+
+
+
+	
 
 }

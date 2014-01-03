@@ -124,12 +124,8 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 			if (line.getColor() != null)
 				style.put(mxConstants.STYLE_STROKECOLOR, line.getColor());
 			style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
-			// Dotted Style Missing
 			if (line.getStyle() != null) {
-				if (line.getStyle().equals(Line.Style.DASH))
-					style.put(mxConstants.STYLE_DASHED, "true");
-				if (line.getStyle().equals(Line.Style.SOLID))
-					style.put(mxConstants.STYLE_DASHED, "false");
+					style.put("Line_Style",line.getStyle());
 			}
 
 		}
@@ -192,12 +188,8 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 				if (line.getColor() != null)
 					style.put(mxConstants.STYLE_STROKECOLOR, line.getColor());
 				style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
-				// Dotted Style Missing
 				if (line.getStyle() != null) {
-					if (line.getStyle().equals(Line.Style.DASH))
-						style.put(mxConstants.STYLE_DASHED, "true");
-					if (line.getStyle().equals(Line.Style.SOLID))
-						style.put(mxConstants.STYLE_DASHED, "false");
+						style.put("Line_Style", line.getStyle());
 				}
 
 			}
@@ -286,13 +278,8 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 		state.getStyle().put(mxConstants.STYLE_FONTCOLOR, "#000000");
 		line.setColor(color);
 		line.setShape(Line.Shape.LINE);
-		String strokeStyle = (String) state.getStyle().get(mxConstants.STYLE_DASHED);
-		boolean dashed = new Boolean(strokeStyle);
-		if (dashed) {
-			line.setStyle(Line.Style.DASH);
-		} else {
-			line.setStyle(Line.Style.SOLID);
-		}
+		line.setStyle(Line.Style.getStyle((String) state.getStyle().get("Line_Style")));
+
 		String lineWidth;
 		if (state.getStyle().get(mxConstants.STYLE_STROKEWIDTH) instanceof String) {
 			lineWidth = (String) state.getStyle().get(mxConstants.STYLE_STROKEWIDTH);
@@ -374,17 +361,35 @@ System.out.println(mxUtils.hexString(MXConstants.bluehigh));
 		// decoration missing: overline and Line-through
 
 		// Line at the moment expresses same like line in NodeGraphics
-		annotation = new AnnotationGraphics(new Offset((int) offset.getX(), (int) offset.getY()), fill, getLineAnnotation(state), font);
+		annotation = new AnnotationGraphics(new Offset((int) offset.getX(), (int) offset.getY()), fill, getArcLineAnnotation(state), font);
 
 		return annotation;
 	}
 
-	// What means Line in Annotationgraphics?
 	private static Line getLineAnnotation(mxCellState state) throws ParameterException {
 		Line line = new Line();
 		line.setShape(Line.Shape.LINE);
 		String color;
-		line.setStyle(Line.Style.SOLID);
+		line.setStyle(Line.Style.getStyle((String) state.getStyle().get("Line_Style")));
+		String lineWidth = "1";
+		line.setWidth(Double.parseDouble(lineWidth));
+		if (state.getStyle().containsKey(mxConstants.STYLE_LABEL_BORDERCOLOR)) {
+			color = (String) state.getStyle().get(mxConstants.STYLE_LABEL_BORDERCOLOR);
+			line.setColor(color);
+
+			return line;
+		}
+		return line;
+
+	}
+	private static Line getArcLineAnnotation(mxCellState state) throws ParameterException {
+		Line line = new Line();
+		line.setShape(Line.Shape.LINE);
+		String color;
+		String linestyle = (String) state.getStyle().get("Label_Line_Style");
+		if(linestyle != null)
+		line.setStyle(Line.Style.getStyle(linestyle));
+		else line.setStyle(Line.Style.SOLID);
 		String lineWidth = "1";
 		line.setWidth(Double.parseDouble(lineWidth));
 		if (state.getStyle().containsKey(mxConstants.STYLE_LABEL_BORDERCOLOR)) {

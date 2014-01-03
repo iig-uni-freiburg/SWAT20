@@ -1,18 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.swing.JColorChooser;
-
-import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -24,13 +18,13 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 public class LineStyleAction extends AbstractPNEditorAction {
 	private Image dot;
 	private Image dash;
-	private Image line;
+	private Image solid;
 	boolean isDot = false;
 	int iterator = 1; 
 
 	public LineStyleAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "Line", IconFactory.getIcon("solid"));
-		line = IconFactory.getIcon("solid").getImage();
+		solid = IconFactory.getIcon("solid").getImage();
 		dash = IconFactory.getIcon("dash").getImage();
 		dot = IconFactory.getIcon("dot").getImage();
 	}
@@ -44,36 +38,81 @@ public class LineStyleAction extends AbstractPNEditorAction {
 		iterator = iterator%3;
 		if(iterator == 0){
 			if (graph.isLabelSelected()) {
-				graph.setCellStyles("labeldashed", "0");
-			} else {
-				graph.setCellStyles(mxConstants.STYLE_DASHED, "0");	
-			}
-			super.getIcon().setImage(this.line);	
+				graph.setCellStyles("Label_Line_Style", "solid");
+			} else{
+			graph.setCellStyles("Line_Style", "solid");}
+			super.getIcon().setImage(this.solid);	
+		}
+		if(iterator == 1){
+			if (graph.isLabelSelected()) {
+				graph.setCellStyles("Label_Line_Style", "dash");
+			} else{
+			graph.setCellStyles("Line_Style", "dash");}
+			super.getIcon().setImage(this.dash);	
+		}
+		if(iterator == 2){
+			if (graph.isLabelSelected()) {
+				graph.setCellStyles("Label_Line_Style", "dot");
+			} else{
+			graph.setCellStyles("Line_Style", "dot");}
+			super.getIcon().setImage(this.dot);	
 		}
 			
 			
-		if(iterator == 1){
-			if (graph.isLabelSelected()) {
-				graph.setCellStyles("labeldashed", "1");
-				graph.setCellStyles("labeldashedpattern", width*4 + " " + width*2);
-			} else {
-				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
-				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width*4 + " " + width*2);
-			}
-			super.getIcon().setImage(this.dash);	
-			}
-
-			
-		if(iterator == 2){
-			if (graph.isLabelSelected()) {
-				graph.setCellStyles("labeldashed", "1");
-				graph.setCellStyles("labeldashedpattern", width +" "+ width);
-			} else {
-				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
-				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width +" "+ width);
-			}
-			super.getIcon().setImage(this.dot);	
-			}
+//		if(iterator == 1){
+//			if (graph.isLabelSelected()) {
+//				graph.setCellStyles("labeldashed", "1");
+//				graph.setCellStyles("labeldashedpattern", width*4 + " " + width*2);
+//			} else {
+//				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
+//				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width*4 + " " + width*2);
+//			}
+//			super.getIcon().setImage(this.dash);	
+//			}
+//
+//			
+//		if(iterator == 2){
+//			if (graph.isLabelSelected()) {
+//				graph.setCellStyles("labeldashed", "1");
+//				graph.setCellStyles("labeldashedpattern", width +" "+ width);
+//			} else {
+//				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
+//				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width +" "+ width);
+//			}
+//			super.getIcon().setImage(this.dot);	
+//			}
+//		if(iterator == 0){
+//			if (graph.isLabelSelected()) {
+//				graph.setCellStyles("labeldashed", "0");
+//			} else {
+//				graph.setCellStyles(mxConstants.STYLE_DASHED, "0");	
+//			}
+//			super.getIcon().setImage(this.line);	
+//		}
+//			
+//			
+//		if(iterator == 1){
+//			if (graph.isLabelSelected()) {
+//				graph.setCellStyles("labeldashed", "1");
+//				graph.setCellStyles("labeldashedpattern", width*4 + " " + width*2);
+//			} else {
+//				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
+//				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width*4 + " " + width*2);
+//			}
+//			super.getIcon().setImage(this.dash);	
+//			}
+//
+//			
+//		if(iterator == 2){
+//			if (graph.isLabelSelected()) {
+//				graph.setCellStyles("labeldashed", "1");
+//				graph.setCellStyles("labeldashedpattern", width +" "+ width);
+//			} else {
+//				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
+//				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width +" "+ width);
+//			}
+//			super.getIcon().setImage(this.dot);	
+//			}
 		iterator++;
 		
 		}
