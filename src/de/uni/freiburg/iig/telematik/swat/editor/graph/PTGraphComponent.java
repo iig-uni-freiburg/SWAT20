@@ -30,7 +30,7 @@ public class PTGraphComponent extends PNGraphComponent {
 	protected boolean doubleClickOnPlace(PNGraphCell cell, MouseEvent e) {
 		String tokens = JOptionPane.showInputDialog(PTGraphComponent.this, "Input new amount of tokens");
 		try {
-			Validate.positiveInteger(tokens);
+			Validate.notNegativeInteger(tokens);
 		} catch (ParameterException ex) {
 			JOptionPane.showMessageDialog(PTGraphComponent.this, "Input is not a positive integer.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
 		}
