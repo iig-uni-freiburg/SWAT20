@@ -516,7 +516,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 			g	= ((mxGraphics2DCanvas)canvas).getGraphics();
 					Color color = mxUtils.getColor(state.getStyle(), mxConstants.STYLE_STROKECOLOR);
 					g.setColor(color);
-					g.setStroke(createLabelStroke(style));}
+					g.setStroke(Utils.createLabelStroke(style, canvas.getScale()));}
 					lab = canvas.drawLabel(label, state, isHtmlLabel(cell));
 					if(g != null)
 					g.setStroke(new BasicStroke((float) 2));
@@ -537,64 +537,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		}
 	}
 	
-	
-
-	private Stroke createLabelStroke(Map<String, Object> style) {
-		double width= mxUtils
-				.getFloat(style, "labelStrokeWidth", 1) * getView().getScale();
-
-		boolean dashed = mxUtils.isTrue(style, "labeldashed");
-		if (dashed)
-		{
-			float[] dashPattern = mxUtils.getFloatArray(style,
-					"labeldashedpattern" ,
-					null, " ");
-			float[] scaledDashPattern = new float[dashPattern.length];
-
-			for (int i = 0; i < dashPattern.length; i++)
-			{
-				scaledDashPattern[i] = (float) (dashPattern[i] * getView().getScale() * width);
-			}
-
-			return new BasicStroke((float) width, BasicStroke.CAP_BUTT,
-					BasicStroke.JOIN_MITER, 10.0f, scaledDashPattern, 0.0f);
-		}
-		else
-		{
-			return new BasicStroke((float) width);
-		}
-	}
-	
-
-	/**
-	 * 
-//	 */
-//	public Stroke createStroke(Map<String, Object> style)
-//	{
-//		double width= mxUtils
-//				.getFloat(style, mxConstants.STYLE_STROKEWIDTH, 1) * scale;
-//
-//		boolean dashed = mxUtils.isTrue(style, mxConstants.STYLE_DASHED);
-//		if (dashed)
-//		{
-//			float[] dashPattern = mxUtils.getFloatArray(style,
-//					mxConstants.STYLE_DASH_PATTERN,
-//					mxConstants.DEFAULT_DASHED_PATTERN, " ");
-//			float[] scaledDashPattern = new float[dashPattern.length];
-//
-//			for (int i = 0; i < dashPattern.length; i++)
-//			{
-//				scaledDashPattern[i] = (float) (dashPattern[i] * scale * width);
-//			}
-//
-//			return new BasicStroke((float) width, BasicStroke.CAP_BUTT,
-//					BasicStroke.JOIN_MITER, 10.0f, scaledDashPattern, 0.0f);
-//		}
-//		else
-//		{
-//			return new BasicStroke((float) width);
-//		}
-//	}
 
 	public Object drawCell(mxGraphics2DCanvas canvas, mxCellState state) {
 		Map<String, Object> style = state.getStyle();
