@@ -23,7 +23,6 @@ import java.util.Vector;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxImageCanvas;
-import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
@@ -50,7 +49,6 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.TokenGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
@@ -69,7 +67,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
 	private PNProperties properties = null;
 	@SuppressWarnings("rawtypes")
-	protected Map<AbstractPNNode, PNGraphCell> nodeReferences = new HashMap<AbstractPNNode, PNGraphCell>();
+	protected Map<String, PNGraphCell> nodeReferences = new HashMap<String, PNGraphCell>();
 	private Map<AbstractFlowRelation, PNGraphCell> arcReferences = new HashMap<AbstractFlowRelation, PNGraphCell>();
 	
 	private Set<PNGraphListener> listeners = new HashSet<PNGraphListener>();
@@ -220,7 +218,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@SuppressWarnings("rawtypes")
 	public void addNodeReference(AbstractPNNode pnNode, PNGraphCell cell) {
-		nodeReferences.put(pnNode, cell);
+		nodeReferences.put(pnNode.getName(), cell);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -230,11 +228,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@SuppressWarnings("rawtypes")
 	PNGraphCell getCell(AbstractPNNode pnNode) {
-		for (Entry<AbstractPNNode, PNGraphCell> nodeset : nodeReferences.entrySet()) {
-			if (nodeset.getKey() == pnNode) {
+		for (Entry<String, PNGraphCell> nodeset : nodeReferences.entrySet()) {
+			if (nodeset.getKey().equals(pnNode.getName())) {
 				return nodeset.getValue();
 			}
-			}
+		}
 		//Strange Nullpointer after editing and connecting cells
 		return nodeReferences.get(pnNode);
 	}
@@ -909,13 +907,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	}
 
 	private boolean handlePlacePropertyChange(String name, PNProperty property, Object oldValue, Object newValue) {
-		PNGraphCell placeCell = null;
-		for (Entry<AbstractPNNode, PNGraphCell> nr : nodeReferences.entrySet()) {
-			if (nr.getKey().getName() == name) {
-				placeCell = nr.getValue();
-				break;
-			}
-		}
+		PNGraphCell placeCell = nodeReferences.get(name);
 
 		mxRectangle bounds;
 		double dy;
@@ -943,13 +935,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	}
 
 	protected boolean handleTransitionPropertyChange(String name, PNProperty property, Object oldValue, Object newValue) {
-		PNGraphCell transitionCell = null;
-		for (Entry<AbstractPNNode, PNGraphCell> nr : nodeReferences.entrySet()) {
-			if (nr.getKey().getName() == name) {
-				transitionCell = nr.getValue();
-				break;
-			}
-		}
+		PNGraphCell transitionCell = nodeReferences.get(name);
+
 		switch (property) {
 		case TRANSITION_LABEL:
 			transitionCell.setValue(newValue);
@@ -994,14 +981,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	
 	public void selectPlace(String name) {
 		if(!isCellSelected(name)){
-			PNGraphCell cell = nodeReferences.get(getNetContainer().getPetriNet().getPlace(name));
+			PNGraphCell cell = nodeReferences.get(name);
 			setSelectionCell(cell);
 		}
 	}
 
 	public void selectTransition(String name) {
 		if(!isCellSelected(name)){
-			PNGraphCell cell = nodeReferences.get(getNetContainer().getPetriNet().getTransition(name));
+			PNGraphCell cell = nodeReferences.get(name);
 			setSelectionCell(cell);
 		}
 	}
