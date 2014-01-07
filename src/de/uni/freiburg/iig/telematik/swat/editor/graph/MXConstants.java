@@ -23,7 +23,10 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.Align;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.Decoration;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Shape;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
@@ -83,12 +86,20 @@ public abstract class MXConstants {
 	public static final String LABEL_LINE_STYLE = "Label_Line_Style";
 	public static final String LABEL_LINE_WIDTH = "labelStrokeWidth";
 	public static final String LINE_STYLE = "Line_Style";
+	public static final String STYLE_LABEL_GRADIENTCOLOR = "labelGradientColor";
+	public static final String STYLE_LABEL_GRADIENT_DIRECTION = "labelGradientDirection";
+	public static final String STYLE_LABEL_IMAGE = "labelImage";
+	public static final String LABEL_LINE_SHAPE = "labelLineShape";
+	public static final String FONT_DECORATION = "labelFontDecoration";
+	public static final String FONT_STYLE = "labelFontStyle";
+	public static final String FONT_WEIGHT = "labelFontWeight";
+	private static final String STYLE_GRADIENT_ROTATION = "gradientRotation";
+	private static final String LINE_SHAPE = "lineShape";
 
 	
 	
-	public static String getNodeStyle(PNComponent type, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) {
-		Hashtable<String, Object> style = new Hashtable<String, Object>() {
-		};
+	public static String getNodeStyle(PNComponent type, NodeGraphics initialNodeGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
+		Hashtable<String, Object> style = new Hashtable<String, Object>();
 
 		style.put(MXConstants.LABEL_POSITION_X, EditorProperties.getInstance().getDefaultHorizontalLabelOffset());
 		style.put(MXConstants.LABEL_POSITION_Y, EditorProperties.getInstance().getDefaultVerticalLabelOffset());
@@ -107,72 +118,51 @@ public abstract class MXConstants {
 			break;
 
 		}
-		style.put(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(MXConstants.bluehigh));
-		style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
-		style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(MXConstants.bluelow));
-		style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
-		if (nodeGraphics != null) {
-			Fill fill = nodeGraphics.getFill();
-			if (fill.getColor() != null)
-				style.put(mxConstants.STYLE_FILLCOLOR, fill.getColor());
-
-			if (fill.getGradientRotation() != null) {
-				style.put(mxConstants.STYLE_GRADIENTCOLOR, fill.getGradientColor());
-					style.put("Gradient_Rotation", fill.getGradientRotation());	
-			}
-			if (fill.getImage() != null)
-				style.put(mxConstants.STYLE_IMAGE, fill.getImage());
-
-			Line line = nodeGraphics.getLine();
-			if (line.getColor() != null)
-				style.put(mxConstants.STYLE_STROKECOLOR, line.getColor());
-			style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
-			if (line.getStyle() != null) {
-					style.put(MXConstants.LINE_STYLE,line.getStyle());
-			}
-
-		}
-
-		if (annotationGraphics != null) {
-			style.put(MXConstants.LABEL_POSITION_X, Double.toString(annotationGraphics.getOffset().getX()));
-			style.put(MXConstants.LABEL_POSITION_Y, Double.toString(annotationGraphics.getOffset().getY()));
+//		style.put(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(MXConstants.bluehigh));
+//		style.put(mxConstants.STYLE_STROKEWIDTH, 2.0);
+//		style.put(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(MXConstants.bluelow));
+//		style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+		NodeGraphics nodeGraphics = (initialNodeGraphics != null)? initialNodeGraphics:new NodeGraphics();
+		
+		Fill fill = (nodeGraphics.getFill() != null)? nodeGraphics.getFill(): new Fill();
+				fill = nodeGraphics.getFill();
 			
+				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultNodeColor();
+				style.put(mxConstants.STYLE_FILLCOLOR,fillColor);
+	
+				GradientRotation gradientRotation = (fill.getGradientRotation() != null)? fill.getGradientRotation():EditorProperties.getInstance().getDefaultGradientDirection();
+				if(gradientRotation != null) style.put(MXConstants.STYLE_GRADIENT_ROTATION, gradientRotation);
+				fill.setGradientRotation(gradientRotation);
+				
+				String gradientColor = (fill.getGradientColor() != null)? fill.getGradientColor(): EditorProperties.getInstance().getDefaultGradientColor();
+				if(gradientColor != null)style.put(mxConstants.STYLE_GRADIENTCOLOR, gradientColor);
+				fill.setGradientColor(gradientColor);
+				
+				URI image = (fill.getImage() != null)? fill.getImage():EditorProperties.getInstance().getDefaultNodeImage();
+				if( image != null) style.put(mxConstants.STYLE_IMAGE, image);
+				fill.setImage(image);
+			nodeGraphics.setFill(new Fill(fillColor, gradientColor, gradientRotation, image));
+		
+		Line line = (nodeGraphics.getLine() != null)? nodeGraphics.getLine():new Line();
+		
+				String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
+				style.put(mxConstants.STYLE_STROKECOLOR,lineColor);
+	
+				Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;
+				style.put(MXConstants.LINE_STYLE, lineStyle);
+				
+				Shape lineShape = (line.getShape() != null)? line.getShape():Shape.LINE;
+				style.put(MXConstants.LINE_SHAPE, lineShape);	
+				
+				style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
+				
+			nodeGraphics.setLine(new Line(lineColor, lineShape, lineStyle, line.getWidth()));
 
-			if (annotationGraphics.getFill() != null)
+	
+	
 
-				if (annotationGraphics.getFont() != null) {
-					Font font = annotationGraphics.getFont();
-					if(font.getAlign() != null)
-					style.put(mxConstants.STYLE_ALIGN, font.getAlign());
-					if (font.getFamily() != null)
-						style.put(mxConstants.STYLE_FONTFAMILY, font.getFamily());
-					if (font.getSize() != null) // TODO: Not working, except
-												// integer
-						style.put(mxConstants.STYLE_FONTSIZE, getSizeFromCSS(font.getSize()));
-					int fontStyle = 0;
-					if (font.getWeight() != null && font.getWeight().equals("bold"))
-						fontStyle += mxConstants.FONT_BOLD;
-					if (font.getStyle() != null && font.getStyle().equals("italic"))
-						fontStyle += mxConstants.FONT_ITALIC;
-					// if (font.getDecoration() != null &&
-					// font.getDecoration().equals(Decoration.UNDERLINE)) TODO:
-					// Implement Underline not working when set
-					// fontStyle += mxConstants.FONT_UNDERLINE;
-					style.put(mxConstants.STYLE_FONTSTYLE, fontStyle);
+	getAnnotationGraphics(annotationGraphics, style);
 
-				}
-
-			if (annotationGraphics.getLine() != null) {
-
-				Line line = annotationGraphics.getLine();
-				if (line.getColor() != null)
-					style.put(mxConstants.STYLE_LABEL_BORDERCOLOR, line.getColor());
-
-			}
-
-		}
-
-		style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(MXConstants.blueBG));
 
 		// Maybe there is a mxUtil Method for this TODO:CHECK IF
 		String convertedStyle = style.toString().replaceAll(", ", ";");
@@ -180,69 +170,103 @@ public abstract class MXConstants {
 
 		return shortendStyle;
 	}
+
 	
-	public static String getArcStyle(ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) {
+	
+	public static String getArcStyle(ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
 		Hashtable<String, Object> style = new Hashtable<String, Object>();
-		if (arcGraphics != null) {
-			if (arcGraphics.getLine() != null) {
+		
+		Line line = (arcGraphics.getLine() != null)? arcGraphics.getLine():new Line();
+			
+		String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
+		style.put(mxConstants.STYLE_STROKECOLOR,lineColor);
 
-				Line line = arcGraphics.getLine();
-
-				if (line.getColor() != null)
-					style.put(mxConstants.STYLE_STROKECOLOR, line.getColor());
-				style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
-				if (line.getStyle() != null) {
-						style.put(MXConstants.LINE_STYLE, line.getStyle());
-				}
-
-			}
-
-		}
-
-		if (annotationGraphics != null) {
-			style.put(MXConstants.LABEL_POSITION_X, Double.toString(annotationGraphics.getOffset().getX()));
-			style.put(MXConstants.LABEL_POSITION_Y, Double.toString(annotationGraphics.getOffset().getY()));
-			if (annotationGraphics.getFill() != null)
-
-				if (annotationGraphics.getFont() != null) {
-					Font font = annotationGraphics.getFont();
-					if (font.getAlign() != null)
-						style.put(mxConstants.STYLE_ALIGN, font.getAlign());
-					if (font.getFamily() != null)
-						style.put(mxConstants.STYLE_FONTFAMILY, font.getFamily());
-					if (font.getSize() != null) // TODO: Not working, except
-												// integer
-						style.put(mxConstants.STYLE_FONTSIZE, getSizeFromCSS(font.getSize()));
-					int fontStyle = 0;
-					if (font.getWeight() != null && font.getWeight().equals("bold"))
-						fontStyle += mxConstants.FONT_BOLD;
-					if (font.getStyle() != null && font.getStyle().equals("italic"))
-						fontStyle += mxConstants.FONT_ITALIC;
-					// if (font.getDecoration() != null &&
-					// font.getDecoration().equals(Decoration.UNDERLINE)) TODO:
-					// Implement Underline not working when set
-					// fontStyle += mxConstants.FONT_UNDERLINE;
-					style.put(mxConstants.STYLE_FONTSTYLE, fontStyle);
-
-				}
-
-			if (annotationGraphics.getLine() != null) {
-
-				Line line = annotationGraphics.getLine();
-				if (line.getColor() != null)
-					style.put(mxConstants.STYLE_LABEL_BORDERCOLOR, line.getColor());
-
-			}
-
-		}
-
-		style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(MXConstants.blueBG));
-
+		Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;
+		style.put(MXConstants.LINE_STYLE, lineStyle);
+		
+		Shape lineShape = (line.getShape() != null)? line.getShape():Shape.LINE;
+		style.put(MXConstants.LINE_SHAPE, lineShape);	
+		
+		style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
+		
+	arcGraphics.setLine(new Line(lineColor, lineShape, lineStyle, line.getWidth()));
+	
+		getAnnotationGraphics(annotationGraphics, style);
 		// Maybe there is a mxUtil Method for this TODO:CHECK IF
 		String convertedStyle = style.toString().replaceAll(", ", ";");
 		String shortendStyle = convertedStyle.substring(1, convertedStyle.length() - 1);
 
 		return shortendStyle;
+	}
+	
+	/**
+	 * @param annotationGraphics
+	 * @param style
+	 * @throws ParameterException 
+	 */
+	protected static void getAnnotationGraphics(AnnotationGraphics initialAnnotationGraphics, Hashtable<String, Object> style) throws ParameterException {
+		 AnnotationGraphics annotationGraphics = (initialAnnotationGraphics!= null)? initialAnnotationGraphics:new AnnotationGraphics();
+				
+			Offset offset = (annotationGraphics.getOffset() != null)? annotationGraphics.getOffset():new Offset(EditorProperties.getInstance().getDefaultHorizontalLabelOffset(),EditorProperties.getInstance().getDefaultVerticalLabelOffset());
+				style.put(MXConstants.LABEL_POSITION_X, Double.toString(offset.getX()));
+				style.put(MXConstants.LABEL_POSITION_Y, Double.toString(offset.getY()));
+			annotationGraphics.setOffset(offset);
+				
+			Fill fill = (annotationGraphics.getFill() != null)? annotationGraphics.getFill():new Fill();
+				
+				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultNodeColor();
+				style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR,fillColor);
+	
+				GradientRotation gradientRotation = (fill.getGradientRotation() != null)? fill.getGradientRotation():EditorProperties.getInstance().getDefaultGradientDirection();
+				if(gradientRotation != null) style.put(MXConstants.STYLE_LABEL_GRADIENT_DIRECTION, gradientRotation);
+				
+				String gradientColor = (fill.getGradientColor() != null)? fill.getGradientColor(): EditorProperties.getInstance().getDefaultGradientColor();
+				if(gradientColor != null)style.put(MXConstants.STYLE_LABEL_GRADIENTCOLOR, gradientColor);
+				
+				URI image = (fill.getImage() != null)? fill.getImage():EditorProperties.getInstance().getDefaultNodeImage();
+				if(image != null)style.put(MXConstants.STYLE_LABEL_IMAGE, image);
+				
+			annotationGraphics.setFill(new Fill(fillColor,gradientColor,gradientRotation,image));
+			
+
+			Font font = (annotationGraphics.getFont() != null)? annotationGraphics.getFont(): new Font();
+				
+				Align fontAlign = (font.getAlign() != null)? font.getAlign():Align.CENTER;
+				style.put(mxConstants.STYLE_ALIGN, fontAlign);
+				
+				String fontFamily = (font.getFamily() != null)? font.getFamily():EditorProperties.getInstance().getDefaultFontFamily();
+				style.put(mxConstants.STYLE_FONTFAMILY, fontFamily);
+				
+				String fontSize = (String) ((font.getSize() != null)?getSizeFromCSS(font.getSize()):EditorProperties.getInstance().getDefaultFontSize());
+				style.put(mxConstants.STYLE_FONTSIZE, fontSize);
+				
+				String fontWeight = (font.getWeight() != null)? font.getWeight(): "normal"; 
+				style.put(MXConstants.FONT_WEIGHT, fontWeight);
+				
+				String fontStyle = (font.getStyle() != null)? font.getStyle():"normal";
+				style.put(MXConstants.FONT_STYLE, fontStyle);
+				
+				Decoration fontDecoration = (font.getDecoration() != null)? font.getDecoration():null;
+				if(fontDecoration != null) style.put(MXConstants.FONT_DECORATION, fontDecoration);
+					
+				style.put(MXConstants.TEXT_ROTATION_DEGREE, font.getRotation());
+				
+			annotationGraphics.setFont(new Font(fontAlign, fontDecoration, fontFamily, font.getRotation(), fontSize, fontStyle, fontWeight));
+	
+			Line line = (annotationGraphics.getLine() != null)? annotationGraphics.getLine():new Line();
+				
+				String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
+				style.put(mxConstants.STYLE_LABEL_BORDERCOLOR,lineColor);
+	
+				Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;
+				style.put(MXConstants.LABEL_LINE_STYLE, lineStyle);
+				
+				Shape lineShape = (line.getShape() != null)? line.getShape():Shape.LINE;
+				style.put(MXConstants.LABEL_LINE_SHAPE, lineShape);	
+				
+				style.put(MXConstants.LABEL_LINE_WIDTH, Double.toString(line.getWidth()));
+			annotationGraphics.setLine(new Line(lineColor, lineShape, lineStyle, line.getWidth()));
+		
 	}
 	
 	public static NodeGraphics getNodeGraphics(mxCellState state) throws ParameterException {
@@ -272,7 +296,7 @@ public abstract class MXConstants {
 				throw new ParameterException(e.getMessage());
 			}
 		}
-		return new NodeGraphics(position, dimension, fill, getLine(state));
+		return new NodeGraphics(position, dimension, fill, new Line());
 	}
 	
 	private static Line getLine(mxCellState state) throws ParameterException {
@@ -421,9 +445,9 @@ public abstract class MXConstants {
 		return getAnnotationGraphics(state);
 	}
 	
-	private static Object getSizeFromCSS(String size) {
+	private static String getSizeFromCSS(String size) {
 		if (size.equals("medium"))
-			return mxConstants.DEFAULT_FONTSIZE;
+			return EditorProperties.getInstance().getDefaultFontSize();
 		// if(size.equals("small"))
 		// return mxConstants.DEFAULT_FONTSIZE;...
 		// Other cases...

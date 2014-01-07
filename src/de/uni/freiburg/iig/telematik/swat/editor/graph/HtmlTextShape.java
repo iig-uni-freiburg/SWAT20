@@ -68,8 +68,8 @@ public void paintShape(mxGraphics2DCanvas canvas, String text,
 		}
 
 		// Renders the scaled text
-		textRenderer.setText(createHtmlDocument(style, text));
-		textRenderer.setFont(mxUtils.getFont(style, canvas.getScale()));
+		textRenderer.setText(createHtmlDoc(style, text, scale, 0, null));
+		textRenderer.setFont(Utils.getFont(style, canvas.getScale()));
 		g.scale(scale, scale);
 		rendererPane.paintComponent(g, textRenderer, rendererPane,
 				(int) (x / scale) + mxConstants.LABEL_INSET,
@@ -77,5 +77,77 @@ public void paintShape(mxGraphics2DCanvas canvas, String text,
 				(int) (w / scale), (int) (h / scale), true);
 	}
 }
+/**
+ * Returns a new, empty DOM document. The head argument can be used to
+ * provide an optional HEAD section without the HEAD tags as follows:
+ * 
+ * <pre>
+ * mxUtils.createHtmlDocument(style,  text, 1, 0, "<style type=\"text/css\">.classname { color:red; }</style>")
+ * </pre>
+ * 
+ * @return Returns a new DOM document.
+ */
+public static String createHtmlDoc(Map<String, Object> style,
+		String text, double scale, int width, String head)
+{
+	StringBuffer css = new StringBuffer();
+	css.append("font-family:"
+			+ mxUtils.getString(style, mxConstants.STYLE_FONTFAMILY,
+					mxConstants.DEFAULT_FONTFAMILIES) + ";");
+	css.append("font-size:"
+			+ (int) (mxUtils.getInt(style, mxConstants.STYLE_FONTSIZE,
+					mxConstants.DEFAULT_FONTSIZE) * scale) + " pt;");
 
+	String color = "#000000";
+
+	if (color != null)
+	{
+		css.append("color:" + color + ";");
+	}
+
+	int fontStyle = mxUtils.getInt(style, mxConstants.STYLE_FONTSTYLE);
+
+	if ((fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD)
+	{
+		css.append("font-weight:bold;");
+	}
+
+	if ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC)
+	{
+		css.append("font-style:italic;");
+	}
+
+	if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
+	{
+		css.append("text-decoration:underline;");
+	}
+
+	String align = mxUtils.getString(style, mxConstants.STYLE_ALIGN,
+			mxConstants.ALIGN_LEFT);
+
+	if (align.equals(mxConstants.ALIGN_CENTER))
+	{
+		css.append("text-align:center;");
+	}
+	else if (align.equals(mxConstants.ALIGN_RIGHT))
+	{
+		css.append("text-align:right;");
+	}
+
+	if (width > 0)
+	{
+		// LATER: With max-width support, wrapped text can be measured in 1 step
+		css.append("width:" + width + "px;");
+	}
+
+	String result = "<html>";
+
+	if (head != null)
+	{
+		result += "<head>" + head + "</head>";
+	}
+
+	return result + "<body style=\"" + css.toString() + "\">" + text
+			+ "</body></html>";
+}
 }

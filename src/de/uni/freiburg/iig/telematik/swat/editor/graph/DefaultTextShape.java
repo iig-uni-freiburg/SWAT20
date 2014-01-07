@@ -69,6 +69,7 @@ public void paintShape(mxGraphics2DCanvas canvas, String text,
 
 		// Shifts the y-coordinate down by the ascent plus a workaround
 		// for the line not starting at the exact vertical location
+		System.out.println("HEY IM CALLED");
 		Font scaledFont = mxUtils.getFont(style, scale);
 		g.setFont(scaledFont);
 		int fontSize = mxUtils.getInt(style, mxConstants.STYLE_FONTSIZE,

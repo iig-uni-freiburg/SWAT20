@@ -143,7 +143,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 	// ------- Set Up GUI -----------------------------------------------------------------------
 
-	private void setUpGUI() {
+	private void setUpGUI() throws ParameterException {
 		setLayout(new BorderLayout());
 		add(getToolbar(), BorderLayout.NORTH);
 		add(getPalettePanel(), BorderLayout.LINE_START);
@@ -221,7 +221,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		return this;
 	}
 
-	private JPanel getPalettePanel() {
+	private JPanel getPalettePanel() throws ParameterException {
 		if (palettePanel == null) {
 			palettePanel = new PalettePanel();
 		}

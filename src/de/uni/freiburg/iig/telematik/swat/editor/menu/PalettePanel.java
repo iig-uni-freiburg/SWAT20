@@ -24,6 +24,7 @@ import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -35,7 +36,7 @@ public class PalettePanel extends JPanel {
 
 	protected JLabel selectedEntry = null;
 
-	public PalettePanel() {
+	public PalettePanel() throws ParameterException {
 		// setLayout(new GridLayout(getComponentCount(), 1));
 		setLayout(new GridLayout(6, 1)); // smaller Icons
 		addTransitionTemplate("Transition", new ImageIcon(PNEditor.class.getResource("/images/rectangle.png")), MXConstants.getNodeStyle(PNComponent.TRANSITION, null, null), EditorProperties

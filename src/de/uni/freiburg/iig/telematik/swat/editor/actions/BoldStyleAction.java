@@ -9,6 +9,8 @@ import com.mxgraph.util.mxConstants;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 public class BoldStyleAction extends AbstractPNEditorAction {
@@ -22,13 +24,13 @@ public class BoldStyleAction extends AbstractPNEditorAction {
 
 	public void actionPerformed(ActionEvent e) {
 				mxIGraphModel model = getEditor().getGraphComponent().getGraph().getModel();
-				model.beginUpdate();
-				try {
-					getEditor().getGraphComponent().stopEditing(false);
-					getEditor().getGraphComponent().getGraph().toggleCellStyleFlags(mxConstants.STYLE_FONTSTYLE, mxConstants.FONT_BOLD);				
-				} finally {
-					model.endUpdate();
-				}
+				PNGraph graph = getEditor().getGraphComponent().getGraph();
+				if(this.enabled)
+				graph.setCellStyles((String) MXConstants.FONT_WEIGHT, "bold");
+				else
+				graph.setCellStyles((String) MXConstants.FONT_WEIGHT, "normal");
+
+				
 		}
 
 }

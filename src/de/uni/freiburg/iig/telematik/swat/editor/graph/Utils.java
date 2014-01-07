@@ -19,8 +19,10 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphic
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 
 public class Utils extends mxUtils {
 	/**
@@ -337,6 +339,31 @@ protected static Stroke getStrokeForLineStyle(Map<String, Object> style, double 
 }
 
 
+
+/**
+ * 
+ */
+public static java.awt.Font getFont(Map<String, Object> style, double scale)
+{
+	String fontFamily = getString(style, mxConstants.STYLE_FONTFAMILY,
+			mxConstants.DEFAULT_FONTFAMILY);
+	int fontSize = getInt(style, mxConstants.STYLE_FONTSIZE,
+			mxConstants.DEFAULT_FONTSIZE);
+	String fontStyle = getString(style, MXConstants.FONT_STYLE, "normal");
+	String fontWeight = getString(style, MXConstants.FONT_WEIGHT, "normal");
+	int swingFontStyle = 0;
+	if(fontStyle.equals("normal"))
+	swingFontStyle = java.awt.Font.PLAIN;
+	if(fontWeight.equals("normal"))
+		swingFontStyle = java.awt.Font.PLAIN;
+	if(fontStyle.equals("italic"))
+	swingFontStyle += java.awt.Font.ITALIC;
+	if(fontWeight.equals("bold"))
+		swingFontStyle += java.awt.Font.BOLD;
+				
+	return new java.awt.Font(fontFamily, swingFontStyle, (int) (fontSize * scale));
+}
+
 public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell cell) {
 	switch (cell.getType()) {
 	case PLACE:
@@ -413,30 +440,93 @@ private static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell c
 
 
 private static void updateAnnotationGraphics(AnnotationGraphics graphics, String key, Object value) throws ParameterException {
+	
+	//FILL
 	if(key.equals(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)){
 		graphics.getFill().setColor((String) value);
 		}
+	if (key.equals(MXConstants.STYLE_LABEL_GRADIENTCOLOR)) {
+		graphics.getFill().setGradientColor((String) value);
+	}
+	if (key.equals(MXConstants.STYLE_LABEL_GRADIENT_DIRECTION)) {
+		graphics.getFill().setGradientRotation(GradientRotation.getGradientRotation((String) value));
+	}
+	if (key.equals(MXConstants.STYLE_LABEL_IMAGE)) {
+		graphics.getFill().setImage((URI) value);
+	}
 
-
-	if(key.equals(mxConstants.STYLE_LABEL_BORDERCOLOR)){
+	
+	//LINE
+	if (key.equals(MXConstants.LABEL_LINE_WIDTH)) {
+		graphics.getLine().setWidth(new Double((String) value));
+	}
+	if (key.equals(mxConstants.STYLE_LABEL_BORDERCOLOR)) {
 		graphics.getLine().setColor((String) value);
-		}
-	if(key.equals(MXConstants.LABEL_LINE_WIDTH)){
-		graphics.getLine().setColor((String) value);
-		}
+	}
+	if (key.equals(MXConstants.LABEL_LINE_STYLE)) {
+		graphics.getLine().setStyle(Line.Style.getStyle((String) value));
+	}
+	if (key.equals(MXConstants.LABEL_LINE_SHAPE)) {
+		if(key.equals("true"))
+		graphics.getLine().setShape(Line.Shape.CURVE);
+		if(key.equals("false"))
+			graphics.getLine().setShape(Line.Shape.LINE);
+	}
+	
+	
+	//Font
+	if (key.equals(mxConstants.STYLE_ALIGN)) {
+		graphics.getFont().setAlign(Font.Align.getAlign((String) value));
+	}
+	if (key.equals(MXConstants.FONT_DECORATION)) {
+		graphics.getFont().setDecoration(Font.Decoration.getDecoration((String) value));
+	}
+	if (key.equals(mxConstants.STYLE_FONTFAMILY)) {
+		graphics.getFont().setFamily((String) value);
+	}
+	if (key.equals(MXConstants.TEXT_ROTATION_DEGREE)) {
+		graphics.getFont().setRotation(new Double((String) value));
+	}
+	if (key.equals(mxConstants.STYLE_FONTSIZE)) {
+		graphics.getFont().setSize((String) value);
+	}
+	if (key.equals(MXConstants.FONT_STYLE)) {
+		graphics.getFont().setStyle((String) value);
+	}
+	if (key.equals(MXConstants.FONT_WEIGHT)) {
+		graphics.getFont().setWeight((String)value);
+	}
 	
 }
 
 
 
 private static void updateArcGraphics(ArcGraphics graphics, String key, Object value) {
-	// TODO Auto-generated method stub
-	
+			//LINE
+			if (key.equals(mxConstants.STYLE_STROKEWIDTH)) {
+				graphics.getLine().setWidth(new Double((String) value));
+			}
+			if (key.equals(mxConstants.STYLE_STROKECOLOR)) {
+				graphics.getLine().setColor((String) value);
+			}
+			if (key.equals(MXConstants.LINE_STYLE)) {
+				graphics.getLine().setStyle(Line.Style.getStyle((String) value));
+			}
+			if (key.equals(mxConstants.STYLE_ROUNDED)) {
+				if(key.equals("true"))
+				graphics.getLine().setShape(Line.Shape.CURVE);
+				if(key.equals("false"))
+					graphics.getLine().setShape(Line.Shape.LINE);
+			}
+
+	//TODO wo positions?
 }
 
 
 
 private static void updateNodeGraphics(NodeGraphics graphics, String key, Object value) throws ParameterException {
+
+		//FILL
 		if (key.equals(mxConstants.STYLE_FILLCOLOR)) {
 			graphics.getFill().setColor((String) value);
 		}
@@ -450,8 +540,9 @@ private static void updateNodeGraphics(NodeGraphics graphics, String key, Object
 			graphics.getFill().setImage((URI) value);
 		}
 		
+		//LINE
 		if (key.equals(mxConstants.STYLE_STROKEWIDTH)) {
-			graphics.getLine().setWidth((Double) value);
+			graphics.getLine().setWidth(new Double((String) value));
 		}
 		if (key.equals(mxConstants.STYLE_STROKECOLOR)) {
 			graphics.getLine().setColor((String) value);
@@ -464,10 +555,7 @@ private static void updateNodeGraphics(NodeGraphics graphics, String key, Object
 			graphics.getLine().setShape(Line.Shape.CURVE);
 			if(key.equals("false"))
 				graphics.getLine().setShape(Line.Shape.LINE);
-
 		}
-
-
 }
 
 

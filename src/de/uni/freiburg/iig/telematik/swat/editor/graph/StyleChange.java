@@ -41,6 +41,7 @@ public class StyleChange extends mxStyleChange {
 				previous);
 		HashMap<String, Object> styleMap = mxGraphMlUtils.getStyleMap(style,"=");
 		Object value = styleMap.get(key);
+		System.out.println(key);
 		try {
 			Utils.updateGraphics(graph, ((PNGraphCell) cell), key, value, key.contains("label"));
 		} catch (ParameterException e) {

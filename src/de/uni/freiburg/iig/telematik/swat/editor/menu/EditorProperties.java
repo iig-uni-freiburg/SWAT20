@@ -3,6 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.editor.menu;
 import java.awt.Color;
 import java.net.URI;
 
+import com.mxgraph.util.mxConstants;
+
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 
 public class EditorProperties {
@@ -44,7 +46,7 @@ public class EditorProperties {
 		return 1;
 	}
 
-	public String getDefaultPlaceColor() {
+	public String getDefaultNodeColor() {
 		return "#B6CAE4";
 	}
 
@@ -56,9 +58,26 @@ public class EditorProperties {
 		return null;
 	}
 
-	public URI getDefaultPlaceImage() {
+	public URI getDefaultNodeImage() {
 		return null;
 	}
+
+	public String getDefaultLineColor() {
+		// TODO Auto-generated method stub
+		return "#A6BAD4";
+	}
+
+	public String getDefaultFontFamily() {
+		// TODO Auto-generated method stub
+		return "Dialog";
+	}
+
+	public String getDefaultFontSize() {
+		// TODO Auto-generated method stub
+		return "11";
+	}
+
+
 
 
 }
