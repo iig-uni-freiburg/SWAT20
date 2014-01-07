@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Paint;
 import java.awt.Stroke;
+import java.net.URI;
 import java.util.Map;
 
 import com.mxgraph.util.mxConstants;
@@ -12,8 +13,13 @@ import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
+import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractObjectGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 
 public class Utils extends mxUtils {
@@ -198,49 +204,90 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 	return new mxRectangle(x + labelPositionX, y+labelPositionY, width, height);
 }
 
-
-
-
-
-
 public static Object createFillPaint(mxRectangle bounds, Map<String, Object> style) {
-		Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
-		
-		Paint fillPaint = null;
+	Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
+	
+	Paint fillPaint = null;
 
-		if (fillColor != null) {
-			Color gradientColor = mxUtils.getColor(style, mxConstants.STYLE_GRADIENTCOLOR);
+	if (fillColor != null) {
+		Color gradientColor = mxUtils.getColor(style, mxConstants.STYLE_GRADIENTCOLOR);
 
-			if (gradientColor != null) {
-				GradientRotation gradientRotation = GradientRotation.getGradientRotation(mxUtils.getString(style, MXConstants.GRADIENT_ROTATION));
+		if (gradientColor != null) {
+			GradientRotation gradientRotation = GradientRotation.getGradientRotation(mxUtils.getString(style, MXConstants.GRADIENT_ROTATION));
 
-				float x1 = (float) bounds.getX();
-				float y1 = (float) bounds.getY();
-				float x2 = (float) bounds.getX();
-				float y2 = (float) bounds.getY();
+			float x1 = (float) bounds.getX();
+			float y1 = (float) bounds.getY();
+			float x2 = (float) bounds.getX();
+			float y2 = (float) bounds.getY();
 
-				switch (gradientRotation) {
-				case DIAGONAL:
-					y2 = (float) (bounds.getY() + bounds.getHeight());
-					x2 = (float) (bounds.getX() + bounds.getWidth());
-					break;
-				case HORIZONTAL:
-					x2 = (float) (bounds.getX() + bounds.getWidth());
-					break;
-				case VERTICAL:
-					y2 = (float) (bounds.getY() + bounds.getHeight());
-					break;
-				default:
-					break;
+			switch (gradientRotation) {
+			case DIAGONAL:
+				y2 = (float) (bounds.getY() + bounds.getHeight());
+				x2 = (float) (bounds.getX() + bounds.getWidth());
+				break;
+			case HORIZONTAL:
+				x2 = (float) (bounds.getX() + bounds.getWidth());
+				break;
+			case VERTICAL:
+				y2 = (float) (bounds.getY() + bounds.getHeight());
+				break;
+			default:
+				break;
 
-				}
-
-				fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, true);
 			}
-		}
 
-		return fillPaint;
+			fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, true);
+		}
 	}
+
+	return fillPaint;
+}
+
+
+
+
+//public static Object createFillPaint(mxRectangle bounds, Fill fill) {
+//	System.out.println(fill.getColor());
+//	System.out.println(fill.getGradientColor());
+//	System.out.println(fill.getGradientRotation());
+//	System.out.println("#####");
+//
+//		Color fillColor = parseColor(fill.getColor());
+//		
+//		Paint fillPaint = null;
+//
+//		if (fillColor != null) {
+//			Color gradientColor = parseColor(fill.getGradientColor());
+//			if (gradientColor != null && fill.getGradientRotation() != null) {
+//				System.out.println(fill.getGradientRotation());
+//
+//				float x1 = (float) bounds.getX();
+//				float y1 = (float) bounds.getY();
+//				float x2 = (float) bounds.getX();
+//				float y2 = (float) bounds.getY();
+//
+//				switch (fill.getGradientRotation()) {
+//				case DIAGONAL:
+//					y2 = (float) (bounds.getY() + bounds.getHeight());
+//					x2 = (float) (bounds.getX() + bounds.getWidth());
+//					break;
+//				case HORIZONTAL:
+//					x2 = (float) (bounds.getX() + bounds.getWidth());
+//					break;
+//				case VERTICAL:
+//					y2 = (float) (bounds.getY() + bounds.getHeight());
+//					break;
+//				default:
+//					break;
+//
+//				}
+//
+//				fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, true);
+//			}
+//		}
+//
+//		return fillPaint;
+//	}
 
 public static Stroke createStroke(Map<String, Object> style, double scale) {
 	String lineStyleString = mxUtils.getString(style, MXConstants.LINE_STYLE);
@@ -288,6 +335,147 @@ protected static Stroke getStrokeForLineStyle(Map<String, Object> style, double 
 	}
 	return null;
 }
+
+
+public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell cell) {
+	switch (cell.getType()) {
+	case PLACE:
+		if(graph.isLabelSelected())
+		return graph.getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
+		else return graph.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(cell.getId());
+	case TRANSITION:
+		if(graph.isLabelSelected())
+		return graph.getNetContainer().getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
+		else
+		return graph.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(cell.getId());
+	case ARC:
+		if(graph.isLabelSelected())
+		return graph.getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(cell.getId());
+		else
+		return graph.getNetContainer().getPetriNetGraphics().getArcGraphics().get(cell.getId());
+		
+	}
+	return null;
+}
+
+
+
+public static void updateGraphics(PNGraph graph, PNGraphCell cell, String key, Object value, boolean isLabel) throws ParameterException {
+//	graphics = graph.getNetContainer().getPetriNetGraphics().getPlaceGraphics();
+	AbstractObjectGraphics graphics = getPNGraphics(graph,cell, isLabel);
+	if(graphics instanceof NodeGraphics)
+		updateNodeGraphics((NodeGraphics) graphics,key,value);
+	if(graphics instanceof ArcGraphics)
+		updateArcGraphics((ArcGraphics) graphics,key,value);
+	if(graphics instanceof AnnotationGraphics)
+		updateAnnotationGraphics((AnnotationGraphics) graphics,key,value);
+
+		
+//	if(!graph.isLabelSelected()){
+//	switch(cell.getType()){
+//	case ARC:
+//		ArcGraphics arcGraphics = graph.getNetContainer().getPetriNetGraphics().getArcGraphics().get(cell.getId());
+//		break;
+//	case PLACE:
+//		NodeGraphics placeGraphics = graph.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(cell.getId());
+//		updateNodeGraphics(placeGraphics,key,value);
+//		break;
+//	case TRANSITION:
+//		NodeGraphics transitionGraphics = graph.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(cell.getId());
+//		break;
+//	
+	}
+
+
+
+private static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell cell, boolean isLabel) {
+		switch (cell.getType()) {
+		case PLACE:
+			if(isLabel)
+			return graph.getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
+			else return graph.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(cell.getId());
+		case TRANSITION:
+			if(isLabel)
+			return graph.getNetContainer().getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
+			else
+			return graph.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(cell.getId());
+		case ARC:
+			if(isLabel)
+			return graph.getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(cell.getId());
+			else
+			return graph.getNetContainer().getPetriNetGraphics().getArcGraphics().get(cell.getId());
+			
+		}
+		return null;
+	}
+
+
+
+
+private static void updateAnnotationGraphics(AnnotationGraphics graphics, String key, Object value) throws ParameterException {
+	if(key.equals(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)){
+		graphics.getFill().setColor((String) value);
+		}
+
+
+	if(key.equals(mxConstants.STYLE_LABEL_BORDERCOLOR)){
+		graphics.getLine().setColor((String) value);
+		}
+	if(key.equals(MXConstants.LABEL_LINE_WIDTH)){
+		graphics.getLine().setColor((String) value);
+		}
+	
+}
+
+
+
+private static void updateArcGraphics(ArcGraphics graphics, String key, Object value) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+
+private static void updateNodeGraphics(NodeGraphics graphics, String key, Object value) throws ParameterException {
+		if (key.equals(mxConstants.STYLE_FILLCOLOR)) {
+			graphics.getFill().setColor((String) value);
+		}
+		if (key.equals(mxConstants.STYLE_GRADIENTCOLOR)) {
+			graphics.getFill().setGradientColor((String) value);
+		}
+		if (key.equals(mxConstants.STYLE_GRADIENT_DIRECTION)) {
+			graphics.getFill().setGradientRotation(GradientRotation.getGradientRotation((String) value));
+		}
+		if (key.equals(mxConstants.STYLE_IMAGE)) {
+			graphics.getFill().setImage((URI) value);
+		}
+		
+		if (key.equals(mxConstants.STYLE_STROKEWIDTH)) {
+			graphics.getLine().setWidth((Double) value);
+		}
+		if (key.equals(mxConstants.STYLE_STROKECOLOR)) {
+			graphics.getLine().setColor((String) value);
+		}
+		if (key.equals(MXConstants.LINE_STYLE)) {
+			graphics.getLine().setStyle(Line.Style.getStyle((String) value));
+		}
+		if (key.equals(mxConstants.STYLE_ROUNDED)) {
+			if(key.equals("true"))
+			graphics.getLine().setShape(Line.Shape.CURVE);
+			if(key.equals("false"))
+				graphics.getLine().setShape(Line.Shape.LINE);
+
+		}
+
+
+}
+
+
+
+
+
+
+
 
 
 

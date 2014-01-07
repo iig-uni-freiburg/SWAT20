@@ -1,5 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
+import java.awt.Color;
+import java.net.URI;
+
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
+
 public class EditorProperties {
 	
 	private static EditorProperties instance = null;
@@ -37,6 +42,22 @@ public class EditorProperties {
 
 	public int getDefaultTokenDistance(){
 		return 1;
+	}
+
+	public String getDefaultPlaceColor() {
+		return "#B6CAE4";
+	}
+
+	public String getDefaultGradientColor() {
+		return null;
+	}
+
+	public GradientRotation getDefaultGradientDirection() {
+		return null;
+	}
+
+	public URI getDefaultPlaceImage() {
+		return null;
 	}
 
 

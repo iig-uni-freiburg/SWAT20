@@ -281,6 +281,7 @@ public abstract class MXConstants {
 		state.getStyle().put(mxConstants.STYLE_FONTCOLOR, "#000000");
 		line.setColor(color);
 		line.setShape(Line.Shape.LINE);
+		if(state.getStyle().get(MXConstants.LINE_STYLE) != null)
 		line.setStyle(Line.Style.getStyle((String) state.getStyle().get(MXConstants.LINE_STYLE)));
 
 		String lineWidth;

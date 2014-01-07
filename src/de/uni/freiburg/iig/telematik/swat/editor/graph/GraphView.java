@@ -43,12 +43,12 @@ public class GraphView extends mxGraphView {
 //			double offsetX = state.getLabelBounds().getX()-state.getCenterX();
 //			double offsetY = state.getLabelBounds().getY() -state.getCenterY();
 			
-			try {
-				((PNGraph) graph).setPNGraphics(state);
-			} catch (ParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				((PNGraph) graph).setPNGraphics(state);
+//			} catch (ParameterException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 	}
 

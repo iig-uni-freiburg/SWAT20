@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,6 +23,8 @@ import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxImageCanvas;
 import com.mxgraph.model.mxGeometry;
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
@@ -31,6 +32,7 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
+import com.mxgraph.util.mxStyleUtils;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
@@ -1119,6 +1121,114 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 				setCellStyles(mxConstants.STYLE_STROKEWIDTH, strokeWeight);
 			}
 	}
+@Override
+/**
+ * Sets the key to value in the styles of the given cells. This will modify
+ * the existing cell styles in-place and override any existing assignment
+ * for the given key. If no cells are specified, then the selection cells
+ * are changed. If no value is specified, then the respective key is
+ * removed from the styles.
+ * 
+ * @param key String representing the key to be assigned.
+ * @param value String representing the new value for the key.
+ * @param cells Array of cells to change the style for.
+ */
+public Object[] setCellStyles(String key, String value, Object[] cells)
+{
+	if (cells == null)
+	{
+		cells = getSelectionCells();
+	}
+
+	setCellStyles(this, cells, key, value);
+
+	return cells;
+}
+
+	/**
+	 * Assigns the value for the given key in the styles of the given cells, or
+	 * removes the key from the styles if the value is null.
+	 * 
+	 * @param pnGraph
+	 *            Model to execute the transaction in.
+	 * @param cells
+	 *            Array of cells to be updated.
+	 * @param key
+	 *            Key of the style to be changed.
+	 * @param value
+	 *            New value for the given key.
+	 */
+	public static void setCellStyles(PNGraph pnGraph, Object[] cells,
+			String key, String value)
+	{
+		if (cells != null && cells.length > 0)
+		{
+			pnGraph.getModel().beginUpdate();
+			try
+			{
+				for (int i = 0; i < cells.length; i++)
+				{
+					if (cells[i] != null)
+					{
+						String style = mxStyleUtils.setStyle(pnGraph.getModel().getStyle(cells[i]), key,
+								value);
+						setStyle(cells[i], style, key, pnGraph);
+					}
+				}
+			}
+			finally
+			{
+				pnGraph.getModel().endUpdate();
+			}
+		}
+	}
 	
+	/* (non-Javadoc)
+	 * @see com.mxgraph.model.mxIGraphModel#setStyle(Object, String)
+	 */
+	public static String setStyle(Object cell, String style, String key, PNGraph pnGraph)
+	{
+		if (style == null || !style.equals(pnGraph.getModel().getStyle(cell)))
+		
+		{
+			((mxGraphModel) pnGraph.getModel()).execute(new StyleChange(pnGraph, cell, style, key));
+		}
+
+		return style;
+	}
+	@Override
+	/**
+	 * Sets the style of the specified cells. If no cells are given, then the
+	 * selection cells are changed.
+	 * 
+	 * @param style String representing the new style of the cells.
+	 * @param cells Optional array of <mxCells> to set the style for. Default is the
+	 * selection cells.
+	 */
+	public Object[] setCellStyle(String style, Object[] cells)
+	{
+		if (cells == null)
+		{
+			cells = getSelectionCells();
+		}
+
+		if (cells != null)
+		{
+			model.beginUpdate();
+			try
+			{
+				for (int i = 0; i < cells.length; i++)
+				{
+					setStyle(cells[i], style,null,this);
+				}
+			}
+			finally
+			{
+				model.endUpdate();
+			}
+		}
+
+		return cells;
+	}
 
 }

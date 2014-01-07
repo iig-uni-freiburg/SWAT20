@@ -30,11 +30,8 @@ public class BackgroundColorAction extends AbstractPNEditorAction{
 
 			if (newColor != null) {
 				mxCell selectedCell = (mxCell) graph.getSelectionCell();
-				mxCellState selectedCellState = graph.getView().getState(selectedCell);
 				if (graph.isLabelSelected()) {
-					graph.getModel().beginUpdate();
-					selectedCellState.getStyle().put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(newColor));
-					graph.getModel().endUpdate();
+					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(newColor));
 				} else {
 					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(newColor));
 				}
