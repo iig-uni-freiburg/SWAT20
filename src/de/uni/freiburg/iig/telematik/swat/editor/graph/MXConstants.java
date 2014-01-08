@@ -101,8 +101,8 @@ public abstract class MXConstants {
 	public static String getNodeStyle(PNComponent type, NodeGraphics initialNodeGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
 		Hashtable<String, Object> style = new Hashtable<String, Object>();
 
-		style.put(MXConstants.LABEL_POSITION_X, EditorProperties.getInstance().getDefaultHorizontalLabelOffset());
-		style.put(MXConstants.LABEL_POSITION_Y, EditorProperties.getInstance().getDefaultVerticalLabelOffset());
+//		style.put(MXConstants.LABEL_POSITION_X, EditorProperties.getInstance().getDefaultHorizontalLabelOffset());
+//		style.put(MXConstants.LABEL_POSITION_Y, EditorProperties.getInstance().getDefaultVerticalLabelOffset());
 		switch (type) {
 		case PLACE:
 			style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
@@ -110,10 +110,10 @@ public abstract class MXConstants {
 		case TRANSITION:
 			style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
 			break;
-		case ARC:
-			style.put(MXConstants.LABEL_POSITION_X, 0);
-			style.put(MXConstants.LABEL_POSITION_Y, 0);
-			break;
+//		case ARC:
+//			style.put(MXConstants.LABEL_POSITION_X, 0);
+//			style.put(MXConstants.LABEL_POSITION_Y, 0);
+//			break;
 		default:
 			break;
 
@@ -206,12 +206,7 @@ public abstract class MXConstants {
 	 */
 	protected static void getAnnotationGraphics(AnnotationGraphics initialAnnotationGraphics, Hashtable<String, Object> style) throws ParameterException {
 		 AnnotationGraphics annotationGraphics = (initialAnnotationGraphics!= null)? initialAnnotationGraphics:new AnnotationGraphics();
-				
-			Offset offset = (annotationGraphics.getOffset() != null)? annotationGraphics.getOffset():new Offset(EditorProperties.getInstance().getDefaultHorizontalLabelOffset(),EditorProperties.getInstance().getDefaultVerticalLabelOffset());
-				style.put(MXConstants.LABEL_POSITION_X, Double.toString(offset.getX()));
-				style.put(MXConstants.LABEL_POSITION_Y, Double.toString(offset.getY()));
-			annotationGraphics.setOffset(offset);
-				
+					
 			Fill fill = (annotationGraphics.getFill() != null)? annotationGraphics.getFill():new Fill();
 				
 				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultNodeColor();

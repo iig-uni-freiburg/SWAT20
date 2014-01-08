@@ -57,6 +57,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.TokenGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Dimension;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
@@ -272,6 +273,7 @@ this.getModel().addListener(mxEvent.CHANGE, this);
 			AnnotationGraphics annotationGraphics = new AnnotationGraphics();
 			nodeGraphicsWithPousePosition.setPosition(new Position(point.getX(), point.getY()));
 			nodeGraphicsWithPousePosition.setDimension(new Dimension(EditorProperties.getInstance().getDefaultPlaceSize(), EditorProperties.getInstance().getDefaultPlaceSize()));
+			annotationGraphics.setOffset(new Offset(EditorProperties.getInstance().getDefaultHorizontalLabelOffset(), EditorProperties.getInstance().getDefaultVerticalLabelOffset()));
 			getNetContainer().getPetriNetGraphics().getPlaceGraphics().put(place.getName(), nodeGraphicsWithPousePosition);
 			getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().put(place.getName(), annotationGraphics);
 			newCell = insertPNPlace(place, nodeGraphicsWithPousePosition, annotationGraphics);
@@ -286,6 +288,11 @@ this.getModel().addListener(mxEvent.CHANGE, this);
 		double dimX = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultPlaceSize() : nodeGraphics.getDimension().getX();
 		double dimY = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultPlaceSize() : nodeGraphics.getDimension().getY();
 		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), x, y, dimX, dimY, MXConstants.getNodeStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
+		double offx = annotationGraphics.getOffset().getX();
+		double offy = annotationGraphics.getOffset().getY();
+		mxPoint offset = new mxPoint(offx, offy);
+		newCell.getGeometry().setOffset(offset );
+
 		if (nodeGraphics == null || annotationGraphics == null) {
 			mxCellState state = getView().getState(newCell, true);
 //			setPNGraphics(state);
@@ -328,6 +335,9 @@ this.getModel().addListener(mxEvent.CHANGE, this);
 	
 	public Object addNewFlowRelation(PNGraphCell sourceCell, PNGraphCell targetCell) throws ParameterException{
 		AbstractFlowRelation relation = null;
+		ArcGraphics arcGraphics = new ArcGraphics();
+		AnnotationGraphics annotationGraphics = new AnnotationGraphics();
+		annotationGraphics.setOffset(new Offset(0, 0));
 		if(sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION){
 			relation = getNetContainer().getPetriNet().addFlowRelationPT(sourceCell.getId(), targetCell.getId());
 		} else if(sourceCell.getType() == PNComponent.TRANSITION && targetCell.getType() == PNComponent.PLACE){
@@ -335,7 +345,7 @@ this.getModel().addListener(mxEvent.CHANGE, this);
 		}
 		PNGraphCell newCell = null;
 		if(relation != null){
-			newCell = insertPNRelation(relation, null, null);
+			newCell = insertPNRelation(relation, arcGraphics, annotationGraphics);
 		}
 		return newCell;
 	}
@@ -366,8 +376,10 @@ this.getModel().addListener(mxEvent.CHANGE, this);
 		if (getNetContainer().getPetriNet().addTransition(nodeName)) {
 			AbstractTransition transition = getNetContainer().getPetriNet().getTransition(nodeName);
 			NodeGraphics nodeGraphicsWithMousePosition = new NodeGraphics();
+			AnnotationGraphics annotationGraphics = new AnnotationGraphics();
 			nodeGraphicsWithMousePosition.setPosition(new Position(point.getX(), point.getY()));
 			nodeGraphicsWithMousePosition.setDimension(new Dimension(EditorProperties.getInstance().getDefaultTransitionWidth(), EditorProperties.getInstance().getDefaultTransitionHeight()));
+			annotationGraphics.setOffset(new Offset(EditorProperties.getInstance().getDefaultHorizontalLabelOffset(), EditorProperties.getInstance().getDefaultVerticalLabelOffset()));
 			getNetContainer().getPetriNetGraphics().getTransitionGraphics().put(transition.getName(), nodeGraphicsWithMousePosition);
 			newCell = insertPNTransition(transition, nodeGraphicsWithMousePosition, null);
 		}
@@ -1137,34 +1149,70 @@ this.getModel().addListener(mxEvent.CHANGE, this);
 //added.gets
 		    System.out.println(evt.getProperties());
 		   ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
+		   if(changes != null){
 		   mxAtomicGraphModelChange change = changes.iterator().next();
 		    mxGeometryChange geochange = null;
-			if(change instanceof mxChildChange){
-				mxChildChange child = ((mxChildChange) change);
-				if(((mxChildChange) change).getChild() instanceof PNGraphCell){
-				PNGraphCell cell = (PNGraphCell) ((mxChildChange) change).getChild();
-				mxGeometry geo = cell.getGeometry();
-				System.out.println(geo +"\n"
-						+ geo.getOffset() + "####offset"
-						
-						);
-				switch(cell.getType()){
-				case PLACE:
-					
-					break;
-				case TRANSITION:
-					break;
-				case ARC:
-					break;
-				}
-		  }
-			}
-		    mxGeometry geo = null;
+		    
+		    
+//			if(change instanceof mxChildChange){
+//				mxChildChange child = ((mxChildChange) change);
+//				if(((mxChildChange) change).getChild() instanceof PNGraphCell){
+//				PNGraphCell cell = (PNGraphCell) ((mxChildChange) change).getChild();
+//				mxGeometry geo = cell.getGeometry();
+//				System.out.println(geo +"\n"
+//						+ geo.getOffset() + "####offset"
+//						
+//						);
+//				switch(cell.getType()){
+//				case PLACE:
+//					break;
+//				case TRANSITION:
+//					break;
+//				case ARC:
+//					break;
+//				}
+//		  }
+//			}
+			
 			if(change instanceof mxGeometryChange){
 		
 		    geochange = 	((mxGeometryChange) change);
-		    System.out.println(geochange.getGeometry().getOffset() + "#offset");
-		    System.out.println(geochange.getGeometry() + "#geo");
+		    mxGeometry geo = geochange.getGeometry();
+		    PNGraphCell cell = (PNGraphCell) geochange.getCell();
+
+		    NodeGraphics nodeGraphics = null;
+		    AnnotationGraphics annotationGraphics = null;
+		    ArcGraphics arcGraphics = null;
+			switch(cell.getType()){
+			case PLACE:
+				nodeGraphics = getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(cell.getId());
+				annotationGraphics = getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
+				break;
+			case TRANSITION:
+				nodeGraphics = getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(cell.getId());
+				annotationGraphics = getNetContainer().getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
+				break;
+			case ARC:
+				arcGraphics = getNetContainer().getPetriNetGraphics().getArcGraphics().get(cell.getId());
+				annotationGraphics = getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(cell.getId());
+				break;
+			}
+			
+			if(nodeGraphics!= null){
+			nodeGraphics.getPosition().setX(geo.getCenterX());
+			nodeGraphics.getPosition().setY(geo.getCenterY());}
+			
+			if(arcGraphics!= null){
+//			arcGraphics.getPosition().setX(geo.getCenterX());
+//			arcGraphics.getPosition().setY(geo.getCenterY());
+			}
+			
+			if(annotationGraphics != null){
+				annotationGraphics.getOffset().setX(geo.getOffset().getX());
+				annotationGraphics.getOffset().setY(geo.getOffset().getY());
+			}
+				
+			
 			}
 			System.out.println(geochange + "#######-");
 //		    System.out.println(change.getClass());
@@ -1178,6 +1226,8 @@ this.getModel().addListener(mxEvent.CHANGE, this);
 		} 
 		if (evt.getName().equals(mxEvent.RESIZE_CELLS)) {
 			ensureValidPlaceSize();
+		}
+		
 		}
 	}
 	

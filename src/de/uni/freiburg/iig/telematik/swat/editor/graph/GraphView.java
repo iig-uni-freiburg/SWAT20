@@ -37,6 +37,9 @@ public class GraphView extends mxGraphView {
 		{
 			mxRectangle vertexBounds = (!graph.getModel().isEdge(cell)) ? state
 					: null;
+			
+//			state.setLabelBounds(mxUtils.getLabelPaintBounds(state.getLabel(),
+//					style, graph.isHtmlLabel(cell), state.getAbsoluteOffset(),vertexBounds, scale));
 			state.setLabelBounds(Utils.getLabelPaintBounds(state.getLabel(),
 					style, graph.isHtmlLabel(cell), state.getAbsoluteOffset(),state.getCenterX(),state.getCenterY(),
 					vertexBounds, scale));
