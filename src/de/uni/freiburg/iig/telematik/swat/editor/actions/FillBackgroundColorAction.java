@@ -17,8 +17,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
-public class BackgroundColorAction extends AbstractPNEditorAction{
-	public BackgroundColorAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+public class FillBackgroundColorAction extends AbstractPNEditorAction{
+	public FillBackgroundColorAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "BackgroundColor", IconFactory.getIcon("bg_color"));
 	}
 

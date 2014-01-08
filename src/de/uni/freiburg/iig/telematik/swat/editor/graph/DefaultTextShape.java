@@ -38,7 +38,7 @@ public void paintShape(mxGraphics2DCanvas canvas, String text,
 		String degree;
 		if (!horizontal)
 		{
-		     degree = (String) style.get(MXConstants.TEXT_ROTATION_DEGREE);
+		     degree = (String) style.get(MXConstants.FONT_ROTATION_DEGREE);
 		     if (degree != null) {
 		        if (degree.equals("90")) {
 		            g.rotate(Math.PI / 2, x + w / 2, y + h / 2);
@@ -51,7 +51,7 @@ public void paintShape(mxGraphics2DCanvas canvas, String text,
 		}
 
 		if (horizontal) {
-		    degree = (String) style.get(MXConstants.TEXT_ROTATION_DEGREE);
+		    degree = (String) style.get(MXConstants.FONT_ROTATION_DEGREE);
 
 		    if (degree != null) {
 

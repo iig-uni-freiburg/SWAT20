@@ -15,8 +15,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
-public class AddImageAction extends AbstractPNEditorAction{
-	public AddImageAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+public class FillImageAction extends AbstractPNEditorAction{
+	public FillImageAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "Image", IconFactory.getIcon("add_image"));
 	}
 
@@ -42,6 +42,7 @@ public class AddImageAction extends AbstractPNEditorAction{
 		        if (returnVal == JFileChooser.APPROVE_OPTION) {
 		            File file = fileChooser.getSelectedFile();
 		        	getEditor().getGraphComponent().getGraph().setCellStyles(mxConstants.STYLE_IMAGE, "file:"+file.getAbsolutePath());
+		        	System.out.println("file:"+file.getAbsolutePath());
 		            getEditor().getGraphComponent().getGraph().setCellStyles("shape",mxConstants.SHAPE_IMAGE);
 
 			}}

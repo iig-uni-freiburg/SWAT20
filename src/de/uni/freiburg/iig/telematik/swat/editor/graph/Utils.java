@@ -5,7 +5,11 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Paint;
 import java.awt.Stroke;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
 
 import com.mxgraph.util.mxConstants;
@@ -20,6 +24,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.Decoration;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
@@ -151,7 +156,7 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 //		height = tmp2;
 //	}
 	
-    String degree = (String) style.get(MXConstants.TEXT_ROTATION_DEGREE);
+    String degree = (String) style.get(MXConstants.FONT_ROTATION_DEGREE);
     if (degree != null) {
        if (degree.equals("90") || degree.equals("270")) {
    		double tmp2 = width;
@@ -198,8 +203,6 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 //		y += spacing + top;
 //	}
 //		int spacing = (int) (getInt(style, MXConstants.LABEL_POSITION_X) * scale);
-		int labelPositionX = (int) (getInt(style, MXConstants.LABEL_POSITION_X) * scale);
-		int labelPositionY = (int) (getInt(style, MXConstants.LABEL_POSITION_Y) * scale);
 //		labelPositionX = 20;
 //		labelPositionY = 50;
 		
@@ -292,90 +295,46 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 //	}
 
 
-public static Object createFillPaint(mxRectangle bounds, Map<String, Object> style) {
-	Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
-	
-	Paint fillPaint = null;
+	public static Object createFillPaint(mxRectangle bounds, Map<String, Object> style) {
+		Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
 
-	if (fillColor != null) {
-		Color gradientColor = mxUtils.getColor(style, mxConstants.STYLE_GRADIENTCOLOR);
+		Paint fillPaint = null;
 
-		if (gradientColor != null) {
-			GradientRotation gradientRotation = GradientRotation.getGradientRotation(mxUtils.getString(style, MXConstants.GRADIENT_ROTATION));
+		if (fillColor != null) {
+			Color gradientColor = mxUtils.getColor(style, mxConstants.STYLE_GRADIENTCOLOR);
+			String gradientRotationString = mxUtils.getString(style, MXConstants.GRADIENT_ROTATION);
+			if (gradientColor != null && gradientRotationString != null) {
+				GradientRotation gradientRotation = GradientRotation.getGradientRotation(gradientRotationString);
 
-			float x1 = (float) bounds.getX();
-			float y1 = (float) bounds.getY();
-			float x2 = (float) bounds.getX();
-			float y2 = (float) bounds.getY();
+				float x1 = (float) bounds.getX();
+				float y1 = (float) bounds.getY();
+				float x2 = (float) bounds.getX();
+				float y2 = (float) bounds.getY();
 
-			switch (gradientRotation) {
-			case DIAGONAL:
-				y2 = (float) (bounds.getY() + bounds.getHeight());
-				x2 = (float) (bounds.getX() + bounds.getWidth());
-				break;
-			case HORIZONTAL:
-				x2 = (float) (bounds.getX() + bounds.getWidth());
-				break;
-			case VERTICAL:
-				y2 = (float) (bounds.getY() + bounds.getHeight());
-				break;
-			default:
-				break;
+				switch (gradientRotation) {
+				case DIAGONAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case HORIZONTAL:
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case VERTICAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					break;
+				default:
+					break;
 
+				}
+
+				fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, true);
 			}
-
-			fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, true);
 		}
+
+		return fillPaint;
 	}
 
-	return fillPaint;
-}
 
-
-
-
-//public static Object createFillPaint(mxRectangle bounds, Fill fill) {
-//	System.out.println(fill.getColor());
-//	System.out.println(fill.getGradientColor());
-//	System.out.println(fill.getGradientRotation());
-//	System.out.println("#####");
-//
-//		Color fillColor = parseColor(fill.getColor());
-//		
-//		Paint fillPaint = null;
-//
-//		if (fillColor != null) {
-//			Color gradientColor = parseColor(fill.getGradientColor());
-//			if (gradientColor != null && fill.getGradientRotation() != null) {
-//				System.out.println(fill.getGradientRotation());
-//
-//				float x1 = (float) bounds.getX();
-//				float y1 = (float) bounds.getY();
-//				float x2 = (float) bounds.getX();
-//				float y2 = (float) bounds.getY();
-//
-//				switch (fill.getGradientRotation()) {
-//				case DIAGONAL:
-//					y2 = (float) (bounds.getY() + bounds.getHeight());
-//					x2 = (float) (bounds.getX() + bounds.getWidth());
-//					break;
-//				case HORIZONTAL:
-//					x2 = (float) (bounds.getX() + bounds.getWidth());
-//					break;
-//				case VERTICAL:
-//					y2 = (float) (bounds.getY() + bounds.getHeight());
-//					break;
-//				default:
-//					break;
-//
-//				}
-//
-//				fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, true);
-//			}
-//		}
-//
-//		return fillPaint;
-//	}
 
 public static Stroke createStroke(Map<String, Object> style, double scale) {
 	String lineStyleString = mxUtils.getString(style, MXConstants.LINE_STYLE);
@@ -473,160 +432,101 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 
 
 
-public static void updateGraphics(PNGraph graph, PNGraphCell cell, String key, Object value, boolean isLabel) throws ParameterException {
-//	graphics = graph.getNetContainer().getPetriNetGraphics().getPlaceGraphics();
-	AbstractObjectGraphics graphics = getPNGraphics(graph,cell, isLabel);
-	if(graphics instanceof NodeGraphics)
-		updateNodeGraphics((NodeGraphics) graphics,key,value);
-	if(graphics instanceof ArcGraphics)
-		updateArcGraphics((ArcGraphics) graphics,key,value);
-	if(graphics instanceof AnnotationGraphics)
-		updateAnnotationGraphics((AnnotationGraphics) graphics,key,value);
-
-		
-//	if(!graph.isLabelSelected()){
-//	switch(cell.getType()){
-//	case ARC:
-//		ArcGraphics arcGraphics = graph.getNetContainer().getPetriNetGraphics().getArcGraphics().get(cell.getId());
-//		break;
-//	case PLACE:
-//		NodeGraphics placeGraphics = graph.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(cell.getId());
-//		updateNodeGraphics(placeGraphics,key,value);
-//		break;
-//	case TRANSITION:
-//		NodeGraphics transitionGraphics = graph.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(cell.getId());
-//		break;
-//	
+	public static void updateGraphics(PNGraph graph, PNGraphCell cell, String key, Object value, boolean isLabel) throws ParameterException {
+		AbstractObjectGraphics graphics = getPNGraphics(graph, cell, isLabel);
+		if (graphics instanceof NodeGraphics)
+			updateNodeGraphics((NodeGraphics) graphics, key, value);
+		if (graphics instanceof ArcGraphics)
+			updateArcGraphics((ArcGraphics) graphics, key, value);
+		if (graphics instanceof AnnotationGraphics)
+			updateAnnotationGraphics((AnnotationGraphics) graphics, key, value);
 	}
 
-
-
-private static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell cell, boolean isLabel) {
+	private static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell cell, boolean isLabel) {
 		switch (cell.getType()) {
 		case PLACE:
-			if(isLabel)
-			return graph.getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
-			else return graph.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(cell.getId());
+			if (isLabel)
+				return graph.getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(cell.getId());
+			else
+				return graph.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(cell.getId());
 		case TRANSITION:
-			if(isLabel)
-			return graph.getNetContainer().getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
+			if (isLabel)
+				return graph.getNetContainer().getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(cell.getId());
 			else
-			return graph.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(cell.getId());
+				return graph.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(cell.getId());
 		case ARC:
-			if(isLabel)
-			return graph.getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(cell.getId());
+			if (isLabel)
+				return graph.getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(cell.getId());
 			else
-			return graph.getNetContainer().getPetriNetGraphics().getArcGraphics().get(cell.getId());
-			
+				return graph.getNetContainer().getPetriNetGraphics().getArcGraphics().get(cell.getId());
 		}
 		return null;
 	}
 
+	private static void updateAnnotationGraphics(AnnotationGraphics graphics, String key, Object value) throws ParameterException {
 
-
-
-private static void updateAnnotationGraphics(AnnotationGraphics graphics, String key, Object value) throws ParameterException {
-	
-	//FILL
-	if(key.equals(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)){
-		graphics.getFill().setColor((String) value);
-		}
-	if (key.equals(MXConstants.STYLE_LABEL_GRADIENTCOLOR)) {
-		graphics.getFill().setGradientColor((String) value);
-	}
-	if (key.equals(MXConstants.STYLE_LABEL_GRADIENT_DIRECTION)) {
-		graphics.getFill().setGradientRotation(GradientRotation.getGradientRotation((String) value));
-	}
-	if (key.equals(MXConstants.STYLE_LABEL_IMAGE)) {
-		graphics.getFill().setImage((URI) value);
-	}
-
-	
-	//LINE
-	if (key.equals(MXConstants.LABEL_LINE_WIDTH)) {
-		graphics.getLine().setWidth(new Double((String) value));
-	}
-	if (key.equals(mxConstants.STYLE_LABEL_BORDERCOLOR)) {
-		graphics.getLine().setColor((String) value);
-	}
-	if (key.equals(MXConstants.LABEL_LINE_STYLE)) {
-		graphics.getLine().setStyle(Line.Style.getStyle((String) value));
-	}
-	if (key.equals(MXConstants.LABEL_LINE_SHAPE)) {
-		if(key.equals("true"))
-		graphics.getLine().setShape(Line.Shape.CURVE);
-		if(key.equals("false"))
-			graphics.getLine().setShape(Line.Shape.LINE);
-	}
-	
-	
-	//Font
-	if (key.equals(mxConstants.STYLE_ALIGN)) {
-		graphics.getFont().setAlign(Font.Align.getAlign((String) value));
-	}
-	if (key.equals(MXConstants.FONT_DECORATION)) {
-		graphics.getFont().setDecoration(Font.Decoration.getDecoration((String) value));
-	}
-	if (key.equals(mxConstants.STYLE_FONTFAMILY)) {
-		graphics.getFont().setFamily((String) value);
-	}
-	if (key.equals(MXConstants.TEXT_ROTATION_DEGREE)) {
-		graphics.getFont().setRotation(new Double((String) value));
-	}
-	if (key.equals(mxConstants.STYLE_FONTSIZE)) {
-		graphics.getFont().setSize((String) value);
-	}
-	if (key.equals(MXConstants.FONT_STYLE)) {
-		graphics.getFont().setStyle((String) value);
-	}
-	if (key.equals(MXConstants.FONT_WEIGHT)) {
-		graphics.getFont().setWeight((String)value);
-	}
-	
-}
-
-
-
-private static void updateArcGraphics(ArcGraphics graphics, String key, Object value) throws ParameterException {
-			//LINE
-			if (key.equals(mxConstants.STYLE_STROKEWIDTH)) {
-				graphics.getLine().setWidth(new Double((String) value));
-			}
-			if (key.equals(mxConstants.STYLE_STROKECOLOR)) {
-				graphics.getLine().setColor((String) value);
-			}
-			if (key.equals(MXConstants.LINE_STYLE)) {
-				graphics.getLine().setStyle(Line.Style.getStyle((String) value));
-			}
-			if (key.equals(mxConstants.STYLE_ROUNDED)) {
-				if(key.equals("true"))
-				graphics.getLine().setShape(Line.Shape.CURVE);
-				if(key.equals("false"))
-					graphics.getLine().setShape(Line.Shape.LINE);
-			}
-
-	//TODO wo positions?
-}
-
-
-
-private static void updateNodeGraphics(NodeGraphics graphics, String key, Object value) throws ParameterException {
-
-		//FILL
-		if (key.equals(mxConstants.STYLE_FILLCOLOR)) {
+		// FILL
+		if (key.equals(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)) {
 			graphics.getFill().setColor((String) value);
 		}
-		if (key.equals(mxConstants.STYLE_GRADIENTCOLOR)) {
+		if (key.equals(MXConstants.LABEL_GRADIENTCOLOR)) {
 			graphics.getFill().setGradientColor((String) value);
 		}
-		if (key.equals(mxConstants.STYLE_GRADIENT_DIRECTION)) {
-			graphics.getFill().setGradientRotation(GradientRotation.getGradientRotation((String) value));
+		if (key.equals(MXConstants.LABEL_GRADIENT_ROTATION)) {
+			GradientRotation gradientRotation = (value != null) ? GradientRotation.getGradientRotation((String) value) : null;
+			graphics.getFill().setGradientRotation(gradientRotation);
 		}
-		if (key.equals(mxConstants.STYLE_IMAGE)) {
+		if (key.equals(MXConstants.LABEL_IMAGE)) {
 			graphics.getFill().setImage((URI) value);
 		}
-		
-		//LINE
+
+		// LINE
+		if (key.equals(MXConstants.LABEL_LINE_WIDTH)) {
+			graphics.getLine().setWidth(new Double((String) value));
+		}
+		if (key.equals(mxConstants.STYLE_LABEL_BORDERCOLOR)) {
+			graphics.getLine().setColor((String) value);
+		}
+		if (key.equals(MXConstants.LABEL_LINE_STYLE)) {
+			Style lineStlye = (value != null) ? Line.Style.getStyle((String) value) : null;
+			graphics.getLine().setStyle(lineStlye);
+		}
+		if (key.equals(MXConstants.LABEL_LINE_SHAPE)) {
+			if (key.equals("true"))
+				graphics.getLine().setShape(Line.Shape.CURVE);
+			if (key.equals("false"))
+				graphics.getLine().setShape(Line.Shape.LINE);
+		}
+
+		// Font
+		if (key.equals(mxConstants.STYLE_ALIGN)) {
+			graphics.getFont().setAlign(Font.Align.getAlign((String) value));
+		}
+		if (key.equals(MXConstants.FONT_DECORATION)) {
+			Decoration fontDecoration = (value != null) ? Font.Decoration.getDecoration((String) value) : null;
+			graphics.getFont().setDecoration(fontDecoration);
+
+		}
+		if (key.equals(mxConstants.STYLE_FONTFAMILY)) {
+			graphics.getFont().setFamily((String) value);
+		}
+		if (key.equals(MXConstants.FONT_ROTATION_DEGREE)) {
+			graphics.getFont().setRotation(new Double((String) value));
+		}
+		if (key.equals(mxConstants.STYLE_FONTSIZE)) {
+			graphics.getFont().setSize((String) value);
+		}
+		if (key.equals(MXConstants.FONT_STYLE)) {
+			graphics.getFont().setStyle((String) value);
+		}
+		if (key.equals(MXConstants.FONT_WEIGHT)) {
+			graphics.getFont().setWeight((String) value);
+		}
+
+	}
+
+	private static void updateArcGraphics(ArcGraphics graphics, String key, Object value) throws ParameterException {
+		// LINE
 		if (key.equals(mxConstants.STYLE_STROKEWIDTH)) {
 			graphics.getLine().setWidth(new Double((String) value));
 		}
@@ -634,25 +534,79 @@ private static void updateNodeGraphics(NodeGraphics graphics, String key, Object
 			graphics.getLine().setColor((String) value);
 		}
 		if (key.equals(MXConstants.LINE_STYLE)) {
-			graphics.getLine().setStyle(Line.Style.getStyle((String) value));
+			Style lineStlye = (value != null) ? Line.Style.getStyle((String) value) : null;
+			graphics.getLine().setStyle(lineStlye);
 		}
 		if (key.equals(mxConstants.STYLE_ROUNDED)) {
-			if(key.equals("true"))
-			graphics.getLine().setShape(Line.Shape.CURVE);
-			if(key.equals("false"))
+			if (key.equals("true"))
+				graphics.getLine().setShape(Line.Shape.CURVE);
+			if (key.equals("false"))
 				graphics.getLine().setShape(Line.Shape.LINE);
 		}
-}
+
+	}
+
+	private static void updateNodeGraphics(NodeGraphics graphics, String key, Object value) throws ParameterException {
+
+		// FILL
+		if (key.equals(mxConstants.STYLE_FILLCOLOR)) {
+			graphics.getFill().setColor((String) value);
+		}
+		if (key.equals(mxConstants.STYLE_GRADIENTCOLOR)) {
+			graphics.getFill().setGradientColor((String) value);
+		}
+		if (key.equals(MXConstants.GRADIENT_ROTATION)) {
+			GradientRotation gradientRotation = (value != null) ? GradientRotation.getGradientRotation((String) value) : null;
+			System.out.println(gradientRotation);
+			graphics.getFill().setGradientRotation(gradientRotation);
+		}
+		if (key.equals(mxConstants.STYLE_IMAGE)) {	
+			System.out.println(value + "#topnml");
+			    File file = new File((String) value);
+			   URI newUri = file.toURI();
+				graphics.getFill().setImage(newUri);
+		}
+
+		// LINE
+		if (key.equals(mxConstants.STYLE_STROKEWIDTH)) {
+			graphics.getLine().setWidth(new Double((String) value));
+		}
+		if (key.equals(mxConstants.STYLE_STROKECOLOR)) {
+			graphics.getLine().setColor((String) value);
+		}
+		if (key.equals(MXConstants.LINE_STYLE)) {
+			Style lineStlye = (value != null) ? Line.Style.getStyle((String) value) : null;
+			graphics.getLine().setStyle(lineStlye);
+		}
+		if (key.equals(mxConstants.STYLE_ROUNDED)) {
+			if (key.equals("true"))
+				graphics.getLine().setShape(Line.Shape.CURVE);
+			if (key.equals("false"))
+				graphics.getLine().setShape(Line.Shape.LINE);
+		}
+	}
 
 
+//
+//	private static URI getURI(String value) {
+//		    String myURL = value;
+//		    try {
+//		    File file = new File(myURL);
+//		    file.toURI()
+//		      URL url = new URL(myURL);
+//		      String nullFragment = null;
+//		      URI uri = new URI(url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), nullFragment);
+//		      System.out.println("URI " + uri.toString() + " is OK");
+//		      return uri;
+//		    } catch (MalformedURLException e) {
+//		      System.out.println("URL " + myURL + " is a malformed URL");
+//		    } catch (URISyntaxException e) {
+//		      System.out.println("URI " + myURL + " is a malformed URL");
+//		    }
+//			return null;
+//		  }
+		
 
 
-
-
-
-
-
-
-	
 
 }

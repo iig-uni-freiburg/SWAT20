@@ -33,27 +33,27 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.AddImageAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.AlignCenterAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.AlignLeftAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.AlignRightAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.BackgroundColorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.BoldStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillImageAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAlignCenterAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAlignLeftAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAlignRightAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillBackgroundColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontBoldStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.GradientColorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.GradientDirectionAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ItalicStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientDirectionAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontItalicStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineCurveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStyleAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.LineThroughStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontLineThroughStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ShowHideLabelsAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.StrokeColorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.TextRotationAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.UnderlineStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStrokeColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontRotationAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FontUnderlineStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -79,18 +79,18 @@ public class ToolBar extends JToolBar {
 	
 	private PNGraphCell selectedCell = null;
 
-	private BoldStyleAction boldFontAction;
+	private FontBoldStyleAction boldFontAction;
 	private JToggleButton boldFontButton = null;
 
-	private ItalicStyleAction italicFontAction;
+	private FontItalicStyleAction italicFontAction;
 	private JToggleButton italicFontButton = null;
 
-	private UnderlineStyleAction underlineFontAction;
+	private FontUnderlineStyleAction underlineFontAction;
 	private JToggleButton underlineFontButton = null;
 
-	private LineThroughStyleAction lineThroughFontaction;
+	private FontLineThroughStyleAction lineThroughFontaction;
 
-	private AlignLeftAction alignLeftAction;
+	private FontAlignLeftAction alignLeftAction;
 	private JToggleButton alignLeftButton = null;
 	
 	private Action alignRightAction;
@@ -101,23 +101,23 @@ public class ToolBar extends JToolBar {
 
 	private Action strokeColorAction;
 
-	private BackgroundColorAction backgroundColorAction;
+	private FillBackgroundColorAction backgroundColorAction;
 
 	private JComboBox strokeWeightBox;
 
 	private LineStyleAction lineStyleAction;
 
-	private GradientDirectionAction gradientDirectionAction;
+	private FillGradientDirectionAction gradientDirectionAction;
 
-	private GradientColorAction gradientColor;
+	private FillGradientColorAction gradientColor;
 
 	private ShowHideLabelsAction showHideLabelsAction;
 
 	private LineCurveAction lineCurveAction;
 
-	private AddImageAction addImageAction;
+	private FillImageAction addImageAction;
 
-	private TextRotationAction textRotationAction;
+	private FontRotationAction textRotationAction;
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
@@ -131,22 +131,22 @@ public class ToolBar extends JToolBar {
 			pasteAction = new PasteAction(pnEditor, TransferHandler.getPasteAction());
 			undoAction = new UndoAction(pnEditor);
 			redoAction = new RedoAction(pnEditor);
-			boldFontAction = new BoldStyleAction(pnEditor);
-			italicFontAction = new ItalicStyleAction(pnEditor);
-			underlineFontAction = new UnderlineStyleAction(pnEditor);
-			lineThroughFontaction = new LineThroughStyleAction(pnEditor);
-			alignLeftAction = new AlignLeftAction(pnEditor);
-			alignCenterAction = new AlignCenterAction(pnEditor);
-			alignRightAction = new AlignRightAction(pnEditor);
-			strokeColorAction = new StrokeColorAction(pnEditor);
-			backgroundColorAction = new BackgroundColorAction(pnEditor);
+			boldFontAction = new FontBoldStyleAction(pnEditor);
+			italicFontAction = new FontItalicStyleAction(pnEditor);
+			underlineFontAction = new FontUnderlineStyleAction(pnEditor);
+			lineThroughFontaction = new FontLineThroughStyleAction(pnEditor);
+			alignLeftAction = new FontAlignLeftAction(pnEditor);
+			alignCenterAction = new FontAlignCenterAction(pnEditor);
+			alignRightAction = new FontAlignRightAction(pnEditor);
+			strokeColorAction = new LineStrokeColorAction(pnEditor);
+			backgroundColorAction = new FillBackgroundColorAction(pnEditor);
 			lineStyleAction = new LineStyleAction(pnEditor);
-			gradientDirectionAction = new GradientDirectionAction(pnEditor);
-			gradientColor = new GradientColorAction(pnEditor);
+			gradientDirectionAction = new FillGradientDirectionAction(pnEditor);
+			gradientColor = new FillGradientColorAction(pnEditor);
 			showHideLabelsAction = new ShowHideLabelsAction(pnEditor);
 			lineCurveAction = new LineCurveAction(pnEditor);
-			addImageAction = new AddImageAction(pnEditor);
-			textRotationAction = new TextRotationAction(pnEditor);
+			addImageAction = new FillImageAction(pnEditor);
+			textRotationAction = new FontRotationAction(pnEditor);
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -454,7 +454,6 @@ public class ToolBar extends JToolBar {
 				alignCenterAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 				alignRightAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 //				getStrokeWeightBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				
 //				int strokeWeight = 0;
 //				if(isArcCell){
 //					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getArcGraphics().get(selectedCell.getId()).getLine().getWidth();
