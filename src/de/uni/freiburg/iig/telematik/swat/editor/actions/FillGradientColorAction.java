@@ -14,29 +14,32 @@ import com.mxgraph.view.mxCellState;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
-@SuppressWarnings("serial")
-public class StrokeColorAction extends AbstractPNEditorAction {
-	public StrokeColorAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
-		super(editor, "StokeColor", IconFactory.getIcon("border_color"));
+public class FillGradientColorAction extends AbstractPNEditorAction{
+	public FillGradientColorAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+		super(editor, "BackgroundColor", IconFactory.getIcon("bg_color"));
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 
 		if (!graph.isSelectionEmpty()) {
-			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Stroke Color", null);
+			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
+
 			if (newColor != null) {
 				if (graph.isLabelSelected()) {
-					graph.setCellStyles(mxConstants.STYLE_LABEL_BORDERCOLOR, mxUtils.hexString(newColor));
+					graph.setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, mxUtils.hexString(newColor));
+
 				} else {
-					graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(newColor));
+					graph.setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(newColor));
 				}
 
 			}
 		}
 	}
-
 }
+
+

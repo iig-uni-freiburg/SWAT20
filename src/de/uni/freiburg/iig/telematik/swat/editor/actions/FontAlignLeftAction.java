@@ -3,9 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.editor.actions;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-import javax.swing.AbstractAction;
-
-import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
@@ -15,18 +12,16 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 @SuppressWarnings("serial")
-public class AlignRightAction extends AbstractPNEditorAction {
+public class FontAlignLeftAction extends AbstractPNEditorAction {
 	
-public AlignRightAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
-		super(editor, "Right", IconFactory.getIcon("right"));
+	public FontAlignLeftAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+		super(editor, "Left", IconFactory.getIcon("left"));
 	}
-
-	public void actionPerformed(ActionEvent e)
-	{
+	
+	public void actionPerformed(ActionEvent e) {
 		mxGraph graph = getEditor().getGraphComponent().getGraph();
-		if (graph != null && !graph.isSelectionEmpty())
-		{
-			graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_RIGHT);
+		if (graph != null && !graph.isSelectionEmpty()) {
+			graph.setCellStyles(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
 		}
 	}
 }

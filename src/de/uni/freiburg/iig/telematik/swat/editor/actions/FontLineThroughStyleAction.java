@@ -21,12 +21,12 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
-public class LineThroughStyleAction extends AbstractPNEditorAction {
+public class FontLineThroughStyleAction extends AbstractPNEditorAction {
 	
 	private static final long serialVersionUID = 7450908146578160638L;
 	protected boolean bold = false;
 	
-	public LineThroughStyleAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+	public FontLineThroughStyleAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "Linethrough", IconFactory.getIcon("linethrough"));
 		
 	}

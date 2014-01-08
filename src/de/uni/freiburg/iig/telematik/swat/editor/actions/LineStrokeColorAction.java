@@ -17,28 +17,26 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
-public class GradientColorAction extends AbstractPNEditorAction{
-	public GradientColorAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
-		super(editor, "BackgroundColor", IconFactory.getIcon("bg_color"));
+@SuppressWarnings("serial")
+public class LineStrokeColorAction extends AbstractPNEditorAction {
+	public LineStrokeColorAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+		super(editor, "StokeColor", IconFactory.getIcon("border_color"));
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 
 		if (!graph.isSelectionEmpty()) {
-			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
-
+			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Stroke Color", null);
 			if (newColor != null) {
 				if (graph.isLabelSelected()) {
-					graph.setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(newColor));
-
+					graph.setCellStyles(mxConstants.STYLE_LABEL_BORDERCOLOR, mxUtils.hexString(newColor));
 				} else {
-					graph.setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(newColor));
+					graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(newColor));
 				}
 
 			}
 		}
 	}
+
 }
-
-

@@ -25,18 +25,20 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 
 	@SuppressWarnings("serial")
-	public class GradientDirectionAction extends AbstractPNEditorAction {
+	public class FillGradientDirectionAction extends AbstractPNEditorAction {
 		private Image diagonal;
 		private Image vertical;
 		private Image horizontal;
 		boolean isDot = false;
-		int iterator = 1; 
+		int iterator = 1;
+		private Image gradientno; 
 
-		public GradientDirectionAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+		public FillGradientDirectionAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 			super(editor, "gradient_horizontal", IconFactory.getIcon("gradient_horizontal"));
 			horizontal = IconFactory.getIcon("gradient_horizontal").getImage();
 			vertical = IconFactory.getIcon("gradient_vertical").getImage();
 			diagonal = IconFactory.getIcon("gradient-diagonal").getImage();
+			gradientno = IconFactory.getIcon("gradient_no").getImage();
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -45,20 +47,36 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 			Map<String, Object> style = graph.getCellStyle(graph.getSelectionCell());
 			double width = mxUtils.getDouble(style, mxConstants.STYLE_STROKEWIDTH);
 
-			iterator = iterator%3;
+			iterator = iterator%4;
 			if(iterator == 0){
+				if(graph.isLabelSelected())
+				graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, GradientRotation.HORIZONTAL.toString());
+				else
 				graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.HORIZONTAL.toString());	
 				super.getIcon().setImage(this.horizontal);	
 			}
 	
 			if(iterator == 1){
+				if(graph.isLabelSelected())
+					graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, GradientRotation.VERTICAL.toString());	
+					else
 				graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.VERTICAL.toString());	
 				super.getIcon().setImage(this.vertical);	
 				}
 
 			if(iterator == 2){
-				graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.DIAGONAL.toString());	
+				if(graph.isLabelSelected())
+				graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, GradientRotation.DIAGONAL.toString());	
+				else
+					graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.DIAGONAL.toString());	
 				super.getIcon().setImage(this.diagonal);	
+				}
+			if(iterator == 3){
+				if(graph.isLabelSelected())
+					graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, null);	
+				else
+				graph.setCellStyles(MXConstants.GRADIENT_ROTATION, null);	
+				super.getIcon().setImage(this.gradientno);	
 				}
 			iterator++;
 			

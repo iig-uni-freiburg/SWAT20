@@ -13,24 +13,28 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
-public class BoldStyleAction extends AbstractPNEditorAction {
+public class FontItalicStyleAction extends AbstractPNEditorAction {
 	
 	private static final long serialVersionUID = 7450908146578160638L;
-	protected boolean bold = false;
+	protected boolean italic = false;
 	
-	public BoldStyleAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
-		super(editor, "Bold", IconFactory.getIcon("bold"));		
+	public FontItalicStyleAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+		super(editor, "Italic", IconFactory.getIcon("italic"));		
 	}
 
-	public void actionPerformed(ActionEvent e) {
-				mxIGraphModel model = getEditor().getGraphComponent().getGraph().getModel();
-				PNGraph graph = getEditor().getGraphComponent().getGraph();
-				if(this.enabled)
-				graph.setCellStyles((String) MXConstants.FONT_WEIGHT, "bold");
-				else
-				graph.setCellStyles((String) MXConstants.FONT_WEIGHT, "normal");
 
-				
+	public void actionPerformed(ActionEvent e) {
+		mxIGraphModel model = getEditor().getGraphComponent().getGraph().getModel();
+		PNGraph graph = getEditor().getGraphComponent().getGraph();
+
+		if(!italic){
+		graph.setCellStyles((String) MXConstants.FONT_STYLE, "italic");
+		italic = true;
+		}
+		else {
+		graph.setCellStyles((String) MXConstants.FONT_WEIGHT, "normal");
+		italic = false;
+		}
 		}
 
 }
