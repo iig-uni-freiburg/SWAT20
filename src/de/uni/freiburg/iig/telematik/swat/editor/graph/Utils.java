@@ -501,7 +501,7 @@ private static void updateAnnotationGraphics(AnnotationGraphics graphics, String
 
 
 
-private static void updateArcGraphics(ArcGraphics graphics, String key, Object value) {
+private static void updateArcGraphics(ArcGraphics graphics, String key, Object value) throws ParameterException {
 			//LINE
 			if (key.equals(mxConstants.STYLE_STROKEWIDTH)) {
 				graphics.getLine().setWidth(new Double((String) value));

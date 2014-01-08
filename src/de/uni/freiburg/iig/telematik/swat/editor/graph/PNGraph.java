@@ -22,9 +22,13 @@ import java.util.Vector;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxImageCanvas;
+import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxGraphModel.mxChildChange;
+import com.mxgraph.model.mxGraphModel.mxGeometryChange;
 import com.mxgraph.model.mxIGraphModel;
+import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
@@ -85,10 +89,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		this.netContainer = netContainer;
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
-		this.getSelectionModel().addListener(mxEvent.CHANGE, this);
+//		this.getSelectionModel().addListener(mxEvent.CHANGE, this);
 		this.addListener(mxEvent.RESIZE_CELLS, this);
 		this.getModel().addListener(mxEvent.EXECUTE, this);
-
+//		this.getModel().addListener(mxEvent.UNDO, this);
+//		this.getModel().addListener(mxEvent.REDO, this);
+this.getModel().addListener(mxEvent.CHANGE, this);
 //		this.getSelectionModel().addListener(mxEvent.CHANGE, this.properties.getPropertiesView());
 //		this.addListener(mxEvent.CELLS_ADDED, this.properties.getPropertiesView());
 //		this.addListener(mxEvent.CELLS_REMOVED, this.properties.getPropertiesView());
@@ -1106,7 +1112,65 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
+		System.out.println(evt.getName() + "##############EVENT");
+		 
+		if (evt.getName().equals(mxEvent.EXECUTE)){
+		    Object change = evt.getProperty("change");
+		    System.out.println(change);
+		    if(change instanceof StyleChange)
+		        System.out.println(((StyleChange) change).getStyle());
+		}
+		 
+		 
+		if (evt.getName().equals(mxEvent.UNDO)){
+			System.out.println(evt.getProperties());
+		    Object change = evt.getProperty("change");
+		    System.out.println(change);
+		    if(change instanceof StyleChange)
+		        System.out.println(((StyleChange) change).getStyle());
+		}
+		 
 		
+		if (evt.getName().equals(mxEvent.CHANGE)){
+		    PNGraphCell added = (PNGraphCell) evt.getProperty("added");
+		    PNGraphCell removed = (PNGraphCell) evt.getProperty("removed");
+//added.gets
+		    System.out.println(evt.getProperties());
+		   ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
+		   mxAtomicGraphModelChange change = changes.iterator().next();
+		    mxGeometryChange geochange = null;
+			if(change instanceof mxChildChange){
+				mxChildChange child = ((mxChildChange) change);
+				if(((mxChildChange) change).getChild() instanceof PNGraphCell){
+				PNGraphCell cell = (PNGraphCell) ((mxChildChange) change).getChild();
+				mxGeometry geo = cell.getGeometry();
+				System.out.println(geo +"\n"
+						+ geo.getOffset() + "####offset"
+						
+						);
+				switch(cell.getType()){
+				case PLACE:
+					
+					break;
+				case TRANSITION:
+					break;
+				case ARC:
+					break;
+				}
+		  }
+			}
+		    mxGeometry geo = null;
+			if(change instanceof mxGeometryChange){
+		
+		    geochange = 	((mxGeometryChange) change);
+		    System.out.println(geochange.getGeometry().getOffset() + "#offset");
+		    System.out.println(geochange.getGeometry() + "#geo");
+			}
+			System.out.println(geochange + "#######-");
+//		    System.out.println(change.getClass());
+//		    if(change instanceof Style)
+//		        System.out.println(((StyleChange) change).getStyle());
+		}
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 			if (sender instanceof mxGraphSelectionModel || sender instanceof PNGraphComponent) {
 				notifyComponentsSelected();

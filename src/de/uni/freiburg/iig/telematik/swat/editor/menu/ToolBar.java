@@ -455,16 +455,16 @@ public class ToolBar extends JToolBar {
 				alignRightAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 //				getStrokeWeightBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 				
-				int strokeWeight = 0;
-				if(isArcCell){
-					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getArcGraphics().get(selectedCell.getId()).getLine().getWidth();
-				} else if(isPlaceCell){
-					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(selectedCell.getId()).getLine().getWidth();					
-				} else if(isTransitionCell){
-					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(selectedCell.getId()).getLine().getWidth();					
-					
-				}
-				getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
+//				int strokeWeight = 0;
+//				if(isArcCell){
+//					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getArcGraphics().get(selectedCell.getId()).getLine().getWidth();
+//				} else if(isPlaceCell){
+//					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(selectedCell.getId()).getLine().getWidth();					
+//				} else if(isTransitionCell){
+//					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(selectedCell.getId()).getLine().getWidth();					
+//					
+//				}
+//				getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
 
 				// Initialize fields.
 			} else {
