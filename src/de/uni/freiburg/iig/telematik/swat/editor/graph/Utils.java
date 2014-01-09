@@ -492,9 +492,9 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 			graphics.getLine().setStyle(lineStlye);
 		}
 		if (key.equals(MXConstants.LABEL_LINE_SHAPE)) {
-			if (key.equals("true"))
+			if (value.equals("true"))
 				graphics.getLine().setShape(Line.Shape.CURVE);
-			if (key.equals("false"))
+			if (value.equals("false"))
 				graphics.getLine().setShape(Line.Shape.LINE);
 		}
 
@@ -539,9 +539,9 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 			graphics.getLine().setStyle(lineStlye);
 		}
 		if (key.equals(mxConstants.STYLE_ROUNDED)) {
-			if (key.equals("true"))
+			if (value.equals("true"))
 				graphics.getLine().setShape(Line.Shape.CURVE);
-			if (key.equals("false"))
+			if (value.equals("false"))
 				graphics.getLine().setShape(Line.Shape.LINE);
 		}
 
@@ -580,10 +580,9 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 			graphics.getLine().setStyle(lineStlye);
 		}
 		if (key.equals(mxConstants.STYLE_ROUNDED)) {
-			System.out.println("value" + value);
-			if (key.equals("true"))
+			if (value.equals("true"))
 				graphics.getLine().setShape(Line.Shape.CURVE);
-			else if (key.equals("false"))
+			if (value.equals("false"))
 				graphics.getLine().setShape(Line.Shape.LINE);
 		}
 	}

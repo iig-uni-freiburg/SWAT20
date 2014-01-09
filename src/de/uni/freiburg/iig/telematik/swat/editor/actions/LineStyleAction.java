@@ -35,8 +35,12 @@ public class LineStyleAction extends AbstractPNEditorAction {
 		if(getIcon().getImage() == dot){
 			if (graph.isLabelSelected()) {
 				graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "solid");
-			} else{
-			graph.setCellStyles(MXConstants.LINE_STYLE, "solid");}
+			} 
+			else{
+			graph.setCellStyles(MXConstants.LINE_STYLE, "solid");
+//			graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, "solid");
+			
+			}
 			getIcon().setImage(solid);	
 		}
 		else if(getIcon().getImage() == solid){

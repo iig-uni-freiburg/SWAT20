@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.io.mxCodec;
+import com.mxgraph.shape.mxConnectorShape;
 import com.mxgraph.shape.mxDefaultTextShape;
 import com.mxgraph.shape.mxEllipseShape;
 import com.mxgraph.shape.mxHtmlTextShape;
@@ -41,6 +42,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		getCanvas().putShape(mxConstants.SHAPE_ELLIPSE, new EllipseShape());
 		getCanvas().putTextShape(mxGraphics2DCanvas.TEXT_SHAPE_DEFAULT, new DefaultTextShape());
 		getCanvas().putTextShape(mxGraphics2DCanvas.TEXT_SHAPE_HTML, new HtmlTextShape());
+		getCanvas().putShape(mxConstants.SHAPE_CONNECTOR, new ConnectorShape());
+
 	}
 
 	@Override
