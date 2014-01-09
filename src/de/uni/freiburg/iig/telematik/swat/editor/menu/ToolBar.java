@@ -143,8 +143,6 @@ public class ToolBar extends JToolBar {
 
 	private ButtonGroup alignmentGroup;
 
-	private ButtonGroup fontStyleGroup;
-
 	private JButton showHideLabelsButton;
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
@@ -214,10 +212,6 @@ public class ToolBar extends JToolBar {
 		boldFontButton = (JToggleButton) add(boldFontAction, true);
 		italicFontButton = (JToggleButton) add(italicFontAction, true);
 		underlineFontButton = (JToggleButton) add(underlineFontAction, true);
-		fontStyleGroup = new ButtonGroup();
-		fontStyleGroup.add(boldFontButton);
-		fontStyleGroup.add(italicFontButton);
-		fontStyleGroup.add(underlineFontButton);
 		addSeparator();		
 		
 		alignLeftButton = (JToggleButton) add(alignLeftAction, true);
@@ -575,8 +569,9 @@ public class ToolBar extends JToolBar {
 						showHideLabelsAction.setHideIconImage();
 					showHideLabelsButton.repaint();
 
-					fontStyleGroup.clearSelection();
-					alignmentGroup.clearSelection();
+					if(!labelSelected){
+					alignmentGroup.clearSelection();}
+					
 					boldFontButton.setSelected(isBold);
 					italicFontButton.setSelected(isItalic);
 					underlineFontButton.setSelected(isUnderlined);
@@ -657,7 +652,6 @@ public class ToolBar extends JToolBar {
 	 */
 	protected void setLineShapeButton(Line line) {
 		Shape lineShape = line.getShape();
-System.out.println(lineShape + "#lineshape");
 		switch (lineShape) {
 		case CURVE:
 			lineShapeAction.setCurveIconImage();

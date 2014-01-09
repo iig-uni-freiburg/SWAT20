@@ -104,23 +104,14 @@ public static String createHtmlDoc(Map<String, Object> style,
 	{
 		css.append("color:" + color + ";");
 	}
-
-	int fontStyle = mxUtils.getInt(style, mxConstants.STYLE_FONTSTYLE);
-
-	if ((fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD)
-	{
-		css.append("font-weight:bold;");
-	}
-
-	if ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC)
-	{
-		css.append("font-style:italic;");
-	}
-
-	if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
-	{
-		css.append("text-decoration:underline;");
-	}
+	
+	String fontStyle = Utils.getString(style, MXConstants.FONT_STYLE, "normal");
+	css.append("font-style:"+fontStyle+";");
+	String fontWeight = Utils.getString(style, MXConstants.FONT_WEIGHT, "normal");
+	css.append("font-weight:"+fontWeight+";");
+	String fontDecoration = Utils.getString(style, MXConstants.FONT_DECORATION);
+	if(fontDecoration != null)
+		css.append("text-decoration:"+fontDecoration+";");
 
 	String align = mxUtils.getString(style, mxConstants.STYLE_ALIGN,
 			mxConstants.ALIGN_LEFT);

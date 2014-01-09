@@ -39,7 +39,6 @@ public class ConnectorShape extends mxConnectorShape {
 			} else {
 				Color color = getFillColor(canvas, state);
 				canvas.getGraphics().setColor(color);
-
 				return color != null;
 			}
 		} else {
