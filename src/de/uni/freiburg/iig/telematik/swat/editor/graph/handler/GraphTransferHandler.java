@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.handler;
 
 import java.awt.datatransfer.Transferable;
 
@@ -10,6 +10,9 @@ import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 
 public class GraphTransferHandler extends mxGraphTransferHandler {
 

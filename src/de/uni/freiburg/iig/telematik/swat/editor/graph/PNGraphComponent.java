@@ -27,6 +27,8 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.ConnectionHandler;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.GraphTransferHandler;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.ConnectorShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.DefaultTextShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.EllipseShape;

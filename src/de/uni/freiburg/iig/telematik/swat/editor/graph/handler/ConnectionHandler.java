@@ -2,7 +2,7 @@
  * $Id: mxConnectionHandler.java,v 1.1 2012/11/15 13:26:44 gaudenz Exp $
  * Copyright (c) 2008, Gaudenz Alder
  */
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.handler;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -15,6 +15,9 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 
 /**
  * Connection handler creates new connections between cells. This control is

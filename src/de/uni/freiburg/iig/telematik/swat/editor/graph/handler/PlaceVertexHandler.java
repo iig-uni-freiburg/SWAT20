@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.handler;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -11,6 +11,8 @@ import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
+
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 
 public class PlaceVertexHandler extends mxVertexHandler {
 
