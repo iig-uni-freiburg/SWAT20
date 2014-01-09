@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.tree;
+package de.uni.freiburg.iig.telematik.swat.editor.properties.tree;
 
 import java.util.HashMap;
 import java.util.Map;

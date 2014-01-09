@@ -29,13 +29,13 @@ import de.invation.code.toval.graphic.component.RestrictedTextField;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.EditorForFirstColumn;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.EditorForPropertiesFieldColumn;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.JTableRenderer;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNCellEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeRenderer;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNodeType;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.EditorForFirstColumn;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.EditorForPropertiesFieldColumn;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.JTableRenderer;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNCellEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNode;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNodeRenderer;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNodeType;
 
 public class PropertiesView extends JTree implements PNPropertiesListener {
 

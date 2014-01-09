@@ -90,59 +90,35 @@ public class ToolBar extends JToolBar {
 	private JComboBox fontBox = null;
 	private JComboBox fontSizeBox = null;
 	private JComboBox zoomBox = null;
-	
 	private PNEditor pnEditor = null;
-	
 	private PNGraphCell selectedCell = null;
-
 	private FontBoldStyleAction boldFontAction;
 	private JToggleButton boldFontButton = null;
-
 	private FontItalicStyleAction italicFontAction;
 	private JToggleButton italicFontButton = null;
-
 	private FontUnderlineStyleAction underlineFontAction;
 	private JToggleButton underlineFontButton = null;
-
 	private FontLineThroughStyleAction lineThroughFontaction;
-
 	private FontAlignLeftAction alignLeftAction;
 	private JToggleButton alignLeftButton = null;
-	
 	private Action alignRightAction;
 	private JToggleButton alignRightButton = null;
-
 	private Action alignCenterAction;
 	private JToggleButton alignCenterButton = null;
-
 	private Action strokeColorAction;
-
 	private FillBackgroundColorAction backgroundColorAction;
-
 	private JComboBox strokeWeightBox;
-
 	private LineStyleAction lineStyleAction;
-
 	private FillGradientDirectionAction gradientDirectionAction;
-
 	private FillGradientColorAction gradientColor;
-
 	private ShowHideLabelsAction showHideLabelsAction;
-
 	private LineShapeAction lineShapeAction;
-
 	private FillImageAction addImageAction;
-
 	private FontRotationAction textRotationAction;
-
 	private JButton gradientDirectionButton;
-
 	private JButton lineStyleButton;
-
 	private JButton lineShapeButton;
-
 	private ButtonGroup alignmentGroup;
-
 	private JButton showHideLabelsButton;
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
@@ -204,8 +180,6 @@ public class ToolBar extends JToolBar {
 		add(getFontBox());
 
 		add(getFontSizeBox());
-		
-		
 
 		addSeparator();
 		
@@ -240,8 +214,6 @@ public class ToolBar extends JToolBar {
 		addSeparator();
 
 		showHideLabelsButton = (JButton)add(showHideLabelsAction, false);
-
-
 
 		addSeparator();
 		

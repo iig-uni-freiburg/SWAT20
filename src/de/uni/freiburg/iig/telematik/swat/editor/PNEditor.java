@@ -70,8 +70,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.PalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
-import de.uni.freiburg.iig.telematik.swat.editor.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
 public abstract class PNEditor extends JPanel implements SwatComponent, TreeSelectionListener, PNGraphListener {
