@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -140,6 +141,12 @@ public class PTNetEditor extends PNEditor {
 		return panel;
 	}
 
+	@Override
+	public JComponent getAnalyseView() {
+		//Show Analyse View if activated
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 

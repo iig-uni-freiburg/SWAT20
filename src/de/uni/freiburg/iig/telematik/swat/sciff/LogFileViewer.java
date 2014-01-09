@@ -43,6 +43,7 @@ public class LogFileViewer extends JEditorPane implements SwatComponent {
 		} catch (PropertyException e) {
 			// Stay with default value
 		}
+		//SCIFFChecker test = new SCIFFChecker();
 	}
 
 	@Override
@@ -78,6 +79,10 @@ public class LogFileViewer extends JEditorPane implements SwatComponent {
 		return file.getPath();
 	}
 
+	public File getFile() {
+		return file;
+	}
+
 	private void createPropertiesView() {
 		properties = new JPanel();
 		properties.setLayout(new FlowLayout());
@@ -95,5 +100,11 @@ public class LogFileViewer extends JEditorPane implements SwatComponent {
 
 	}
 
+	@Override
+	public JComponent getAnalyseView() {
+		//return Analyse View if selected
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
