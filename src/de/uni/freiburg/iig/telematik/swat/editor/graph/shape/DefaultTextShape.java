@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.shape;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -13,6 +13,8 @@ import com.mxgraph.shape.mxITextShape;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
+
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 
 public class DefaultTextShape extends mxDefaultTextShape {
 @Override

@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.shape;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -13,6 +13,9 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxLightweightLabel;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
+
+import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
 
 public class HtmlTextShape extends mxHtmlTextShape {
 @Override

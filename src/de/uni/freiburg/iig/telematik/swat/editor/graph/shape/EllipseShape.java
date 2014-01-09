@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.shape;
 
 import java.awt.Color;
 import java.awt.Paint;
@@ -7,6 +7,8 @@ import java.util.Map;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.shape.mxEllipseShape;
 import com.mxgraph.view.mxCellState;
+
+import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
 
 public class EllipseShape extends mxEllipseShape {
 

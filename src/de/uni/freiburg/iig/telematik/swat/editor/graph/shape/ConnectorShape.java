@@ -1,14 +1,22 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.shape;
 
 import java.awt.Color;
 import java.awt.Paint;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
-import com.mxgraph.shape.mxRectangleShape;
+import com.mxgraph.shape.mxConnectorShape;
+import com.mxgraph.shape.mxIShape;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
-public class RectangleShape extends mxRectangleShape {
+import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
+
+public class ConnectorShape extends mxConnectorShape {
 
 	@Override
 	/**
@@ -26,7 +34,6 @@ public class RectangleShape extends mxRectangleShape {
 			// Paints the background of the shape
 			Paint fillPaint = (Paint) (hasGradient(canvas, state) ? Utils.createFillPaint(getGradientBounds(canvas, state), style) : null);
 
-
 			if (fillPaint != null) {
 				canvas.getGraphics().setPaint(fillPaint);
 
@@ -34,18 +41,16 @@ public class RectangleShape extends mxRectangleShape {
 			} else {
 				Color color = getFillColor(canvas, state);
 				canvas.getGraphics().setColor(color);
-
 				return color != null;
 			}
 		} else {
 			canvas.getGraphics().setPaint(null);
 			Color color = getStrokeColor(canvas, state);
 			canvas.getGraphics().setColor(color);
-			// TODO: untersuche verhalten für Handler
 			canvas.getGraphics().setStroke(Utils.createStroke(style, scale));
 
 			return color != null;
 		}
 	}
-
+	
 }
