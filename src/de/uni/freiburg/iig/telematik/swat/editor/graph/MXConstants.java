@@ -139,13 +139,15 @@ public abstract class MXConstants {
 				fill = nodeGraphics.getFill();
 			
 				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultNodeColor();
+				fillColor = ((fillColor).equals("transparent"))? "none":fillColor;
 				style.put(mxConstants.STYLE_FILLCOLOR,fillColor);
 	
 				GradientRotation gradientRotation = (fill.getGradientRotation() != null)? fill.getGradientRotation():EditorProperties.getInstance().getDefaultGradientDirection();
 				if(gradientRotation != null) style.put(MXConstants.GRADIENT_ROTATION, gradientRotation);
 				
 				String gradientColor = (fill.getGradientColor() != null)? fill.getGradientColor(): EditorProperties.getInstance().getDefaultGradientColor();
-				if(gradientColor != null) style.put(mxConstants.STYLE_GRADIENTCOLOR, gradientColor);
+				if(gradientColor != null) {gradientColor = ((gradientColor).equals("transparent"))? "none":gradientColor;
+				style.put(mxConstants.STYLE_GRADIENTCOLOR, gradientColor);}
 				
 				URI image = (fill.getImage() != null)? fill.getImage():EditorProperties.getInstance().getDefaultNodeImage();
 				if(image != null){
@@ -170,6 +172,7 @@ public abstract class MXConstants {
 		Line line = (nodeGraphics.getLine() != null)? nodeGraphics.getLine():new Line();
 		
 				String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
+				lineColor = ((lineColor).equals("transparent"))? "none":lineColor;
 				style.put(mxConstants.STYLE_STROKECOLOR,lineColor);
 	
 				Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;
@@ -211,6 +214,7 @@ public abstract class MXConstants {
 		Line line = (arcGraphics.getLine() != null)? arcGraphics.getLine():new Line();
 			
 		String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
+		lineColor = ((lineColor).equals("transparent"))? "none":lineColor;
 		style.put(mxConstants.STYLE_STROKECOLOR,lineColor);
 
 		Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;
@@ -247,14 +251,16 @@ public abstract class MXConstants {
 					
 			Fill fill = (annotationGraphics.getFill() != null)? annotationGraphics.getFill():new Fill();
 				
-				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultNodeColor();
+				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultLabelBackgroundColor();
+				fillColor = ((fillColor).equals("transparent"))? "none":fillColor;
 				style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR,fillColor);
 	
 				GradientRotation gradientRotation = (fill.getGradientRotation() != null)? fill.getGradientRotation():EditorProperties.getInstance().getDefaultGradientDirection();
 				if(gradientRotation != null) style.put(MXConstants.LABEL_GRADIENT_ROTATION, gradientRotation);
 				
 				String gradientColor = (fill.getGradientColor() != null)? fill.getGradientColor(): EditorProperties.getInstance().getDefaultGradientColor();
-				if(gradientColor != null)style.put(MXConstants.LABEL_GRADIENTCOLOR, gradientColor);
+				if(gradientColor != null) {gradientColor = ((gradientColor).equals("transparent"))? "none":gradientColor;
+				style.put(MXConstants.LABEL_GRADIENTCOLOR, gradientColor);}
 				
 				URI image = (fill.getImage() != null)? fill.getImage():EditorProperties.getInstance().getDefaultNodeImage();
 				if(image != null)style.put(MXConstants.LABEL_IMAGE, image);
@@ -288,7 +294,8 @@ public abstract class MXConstants {
 	
 			Line line = (annotationGraphics.getLine() != null)? annotationGraphics.getLine():new Line();
 				
-				String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
+				String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLabelLineColor();
+				lineColor = ((lineColor).equals("transparent"))? "none":lineColor;
 				style.put(mxConstants.STYLE_LABEL_BORDERCOLOR,lineColor);
 	
 				Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;

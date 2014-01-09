@@ -37,6 +37,14 @@ public class LineStrokeColorAction extends AbstractPNEditorAction {
 
 			}
 		}
+		//TODO: None Border Color not viewed correctly
+		else{
+			if (graph.isLabelSelected()) {
+				graph.setCellStyles(mxConstants.STYLE_LABEL_BORDERCOLOR, "none");
+			} else {
+				graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, "none");
+			}
+		}
 	}
 
 }

@@ -38,6 +38,15 @@ public class FillGradientColorAction extends AbstractPNEditorAction{
 				}
 
 			}
+			else {
+				if (graph.isLabelSelected()) {
+					graph.setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, "none");
+
+				} else {
+					graph.setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, "none");
+				}
+
+			}
 		}
 	}
 }

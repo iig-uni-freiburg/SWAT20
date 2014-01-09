@@ -49,6 +49,10 @@ public class EditorProperties {
 	public String getDefaultNodeColor() {
 		return "#B6CAE4";
 	}
+	
+	public String getDefaultLabelBackgroundColor() {
+		return "none";
+	}
 
 	public String getDefaultGradientColor() {
 		return null;
@@ -75,6 +79,11 @@ public class EditorProperties {
 	public String getDefaultFontSize() {
 		// TODO Auto-generated method stub
 		return "11";
+	}
+
+	public String getDefaultLabelLineColor() {
+		// TODO Auto-generated method stub
+		return "none";
 	}
 
 

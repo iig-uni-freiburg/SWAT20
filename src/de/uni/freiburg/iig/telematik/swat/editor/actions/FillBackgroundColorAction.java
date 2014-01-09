@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JColorChooser;
 
 import com.mxgraph.model.mxCell;
@@ -26,7 +27,7 @@ public class FillBackgroundColorAction extends AbstractPNEditorAction{
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 
 		if (!graph.isSelectionEmpty()) {
-			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
+			Color newColor = ColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
 
 			if (newColor != null) {
 				mxCell selectedCell = (mxCell) graph.getSelectionCell();
@@ -36,6 +37,14 @@ public class FillBackgroundColorAction extends AbstractPNEditorAction{
 					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(newColor));
 				}
 
+			}
+			else {
+				mxCell selectedCell = (mxCell) graph.getSelectionCell();
+				if (graph.isLabelSelected()) {
+					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, "none");
+				} else {
+					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "none");
+				}
 			}
 		}
 	}

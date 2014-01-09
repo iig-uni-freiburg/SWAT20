@@ -467,7 +467,8 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 
 		// FILL
 		if (key.equals(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)) {
-			graphics.getFill().setColor((String) value);
+			String color = (String) ((((String)value).equals("none"))? "transparent":value);
+			graphics.getFill().setColor(color);
 		}
 		if (key.equals(MXConstants.LABEL_GRADIENTCOLOR)) {
 			graphics.getFill().setGradientColor((String) value);
@@ -485,7 +486,8 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 			graphics.getLine().setWidth(new Double((String) value));
 		}
 		if (key.equals(mxConstants.STYLE_LABEL_BORDERCOLOR)) {
-			graphics.getLine().setColor((String) value);
+			String color = (String) ((((String)value).equals("none"))? "transparent":value);
+			graphics.getLine().setColor(color);
 		}
 		if (key.equals(MXConstants.LABEL_LINE_STYLE)) {
 			Style lineStlye = (value != null) ? Line.Style.getStyle((String) value) : null;
@@ -532,7 +534,8 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 			graphics.getLine().setWidth(new Double((String) value));
 		}
 		if (key.equals(mxConstants.STYLE_STROKECOLOR)) {
-			graphics.getLine().setColor((String) value);
+			String color = (String) ((((String)value).equals("none"))? "transparent":value);
+			graphics.getLine().setColor(color);
 		}
 		if (key.equals(MXConstants.LINE_STYLE)) {
 			Style lineStlye = (value != null) ? Line.Style.getStyle((String) value) : null;
@@ -551,7 +554,8 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 
 		// FILL
 		if (key.equals(mxConstants.STYLE_FILLCOLOR)) {
-			graphics.getFill().setColor((String) value);
+			String color = (String) ((((String)value).equals("none"))? "transparent":value);
+			graphics.getFill().setColor(color);
 		}
 		if (key.equals(mxConstants.STYLE_GRADIENTCOLOR)) {
 			graphics.getFill().setGradientColor((String) value);
@@ -573,7 +577,8 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 			graphics.getLine().setWidth(new Double((String) value));
 		}
 		if (key.equals(mxConstants.STYLE_STROKECOLOR)) {
-			graphics.getLine().setColor((String) value);
+			String color = (String) ((((String)value).equals("none"))? "transparent":value);
+			graphics.getLine().setColor(color);
 		}
 		if (key.equals(MXConstants.LINE_STYLE)) {
 			Style lineStlye = (value != null) ? Line.Style.getStyle((String) value) : null;
