@@ -7,6 +7,7 @@ import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.model.mxGraphModel.mxStyleChange;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
+import com.mxgraph.util.mxConstants;
 
 import de.invation.code.toval.validate.ParameterException;
 
@@ -43,7 +44,7 @@ public class StyleChange extends mxStyleChange {
 		Object value = styleMap.get(key);
 		System.out.println(key);
 		try {
-			Utils.updateGraphics(graph, ((PNGraphCell) cell), key, value, key.contains("label"));
+			Utils.updateGraphics(graph, ((PNGraphCell) cell), key, value, key.contains("label") || key.equals(mxConstants.STYLE_FONTSIZE) || key.equals(mxConstants.STYLE_FONTFAMILY) || key.equals(mxConstants.STYLE_ALIGN));
 		} catch (ParameterException e) {
 		}
 	}

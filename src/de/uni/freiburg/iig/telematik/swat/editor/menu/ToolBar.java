@@ -8,8 +8,10 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -22,9 +24,11 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.TransferHandler;
 
+import com.mxgraph.io.graphml.mxGraphMlUtils;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraphView;
@@ -32,6 +36,18 @@ import com.mxgraph.view.mxGraphView;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.Align;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.Decoration;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Shape;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FillImageAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAlignCenterAction;
@@ -44,7 +60,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientDirectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontItalicStyleAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.LineCurveAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.LineShapeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontLineThroughStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
@@ -113,11 +129,23 @@ public class ToolBar extends JToolBar {
 
 	private ShowHideLabelsAction showHideLabelsAction;
 
-	private LineCurveAction lineCurveAction;
+	private LineShapeAction lineShapeAction;
 
 	private FillImageAction addImageAction;
 
 	private FontRotationAction textRotationAction;
+
+	private JButton gradientDirectionButton;
+
+	private JButton lineStyleButton;
+
+	private JButton lineShapeButton;
+
+	private ButtonGroup alignmentGroup;
+
+	private ButtonGroup fontStyleGroup;
+
+	private JButton showHideLabelsButton;
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
@@ -144,7 +172,7 @@ public class ToolBar extends JToolBar {
 			gradientDirectionAction = new FillGradientDirectionAction(pnEditor);
 			gradientColor = new FillGradientColorAction(pnEditor);
 			showHideLabelsAction = new ShowHideLabelsAction(pnEditor);
-			lineCurveAction = new LineCurveAction(pnEditor);
+			lineShapeAction = new LineShapeAction(pnEditor);
 			addImageAction = new FillImageAction(pnEditor);
 			textRotationAction = new FontRotationAction(pnEditor);
 		} catch (PropertyException e) {
@@ -186,12 +214,16 @@ public class ToolBar extends JToolBar {
 		boldFontButton = (JToggleButton) add(boldFontAction, true);
 		italicFontButton = (JToggleButton) add(italicFontAction, true);
 		underlineFontButton = (JToggleButton) add(underlineFontAction, true);
+		fontStyleGroup = new ButtonGroup();
+		fontStyleGroup.add(boldFontButton);
+		fontStyleGroup.add(italicFontButton);
+		fontStyleGroup.add(underlineFontButton);
 		addSeparator();		
 		
 		alignLeftButton = (JToggleButton) add(alignLeftAction, true);
 		alignCenterButton = (JToggleButton) add(alignCenterAction, true);
 		alignRightButton = (JToggleButton) add(alignRightAction, true);
-		ButtonGroup alignmentGroup = new ButtonGroup();
+		alignmentGroup = new ButtonGroup();
 		alignmentGroup.add(alignLeftButton);
 		alignmentGroup.add(alignCenterButton);
 		alignmentGroup.add(alignRightButton);
@@ -204,16 +236,16 @@ public class ToolBar extends JToolBar {
 		
 		add(addImageAction);
 		add(backgroundColorAction);
-		add(gradientDirectionAction);
+		gradientDirectionButton = (JButton) add(gradientDirectionAction, false);
 		add(gradientColor);
 		add(strokeColorAction);
 		add(getStrokeWeightBox());
 		
-		add(lineStyleAction);
-		add(lineCurveAction);
+		lineStyleButton = (JButton) add(lineStyleAction, false);
+		lineShapeButton = (JButton)add(lineShapeAction, false);
 		addSeparator();
 
-		add(showHideLabelsAction);
+		showHideLabelsButton = (JButton)add(showHideLabelsAction, false);
 
 
 
@@ -281,7 +313,7 @@ public class ToolBar extends JToolBar {
 	
 	private JComboBox getFontSizeBox(){
 		if(fontSizeBox == null){
-			fontSizeBox = new JComboBox(new Object[] { "6pt", "8pt", "9pt", "10pt", "12pt", "14pt", "18pt", "24pt", "30pt", "36pt", "48pt", "60pt" });
+			fontSizeBox = new JComboBox(new Object[] { "6pt", "8pt", "9pt", "10pt","11pt", "12pt", "14pt", "18pt", "24pt", "30pt", "36pt", "48pt", "60pt" });
 			fontSizeBox.setMinimumSize(new Dimension(100, 24));
 			fontSizeBox.setPreferredSize(new Dimension(100, 24));
 			fontSizeBox.setMaximumSize(new Dimension(100, 24));
@@ -415,11 +447,13 @@ public class ToolBar extends JToolBar {
 		gradientDirectionAction.setEnabled(false);
 		gradientColor.setEnabled(false);
 		showHideLabelsAction.setEnabled(false);
-		lineCurveAction.setEnabled(false);
+		lineShapeAction.setEnabled(false);
 		addImageAction.setEnabled(false);
+		textRotationAction.setEnabled(false);
 	}
 	
 	public void updateView(Set<PNGraphCell> selectedComponents){
+
 		if(selectedComponents == null || selectedComponents.isEmpty()){
 			deactivate();
 			this.selectedCell = null;
@@ -436,42 +470,204 @@ public class ToolBar extends JToolBar {
 			gradientDirectionAction.setEnabled(true);
 			gradientColor.setEnabled(true);
 			showHideLabelsAction.setEnabled(true);
-			lineCurveAction.setEnabled(true);
+			lineShapeAction.setEnabled(true);
 			addImageAction.setEnabled(true);
 			if(selectedComponents.size() == 1){
+				//Enables Toolbar Buttons
 				this.selectedCell = selectedComponents.iterator().next();
 				boolean isPlaceCell = selectedCell.getType() == PNComponent.PLACE;
 				boolean isTransitionCell = selectedCell.getType() == PNComponent.TRANSITION;
 				boolean isArcCell = selectedCell.getType() == PNComponent.ARC;
 				boolean labelSelected = pnEditor.getGraphComponent().getGraph().isLabelSelected();
-				getFontBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				getFontSizeBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				boldFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				italicFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				underlineFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				lineThroughFontaction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				alignLeftAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				alignCenterAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				alignRightAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-//				getStrokeWeightBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-//				int strokeWeight = 0;
-//				if(isArcCell){
-//					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getArcGraphics().get(selectedCell.getId()).getLine().getWidth();
-//				} else if(isPlaceCell){
-//					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(selectedCell.getId()).getLine().getWidth();					
-//				} else if(isTransitionCell){
-//					strokeWeight = (int) pnEditor.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(selectedCell.getId()).getLine().getWidth();					
-//					
-//				}
-//				getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
+				boolean isBold = false;
+				boolean isItalic = false;
+				boolean isUnderlined = false;
+				boolean isAlignLeft = false;
+				boolean isAlignCenter = false;
+				boolean isAlignRight = false;
+				int strokeWeight = (int) Line.DEFAULT_WIDTH;
 
-				// Initialize fields.
+				String fontFamily = null;
+				String fontSize = null;
+
+				
+				
+				 NodeGraphics nodeGraphics = null;
+				    AnnotationGraphics annotationGraphics = null;
+				    ArcGraphics arcGraphics = null;
+					switch(selectedCell.getType()){
+					case PLACE:
+						nodeGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(selectedCell.getId());
+						annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(selectedCell.getId());
+						break;
+					case TRANSITION:
+						nodeGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(selectedCell.getId());
+						annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(selectedCell.getId());
+						break;
+					case ARC:
+						arcGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getArcGraphics().get(selectedCell.getId());
+						annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(selectedCell.getId());
+						break;
+					}
+					
+					if(nodeGraphics!= null && !labelSelected){					
+						Fill fill = nodeGraphics.getFill();
+						setGradientRotationButton(fill);
+						Line line = nodeGraphics.getLine();
+						strokeWeight = (int) line.getWidth();
+						getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
+						setLineStyleButton(line);	
+						setLineShapeButton(line);
+					
+
+					}
+					
+					if (arcGraphics != null && isArcCell){
+						Line line = arcGraphics.getLine();
+						strokeWeight = (int) line.getWidth();
+						getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
+						setLineStyleButton(line);
+						setLineShapeButton(line);							
+					}
+							
+					if(annotationGraphics != null && labelSelected){
+						
+						Font font = annotationGraphics.getFont();
+						fontFamily = font.getFamily();
+						fontSize = font.getSize();
+						String fontWeight = font.getWeight();
+							if(fontWeight.equals("bold"))
+								isBold = true;
+						String fontStyle = font.getStyle();
+							if(fontStyle.equals("italic"))
+									isItalic = true;
+						Decoration fontDecoration = font.getDecoration();
+							if(fontDecoration != null && fontDecoration.equals(Font.Decoration.UNDERLINE))
+								isUnderlined = true;
+						Align fontAlign = font.getAlign();
+							if(fontAlign.equals(Font.Align.CENTER))
+								isAlignCenter = true;
+							else if(fontAlign.equals(Font.Align.LEFT))
+								isAlignLeft = true;
+							else if(fontAlign.equals(Font.Align.RIGHT))
+								isAlignRight = true;		
+							
+						Fill fill = annotationGraphics.getFill();
+						setGradientRotationButton(fill);
+						
+						Line line = annotationGraphics.getLine();
+						strokeWeight = (int) line.getWidth();
+						setLineStyleButton(line);
+						setLineShapeButton(line);
+						getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
+
+						
+						getFontBox().setSelectedItem(fontFamily);
+						getFontSizeBox().setSelectedItem(fontSize + "pt");
+			
+					}
+					
+					HashMap<String, Object> style = mxGraphMlUtils.getStyleMap(selectedCell.getStyle(),"=");
+					String noLabel = (String) style.get("noLabel");
+					if(noLabel == null || noLabel.equals("0"))
+					showHideLabelsAction.setShowIconImage();
+					else if(noLabel.equals("1"))
+						showHideLabelsAction.setHideIconImage();
+					showHideLabelsButton.repaint();
+
+					fontStyleGroup.clearSelection();
+					alignmentGroup.clearSelection();
+					boldFontButton.setSelected(isBold);
+					italicFontButton.setSelected(isItalic);
+					underlineFontButton.setSelected(isUnderlined);
+					alignLeftButton.setSelected(isAlignLeft);
+					alignCenterButton.setSelected(isAlignCenter);
+					alignRightButton.setSelected(isAlignRight);	
+					
+					getFontBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					getFontSizeBox().setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					boldFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					italicFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					underlineFontAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+//					lineThroughFontaction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					alignLeftAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					alignCenterAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					alignRightAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					textRotationAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					getStrokeWeightBox().setEnabled(isPlaceCell || isTransitionCell || isArcCell);
+
+				
 			} else {
 				getFontBox().setEnabled(false);
 				getFontSizeBox().setEnabled(false);
 				this.selectedCell = null;
 			}
 		}
+	}
+
+	/**
+	 * @param fill
+	 */
+	protected void setGradientRotationButton(Fill fill) {
+		GradientRotation gradientRotation = fill.getGradientRotation();
+		if(gradientRotation == null){
+			gradientDirectionAction.setGradientnoIconImage();}
+			else{
+		switch(gradientRotation){
+		case DIAGONAL:
+			gradientDirectionAction.setDiagonalIconImage();;
+			break;
+		case HORIZONTAL:
+			gradientDirectionAction.setHorizontalIconImage();;
+			break;
+		case VERTICAL:
+			gradientDirectionAction.setVerticalIconImage();
+			break;
+		default:
+			break;
+		}
+		}
+		gradientDirectionButton.repaint();
+	}
+
+	/**
+	 * @param line
+	 */
+	protected void setLineStyleButton(Line line) {
+		Style lineStyle = line.getStyle();
+
+		switch (lineStyle) {
+		case DASH:
+			lineStyleAction.setDashIconImage();
+			break;
+		case DOT:
+			lineStyleAction.setDotconImage();
+			break;
+		case SOLID:
+			lineStyleAction.setSolidIconImage();
+			break;
+
+		}
+
+		lineStyleButton.repaint();
+	}
+
+	/**
+	 * @param line
+	 */
+	protected void setLineShapeButton(Line line) {
+		Shape lineShape = line.getShape();
+System.out.println(lineShape + "#lineshape");
+		switch (lineShape) {
+		case CURVE:
+			lineShapeAction.setCurveIconImage();
+			break;
+		case LINE:
+			lineShapeAction.setLineIconImage();
+			break;
+		}
+
+		lineShapeButton.repaint();
 	}
 
 	

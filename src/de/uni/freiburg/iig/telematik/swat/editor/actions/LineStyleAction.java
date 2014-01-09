@@ -20,12 +20,11 @@ public class LineStyleAction extends AbstractPNEditorAction {
 	private Image dot;
 	private Image dash;
 	private Image solid;
-	boolean isDot = false;
 	int iterator = 1; 
 
 	public LineStyleAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "Line", IconFactory.getIcon("solid"));
-		solid = IconFactory.getIcon("solid").getImage();
+		solid = getIcon().getImage();
 		dash = IconFactory.getIcon("dash").getImage();
 		dot = IconFactory.getIcon("dot").getImage();
 	}
@@ -33,89 +32,42 @@ public class LineStyleAction extends AbstractPNEditorAction {
 	public void actionPerformed(ActionEvent e) {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 
-		Map<String, Object> style = graph.getCellStyle(graph.getSelectionCell());
-		double width = mxUtils.getDouble(style, mxConstants.STYLE_STROKEWIDTH);
-
-		iterator = iterator%3;
-		if(iterator == 0){
+		if(getIcon().getImage() == dot){
 			if (graph.isLabelSelected()) {
 				graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "solid");
 			} else{
 			graph.setCellStyles(MXConstants.LINE_STYLE, "solid");}
-			super.getIcon().setImage(this.solid);	
+			getIcon().setImage(solid);	
 		}
-		if(iterator == 1){
+		else if(getIcon().getImage() == solid){
 			if (graph.isLabelSelected()) {
 				graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "dash");
 			} else{
 			graph.setCellStyles(MXConstants.LINE_STYLE, "dash");}
-			super.getIcon().setImage(this.dash);	
+			getIcon().setImage(dash);	
 		}
-		if(iterator == 2){
+		else if(getIcon().getImage() == dash){
 			if (graph.isLabelSelected()) {
 				graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "dot");
 			} else{
 			graph.setCellStyles(MXConstants.LINE_STYLE, "dot");}
-			super.getIcon().setImage(this.dot);	
+			getIcon().setImage(dot);	
 		}
-			
-			
-//		if(iterator == 1){
-//			if (graph.isLabelSelected()) {
-//				graph.setCellStyles("labeldashed", "1");
-//				graph.setCellStyles("labeldashedpattern", width*4 + " " + width*2);
-//			} else {
-//				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
-//				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width*4 + " " + width*2);
-//			}
-//			super.getIcon().setImage(this.dash);	
-//			}
-//
-//			
-//		if(iterator == 2){
-//			if (graph.isLabelSelected()) {
-//				graph.setCellStyles("labeldashed", "1");
-//				graph.setCellStyles("labeldashedpattern", width +" "+ width);
-//			} else {
-//				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
-//				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width +" "+ width);
-//			}
-//			super.getIcon().setImage(this.dot);	
-//			}
-//		if(iterator == 0){
-//			if (graph.isLabelSelected()) {
-//				graph.setCellStyles("labeldashed", "0");
-//			} else {
-//				graph.setCellStyles(mxConstants.STYLE_DASHED, "0");	
-//			}
-//			super.getIcon().setImage(this.line);	
-//		}
-//			
-//			
-//		if(iterator == 1){
-//			if (graph.isLabelSelected()) {
-//				graph.setCellStyles("labeldashed", "1");
-//				graph.setCellStyles("labeldashedpattern", width*4 + " " + width*2);
-//			} else {
-//				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
-//				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width*4 + " " + width*2);
-//			}
-//			super.getIcon().setImage(this.dash);	
-//			}
-//
-//			
-//		if(iterator == 2){
-//			if (graph.isLabelSelected()) {
-//				graph.setCellStyles("labeldashed", "1");
-//				graph.setCellStyles("labeldashedpattern", width +" "+ width);
-//			} else {
-//				graph.setCellStyles(mxConstants.STYLE_DASHED, "1");	
-//				graph.setCellStyles(mxConstants.STYLE_DASH_PATTERN, width +" "+ width);
-//			}
-//			super.getIcon().setImage(this.dot);	
-//			}
-		iterator++;
+
+		}
+
+	public void setDashIconImage() {
+		getIcon().setImage(dash);
 		
-		}
+	}
+
+	public void setDotconImage() {
+		getIcon().setImage(dot);
+		
+	}
+
+	public void setSolidIconImage() {
+		getIcon().setImage(solid);		
+	}
 
 }

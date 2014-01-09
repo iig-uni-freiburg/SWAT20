@@ -504,6 +504,7 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 		}
 		if (key.equals(MXConstants.FONT_DECORATION)) {
 			Decoration fontDecoration = (value != null) ? Font.Decoration.getDecoration((String) value) : null;
+			System.out.println(fontDecoration);
 			graphics.getFont().setDecoration(fontDecoration);
 
 		}
@@ -579,9 +580,10 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 			graphics.getLine().setStyle(lineStlye);
 		}
 		if (key.equals(mxConstants.STYLE_ROUNDED)) {
+			System.out.println("value" + value);
 			if (key.equals("true"))
 				graphics.getLine().setShape(Line.Shape.CURVE);
-			if (key.equals("false"))
+			else if (key.equals("false"))
 				graphics.getLine().setShape(Line.Shape.LINE);
 		}
 	}

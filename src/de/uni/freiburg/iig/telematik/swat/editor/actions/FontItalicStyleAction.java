@@ -32,7 +32,7 @@ public class FontItalicStyleAction extends AbstractPNEditorAction {
 		italic = true;
 		}
 		else {
-		graph.setCellStyles((String) MXConstants.FONT_WEIGHT, "normal");
+		graph.setCellStyles((String) MXConstants.FONT_STYLE, "normal");
 		italic = false;
 		}
 		}
