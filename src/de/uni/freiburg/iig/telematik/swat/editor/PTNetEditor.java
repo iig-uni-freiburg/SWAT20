@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import de.invation.code.toval.parser.ParserException;
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
@@ -75,7 +76,15 @@ public class PTNetEditor extends PNEditor {
 	@Override
 	public EditorPopupMenu getPopupMenu() {
 		try {
-			return new EditorPopupMenu(this);
+			try {
+				return new EditorPopupMenu(this);
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (ParameterException e) {
 			e.printStackTrace();
 		}

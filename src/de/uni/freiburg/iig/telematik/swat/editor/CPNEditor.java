@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import de.invation.code.toval.parser.ParserException;
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
@@ -86,6 +87,13 @@ public class CPNEditor extends AbstractCPNEditor {
 		try {
 			return new EditorPopupMenu(this);
 		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
