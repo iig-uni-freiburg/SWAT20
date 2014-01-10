@@ -118,6 +118,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	protected ConnectionHandler createConnectionHandler() {
 		return new ConnectionHandler(this);
 	}
+	
 
 	public void setPopupMenu(EditorPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;

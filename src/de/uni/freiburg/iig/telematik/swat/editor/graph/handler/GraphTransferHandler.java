@@ -1,6 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph.handler;
 
 import java.awt.datatransfer.Transferable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JComponent;
 
@@ -103,7 +107,6 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 
 		return result;
 	}
-
 	/**
 	 * Gets a drop target using getDropTarget and imports the cells using
 	 * mxGraph.splitEdge or PNGraphComponent.importCells depending on the drop
@@ -115,42 +118,61 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 		Object target = getDropTarget(graphComponent, gt);
 		PNGraph graph = graphComponent.getGraph();
 		Object[] cells = gt.getCells();
-
+		HashMap<String, PNGraphCell> temporaryMapping = new HashMap<String, PNGraphCell>();
 		for (Object object : cells) {
 			PNGraphCell cell;
+
 			if (object instanceof PNGraphCell) {
 				cell = (PNGraphCell) object;
+				PNGraphCell newCell = null;
+
 				switch (cell.getType()) {
 				case PLACE:
-					try {
-						cells = new Object[] { graph.addNewPlace(new mxPoint(dx, dy)) };
+					try {	
+						if(graph.getNetContainer().getPetriNet().containsPlace(cell.getId()))
+							newCell = (PNGraphCell) graph.addNewPlace(new mxPoint(cell.getGeometry().getCenterX()+10, cell.getGeometry().getCenterY() + 10));
+						else
+							newCell = (PNGraphCell) graph.addNewPlace(new mxPoint(dx, dy));
 					} catch (ParameterException e) {
 						e.printStackTrace();
 					}
 					break;
 				case TRANSITION:
 					try {
-						cells = new Object[] { graph.addNewTransition(new mxPoint(dx, dy)) };
+						if(graph.getNetContainer().getPetriNet().containsTransition(cell.getId()))
+						newCell = (PNGraphCell) graph.addNewTransition(new mxPoint(cell.getGeometry().getCenterX()+10, cell.getGeometry().getCenterY() + 10)) ;
+					else{						
+						newCell = (PNGraphCell) graph.addNewTransition(new mxPoint(dx, dy));}
 					} catch (ParameterException e) {
-						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					break;
+				case ARC:
+					try {	
+						PNGraphCell sourceCell = (PNGraphCell)cell.getSource();						
+						PNGraphCell targetCell = (PNGraphCell) cell.getTarget();
+						if(sourceCell!=null && targetCell != null)
+						newCell = (PNGraphCell) graph.addNewFlowRelation(temporaryMapping.get(sourceCell.getId()),temporaryMapping.get(targetCell.getId()) );
+					} catch (ParameterException e) {
 						e.printStackTrace();
 					}
 					break;
 				}
+				temporaryMapping.put(cell.getId(), newCell);
 			}
 		}
-
-		// cells = graphComponent.getImportableCells(cells);
 
 		if (graph.isSplitEnabled() && graph.isSplitTarget(target, cells)) {
 			graph.splitEdge(target, cells, dx, dy);
 		} else {
-			// cells = graphComponent.importCells(cells, 0, 0, target,
-			// location);
 			graph.setSelectionCells(cells);
 		}
+		if(!temporaryMapping.isEmpty())
+			graph.setSelectionCells(temporaryMapping.values().toArray());
 
 		return cells;
 	}
 
+	
+	
 }
