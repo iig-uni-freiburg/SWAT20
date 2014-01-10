@@ -10,8 +10,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import com.mxgraph.io.graphml.mxGraphMlUtils;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
@@ -22,6 +25,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractObjectGra
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.Decoration;
@@ -590,6 +594,41 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 			if (value.equals("false"))
 				graphics.getLine().setShape(Line.Shape.LINE);
 		}
+	}
+
+
+
+	public static void createNodeGraphicsFromStyle(String style, NodeGraphics nodeGraphicsWithPousePosition, AnnotationGraphics annotationGraphics) throws ParameterException {
+nodeGraphicsWithPousePosition.setFill(new Fill("#000000", null, null, null));
+nodeGraphicsWithPousePosition.setLine(new Line("#000000", Line.Shape.LINE, Line.Style.SOLID, 1.0));
+annotationGraphics.setFill(new Fill("#000000", null, null, null));
+annotationGraphics.setLine(new Line("#000000", Line.Shape.LINE, Line.Style.SOLID, 1.0));
+annotationGraphics.setFont(new Font(Font.Align.CENTER, null, EditorProperties.getInstance().getDefaultFontFamily(), 0.0, EditorProperties.getInstance().getDefaultFontSize(), "normal", "normal"));
+HashMap<String, Object> styleMap = mxGraphMlUtils.getStyleMap(style,"=");
+for(Entry<String, Object> s:styleMap.entrySet()){
+	String key = s.getKey();
+	if(key.contains("label") || key.equals(mxConstants.STYLE_FONTSIZE) || key.equals(mxConstants.STYLE_FONTFAMILY) || key.equals(mxConstants.STYLE_ALIGN))
+		updateAnnotationGraphics((AnnotationGraphics) annotationGraphics, s.getKey(), s.getValue());
+	else
+		updateNodeGraphics(nodeGraphicsWithPousePosition, s.getKey(), s.getValue());
+}
+		
+	}
+	
+	public static void createArcGraphicsFromStyle(String style, ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
+arcGraphics.setLine(new Line("#000000", Line.Shape.LINE, Line.Style.SOLID, 1.0));
+annotationGraphics.setFill(new Fill("#000000", null, null, null));
+annotationGraphics.setLine(new Line("#000000", Line.Shape.LINE, Line.Style.SOLID, 1.0));
+annotationGraphics.setFont(new Font(Font.Align.CENTER, null, EditorProperties.getInstance().getDefaultFontFamily(), 0.0, EditorProperties.getInstance().getDefaultFontSize(), "normal", "normal"));
+HashMap<String, Object> styleMap = mxGraphMlUtils.getStyleMap(style,"=");
+for(Entry<String, Object> s:styleMap.entrySet()){
+	String key = s.getKey();
+	if(key.contains("label") || key.equals(mxConstants.STYLE_FONTSIZE) || key.equals(mxConstants.STYLE_FONTFAMILY) || key.equals(mxConstants.STYLE_ALIGN))
+		updateAnnotationGraphics((AnnotationGraphics) annotationGraphics, s.getKey(), s.getValue());
+	else
+		updateArcGraphics(arcGraphics, s.getKey(), s.getValue());
+}
+		
 	}
 
 

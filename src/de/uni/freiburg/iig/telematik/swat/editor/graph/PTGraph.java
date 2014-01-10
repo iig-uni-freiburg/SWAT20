@@ -53,10 +53,12 @@ public class PTGraph extends PNGraph {
 	 */
 	protected Multiset<String> getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup) {
 		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(cell.getId());
+		if(place!= null){
 		circularPointGroup.addPoints(PColor.black, place.getState());
 		Multiset<String> multiSet = new Multiset<String>();
 		multiSet.setMultiplicity("black", place.getState());
-		return multiSet;
+		return multiSet;}
+		return null;
 	}
 	
 
