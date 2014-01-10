@@ -100,10 +100,7 @@ public class Utils extends mxUtils {
 				height += vertexBounds.getHeight();
 			}
 		}
-//style.put(MXConstants.LABEL_POSITION_X, x-centerx);
-//System.out.println(x-centerx);
-//style.put(MXConstants.LABEL_POSITION_Y, y-centery);
-//System.out.println(y-centery);
+
 		return Utils.getScaledLabelBounds(x, y, size, width, height, style,
 				scale);
 	}
@@ -510,7 +507,6 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 		}
 		if (key.equals(MXConstants.FONT_DECORATION)) {
 			Decoration fontDecoration = (value != null) ? Font.Decoration.getDecoration((String) value) : null;
-			System.out.println(fontDecoration);
 			graphics.getFont().setDecoration(fontDecoration);
 
 		}
@@ -566,11 +562,9 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 		}
 		if (key.equals(MXConstants.GRADIENT_ROTATION)) {
 			GradientRotation gradientRotation = (value != null) ? GradientRotation.getGradientRotation((String) value) : null;
-			System.out.println(gradientRotation);
 			graphics.getFill().setGradientRotation(gradientRotation);
 		}
 		if (key.equals(mxConstants.STYLE_IMAGE)) {	
-			System.out.println(value + "#topnml");
 			    File file = new File((String) value);
 			   URI newUri = file.toURI();
 				graphics.getFill().setImage(newUri);

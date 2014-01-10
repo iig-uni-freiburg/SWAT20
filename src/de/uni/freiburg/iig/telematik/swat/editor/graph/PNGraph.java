@@ -1078,7 +1078,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		// System.out.println(((StyleChange) change).getStyle());
 		// }
 
-		System.out.println(evt.getName());
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 
 			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
