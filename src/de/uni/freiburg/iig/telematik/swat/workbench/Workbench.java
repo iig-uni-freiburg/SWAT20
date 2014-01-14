@@ -226,7 +226,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		getTabView().componentSelected(node);
 
 		//Update Toolbar
-		//updateToolbar();
+		updateToolbar();
 	}
 
 	@Override
@@ -256,7 +256,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		}
 
 		//Update Toolbar
-		//updateToolbar();
+		updateToolbar();
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -307,7 +307,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		getPropertiesPanel().repaint();
 
 		//Update Toolbar
-		//updateToolbar();
+		updateToolbar();
 	}
 
 	@Override
@@ -320,7 +320,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		getPropertiesPanel().repaint();
 
 		//Update Toolbar
-		//updateToolbar();
+		updateToolbar();
 	}
 
 	/** check if a PNEditor got activated and update Toolbar if needed **/
@@ -330,9 +330,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			PNEditor editor = (PNEditor) getTabView().getSelectedComponent();
 			getSwatToolbar().clear();
 			getSwatToolbar().add(editor.getEditorToolbar());
-			getSwatToolbar().validate();
-			getSwatToolbar().repaint();
+		} else {
+			//remove Toolbar-Addons
+			getSwatToolbar().clear();
 		}
+
+		getSwatToolbar().validate();
+		getSwatToolbar().repaint();
 
 	}
 

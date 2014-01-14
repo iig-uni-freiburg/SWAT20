@@ -60,7 +60,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 		setFloatable(false);
 		setRollover(true);
-		setPreferredSize(new Dimension(200,ICON_SIZE+10));
+
+		//HACK!: To show PNEditor-Icons (they seem to be bigger) 
+		setPreferredSize(new Dimension(200, ICON_SIZE + 30));
 		
 		createButtons();
 
@@ -256,8 +258,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		getSwitchworkingDirectoryButton().addActionListener(listener);
 	}
 
-	public void clear(){
-		this.clear();
+	public void clear() {
+		this.removeAll();
 		createButtons();
 	}
 
