@@ -379,7 +379,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 							public void invoke(Object sender, mxEventObject evt) {
 								graph.getModel().endUpdate();
-								getGraph().updatePositionPropertiesFromCells();
+//								getGraph().updatePositionPropertiesFromCells();
 							}
 
 						});

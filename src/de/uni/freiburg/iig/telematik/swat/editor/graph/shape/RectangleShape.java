@@ -28,7 +28,6 @@ public class RectangleShape extends mxRectangleShape {
 			// Paints the background of the shape
 			Paint fillPaint = (Paint) (hasGradient(canvas, state) ? Utils.createFillPaint(getGradientBounds(canvas, state), style) : null);
 
-
 			if (fillPaint != null) {
 				canvas.getGraphics().setPaint(fillPaint);
 
@@ -43,7 +42,6 @@ public class RectangleShape extends mxRectangleShape {
 			canvas.getGraphics().setPaint(null);
 			Color color = getStrokeColor(canvas, state);
 			canvas.getGraphics().setColor(color);
-			// TODO: untersuche verhalten für Handler
 			canvas.getGraphics().setStroke(Utils.createStroke(style, scale));
 
 			return color != null;

@@ -74,7 +74,6 @@ public class ConnectionHandler extends mxConnectionHandler {
 							e1.printStackTrace();
 						}
 					}
-
 					fireEvent(new mxEventObject(mxEvent.STOP, "event", e, "commit", commit, "cell", (commit) ? result : null));
 
 					// Clears the state before the model commits
@@ -88,6 +87,8 @@ public class ConnectionHandler extends mxConnectionHandler {
 						}
 					}
 					graph.getModel().endUpdate();
+					//Repaint to avoid graph-artifacts of unallowed connections
+					graph.repaint();
 				}
 
 				sourceState = null;
@@ -102,9 +103,9 @@ public class ConnectionHandler extends mxConnectionHandler {
 	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void mouseReleased(MouseEvent e) {
+
 		if (isActive()) {
 			if (error == null && first != null) {
-				
 				PNGraph graph = getGraphComponent().getGraph();
 				double dx = first.getX() - e.getX();
 				double dy = first.getY() - e.getY();
@@ -134,7 +135,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 						}
 
 						edgeCell = connectPreview.stop(graphComponent.isSignificant(dx, dy), e);
-
+						
 						if (edgeCell != null) {
 							eventSource.fireEvent(new mxEventObject(mxEvent.CONNECT, "cell", edgeCell, "event", e, "target", targetCell));
 						}

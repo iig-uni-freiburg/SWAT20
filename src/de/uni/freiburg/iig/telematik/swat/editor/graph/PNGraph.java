@@ -93,7 +93,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		this.getModel().addListener(mxEvent.CHANGE, this);
 
 		setHtmlLabels(true);
-
+		setAllowDanglingEdges(false);
 		setMultigraph(true);
 		setCellsEditable(false);
 		setDisconnectOnMove(false);
@@ -763,16 +763,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		case ARC:
 			break;
 		case PLACE:
-			if (cell.getGeometry().getX() >= 0)
-				properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-			if (cell.getGeometry().getY() >= 0)
-				properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getY());
+			if (cell.getGeometry().getCenterX() >= 0)
+				properties.setPlacePositionX(this, cell.getId(), (int) cell.getGeometry().getCenterX());
+			if (cell.getGeometry().getCenterY() >= 0)
+				properties.setPlacePositionY(this, cell.getId(), (int) cell.getGeometry().getCenterY());
 			break;
 		case TRANSITION:
-			if (cell.getGeometry().getX() >= 0)
-				properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getX());
-			if (cell.getGeometry().getY() >= 0)
-				properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getY());
+			if (cell.getGeometry().getCenterX() >= 0)
+				properties.setTransitionPositionX(this, cell.getId(), (int) cell.getGeometry().getCenterX());
+			if (cell.getGeometry().getCenterY() >= 0)
+				properties.setTransitionPositionY(this, cell.getId(), (int) cell.getGeometry().getCenterY());
 			break;
 		}
 	}

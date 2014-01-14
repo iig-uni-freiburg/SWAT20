@@ -299,7 +299,6 @@ public abstract class PNProperties {
 		Validate.bigger(position, -1);
 		if(!getNetContainer().getPetriNet().containsPlace(placeName))
 			throw new ParameterException("Unknown Place");
-		
 		Integer oldSize = (int) getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getPosition().getX();
 		getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(placeName).getPosition().setX(position);
 		PNPropertyChangeEvent event = new PNPropertyChangeEvent(sender, PNComponent.PLACE, placeName, PNProperty.PLACE_POSITION_X, oldSize , position);
