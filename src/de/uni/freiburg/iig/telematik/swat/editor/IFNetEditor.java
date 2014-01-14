@@ -2,8 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.editor;
 
 import java.io.File;
 
-import javax.swing.JComponent;
-
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
@@ -66,10 +64,5 @@ public class IFNetEditor extends AbstractCPNEditor {
 		return null;
 	}
 
-	@Override
-	public JComponent getAnalyseView() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

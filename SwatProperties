@@ -1,7 +1,7 @@
 #
-#Mon Dec 23 16:57:50 CET 2013
+#Mon Jan 13 13:02:04 CET 2014
 VERIFY_PNML_SCHEMA=false
-KNOWN_WORKING_DIRECTORIES=['/Users/stocker/Desktop/SwatWorkingDirectory/']
 ICON_SIZE=MEDIUM
+KNOWN_WORKING_DIRECTORIES=['/home/richard/' '/Users/stocker/Desktop/SwatWorkingDirectory/']
 REQUIRE_NET_TYPE=false
-WORKING_DIRECTORY=/Users/stocker/Desktop/SwatWorkingDirectory/
+WORKING_DIRECTORY=/home/richard/

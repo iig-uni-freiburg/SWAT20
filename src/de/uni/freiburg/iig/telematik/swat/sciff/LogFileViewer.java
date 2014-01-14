@@ -100,11 +100,4 @@ public class LogFileViewer extends JEditorPane implements SwatComponent {
 
 	}
 
-	@Override
-	public JComponent getAnalyseView() {
-		//return Analyse View if selected
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

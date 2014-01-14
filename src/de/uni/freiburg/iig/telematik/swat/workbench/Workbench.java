@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.ScrollPane;
 import java.io.IOException;
 
 import javax.swing.JComponent;
@@ -25,11 +26,12 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener {
+public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener, SwatStateListener {
 
 	private static final long serialVersionUID = 6109154620023481119L;
 	
@@ -50,6 +52,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private JTextArea console = null;
 	private JTextArea errors = null;
 
+	private SwatTreeNode currentNode;
+
 	public Workbench() {
 		super();
 		// Check if there is a path to a working directory.
@@ -64,7 +68,9 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 		try {
 			SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
+			SwatState.getInstance().addListener(this);
 		} catch (ParameterException e) {}
+
 	}
 	
 	private boolean checkWorkingDirectory(){
@@ -222,6 +228,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	@Override
 	public void componentActivated(SwatTreeNode node) {
+		this.currentNode = node;
 		SwatComponent swatComponent = null;
 		// Test if SwatTreeNode has valid SwatComponent in it
 		//		try {
@@ -235,7 +242,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			// add SwatTreeNode to tab and get its swatComponent to make its propertyView
 			swatComponent = getTabView().addNewTab(node);
 			getPropertiesPanel().removeAll();
-			getPropertiesPanel().add(swatComponent.getPropertiesView());
+			JComponent propertyView = swatComponent.getPropertiesView();
+
+//			ScrollPane scrollPane = new ScrollPane();
+//			scrollPane.add(propertyView);
+//			getPropertiesPanel().add(scrollPane);
+			getPropertiesPanel().removeAll();
+			getPropertiesPanel().add(new ScrollPane().add(propertyView));
 			pack();
 			getPropertiesPanel().repaint();
 		}
@@ -284,10 +297,17 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			return; //no tabs inside
 		// Update Properties Panel according to active tab
 		getPropertiesPanel().removeAll();
-		getPropertiesPanel().add(component.getPropertiesView());
+		getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
+		//getPropertiesPanel().add(component.getPropertiesView());
 		pack();
 		getPropertiesPanel().repaint();
 	}
 
+	@Override
+	public void operatingModeChanged() {
+		System.out.println("Changed");
+		componentActivated(currentNode);
+
+	}
 
 }
