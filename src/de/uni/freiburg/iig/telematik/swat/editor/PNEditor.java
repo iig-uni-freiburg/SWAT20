@@ -46,8 +46,8 @@ import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
-import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 
 import de.invation.code.toval.validate.ParameterException;
@@ -70,8 +70,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.PalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
 public abstract class PNEditor extends JPanel implements SwatComponent, TreeSelectionListener, PNGraphListener {
@@ -156,7 +156,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 	}
 
-	private ToolBar getEditorToolbar() {
+	public ToolBar getEditorToolbar() {
 		return toolbar;
 	}
 

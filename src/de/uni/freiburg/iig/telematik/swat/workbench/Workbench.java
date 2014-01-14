@@ -20,6 +20,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
@@ -51,8 +52,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private JPanel content = null;
 	private JTextArea console = null;
 	private JTextArea errors = null;
-
-	private SwatTreeNode currentNode;
 
 	public Workbench() {
 		super();
@@ -222,13 +221,16 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	@Override
 	public void componentSelected(SwatTreeNode node) {
+		//Information from TreeView: New node activated -> relay to TabView
 		// Or: Let SwatTabView implement SwatTreeChangeListener and add it to
 		getTabView().componentSelected(node);
+
+		//Update Toolbar
+		updateToolbar();
 	}
 
 	@Override
 	public void componentActivated(SwatTreeNode node) {
-		this.currentNode = node;
 		SwatComponent swatComponent = null;
 		// Test if SwatTreeNode has valid SwatComponent in it
 		//		try {
@@ -242,16 +244,19 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			// add SwatTreeNode to tab and get its swatComponent to make its propertyView
 			swatComponent = getTabView().addNewTab(node);
 			getPropertiesPanel().removeAll();
-			JComponent propertyView = swatComponent.getPropertiesView();
+			//JComponent propertyView = swatComponent.getPropertiesView();
 
 //			ScrollPane scrollPane = new ScrollPane();
 //			scrollPane.add(propertyView);
 //			getPropertiesPanel().add(scrollPane);
 			getPropertiesPanel().removeAll();
-			getPropertiesPanel().add(new ScrollPane().add(propertyView));
+			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 			pack();
 			getPropertiesPanel().repaint();
 		}
+
+		//Update Toolbar
+		updateToolbar();
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -298,15 +303,36 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		// Update Properties Panel according to active tab
 		getPropertiesPanel().removeAll();
 		getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
-		//getPropertiesPanel().add(component.getPropertiesView());
 		pack();
 		getPropertiesPanel().repaint();
+
+		//Update Toolbar
+		updateToolbar();
 	}
 
 	@Override
 	public void operatingModeChanged() {
-		System.out.println("Changed");
-		componentActivated(currentNode);
+		//Update Properties View
+		SwatComponent swatComponent = (SwatComponent) getTabView().getSelectedComponent();
+		getPropertiesPanel().removeAll();
+		getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+		pack();
+		getPropertiesPanel().repaint();
+
+		//Update Toolbar
+		updateToolbar();
+	}
+
+	/** check if a PNEditor got activated and update Toolbar if needed **/
+	private void updateToolbar() {
+		if (getTabView().getSelectedComponent() instanceof PNEditor) {
+			System.out.println("This is a PNEditor");
+			PNEditor editor = (PNEditor) getTabView().getSelectedComponent();
+			getSwatToolbar().clear();
+			getSwatToolbar().add(editor.getEditorToolbar());
+			getSwatToolbar().validate();
+			getSwatToolbar().repaint();
+		}
 
 	}
 

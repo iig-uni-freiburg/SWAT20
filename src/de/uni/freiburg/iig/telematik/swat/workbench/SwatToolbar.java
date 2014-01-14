@@ -62,6 +62,24 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		setRollover(true);
 		setPreferredSize(new Dimension(200,ICON_SIZE+10));
 		
+		createButtons();
+
+		try {
+			SwatState.getInstance().addListener(this);
+		} catch (ParameterException e) {
+			// Cannot happen, since this is never null.
+		}
+
+		// try to get ICONSize
+		try {
+			ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
+		} catch (Exception e) {
+			// Cannot read property. Ignore and stay with default value (32)
+		}
+
+	}
+
+	private void createButtons() {
 		add(new SwatToolbarButton(ToolbarButtonType.SAVE));
 		add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
 		add(getSwitchworkingDirectoryButton());
@@ -75,20 +93,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		group.add(getAnalysisRadioButton());
 		group.add(getEditRadioButton());
 		getEditRadioButton().setSelected(true);
-		
-		try {
-			SwatState.getInstance().addListener(this);
-		} catch (ParameterException e) {
-			// Cannot happen, since this is never null.
-		}
-
-		// try to get ICONSize
-		try {
-			ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
-		} catch (Exception e) {
-			// Cannot read property. Ignore and stay with default value
-		}
-
 	}
 	
 	private JRadioButton getAnalysisRadioButton(){
@@ -250,6 +254,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	public void addOpenActionListener(ActionListener listener) {
 		getSwitchworkingDirectoryButton().addActionListener(listener);
+	}
+
+	public void clear(){
+		this.clear();
+		createButtons();
 	}
 
 
