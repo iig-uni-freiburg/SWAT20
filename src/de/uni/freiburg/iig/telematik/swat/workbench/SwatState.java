@@ -1,7 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -15,7 +15,7 @@ public class SwatState {
 	
 	private String activeFile = null;
 
-	private Set<SwatStateListener> listeners = new HashSet<SwatStateListener>();
+	private List<SwatStateListener> listeners = new ArrayList<SwatStateListener>();
 	
 	public static SwatState getInstance(){
 		if(instance == null){
@@ -52,7 +52,8 @@ public class SwatState {
 
 	public void addListener(SwatStateListener listener) throws ParameterException{
 		Validate.notNull(listener);
-		listeners.add(listener);
+		if(!listeners.contains(listener))
+			listeners.add(0, listener);
 	}
 
 	public enum OperatingMode {
