@@ -1,11 +1,18 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 
@@ -23,9 +30,11 @@ import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.ConnectionHandler;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.GraphTransferHandler;
@@ -108,6 +117,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		setToolTips(true);
 		getGraphControl().addMouseListener(new GCMouseAdapter());
 		addMouseWheelListener(new GCMouseWheelListener());
+//		addKeyListener(new GCKeyListener());
 		getConnectionHandler().setCreateTarget(true);
 		mxCodec codec = new mxCodec();
 		Document doc = mxUtils.loadDocument(PNEditor.class.getResource("/default-style.xml").toString());
@@ -119,6 +129,129 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		return new ConnectionHandler(this);
 	}
 	
+	@Override
+	/**
+	 * Handles escape keystrokes.
+	 */
+	protected void installKeyHandler()
+	{
+		addKeyListener(new MultiKeyPressListener());
+	}
+	
+	class MultiKeyPressListener implements KeyListener {
+
+	    // Set of currently pressed keys
+	    private final Set<Integer> pressed = new HashSet<Integer>();
+
+	    @Override
+	    public synchronized void keyPressed(KeyEvent e) {
+	    	int dx = 0;
+        	int dy = 0;
+        	System.out.println(e.getKeyCode() + "#code");
+	        pressed.add(e.getKeyCode());
+	        if (pressed.size() > 1) {
+	        System.out.println("more" );
+	        	for(int key: pressed){
+	    			if (pressed.contains(KeyEvent.BUTTON1_MASK)) {
+
+	    				if (key == KeyEvent.VK_LEFT) {
+	    			        dx-=5;
+	    			    }
+	    				if (key == KeyEvent.VK_DOWN) {
+	    			        dy+=5;
+	    			    }
+	    			    if (key == KeyEvent.VK_RIGHT) {
+	    			        dx+=5;
+	    			    }
+	    			    if (key == KeyEvent.VK_UP) {
+	    			        dy-=5;
+	    			    }
+	    		    
+	    			}
+	    			
+					if (pressed.contains(17)) {
+						PNGraphCell source = (PNGraphCell) graph.getSelectionCell();
+						PNGraph pnGraph = (PNGraph) graph;
+						PNGraphCell target = null;
+						double centerX = source.getGeometry().getCenterX();
+						double centerY = source.getGeometry().getCenterY();
+						if (key == KeyEvent.VK_LEFT) {
+							centerX -= 100;
+						}
+						if (key == KeyEvent.VK_DOWN) {
+							centerY += 100;
+						}
+						if (key == KeyEvent.VK_RIGHT) {
+							centerX += 100;
+						}
+						if (key == KeyEvent.VK_UP) {
+							centerY += -100;
+						}
+						try {
+							switch (source.getType()) {
+							case PLACE:
+								target = (PNGraphCell) pnGraph.addNewTransition(new mxPoint(centerX, centerY));
+								break;
+							case TRANSITION:
+								target = (PNGraphCell) pnGraph.addNewPlace(new mxPoint(centerX, centerY));
+								break;
+							case ARC:
+								break;
+
+							}
+							
+							pnGraph.addNewFlowRelation(source, target);
+							
+							graph.setSelectionCell(target);
+						} catch (ParameterException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
+						}
+					}
+	  
+	            }
+	        	
+	        	
+	        }
+	        else{
+	        	if (e.getKeyCode() == KeyEvent.VK_ESCAPE && isEscapeEnabled())
+				{
+					escape(e);
+				}
+
+				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			        dx--;
+			    }
+				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			        dy++;
+			    }
+			    if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			        dx++;
+			    }
+			    if (e.getKeyCode() == KeyEvent.VK_UP) {
+			        dy--;
+			    }
+
+			    
+	
+			    
+			    
+	        }
+	        graph.moveCells(graph.getSelectionCells(), dx, dy);
+	    }
+	    
+	  
+			
+	
+
+	    @Override
+	    public synchronized void keyReleased(KeyEvent e) {
+	        pressed.remove(e.getKeyCode());
+	    }
+
+	    @Override
+	    public void keyTyped(KeyEvent e) {/* Not used */ }
+	}
 
 	public void setPopupMenu(EditorPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;
@@ -197,6 +330,41 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 			}
 
 		}
+
+	}
+	
+	private class GCKeyListener extends KeyAdapter {
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+
+		}
+
+		@Override
+		public void keyTyped(KeyEvent event) {
+			System.out.println("blub");
+			int dx = 0;
+			int dy = 0;
+		    if (event.getKeyChar() == KeyEvent.VK_LEFT) {
+		        dx--;
+		    }
+		    if (event.getKeyChar() == KeyEvent.VK_DOWN) {
+		        dy++;
+		    }
+		    if (event.getKeyChar() == KeyEvent.VK_RIGHT) {
+		        dx++;
+		    }
+		    if (event.getKeyChar() == KeyEvent.VK_UP) {
+		        dy--;
+		    }
+		    graph.moveCells(graph.getSelectionCells(), dx, dy);
+		}
+
 
 	}
 
