@@ -1,7 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
@@ -121,6 +123,7 @@ public class ToolBar extends JToolBar {
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
 		Validate.notNull(pnEditor);
+		setLayout(new WrapLayout());
 		this.pnEditor = pnEditor;
 
 		try {
@@ -217,6 +220,9 @@ public class ToolBar extends JToolBar {
 		add(getZoomBox());
 
 		deactivate();
+		doLayout();
+
+
 	}
 
 	private JComponent add(Action action, boolean asToggleButton) {

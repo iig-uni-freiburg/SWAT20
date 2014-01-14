@@ -145,7 +145,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 	private void setUpGUI() throws ParameterException {
 		setLayout(new BorderLayout());
-		add(getToolbar(), BorderLayout.NORTH);
+		toolbar = new ToolBar(this, JToolBar.HORIZONTAL);
+		add(getEditorToolbar(), BorderLayout.NORTH);
 		add(getPalettePanel(), BorderLayout.LINE_START);
 		add(getGraphComponent(), BorderLayout.CENTER);
 		// add(getStatusPanel(), BorderLayout.SOUTH);
@@ -155,15 +156,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 	}
 
-	private ToolBar getToolbar() {
-		if (toolbar == null) {
-			try {
-				toolbar = new ToolBar(this, JToolBar.HORIZONTAL);
-			} catch (ParameterException e) {
-				// Cannot happen, since this is not null.
-				e.printStackTrace();
-			}
-		}
+	private ToolBar getEditorToolbar() {
 		return toolbar;
 	}
 
