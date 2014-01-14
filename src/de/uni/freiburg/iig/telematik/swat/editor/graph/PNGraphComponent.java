@@ -147,10 +147,15 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	    public synchronized void keyPressed(KeyEvent e) {
 	    	int dx = 0;
         	int dy = 0;
-        	System.out.println(e.getKeyCode() + "#code");
+        	System.out.println(e.getKeyCode() + "#code" + pressed);
 	        pressed.add(e.getKeyCode());
 	        if (pressed.size() > 1) {
-	        System.out.println("more" );
+	        	
+				PNGraphCell source = (PNGraphCell) graph.getSelectionCell();
+				PNGraph pnGraph = (PNGraph) graph;
+				PNGraphCell target = null;
+				double centerX = source.getGeometry().getCenterX();
+				double centerY = source.getGeometry().getCenterY();
 	        	for(int key: pressed){
 	    			if (pressed.contains(KeyEvent.BUTTON1_MASK)) {
 
@@ -169,12 +174,9 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	    		    
 	    			}
 	    			
-					if (pressed.contains(17)) {
-						PNGraphCell source = (PNGraphCell) graph.getSelectionCell();
-						PNGraph pnGraph = (PNGraph) graph;
-						PNGraphCell target = null;
-						double centerX = source.getGeometry().getCenterX();
-						double centerY = source.getGeometry().getCenterY();
+	    			else if (pressed.contains(17)) {
+
+
 						if (key == KeyEvent.VK_LEFT) {
 							centerX -= 100;
 						}
@@ -185,32 +187,20 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 							centerX += 100;
 						}
 						if (key == KeyEvent.VK_UP) {
-							centerY += -100;
-						}
-						try {
-							switch (source.getType()) {
-							case PLACE:
-								target = (PNGraphCell) pnGraph.addNewTransition(new mxPoint(centerX, centerY));
-								break;
-							case TRANSITION:
-								target = (PNGraphCell) pnGraph.addNewPlace(new mxPoint(centerX, centerY));
-								break;
-							case ARC:
-								break;
-
-							}
-							
-							pnGraph.addNewFlowRelation(source, target);
-							
-							graph.setSelectionCell(target);
-						} catch (ParameterException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
+							centerY -= 100;
+							//Only working Once, bufferes Keys somehow afterwards
 						}
 					}
-	  
 	            }
-	        	
+	        	if (pressed.contains(17) && centerX >0 && centerY>0){
+	        		System.out.println(centerX + "#" + centerY);
+				target = createNewNodeWithEdge(source, pnGraph, centerX, centerY);
+				graph.setSelectionCell(target);}
+	        	if (pressed.contains(KeyEvent.BUTTON1_MASK)) {
+				    graph.moveCells(graph.getSelectionCells(), dx, dy);
+	        	}
+
+
 	        	
 	        }
 	        else{
@@ -232,13 +222,45 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 			        dy--;
 			    }
 
-			    
-	
-			    
+			    graph.moveCells(graph.getSelectionCells(), dx, dy);
+
 			    
 	        }
-	        graph.moveCells(graph.getSelectionCells(), dx, dy);
+	     
 	    }
+
+
+
+
+
+		/**
+		 * @param source
+		 * @param pnGraph
+		 * @param centerX
+		 * @param centerY
+		 * @return 
+		 */
+		protected PNGraphCell createNewNodeWithEdge(PNGraphCell source, PNGraph pnGraph, double centerX, double centerY) {
+			PNGraphCell target = null;
+			try {
+				switch (source.getType()) {
+				case PLACE:
+					target = (PNGraphCell) pnGraph.addNewTransition(new mxPoint(centerX, centerY));
+					break;
+				case TRANSITION:
+					target = (PNGraphCell) pnGraph.addNewPlace(new mxPoint(centerX, centerY));
+					break;
+				case ARC:
+					break;
+				}
+				if(target != null)
+				pnGraph.addNewFlowRelation(source, target);
+			} catch (ParameterException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			return target;
+		}
 	    
 	  
 			
@@ -246,6 +268,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 	    @Override
 	    public synchronized void keyReleased(KeyEvent e) {
+	    	System.out.println("remove" + e.getKeyCode());
 	        pressed.remove(e.getKeyCode());
 	    }
 
