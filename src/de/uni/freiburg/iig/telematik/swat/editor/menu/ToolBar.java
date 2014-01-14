@@ -123,7 +123,7 @@ public class ToolBar extends JToolBar {
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
 		Validate.notNull(pnEditor);
-		setLayout(new WrapLayout());
+		setLayout(new WrapLayout(FlowLayout.LEFT));
 		this.pnEditor = pnEditor;
 
 		try {
