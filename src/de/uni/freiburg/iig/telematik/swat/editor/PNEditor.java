@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.editor;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -305,22 +306,18 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		protected InputMap getInputMap(int condition) {
 			InputMap map = super.getInputMap(condition);
 			if (condition == JComponent.WHEN_FOCUSED && map != null) {
-//				String osName = System.getProperty("os.name").toLowerCase();
-//				boolean isMacOs = osName.startsWith("mac os x");
-int commandKey;
-//if(isMacOs)
-commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-//else commandKey = KeyEvent.CTRL_DOWN_MASK;
+
+				int commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S,commandKey), "save");
-				map.put(KeyStroke.getKeyStroke("control shift S"), "saveAs");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S,commandKey | InputEvent.SHIFT_DOWN_MASK), "saveAs");
 				map.put(KeyStroke.getKeyStroke("control N"), "new");
 				map.put(KeyStroke.getKeyStroke("control O"), "open");
 				map.put(KeyStroke.getKeyStroke("control Z"), "undo");
 				map.put(KeyStroke.getKeyStroke("control Y"), "redo");
 				map.put(KeyStroke.getKeyStroke("control shift V"), "selectVertices");
 				map.put(KeyStroke.getKeyStroke("control shift E"), "selectEdges");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandKey), "printNet");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandKey | InputEvent.SHIFT_DOWN_MASK), "printNet");
 //				map.put(KeyStroke.getKeyStroke("control P"), "printNet");
 				map.put(KeyStroke.getKeyStroke("DELETE"), "delete");
 				

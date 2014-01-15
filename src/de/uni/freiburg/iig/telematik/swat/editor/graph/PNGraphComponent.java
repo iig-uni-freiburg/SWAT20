@@ -147,7 +147,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	    public synchronized void keyPressed(KeyEvent e) {
 	    	int dx = 0;
         	int dy = 0;
-        	System.out.println(e.getKeyCode() + "#code" + pressed);
+//        	System.out.println(e.getKeyCode() + "#code" + pressed);
 	        pressed.add(e.getKeyCode());
 	        if (pressed.size() > 1) {
 	        	
@@ -192,10 +192,10 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 						}
 					}
 	            }
-	        	if (pressed.contains(17) && centerX >0 && centerY>0){
-	        		System.out.println(centerX + "#" + centerY);
-				target = createNewNodeWithEdge(source, pnGraph, centerX, centerY);
-				graph.setSelectionCell(target);}
+//	        	if (pressed.contains(17) && centerX >0 && centerY>0){
+//	        		System.out.println(centerX + "#" + centerY);
+//				target = createNewNodeWithEdge(source, pnGraph, centerX, centerY);
+//				graph.setSelectionCell(target);}
 	        	if (pressed.contains(KeyEvent.BUTTON1_MASK)) {
 				    graph.moveCells(graph.getSelectionCells(), dx, dy);
 	        	}
@@ -268,7 +268,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 	    @Override
 	    public synchronized void keyReleased(KeyEvent e) {
-	    	System.out.println("remove" + e.getKeyCode());
+//	    	System.out.println("remove" + e.getKeyCode());
 	        pressed.remove(e.getKeyCode());
 	    }
 
