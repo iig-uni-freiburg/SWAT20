@@ -326,8 +326,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 		treeModel.insertNodeInto(createFields(name, PNComponent.PLACE, PNTreeNodeType.PLACE), placesNode, placesNode.getChildCount());
 	}
 
-	// CURRENTLY NOT IN USE
-
 	@Override
 	public void componentRemoved(PNComponent component, String name) {
 		DefaultMutableTreeNode comp = findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), name);
@@ -336,11 +334,15 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 	
 	public void selectNode(String name) {
 		DefaultMutableTreeNode node = findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), name);
-		if(node != null){
+		
+
+if(node != null){
 			PNTreeNode firstChild = (PNTreeNode) ((PNTreeNode) node).getChildAt(0);
 			TreePath propPath = new TreePath(firstChild.getPath());
-			collapsePath(propPath);
+			deselect(); //collapses all unfolded paths before currently selected node is expanded
 			setSelectionPath(new TreePath(node.getPath()));
+			collapsePath(propPath);
+
 		} else {
 			deselect();
 		}
