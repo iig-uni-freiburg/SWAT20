@@ -59,6 +59,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.MoveAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.NewNodeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PrintAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
@@ -69,6 +71,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphListener;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.PalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
@@ -308,18 +311,35 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 			if (condition == JComponent.WHEN_FOCUSED && map != null) {
 
 				int commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+				int commandAndShift = commandKey | InputEvent.SHIFT_DOWN_MASK;
 
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S,commandKey), "save");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S,commandKey | InputEvent.SHIFT_DOWN_MASK), "saveAs");
-				map.put(KeyStroke.getKeyStroke("control N"), "new");
-				map.put(KeyStroke.getKeyStroke("control O"), "open");
-				map.put(KeyStroke.getKeyStroke("control Z"), "undo");
-				map.put(KeyStroke.getKeyStroke("control Y"), "redo");
-				map.put(KeyStroke.getKeyStroke("control shift V"), "selectVertices");
-				map.put(KeyStroke.getKeyStroke("control shift E"), "selectEdges");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandKey | InputEvent.SHIFT_DOWN_MASK), "printNet");
-//				map.put(KeyStroke.getKeyStroke("control P"), "printNet");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S,commandAndShift), "saveAs");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, commandKey), "new");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_O, commandKey), "open");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,commandKey), "undo");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,commandKey), "redo");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, commandAndShift), "selectVertices");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, commandAndShift), "selectEdges");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandKey), "printNet");
 				map.put(KeyStroke.getKeyStroke("DELETE"), "delete");
+				
+				
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,commandKey), "newNodeLeft");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,commandKey), "newNodeRight");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,commandKey), "newNodeDown");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,commandKey), "newNodeUp");
+				
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0), "moveLeft");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0), "moveRight");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0), "moveDown");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0), "moveUp");
+				
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,InputEvent.SHIFT_DOWN_MASK), "bigMoveLeft");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,InputEvent.SHIFT_DOWN_MASK), "bigMoveRight");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,InputEvent.SHIFT_DOWN_MASK), "bigMoveDown");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,InputEvent.SHIFT_DOWN_MASK), "bigMoveUp");
+				
 				
 				
 
@@ -335,6 +355,24 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 				map.put("undo", new UndoAction(PNEditor.this));
 				map.put("redo", new RedoAction(PNEditor.this));
 				map.put("printNet", new PrintAction(PNEditor.this));
+				
+				int offset = EditorProperties.getInstance().getDefaultPlaceSize()*4;
+				map.put("newNodeLeft", new NewNodeAction(PNEditor.this,-offset ,0));
+				map.put("newNodeRight", new NewNodeAction(PNEditor.this,offset,0));
+				map.put("newNodeDown", new NewNodeAction(PNEditor.this,0,offset));
+				map.put("newNodeUp", new NewNodeAction(PNEditor.this,0,-offset));
+
+				map.put("moveLeft", new MoveAction(PNEditor.this,-1,0));
+				map.put("moveRight", new MoveAction(PNEditor.this,1,0));
+				map.put("moveDown", new MoveAction(PNEditor.this,0,1));
+				map.put("moveUp", new MoveAction(PNEditor.this,0,-1));
+
+				int movingGap = 5 ;
+				map.put("bigMoveLeft", new MoveAction(PNEditor.this,-movingGap,0));
+				map.put("bigMoveRight", new MoveAction(PNEditor.this,movingGap,0));
+				map.put("bigMoveDown", new MoveAction(PNEditor.this,0,movingGap));
+				map.put("bigMoveUp", new MoveAction(PNEditor.this,0,-movingGap));
+
 			} catch (Exception e) {
 				// Cannot happen, since this is not null
 				e.printStackTrace();
