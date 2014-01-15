@@ -305,12 +305,12 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		protected InputMap getInputMap(int condition) {
 			InputMap map = super.getInputMap(condition);
 			if (condition == JComponent.WHEN_FOCUSED && map != null) {
-				String osName = System.getProperty("os.name").toLowerCase();
-				boolean isMacOs = osName.startsWith("mac os x");
+//				String osName = System.getProperty("os.name").toLowerCase();
+//				boolean isMacOs = osName.startsWith("mac os x");
 int commandKey;
-if(isMacOs)
+//if(isMacOs)
 commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-else commandKey = KeyEvent.CTRL_DOWN_MASK;
+//else commandKey = KeyEvent.CTRL_DOWN_MASK;
 
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S,commandKey), "save");
 				map.put(KeyStroke.getKeyStroke("control shift S"), "saveAs");
@@ -320,7 +320,8 @@ else commandKey = KeyEvent.CTRL_DOWN_MASK;
 				map.put(KeyStroke.getKeyStroke("control Y"), "redo");
 				map.put(KeyStroke.getKeyStroke("control shift V"), "selectVertices");
 				map.put(KeyStroke.getKeyStroke("control shift E"), "selectEdges");
-				map.put(KeyStroke.getKeyStroke("control P"), "printNet");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandKey), "printNet");
+//				map.put(KeyStroke.getKeyStroke("control P"), "printNet");
 				map.put(KeyStroke.getKeyStroke("DELETE"), "delete");
 				
 				
