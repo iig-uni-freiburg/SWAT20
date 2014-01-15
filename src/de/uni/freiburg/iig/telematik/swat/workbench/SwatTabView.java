@@ -37,6 +37,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
+import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
@@ -126,6 +127,8 @@ public class SwatTabView extends JTabbedPane {
 			case LOG_FILE:
 				addLogFile(node);
 				break;
+			case XML_FILE:
+				addXmlFile(node);
 
 			}
 			
@@ -134,6 +137,15 @@ public class SwatTabView extends JTabbedPane {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
+	}
+
+	private void addXmlFile(SwatTreeNode node) {
+		// node holds XMLFileView
+		// Change it all to only use SwatComponent?
+		addTab(node.getDisplayName(), ((XMLFileViewer) node.getUserObject()).getMainComponent());
+		setSelectedIndex(getTabCount() - 1);
+		openedSwatComponents.put((XMLFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
+
 	}
 
 	private void addNewTab(SwatComponent swatComponent) {

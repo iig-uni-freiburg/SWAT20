@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
+import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -25,6 +26,7 @@ public class SwatComponents {
 	@SuppressWarnings("rawtypes")
 	private Map<AbstractGraphicalPN, File> nets = new HashMap<AbstractGraphicalPN, File>();
 	private Map<LogFileViewer, File> logs = new HashMap<LogFileViewer, File>();
+	private Map<XMLFileViewer, File> xml = new HashMap<XMLFileViewer, File>();
 	
 	private SwatComponents(){
 		try {
@@ -38,6 +40,7 @@ public class SwatComponents {
 	public void reload() throws ParameterException {
 		nets.clear();
 		logs.clear();
+		xml.clear();
 		loadSwatComponents();
 	}
 
@@ -93,6 +96,24 @@ public class SwatComponents {
 			}
 		}
 
+		// 3. Load xml files for Lola
+		MessageDialog.getInstance().addMessage("2. Searching for xml files:");
+		List<File> xmlFiles = null;
+		try {
+			xmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "xml");
+		} catch (Exception e) {
+			throw new ParameterException("Cannot access working directory.\nReason: " + e.getMessage());
+		}
+		for (File xmlFile : xmlFiles) {
+			try {
+				xml.put(new XMLFileViewer(xmlFile), xmlFile);
+				MessageDialog.getInstance().addMessage("Done.");
+			} catch (IOException e) {
+				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
 	}
 	
 	
@@ -103,6 +124,10 @@ public class SwatComponents {
 	
 	public Set<LogFileViewer> getLogFiles() {
 		return logs.keySet();
+	}
+
+	public Set<XMLFileViewer> getXMLFiles() {
+		return xml.keySet();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

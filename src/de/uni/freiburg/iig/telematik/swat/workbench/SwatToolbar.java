@@ -1,11 +1,13 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -22,6 +24,7 @@ import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
@@ -54,6 +57,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private SwatTabView tabView = null;
 	private SwatTreeView treeView = null;
 
+	private List<Component> standardItems = new LinkedList<Component>();
+
 	public SwatToolbar(SwatTabView tabView, SwatTreeView treeView) {
 		this.tabView = tabView;
 		this.treeView = treeView;
@@ -62,9 +67,12 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		setRollover(true);
 
 		//HACK!: To show PNEditor-Icons (they seem to be bigger) 
-		setPreferredSize(new Dimension(200, ICON_SIZE + 30));
+		//setPreferredSize(new Dimension(200, ICON_SIZE + 30));
 		
+		setLayout(new WrapLayout(3));
+
 		createButtons();
+		addStandardButtons();
 
 		try {
 			SwatState.getInstance().addListener(this);
@@ -81,20 +89,28 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	}
 
+	private void addStandardButtons() {
+		for (Component component : standardItems) {
+			add(component);
+		}
+		addSeparator();
+	}
+
 	private void createButtons() {
-		add(new SwatToolbarButton(ToolbarButtonType.SAVE));
-		add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
-		add(getSwitchworkingDirectoryButton());
-		add(getNewPTNetButton());
-		add(getNewCPNButton());
-		add(getNewIFNetButton());
-		add(getEditRadioButton());
-		add(getAnalysisRadioButton());
+		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE));
+		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
+		standardItems.add(getSwitchworkingDirectoryButton());
+		standardItems.add(getNewPTNetButton());
+		standardItems.add(getNewCPNButton());
+		standardItems.add(getNewIFNetButton());
+		standardItems.add(getEditRadioButton());
+		standardItems.add(getAnalysisRadioButton());
 		
 		ButtonGroup group = new ButtonGroup();
 		group.add(getAnalysisRadioButton());
 		group.add(getEditRadioButton());
 		getEditRadioButton().setSelected(true);
+		//addSeparator();
 	}
 	
 	private JRadioButton getAnalysisRadioButton(){
@@ -260,7 +276,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	public void clear() {
 		this.removeAll();
-		createButtons();
+		//createButtons();
+		addStandardButtons();
 	}
 
 

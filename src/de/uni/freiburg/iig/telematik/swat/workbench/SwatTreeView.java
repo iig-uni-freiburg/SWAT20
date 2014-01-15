@@ -10,6 +10,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
@@ -52,6 +53,10 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 		// LogFiles
 		for (LogFileViewer logFileViewer : SwatComponents.getInstance().getLogFiles()) {
 			root.add(new SwatTreeNode(logFileViewer, SwatComponentType.LOG_FILE));
+		}
+
+		for (XMLFileViewer xmlFileViewer : SwatComponents.getInstance().getXMLFiles()) {
+			root.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE));
 		}
 	}
 
@@ -96,8 +101,12 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 				displayName = SwatComponents.getInstance().getFileName((AbstractGraphicalPN) getUserObject()); 
 				break;
 			case LOG_FILE:
-				// userObject if of instance LogFileViewer
+				// userObject is of instance LogFileViewer
 				displayName = ((LogFileViewer) this.getUserObject()).getName();
+				break;
+			case XML_FILE:
+				displayName = ((XMLFileViewer) this.getUserObject()).getName();
+
 			}
 		}
 		
