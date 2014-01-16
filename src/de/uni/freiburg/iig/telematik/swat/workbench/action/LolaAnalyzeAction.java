@@ -37,10 +37,8 @@ public class LolaAnalyzeAction extends AbstractAction {
 			try {
 				lola.analyze();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// TODO: implement system call to LoLA
 		} catch (ParameterException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -144,7 +144,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private JButton getNewPTNetButton(){
 		//TODO Adjust Icon
-		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_PT);
 		newButton.addActionListener(new createNewAction());
 		//		newButton.addActionListener(new ActionListener() {
 		//			@Override
@@ -175,7 +175,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private JButton getNewCPNButton(){
 		//TODO Adjust Icon
-		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_CPN);
 		newButton.addActionListener(new createNewAction());
 		//		newButton.addActionListener(new ActionListener() {
 		//			
@@ -192,7 +192,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private JButton getNewIFNetButton(){
-		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_IF);
 		newButton.addActionListener(new createNewAction());
 		//		newButton.addActionListener(new ActionListener() {
 		//			
@@ -308,13 +308,19 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case SWITCH_DIRECTORY:
 				addActionListener(new SwitchWorkingDirectoryAction(treeView, tabView));
 				break;
+			case NEW_CPN:
+				break;
+			case NEW_PT:
+				break;
+			case NEW_IF:
+				break;
 			}
 		}
 		
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF;
 	}
 
 	// class openActionListener implements ActionListener {
