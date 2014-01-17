@@ -30,6 +30,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.FontItalicStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontLineThroughStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontRotationAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontUnderlineStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.LayoutAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineShapeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStrokeColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.LineStyleAction;
@@ -44,87 +45,45 @@ public class EditorPopupMenu extends JPopupMenu {
 	private static final long serialVersionUID = -2983257974918330746L;
 
 	public EditorPopupMenu(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
-		System.out.println("hey");
 		Validate.notNull(pnEditor);
 		boolean selected = !pnEditor.getGraphComponent().getGraph().isSelectionEmpty();
 
 		
-		 addSeparator();
-		 add(new CutAction(pnEditor, TransferHandler.getCutAction())).setEnabled(selected);
-		 add(new CopyAction(pnEditor, TransferHandler.getCopyAction())).setEnabled(selected);
-		 add(new PasteAction(pnEditor, TransferHandler.getPasteAction()));
-		
-		 addSeparator();
-		 add(new DeleteAction(pnEditor, TransferHandler.getPasteAction())).setEnabled(selected);
-		
-		 addSeparator();
-		 // Creates the format menu
-//		 JMenu menu = (JMenu) add(new JMenu(mxResources.get("format")));
-//
-//		 EditorMenuBar.populateFormatMenu(menu, editor);
-//
-//		 // Creates the shape menu
-//		 menu = (JMenu) add(new JMenu(mxResources.get("shape")));
-//
-//		 EditorMenuBar.populateShapeMenu(menu, editor);
-//
-//		 addSeparator();
-//
-//		 add(
-//		 editor.bind(mxResources.get("edit"), mxGraphActions
-//		 		.getEditAction())).setEnabled(selected);
-
-		 addSeparator();
-add(new SelectAction("vertices"));
-add(new SelectAction("edges"));
-
-
-		 addSeparator();
-add(new SelectAction("selectAll"));
-
-
 		
 		 JMenu submenu = (JMenu) add(new JMenu("Layout"));
 		
-		 submenu.add(pnEditor.graphLayout("verticalHierarchical",
+		 submenu.add(new LayoutAction(pnEditor, "verticalHierarchical",
+		 false));
+		 submenu.add(new LayoutAction(pnEditor, "horizontalHierarchical",
+		 false));
+
+		 submenu.addSeparator();
+		
+		 submenu.add(new LayoutAction(pnEditor, "verticalStack",
+		 false));
+		 submenu.add(new LayoutAction(pnEditor, "horizontalStack",
+		 false));
+		
+		 submenu.addSeparator();
+		
+		 submenu.add(new LayoutAction(pnEditor, "verticalTree",
 		 true));
-		 submenu.add(pnEditor.graphLayout("horizontalHierarchical",
+		 submenu.add(new LayoutAction(pnEditor, "horizontalTree",
 		 true));
 		
 		 submenu.addSeparator();
 		
-		 submenu.add(pnEditor.graphLayout("verticalPartition",
+		 submenu.add(new LayoutAction(pnEditor, "placeEdgeLabels",
 		 false));
-		 submenu.add(pnEditor.graphLayout("horizontalPartition",
+		 submenu.add(new LayoutAction(pnEditor, "parallelEdges",
 		 false));
 		
 		 submenu.addSeparator();
-//		
-//		 submenu.add(pnEditor.bind("verticalStack",pnEditor.graphLayout("verticalStack",
-//		 false)));
-//		 submenu.add(pnEditor.bind("horizontalStack",pnEditor.graphLayout("horizontalStack",
-//		 false)));
-//		
-//		 submenu.addSeparator();
-//		
-//		 submenu.add(pnEditor.bind("verticalTree",pnEditor.graphLayout("verticalTree",
-//		 true)));
-//		 submenu.add(pnEditor.bind("horizontalTree",pnEditor.graphLayout("horizontalTree",
-//		 true)));
-//		
-//		 submenu.addSeparator();
-//		
-//		 submenu.add(pnEditor.bind("placeEdgeLabels",pnEditor.graphLayout("placeEdgeLabels",
-//		 false)));
-//		 submenu.add(pnEditor.bind("parallelEdges",pnEditor.graphLayout("parallelEdges",
-//		 false)));
-//		
-//		 submenu.addSeparator();
-//		
-//		 submenu.add(pnEditor.bind("organicLayout",pnEditor.graphLayout("organicLayout",
-//		 true)));
-//		 submenu.add(pnEditor.bind("circleLayout",pnEditor.graphLayout("circleLayout",
-//		 true)));
+		
+		 submenu.add(new LayoutAction(pnEditor, "organicLayout",
+		 true));
+		 submenu.add(new LayoutAction(pnEditor, "circleLayout",
+		 true));
 		 
 	
 

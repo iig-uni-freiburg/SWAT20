@@ -394,13 +394,13 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	 * @return an action that executes the specified layout
 	 */
 	@SuppressWarnings("serial")
-	public Action graphLayout(final String key, boolean animate) {
+	public Action graphLayout(String key, boolean animate) {
 		final mxIGraphLayout layout = createLayout(key, animate);
 
 		if (layout != null) {
 			return new AbstractAction(mxResources.get(key)) {
 				public void actionPerformed(ActionEvent e) {
-					final mxGraph graph = graphComponent.getGraph();
+					mxGraph graph = graphComponent.getGraph();
 					Object cell = graph.getSelectionCell();
 
 					if (cell == null || graph.getModel().getChildCount(cell) == 0) {
@@ -418,7 +418,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 						morph.addListener(mxEvent.DONE, new mxIEventListener() {
 
 							public void invoke(Object sender, mxEventObject evt) {
-								graph.getModel().endUpdate();
+								getGraph().getModel().endUpdate();
 //								getGraph().updatePositionPropertiesFromCells();
 							}
 
