@@ -1186,15 +1186,17 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 						if (arcGraphics != null) {
 							Vector<Position> vector = new Vector<Position>();
 							List<mxPoint> points = geo.getPoints();
-							if (points.size() > 0) {
-								for (mxPoint p : points) {
-									vector.add(new Position(p.getX(), p.getY()));
-								}
-								try {
-									arcGraphics.setPositions(vector);
-								} catch (ParameterException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+							if(points != null){
+								if (points.size() > 0) {
+									for (mxPoint p : points) {
+										vector.add(new Position(p.getX(), p.getY()));
+									}
+									try {
+										arcGraphics.setPositions(vector);
+									} catch (ParameterException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 								}
 							}
 						}
@@ -1212,10 +1214,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 					notifyComponentsSelected();
 				}
 			}
-			if (evt.getName().equals(mxEvent.RESIZE_CELLS)) {
-				ensureValidPlaceSize();
-			}
 
+		}
+		
+		if (evt.getName().equals(mxEvent.RESIZE_CELLS)) {
+			ensureValidPlaceSize();
 		}
 	}
 

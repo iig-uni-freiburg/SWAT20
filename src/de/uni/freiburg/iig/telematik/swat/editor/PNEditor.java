@@ -270,7 +270,6 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 	public void setFileReference(File fileReference) throws ParameterException {
 		Validate.notNull(fileReference);
-		Validate.noDirectory(fileReference);
 		this.fileReference = fileReference;
 	}
 

@@ -178,12 +178,13 @@ public class SwatTabView extends JTabbedPane {
 		openedSwatComponents.clear();
 	}
 	
-	/** make Tab with close button **/
-	public void addTab(String title, Component component) {
-		super.addTab(title, component);
-		//Uncomment to make buttons removable
-		//this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(title));
-	}
+//	/** make Tab with close button **/
+//	@Override
+//	public void addTab(String title, Component component) {
+//		super.addTab(title, component);
+//		//Uncomment to make buttons removable
+//		//this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(title));
+//	}
 	
 	public class SwatTabViewAdapter implements ChangeListener {
 
