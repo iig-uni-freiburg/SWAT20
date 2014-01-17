@@ -23,6 +23,8 @@ import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
@@ -143,9 +145,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	
 	private JButton getNewPTNetButton(){
-		//TODO Adjust Icon
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_PT);
-		newButton.addActionListener(new createNewAction());
+		newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_PT));
 		//		newButton.addActionListener(new ActionListener() {
 		//			@Override
 		//			public void actionPerformed(ActionEvent e) {
@@ -176,7 +177,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private JButton getNewCPNButton(){
 		//TODO Adjust Icon
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_CPN);
-		newButton.addActionListener(new createNewAction());
+		newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_CPN));
 		//		newButton.addActionListener(new ActionListener() {
 		//			
 		//			@Override
@@ -193,7 +194,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private JButton getNewIFNetButton(){
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_IF);
-		newButton.addActionListener(new createNewAction());
+		newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_IF));
 		//		newButton.addActionListener(new ActionListener() {
 		//			
 		//			@Override
@@ -358,17 +359,41 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	class createNewAction implements ActionListener {
 
+		private ToolbarButtonType type;
+
+		public createNewAction(SwatToolbar.ToolbarButtonType type) {
+			this.type = type;
+		}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
+			String netName = requestFileName("Please choose a name for the new net:", "New Petri-Net");
 		if(netName != null){
 			//IFNet newNet = new IFNet();
+				//AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> newNet = null;
 			try {
 				// Test new file name
 				File file = getAbsolutePathToWorkingDir(netName);
-				GraphicalPTNet newNet = new GraphicalPTNet();
-				SwatComponents.getInstance().putIntoSwatComponent(newNet, file);
+					switch (type) {
+					case NEW_CPN:
+						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalCPN(), file);
+						//newNet = new GraphicalCPN();
+						break;
+					case NEW_PT:
+						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalPTNet(), file);
+						//newNet = new GraphicalPTNet();
+						break;
+					case NEW_IF:
+						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalIFNet(), file);
+						//newNet = new GraphicalIFNet();
+						break;
+
+					default:
+						break;
+					}
+					//GraphicalPTNet 
+					//SwatComponents.getInstance().putIntoSwatComponent(newNet, file);
 				//Inform Tree View of changed components
 				treeView.removeAndUpdateSwatComponents();
 			} catch (PropertyException e1) {

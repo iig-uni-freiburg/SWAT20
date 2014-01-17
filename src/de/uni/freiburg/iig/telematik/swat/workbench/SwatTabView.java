@@ -35,6 +35,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.CPNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
@@ -90,9 +92,9 @@ public class SwatTabView extends JTabbedPane {
 		if(petriNet instanceof GraphicalPTNet){
 			addTab(tabName, new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet)));
 		} else if(petriNet instanceof GraphicalCPN){
-			
+			addTab(tabName, new CPNEditor((GraphicalCPN) petriNet, SwatComponents.getInstance().getFile(petriNet)));
 		} else if(petriNet instanceof GraphicalIFNet){
-			
+			addTab(tabName, new IFNetEditor((GraphicalIFNet) petriNet, SwatComponents.getInstance().getFile(petriNet)));
 		}
 		//openedSwatComponents.put(petriNet, getComponentAt(getComponentCount()-1));
 		openedSwatComponents.put(petriNet, getComponentAt(getTabCount() - 1));

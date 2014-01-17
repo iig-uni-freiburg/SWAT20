@@ -232,23 +232,10 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	@Override
 	public void componentActivated(SwatTreeNode node) {
 		SwatComponent swatComponent = null;
-		// Test if SwatTreeNode has valid SwatComponent in it
-		//		try {
-		//			//getSwatComponent(node);
-		//		} catch (ParameterException e) {
-		//			JOptionPane.showMessageDialog(this, "Cannot convert selected tree node to swat component", "SWAT Exception", JOptionPane.ERROR_MESSAGE);
-		//			return;
-		//		}
 		if (!getTabView().containsComponent(node)) {
-			System.out.println("tab view contains element");
+			System.out.println("tab view does not contain element");
 			// add SwatTreeNode to tab and get its swatComponent to make its propertyView
 			swatComponent = getTabView().addNewTab(node);
-			getPropertiesPanel().removeAll();
-			//JComponent propertyView = swatComponent.getPropertiesView();
-
-//			ScrollPane scrollPane = new ScrollPane();
-//			scrollPane.add(propertyView);
-//			getPropertiesPanel().add(scrollPane);
 			getPropertiesPanel().removeAll();
 			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 			pack();
@@ -326,10 +313,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	/** check if a PNEditor got activated and update Toolbar if needed **/
 	private void updateToolbar() {
 		if (getTabView().getSelectedComponent() instanceof PNEditor) {
-			System.out.println("This is a PNEditor");
+			try {
 			PNEditor editor = (PNEditor) getTabView().getSelectedComponent();
 			getSwatToolbar().clear();
 			getSwatToolbar().add(editor.getEditorToolbar());
+			} catch (Exception e) {
+
+			}
 		} else {
 			//remove Toolbar-Addons
 			getSwatToolbar().clear();
