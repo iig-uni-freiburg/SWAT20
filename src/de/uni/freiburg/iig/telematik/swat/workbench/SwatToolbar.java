@@ -23,9 +23,11 @@ import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.parser.graphic.PNParserDialog;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
@@ -98,6 +100,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		addSeparator();
 	}
 
+	/** Put Buttons into linkedList {@link #standardItems} for later use **/
 	private void createButtons() {
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
@@ -105,6 +108,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(getNewPTNetButton());
 		standardItems.add(getNewCPNButton());
 		standardItems.add(getNewIFNetButton());
+		standardItems.add(getImportButon());
 		standardItems.add(getEditRadioButton());
 		standardItems.add(getAnalysisRadioButton());
 		
@@ -112,9 +116,13 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		group.add(getAnalysisRadioButton());
 		group.add(getEditRadioButton());
 		getEditRadioButton().setSelected(true);
-		//addSeparator();
 	}
 	
+	private Component getImportButon() {
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.IMPORT);
+		return newButton;
+	}
+
 	private JRadioButton getAnalysisRadioButton(){
 		if(rdbtnAnalysis == null){
 			rdbtnAnalysis = new JRadioButton("Analyse");
@@ -146,84 +154,19 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private JButton getNewPTNetButton(){
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_PT);
-		newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_PT));
-		//		newButton.addActionListener(new ActionListener() {
-		//			@Override
-		//			public void actionPerformed(ActionEvent e) {
-		//				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
-		//				if(netName != null){
-		//					try {
-		//						File file = getAbsolutePathToWorkingDir(netName);
-		//						PTNet newNet = new PTNet();
-		//						AbstractGraphicalPTNet<?, ?, ?, ?, ?, ?> test;
-		//					} catch (PropertyException e1) {
-		//						// TODO Auto-generated catch block
-		//						e1.printStackTrace();
-		//					} catch (ParameterException e1) {
-		//						// TODO Auto-generated catch block
-		//						e1.printStackTrace();
-		//					} catch (IOException e1) {
-		//						// TODO Auto-generated catch block
-		//						e1.printStackTrace();
-		//					}
-		//
-		//					//TODO Put net in components
-		//				}
-		//			}
-		//		});
+		//newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_PT));
+
 		return newButton;
 	}
 	
 	private JButton getNewCPNButton(){
-		//TODO Adjust Icon
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_CPN);
-		newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_CPN));
-		//		newButton.addActionListener(new ActionListener() {
-		//			
-		//			@Override
-		//			public void actionPerformed(ActionEvent e) {
-		//				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
-		//				if(netName != null){
-		//					CPN newNet = new CPN();
-		//					//TODO Put net in components
-		//				}
-		//			}
-		//		});
+		//newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_CPN));
 		return newButton;
 	}
 	
 	private JButton getNewIFNetButton(){
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_IF);
-		newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_IF));
-		//		newButton.addActionListener(new ActionListener() {
-		//			
-		//			@Override
-		//			public void actionPerformed(ActionEvent e) {
-		//				String netName = requestFileName("Please choose a name for the new net:", "New P/T-Net");
-		//				if(netName != null){
-		//					//IFNet newNet = new IFNet();
-		//					try {
-		//						// Test new file name
-		//						File file = getAbsolutePathToWorkingDir(netName);
-		//						GraphicalPTNet newNet = new GraphicalPTNet();
-		//						SwatComponents.getInstance().putIntoSwatComponent(newNet, file);
-		//						//Inform Tree View of changed components
-		//						treeView.removeAndUpdateSwatComponents();
-		//					} catch (PropertyException e1) {
-		//						// TODO Auto-generated catch block
-		//						e1.printStackTrace();
-		//					} catch (ParameterException e1) {
-		//						// TODO Auto-generated catch block
-		//						e1.printStackTrace();
-		//					} catch (IOException e1) {
-		//						// TODO Auto-generated catch block
-		//						e1.printStackTrace();
-		//					}
-		//
-		//				}
-		//			}
-		//		});
-		newButton.setToolTipText("Create new IFnet");
 		return newButton;
 	}
 	
@@ -283,6 +226,32 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 
 	
+	private final class ImportAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = PNParserDialog.showPetriNetDialog(SwingUtilities
+					.getWindowAncestor(SwatToolbar.this));
+			if (net == null)
+				return;
+			String fileName = requestFileName("Name for imported net?", "New name?");
+			try {
+				File file = getAbsolutePathToWorkingDir(fileName);
+				SwatComponents.getInstance().putIntoSwatComponent(net, file);
+				treeView.removeAndUpdateSwatComponents();
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
 	private class SwatToolbarButton extends JButton{
 
 		private static final long serialVersionUID = 9184814296174960480L;
@@ -295,6 +264,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			setBorderPainted(false);
 			switch(type){
 			case IMPORT:
+				setToolTipText("Import PT-Net from filesystem");
+				addActionListener(new ImportAction());
 				break;
 			case NEW:
 				break;
@@ -310,10 +281,16 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				addActionListener(new SwitchWorkingDirectoryAction(treeView, tabView));
 				break;
 			case NEW_CPN:
+				setToolTipText("Create new CPnet");
+				addActionListener(new createNewAction(type));
 				break;
 			case NEW_PT:
+				setToolTipText("Create new PTnet");
+				addActionListener(new createNewAction(type));
 				break;
 			case NEW_IF:
+				setToolTipText("Create new IFnet");
+				addActionListener(new createNewAction(type));
 				break;
 			}
 		}
