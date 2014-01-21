@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.prism.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
@@ -78,13 +79,22 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		// ImageIcon(getClass().getResource("../resources/addFile.png")));
 		JMenuItem exit = getExitEntry();
 
+		JMenuItem importEntry = getImportEntry();
+
 		fileMenu.add(open);
 		fileMenu.add(saveAll);
 		fileMenu.add(save);
-		// fileMenu.add(addFile);
+		fileMenu.add(importEntry);
+		fileMenu.addSeparator();
 		fileMenu.add(exit);
 
 		return fileMenu;
+	}
+
+	private JMenuItem getImportEntry() {
+		JMenuItem importEntry = new JMenuItem("Import");
+		importEntry.addActionListener(new ImportAction(treeView));
+		return importEntry;
 	}
 
 	private JMenuItem getSaveEntry() {

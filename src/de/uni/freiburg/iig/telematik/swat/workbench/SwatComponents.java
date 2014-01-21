@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
@@ -149,6 +150,11 @@ public class SwatComponents {
 		return nets.get(net);
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public void changeFileforNet(AbstractGraphicalPN net, File newFile) {
+		nets.put(net, newFile);
+	}
+
 	public boolean containsNetWithID(String name){
 		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> pn : getPetriNets()) {
 			if (name.equals(pn.getPetriNet().getName()))
@@ -182,6 +188,34 @@ public class SwatComponents {
 			}
 		}
 
+	}
+
+	/**
+	 * get File that belongs to currentComponent
+	 * 
+	 * @throws ParameterException
+	 *             if not found
+	 **/
+	public File getFile(SwatComponent currentComponent) throws ParameterException {
+		// Traverse all lists
+		File file;
+		//nets
+		if (currentComponent instanceof PNEditor) {
+		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> pnet : nets.keySet()) {
+			if (pnet == ((PNEditor) currentComponent).getNetContainer())
+				return nets.get(pnet);
+		}}
+		//xml
+		for (XMLFileViewer xmlFile:xml.keySet()){
+			if (xmlFile == currentComponent)
+				return xml.get(xmlFile);
+			}
+		//mnl Logs
+		for (LogFileViewer log : logs.keySet()) {
+			if (log == currentComponent)
+				return logs.get(log);
+		}
+		throw new ParameterException("not a valid SwatComponent");
 	}
 
 }

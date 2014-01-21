@@ -23,13 +23,13 @@ import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.sepia.parser.graphic.PNParserDialog;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
@@ -109,6 +109,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(getNewCPNButton());
 		standardItems.add(getNewIFNetButton());
 		standardItems.add(getImportButon());
+		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		standardItems.add(getEditRadioButton());
 		standardItems.add(getAnalysisRadioButton());
 		
@@ -226,31 +227,31 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 
 	
-	private final class ImportAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = PNParserDialog.showPetriNetDialog(SwingUtilities
-					.getWindowAncestor(SwatToolbar.this));
-			if (net == null)
-				return;
-			String fileName = requestFileName("Name for imported net?", "New name?");
-			try {
-				File file = getAbsolutePathToWorkingDir(fileName);
-				SwatComponents.getInstance().putIntoSwatComponent(net, file);
-				treeView.removeAndUpdateSwatComponents();
-			} catch (PropertyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-	}
+	//	public class ImportAction implements ActionListener {
+	//		@Override
+	//		public void actionPerformed(ActionEvent arg0) {
+	//			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = PNParserDialog.showPetriNetDialog(SwingUtilities
+	//					.getWindowAncestor(SwatToolbar.this));
+	//			if (net == null)
+	//				return;
+	//			String fileName = requestFileName("Name for imported net?", "New name?");
+	//			try {
+	//				File file = getAbsolutePathToWorkingDir(fileName);
+	//				SwatComponents.getInstance().putIntoSwatComponent(net, file);
+	//				treeView.removeAndUpdateSwatComponents();
+	//			} catch (PropertyException e) {
+	//				// TODO Auto-generated catch block
+	//				e.printStackTrace();
+	//			} catch (ParameterException e) {
+	//				// TODO Auto-generated catch block
+	//				e.printStackTrace();
+	//			} catch (IOException e) {
+	//				// TODO Auto-generated catch block
+	//				e.printStackTrace();
+	//			}
+	//
+	//		}
+	//	}
 
 	private class SwatToolbarButton extends JButton{
 
@@ -265,7 +266,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			switch(type){
 			case IMPORT:
 				setToolTipText("Import PT-Net from filesystem");
-				addActionListener(new ImportAction());
+				addActionListener(new ImportAction(treeView));
 				break;
 			case NEW:
 				break;
@@ -292,13 +293,16 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				setToolTipText("Create new IFnet");
 				addActionListener(new createNewAction(type));
 				break;
+			case RENAME:
+				setToolTipText("Rename current net");
+				addActionListener(new RenameAction(tabView, treeView));
 			}
 		}
 		
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME;
 	}
 
 	// class openActionListener implements ActionListener {
