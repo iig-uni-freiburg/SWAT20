@@ -138,7 +138,6 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 			if (object instanceof PNGraphCell) {
 				cell = (PNGraphCell) object;
 				PNGraphCell newCell = null;
-
 				switch (cell.getType()) {
 				case PLACE:
 					try {	
@@ -149,7 +148,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 								NodeGraphics nodeGraphics = new NodeGraphics();
 								AnnotationGraphics annotationGraphics = new AnnotationGraphics();
 								Utils.createNodeGraphicsFromStyle(cell.getStyle(), nodeGraphics, annotationGraphics);
-								graph.addGraphicalInfoToPNPlace(new mxPoint(cell.getGeometry().getCenterX() + 10, cell.getGeometry().getCenterY() + 10), place, nodeGraphics, annotationGraphics);
+								graph.addGraphicalInfoToPNPlace(new mxPoint(cell.getGeometry().getCenterX() +dx, cell.getGeometry().getCenterY() + dy), place, nodeGraphics, annotationGraphics);
 								newCell = graph.insertPNPlace(place, nodeGraphics, annotationGraphics);
 							}
 							
@@ -170,7 +169,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 							NodeGraphics nodeGraphics = new NodeGraphics();
 							AnnotationGraphics annotationGraphics = new AnnotationGraphics();
 							Utils.createNodeGraphicsFromStyle(cell.getStyle(), nodeGraphics, annotationGraphics);
-							graph.addGraphicalInfoToPNTransition(new mxPoint(cell.getGeometry().getCenterX() + 10, cell.getGeometry().getCenterY() + 10), transition, nodeGraphics, annotationGraphics);
+							graph.addGraphicalInfoToPNTransition(new mxPoint(cell.getGeometry().getCenterX() +  dx, cell.getGeometry().getCenterY()  + dy), transition, nodeGraphics, annotationGraphics);
 							newCell = graph.insertPNTransition(transition, nodeGraphics, annotationGraphics);
 						}
 					}
@@ -187,7 +186,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 						sourceCell = temporaryMapping.get(sourceCell.getId());
 						PNGraphCell targetCell = (PNGraphCell) cell.getTarget();
 						targetCell = temporaryMapping.get(targetCell.getId());
-
+						if(sourceCell!=null && targetCell != null){
 						if (sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION) {
 								relation = graph.getNetContainer().getPetriNet().addFlowRelationPT(sourceCell.getId(), targetCell.getId());
 						} else if (sourceCell.getType() == PNComponent.TRANSITION && targetCell.getType() == PNComponent.PLACE) {
@@ -199,9 +198,8 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 						Utils.createArcGraphicsFromStyle(cell.getStyle(),arcGraphics, annotationGraphics);
 					
 			
-						if(sourceCell!=null && targetCell != null)
 					newCell = graph.insertPNRelation(relation, arcGraphics, annotationGraphics);
-					
+						}
 					} catch (ParameterException e) {
 						e.printStackTrace();
 					}

@@ -92,6 +92,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this);
+		
+
+		
 		this.addListener(mxEvent.RESIZE_CELLS, this);
 
 		this.getModel().addListener(mxEvent.CHANGE, this);
@@ -1124,6 +1127,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
+		
+//		System.out.println("MX:" + evt.getName());
+//		if (evt.getName().equals(mxEvent.CHANGE)) {
+//			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
+//System.out.println(changes + "changes");
+//}
 
 		// if (evt.getName().equals(mxEvent.EXECUTE)){
 		// Object change = evt.getProperty("change");
@@ -1138,14 +1147,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		// if(change instanceof StyleChange)
 		// System.out.println(((StyleChange) change).getStyle());
 		// }
-System.out.println(evt.getName());
+System.out.println("EVENT:" + evt.getName());
 if (evt.getName().equals(mxEvent.UNDO)) {
 	mxUndoableEdit edit = (mxUndoableEdit) evt.getProperty("edit");
-//	System.out.println("#"+evt.getProperties() + "#" + edit.getChanges() );
+	System.out.println("#"+evt.getProperties() + "#" + edit.getChanges() );
 }
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
-
+System.out.println(changes + "changes");
 			if (changes != null) {
 				for (mxAtomicGraphModelChange change : changes) {
 					if(change instanceof mxTerminalChange){
@@ -1202,10 +1211,11 @@ if (evt.getName().equals(mxEvent.UNDO)) {
 					}
 					if (change instanceof mxChildChange) {
 						mxChildChange childChange = ((mxChildChange) change);
-
+System.out.println(childChange);
 						if (childChange.getChild() instanceof PNGraphCell) {
 							PNGraphCell cell = (PNGraphCell) ((mxChildChange) change).getChild();
 							if(childChange.getPrevious() == null){
+								
 							switch (cell.getType()) {
 							case PLACE:
 								if (!getNetContainer().getPetriNet().containsPlace(cell.getId())) {
@@ -1266,6 +1276,26 @@ if (evt.getName().equals(mxEvent.UNDO)) {
 							}
 									break;
 							}
+							}
+							else if(childChange.getPrevious() != null && childChange.getParent() == null){
+								try {
+								switch (cell.getType()) {
+								case ARC:								
+										removeFlowRelation(cell.getId());
+
+									break;
+								case PLACE:
+									removePlace(cell.getId());
+									break;
+								case TRANSITION:
+									removeTransition(cell.getId());
+									break;
+
+								}
+								} catch (ParameterException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							}
 						}
 					}

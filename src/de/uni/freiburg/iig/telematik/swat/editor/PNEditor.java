@@ -178,6 +178,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 			addGraphComponentListeners();
 			setUpUndo();
+
 		}
 		return graphComponent;
 	}
@@ -199,20 +200,34 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	}
 
 	private void setUpUndo() {
-		getGraph().getModel().addListener(mxEvent.CHANGE, changeTracker); // S.T.A.R.S.
+
+		
+		undoManager = new mxUndoManager();
+
+		// Do not change the scale and translation after files have been loaded
+		getGraph().setResetViewOnRootChange(false);
+
+		// Updates the modified flag if the graph model changes
+		getGraph().getModel().addListener(mxEvent.CHANGE, changeTracker);
+
+		// Adds the command history to the model and view
 		getGraph().getModel().addListener(mxEvent.UNDO, undoHandler);
 		getGraph().getView().addListener(mxEvent.UNDO, undoHandler);
 
-		mxIEventListener handler = new mxIEventListener() {
-			public void invoke(Object source, mxEventObject evt) {
-				List<mxUndoableChange> changes = ((mxUndoableEdit) evt.getProperty("edit")).getChanges();
-				getGraph().setSelectionCells(getGraph().getSelectionCellsForChanges(changes));
+		// Keeps the selection in sync with the command history
+		mxIEventListener undoHandler = new mxIEventListener()
+		{
+			public void invoke(Object source, mxEventObject evt)
+			{
+				List<mxUndoableChange> changes = ((mxUndoableEdit) evt
+						.getProperty("edit")).getChanges();
+				getGraph().setSelectionCells(getGraph()
+						.getSelectionCellsForChanges(changes));
 			}
 		};
-		undoManager = new mxUndoManager();
-		undoManager.addListener(mxEvent.UNDO, handler);
-		undoManager.addListener(mxEvent.REDO, handler);
 	}
+
+
 
 	@Override
 	public JComponent getMainComponent() {
