@@ -329,6 +329,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 	@Override
 	public void componentRemoved(PNComponent component, String name) {
 		DefaultMutableTreeNode comp = findTreeNodeByName((DefaultMutableTreeNode) getModel().getRoot(), name);
+		if(comp!= null)
 		treeModel.removeNodeFromParent(comp);
 	}
 	
