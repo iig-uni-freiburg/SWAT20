@@ -34,8 +34,8 @@ public class PalettePanel extends JPanel {
 
 	private static final long serialVersionUID = -1156941541375286369L;
 	
-	private final int PREFERRED_ICON_SIZE = 40;
-	private final Dimension PREFERRED_PALETTE_COMPONENT_SIZE = new Dimension(100,80);
+	private final int PREFERRED_ICON_SIZE = 30;
+	private final Dimension PREFERRED_PALETTE_COMPONENT_SIZE = new Dimension(80,60);
 	
 	private JSVGCanvas svgCanvasPlace = new JSVGCanvas();
 	private JSVGCanvas svgCanvasTransition = new JSVGCanvas();
@@ -105,26 +105,6 @@ public class PalettePanel extends JPanel {
 		paletteComponent.add(paletteIconPanelOuter, BorderLayout.CENTER);
 		paletteComponent.add(new JLabel(name, JLabel.CENTER), BorderLayout.PAGE_END);
 		
-		
-		
-//		final JLabel entry = new JLabel(icon);
-//		entry.setPreferredSize(new Dimension(50, 50));
-//		entry.setBackground(PalettePanel.this.getBackground().brighter());
-//		entry.setFont(new Font(entry.getFont().getFamily(), 0, 10));
-//
-//		entry.setVerticalTextPosition(JLabel.BOTTOM);
-//		entry.setHorizontalTextPosition(JLabel.CENTER);
-//		entry.setIconTextGap(0);
-//
-//		entry.setToolTipText(name);
-//		entry.setText(name);
-//		iconPanel.addMouseListener(new MouseAdapter() {
-//
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				setSelectionEntry(iconPanel, t);
-//			}
-//		});
 
 		DragGestureListener dragGestureListener = new DragGestureListener() {
 			public void dragGestureRecognized(DragGestureEvent e) {
@@ -138,7 +118,7 @@ public class PalettePanel extends JPanel {
 		};
 
 		DragSource dragSource = new DragSource();
-		dragSource.createDefaultDragGestureRecognizer(iconPanel, DnDConstants.ACTION_COPY, dragGestureListener);
+		dragSource.createDefaultDragGestureRecognizer(svgCanvas, DnDConstants.ACTION_COPY, dragGestureListener);
 		
 		add(paletteComponent);
 	}
