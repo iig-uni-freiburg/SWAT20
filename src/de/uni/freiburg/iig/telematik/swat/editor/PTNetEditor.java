@@ -105,8 +105,9 @@ public class PTNetEditor extends PNEditor {
 		openSampleNetWithProperties(frame);
 		
 		// show all
-		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setVisible(true);
 	}
 
 	private static void testEmptyNet(JFrame frame) throws IOException, ParserException, ParameterException {
