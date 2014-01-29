@@ -535,11 +535,10 @@ public class ToolBar extends JToolBar {
 
 				}
 
-				HashMap<String, Object> style = mxGraphMlUtils.getStyleMap(selectedCell.getStyle(), "=");
-				String noLabel = (String) style.get("noLabel");
-				if (noLabel == null || noLabel.equals("0"))
+
+				if (annotationGraphics.isVisible())
 					showHideLabelsAction.setShowIconImage();
-				else if (noLabel.equals("1"))
+				else
 					showHideLabelsAction.setHideIconImage();
 				showHideLabelsButton.repaint();
 

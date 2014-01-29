@@ -30,7 +30,6 @@
 	<classpathentry kind="lib" path="lib/batik/batik-xml.jar"/>
 	<classpathentry kind="lib" path="lib/batik/js.jar"/>
 	<classpathentry kind="lib" path="lib/batik/pdf-transcoder.jar"/>
-	<classpathentry kind="lib" path="lib/batik/xalan-2.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/batik/xerces_2_5_0.jar"/>
 	<classpathentry kind="lib" path="lib/batik/xml-apis-ext.jar"/>
 	<classpathentry kind="lib" path="lib/batik/xml-apis.jar"/>

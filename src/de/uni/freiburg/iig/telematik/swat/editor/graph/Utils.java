@@ -466,6 +466,10 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 
 	private static void updateAnnotationGraphics(AnnotationGraphics graphics, String key, Object value) throws ParameterException {
 
+		if (key.equals(mxConstants.STYLE_NOLABEL)) {
+			boolean isVisible = ((((String)value).equals("0"))? true:false);
+			graphics.setVisibility(isVisible);
+		}
 		// FILL
 		if (key.equals(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)) {
 			String color = (String) ((((String)value).equals("none"))? "transparent":value);
