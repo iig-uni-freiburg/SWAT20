@@ -8,6 +8,6 @@ public enum SwatProperty {
 	REQUIRE_NET_TYPE,
 	VERIFY_PNML_SCHEMA, 
 	ICON_SIZE, 
-	SCIFF_PATH;
+ SCIFF_PATH, LOLA_PATH;
 
 }

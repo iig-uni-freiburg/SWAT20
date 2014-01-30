@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.lola.LolaPathChooser;
 import de.uni.freiburg.iig.telematik.swat.prism.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
@@ -147,9 +148,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		return editMenu;
 	}
 
-	private JMenu getSettingsMenu() {
-		JMenu settings = new JMenu("Settings");
-
+	private JMenuItem getPrismPathSettingEntry() {
 		JMenuItem prismPathSetting = new JMenuItem("Set Prism Model Checker Path...");
 		prismPathSetting.addActionListener(new ActionListener() {
 			@Override
@@ -166,9 +165,35 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 				}
 			}
 		});
-		settings.add(prismPathSetting);
+		return prismPathSetting;
+	}
+
+	private JMenu getSettingsMenu() {
+		JMenu settings = new JMenu("Settings");
+		settings.add(getPrismPathSettingEntry());
+		settings.add(getLolaPathSettingEntry());
 
 		return settings;
+	}
+
+	private JMenuItem getLolaPathSettingEntry() {
+		JMenuItem lolaPathSetting = new JMenuItem("Set LoLA Model Checker Path...");
+		lolaPathSetting.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LolaPathChooser chooser = new LolaPathChooser(SwingUtilities.getWindowAncestor(getParent()));
+				String lolaPath = chooser.chooseFile();
+				if (lolaPath != null) {
+					try {
+						SwatProperties.getInstance().setLolaPath(lolaPath);
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot set Prism path.\n Reason: "
+								+ e1.getMessage(), "Error while setting Prism path", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+		return lolaPathSetting;
 	}
 
 	@Override

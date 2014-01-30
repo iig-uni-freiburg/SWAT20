@@ -186,6 +186,20 @@ public class SwatProperties extends AbstractProperties{
 		return propertyValue;
 	}
 	
+	//------- LoLA Path -------------------------------------------------------------------
+
+	public void setLolaPath(String directory) {
+		//LolaSearcher.validatePrismPath(directory);
+		setProperty(SwatProperty.LOLA_PATH, directory);
+	}
+
+	public String getLolaPath() throws PropertyException, ParameterException {
+		String propertyValue = getProperty(SwatProperty.LOLA_PATH);
+		if (propertyValue == null)
+			throw new PropertyException(SwatProperty.LOLA_PATH, propertyValue);
+		return propertyValue;
+	}
+
 	//------- SCIFF Path -------------------------------------------------------------------
 
 	public void setSciffPath(String directory) throws ParameterException, IOException, PropertyException {
