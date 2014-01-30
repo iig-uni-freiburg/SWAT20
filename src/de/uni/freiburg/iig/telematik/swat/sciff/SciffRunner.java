@@ -5,8 +5,6 @@ import java.io.File;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.processmining.analysis.sciffchecker.SCIFFChecker;
-
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
@@ -16,7 +14,7 @@ public class SciffRunner {
 
 	public static void main(String[] args) {
 		System.out.println("Run");
-		SCIFFChecker test = new SCIFFChecker();
+		//		SCIFFChecker test = new SCIFFChecker();
 		AnalysisInputItem item = new AnalysisInputItem("Test");
 		//test.analyse(item);
 	}
@@ -33,7 +31,7 @@ public class SciffRunner {
 
 	public void analyse(String rules) {
 		//TODO: Implement
-		SCIFFChecker test = new SCIFFChecker();
+		//		SCIFFChecker test = new SCIFFChecker();
 
 		//test.analyse(inputs);
 	}
