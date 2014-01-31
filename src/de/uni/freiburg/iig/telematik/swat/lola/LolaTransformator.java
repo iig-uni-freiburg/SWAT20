@@ -27,6 +27,7 @@ public class LolaTransformator {
 
 	public String getNetAsLolaFormat() {
 		StringBuilder builder = new StringBuilder(1000);
+		//builder.append("NET\r\n");
 		builder.append(getPlaces());
 		builder.append("\r\n");
 		builder.append(getInitialMarking());
@@ -69,14 +70,17 @@ public class LolaTransformator {
 		boolean first = true;
 		//test every place
 		for (PTPlace place : net.getPlaces()) {
-			if (!first)
-				builder.append(",");
 			if (net.getInitialMarking().contains(place.getName())) {
 				try {
+					//test if place has a marking
+					net.getInitialMarking().get(place.getName());
+					if (!first)
+						builder.append(", ");
 					builder.append(place.getName() + ": " + net.getInitialMarking().get(place.getName()) + " ");
 				} catch (ParameterException e) {
 				}
 			}
+			first = false;
 		}
 		builder.append(";\r\n");
 
