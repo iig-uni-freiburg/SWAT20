@@ -3,8 +3,13 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Paint;
+import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -334,6 +339,56 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 
 		return fillPaint;
 	}
+	
+	public static Image createIconImage(Color fillColor,Color gradientColor, GradientRotation gradientRotation, int size) {
+
+        Image image = new BufferedImage (size, size, BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics g = image.getGraphics();
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+      
+		mxRectangle bounds = new mxRectangle(0, 0, size, size);
+		float x1 = (float) bounds .getX();
+		float y1 = (float) bounds.getY();
+		float x2 = (float) bounds.getX();
+		float y2 = (float) bounds.getY();
+
+		if (fillColor != null) {
+			if (gradientColor != null && gradientRotation != null) {
+
+				switch (gradientRotation) {
+				case DIAGONAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case HORIZONTAL:
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case VERTICAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					break;
+				default:
+					break;
+
+				}
+
+			}
+		}
+
+		GradientPaint fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, false);
+ 		g2.setPaint(fillPaint);
+
+        g2.fillRect(0, 0, 	size-1, size-1);
+        g2.setColor (new Color(0,0,0));
+
+		g2.setStroke(new BasicStroke(1));
+        g2.drawRect(0, 0, 	size-1, size-1);
+
+        g2.dispose ();
+        return image;
+
+	}
 
 
 
@@ -465,10 +520,11 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 	}
 
 	private static void updateAnnotationGraphics(AnnotationGraphics graphics, String key, Object value) throws ParameterException {
-
+System.out.println("key:" + key);
 		if (key.equals(mxConstants.STYLE_NOLABEL)) {
 			boolean isVisible = ((((String)value).equals("0"))? true:false);
 			graphics.setVisibility(isVisible);
+			System.out.println(isVisible + "#");
 		}
 		// FILL
 		if (key.equals(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)) {

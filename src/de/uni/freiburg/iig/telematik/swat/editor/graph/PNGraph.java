@@ -1147,14 +1147,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		// if(change instanceof StyleChange)
 		// System.out.println(((StyleChange) change).getStyle());
 		// }
-System.out.println("EVENT:" + evt.getName());
+//System.out.println("EVENT:" + evt.getName());
 if (evt.getName().equals(mxEvent.UNDO)) {
 	mxUndoableEdit edit = (mxUndoableEdit) evt.getProperty("edit");
-	System.out.println("#"+evt.getProperties() + "#" + edit.getChanges() );
+	//System.out.println("#"+evt.getProperties() + "#" + edit.getChanges() );
 }
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
-System.out.println(changes + "changes");
+//System.out.println(changes + "changes");
 			if (changes != null) {
 				for (mxAtomicGraphModelChange change : changes) {
 					if(change instanceof mxTerminalChange){
@@ -1211,7 +1211,7 @@ System.out.println(changes + "changes");
 					}
 					if (change instanceof mxChildChange) {
 						mxChildChange childChange = ((mxChildChange) change);
-System.out.println(childChange);
+//System.out.println(childChange);
 						if (childChange.getChild() instanceof PNGraphCell) {
 							PNGraphCell cell = (PNGraphCell) ((mxChildChange) change).getChild();
 							if(childChange.getPrevious() == null){

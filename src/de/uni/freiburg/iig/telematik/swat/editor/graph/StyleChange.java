@@ -43,7 +43,7 @@ public class StyleChange extends mxStyleChange {
 		HashMap<String, Object> styleMap = mxGraphMlUtils.getStyleMap(style,"=");
 		Object value = styleMap.get(key);
 		try {
-			Utils.updateGraphics(graph, ((PNGraphCell) cell), key, value, key.contains("label") || key.equals(mxConstants.STYLE_FONTSIZE) || key.equals(mxConstants.STYLE_FONTFAMILY) || key.equals(mxConstants.STYLE_ALIGN));
+			Utils.updateGraphics(graph, ((PNGraphCell) cell), key, value, key.contains("label") || key.equals(mxConstants.STYLE_FONTSIZE) || key.equals(mxConstants.STYLE_FONTFAMILY) || key.equals(mxConstants.STYLE_ALIGN) || key.equals(mxConstants.STYLE_NOLABEL) );
 		} catch (ParameterException e) {
 		}
 	}

@@ -1,9 +1,19 @@
 package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
@@ -21,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.TransferHandler;
@@ -48,12 +59,18 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Shape;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FillBackgroundColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillColorSelectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientDirectionAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientRotationDiagonal;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientRotationHorizontal;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillGradientRotationVertical;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FillImageAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.FillNoFillAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAlignCenterAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAlignLeftAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAlignRightAction;
@@ -72,7 +89,10 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.ShowHideLabelsAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class ToolBar extends JToolBar {
 
@@ -109,16 +129,37 @@ public class ToolBar extends JToolBar {
 	private JComboBox strokeWeightBox;
 	private LineStyleAction lineStyleAction;
 	private FillGradientDirectionAction gradientDirectionAction;
-	private FillGradientColorAction gradientColor;
+	private FillColorSelectionAction colorSelectionAction;
 	private ShowHideLabelsAction showHideLabelsAction;
 	private LineShapeAction lineShapeAction;
-	private FillImageAction addImageAction;
+//	private FillImageAction addImageAction;
 	private FontRotationAction textRotationAction;
-	private JButton gradientDirectionButton;
 	private JButton lineStyleButton;
 	private JButton lineShapeButton;
 	private ButtonGroup alignmentGroup;
 	private JButton showHideLabelsButton;
+	private Action gradientVerticalAction;
+	private Action gradientHorizontalAction;
+	private Action gradientDiagonalAction;
+
+	private FillNoFillAction noFillAction;
+	private JToggleButton backgroundColorButton;
+	private JToggleButton gradientColorButton;
+	private FillGradientColorAction gradientColorAction;
+	private JToggleButton colorSelectionButton;
+	private JToggleButton noFillButton;
+	private ButtonGroup fillGroup;
+	private JToggleButton gradientDiagonalButton;
+	private JToggleButton gradientHorizontalButton;
+	private JToggleButton gradientVerticalButton;
+	private ButtonGroup gradientDirectionGroup;
+	private FillStyle fillStyle = FillStyle.SOLID;
+
+	private Color currentFillColor;
+
+	
+
+
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
@@ -144,11 +185,18 @@ public class ToolBar extends JToolBar {
 			backgroundColorAction = new FillBackgroundColorAction(pnEditor);
 			lineStyleAction = new LineStyleAction(pnEditor);
 			gradientDirectionAction = new FillGradientDirectionAction(pnEditor);
-			gradientColor = new FillGradientColorAction(pnEditor);
+			gradientColorAction = new FillGradientColorAction(pnEditor);
 			showHideLabelsAction = new ShowHideLabelsAction(pnEditor);
 			lineShapeAction = new LineShapeAction(pnEditor);
-			addImageAction = new FillImageAction(pnEditor);
+		
+//			addImageAction = new FillImageAction(pnEditor); 	//could be activated, working
 			textRotationAction = new FontRotationAction(pnEditor);
+			gradientHorizontalAction = new FillGradientRotationHorizontal(pnEditor);
+			gradientVerticalAction = new FillGradientRotationVertical(pnEditor);
+			gradientDiagonalAction = new FillGradientRotationDiagonal(pnEditor);
+			colorSelectionAction = new FillColorSelectionAction(pnEditor);
+			
+			noFillAction = new FillNoFillAction(pnEditor);
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -202,10 +250,32 @@ public class ToolBar extends JToolBar {
 
 		addSeparator();
 
-		add(addImageAction);
-		add(backgroundColorAction);
-		gradientDirectionButton = (JButton) add(gradientDirectionAction, false);
-		add(gradientColor);
+//		add(addImageAction);
+
+		backgroundColorButton = (JToggleButton) nestedAdd(backgroundColorAction);
+		gradientColorButton = (JToggleButton) nestedAdd(gradientColorAction);
+		noFillButton = (JToggleButton) nestedAdd(noFillAction);
+		
+		fillGroup = new ButtonGroup();
+		fillGroup.add(backgroundColorButton);
+		fillGroup.add(gradientColorButton);
+		fillGroup.add(noFillButton);
+		
+		gradientVerticalButton = (JToggleButton) nestedAdd(gradientVerticalAction);
+		gradientHorizontalButton = (JToggleButton) nestedAdd(gradientHorizontalAction);
+		gradientDiagonalButton = (JToggleButton) nestedAdd(gradientDiagonalAction);
+		
+		gradientDirectionGroup = new ButtonGroup();
+		gradientDirectionGroup.add(gradientVerticalButton);
+		gradientDirectionGroup.add(gradientHorizontalButton);
+		gradientDirectionGroup.add(gradientDiagonalButton);
+
+		colorSelectionButton = (JToggleButton) nestedAdd(colorSelectionAction);
+
+		setUpFillPanel();
+		addSeparator();
+
+		
 		add(strokeColorAction);
 		add(getStrokeWeightBox());
 
@@ -225,12 +295,100 @@ public class ToolBar extends JToolBar {
 
 	}
 
+	private void setUpFillPanel() {
+		int iconSize = 0;
+		try {
+			iconSize = SwatProperties.getInstance().getIconSize().getSize();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JPanel pane = new JPanel();
+		pane.setLayout(new GridBagLayout());
+		
+	    GridBagConstraints c = new GridBagConstraints();
+	    
+		pane.setMinimumSize(new Dimension(iconSize*2, iconSize));
+		pane.setPreferredSize(new Dimension(iconSize*2, iconSize));
+		pane.setMaximumSize(new Dimension(iconSize*2, iconSize));
+	    
+	    c.fill = GridBagConstraints.HORIZONTAL;
+
+	    c.weightx = 0.5;
+	    c.weighty = 0.3;
+	    
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    c.gridx = 0;
+	    c.gridy = 0;
+	    pane.add(backgroundColorButton, c);
+	 
+	    c.weighty = 0.3;
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    c.weightx = 0.5;
+	    c.gridx = 0;
+	    c.gridy = 1;
+	    pane.add(gradientColorButton, c);
+	 
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    c.weightx = 0.5;
+	    c.weighty = 0.3;
+	    c.gridx = 0;
+	    c.gridy = 2;
+	    pane.add(noFillButton, c);
+	    
+	    
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    c.weighty = 0.3;
+	    c.weightx = 0.5;
+	    c.gridx = 4;
+	    c.gridy = 0;
+	    pane.add(gradientVerticalButton, c);
+	    
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    c.weighty = 0.3;
+	    c.weightx = 0.5;
+	    c.gridx = 4;
+	    c.gridy = 1;
+	    pane.add(gradientHorizontalButton, c);
+	    
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    c.weighty = 0.3;
+	    c.weightx = 0.5;
+	    c.gridx = 4;
+	    c.gridy = 2;
+	    pane.add(gradientDiagonalButton, c);
+	 
+
+	 
+//	    c.fill = GridBagConstraints.HORIZONTAL;
+//	    c.ipady = 0;       //reset to default
+	    c.weighty = 1.0;   //request any extra vertical space
+//	    c.anchor = GridBagConstraints.LAST_LINE_START; //bottom of space
+//	    c.insets = new Insets(10,0,0,0);  //top padding
+	    c.gridx = 1;     
+	    c.gridwidth = 3;  
+	    c.gridheight = 3;  
+	    c.gridy = 0;      
+	    pane.add(colorSelectionButton, c);
+
+		add(pane);
+	}
+
 	private JComponent add(Action action, boolean asToggleButton) {
 		if (!asToggleButton)
 			return super.add(action);
 		JToggleButton b = createToggleActionComponent(action);
 		b.setAction(action);
 		add(b);
+		return b;
+	}
+	
+	private JComponent nestedAdd(Action action) {
+		JToggleButton b = createToggleActionComponent(action);
+		b.setAction(action);
 		return b;
 	}
 
@@ -417,11 +575,17 @@ public class ToolBar extends JToolBar {
 		backgroundColorAction.setEnabled(false);
 		lineStyleAction.setEnabled(false);
 		gradientDirectionAction.setEnabled(false);
-		gradientColor.setEnabled(false);
 		showHideLabelsAction.setEnabled(false);
 		lineShapeAction.setEnabled(false);
-		addImageAction.setEnabled(false);
+//		addImageAction.setEnabled(false);
 		textRotationAction.setEnabled(false);
+		backgroundColorAction.setEnabled(false);
+		gradientColorAction.setEnabled(false);
+		noFillAction.setEnabled(false);
+		
+		gradientDiagonalAction.setEnabled(false);
+		gradientHorizontalAction.setEnabled(false);
+		gradientVerticalAction.setEnabled(false);
 	}
 
 	public void updateView(Set<PNGraphCell> selectedComponents) {
@@ -436,14 +600,16 @@ public class ToolBar extends JToolBar {
 			pasteAction.setEnabled(true);
 			cutAction.setEnabled(true);
 			strokeColorAction.setEnabled(true);
-			backgroundColorAction.setEnabled(true);
 			getStrokeWeightBox().setEnabled(true);
 			lineStyleAction.setEnabled(true);
 			gradientDirectionAction.setEnabled(true);
-			gradientColor.setEnabled(true);
+//			gradientColor.setEnabled(true);
 			showHideLabelsAction.setEnabled(true);
 			lineShapeAction.setEnabled(true);
-			addImageAction.setEnabled(true);
+//			addImageAction.setEnabled(true);
+			
+
+			
 			if (selectedComponents.size() == 1) {
 				// Enables Toolbar Buttons
 				this.selectedCell = selectedComponents.iterator().next();
@@ -457,6 +623,12 @@ public class ToolBar extends JToolBar {
 				boolean isAlignLeft = false;
 				boolean isAlignCenter = false;
 				boolean isAlignRight = false;
+				boolean isFillSolid = false;
+				boolean isFillGradient = false;
+				boolean isFillEmpty = false;
+				boolean isGradientDiagonal = false;
+				boolean isGradientVertical = false;
+				boolean isGradientHorizontal = false;
 				int strokeWeight = (int) Line.DEFAULT_WIDTH;
 
 				String fontFamily = null;
@@ -480,9 +652,134 @@ public class ToolBar extends JToolBar {
 					break;
 				}
 
+				
+	
+				
 				if (nodeGraphics != null && !labelSelected) {
+					
+	
+					
 					Fill fill = nodeGraphics.getFill();
-					setGradientRotationButton(fill);
+			
+						if (fill != null) {
+							String colorString = fill.getColor();
+							String gradientString = fill.getGradientColor();
+							GradientRotation gradientRotation = fill.getGradientRotation();
+							boolean containsFillColor = false;
+							boolean containsGradientColor = false;
+							boolean containsGradientRotation = false;
+							Color fillColor = FillGradientColorAction.DEFAULT_FILL_COLOR;
+							if (colorString != null){
+								if(!colorString.equals("transparent")){
+								fillColor = Utils.parseColor(colorString);
+								containsFillColor = true;}
+								else{
+								containsFillColor = false;
+								}
+							}	
+							Color gradientColor = FillGradientColorAction.DEFAULT_GRADIENT_COLOR;
+							if (gradientString != null){ 
+								gradientColor = Utils.parseColor(gradientString);
+								containsGradientColor = true;
+							}
+						
+							if(gradientRotation != null){
+								containsGradientRotation = true;}
+							else
+								gradientRotation = GradientRotation.VERTICAL;
+							
+							
+							
+							try {
+//								backgroundColorAction.setFillColor(fillColor);
+//								gradientColorAction.setFillColor(fillColor, gradientColor);
+								
+								if(!containsFillColor){
+									try {
+										setFillStyle(FillStyle.NOFILL, null,null,null);
+									} catch (PropertyException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+								else if(containsFillColor && containsGradientColor && containsGradientRotation){
+
+									setFillStyle(FillStyle.GRADIENT, fillColor, gradientColor, gradientRotation);
+								}
+								else{
+									setFillStyle(FillStyle.SOLID,fillColor, fillColor, gradientRotation);
+								}
+								currentFillColor = fillColor;
+							if(containsGradientRotation){
+								switch(gradientRotation){
+								case DIAGONAL:
+									isGradientDiagonal = true;
+									break;
+								case HORIZONTAL:
+									isGradientHorizontal = true;
+									break;
+								case VERTICAL:
+									isGradientVertical = true;
+									break;
+								default:
+									break;
+								
+								}
+							}
+							
+							} catch (PropertyException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+								
+
+	
+
+				
+					gradientColorButton.repaint();
+					backgroundColorButton.repaint();
+					colorSelectionButton.repaint();
+					switch(getFillStyle()){
+					case SOLID:
+						isFillSolid = true;
+						break;
+					case GRADIENT:
+						isFillGradient = true;
+						break;
+					case NOFILL:
+						isFillEmpty = true;
+						break;
+					
+					}
+					fillGroup.clearSelection();
+					backgroundColorButton.setSelected(isFillSolid);
+					gradientColorButton.setSelected(isFillGradient);
+					noFillButton.setSelected(isFillEmpty);
+					
+					backgroundColorAction.setEnabled(true);
+					gradientColorAction.setEnabled(true);
+					noFillAction.setEnabled(true);
+					
+					
+					gradientDirectionGroup.clearSelection();
+					gradientDiagonalButton.setSelected(isGradientDiagonal);
+					gradientHorizontalButton.setSelected(isGradientHorizontal);
+					gradientVerticalButton.setSelected(isGradientVertical);
+					
+					gradientDiagonalAction.setEnabled(true);
+					gradientHorizontalAction.setEnabled(true);
+					gradientVerticalAction.setEnabled(true);
+				
+//					normalFillButton.setBackground(new Color(255, 0, 0, 100));
+//					normalFillButton.setForeground(new Color(255, 0, 255));
+					backgroundColorButton.repaint();
 					Line line = nodeGraphics.getLine();
 					strokeWeight = (int) line.getWidth();
 					getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
@@ -490,6 +787,7 @@ public class ToolBar extends JToolBar {
 					setLineShapeButton(line);
 
 				}
+						}
 
 				if (arcGraphics != null && isArcCell) {
 					Line line = arcGraphics.getLine();
@@ -522,7 +820,6 @@ public class ToolBar extends JToolBar {
 						isAlignRight = true;
 
 					Fill fill = annotationGraphics.getFill();
-					setGradientRotationButton(fill);
 
 					Line line = annotationGraphics.getLine();
 					strokeWeight = (int) line.getWidth();
@@ -533,17 +830,15 @@ public class ToolBar extends JToolBar {
 					getFontBox().setSelectedItem(fontFamily);
 					getFontSizeBox().setSelectedItem(fontSize + "pt");
 
-				}
+					if (annotationGraphics.isVisible())
+						showHideLabelsAction.setShowIconImage();
+					else
+						showHideLabelsAction.setHideIconImage();
+					showHideLabelsButton.repaint();
 
-
-				if (annotationGraphics.isVisible())
-					showHideLabelsAction.setShowIconImage();
-				else
-					showHideLabelsAction.setHideIconImage();
-				showHideLabelsButton.repaint();
-
-				if (!labelSelected) {
-					alignmentGroup.clearSelection();
+					if (!labelSelected) {
+						alignmentGroup.clearSelection();
+					}	
 				}
 
 				boldFontButton.setSelected(isBold);
@@ -566,6 +861,9 @@ public class ToolBar extends JToolBar {
 				textRotationAction.setEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
 				getStrokeWeightBox().setEnabled(isPlaceCell || isTransitionCell || isArcCell);
 
+				
+
+				
 			} else {
 				getFontBox().setEnabled(false);
 				getFontSizeBox().setEnabled(false);
@@ -574,32 +872,8 @@ public class ToolBar extends JToolBar {
 		}
 	}
 
-	/**
-	 * @param fill
-	 */
-	protected void setGradientRotationButton(Fill fill) {
-		GradientRotation gradientRotation = fill.getGradientRotation();
-		if (gradientRotation == null) {
-			gradientDirectionAction.setGradientnoIconImage();
-		} else {
-			switch (gradientRotation) {
-			case DIAGONAL:
-				gradientDirectionAction.setDiagonalIconImage();
-				;
-				break;
-			case HORIZONTAL:
-				gradientDirectionAction.setHorizontalIconImage();
-				;
-				break;
-			case VERTICAL:
-				gradientDirectionAction.setVerticalIconImage();
-				break;
-			default:
-				break;
-			}
-		}
-		gradientDirectionButton.repaint();
-	}
+
+
 
 	/**
 	 * @param line
@@ -639,5 +913,57 @@ public class ToolBar extends JToolBar {
 
 		lineShapeButton.repaint();
 	}
+
+	public FillStyle getFillStyle() {
+		return fillStyle;	
+	}
+	public void setFillStyle(FillStyle fillStyle, Color fillColor, Color gradientColor, GradientRotation rotation) throws PropertyException, IOException {
+		this.fillStyle = fillStyle;
+		switch(fillStyle){
+
+		case SOLID:
+			if(fillColor != null)
+			backgroundColorButton.setSelected(true);
+			colorSelectionAction.setFillColor(fillColor, fillColor, rotation);
+
+			break;
+		case GRADIENT:
+			if(gradientColor != null){			
+			colorSelectionAction.setFillColor(fillColor, gradientColor, rotation);
+
+			}
+			else{
+				colorSelectionAction.setFillColor(currentFillColor, FillGradientColorAction.DEFAULT_GRADIENT_COLOR, GradientRotation.VERTICAL);
+			}
+
+			gradientColorButton.setSelected(true);
+			
+
+			break;
+		case NOFILL:
+			noFillButton.setSelected(true);
+			colorSelectionAction.setNoFill();
+			break;
+		default:
+			break;
+		
+		}
+		if(fillColor != null)
+		backgroundColorAction.setFillColor(fillColor);
+		if(fillColor == gradientColor)
+			gradientColor = FillGradientColorAction.DEFAULT_GRADIENT_COLOR;
+		if(fillColor != null && gradientColor != null)
+		gradientColorAction.setFillColor(fillColor, gradientColor);
+		colorSelectionButton.repaint();
+
+	}
+	public enum FillStyle{
+		SOLID,GRADIENT,NOFILL
+	}
+	public void setFillStyle(FillStyle style) {
+		this.fillStyle = style;
+		
+	}
+
 
 }

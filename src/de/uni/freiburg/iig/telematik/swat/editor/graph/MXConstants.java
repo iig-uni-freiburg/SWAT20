@@ -249,12 +249,14 @@ public abstract class MXConstants {
 	protected static void getAnnotationGraphics(AnnotationGraphics initialAnnotationGraphics, Hashtable<String, Object> style) throws ParameterException {
 		 AnnotationGraphics annotationGraphics = (initialAnnotationGraphics!= null)? initialAnnotationGraphics:new AnnotationGraphics();
 	System.out.println(annotationGraphics.isVisible()+ "isvisible");
-		if (annotationGraphics.isVisible())
-			style.put("noLabel", "0");
-		else
-			style.put("noLabel", "1");
 	
-	
+		if (annotationGraphics.isVisible()){
+			style.put(mxConstants.STYLE_NOLABEL, "0");
+			annotationGraphics.setVisibility(true);	
+		}
+		else{
+			style.put(mxConstants.STYLE_NOLABEL, "1");
+	annotationGraphics.setVisibility(false);}
 		 	Fill fill = (annotationGraphics.getFill() != null)? annotationGraphics.getFill():new Fill();
 				
 				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultLabelBackgroundColor();
