@@ -11,7 +11,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 
 public class LolaTransformator {
 
@@ -21,16 +21,16 @@ public class LolaTransformator {
 		this.net = net;
 	}
 
-	public LolaTransformator(PTNetEditor neteditor) {
-		this.net = neteditor.getNetContainer().getPetriNet();
+	public LolaTransformator(PNEditor neteditor) {
+		this.net = (PTNet) neteditor.getNetContainer().getPetriNet();
 	}
 
 	public String getNetAsLolaFormat() {
 		StringBuilder builder = new StringBuilder(1000);
 		builder.append(getPlaces());
-		builder.append("\n");
+		builder.append("\r\n");
 		builder.append(getInitialMarking());
-		builder.append("\n");
+		builder.append("\r\n");
 		builder.append(getTransitions());
 		return builder.toString();
 	}
@@ -51,14 +51,14 @@ public class LolaTransformator {
 
 	private StringBuilder getPlaces() {
 		StringBuilder builder=new StringBuilder();
-		builder.append("PLACE \n");
+		builder.append("PLACE \r\n");
 		for (PTPlace place : net.getPlaces()) {
 			if (place.getCapacity() != -1) {
 				//Place has bounded capacity
 				builder.append("SAFE " + place.getCapacity() + ": ");
 			}
 			builder.append(place.getName() + ";");
-			builder.append("\n");
+			builder.append("\r\n");
 		}
 		return builder;
 	}
@@ -78,23 +78,22 @@ public class LolaTransformator {
 				}
 			}
 		}
-		builder.append(";\n");
+		builder.append(";\r\n");
 
 		return builder;
 	}
 
 	private StringBuilder getTransitions() {
 		StringBuilder builder = new StringBuilder();
-		//builder.append("MARKING ");
 		for (PTTransition transition : net.getTransitions(true)) {
-			builder.append("TRANSITION "+transition.getName()+"\n");
+			builder.append("\r\nTRANSITION " + transition.getName() + "\r\n");
 			builder.append(getIncomingRelationsAsString(transition));
-			builder.append("\n");
+			builder.append("\r\n");
 			builder.append(getOutgoingRelationsAsString(transition));
-			builder.append("\n");
+			builder.append("\r\n");
 
 		}
-		builder.append("\n");
+		builder.append("\r\n");
 		return builder;
 	}
 

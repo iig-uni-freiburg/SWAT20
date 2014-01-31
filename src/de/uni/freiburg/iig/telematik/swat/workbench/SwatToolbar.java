@@ -26,7 +26,10 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
+import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
+import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
@@ -112,6 +115,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		standardItems.add(getEditRadioButton());
 		standardItems.add(getAnalysisRadioButton());
+		standardItems.add(getLolaButton());
 		
 		ButtonGroup group = new ButtonGroup();
 		group.add(getAnalysisRadioButton());
@@ -119,6 +123,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		getEditRadioButton().setSelected(true);
 	}
 	
+	private JButton getLolaButton() {
+		JButton lola = new SwatToolbarButton(ToolbarButtonType.LOLA);
+		return lola;
+	}
+
 	private Component getImportButon() {
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.IMPORT);
 		return newButton;
@@ -296,46 +305,20 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case RENAME:
 				setToolTipText("Rename current net");
 				addActionListener(new RenameAction(tabView, treeView));
+				break;
+			case LOLA:
+				setToolTipText("Convert to Lola");
+				addActionListener(new LolaTransformAction());
+				break;
 			}
 		}
 		
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, LOLA;
 	}
 
-	// class openActionListener implements ActionListener {
-	//
-	// @Override
-	// public void actionPerformed(ActionEvent e) {
-	// WorkingDirectoryDialog dialog = new
-	// WorkingDirectoryDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this));
-	// String workingDirectory = dialog.getSimulationDirectory();
-	// try { // Update Properties and reload
-	// SwatComponents.SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
-	// SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory);
-	// SwatProperties.getInstance().store();
-	// SwatComponents.getInstance().reload(); // Inform TabView, etc...
-	// tabView.removeAll();
-	// treeView.removeAndUpdateSwatComponents();
-	// } catch (ParameterException e2) {
-	// JOptionPane.showMessageDialog(null, e2.getMessage(),
-	// "Parameter Exception", JOptionPane.ERROR_MESSAGE);
-	// e2.printStackTrace();
-	// } catch (IOException e3) {
-	// JOptionPane.showMessageDialog(null, e3.getMessage(), "IO Exception",
-	// JOptionPane.ERROR_MESSAGE);
-	// e3.printStackTrace();
-	// } catch (PropertyException e1) {
-	// JOptionPane.showMessageDialog(null, e1.getMessage(),
-	// "Property Exception", JOptionPane.ERROR_MESSAGE);
-	// e1.printStackTrace();
-	// }
-	//
-	// }
-	//
-	// }
 
 
 	class createNewAction implements ActionListener {
@@ -403,4 +386,23 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			return file;
 	}
 }
+
+	class LolaTransformAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			try {
+			PNEditor editor = (PNEditor) tabView.getSelectedComponent();
+				LolaTransformator lola = new LolaTransformator(editor);
+				LolaPresenter presenter = new LolaPresenter(lola.getNetAsLolaFormat());
+				presenter.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+
+		}
+
+	}
+
 }

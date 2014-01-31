@@ -79,6 +79,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNCompo
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 
 public abstract class PNEditor extends JPanel implements SwatComponent, TreeSelectionListener, PNGraphListener {
 
@@ -259,7 +261,13 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	}
 
 	public PropertiesView getPropertiesView() {
-		return propertiesView;
+		if (SwatState.getInstance().getOperatingMode()==OperatingMode.EDIT_MODE){
+			return propertiesView;
+		}
+		else{
+			//TODO: Hier bitte die Lola einbauen... :-)
+			return propertiesView;
+		}
 	}
 
 	protected PNProperties getPNProperties() {

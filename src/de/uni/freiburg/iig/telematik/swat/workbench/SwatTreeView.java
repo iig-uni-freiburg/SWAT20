@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,6 +44,11 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 		repaint();
 	}
 
+	public void update() {
+		treeModel.reload();
+		repaint();
+	}
+
 	@SuppressWarnings("rawtypes")
 	private void createChildren() {
 		// Petri Nets
@@ -57,6 +63,10 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 
 		for (XMLFileViewer xmlFileViewer : SwatComponents.getInstance().getXMLFiles()) {
 			root.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE));
+		}
+		try {
+			expandRow(0);
+		} catch (Exception e) {
 		}
 	}
 
@@ -80,6 +90,17 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public SwatTreeNode getComponent(SwatComponent component) {
+		Enumeration<SwatTreeNode> children = root.children();
+		while (children.hasMoreElements()) {
+			SwatTreeNode node = children.nextElement();
+			if (node.getUserObject().equals(component))
+				return node;
+		}
+		return null;
+	}
+
 	public class SwatTreeNode extends DefaultMutableTreeNode {
 		
 		private SwatComponentType objectType = null;
@@ -111,9 +132,15 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 		}
 		
 		public String getDisplayName(){
+			setDisplayName();
 			return displayName;
 		}
 		
+		/** Update the displayName for JTree if Filename changed **/
+		public void updateDisplayName() {
+			setDisplayName();
+		}
+
 		public SwatComponentType getObjectType(){
 			return objectType;
 		}
