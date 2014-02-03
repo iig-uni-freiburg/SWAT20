@@ -152,7 +152,6 @@ public abstract class MXConstants {
 				URI image = (fill.getImage() != null)? fill.getImage():EditorProperties.getInstance().getDefaultNodeImage();
 				if(image != null){
 					String path = decodePath(image);
-					System.out.println(path);
 					try {
 						path = URLDecoder.decode(path, "utf-8");
 					} catch (UnsupportedEncodingException e) {
@@ -160,7 +159,6 @@ public abstract class MXConstants {
 						e.printStackTrace();
 					}
 					path = new File(path).getPath();
-					System.out.println(path);
 //				File file = new File(image);
 //				System.out.println(file.getAbsolutePath());
 
@@ -248,7 +246,6 @@ public abstract class MXConstants {
 	
 	protected static void getAnnotationGraphics(AnnotationGraphics initialAnnotationGraphics, Hashtable<String, Object> style) throws ParameterException {
 		 AnnotationGraphics annotationGraphics = (initialAnnotationGraphics!= null)? initialAnnotationGraphics:new AnnotationGraphics();
-	System.out.println(annotationGraphics.isVisible()+ "isvisible");
 	
 		if (annotationGraphics.isVisible()){
 			style.put(mxConstants.STYLE_NOLABEL, "0");

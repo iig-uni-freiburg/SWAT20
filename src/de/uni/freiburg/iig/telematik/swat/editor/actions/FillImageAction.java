@@ -42,7 +42,6 @@ public class FillImageAction extends AbstractPNEditorAction{
 		        if (returnVal == JFileChooser.APPROVE_OPTION) {
 		            File file = fileChooser.getSelectedFile();
 		        	getEditor().getGraphComponent().getGraph().setCellStyles(mxConstants.STYLE_IMAGE, "file:"+file.getAbsolutePath());
-		        	System.out.println("file:"+file.getAbsolutePath());
 		            getEditor().getGraphComponent().getGraph().setCellStyles("shape",mxConstants.SHAPE_IMAGE);
 
 			}}

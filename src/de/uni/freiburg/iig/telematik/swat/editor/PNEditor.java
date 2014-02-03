@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.TransferHandler;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
@@ -64,6 +65,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.NewNodeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PrintAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.SelectAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
@@ -340,9 +342,18 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_O, commandKey), "open");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,commandKey), "undo");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,commandKey), "redo");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, commandAndShift), "selectVertices");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, commandAndShift), "selectVertices");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, commandAndShift), "selectEdges");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandKey), "printNet");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, commandKey), "selectPlaces");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_T, commandKey), "selectTransitions");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, commandKey), "selectPlaces");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, commandKey), "selectArcs");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, commandKey), "selectArcs");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, commandKey), "selectAll");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, commandKey), "cut");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, commandKey), "copy");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, commandKey), "paste");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandAndShift), "printNet");
 				map.put(KeyStroke.getKeyStroke("DELETE"), "delete");
 				
 				
@@ -393,6 +404,10 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 				map.put("bigMoveRight", new MoveAction(PNEditor.this,movingGap,0));
 				map.put("bigMoveDown", new MoveAction(PNEditor.this,0,movingGap));
 				map.put("bigMoveUp", new MoveAction(PNEditor.this,0,-movingGap));
+				
+				map.put("selectPlaces", new SelectAction(PNEditor.this,PNComponent.PLACE));
+				map.put("selectTransitions", new SelectAction(PNEditor.this,PNComponent.TRANSITION));
+				map.put("selectArcs", new SelectAction(PNEditor.this,PNComponent.ARC));
 
 			} catch (Exception e) {
 				// Cannot happen, since this is not null
@@ -401,6 +416,12 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 			map.put("selectVertices", mxGraphActions.getSelectVerticesAction());
 			map.put("selectEdges", mxGraphActions.getSelectEdgesAction());
+			map.put("selectAll",mxGraphActions.getSelectAllAction());
+			map.put("selectAllEdges",mxGraphActions.getSelectEdgesAction());
+			
+			map.put(("cut"), TransferHandler.getCutAction());
+			map.put(("copy"), TransferHandler.getCopyAction());
+			map.put(("paste"), TransferHandler.getPasteAction());
 			map.put("delete", new DeleteAction("delete"));
 			return map;
 		}

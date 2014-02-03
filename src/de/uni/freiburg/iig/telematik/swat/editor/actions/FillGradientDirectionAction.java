@@ -88,14 +88,12 @@ public class FillGradientDirectionAction extends AbstractPNEditorAction {
 		}
 
 		else if (getIcon().getImage() == vertical) {
-			System.out.println("verti");
 			if (graph.isLabelSelected())
 				graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, GradientRotation.DIAGONAL.toString());
 			else
 				graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.DIAGONAL.toString());
 			getIcon().setImage(diagonal);
 		} else if (getIcon().getImage() == diagonal) {
-			System.out.println("dia");
 			if (graph.isLabelSelected())
 				graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, null);
 			else

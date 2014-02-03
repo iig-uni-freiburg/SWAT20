@@ -71,7 +71,6 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertiesListener
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperty;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertyChangeEvent;
 
-
 public abstract class PNGraph extends mxGraph implements PNPropertiesListener, mxIEventListener {
 
 	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
@@ -92,9 +91,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		this.properties = properties;
 		this.properties.addPNPropertiesListener(this);
 		this.getSelectionModel().addListener(mxEvent.CHANGE, this);
-		
 
-		
 		this.addListener(mxEvent.RESIZE_CELLS, this);
 
 		this.getModel().addListener(mxEvent.CHANGE, this);
@@ -352,8 +349,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		}
 		ArcGraphics arcGraphics = new ArcGraphics();
 		AnnotationGraphics annotationGraphics = new AnnotationGraphics();
-		if(relation != null)
-		addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
+		if (relation != null)
+			addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
 		PNGraphCell newCell = null;
 		if (relation != null) {
 			newCell = insertPNRelation(relation, arcGraphics, annotationGraphics);
@@ -370,7 +367,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	public void addGraphicalInfoToPNArc(AbstractFlowRelation relation, ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
 		annotationGraphics.setOffset(new Offset(0, 0));
 		String name = relation.getName();
-		getNetContainer().getPetriNetGraphics().getArcGraphics().put(name , arcGraphics);
+		getNetContainer().getPetriNetGraphics().getArcGraphics().put(name, arcGraphics);
 		getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().put(relation.getName(), annotationGraphics);
 	}
 
@@ -530,6 +527,26 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	protected abstract String getArcToolTip(PNGraphCell cell);
 
+	/**
+	 * Selects all vertices and/or edges depending on the given boolean
+	 * arguments recursively, starting at the given parent or the default parent
+	 * if no parent is specified. Use <code>selectAll</code> to select all
+	 * cells.
+	 * 
+	 * @param vertices
+	 *            Boolean indicating if vertices should be selected.
+	 */
+	public void selectPNGraphCells(final PNComponent type) {
+
+		Collection<Object> cells = mxGraphModel.filterDescendants(getModel(), new mxGraphModel.Filter() {
+			public boolean filter(Object cell) {
+				return view.getState(cell) != null && model.getChildCount(cell) == 0 && ((PNGraphCell) cell).getType() == type;
+			}
+
+		});
+		setSelectionCells(cells);
+	}
+
 	// Needs to bee overriden for Token-Painting
 	@Override
 	/**
@@ -557,7 +574,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 			Object lab = null;
 
-			// Holds the current clipping region in case the label will be clipped
+			// Holds the current clipping region in case the label will be
+			// clipped
 			Shape clip = null;
 			Rectangle newClip = state.getRectangle();
 
@@ -656,7 +674,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		int pointDiameter = (int) (EditorProperties.getInstance().getDefaultTokenSize() * getView().getScale());
 		CircularPointGroup circularPointGroup = new CircularPointGroup(minDistance, pointDiameter);
 
-		// TODO Making method more general to be able to handle colored marking in cpn
+		// TODO Making method more general to be able to handle colored marking
+		// in cpn
 		Multiset<String> placeState = getPlaceStateForCell(cell, circularPointGroup);
 		if (placeState != null) {
 			CPNGraphics cpnGraphics;
@@ -785,16 +804,17 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		}
 	}
 
-
-
-	// ------- GUI events that represent changes on Petri net components ----------------------------------------//
+	// ------- GUI events that represent changes on Petri net components
+	// ----------------------------------------//
 
 	protected void addTransitionToPetriNet(String name, String label) {
 
 	}
 
-	// ------- Property change handling-------------------------------------------------------------------------------- 
-	// These methods are called when some Petri net properties changed by other classes. ----------------
+	// ------- Property change
+	// handling--------------------------------------------------------------------------------
+	// These methods are called when some Petri net properties changed by other
+	// classes. ----------------
 
 	/**
 	 * This method notifies a PNPropertiesListener that a PN component was
@@ -1016,9 +1036,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 		}
 	}
-	
-
-	
 
 	@Override
 	/**
@@ -1030,29 +1047,26 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	 * @return Returns true if the given edge may be splitted by the given
 	 * cell.
 	 */
-	public boolean isSplitTarget(Object target, Object[] cells)
-	{
-// since this works only for one cell, this would always hurt the Petri-Net order
-//		if (target != null && cells != null && cells.length == 1)
-//		{
-//			Object src = model.getTerminal(target, true);
-//			Object trg = model.getTerminal(target, false);
-//
-//			return (model.isEdge(target)
-//					&& isCellConnectable(cells[0])
-//					&& getEdgeValidationError(target,
-//							model.getTerminal(target, true), cells[0]) == null
-//					&& !model.isAncestor(cells[0], src) && !model.isAncestor(
-//					cells[0], trg));
-//		}
+	public boolean isSplitTarget(Object target, Object[] cells) {
+		// since this works only for one cell, this would always hurt the
+		// Petri-Net order
+		// if (target != null && cells != null && cells.length == 1)
+		// {
+		// Object src = model.getTerminal(target, true);
+		// Object trg = model.getTerminal(target, false);
+		//
+		// return (model.isEdge(target)
+		// && isCellConnectable(cells[0])
+		// && getEdgeValidationError(target,
+		// model.getTerminal(target, true), cells[0]) == null
+		// && !model.isAncestor(cells[0], src) && !model.isAncestor(
+		// cells[0], trg));
+		// }
 
 		return false;
 	}
-	
 
-	
-
-@Override
+	@Override
 	/**
 	 * Returns true if the given target cell is a valid target for source.
 	 * This is a boolean implementation for not allowing connections between
@@ -1065,17 +1079,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	 * @return Returns true if the the connection between the given terminals
 	 * is valid.
 	 */
-	public boolean isValidConnection(Object source, Object target)
-	{
-	boolean result = isValidSource(source) && isValidTarget(target)
-			&& (isAllowLoops() || source != target);
-	PNComponent sourceType, targetType;
-	if(result && source instanceof PNGraphCell && target instanceof PNGraphCell){
-		sourceType = ((PNGraphCell) source).getType();
-		targetType = ((PNGraphCell) target).getType();
-	if(sourceType == targetType)
-		return false;}
-	return result;
+	public boolean isValidConnection(Object source, Object target) {
+		boolean result = isValidSource(source) && isValidTarget(target) && (isAllowLoops() || source != target);
+		PNComponent sourceType, targetType;
+		if (result && source instanceof PNGraphCell && target instanceof PNGraphCell) {
+			sourceType = ((PNGraphCell) source).getType();
+			targetType = ((PNGraphCell) target).getType();
+			if (sourceType == targetType)
+				return false;
+		}
+		return result;
 
 	}
 
@@ -1127,12 +1140,13 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-		
-//		System.out.println("MX:" + evt.getName());
-//		if (evt.getName().equals(mxEvent.CHANGE)) {
-//			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
-//System.out.println(changes + "changes");
-//}
+
+		// System.out.println("MX:" + evt.getName());
+		// if (evt.getName().equals(mxEvent.CHANGE)) {
+		// ArrayList<mxAtomicGraphModelChange> changes =
+		// (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
+		// System.out.println(changes + "changes");
+		// }
 
 		// if (evt.getName().equals(mxEvent.EXECUTE)){
 		// Object change = evt.getProperty("change");
@@ -1147,78 +1161,79 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		// if(change instanceof StyleChange)
 		// System.out.println(((StyleChange) change).getStyle());
 		// }
-//System.out.println("EVENT:" + evt.getName());
-if (evt.getName().equals(mxEvent.UNDO)) {
-	mxUndoableEdit edit = (mxUndoableEdit) evt.getProperty("edit");
-	//System.out.println("#"+evt.getProperties() + "#" + edit.getChanges() );
-}
+		// System.out.println("EVENT:" + evt.getName());
+		if (evt.getName().equals(mxEvent.UNDO)) {
+			mxUndoableEdit edit = (mxUndoableEdit) evt.getProperty("edit");
+			// System.out.println("#"+evt.getProperties() + "#" +
+			// edit.getChanges() );
+		}
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
-//System.out.println(changes + "changes");
+			// System.out.println(changes + "changes");
 			if (changes != null) {
 				for (mxAtomicGraphModelChange change : changes) {
-					if(change instanceof mxTerminalChange){
-						mxTerminalChange terminalChange = (mxTerminalChange)change;
+					if (change instanceof mxTerminalChange) {
+						mxTerminalChange terminalChange = (mxTerminalChange) change;
 						PNGraphCell arc = (PNGraphCell) terminalChange.getCell();
 						PNGraphCell prevArcEnd = (PNGraphCell) terminalChange.getPrevious();
 						PNGraphCell newArcEnd = (PNGraphCell) terminalChange.getTerminal();
-						if(prevArcEnd!= null && newArcEnd != null){
-							if(prevArcEnd.getType() != newArcEnd.getType()){
+						if (prevArcEnd != null && newArcEnd != null) {
+							if (prevArcEnd.getType() != newArcEnd.getType()) {
 							}
-	
-							
-							
-							if (getNetContainer().getPetriNet().containsFlowRelation(arc.getId())){
-								
+
+							if (getNetContainer().getPetriNet().containsFlowRelation(arc.getId())) {
+
 								try {
-								
 
-								PNGraphCell sourceCell = (PNGraphCell) arc.getSource();
-								PNGraphCell targetCell = (PNGraphCell) arc.getTarget();
-////								removeFlowRelation(arc.getId());
-//								PNGraphCell newArc = (PNGraphCell) addNewFlowRelation(sourceCell, targetCell);	
-//
-//								annotationGraphics.setOffset(new Offset(0, 0));
-//								getNetContainer().getPetriNetGraphics().getArcGraphics().put(newArc.getId() , arcGraphics);
-//								getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().put(newArc.getId(), annotationGraphics);
-//								
-								
-								
-								AbstractFlowRelation relation = null;
+									PNGraphCell sourceCell = (PNGraphCell) arc.getSource();
+									PNGraphCell targetCell = (PNGraphCell) arc.getTarget();
+									// // removeFlowRelation(arc.getId());
+									// PNGraphCell newArc = (PNGraphCell)
+									// addNewFlowRelation(sourceCell,
+									// targetCell);
+									//
+									// annotationGraphics.setOffset(new
+									// Offset(0, 0));
+									// getNetContainer().getPetriNetGraphics().getArcGraphics().put(newArc.getId()
+									// , arcGraphics);
+									// getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().put(newArc.getId(),
+									// annotationGraphics);
+									//
 
-								if (sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION) {
-									relation = getNetContainer().getPetriNet().addFlowRelationPT(sourceCell.getId(), targetCell.getId());
-								} else if (sourceCell.getType() == PNComponent.TRANSITION && targetCell.getType() == PNComponent.PLACE) {
-									relation = getNetContainer().getPetriNet().addFlowRelationTP(sourceCell.getId(), targetCell.getId());
-								}
-								PNGraphCell arcCell = arcReferences.get(arc.getId());
-								addArcReference(relation, arcCell);
-								ArcGraphics arcGraphics =  getNetContainer().getPetriNetGraphics().getArcGraphics().get(arc.getId());
-								AnnotationGraphics annotationGraphics = getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(arc.getId());
-								addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
-								removeFlowRelation(arc.getId());
-								arcCell.setId(relation.getName());
-								notifyRelationAdded(relation);
-								setSelectionCell(arcCell);
+									AbstractFlowRelation relation = null;
+
+									if (sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION) {
+										relation = getNetContainer().getPetriNet().addFlowRelationPT(sourceCell.getId(), targetCell.getId());
+									} else if (sourceCell.getType() == PNComponent.TRANSITION && targetCell.getType() == PNComponent.PLACE) {
+										relation = getNetContainer().getPetriNet().addFlowRelationTP(sourceCell.getId(), targetCell.getId());
+									}
+									PNGraphCell arcCell = arcReferences.get(arc.getId());
+									addArcReference(relation, arcCell);
+									ArcGraphics arcGraphics = getNetContainer().getPetriNetGraphics().getArcGraphics().get(arc.getId());
+									AnnotationGraphics annotationGraphics = getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(arc.getId());
+									addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
+									removeFlowRelation(arc.getId());
+									arcCell.setId(relation.getName());
+									notifyRelationAdded(relation);
+									setSelectionCell(arcCell);
 								} catch (ParameterException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-				
-								
-						}
+
+							}
 						}
 					}
 					if (change instanceof mxChildChange) {
 						mxChildChange childChange = ((mxChildChange) change);
-//System.out.println(childChange);
+						// System.out.println(childChange);
 						if (childChange.getChild() instanceof PNGraphCell) {
 							PNGraphCell cell = (PNGraphCell) ((mxChildChange) change).getChild();
-							if(childChange.getPrevious() == null){
-								
-							switch (cell.getType()) {
-							case PLACE:
-								if (!getNetContainer().getPetriNet().containsPlace(cell.getId())) {
+							if (childChange.getPrevious() == null) {
+
+								switch (cell.getType()) {
+								case PLACE:
+									if (!getNetContainer().getPetriNet().containsPlace(cell.getId())) {
 										try {
 											if (getNetContainer().getPetriNet().addPlace(cell.getId())) {
 												AbstractPlace place = getNetContainer().getPetriNet().getPlace(cell.getId());
@@ -1234,64 +1249,64 @@ if (evt.getName().equals(mxEvent.UNDO)) {
 										}
 									}
 
-								break;
-							case TRANSITION:
-								if (!getNetContainer().getPetriNet().containsTransition(cell.getId())){
-									try {
-										if (getNetContainer().getPetriNet().addTransition(cell.getId())) {
-											AbstractTransition transition = getNetContainer().getPetriNet().getTransition(cell.getId());
-											NodeGraphics nodeGraphics = new NodeGraphics();
-											AnnotationGraphics annotationGraphics = new AnnotationGraphics();
-											addGraphicalInfoToPNTransition(new mxPoint(cell.getGeometry().getCenterX(), cell.getGeometry().getCenterY()), transition, nodeGraphics, annotationGraphics);
-											Utils.createNodeGraphicsFromStyle(cell.getStyle(), nodeGraphics, annotationGraphics);
-											addNodeReference(transition, cell);
-											notifyTransitionAdded(transition);
-										}
-									} catch (ParameterException e) {
-										e.printStackTrace();
-									}
-								}
-									break;
-							case ARC:
-								if (!getNetContainer().getPetriNet().containsFlowRelation(cell.getId())){
-									try {
-									AbstractFlowRelation relation = null;
-									PNGraphCell sourceCell = (PNGraphCell) cell.getSource();
-									PNGraphCell targetCell = (PNGraphCell) cell.getTarget();
-									if (sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION) {
-											relation = getNetContainer().getPetriNet().addFlowRelationPT(sourceCell.getId(), targetCell.getId());
-									} else if (sourceCell.getType() == PNComponent.TRANSITION && targetCell.getType() == PNComponent.PLACE) {
-										relation = getNetContainer().getPetriNet().addFlowRelationTP(sourceCell.getId(), targetCell.getId());
-									}
-									ArcGraphics arcGraphics = new ArcGraphics();
-									AnnotationGraphics annotationGraphics = new AnnotationGraphics();
-									addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
-									Utils.createArcGraphicsFromStyle(cell.getStyle(),arcGraphics, annotationGraphics);
-									addArcReference(relation, cell);
-									notifyRelationAdded(relation);	
-									} catch (ParameterException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-							}
-									break;
-							}
-							}
-							else if(childChange.getPrevious() != null && childChange.getParent() == null){
-								try {
-								switch (cell.getType()) {
-								case ARC:								
-										removeFlowRelation(cell.getId());
-
-									break;
-								case PLACE:
-									removePlace(cell.getId());
 									break;
 								case TRANSITION:
-									removeTransition(cell.getId());
+									if (!getNetContainer().getPetriNet().containsTransition(cell.getId())) {
+										try {
+											if (getNetContainer().getPetriNet().addTransition(cell.getId())) {
+												AbstractTransition transition = getNetContainer().getPetriNet().getTransition(cell.getId());
+												NodeGraphics nodeGraphics = new NodeGraphics();
+												AnnotationGraphics annotationGraphics = new AnnotationGraphics();
+												addGraphicalInfoToPNTransition(new mxPoint(cell.getGeometry().getCenterX(), cell.getGeometry().getCenterY()), transition, nodeGraphics,
+														annotationGraphics);
+												Utils.createNodeGraphicsFromStyle(cell.getStyle(), nodeGraphics, annotationGraphics);
+												addNodeReference(transition, cell);
+												notifyTransitionAdded(transition);
+											}
+										} catch (ParameterException e) {
+											e.printStackTrace();
+										}
+									}
 									break;
-
+								case ARC:
+									if (!getNetContainer().getPetriNet().containsFlowRelation(cell.getId())) {
+										try {
+											AbstractFlowRelation relation = null;
+											PNGraphCell sourceCell = (PNGraphCell) cell.getSource();
+											PNGraphCell targetCell = (PNGraphCell) cell.getTarget();
+											if (sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION) {
+												relation = getNetContainer().getPetriNet().addFlowRelationPT(sourceCell.getId(), targetCell.getId());
+											} else if (sourceCell.getType() == PNComponent.TRANSITION && targetCell.getType() == PNComponent.PLACE) {
+												relation = getNetContainer().getPetriNet().addFlowRelationTP(sourceCell.getId(), targetCell.getId());
+											}
+											ArcGraphics arcGraphics = new ArcGraphics();
+											AnnotationGraphics annotationGraphics = new AnnotationGraphics();
+											addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
+											Utils.createArcGraphicsFromStyle(cell.getStyle(), arcGraphics, annotationGraphics);
+											addArcReference(relation, cell);
+											notifyRelationAdded(relation);
+										} catch (ParameterException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+									break;
 								}
+							} else if (childChange.getPrevious() != null && childChange.getParent() == null) {
+								try {
+									switch (cell.getType()) {
+									case ARC:
+										removeFlowRelation(cell.getId());
+
+										break;
+									case PLACE:
+										removePlace(cell.getId());
+										break;
+									case TRANSITION:
+										removeTransition(cell.getId());
+										break;
+
+									}
 								} catch (ParameterException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -1332,7 +1347,7 @@ if (evt.getName().equals(mxEvent.UNDO)) {
 						if (arcGraphics != null) {
 							Vector<Position> vector = new Vector<Position>();
 							List<mxPoint> points = geo.getPoints();
-							if(points != null){
+							if (points != null) {
 								if (points.size() > 0) {
 									for (mxPoint p : points) {
 										vector.add(new Position(p.getX(), p.getY()));
@@ -1362,7 +1377,7 @@ if (evt.getName().equals(mxEvent.UNDO)) {
 			}
 
 		}
-		
+
 		if (evt.getName().equals(mxEvent.RESIZE_CELLS)) {
 			ensureValidPlaceSize();
 		}
@@ -1481,7 +1496,7 @@ if (evt.getName().equals(mxEvent.UNDO)) {
 
 		return cells;
 	}
-	
+
 	/**
 	 * @param graph
 	 * @return
@@ -1495,12 +1510,36 @@ if (evt.getName().equals(mxEvent.UNDO)) {
 		return prefix + index;
 	}
 	
+
+
 	public String getNewPlaceName() {
-	String prefix = MXConstants.PLACE_NAME_PREFIX;
-	Integer index = 0;
-	while (getNetContainer().getPetriNet().containsPlace(prefix + index)) {
-		index++;
+		String prefix = MXConstants.PLACE_NAME_PREFIX;
+		Integer index = 0;
+		while (getNetContainer().getPetriNet().containsPlace(prefix + index)) {
+			index++;
+		}
+		return prefix + index;
 	}
-	return prefix + index;
+	
+	public boolean isValidNodeName(String name, PNComponent type) {
+		String prefix = null;
+		switch (type) {
+		case PLACE:
+			prefix = MXConstants.PLACE_NAME_PREFIX;
+			break;
+		case TRANSITION:
+			prefix = MXConstants.TRANSITION_NAME_PREFIX;
+			break;
+		}
+		if(!name.startsWith(prefix))
+			return false;
+		String possibleInteger = name.substring(prefix.length());
+		try {
+			Validate.isInteger(possibleInteger);
+		} catch (ParameterException e) {
+			return false;
+		}
+
+		return true;
 	}
 }

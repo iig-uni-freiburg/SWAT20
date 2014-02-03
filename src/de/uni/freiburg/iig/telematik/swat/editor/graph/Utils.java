@@ -538,9 +538,9 @@ System.out.println("key:" + key);
 			GradientRotation gradientRotation = (value != null) ? GradientRotation.getGradientRotation((String) value) : null;
 			graphics.getFill().setGradientRotation(gradientRotation);
 		}
-		if (key.equals(MXConstants.LABEL_IMAGE)) {
-			graphics.getFill().setImage((URI) value);
-		}
+//		if (key.equals(MXConstants.LABEL_IMAGE)) {
+//			graphics.getFill().setImage((URI) value);
+//		}
 
 		// LINE
 		if (key.equals(MXConstants.LABEL_LINE_WIDTH)) {

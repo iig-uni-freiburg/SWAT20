@@ -14,6 +14,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
@@ -38,6 +43,7 @@ import javax.swing.TransferHandler;
 
 import com.mxgraph.io.graphml.mxGraphMlUtils;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
@@ -90,6 +96,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.GraphTransferHandler;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -559,7 +566,7 @@ public class ToolBar extends JToolBar {
 
 	public void deactivate() {
 		copyAction.setEnabled(false);
-		pasteAction.setEnabled(false);
+	pasteAction.setEnabled(isCellInClipboard());
 		cutAction.setEnabled(false);
 		getFontBox().setEnabled(false);
 		getFontSizeBox().setEnabled(false);
@@ -586,8 +593,17 @@ public class ToolBar extends JToolBar {
 		gradientDiagonalAction.setEnabled(false);
 		gradientHorizontalAction.setEnabled(false);
 		gradientVerticalAction.setEnabled(false);
+
 	}
 
+	private boolean isCellInClipboard(){
+			Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+			return	clipBoard.isDataFlavorAvailable(mxGraphTransferable.dataFlavor);
+			
+	}
+	
+	
 	public void updateView(Set<PNGraphCell> selectedComponents) {
 
 		if (selectedComponents == null || selectedComponents.isEmpty()) {
@@ -597,7 +613,13 @@ public class ToolBar extends JToolBar {
 		}
 		if (!selectedComponents.isEmpty()) {
 			copyAction.setEnabled(true);
-			pasteAction.setEnabled(true);
+
+		
+
+
+
+
+			pasteAction.setEnabled(isCellInClipboard());
 			cutAction.setEnabled(true);
 			strokeColorAction.setEnabled(true);
 			getStrokeWeightBox().setEnabled(true);

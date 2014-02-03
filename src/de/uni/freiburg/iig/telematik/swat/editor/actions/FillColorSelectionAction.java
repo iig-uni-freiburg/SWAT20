@@ -74,7 +74,6 @@ public class FillColorSelectionAction extends AbstractPNEditorAction {
 	public void actionPerformed(ActionEvent e) {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 		FillStyle fillStlye = getEditor().getEditorToolbar().getFillStyle();
-		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
 		Color backgroundColor;
 		switch (fillStlye) {
 		case SOLID:
@@ -129,11 +128,12 @@ if(backgroundColor != null){
 			break;
 
 		}
-
+		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
+		if(selectedCell != null){
 		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
 		setWithOneCell.add(selectedCell);
 		getEditor().getEditorToolbar().updateView(setWithOneCell);
-
+		}
 
 //		try {
 //			setFillColor(backgroundColor, gradientColor, this.gradientRotation);

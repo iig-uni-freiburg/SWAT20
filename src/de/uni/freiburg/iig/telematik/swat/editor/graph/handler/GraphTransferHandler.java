@@ -45,7 +45,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 	 */
 	public boolean importData(JComponent c, Transferable t) {
 		boolean result = false;
-
+		
 		if (isLocalDrag()) {
 			// Enables visual feedback on the Mac
 			result = true;
@@ -134,53 +134,73 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 		HashMap<String, PNGraphCell> temporaryMapping = new HashMap<String, PNGraphCell>();
 		for (Object object : cells) {
 			PNGraphCell cell;
-
 			if (object instanceof PNGraphCell) {
 				cell = (PNGraphCell) object;
+
 				PNGraphCell newCell = null;
+				
+				try {	
 				switch (cell.getType()) {
 				case PLACE:
-					try {	
-						if(graph.getNetContainer().getPetriNet().containsPlace(cell.getId())){
+					if(cell.getId() == null) // DnD generated
+						newCell = (PNGraphCell) graph.addNewPlace(new mxPoint(dx, dy));
+					else{
+						
 							String nodeName = graph.getNewPlaceName();
+	
+
 							if (graph.getNetContainer().getPetriNet().addPlace(nodeName)) {
 								AbstractPlace place = graph.getNetContainer().getPetriNet().getPlace(nodeName);
+								
+			
+								if (graph.getNetContainer().getPetriNet().containsPlace(cell.getId()))
+									if(!graph.getNetContainer().getPetriNet().getPlace(cell.getId()).getLabel().equals(cell.getId()))
+										place.setLabel(graph.getNetContainer().getPetriNet().getPlace(cell.getId()).getLabel());
+								else 
+									dx = dy = 0; // avoids delta-shift if cells are copied between different graphs.
+								
+								
 								NodeGraphics nodeGraphics = new NodeGraphics();
 								AnnotationGraphics annotationGraphics = new AnnotationGraphics();
 								Utils.createNodeGraphicsFromStyle(cell.getStyle(), nodeGraphics, annotationGraphics);
 								graph.addGraphicalInfoToPNPlace(new mxPoint(cell.getGeometry().getCenterX() +dx, cell.getGeometry().getCenterY() + dy), place, nodeGraphics, annotationGraphics);
+								annotationGraphics.setOffset(new Offset(cell.getGeometry().getOffset().getX(), cell.getGeometry().getOffset().getY()));
 								newCell = graph.insertPNPlace(place, nodeGraphics, annotationGraphics);
 							}
 							
 						}						
-						else
-							newCell = (PNGraphCell) graph.addNewPlace(new mxPoint(dx, dy));
-					} catch (ParameterException e) {
-						e.printStackTrace();
-					}
+						
+					
 					break;
 				case TRANSITION:
-					try {
-						if(graph.getNetContainer().getPetriNet().containsTransition(cell.getId())){	
-						
-						String nodeName = graph.getNewTransitionName();
+						if(cell.getId() == null) 	// DnD generated			
+							newCell = (PNGraphCell) graph.addNewTransition(new mxPoint(dx, dy));
+						else {
+							
+							
+							String nodeName = graph.getNewTransitionName();
+							
+							
 						if (graph.getNetContainer().getPetriNet().addTransition(nodeName)) {
 							AbstractTransition transition = graph.getNetContainer().getPetriNet().getTransition(nodeName);
+							if (graph.getNetContainer().getPetriNet().containsTransition(cell.getId()))
+								if(!graph.getNetContainer().getPetriNet().getTransition(cell.getId()).getLabel().equals(cell.getId()))
+								transition.setLabel(graph.getNetContainer().getPetriNet().getTransition(cell.getId()).getLabel());
+							else 
+								dx = dy = 0; // avoids delta-shift if cells are copied between different graphs.
 							NodeGraphics nodeGraphics = new NodeGraphics();
 							AnnotationGraphics annotationGraphics = new AnnotationGraphics();
 							Utils.createNodeGraphicsFromStyle(cell.getStyle(), nodeGraphics, annotationGraphics);
 							graph.addGraphicalInfoToPNTransition(new mxPoint(cell.getGeometry().getCenterX() +  dx, cell.getGeometry().getCenterY()  + dy), transition, nodeGraphics, annotationGraphics);
+							annotationGraphics.setOffset(new Offset(cell.getGeometry().getOffset().getX(), cell.getGeometry().getOffset().getY()));
 							newCell = graph.insertPNTransition(transition, nodeGraphics, annotationGraphics);
 						}
-					}
-						else{						
-						newCell = (PNGraphCell) graph.addNewTransition(new mxPoint(dx, dy));}
-					} catch (ParameterException e) {
-						e.printStackTrace();
-					}
-					break;
+						}
+						break;
+						
+					
 				case ARC:
-					try {	
+					
 						AbstractFlowRelation relation = null;
 						PNGraphCell sourceCell = (PNGraphCell) cell.getSource();
 						sourceCell = temporaryMapping.get(sourceCell.getId());
@@ -200,10 +220,11 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 			
 					newCell = graph.insertPNRelation(relation, arcGraphics, annotationGraphics);
 						}
-					} catch (ParameterException e) {
-						e.printStackTrace();
-					}
+				
 					break;
+				}
+				} catch (ParameterException e) {
+					e.printStackTrace();
 				}
 				temporaryMapping.put(cell.getId(), newCell);
 			}
@@ -219,6 +240,8 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 
 		return cells;
 	}
+
+	
 
 
 
