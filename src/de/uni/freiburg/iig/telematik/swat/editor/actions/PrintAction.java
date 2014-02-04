@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 
 public class PrintAction extends AbstractPNEditorAction {
 
@@ -16,7 +17,7 @@ public class PrintAction extends AbstractPNEditorAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		success = false;
+		success = false;		
 		System.out.println("\n//PRINT NET INFORMATION//\n");
 		System.out.println(editor.getNetContainer().getPetriNet());
 		System.out.println(editor.getNetContainer().getPetriNetGraphics());

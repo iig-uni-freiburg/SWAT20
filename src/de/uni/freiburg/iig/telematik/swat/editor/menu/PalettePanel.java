@@ -109,10 +109,8 @@ public class PalettePanel extends JPanel {
 		DragGestureListener dragGestureListener = new DragGestureListener() {
 			public void dragGestureRecognized(DragGestureEvent e) {
 				if (!iconPanel.isEnabled()) {
-					System.out.println("gerd");
 					return;
 				}
-				System.out.println("gerda");
 				e.startDrag(null, MXConstants.EMPTY_IMAGE, new Point(), t, null);
 			}
 		};

@@ -27,16 +27,23 @@ import com.mxgraph.shape.mxHtmlTextShape;
 import com.mxgraph.shape.mxRectangleShape;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
+import com.mxgraph.swing.handler.mxCellHandler;
+import com.mxgraph.swing.handler.mxEdgeHandler;
+import com.mxgraph.swing.handler.mxElbowEdgeHandler;
+import com.mxgraph.swing.handler.mxVertexHandler;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
+import com.mxgraph.view.mxEdgeStyle;
+import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.ConnectionHandler;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.EdgeHandler;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.GraphTransferHandler;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.ConnectorShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.DefaultTextShape;
@@ -59,6 +66,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		getCanvas().putTextShape(mxGraphics2DCanvas.TEXT_SHAPE_DEFAULT, new DefaultTextShape());
 		getCanvas().putTextShape(mxGraphics2DCanvas.TEXT_SHAPE_HTML, new HtmlTextShape());
 		getCanvas().putShape(mxConstants.SHAPE_CONNECTOR, new ConnectorShape());
+		
 
 	}
 
@@ -129,6 +137,36 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		return new ConnectionHandler(this);
 	}
 	
+	@Override
+	/**
+	 * 
+	 * @param state
+	 *            Cell state for which a handler should be created.
+	 * @return Returns the handler to be used for the given cell state.
+	 */
+	public mxCellHandler createHandler(mxCellState state)
+	{
+		if (graph.getModel().isVertex(state.getCell()))
+		{
+			return new mxVertexHandler(this, state);
+		}
+		else if (graph.getModel().isEdge(state.getCell()))
+		{
+			mxEdgeStyleFunction style = graph.getView().getEdgeStyle(state,
+					null, null, null);
+
+			if (graph.isLoop(state) || style == mxEdgeStyle.ElbowConnector
+					|| style == mxEdgeStyle.SideToSide
+					|| style == mxEdgeStyle.TopToBottom)
+			{
+				return new mxElbowEdgeHandler(this, state);
+			}
+
+			return new EdgeHandler(this, state);
+		}
+
+		return new mxCellHandler(this, state);
+	}
 
 	public void setPopupMenu(EditorPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;
@@ -152,7 +190,20 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	}
 
 	protected boolean rightClickOnArc(PNGraphCell cell, MouseEvent e) {
-		return false;
+		if(getGraph().isLabelSelected())
+			rightClickOnArcLabel(cell,e);
+		else{
+			Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), this);
+			mxCellHandler handler = getSelectionCellsHandler().getHandler(cell);
+			if(handler instanceof EdgeHandler){
+			int index = handler.getIndex();
+			int indexbymouse = handler.getIndexAt(pt.x, pt.y);
+			if(indexbymouse >0){
+				getGraph().removePoint(cell,indexbymouse);
+			}
+			}
+		}
+		return true;
 	}
 
 	protected boolean doubleClickOnCanvas(MouseEvent e) {
@@ -176,6 +227,21 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	}
 
 	protected boolean doubleClickOnArc(PNGraphCell cell, MouseEvent e) {
+		if(getGraph().isLabelSelected())
+			doubleClickOnArcLabel(cell,e);
+		else{
+			Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), this);
+			getGraph().addWayPoint(cell,pt);
+		}
+
+		return true;
+	}
+	
+	protected boolean doubleClickOnArcLabel(PNGraphCell cell, MouseEvent e) {
+		return false;
+	}
+	
+	protected boolean rightClickOnArcLabel(PNGraphCell cell, MouseEvent e) {
 		return false;
 	}
 
@@ -224,7 +290,6 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 		@Override
 		public void keyTyped(KeyEvent event) {
-			System.out.println("blub");
 			int dx = 0;
 			int dy = 0;
 		    if (event.getKeyChar() == KeyEvent.VK_LEFT) {
@@ -338,6 +403,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 			if (refresh) {
 				mxCellState state = getGraph().getView().getState(cell);
 				redraw(state);
+				refresh();
 			}
 		}
 

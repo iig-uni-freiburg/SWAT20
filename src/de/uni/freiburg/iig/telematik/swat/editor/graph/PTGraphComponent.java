@@ -50,7 +50,7 @@ public class PTGraphComponent extends PNGraphComponent {
 
 
 	@Override
-	protected boolean doubleClickOnArc(PNGraphCell cell, MouseEvent e) {
+	protected boolean doubleClickOnArcLabel(PNGraphCell cell, MouseEvent e) {
 		String weight = JOptionPane.showInputDialog(PTGraphComponent.this, "Input new arc weight");
 		try {
 			Validate.positiveInteger(weight);

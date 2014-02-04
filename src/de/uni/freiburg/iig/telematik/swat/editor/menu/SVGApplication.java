@@ -69,7 +69,6 @@ public class SVGApplication {
                 if (choice == JFileChooser.APPROVE_OPTION) {
                     File f = fc.getSelectedFile();
                     try {
-                    	System.out.println(f.toURL().toString());
                         svgCanvas.setURI(f.toURL().toString());
                     } catch (IOException ex) {
                         ex.printStackTrace();

@@ -1,10 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph.handler;
 
+import java.awt.Container;
 import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JComponent;
 
@@ -132,6 +134,8 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 		PNGraph graph = graphComponent.getGraph();
 		Object[] cells = gt.getCells();
 		HashMap<String, PNGraphCell> temporaryMapping = new HashMap<String, PNGraphCell>();
+		
+		graph.getModel().beginUpdate();
 		for (Object object : cells) {
 			PNGraphCell cell;
 			if (object instanceof PNGraphCell) {
@@ -147,17 +151,15 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 					else{
 						
 							String nodeName = graph.getNewPlaceName();
-	
 
 							if (graph.getNetContainer().getPetriNet().addPlace(nodeName)) {
 								AbstractPlace place = graph.getNetContainer().getPetriNet().getPlace(nodeName);
 								
 			
-								if (graph.getNetContainer().getPetriNet().containsPlace(cell.getId()))
+								if (graph.getNetContainer().getPetriNet().containsPlace(cell.getId())){
 									if(!graph.getNetContainer().getPetriNet().getPlace(cell.getId()).getLabel().equals(cell.getId()))
-										place.setLabel(graph.getNetContainer().getPetriNet().getPlace(cell.getId()).getLabel());
-								else 
-									dx = dy = 0; // avoids delta-shift if cells are copied between different graphs.
+										place.setLabel(graph.getNetContainer().getPetriNet().getPlace(cell.getId()).getLabel());}
+								
 								
 								
 								NodeGraphics nodeGraphics = new NodeGraphics();
@@ -176,18 +178,13 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 						if(cell.getId() == null) 	// DnD generated			
 							newCell = (PNGraphCell) graph.addNewTransition(new mxPoint(dx, dy));
 						else {
-							
-							
-							String nodeName = graph.getNewTransitionName();
-							
-							
+							String nodeName = graph.getNewTransitionName();	
 						if (graph.getNetContainer().getPetriNet().addTransition(nodeName)) {
 							AbstractTransition transition = graph.getNetContainer().getPetriNet().getTransition(nodeName);
-							if (graph.getNetContainer().getPetriNet().containsTransition(cell.getId()))
+							if (graph.getNetContainer().getPetriNet().containsTransition(cell.getId())){
 								if(!graph.getNetContainer().getPetriNet().getTransition(cell.getId()).getLabel().equals(cell.getId()))
-								transition.setLabel(graph.getNetContainer().getPetriNet().getTransition(cell.getId()).getLabel());
-							else 
-								dx = dy = 0; // avoids delta-shift if cells are copied between different graphs.
+								transition.setLabel(graph.getNetContainer().getPetriNet().getTransition(cell.getId()).getLabel());}
+
 							NodeGraphics nodeGraphics = new NodeGraphics();
 							AnnotationGraphics annotationGraphics = new AnnotationGraphics();
 							Utils.createNodeGraphicsFromStyle(cell.getStyle(), nodeGraphics, annotationGraphics);
@@ -217,8 +214,27 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 						graph.addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
 						Utils.createArcGraphicsFromStyle(cell.getStyle(),arcGraphics, annotationGraphics);
 					
-			
-					newCell = graph.insertPNRelation(relation, arcGraphics, annotationGraphics);
+					
+						List<mxPoint> points = cell.getGeometry().getPoints();
+						if (arcGraphics != null) {
+							Vector<Position> vector = new Vector<Position>();
+							if (points != null) {
+								if (points.size() >= 0) {
+									for (mxPoint p : points) {
+										vector.add(new Position(p.getX() + dx, p.getY() + dy));
+									}
+										try {
+											arcGraphics.setPositions(vector);
+										} catch (ParameterException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+								}
+							}
+						}
+						
+						newCell = graph.insertPNRelation(relation, arcGraphics, annotationGraphics);
+					
 						}
 				
 					break;
@@ -229,7 +245,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 				temporaryMapping.put(cell.getId(), newCell);
 			}
 		}
-
+		graph.getModel().endUpdate();
 		if (graph.isSplitEnabled() && graph.isSplitTarget(target, cells)) {
 			graph.splitEdge(target, cells, dx, dy);
 		} else {

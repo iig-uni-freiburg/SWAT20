@@ -520,11 +520,9 @@ public static AbstractObjectGraphics getPNGraphics(PNGraph graph, PNGraphCell ce
 	}
 
 	private static void updateAnnotationGraphics(AnnotationGraphics graphics, String key, Object value) throws ParameterException {
-System.out.println("key:" + key);
 		if (key.equals(mxConstants.STYLE_NOLABEL)) {
 			boolean isVisible = ((((String)value).equals("0"))? true:false);
 			graphics.setVisibility(isVisible);
-			System.out.println(isVisible + "#");
 		}
 		// FILL
 		if (key.equals(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR)) {

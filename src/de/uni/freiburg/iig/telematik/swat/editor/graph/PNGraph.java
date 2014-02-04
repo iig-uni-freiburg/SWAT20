@@ -8,8 +8,12 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -96,6 +100,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 		this.getModel().addListener(mxEvent.CHANGE, this);
 		this.getModel().addListener(mxEvent.UNDO, this);
+		setCellsBendable(true);
 
 		setHtmlLabels(true);
 		setAllowDanglingEdges(false);
@@ -133,7 +138,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 						netContainer.getPetriNetGraphics().getArcAnnotationGraphics().get(relation.getName()));
 			}
 			getModel().endUpdate();
-
 		}
 	}
 
@@ -232,8 +236,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	}
 
 	@SuppressWarnings("rawtypes")
-	void addArcReference(AbstractFlowRelation pnArc, PNGraphCell cell) {
-		arcReferences.put(pnArc.getName(), cell);
+	void addArcReference(String string, PNGraphCell cell) {
+		arcReferences.put(string, cell);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -373,17 +377,23 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@SuppressWarnings("rawtypes")
 	public PNGraphCell insertPNRelation(AbstractFlowRelation relation, ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
-		Vector<Position> positions = arcGraphics == null ? new Vector<Position>() : arcGraphics.getPositions();
-		PNGraphCell newCell = createArcCell(relation.getName(), getArcConstraint(relation), positions, MXConstants.getArcStyle(arcGraphics, annotationGraphics));
+
+		PNGraphCell newCell = createArcCell(relation.getName(), getArcConstraint(relation), MXConstants.getArcStyle(arcGraphics, annotationGraphics));
+		addEdge(newCell, getDefaultParent(), getCell(relation.getSource()), getCell(relation.getTarget()), null);
+		
 		double offx = annotationGraphics.getOffset().getX();
 		double offy = annotationGraphics.getOffset().getY();
 		mxPoint offset = new mxPoint(offx, offy);
 		newCell.getGeometry().setOffset(offset);
-		if (arcGraphics == null || annotationGraphics == null) {
-			mxCellState state = getView().getState(newCell, true);
+		
+		Vector<Position> positions = (arcGraphics == null) ? new Vector<Position>() : arcGraphics.getPositions();
+		List<mxPoint> points = new ArrayList<mxPoint>();
+		for (Position position : positions) {
+			points.add(new mxPoint(position.getX(), position.getY()));
 		}
-		addEdge(newCell, getDefaultParent(), getCell(relation.getSource()), getCell(relation.getTarget()), null);
-		addArcReference(relation, newCell);
+		newCell.getGeometry().setPoints(points);
+		
+		addArcReference(relation.getName(), newCell);
 		notifyRelationAdded(relation);
 		return newCell;
 	}
@@ -474,13 +484,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		return vertex;
 	}
 
-	public PNGraphCell createArcCell(String name, String label, Collection<Position> positions, String style) {
+	public PNGraphCell createArcCell(String name, String label, String style) {
 		mxGeometry geometry = new mxGeometry();
-		List<mxPoint> points = new ArrayList<mxPoint>();
-		for (Position position : positions) {
-			points.add(new mxPoint(position.getX(), position.getY()));
-		}
-		geometry.setPoints(points);
 		geometry.setRelative(true);
 		PNGraphCell vertex = new PNGraphCell(label, geometry, style, PNComponent.ARC);
 		vertex.setId(name);
@@ -1141,7 +1146,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
 
-		// System.out.println("MX:" + evt.getName());
 		// if (evt.getName().equals(mxEvent.CHANGE)) {
 		// ArrayList<mxAtomicGraphModelChange> changes =
 		// (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
@@ -1208,7 +1212,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 										relation = getNetContainer().getPetriNet().addFlowRelationTP(sourceCell.getId(), targetCell.getId());
 									}
 									PNGraphCell arcCell = arcReferences.get(arc.getId());
-									addArcReference(relation, arcCell);
+									addArcReference(relation.getName(), arcCell);
 									ArcGraphics arcGraphics = getNetContainer().getPetriNetGraphics().getArcGraphics().get(arc.getId());
 									AnnotationGraphics annotationGraphics = getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(arc.getId());
 									addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
@@ -1283,7 +1287,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 											AnnotationGraphics annotationGraphics = new AnnotationGraphics();
 											addGraphicalInfoToPNArc(relation, arcGraphics, annotationGraphics);
 											Utils.createArcGraphicsFromStyle(cell.getStyle(), arcGraphics, annotationGraphics);
-											addArcReference(relation, cell);
+											addArcReference(relation.getName(), cell);
 											notifyRelationAdded(relation);
 										} catch (ParameterException e) {
 											// TODO Auto-generated catch block
@@ -1343,24 +1347,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 							nodeGraphics.getPosition().setX(geo.getCenterX());
 							nodeGraphics.getPosition().setY(geo.getCenterY());
 						}
+						updatePointsInArcGraphics(cell,geo.getPoints());
 
-						if (arcGraphics != null) {
-							Vector<Position> vector = new Vector<Position>();
-							List<mxPoint> points = geo.getPoints();
-							if (points != null) {
-								if (points.size() > 0) {
-									for (mxPoint p : points) {
-										vector.add(new Position(p.getX(), p.getY()));
-									}
-									try {
-										arcGraphics.setPositions(vector);
-									} catch (ParameterException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-							}
-						}
 
 						if (annotationGraphics != null) {
 							annotationGraphics.getOffset().setX(geo.getOffset().getX());
@@ -1541,5 +1529,93 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		}
 
 		return true;
+	}
+
+	public void addWayPoint(PNGraphCell cell, Point pt) {
+		if (cell.getType().equals(PNComponent.ARC)) {
+			List<mxPoint> points = cell.getGeometry().getPoints();
+			if (points != null) {
+
+				// This code enables adding waypoints in between two existing waypoints, and not just adding it at the end of the given line
+				if (points.size() == 0) {
+					points.add(new mxPoint(pt.getX(), pt.getY()));
+				} else {
+					double sourceX = cell.getSource().getGeometry().getCenterX();
+					double sourceY = cell.getSource().getGeometry().getCenterY();
+					double targetX = cell.getTarget().getGeometry().getCenterX();
+					double targetY = cell.getTarget().getGeometry().getCenterY();
+					points.add(new mxPoint(targetX, targetY));
+					points.add(0, new mxPoint(sourceX, sourceY));
+
+					for (int i = 0; i < points.size() - 1; i++) {
+						mxPoint p = points.get(i);
+						double x1 = p.getX();
+						double y1 = p.getY();
+						mxPoint p2 = points.get(i + 1);
+						double x2 = p2.getX();
+						double y2 = p2.getY();
+						mxPoint newPoint = new mxPoint(pt.getX(), pt.getY());
+						double xP = newPoint.getX();
+						double yP = newPoint.getY();
+						double comp = Line2D.ptSegDist(x1, y1, x2, y2, xP, yP);
+						if (comp <= 5.0 * getView().getScale()) {
+							points.add(i + 1, newPoint);
+							i = points.size();
+						}
+
+					}
+					points.remove(points.size() - 1);
+					points.remove(0);
+
+				}
+			} else {
+				points = new ArrayList<mxPoint>();
+				points.add(new mxPoint(pt.getX(), pt.getY()));
+
+			}
+
+			cell.getGeometry().setPoints(points);
+			
+		
+				updatePointsInArcGraphics(cell, points);
+		
+		}
+
+	}
+	
+
+
+
+
+	public void removePoint(PNGraphCell cell, int index) {
+		if(cell.getType().equals(PNComponent.ARC)){
+			List<mxPoint> points = cell.getGeometry().getPoints();
+			if(points != null)
+				cell.getGeometry().getPoints().remove(index-1);		
+		}	
+	
+			updatePointsInArcGraphics(cell, cell.getGeometry().getPoints());
+	
+	}
+	
+	private void updatePointsInArcGraphics(PNGraphCell cell, List<mxPoint> points){
+		ArcGraphics arcGraphics = getNetContainer().getPetriNetGraphics().getArcGraphics().get(cell.getId());
+		if (arcGraphics != null) {
+			Vector<Position> vector = new Vector<Position>();
+			if (points != null) {
+				if (points.size() >= 0) {
+					for (mxPoint p : points) {
+						vector.add(new Position(p.getX(), p.getY()));
+					}
+						try {
+							arcGraphics.setPositions(vector);
+						} catch (ParameterException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+			}
+		}
+		
 	}
 }
