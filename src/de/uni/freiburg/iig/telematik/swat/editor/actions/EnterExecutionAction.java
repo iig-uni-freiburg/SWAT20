@@ -46,7 +46,6 @@ public class EnterExecutionAction extends AbstractPNEditorAction {
 			getEditor().getGraphComponent().getGraph().getNetContainer().getPetriNet().reset();
 			getEditor().getGraphComponent().getGraph().refresh();
 			getEditor().getGraphComponent().highlightEnabledTransitions();
-			getIcon().setImage(play);
 		}
 	
 		
