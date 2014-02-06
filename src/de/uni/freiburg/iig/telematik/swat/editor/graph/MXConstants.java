@@ -138,16 +138,16 @@ public abstract class MXConstants {
 		Fill fill = (nodeGraphics.getFill() != null)? nodeGraphics.getFill(): new Fill();
 				fill = nodeGraphics.getFill();
 			
-				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultNodeColor();
-				fillColor = ((fillColor).equals("transparent"))? "none":fillColor;
-				style.put(mxConstants.STYLE_FILLCOLOR,fillColor);
+				String fillColorPN = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultNodeColor();
+				String fillColorMX = ((fillColorPN).equals("transparent"))? "none":fillColorPN;
+				style.put(mxConstants.STYLE_FILLCOLOR,fillColorMX);
 	
 				GradientRotation gradientRotation = (fill.getGradientRotation() != null)? fill.getGradientRotation():EditorProperties.getInstance().getDefaultGradientDirection();
 				if(gradientRotation != null) style.put(MXConstants.GRADIENT_ROTATION, gradientRotation);
 				
-				String gradientColor = (fill.getGradientColor() != null)? fill.getGradientColor(): EditorProperties.getInstance().getDefaultGradientColor();
-				if(gradientColor != null) {gradientColor = ((gradientColor).equals("transparent"))? "none":gradientColor;
-				style.put(mxConstants.STYLE_GRADIENTCOLOR, gradientColor);}
+				String gradientColorPN = (fill.getGradientColor() != null)? fill.getGradientColor(): EditorProperties.getInstance().getDefaultGradientColor();
+				if(gradientColorPN != null) {String gradientColorMX = ((gradientColorPN).equals("transparent"))? "none":gradientColorPN;
+				style.put(mxConstants.STYLE_GRADIENTCOLOR, gradientColorMX);}
 				
 				URI image = (fill.getImage() != null)? fill.getImage():EditorProperties.getInstance().getDefaultNodeImage();
 				if(image != null){
@@ -160,18 +160,17 @@ public abstract class MXConstants {
 					}
 					path = new File(path).getPath();
 //				File file = new File(image);
-//				System.out.println(file.getAbsolutePath());
 
 					    
 				if( image != null) style.put(mxConstants.STYLE_IMAGE, "file:"+path);
 				}
-			nodeGraphics.setFill(new Fill(fillColor, gradientColor, gradientRotation, image));
+			nodeGraphics.setFill(new Fill(fillColorPN, gradientColorPN, gradientRotation, image));
 		
 		Line line = (nodeGraphics.getLine() != null)? nodeGraphics.getLine():new Line();
 		
-				String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
-				lineColor = ((lineColor).equals("transparent"))? "none":lineColor;
-				style.put(mxConstants.STYLE_STROKECOLOR,lineColor);
+				String lineColorPN = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
+				String lineColorMX = ((lineColorPN).equals("transparent"))? "none":lineColorPN;
+				style.put(mxConstants.STYLE_STROKECOLOR,lineColorMX);
 	
 				Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;
 				style.put(MXConstants.LINE_STYLE, lineStyle);
@@ -191,7 +190,7 @@ public abstract class MXConstants {
 				
 				style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
 				
-			nodeGraphics.setLine(new Line(lineColor, lineShape, lineStyle, line.getWidth()));
+			nodeGraphics.setLine(new Line(lineColorPN, lineShape, lineStyle, line.getWidth()));
 
 		getAnnotationGraphics(annotationGraphics, style);
 
@@ -211,9 +210,9 @@ public abstract class MXConstants {
 		
 		Line line = (arcGraphics.getLine() != null)? arcGraphics.getLine():new Line();
 			
-		String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
-		lineColor = ((lineColor).equals("transparent"))? "none":lineColor;
-		style.put(mxConstants.STYLE_STROKECOLOR,lineColor);
+		String lineColorPN = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLineColor();
+		String lineColorMX = ((lineColorPN).equals("transparent"))? "none":lineColorPN;
+		style.put(mxConstants.STYLE_STROKECOLOR,lineColorMX);
 
 		Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;
 		style.put(MXConstants.LINE_STYLE, lineStyle);
@@ -233,7 +232,7 @@ public abstract class MXConstants {
 		
 		style.put(mxConstants.STYLE_STROKEWIDTH, Double.toString(line.getWidth()));
 		
-	arcGraphics.setLine(new Line(lineColor, lineShape, lineStyle, line.getWidth()));
+	arcGraphics.setLine(new Line(lineColorPN, lineShape, lineStyle, line.getWidth()));
 	
 
 	
@@ -256,10 +255,9 @@ public abstract class MXConstants {
 	annotationGraphics.setVisibility(false);}
 		 	Fill fill = (annotationGraphics.getFill() != null)? annotationGraphics.getFill():new Fill();
 				
-				String fillColor = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultLabelBackgroundColor();
-				fillColor = ((fillColor).equals("transparent"))? "none":fillColor;
-				style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR,fillColor);
-	
+				String fillColorPN = (fill.getColor() != null)? fill.getColor():EditorProperties.getInstance().getDefaultLabelBackgroundColor();
+				String fillColorMX = ((fillColorPN).equals("transparent"))? "none":fillColorPN;
+				style.put(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR,fillColorMX);
 				GradientRotation gradientRotation = (fill.getGradientRotation() != null)? fill.getGradientRotation():EditorProperties.getInstance().getDefaultGradientDirection();
 				if(gradientRotation != null) style.put(MXConstants.LABEL_GRADIENT_ROTATION, gradientRotation);
 				
@@ -270,7 +268,7 @@ public abstract class MXConstants {
 				URI image = (fill.getImage() != null)? fill.getImage():EditorProperties.getInstance().getDefaultNodeImage();
 				if(image != null)style.put(MXConstants.LABEL_IMAGE, image);
 				
-			annotationGraphics.setFill(new Fill(fillColor,gradientColor,gradientRotation,image));
+			annotationGraphics.setFill(new Fill(fillColorPN,gradientColor,gradientRotation,image));
 			
 
 			Font font = (annotationGraphics.getFont() != null)? annotationGraphics.getFont(): new Font();
@@ -299,9 +297,9 @@ public abstract class MXConstants {
 	
 			Line line = (annotationGraphics.getLine() != null)? annotationGraphics.getLine():new Line();
 				
-				String lineColor = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLabelLineColor();
-				lineColor = ((lineColor).equals("transparent"))? "none":lineColor;
-				style.put(mxConstants.STYLE_LABEL_BORDERCOLOR,lineColor);
+				String lineColorPN = (line.getColor() != null)? line.getColor():EditorProperties.getInstance().getDefaultLabelLineColor();
+				String lineColorMX = ((lineColorPN).equals("transparent"))? "none":lineColorPN;
+				style.put(mxConstants.STYLE_LABEL_BORDERCOLOR,lineColorMX);
 	
 				Style lineStyle = (line.getStyle() != null)? line.getStyle(): Line.Style.SOLID;
 				style.put(MXConstants.LABEL_LINE_STYLE, lineStyle);
@@ -311,7 +309,7 @@ public abstract class MXConstants {
 				//Round not implemented for Labels, maybe implement when implementing gradient functionality in label background
 				
 				style.put(MXConstants.LABEL_LINE_WIDTH, Double.toString(line.getWidth()));
-			annotationGraphics.setLine(new Line(lineColor, lineShape, lineStyle, line.getWidth()));
+			annotationGraphics.setLine(new Line(lineColorPN, lineShape, lineStyle, line.getWidth()));
 		
 	}
 	

@@ -42,32 +42,35 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class LineColorSelectionAction extends AbstractPNEditorAction {
-	public static Color DEFAULT_LINE_COLOR = new Color(255, 255, 255);
+	public static Color DEFAULT_FILL_COLOR = new Color(255, 255, 255);
 	public static Color DEFAULT_GRADIENT_COLOR = new Color(0, 0, 0);
+	private static final Double DEFAULT_STROKEWIDTH = 1.0;
+	private static final Style DEFAULT_LINESTYLE = Style.SOLID;
+	private Color fillColor;
 //	private Color backgroundColor;
 //	private Color gradientColor;
 //	private GradientRotation gradientRotation;
 
 	public LineColorSelectionAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "FillColor", IconFactory.getIcon("fill"));
-		setLineColor(DEFAULT_LINE_COLOR, false);
+		setFillColor(DEFAULT_FILL_COLOR, DEFAULT_STROKEWIDTH, DEFAULT_LINESTYLE, false);
 
 	}
-
-	public void setLineColor(Color fillColor, boolean isCurve) {
-		Image image;
-		try {
-			image = Utils.createLIconImage(fillColor, SwatProperties.getInstance().getIconSize().getSize(), 1, Style.SOLID, isCurve );
-			setIconImage(image);
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
+//
+//	public void setLineColor(Color fillColor, boolean isCurve) {
+//		Image image;
+//		try {
+//			image = Utils.createLIconImage(fillColor, SwatProperties.getInstance().getIconSize().getSize(), 1, Style.SOLID, isCurve );
+//			setIconImage(image);
+//		} catch (PropertyException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 	public void setIconImage(Image image) {
 		getIcon().setImage(image);
@@ -127,5 +130,11 @@ public class LineColorSelectionAction extends AbstractPNEditorAction {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void setFillColor(Color fillColor, Double defaultStrokewidth, Style defaultLinestyle, boolean isLineCurve) throws PropertyException, IOException {
+		Image image = Utils.createLIconImage(fillColor, SwatProperties.getInstance().getIconSize().getSize(), defaultStrokewidth, defaultLinestyle, isLineCurve);
+		this.fillColor= fillColor;
+		setIconImage(image);
 	}
 }

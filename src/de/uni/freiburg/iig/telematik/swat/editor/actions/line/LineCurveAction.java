@@ -33,6 +33,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.FillStyle;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.LineStyle;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -42,12 +43,9 @@ public class LineCurveAction extends AbstractPNEditorAction{
 	private Color gradientColor = DEFAULT_GRADIENT_COLOR;
 	private Color fillColor = DEFAULT_FILL_COLOR ;
 	public LineCurveAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
-		super(editor, "GradientColor", IconFactory.getIcon("round"));
-		java.awt.Image img = getIcon().getImage();
-		int size = getIcon().getIconWidth();
-		java.awt.Image newimg = img.getScaledInstance(size /3, size /3 , java.awt.Image.SCALE_SMOOTH);
-		getIcon().setImage(newimg);
-		setLineColor(DEFAULT_FILL_COLOR, DEFAULT_GRADIENT_COLOR);
+		super(editor, "Curve Color", IconFactory.getIcon("round"));
+
+		setLineColor(DEFAULT_FILL_COLOR);
 		
 	}
 
@@ -56,20 +54,26 @@ public class LineCurveAction extends AbstractPNEditorAction{
 
 	public void actionPerformed(ActionEvent e) {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		graph.setCellStyles(mxConstants.STYLE_ROUNDED, "true");
-		graph.setCellStyles(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ENTITY_RELATION);
+		
+		if (graph.isLabelSelected()) {
+			graph.setCellStyles(mxConstants.STYLE_LABEL_BORDERCOLOR, mxUtils.hexString(fillColor));
+		} else {
+			graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(fillColor));
+			graph.setCellStyles(mxConstants.STYLE_ROUNDED, "true");
+			graph.setCellStyles(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ENTITY_RELATION);
+		}
+
+		getEditor().getEditorToolbar().setLineStyle(LineStyle.NORMAL);
 		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
-		getEditor().getEditorToolbar().setFillStyle(FillStyle.GRADIENT);
 		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
 		setWithOneCell.add(selectedCell);
 		getEditor().getEditorToolbar().updateView(setWithOneCell);
 
 	}
 
-	public void setLineColor(Color fillColor, Color gradientColor) throws PropertyException, IOException {
+	public void setLineColor(Color fillColor) throws PropertyException, IOException {
 		Image image = Utils.createLIconImage(fillColor, SwatProperties.getInstance().getIconSize().getSize()/3, 1, Line.Style.SOLID, true);
 		this.fillColor = fillColor;
-		this.gradientColor = gradientColor;
 		setIconImage(image);
 	}
 	public void setIconImage(Image image){

@@ -51,7 +51,6 @@ public class FillBackgroundColorAction extends AbstractPNEditorAction{
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 
 
-				PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
 				if (graph.isLabelSelected()){
 					graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, null);
 					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(fillColor));
@@ -60,6 +59,7 @@ public class FillBackgroundColorAction extends AbstractPNEditorAction{
 					graph.setCellStyles(MXConstants.GRADIENT_ROTATION, null);
 					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(fillColor));
 					}
+				PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
 				getEditor().getEditorToolbar().setFillStyle(FillStyle.SOLID);
 				Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
 				setWithOneCell.add(selectedCell);

@@ -23,6 +23,7 @@ import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
@@ -48,7 +49,7 @@ public class LineLineAction extends AbstractPNEditorAction{
 		int size = getIcon().getIconWidth();
 		java.awt.Image newimg = img.getScaledInstance(size /3, size /3 , java.awt.Image.SCALE_SMOOTH);
 		getIcon().setImage(newimg);
-		setFillColor(DEFAULT_FILL_COLOR, DEFAULT_STROKEWIDTH, DEFAULT_LINESTYLE);
+		setFillColor(DEFAULT_FILL_COLOR, DEFAULT_STROKEWIDTH);
 	}
 
 
@@ -57,11 +58,15 @@ public class LineLineAction extends AbstractPNEditorAction{
 	public void actionPerformed(ActionEvent e) {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 
-
+		if (graph.isLabelSelected()) {
+			graph.setCellStyles(mxConstants.STYLE_LABEL_BORDERCOLOR, mxUtils.hexString(fillColor));
+		} else {
+			graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(fillColor));
+		}
 				PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
 				graph.setCellStyles(mxConstants.STYLE_ROUNDED, "false");
 				graph.setCellStyles(mxConstants.STYLE_EDGE, "direct");
-				getEditor().getEditorToolbar().setFillStyle(FillStyle.SOLID);
+				getEditor().getEditorToolbar().setLineStyle(LineStyle.NORMAL);
 				Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
 				setWithOneCell.add(selectedCell);
 				getEditor().getEditorToolbar().updateView(setWithOneCell);
@@ -72,8 +77,8 @@ public class LineLineAction extends AbstractPNEditorAction{
 		
 	}
 
-	public void setFillColor(Color fillColor, Double defaultStrokewidth, Style defaultLinestyle) throws PropertyException, IOException {
-		Image image = Utils.createLIconImage(fillColor, SwatProperties.getInstance().getIconSize().getSize()/3, defaultStrokewidth, defaultLinestyle, false);
+	public void setFillColor(Color fillColor, Double defaultStrokewidth) throws PropertyException, IOException {
+		Image image = Utils.createLIconImage(fillColor, SwatProperties.getInstance().getIconSize().getSize()/3, defaultStrokewidth, Line.Style.SOLID, false);
 		this.fillColor= fillColor;
 		setIconImage(image);
 	}

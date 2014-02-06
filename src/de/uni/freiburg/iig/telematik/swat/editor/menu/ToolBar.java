@@ -190,6 +190,11 @@ public class ToolBar extends JToolBar {
 	private String lineStyleTooltip = "switch solid/ dash/ dot";
 	private String lineShapeTooltip = "switch line/curve";
 	private String showHideLabelsTooltip = "show/ hide labels";
+	private String curveTooltip = "curve";
+	private String lineTooltip = "line";
+	private String lineSolidTooltip = "solid";
+	private String lineDashTooltip = "dash";
+	private String lineDotTooltip = "dot";
 
 	// further variables
 	private PNEditor pnEditor = null;
@@ -238,6 +243,10 @@ public class ToolBar extends JToolBar {
 	private ButtonGroup lineStyleGroup;
 
 	private JToggleButton lineColorSelectionButton;
+
+	private int strokeWeight = (int) Line.DEFAULT_WIDTH;;
+
+
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
@@ -379,7 +388,6 @@ public class ToolBar extends JToolBar {
 		lineGroup = new ButtonGroup();
 		lineGroup.add(lineButton);
 		lineGroup.add(curveButton);
-		lineGroup.add(noLineButton);
 
 		lineSolidButton = (JToggleButton) nestedAdd(lineSolidAction);
 		lineDashButton = (JToggleButton) nestedAdd(lineDashAction);
@@ -445,6 +453,17 @@ public class ToolBar extends JToolBar {
 //		lineStyleButton.setToolTipText(lineStyleTooltip);
 //		lineShapeButton.setToolTipText(lineShapeTooltip);
 		showHideLabelsButton.setToolTipText(showHideLabelsTooltip);
+		
+		lineButton.setToolTipText(lineTooltip);
+		curveButton.setToolTipText(curveTooltip);
+		noLineButton.setToolTipText(noLineTooltip);
+		lineSolidButton.setToolTipText(lineSolidTooltip);
+		lineDashButton.setToolTipText(lineDashTooltip);
+		lineDotButton.setToolTipText(lineDotTooltip);
+		lineColorSelectionButton.setToolTipText(strokeColorTooltip);
+		
+
+
 
 	}
 
@@ -823,6 +842,13 @@ public class ToolBar extends JToolBar {
 		getStrokeWeightBox().setEnabled(b);
 		lineStyleAction.setEnabled(b);
 		lineShapeAction.setEnabled(b);
+		lineDotAction.setEnabled(b);
+		lineDashAction.setEnabled(b);
+		lineShapeAction.setEnabled(b);
+		lineAction.setEnabled(b);
+		curveAction.setEnabled(b);
+		lineColorSelectionAction.setEnabled(b);
+		noLineAction.setEnabled(b);
 	}
 
 	private void setFillEnabled(boolean b) {
@@ -874,20 +900,8 @@ public class ToolBar extends JToolBar {
 				boolean isAlignLeft = false;
 				boolean isAlignCenter = false;
 				boolean isAlignRight = false;
-				boolean isFillSolid = false;
-				boolean isFillGradient = false;
-				boolean isFillEmpty = false;
-				boolean isLineEmpty = false;
-				boolean isLineLine = false;
-				boolean isLineCurve = false;
-				boolean isLineStraight = false;
-				boolean isGradientDiagonal = false;
-				boolean isGradientVertical = false;
-				boolean isGradientHorizontal = false;
-				boolean isLineSolid = false;
-				boolean isLineDashed = false;
-				boolean isLineDotted = false;
-				int strokeWeight = (int) Line.DEFAULT_WIDTH;
+
+
 
 				String fontFamily = null;
 				String fontSize = null;
@@ -913,233 +927,22 @@ public class ToolBar extends JToolBar {
 				if (nodeGraphics != null && !labelSelected) {
 
 					Fill fill = nodeGraphics.getFill();
+					setFillToolbar(fill, false);
 
-					if (fill != null) {
-						String colorString = fill.getColor();
-						String gradientString = fill.getGradientColor();
-						GradientRotation gradientRotation = fill.getGradientRotation();
-						boolean containsFillColor = false;
-						boolean containsGradientColor = false;
-						boolean containsGradientRotation = false;
-						Color fillColor = FillGradientColorAction.DEFAULT_FILL_COLOR;
-						if (colorString != null) {
-							if (!colorString.equals("transparent")) {
-								fillColor = Utils.parseColor(colorString);
-								containsFillColor = true;
-							} else {
-								containsFillColor = false;
-							}
-						}
-						Color gradientColor = FillGradientColorAction.DEFAULT_GRADIENT_COLOR;
-						if (gradientString != null) {
-							gradientColor = Utils.parseColor(gradientString);
-							containsGradientColor = true;
-						}
+					Line line = nodeGraphics.getLine();
+					setLineToolbar(line);
 
-						if (gradientRotation != null) {
-							containsGradientRotation = true;
-						} else
-							gradientRotation = GradientRotation.VERTICAL;
-
-						try {
-							// backgroundColorAction.setFillColor(fillColor);
-							// gradientColorAction.setFillColor(fillColor,
-							// gradientColor);
-
-							if (!containsFillColor) {
-								try {
-									setFillStyle(FillStyle.NOFILL, null, null, null);
-								} catch (PropertyException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							} else if (containsFillColor && containsGradientColor && containsGradientRotation) {
-
-								setFillStyle(FillStyle.GRADIENT, fillColor, gradientColor, gradientRotation);
-							} else {
-								setFillStyle(FillStyle.SOLID, fillColor, fillColor, gradientRotation);
-							}
-							currentFillColor = fillColor;
-							if (containsGradientRotation) {
-								switch (gradientRotation) {
-								case DIAGONAL:
-									isGradientDiagonal = true;
-									break;
-								case HORIZONTAL:
-									isGradientHorizontal = true;
-									break;
-								case VERTICAL:
-									isGradientVertical = true;
-									break;
-								default:
-									break;
-
-								}
-							}
-
-						} catch (PropertyException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						gradientColorButton.repaint();
-						backgroundColorButton.repaint();
-						colorSelectionButton.repaint();
-						switch (getFillStyle()) {
-						case SOLID:
-							isFillSolid = true;
-							break;
-						case GRADIENT:
-							isFillGradient = true;
-							break;
-						case NOFILL:
-							isFillEmpty = true;
-							break;
-
-						}
-						fillGroup.clearSelection();
-						backgroundColorButton.setSelected(isFillSolid);
-						gradientColorButton.setSelected(isFillGradient);
-						noFillButton.setSelected(isFillEmpty);
-
-						gradientDirectionGroup.clearSelection();
-						gradientDiagonalButton.setSelected(isGradientDiagonal);
-						gradientHorizontalButton.setSelected(isGradientHorizontal);
-						gradientVerticalButton.setSelected(isGradientVertical);
-
-						// normalFillButton.setBackground(new Color(255, 0, 0,
-						// 100));
-						// normalFillButton.setForeground(new Color(255, 0,
-						// 255));
-						backgroundColorButton.repaint();
-						
-						Line line = nodeGraphics.getLine();
-						if (line != null) {
-							String lineColorString = line.getColor();
-							Style lineStyle = line.getStyle();
-							Shape lineShape = line.getShape();
-							
-							switch (lineShape) {
-							case CURVE:
-								isLineCurve = true;
-								break;
-							case LINE:
-								isLineLine = true;
-								break;
-							}
-							boolean containsLineColor = false;
-							boolean containsStyle = false;
-							Color lineColor = LineColorSelectionAction.DEFAULT_LINE_COLOR;
-							if (lineColorString != null) {
-								if (!lineColorString.equals("transparent")) {
-									fillColor = Utils.parseColor(lineColorString);
-									containsLineColor = true;
-								} else {
-									containsLineColor = false;
-								}
-							}
-						
-
-							if (lineStyle != null) {
-								containsStyle = true;
-							} else
-								lineStyle = Style.SOLID;
-
-						
-
-								if (!containsLineColor) {
-								
-										setLineStyle(LineStyle.NOFILL, null, lineStyle, isLineCurve);
-								
-								} else if (containsLineColor && containsStyle) {
-
-									setLineStyle(LineStyle.NORMAL, fillColor, lineStyle, isLineCurve);
-								} else {
-									setLineStyle(LineStyle.NORMAL, fillColor, lineStyle, isLineCurve);
-								}
-								currentFillColor = fillColor;
-								if (containsStyle) {
-									switch (lineStyle) {
-									case DASH:
-										isLineDashed = true;
-										break;
-									case DOT:
-										isLineDotted = true;
-										break;
-									case SOLID:
-										isLineSolid = true;
-										break;
-	
-//									case DIAGONAL:
-//										isGradientDiagonal = true;
-//										break;
-//									case HORIZONTAL:
-//										isGradientHorizontal = true;
-//										break;
-//									case VERTICAL:
-//										isGradientVertical = true;
-//										break;
-//									default:
-//										break;
-
-									}
-								}
-
-							
-
-							curveButton.repaint();
-							lineButton.repaint();
-							lineColorSelectionButton.repaint();
-							switch (getLineStyle()) {
-							case NOFILL:
-								isLineEmpty = true;
-								break;
-							case NORMAL:
-								isLineStraight = true;
-								break;
-							default:
-								break;
-
-							}
-						
-							lineGroup.clearSelection();
-							lineButton.setSelected(isLineLine);
-							curveButton.setSelected(isLineCurve);
-							noFillButton.setSelected(isLineEmpty);
-							
-
-							lineStyleGroup.clearSelection();
-							lineDotButton.setSelected(isLineDotted);
-							lineDashButton.setSelected(isLineDashed);
-							lineSolidButton.setSelected(isLineSolid);
-							
-							lineButton.repaint();
-							
-						strokeWeight = (int) line.getWidth();
-						getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
-//						setLineStyleButton(line);
-//						setLineShapeButton(line);
-
-						}
-						}
 				}
 
 				if (arcGraphics != null && isArcCell) {
 					Line line = arcGraphics.getLine();
-					strokeWeight = (int) line.getWidth();
-					getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
+					setLineToolbar(line);
+					
 //					setLineStyleButton(line);
 //					setLineShapeButton(line);
 				}
 
 				if (annotationGraphics != null && labelSelected) {
-
 					Font font = annotationGraphics.getFont();
 					fontFamily = font.getFamily();
 					fontSize = font.getSize();
@@ -1160,13 +963,8 @@ public class ToolBar extends JToolBar {
 					else if (fontAlign.equals(Font.Align.RIGHT))
 						isAlignRight = true;
 
-					Fill fill = annotationGraphics.getFill();
+					
 
-					Line line = annotationGraphics.getLine();
-					strokeWeight = (int) line.getWidth();
-//					setLineStyleButton(line);
-//					setLineShapeButton(line);
-					getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
 
 					getFontBox().setSelectedItem(fontFamily);
 					getFontSizeBox().setSelectedItem(fontSize + "pt");
@@ -1180,6 +978,24 @@ public class ToolBar extends JToolBar {
 					if (!labelSelected) {
 						alignmentGroup.clearSelection();
 					}
+					
+					Fill fill = annotationGraphics.getFill();
+					setFillToolbar(fill, true);
+					gradientColorAction.setEnabled(false);
+					gradientDiagonalAction.setEnabled(false);
+					gradientHorizontalAction.setEnabled(false);
+					gradientVerticalAction.setEnabled(false);
+
+					// normalFillButton.setBackground(new Color(255, 0, 0,
+					// 100));
+					// normalFillButton.setForeground(new Color(255, 0,
+					// 255));
+					backgroundColorButton.repaint();
+					
+					Line line = annotationGraphics.getLine();
+					
+					setLineToolbar(line);
+					curveAction.setEnabled(false);
 				}
 
 				boldFontButton.setSelected(isBold);
@@ -1189,13 +1005,126 @@ public class ToolBar extends JToolBar {
 				alignCenterButton.setSelected(isAlignCenter);
 				alignRightButton.setSelected(isAlignRight);
 				setFontEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-				setLineEnabled(isPlaceCell || isTransitionCell || isArcCell);
+
 
 			} else {
 				setFontEnabled(false);
 				this.selectedCell = null;
 			}
 		}
+	}
+
+	private void setFillToolbar(Fill fill, boolean isLabel) {
+		boolean isFillSolid = false;
+		boolean isFillGradient = false;
+		boolean isFillEmpty = false;
+		boolean isGradientDiagonal = false;
+		boolean isGradientVertical = false;
+		boolean isGradientHorizontal = false;
+		if (fill != null) {
+			String colorString = fill.getColor();
+			String gradientString = fill.getGradientColor();
+			GradientRotation gradientRotation = fill.getGradientRotation();
+			boolean containsFillColor = false;
+			boolean containsGradientColor = false;
+			boolean containsGradientRotation = false;
+			Color fillColor = FillGradientColorAction.DEFAULT_FILL_COLOR;
+			if (colorString != null) {
+				if (!colorString.equals("transparent")) {
+					fillColor = Utils.parseColor(colorString);
+					containsFillColor = true;
+				} else {
+					containsFillColor = false;
+					fillColor = FillBackgroundColorAction.DEFAULT_FILL_COLOR;
+				}
+			}
+			
+			if(fillColor == null)
+				containsFillColor = false;
+			
+			Color gradientColor = FillGradientColorAction.DEFAULT_GRADIENT_COLOR;
+			if (gradientString != null) {
+				gradientColor = Utils.parseColor(gradientString);
+				containsGradientColor = true;
+			}
+			
+
+			if (gradientRotation != null) {
+				containsGradientRotation = true;
+			} else
+				gradientRotation = GradientRotation.VERTICAL;
+
+			try {
+				// backgroundColorAction.setFillColor(fillColor);
+				// gradientColorAction.setFillColor(fillColor,
+				// gradientColor);
+
+				if (!containsFillColor) {
+					try {
+						setFillStyle(FillStyle.NOFILL, null, null, null);
+						isFillEmpty = true;
+						
+					} catch (PropertyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if (containsFillColor && containsGradientColor && containsGradientRotation &&!isLabel) {
+					setFillStyle(FillStyle.GRADIENT, fillColor, gradientColor, gradientRotation);
+					isFillGradient = true;
+				} else {
+					setFillStyle(FillStyle.SOLID, fillColor, fillColor, gradientRotation);
+					isFillSolid = true;
+				}
+				currentFillColor = fillColor;
+				if (containsGradientRotation) {
+					switch (gradientRotation) {
+					case DIAGONAL:
+						isGradientDiagonal = true;
+						break;
+					case HORIZONTAL:
+						isGradientHorizontal = true;
+						break;
+					case VERTICAL:
+						isGradientVertical = true;
+						break;
+					default:
+						break;
+
+					}
+				}
+
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			gradientColorButton.repaint();
+			backgroundColorButton.repaint();
+			colorSelectionButton.repaint();
+
+			fillGroup.clearSelection();
+			backgroundColorButton.setSelected(isFillSolid);
+			gradientColorButton.setSelected(isFillGradient);
+			noFillButton.setSelected(isFillEmpty);
+
+			gradientDirectionGroup.clearSelection();
+			gradientDiagonalButton.setSelected(isGradientDiagonal);
+			gradientHorizontalButton.setSelected(isGradientHorizontal);
+			gradientVerticalButton.setSelected(isGradientVertical);
+
+			// normalFillButton.setBackground(new Color(255, 0, 0,
+			// 100));
+			// normalFillButton.setForeground(new Color(255, 0,
+			// 255));
+			backgroundColorButton.repaint();
+		}
+		
 	}
 
 	private LineStyle getLineStyle() {
@@ -1212,14 +1141,145 @@ public class ToolBar extends JToolBar {
 			break;
 		case NORMAL:
 			if(fillColor != null)
-			lineColorSelectionAction.setLineColor(fillColor, isLineCurve);
+				try {
+					lineColorSelectionAction.setFillColor(fillColor, 1.0, linestyle, isLineCurve);
+				} catch (PropertyException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			break;
 		default:
 			break;
+		}
+			if (fillColor != null){
+			try {
+				lineAction.setFillColor(fillColor, 1.0);
+				curveAction.setLineColor(fillColor);
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
 
+			colorSelectionButton.repaint();
+		}
+	
+	private void setLineToolbar(Line line){
+		boolean isLineEmpty = false;
+		boolean isLineLine = false;
+		boolean isLineCurve = false;
+		boolean isLineStraight = false;
+		boolean isLineSolid = false;
+		boolean isLineDashed = false;
+		boolean isLineDotted = false;
+		Color fillColor = null;
+		if (line != null) {
+			String lineColorString = line.getColor();
+			Style lineStyle = line.getStyle();
+			Shape lineShape = line.getShape();
+			
+
+			boolean containsLineColor = false;
+			boolean containsStyle = false;
+			Color lineColor = LineColorSelectionAction.DEFAULT_FILL_COLOR;
+			
+			
+			switch (lineShape) {
+			case CURVE:
+				isLineCurve = true;
+				break;
+			case LINE:
+				isLineLine = true;
+				break;
+			}
+			if (lineColorString != null) {
+				if (!lineColorString.equals("transparent")) {
+					fillColor = Utils.parseColor(lineColorString);
+					containsLineColor = true;
+				} else {
+					containsLineColor = false;
+				}
+			}
+			if(fillColor == null)
+				containsLineColor = false;
+		
+
+			if (lineStyle != null) {
+				containsStyle = true;
+			} else
+				lineStyle = Style.SOLID;
+
+		
+
+				if (!containsLineColor) {
+				
+						setLineStyle(LineStyle.NOFILL, null, lineStyle, isLineCurve);
+						isLineEmpty = true;
+				
+				}  else {
+					setLineStyle(LineStyle.NORMAL, fillColor, lineStyle, isLineCurve);
+
+				}
+				currentFillColor = fillColor;
+				if (containsStyle) {
+					switch (lineStyle) {
+					case DASH:
+						isLineDashed = true;
+						break;
+					case DOT:
+						isLineDotted = true;
+						break;
+					case SOLID:
+						isLineSolid = true;
+						break;
+
+//					case DIAGONAL:
+//						isGradientDiagonal = true;
+//						break;
+//					case HORIZONTAL:
+//						isGradientHorizontal = true;
+//						break;
+//					case VERTICAL:
+//						isGradientVertical = true;
+//						break;
+//					default:
+//						break;
+
+					}
+				}
+
+			
+
+			curveButton.repaint();
+			lineButton.repaint();
+			lineColorSelectionButton.repaint();
+
+		
+			lineGroup.clearSelection();
+			lineButton.setSelected(isLineLine);
+			curveButton.setSelected(isLineCurve);
+			noLineButton.setSelected(isLineEmpty);
+			
+			lineStyleGroup.clearSelection();
+			lineDotButton.setSelected(isLineDotted);
+			lineDashButton.setSelected(isLineDashed);
+			lineSolidButton.setSelected(isLineSolid);
+			lineButton.repaint();
+			
+		strokeWeight = (int) line.getWidth();
+		getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
+//		setLineStyleButton(line);
+//		setLineShapeButton(line);
 
 		}
 	}
+	
 
 //	/**
 //	 * @param line
