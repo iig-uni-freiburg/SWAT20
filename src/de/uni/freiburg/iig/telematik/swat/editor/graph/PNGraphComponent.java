@@ -399,7 +399,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 					}
 				}
 				
-			if(getGraph().isExecution()){
+			if(!getGraph().isExecution()){
 				if (e.getModifiers() == 4) {
 					// Right click on graph component.
 					if (object == null) {

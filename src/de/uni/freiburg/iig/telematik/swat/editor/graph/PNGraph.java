@@ -89,7 +89,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	private Set<PNGraphListener> listeners = new HashSet<PNGraphListener>();
 
 	private boolean labelSelected = false;
-	private boolean isExecution;
+	private boolean isExecution = false;
 	private Set<String> nameSetFromTransitions;
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
