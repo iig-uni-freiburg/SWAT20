@@ -48,15 +48,13 @@ public class EnterExecutionAction extends AbstractPNEditorAction {
 			getEditor().getGraphComponent().highlightEnabledTransitions();
 			getIcon().setImage(play);
 		}
-
+	
 		
 	}
 
-//	public boolean isSuccess() {
-//		return success;
-//	}
-//
-//	public String getErrorMessage() {
-//		return errorMessage;
-//	}
+
+	public void setExecutionImage() {
+		getIcon().setImage(play);
+		
+	}
 }

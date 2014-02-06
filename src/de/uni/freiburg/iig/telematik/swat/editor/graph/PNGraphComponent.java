@@ -12,6 +12,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -397,6 +398,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 						}
 					}
 				}
+				
+			if(getGraph().isExecution()){
 				if (e.getModifiers() == 4) {
 					// Right click on graph component.
 					if (object == null) {
@@ -442,6 +445,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 					}
 				}
 			}
+			}
 
 			if (refresh) {
 				mxCellState state = getGraph().getView().getState(cell);
@@ -452,6 +456,12 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 	
 
+	}
+
+	public void removeCellOverlays() {
+		for(Entry<String, PNGraphCell> cell : getGraph().nodeReferences.entrySet())
+			removeCellOverlays(cell.getValue());
+		
 	}
 
 	// public class PaletteTransferHandler extends TransferHandler {

@@ -53,8 +53,7 @@ public class PTGraphComponent extends PNGraphComponent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for(Entry<String, PNGraphCell> cell : getGraph().nodeReferences.entrySet())
-		removeCellOverlays(cell.getValue());
+		removeCellOverlays();
 		for(String n:nameSet){
 			PNGraphCell cell =getGraph().nodeReferences.get(n);
 			Rectangle geo = cell.getGeometry().getRectangle();

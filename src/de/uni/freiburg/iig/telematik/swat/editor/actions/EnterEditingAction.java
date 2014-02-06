@@ -27,18 +27,9 @@ public class EnterEditingAction extends AbstractPNEditorAction {
 	
 	public void actionPerformed(ActionEvent e) {
 		getEditor().getEditorToolbar().setEditingMode();
-		getEditor().getGraphComponent().getGraph().setExecution(false);
-		getEditor().getGraphComponent().getGraph().getNetContainer().getPetriNet().reset();
-		for(Entry<String, PNGraphCell> cell : getEditor().getGraphComponent().getGraph().nodeReferences.entrySet())
-			getEditor().getGraphComponent().removeCellOverlays(cell.getValue());
-		getEditor().getGraphComponent().getGraph().refresh();
+		getEditor().getGraphComponent().removeCellOverlays();
+		getEditor().getGraphComponent().getGraph().enterEditingMode();
 	}
 
-//	public boolean isSuccess() {
-//		return success;
-//	}
-//
-//	public String getErrorMessage() {
-//		return errorMessage;
-//	}
+
 }

@@ -251,9 +251,15 @@ public class ToolBar extends JToolBar {
 	private EnterExecutionAction enterExecutionAction;
 	private EnterEditingAction enterEditingAction;
 
-	private JButton enterExecutionButton;
+	private JToggleButton enterExecutionButton;
 
-	private JButton enterEditingButton;;
+	private JToggleButton enterEditingButton;
+
+	private ButtonGroup editOrExecutionGroup;
+
+	private String executionButtonTooltip = "execution mode";
+
+	private String editingButtonTooltip = " editing mode";
 
 
 
@@ -322,9 +328,9 @@ public class ToolBar extends JToolBar {
 		saveButton = add(saveAction);
 		addSeparator();
 		
-		enterExecutionButton = add(enterExecutionAction);
-		
-		enterEditingButton = add(enterEditingAction);
+		enterExecutionButton = (JToggleButton)  add(enterExecutionAction,true);
+		enterEditingButton = (JToggleButton) add(enterEditingAction,true);
+		editOrExecutionGroup = new ButtonGroup();
 		addSeparator();
 
 		cutButton = add(cutAction);
@@ -442,6 +448,8 @@ public class ToolBar extends JToolBar {
 		doLayout();
 
 		saveButton.setToolTipText(saveButtonTooltip);
+		enterExecutionButton.setToolTipText(executionButtonTooltip);
+		enterEditingButton.setToolTipText(editingButtonTooltip);
 		cutButton.setToolTipText(cutButtonTooltip);
 		copyButton.setToolTipText(copyTooltip);
 		pasteButton.setToolTipText(pasteTooltip);
@@ -825,7 +833,7 @@ public class ToolBar extends JToolBar {
 		copyAction.setEnabled(false);
 		pasteAction.setEnabled(isCellInClipboard());
 		cutAction.setEnabled(false);
-
+//		editOrExecutionGroup.clearSelection();
 		setFontEnabled(false);
 
 		setLineEnabled(false);
@@ -887,7 +895,7 @@ public class ToolBar extends JToolBar {
 	}
 
 	public void updateView(Set<PNGraphCell> selectedComponents) {
-
+		if(!pnEditor.getGraphComponent().getGraph().isExecution()){
 		if (selectedComponents == null || selectedComponents.isEmpty()) {
 			deactivate();
 			this.selectedCell = null;
@@ -1027,6 +1035,7 @@ public class ToolBar extends JToolBar {
 				setFontEnabled(false);
 				this.selectedCell = null;
 			}
+		}
 		}
 	}
 
@@ -1401,15 +1410,23 @@ public class ToolBar extends JToolBar {
 		deactivate();
 		undoAction.setEnabled(false);
 		redoAction.setEnabled(false);
+		editOrExecutionGroup.clearSelection();
+		enterExecutionButton.setSelected(true);
+		enterEditingButton.setSelected(false);
 		
 	}
 	
 	public void setEditingMode() {
 		deactivate();
+		enterExecutionAction.setExecutionImage();
+		enterExecutionButton.repaint();
+		editOrExecutionGroup.clearSelection();
+		enterExecutionButton.setSelected(false);
+		enterEditingButton.setSelected(true);
 		
 	}
 
-	public JButton getExecutionButton() {
+	public JToggleButton getExecutionButton() {
 		return enterExecutionButton;
 		
 	}

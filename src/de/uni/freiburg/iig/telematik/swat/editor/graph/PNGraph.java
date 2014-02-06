@@ -69,6 +69,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterEditingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.NewNodeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
@@ -1672,6 +1673,13 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 				}
 			}
 		}
+		
+	}
+
+	public void enterEditingMode() {
+		setExecution(false);
+		getNetContainer().getPetriNet().reset();
+		refresh();
 		
 	}
 
