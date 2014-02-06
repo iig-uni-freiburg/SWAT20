@@ -517,33 +517,18 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	public abstract void updatePlaceState(PNGraphCell cell, Multiset<String> input) throws ParameterException;
 
-	
-
-//	    @Override
-//	      public boolean isCellSelectable(Object cell) {
-//	         if (cell != null) {
-//	            if (cell instanceof PNGraphCell) {
-//	               PNGraphCell myCell = (PNGraphCell) cell;
-//	               if (isExecution)
-//	                  return false;
-//	            }
-//	         }
-//	         return super.isCellSelectable(cell);
-//	      }
-	
-	
-//	@Override
-//		public boolean isCellEditable(Object cell) {
-//			if(isExecution)
-//				return false;
-//			return super.isCellEditable(cell);
-//		}
-
 	@Override
 	public boolean isCellLocked(Object cell) {
 		if(isExecution)
 			return true;		
 		return super.isCellLocked(cell);
+	}
+
+	@Override
+	public boolean isCellConnectable(Object cell) {
+		if(isExecution)
+			return false;	
+		return super.isCellConnectable(cell);
 	}
 
 	public boolean isExecution() {
