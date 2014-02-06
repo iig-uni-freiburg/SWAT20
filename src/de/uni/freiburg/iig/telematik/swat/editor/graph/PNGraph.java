@@ -68,6 +68,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.NewNodeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
@@ -81,12 +82,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
 	private PNProperties properties = null;
 	@SuppressWarnings("rawtypes")
-	protected Map<String, PNGraphCell> nodeReferences = new HashMap<String, PNGraphCell>();
+	public Map<String, PNGraphCell> nodeReferences = new HashMap<String, PNGraphCell>();
 	private Map<String, PNGraphCell> arcReferences = new HashMap<String, PNGraphCell>();
 
 	private Set<PNGraphListener> listeners = new HashSet<PNGraphListener>();
 
 	private boolean labelSelected = false;
+	private boolean isExecution;
+	private Set<String> nameSetFromTransitions;
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
@@ -512,6 +515,43 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	}
 
 	public abstract void updatePlaceState(PNGraphCell cell, Multiset<String> input) throws ParameterException;
+
+	
+
+//	    @Override
+//	      public boolean isCellSelectable(Object cell) {
+//	         if (cell != null) {
+//	            if (cell instanceof PNGraphCell) {
+//	               PNGraphCell myCell = (PNGraphCell) cell;
+//	               if (isExecution)
+//	                  return false;
+//	            }
+//	         }
+//	         return super.isCellSelectable(cell);
+//	      }
+	
+	
+//	@Override
+//		public boolean isCellEditable(Object cell) {
+//			if(isExecution)
+//				return false;
+//			return super.isCellEditable(cell);
+//		}
+
+	@Override
+	public boolean isCellLocked(Object cell) {
+		if(isExecution)
+			return true;		
+		return super.isCellLocked(cell);
+	}
+
+	public boolean isExecution() {
+			return isExecution;
+		}
+
+		public void setExecution(boolean isExecution) {
+			this.isExecution = isExecution;
+		}
 
 	@Override
 	/**
@@ -1634,4 +1674,24 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		}
 		
 	}
+
+//	public void highlightEnabledTransition() {
+//		Set<String> nameSet = null;
+//		try {
+//			nameSet = PNUtils.getNameSetFromTransitions(getNetContainer().getPetriNet().getEnabledTransitions(), true);
+//		} catch (ParameterException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		for(String n:nameSet){
+//			PNGraphCell cell =nodeReferences.get(n);
+//			Rectangle geo = cell.getGeometry().getRectangle();
+//			getca
+////			enabledTransitionsPanel =
+//			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;
+//			
+//		}
+//		
+//		
+//	}
 }

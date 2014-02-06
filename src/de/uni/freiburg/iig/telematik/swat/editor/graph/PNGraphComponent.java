@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -41,6 +42,7 @@ import com.mxgraph.view.mxEdgeStyle;
 import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.ConnectionHandler;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.EdgeHandler;
@@ -70,6 +72,24 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 	}
 
+	public void highlightEnabledTransitions() {
+		Set<String> nameSet = null;
+		try {
+			nameSet = PNUtils.getNameSetFromTransitions(getGraph().getNetContainer().getPetriNet().getEnabledTransitions(), true);
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(String n:nameSet){
+			PNGraphCell cell =getGraph().nodeReferences.get(n);
+			Rectangle geo = cell.getGeometry().getRectangle();
+//			enabledTransitionsPanel =
+			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;
+			
+		}
+		
+		
+	}
 	@Override
 	public PNGraph getGraph() {
 		return (PNGraph) super.getGraph();
@@ -244,6 +264,10 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	protected boolean rightClickOnArcLabel(PNGraphCell cell, MouseEvent e) {
 		return false;
 	}
+	protected boolean singleClickOnTransition(PNGraphCell cell, MouseEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 	private class GCMouseWheelListener implements MouseWheelListener {
 
@@ -355,6 +379,24 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 			}
 			boolean refresh = false;
 			if (e.getClickCount() == 1) {
+				if (!(e.getModifiers() == 4)) {
+					// Double click on graph component.
+					if (object == null) {
+						refresh = doubleClickOnCanvas(e);
+					} else {
+						switch (cell.getType()) {
+						case PLACE:
+//							refresh = doubleClickOnPlace(cell, e);
+							break;
+						case TRANSITION:
+							refresh = singleClickOnTransition(cell, e);
+							break;
+						case ARC:
+//							refresh = doubleClickOnArc(cell, e);
+							break;
+						}
+					}
+				}
 				if (e.getModifiers() == 4) {
 					// Right click on graph component.
 					if (object == null) {
@@ -400,12 +442,15 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 					}
 				}
 			}
+
 			if (refresh) {
 				mxCellState state = getGraph().getView().getState(cell);
 				redraw(state);
 				refresh();
 			}
 		}
+
+	
 
 	}
 

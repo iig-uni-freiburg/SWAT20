@@ -55,6 +55,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.S
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterEditingAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterExecutionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
@@ -244,7 +246,14 @@ public class ToolBar extends JToolBar {
 
 	private JToggleButton lineColorSelectionButton;
 
-	private int strokeWeight = (int) Line.DEFAULT_WIDTH;;
+	private int strokeWeight = (int) Line.DEFAULT_WIDTH;
+
+	private EnterExecutionAction enterExecutionAction;
+	private EnterEditingAction enterEditingAction;
+
+	private JButton enterExecutionButton;
+
+	private JButton enterEditingButton;;
 
 
 
@@ -256,6 +265,8 @@ public class ToolBar extends JToolBar {
 
 		try {
 			saveAction = new SaveAction(pnEditor);
+			enterExecutionAction = new EnterExecutionAction(pnEditor);
+			enterEditingAction = new EnterEditingAction(pnEditor);
 			cutAction = new CutAction(pnEditor, TransferHandler.getCutAction());
 			copyAction = new CopyAction(pnEditor, TransferHandler.getCopyAction());
 			pasteAction = new PasteAction(pnEditor, TransferHandler.getPasteAction());
@@ -309,6 +320,11 @@ public class ToolBar extends JToolBar {
 		// setLayout(layout);
 
 		saveButton = add(saveAction);
+		addSeparator();
+		
+		enterExecutionButton = add(enterExecutionAction);
+		
+		enterEditingButton = add(enterEditingAction);
 		addSeparator();
 
 		cutButton = add(cutAction);
@@ -1379,6 +1395,23 @@ public class ToolBar extends JToolBar {
 	public void setLineStyle(LineStyle nofill) {
 		this.lineStyle = nofill;
 
+	}
+
+	public void setExecutionMode() {
+		deactivate();
+		undoAction.setEnabled(false);
+		redoAction.setEnabled(false);
+		
+	}
+	
+	public void setEditingMode() {
+		deactivate();
+		
+	}
+
+	public JButton getExecutionButton() {
+		return enterExecutionButton;
+		
 	}
 
 }

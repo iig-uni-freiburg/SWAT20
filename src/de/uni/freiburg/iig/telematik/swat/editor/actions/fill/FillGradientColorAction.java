@@ -64,8 +64,9 @@ public class FillGradientColorAction extends AbstractPNEditorAction{
 		case ARC:
 			break;
 		}
-		
-		Fill fill = nodeGraphics.getFill();
+		Fill fill = null;
+		if(nodeGraphics != null)
+		fill = nodeGraphics.getFill();
 		if(fill != null){
 			
 			

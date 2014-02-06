@@ -1,9 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.event.MouseEvent;
+
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
 import de.invation.code.toval.graphic.misc.PColor;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
@@ -98,6 +101,11 @@ public class PTGraph extends PNGraph {
 	@Override
 	protected String getArcToolTip(PNGraphCell cell) {
 		return "";
+	}
+
+	public void fireTransition(PNGraphCell cell) throws ParameterException, PNException {
+			getNetContainer().getPetriNet().fire(cell.getId());
+	
 	}
 
 
