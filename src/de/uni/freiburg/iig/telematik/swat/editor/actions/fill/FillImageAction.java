@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.actions;
+package de.uni.freiburg.iig.telematik.swat.editor.actions.fill;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -12,6 +12,8 @@ import com.mxgraph.util.mxConstants;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ImageFileFilter;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 

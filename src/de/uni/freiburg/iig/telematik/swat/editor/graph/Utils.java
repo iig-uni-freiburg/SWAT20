@@ -37,6 +37,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.D
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.LineStyle;
 
 public class Utils extends mxUtils {
 	/**
@@ -303,7 +304,6 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 
 	public static Object createFillPaint(mxRectangle bounds, Map<String, Object> style) {
 		Color fillColor = mxUtils.getColor(style, mxConstants.STYLE_FILLCOLOR);
-
 		Paint fillPaint = null;
 
 		if (fillColor != null) {
@@ -381,7 +381,8 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
 
         g2.fillRect(0, 0, 	size-1, size-1);
         g2.setColor (new Color(0,0,0));
-
+//        g2.setStroke(new BasicStroke(2));
+//        g2.drawOval(0, size/5, size*2, size*3);
 		g2.setStroke(new BasicStroke(1));
         g2.drawRect(0, 0, 	size-1, size-1);
 
@@ -389,6 +390,116 @@ public static mxRectangle getScaledLabelBounds(double x, double y,
         return image;
 
 	}
+	
+	public static Image createLIconImage(Color fillColor,int size,  double width, Style defaultLinestyle, boolean curve) {
+
+        Image image = new BufferedImage (size, size, BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics g = image.getGraphics();
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+      
+		mxRectangle bounds = new mxRectangle(0, 0, size, size);
+		float x1 = (float) bounds .getX();
+		float y1 = (float) bounds.getY();
+		float x2 = (float) bounds.getX();
+		float y2 = (float) bounds.getY();
+
+//		if (fillColor != null) {
+//			if (gradientColor != null && gradientRotation != null) {
+//
+//				switch (gradientRotation) {
+//				case DIAGONAL:
+//					y2 = (float) (bounds.getY() + bounds.getHeight());
+//					x2 = (float) (bounds.getX() + bounds.getWidth());
+//					break;
+//				case HORIZONTAL:
+//					x2 = (float) (bounds.getX() + bounds.getWidth());
+//					break;
+//				case VERTICAL:
+//					y2 = (float) (bounds.getY() + bounds.getHeight());
+//					break;
+//				default:
+//					break;
+//
+//				}
+//
+//			}
+//		}
+
+		GradientPaint fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, fillColor, false);
+ 		g2.setPaint(fillPaint);
+
+        g2.fillRect(0, 0, 	size-1, size-1);
+        g2.setColor (new Color(0,0,0));
+//        g2.setStroke(new BasicStroke(2));
+       
+        Stroke s=  getStrokeWithStyleForToolbar(1.0, width, defaultLinestyle);
+		g2.setStroke(s);
+		
+		if(curve)
+        g2.drawOval(0, size/5, size*2, size*3);
+		else
+			g2.drawLine(0, size, size, 0);
+		g2.setStroke(new BasicStroke(1));
+        g2.drawRect(0, 0, 	size-1, size-1);
+
+        g2.dispose ();
+        return image;
+
+	}
+	
+	public static Image createLineIconImage(Color fillColor,Color gradientColor, GradientRotation gradientRotation, int size) {
+int sizex = size*3;
+int sizey = size*(3/2);
+        Image image = new BufferedImage (sizex, sizey, BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics g = image.getGraphics();
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+      
+		mxRectangle bounds = new mxRectangle(0, 0, sizex, sizey);
+		float x1 = (float) bounds .getX();
+		float y1 = (float) bounds.getY();
+		float x2 = (float) bounds.getX();
+		float y2 = (float) bounds.getY();
+
+		if (fillColor != null) {
+			if (gradientColor != null && gradientRotation != null) {
+
+				switch (gradientRotation) {
+				case DIAGONAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case HORIZONTAL:
+					x2 = (float) (bounds.getX() + bounds.getWidth());
+					break;
+				case VERTICAL:
+					y2 = (float) (bounds.getY() + bounds.getHeight());
+					break;
+				default:
+					break;
+
+				}
+
+			}
+		}
+
+		GradientPaint fillPaint = new GradientPaint(x1, y1, fillColor, x2, y2, gradientColor, false);
+ 		g2.setPaint(fillPaint);
+
+        g2.fillRect(0, 0, 	sizex-1, sizey-1);
+        g2.setColor (new Color(0,0,0));
+
+		g2.setStroke(new BasicStroke(1));
+        g2.drawRect(0, 0, 	sizex-1, sizey-1);
+
+        g2.dispose ();
+        return image;
+
+	}
+
 
 
 
@@ -419,6 +530,12 @@ protected static Stroke getStrokeForLineStyle(Map<String, Object> style, double 
 	linestyle = Line.Style.getStyle(lineStyleString);
 	else linestyle = Line.Style.SOLID;
 
+	return getStrokeWithStyle(style, scale, width, linestyle);
+}
+
+
+
+private static Stroke getStrokeWithStyle(Map<String, Object> style, double scale, double width, Style linestyle) {
 	float f;
 	switch (linestyle) {
 	case DASH:
@@ -438,7 +555,26 @@ protected static Stroke getStrokeForLineStyle(Map<String, Object> style, double 
 	}
 	return null;
 }
-
+private static Stroke getStrokeWithStyleForToolbar(double scale, double width, Style linestyle) {
+	float f;
+	switch (linestyle) {
+	case DASH:
+		float[] dashPattern = new float[] {3.0f , 3.0f};
+		float[] scaledDashPattern = new float[dashPattern.length];
+		f = (width>0)?(float) width:1;
+		for (int i = 0; i < dashPattern.length; i++) {
+			scaledDashPattern[i] = (float) (dashPattern[i] * scale * f);
+		}
+		return new BasicStroke((float) width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 10.0f, scaledDashPattern, 0.0f);
+	case DOT:
+		f = (width>0)?(float) width:1;
+		float[] dash = { 0.0f, f * 2 };
+		return new BasicStroke((float) width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 1.0f, dash, 10.0f);
+	case SOLID:
+		return new BasicStroke((float) width);
+	}
+	return null;
+}
 
 
 /**

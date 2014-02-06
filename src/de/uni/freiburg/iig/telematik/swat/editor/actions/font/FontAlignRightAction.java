@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.actions;
+package de.uni.freiburg.iig.telematik.swat.editor.actions.font;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -12,6 +12,7 @@ import com.mxgraph.view.mxGraph;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 @SuppressWarnings("serial")

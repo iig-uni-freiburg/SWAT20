@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.actions;
+package de.uni.freiburg.iig.telematik.swat.editor.actions.line;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -29,7 +29,10 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ColorChooser;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -38,23 +41,23 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class FillColorSelectionAction extends AbstractPNEditorAction {
-	public static Color DEFAULT_FILL_COLOR = new Color(255, 255, 255);
+public class LineColorSelectionAction extends AbstractPNEditorAction {
+	public static Color DEFAULT_LINE_COLOR = new Color(255, 255, 255);
 	public static Color DEFAULT_GRADIENT_COLOR = new Color(0, 0, 0);
 //	private Color backgroundColor;
 //	private Color gradientColor;
 //	private GradientRotation gradientRotation;
 
-	public FillColorSelectionAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+	public LineColorSelectionAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "FillColor", IconFactory.getIcon("fill"));
-		setFillColor(DEFAULT_FILL_COLOR, DEFAULT_GRADIENT_COLOR, GradientRotation.VERTICAL);
+		setLineColor(DEFAULT_LINE_COLOR, false);
 
 	}
 
-	public void setFillColor(Color fillColor, Color gradientColor, GradientRotation gradientRotation) {
+	public void setLineColor(Color fillColor, boolean isCurve) {
 		Image image;
 		try {
-			image = Utils.createIconImage(fillColor, gradientColor, gradientRotation, SwatProperties.getInstance().getIconSize().getSize());
+			image = Utils.createLIconImage(fillColor, SwatProperties.getInstance().getIconSize().getSize(), 1, Style.SOLID, isCurve );
 			setIconImage(image);
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
@@ -75,59 +78,26 @@ public class FillColorSelectionAction extends AbstractPNEditorAction {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 		FillStyle fillStlye = getEditor().getEditorToolbar().getFillStyle();
 		Color backgroundColor;
-		switch (fillStlye) {
-		case SOLID:
-			if (!graph.isSelectionEmpty()) {
-				backgroundColor = ColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
-if(backgroundColor != null){
+		if (!graph.isSelectionEmpty()) {
+			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Stroke Color", null);
+			if (newColor != null) {
 				if (graph.isLabelSelected()) {
-					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(backgroundColor));
+					graph.setCellStyles(mxConstants.STYLE_LABEL_BORDERCOLOR, mxUtils.hexString(newColor));
 				} else {
-					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(backgroundColor));
-				}}
-
-
-
-			}
-			break;
-		case GRADIENT:
-			if (!graph.isSelectionEmpty()) {
-				Color gradientColor = ColorChooser.showDialog(getEditor().getGraphComponent(), "Gradient Color", null);
-				if(gradientColor != null){
-				if (graph.isLabelSelected()) {
-					graph.setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, mxUtils.hexString(gradientColor));
-
-				} else {
-					graph.setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(gradientColor));
-				}
+					graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, mxUtils.hexString(newColor));
 				}
 				
-			}
-			break;
-		case NOFILL:
-			if (!graph.isSelectionEmpty()) {
-				Color newColor = ColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
-				if(newColor != null){
-				if (graph.isLabelSelected()){
-					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(newColor));
-					graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, null);
-					graph.setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, mxUtils.hexString(FillGradientColorAction.DEFAULT_GRADIENT_COLOR));}
+//					setLineColor(newColor);
+		
 
-				else{
-					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(newColor));
-					graph.setCellStyles(MXConstants.GRADIENT_ROTATION, null);
-					graph.setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(FillGradientColorAction.DEFAULT_GRADIENT_COLOR));
-	
-					}
-				getEditor().getEditorToolbar().setFillStyle(FillStyle.SOLID);
-				}
-			
-			}
-			break;
-		default:
-			break;
-
-		}
+			}//TODO: None Border Color not viewed correctly
+//		else{
+//			if (graph.isLabelSelected()) {
+//				graph.setCellStyles(mxConstants.STYLE_LABEL_BORDERCOLOR, "none");
+//			} else {
+//				graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, "none");
+//			}
+//		}
 		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
 		if(selectedCell != null){
 		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
@@ -135,19 +105,9 @@ if(backgroundColor != null){
 		getEditor().getEditorToolbar().updateView(setWithOneCell);
 		}
 
-//		try {
-//			setFillColor(backgroundColor, gradientColor, this.gradientRotation);
-//			getEditor().getEditorToolbar().setFillStyle(fillStlye, backgroundColor, gradientColor, this.gradientRotation);
-//		} catch (PropertyException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
 
-	}
 
+		}}
 	public void setNoFill() {
 		ImageIcon noFill;
 		try {

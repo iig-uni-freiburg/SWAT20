@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.actions;
+package de.uni.freiburg.iig.telematik.swat.editor.actions.fill;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
@@ -17,6 +17,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphic
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
