@@ -54,7 +54,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 	public PropertiesView(PNProperties properties) throws ParameterException {
 		Validate.notNull(properties);
 		this.properties = properties;
-		setUpGUI();
+		
 
 		// expand all nodes in the tree to be visible
 		for (int i = 0; i < getRowCount(); i++) {
@@ -67,7 +67,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 	 * and assigns the renderer and and editor.
 	 * @throws ParameterException
 	 */
-	protected void setUpGUI() throws ParameterException {
+	public void setUpGUI() throws ParameterException {
 		root = new PNTreeNode("root", PNTreeNodeType.ROOT);
 
 		root.add(placesNode);

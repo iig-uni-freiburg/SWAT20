@@ -68,6 +68,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.NewNodeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
@@ -121,10 +122,19 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 			getModel().beginUpdate();
 
 			for (AbstractPlace place : getNetContainer().getPetriNet().getPlaces()) {
+				if(netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()) == null)
+					netContainer.getPetriNetGraphics().getPlaceGraphics().put(place.getName(),new NodeGraphics()); 
+				if(netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(place.getName()) == null)
+					netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().put(place.getName(),new AnnotationGraphics()); 
+
 				insertPNPlace(place, netContainer.getPetriNetGraphics().getPlaceGraphics().get(place.getName()),
 						netContainer.getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(place.getName()));
 			}
 			for (AbstractTransition transition : getNetContainer().getPetriNet().getTransitions()) {
+				if(netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()) == null)
+					netContainer.getPetriNetGraphics().getTransitionGraphics().put(transition.getName(),new NodeGraphics()); 
+				if(netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(transition.getName()) == null)
+					netContainer.getPetriNetGraphics().getTransitionLabelAnnotationGraphics().put(transition.getName(),new AnnotationGraphics()); 
 				insertPNTransition(transition, netContainer.getPetriNetGraphics().getTransitionGraphics().get(transition.getName()), netContainer.getPetriNetGraphics()
 						.getTransitionLabelAnnotationGraphics().get(transition.getName()));
 			}
@@ -299,6 +309,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		double dimX = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultPlaceSize() : nodeGraphics.getDimension().getX();
 		double dimY = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultPlaceSize() : nodeGraphics.getDimension().getY();
 		PNGraphCell newCell = createPlaceCell(place.getName(), place.getLabel(), x, y, dimX, dimY, MXConstants.getNodeStyle(PNComponent.PLACE, nodeGraphics, annotationGraphics));
+		
+//		if(annotationGraphics == null){
+//			annotationGraphics = new AnnotationGraphics();
+//			mxPoint point = new mxPoint(0, 0);
+//			addGraphicalInfoToPNPlace(point , place, nodeGraphics, annotationGraphics);
+//		}
 		double offx = annotationGraphics.getOffset().getX();
 		double offy = annotationGraphics.getOffset().getY();
 		mxPoint offset = new mxPoint(offx, offy);

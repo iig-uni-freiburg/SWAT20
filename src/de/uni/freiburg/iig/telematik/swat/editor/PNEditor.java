@@ -127,6 +127,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		Validate.notNull(netContainer);
 		initialize(netContainer, fileReference);
 		setUpGUI();
+		propertiesView.setUpGUI();
 	}
 
 	public String getName() {
