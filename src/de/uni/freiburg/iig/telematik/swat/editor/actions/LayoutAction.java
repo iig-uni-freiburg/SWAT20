@@ -138,11 +138,26 @@ public class LayoutAction extends AbstractPNEditorAction {
 
 		if (ident != null) {
 			mxGraph graph = getEditor().getGraphComponent().getGraph();
-
 			if (ident.equals("verticalHierarchical")) {
-				layout = new mxHierarchicalLayout(graph);
+				layout = new mxHierarchicalLayout(graph){
+
+					@Override
+					public void execute(Object parent) {
+						getEditor().getGraphComponent().getGraph().removeAllArcPoints();
+						super.execute(parent);
+					}
+					
+				};
 			} else if (ident.equals("horizontalHierarchical")) {
-				layout = new mxHierarchicalLayout(graph, JLabel.WEST);
+				layout = new mxHierarchicalLayout(graph, JLabel.WEST){
+
+					@Override
+					public void execute(Object parent) {
+						getEditor().getGraphComponent().getGraph().removeAllArcPoints();
+						super.execute(parent);
+					}
+					
+				};
 			} else if (ident.equals("verticalTree")) {
 				layout = new mxCompactTreeLayout(graph, false);
 			} else if (ident.equals("horizontalTree")) {
@@ -152,7 +167,15 @@ public class LayoutAction extends AbstractPNEditorAction {
 			} else if (ident.equals("placeEdgeLabels")) {
 				layout = new mxEdgeLabelLayout(graph);
 			} else if (ident.equals("organicLayout")) {
-				layout = new mxOrganicLayout(graph);
+				layout = new mxOrganicLayout(graph){
+
+					@Override
+					public void execute(Object parent) {
+						getEditor().getGraphComponent().getGraph().removeAllArcPoints();
+						super.execute(parent);
+					}
+					
+				};
 			}
 			if (ident.equals("verticalPartition")) {
 				layout = new mxPartitionLayout(graph, false) {
@@ -195,7 +218,15 @@ public class LayoutAction extends AbstractPNEditorAction {
 					}
 				};
 			} else if (ident.equals("circleLayout")) {
-				layout = new mxCircleLayout(graph);
+				layout = new mxCircleLayout(graph){
+
+					@Override
+					public void execute(Object parent) {
+						getEditor().getGraphComponent().getGraph().removeAllArcPoints();
+						super.execute(parent);
+					}
+					
+				};
 			}
 		}
 

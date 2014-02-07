@@ -221,17 +221,17 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		getGraph().getModel().addListener(mxEvent.UNDO, undoHandler);
 		getGraph().getView().addListener(mxEvent.UNDO, undoHandler);
 
-		// Keeps the selection in sync with the command history
-		mxIEventListener undoHandler = new mxIEventListener()
-		{
-			public void invoke(Object source, mxEventObject evt)
-			{
-				List<mxUndoableChange> changes = ((mxUndoableEdit) evt
-						.getProperty("edit")).getChanges();
-				getGraph().setSelectionCells(getGraph()
-						.getSelectionCellsForChanges(changes));
-			}
-		};
+//		// Keeps the selection in sync with the command history
+//		mxIEventListener undoHandler = new mxIEventListener()
+//		{
+//			public void invoke(Object source, mxEventObject evt)
+//			{
+//				List<mxUndoableChange> changes = ((mxUndoableEdit) evt
+//						.getProperty("edit")).getChanges();
+//				getGraph().setSelectionCells(getGraph()
+//						.getSelectionCellsForChanges(changes));
+//			}
+//		};
 	}
 
 

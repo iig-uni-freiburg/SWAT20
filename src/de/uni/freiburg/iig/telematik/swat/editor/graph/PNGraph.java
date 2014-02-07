@@ -1205,7 +1205,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-
+System.out.println();
 		// if (evt.getName().equals(mxEvent.CHANGE)) {
 		// ArrayList<mxAtomicGraphModelChange> changes =
 		// (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
@@ -1233,7 +1233,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		}
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
-			// System.out.println(changes + "changes");
+			 System.out.println(changes + "changes");
 			if (changes != null) {
 				for (mxAtomicGraphModelChange change : changes) {
 					if (change instanceof mxTerminalChange) {
@@ -1689,6 +1689,24 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	public void setTransitionSilent(String id, boolean setSilent) {
 		getNetContainer().getPetriNet().getTransition(id).setSilent(setSilent);	
 	
+	}
+
+	public void removeAllArcPoints() {
+		for(Entry<String, PNGraphCell> arc : arcReferences.entrySet()){
+			PNGraphCell arcCell = arc.getValue();
+			arcCell.getGeometry().setPoints(new ArrayList<mxPoint>());
+			ArcGraphics arcGraphics = getNetContainer().getPetriNetGraphics().getArcGraphics().get(arcCell.getId());
+			try {
+				arcGraphics.setPositions(new Vector<Position>());
+			} catch (ParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		
+		
+		}
+		
 	}
 
 //	public void highlightEnabledTransition() {
