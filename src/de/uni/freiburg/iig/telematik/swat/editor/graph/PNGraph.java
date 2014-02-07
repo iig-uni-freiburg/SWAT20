@@ -33,6 +33,7 @@ import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxGraphModel.mxChildChange;
 import com.mxgraph.model.mxGraphModel.mxGeometryChange;
 import com.mxgraph.model.mxGraphModel.mxTerminalChange;
+import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
@@ -897,6 +898,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@Override
 	public void propertyChange(PNPropertyChangeEvent event) {
+		if(!event.getOldValue().equals(event.getNewValue()))
 		if (event.getSource() != this) {
 			switch (event.getFieldType()) {
 			case PLACE:
@@ -920,7 +922,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		double dy;
 		switch (property) {
 		case PLACE_LABEL:
-			placeCell.setValue(newValue);
+			getModel().setValue(placeCell, newValue);
 			return true;
 		case PLACE_SIZE:
 			bounds = getView().getState(placeCell).getBoundingBox();
@@ -946,7 +948,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 		switch (property) {
 		case TRANSITION_LABEL:
-			transitionCell.setValue(newValue);
+			getModel().setValue(transitionCell, newValue);
 			return true;
 		case TRANSITION_POSITION_X:
 			transitionCell.getGeometry().setX(new Integer((Integer) newValue).doubleValue());
@@ -972,7 +974,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		PNGraphCell arcCell = arcReferences.get(name);
 		switch (property) {
 		case ARC_WEIGHT:
-			arcCell.setValue(newValue);
+			getModel().setValue(arcCell, newValue);
 			break;
 
 		}
@@ -1205,7 +1207,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-System.out.println();
 		// if (evt.getName().equals(mxEvent.CHANGE)) {
 		// ArrayList<mxAtomicGraphModelChange> changes =
 		// (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
@@ -1233,9 +1234,32 @@ System.out.println();
 		}
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
-			 System.out.println(changes + "changes");
+//			 System.out.println(changes + "changes");
 			if (changes != null) {
 				for (mxAtomicGraphModelChange change : changes) {
+					if(change instanceof mxValueChange){
+						PNGraphCell labelCell = (PNGraphCell) ((mxValueChange) change).getCell();
+						try {
+						switch(labelCell.getType()){
+						case ARC:
+							setArcLabel(this, labelCell.getId(),((mxValueChange) change).getValue() + "");
+							break;
+						case PLACE:
+							properties.setPlaceLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
+							break;
+						case TRANSITION:
+							properties.setTransitionLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
+							break;
+						default:
+							break;
+						
+						}
+						} catch (ParameterException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}
 					if (change instanceof mxTerminalChange) {
 						mxTerminalChange terminalChange = (mxTerminalChange) change;
 						PNGraphCell arc = (PNGraphCell) terminalChange.getCell();
@@ -1430,6 +1454,8 @@ System.out.println();
 			ensureValidPlaceSize();
 		}
 	}
+
+	protected abstract void setArcLabel(PNGraph pnGraph, String id, String string);
 
 	public void setFontOfSelectedCellLabel(String font) throws ParameterException {
 		Validate.notNull(font);

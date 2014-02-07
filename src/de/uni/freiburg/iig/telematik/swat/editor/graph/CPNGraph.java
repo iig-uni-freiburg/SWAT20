@@ -93,4 +93,10 @@ public class CPNGraph extends PNGraph {
 		return "";
 	}
 
+	@Override
+	protected void setArcLabel(PNGraph pnGraph, String id, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -68,7 +68,7 @@ public class EditorProperties {
 
 	public String getDefaultLineColor() {
 		// TODO Auto-generated method stub
-		return "#A6BAD4";
+		return "#000000";
 	}
 
 	public String getDefaultFontFamily() {

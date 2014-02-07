@@ -565,21 +565,21 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		if(e.getSource() == null || e.getSource() == this)
-			return;
-		JTree sourceTree = null;
-		try{
-			sourceTree = (JTree) e.getSource();
-		} catch(Exception ex){
-			return;
-		}
-		PNTreeNode node = null;
-		try{
-			node = (PNTreeNode) sourceTree.getLastSelectedPathComponent();
-		}catch(Exception ex){
-			return;
-		}
-		treeNodeSelected(node);
+//		if(e.getSource() == null || e.getSource() == this)
+//			return;
+//		JTree sourceTree = null;
+//		try{
+//			sourceTree = (JTree) e.getSource();
+//		} catch(Exception ex){
+//			return;
+//		}
+//		PNTreeNode node = null;
+//		try{
+//			node = (PNTreeNode) sourceTree.getLastSelectedPathComponent();
+//		}catch(Exception ex){
+//			return;
+//		}
+//		treeNodeSelected(node);
 	}
 	
 	private void treeNodeSelected(PNTreeNode node){

@@ -118,6 +118,7 @@ public class PTProperties extends PNProperties {
 	 * @throws ParameterException If the given arc name is <code>null</code> or the net does not contain an arc with the given name.
 	 */
 	public void setArcWeight(Object sender, String arcName, Integer weight) throws ParameterException{
+
 		Validate.notNull(arcName);
 		Validate.notNull(weight);
 		Validate.bigger(weight, 0);
