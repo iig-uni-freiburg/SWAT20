@@ -21,6 +21,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.CPNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.CPNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.CPNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
@@ -149,6 +150,12 @@ public class CPNEditor extends AbstractCPNEditor {
 		frame.setSize(800, 500);
 		panel.setBackground(Color.black);
 		return panel;
+	}
+
+	@Override
+	public TransitionPopupMenu getTransitionPopupMenu() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

@@ -54,12 +54,17 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.EllipseShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.HtmlTextShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.RectangleShape;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
 
 	private static final long serialVersionUID = 1411737962538427287L;
 
 	private EditorPopupMenu popupMenu = null;
+
+	private TransitionPopupMenu transitionPopupMenu;
+
+
 
 	public PNGraphComponent(PNGraph graph) {
 		super(graph);
@@ -85,11 +90,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 			PNGraphCell cell =getGraph().nodeReferences.get(n);
 			Rectangle geo = cell.getGeometry().getRectangle();
 //			enabledTransitionsPanel =
-			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;
-			
-		}
-		
-		
+			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;	
+		}		
 	}
 	@Override
 	public PNGraph getGraph() {
@@ -192,7 +194,16 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	public void setPopupMenu(EditorPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;
 	}
-
+	public EditorPopupMenu getPopupMenu() {
+		return popupMenu;
+	}
+	
+	public void setTransitionPopupMenu(TransitionPopupMenu transitionPopupMenu) {
+		this.transitionPopupMenu = transitionPopupMenu;
+	}
+	public TransitionPopupMenu getTransitionPopupMenu() {
+		return transitionPopupMenu;
+	}
 	// ------- MouseListener support
 	// ------------------------------------------------------------------
 
@@ -399,8 +410,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 					}
 				}
 				
-			if(!getGraph().isExecution()){
-				if (e.getModifiers() == 4) {
+				if (e.getModifiers() == 4 && !getGraph().isExecution()) {
 					// Right click on graph component.
 					if (object == null) {
 						refresh = rightClickOnCanvas(e);
@@ -427,7 +437,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 					}
 					getGraph().invoke(PNGraphComponent.this, new mxEventObject(mxEvent.CHANGE));
 				}
-			} else if (e.getClickCount() == 2 && !(e.getModifiers() == 4)) {
+			} else if (e.getClickCount() == 2 && !(e.getModifiers() == 4) && !getGraph().isExecution()) {
 				// Double click on graph component.
 				if (object == null) {
 					refresh = doubleClickOnCanvas(e);
@@ -445,7 +455,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 					}
 				}
 			}
-			}
+			
 
 			if (refresh) {
 				mxCellState state = getGraph().getView().getState(cell);

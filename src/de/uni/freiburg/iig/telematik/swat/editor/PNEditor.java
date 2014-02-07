@@ -76,6 +76,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.PalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
@@ -174,6 +175,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		if (graphComponent == null) {
 			graphComponent = createGraphComponent();
 			graphComponent.setPopupMenu(getPopupMenu());
+			graphComponent.setTransitionPopupMenu(getTransitionPopupMenu());
 			graphComponent.getViewport().setOpaque(true);
 			graphComponent.getViewport().setBackground(MXConstants.blueBG);
 
@@ -293,6 +295,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	}
 
 	public abstract EditorPopupMenu getPopupMenu();
+	
+	public abstract TransitionPopupMenu getTransitionPopupMenu();
 
 	public void setFileReference(File fileReference) throws ParameterException {
 		Validate.notNull(fileReference);

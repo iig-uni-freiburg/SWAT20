@@ -62,6 +62,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.TokenGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Dimension;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
@@ -456,6 +457,13 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@SuppressWarnings("rawtypes")
 	public PNGraphCell insertPNTransition(AbstractTransition transition, NodeGraphics nodeGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
+//		transition.setSilent(true);
+		if(transition.isSilent()){
+		Fill fill = new Fill("#0000", null, null, null);
+		annotationGraphics.setVisibility(false);
+		nodeGraphics.setFill(fill);
+		}
+		
 		double x = (nodeGraphics == null) ? 0 : nodeGraphics.getPosition().getX();
 		double y = (nodeGraphics == null) ? 0 : nodeGraphics.getPosition().getY();
 		double dimX = (nodeGraphics == null) ? EditorProperties.getInstance().getDefaultTransitionWidth() : nodeGraphics.getDimension().getX();
@@ -469,10 +477,20 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		if (nodeGraphics == null || annotationGraphics == null) {
 			mxCellState state = getView().getState(newCell, true);
 		}
+
 		addCell(newCell, getDefaultParent());
 		addNodeReference(transition, newCell);
 		notifyTransitionAdded(transition);
+		
 		return newCell;
+
+	}
+
+	private void makeSilent(PNGraphCell state) {
+//		newCell.getStyle();
+//style.put(mxConstants.STYLE_FILLCOLOR, "#000000");
+//style.put(mxConstants.STYLE_STROKECOLOR, "none");
+//style.put(mxConstants.STYLE_NOLABEL, "1");
 
 	}
 
@@ -1666,6 +1684,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		getNetContainer().getPetriNet().reset();
 		refresh();
 		
+	}
+
+	public void setTransitionSilent(String id, boolean setSilent) {
+		getNetContainer().getPetriNet().getTransition(id).setSilent(setSilent);	
+	
 	}
 
 //	public void highlightEnabledTransition() {

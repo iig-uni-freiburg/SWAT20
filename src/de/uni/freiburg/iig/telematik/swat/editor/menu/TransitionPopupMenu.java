@@ -42,31 +42,23 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.line.LineShapeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.line.LineStrokeColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.line.LineStyleAction;
 
-public class EditorPopupMenu extends JPopupMenu {
+public class TransitionPopupMenu extends JPopupMenu {
 	
 	private static final long serialVersionUID = -2983257974918330746L;
 
-	public EditorPopupMenu(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
+	public TransitionPopupMenu(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
 		Validate.notNull(pnEditor);
 		boolean selected = !pnEditor.getGraphComponent().getGraph().isSelectionEmpty();
 
 		
 		
-		 JMenu submenu = (JMenu) add(new JMenu("Layout"));
-		
-		 submenu.add(new LayoutAction(pnEditor, "verticalHierarchical",
-		 false));
-		 submenu.add(new LayoutAction(pnEditor, "horizontalHierarchical",
-		 false));
 
-		 submenu.addSeparator();
-		
-		 submenu.add(new LayoutAction(pnEditor, "organicLayout",
+		 JMenu submenu = (JMenu) add(new JMenu("Transition"));
+			
+		 submenu.add(new TransitionSilentAction(pnEditor, "silent",
 		 true));
-		 submenu.add(new LayoutAction(pnEditor, "circleLayout",
-		 true));
-		 
-
+		 submenu.add(new TransitionSilentAction(pnEditor, "not silent",
+		 false));		
 		 
 		 
 	}

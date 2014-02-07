@@ -9,6 +9,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 
 public class IFNetEditor extends AbstractCPNEditor {
@@ -60,6 +61,12 @@ public class IFNetEditor extends AbstractCPNEditor {
 
 	@Override
 	public EditorPopupMenu getPopupMenu() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TransitionPopupMenu getTransitionPopupMenu() {
 		// TODO Auto-generated method stub
 		return null;
 	}

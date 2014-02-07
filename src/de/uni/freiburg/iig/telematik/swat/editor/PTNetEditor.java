@@ -20,6 +20,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 
@@ -148,6 +149,24 @@ public class PTNetEditor extends PNEditor {
 		frame.setSize(800, 500);
 		panel.setBackground(Color.black);
 		return panel;
+	}
+
+	@Override
+	public TransitionPopupMenu getTransitionPopupMenu() {
+		try {
+			try {
+				return new TransitionPopupMenu(this);
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (ParameterException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	

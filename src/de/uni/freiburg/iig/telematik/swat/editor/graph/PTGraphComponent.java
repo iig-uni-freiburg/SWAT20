@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -9,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.util.mxCellOverlay;
@@ -24,6 +26,14 @@ import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 public class PTGraphComponent extends PNGraphComponent {
+
+	@Override
+	protected boolean rightClickOnTransition(PNGraphCell cell, MouseEvent e) {
+		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), this);
+		getTransitionPopupMenu().show(PTGraphComponent.this, pt.x, pt.y);
+		return false;
+	}
+
 
 	private boolean isExecution;
 
@@ -98,18 +108,11 @@ public class PTGraphComponent extends PNGraphComponent {
 		String tokens = JOptionPane.showInputDialog(PTGraphComponent.this, "Input new amount of tokens");
 		try {
 			Validate.notNegativeInteger(tokens);
+			Multiset<String> multiSet = new Multiset<String>();
+			multiSet.setMultiplicity("black", new Integer(tokens));
+			getGraph().updatePlaceState(cell, multiSet);
 		} catch (ParameterException ex) {
 			JOptionPane.showMessageDialog(PTGraphComponent.this, "Input is not a positive integer.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
-		}
-
-		if (tokens != null) {
-			try {
-				Multiset<String> multiSet = new Multiset<String>();
-				multiSet.setMultiplicity("black", new Integer(tokens));
-				getGraph().updatePlaceState(cell, multiSet);
-			} catch (ParameterException e2) {
-				JOptionPane.showMessageDialog(PTGraphComponent.this, "Cannot set initial marking for place.\n Reason: " + e2.getMessage(), "Graph Exception", JOptionPane.ERROR_MESSAGE);
-			}
 		}
 		return true;
 	}

@@ -52,6 +52,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.D
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Shape;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
@@ -895,147 +896,151 @@ public class ToolBar extends JToolBar {
 	}
 
 	public void updateView(Set<PNGraphCell> selectedComponents) {
-		if(!pnEditor.getGraphComponent().getGraph().isExecution()){
-		if (selectedComponents == null || selectedComponents.isEmpty()) {
-			deactivate();
-			this.selectedCell = null;
-			return;
-		}
-		if (!selectedComponents.isEmpty()) {
-			copyAction.setEnabled(true);
-			pasteAction.setEnabled(isCellInClipboard());
-			cutAction.setEnabled(true);
-
-			setLineEnabled(true);
-			setFillEnabled(true);
-			showHideLabelsAction.setEnabled(true);
-			// addImageAction.setEnabled(true);
-
-			if (selectedComponents.size() == 1) {
-				// Enables Toolbar Buttons
-				this.selectedCell = selectedComponents.iterator().next();
-				boolean isPlaceCell = selectedCell.getType() == PNComponent.PLACE;
-				boolean isTransitionCell = selectedCell.getType() == PNComponent.TRANSITION;
-				boolean isArcCell = selectedCell.getType() == PNComponent.ARC;
-				boolean labelSelected = pnEditor.getGraphComponent().getGraph().isLabelSelected();
-				boolean isBold = false;
-				boolean isItalic = false;
-				boolean isUnderlined = false;
-				boolean isAlignLeft = false;
-				boolean isAlignCenter = false;
-				boolean isAlignRight = false;
-
-
-
-				String fontFamily = null;
-				String fontSize = null;
-
-				NodeGraphics nodeGraphics = null;
-				AnnotationGraphics annotationGraphics = null;
-				ArcGraphics arcGraphics = null;
-				switch (selectedCell.getType()) {
-				case PLACE:
-					nodeGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(selectedCell.getId());
-					annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(selectedCell.getId());
-					break;
-				case TRANSITION:
-					nodeGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(selectedCell.getId());
-					annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(selectedCell.getId());
-					break;
-				case ARC:
-					arcGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getArcGraphics().get(selectedCell.getId());
-					annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(selectedCell.getId());
-					break;
-				}
-
-				if (nodeGraphics != null && !labelSelected) {
-
-					Fill fill = nodeGraphics.getFill();
-					setFillToolbar(fill, false);
-
-					Line line = nodeGraphics.getLine();
-					setLineToolbar(line);
-
-				}
-
-				if (arcGraphics != null && isArcCell) {
-					Line line = arcGraphics.getLine();
-					setLineToolbar(line);
-					
-//					setLineStyleButton(line);
-//					setLineShapeButton(line);
-				}
-
-				if (annotationGraphics != null && labelSelected) {
-					Font font = annotationGraphics.getFont();
-					fontFamily = font.getFamily();
-					fontSize = font.getSize();
-					String fontWeight = font.getWeight();
-					if (fontWeight.equals("bold"))
-						isBold = true;
-					String fontStyle = font.getStyle();
-					if (fontStyle.equals("italic"))
-						isItalic = true;
-					Decoration fontDecoration = font.getDecoration();
-					if (fontDecoration != null && fontDecoration.equals(Font.Decoration.UNDERLINE))
-						isUnderlined = true;
-					Align fontAlign = font.getAlign();
-					if (fontAlign.equals(Font.Align.CENTER))
-						isAlignCenter = true;
-					else if (fontAlign.equals(Font.Align.LEFT))
-						isAlignLeft = true;
-					else if (fontAlign.equals(Font.Align.RIGHT))
-						isAlignRight = true;
-
-					
-
-
-					getFontBox().setSelectedItem(fontFamily);
-					getFontSizeBox().setSelectedItem(fontSize + "pt");
-
-					if (annotationGraphics.isVisible())
-						showHideLabelsAction.setShowIconImage();
-					else
-						showHideLabelsAction.setHideIconImage();
-					showHideLabelsButton.repaint();
-
-					if (!labelSelected) {
-						alignmentGroup.clearSelection();
-					}
-					
-					Fill fill = annotationGraphics.getFill();
-					setFillToolbar(fill, true);
-					gradientColorAction.setEnabled(false);
-					gradientDiagonalAction.setEnabled(false);
-					gradientHorizontalAction.setEnabled(false);
-					gradientVerticalAction.setEnabled(false);
-
-					// normalFillButton.setBackground(new Color(255, 0, 0,
-					// 100));
-					// normalFillButton.setForeground(new Color(255, 0,
-					// 255));
-					backgroundColorButton.repaint();
-					
-					Line line = annotationGraphics.getLine();
-					
-					setLineToolbar(line);
-					curveAction.setEnabled(false);
-				}
-
-				boldFontButton.setSelected(isBold);
-				italicFontButton.setSelected(isItalic);
-				underlineFontButton.setSelected(isUnderlined);
-				alignLeftButton.setSelected(isAlignLeft);
-				alignCenterButton.setSelected(isAlignCenter);
-				alignRightButton.setSelected(isAlignRight);
-				setFontEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
-
-
-			} else {
-				setFontEnabled(false);
+		if (!pnEditor.getGraphComponent().getGraph().isExecution()) {
+			if (selectedComponents == null || selectedComponents.isEmpty()) {
+				deactivate();
 				this.selectedCell = null;
+				return;
 			}
-		}
+			if (!selectedComponents.isEmpty()) {
+				copyAction.setEnabled(true);
+				pasteAction.setEnabled(isCellInClipboard());
+				cutAction.setEnabled(true);
+
+			
+				
+				// addImageAction.setEnabled(true);
+
+				if (selectedComponents.size() == 1) {
+					// Enables Toolbar Buttons
+					this.selectedCell = selectedComponents.iterator().next();
+					boolean isPlaceCell = selectedCell.getType() == PNComponent.PLACE;
+					boolean isTransitionCell = selectedCell.getType() == PNComponent.TRANSITION;
+					boolean isTransitionSilent = false;
+					if (isTransitionCell) {
+						if(pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().containsTransition(selectedCell.getId()))
+						 isTransitionSilent = pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getTransition(selectedCell.getId()).isSilent();
+					}
+					boolean isArcCell = selectedCell.getType() == PNComponent.ARC;
+					boolean labelSelected = pnEditor.getGraphComponent().getGraph().isLabelSelected();
+					boolean isBold = false;
+					boolean isItalic = false;
+					boolean isUnderlined = false;
+					boolean isAlignLeft = false;
+					boolean isAlignCenter = false;
+					boolean isAlignRight = false;
+
+					String fontFamily = null;
+					String fontSize = null;
+
+					NodeGraphics nodeGraphics = null;
+					AnnotationGraphics annotationGraphics = null;
+					ArcGraphics arcGraphics = null;
+					if (!isTransitionSilent) {
+						setLineEnabled(true);
+						setFillEnabled(true);
+						showHideLabelsAction.setEnabled(true);
+						switch (selectedCell.getType()) {
+						case PLACE:
+							nodeGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getPlaceGraphics().get(selectedCell.getId());
+							annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getPlaceLabelAnnotationGraphics().get(selectedCell.getId());
+							break;
+						case TRANSITION:
+							nodeGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getTransitionGraphics().get(selectedCell.getId());
+							annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getTransitionLabelAnnotationGraphics().get(selectedCell.getId());
+							break;
+						case ARC:
+							arcGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getArcGraphics().get(selectedCell.getId());
+							annotationGraphics = pnEditor.getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().get(selectedCell.getId());
+							break;
+						}
+
+						if (nodeGraphics != null && !labelSelected) {
+
+							Fill fill = nodeGraphics.getFill();
+							setFillToolbar(fill, false);
+
+							Line line = nodeGraphics.getLine();
+							setLineToolbar(line);
+
+						}
+
+						if (arcGraphics != null && isArcCell) {
+							Line line = arcGraphics.getLine();
+							setLineToolbar(line);
+
+							// setLineStyleButton(line);
+							// setLineShapeButton(line);
+						}
+
+						if (annotationGraphics != null && labelSelected) {
+							Font font = annotationGraphics.getFont();
+							fontFamily = font.getFamily();
+							fontSize = font.getSize();
+							String fontWeight = font.getWeight();
+							if (fontWeight.equals("bold"))
+								isBold = true;
+							String fontStyle = font.getStyle();
+							if (fontStyle.equals("italic"))
+								isItalic = true;
+							Decoration fontDecoration = font.getDecoration();
+							if (fontDecoration != null && fontDecoration.equals(Font.Decoration.UNDERLINE))
+								isUnderlined = true;
+							Align fontAlign = font.getAlign();
+							if (fontAlign.equals(Font.Align.CENTER))
+								isAlignCenter = true;
+							else if (fontAlign.equals(Font.Align.LEFT))
+								isAlignLeft = true;
+							else if (fontAlign.equals(Font.Align.RIGHT))
+								isAlignRight = true;
+
+							getFontBox().setSelectedItem(fontFamily);
+							getFontSizeBox().setSelectedItem(fontSize + "pt");
+
+							if (annotationGraphics.isVisible())
+								showHideLabelsAction.setShowIconImage();
+							else
+								showHideLabelsAction.setHideIconImage();
+							showHideLabelsButton.repaint();
+
+							if (!labelSelected) {
+								alignmentGroup.clearSelection();
+							}
+
+							Fill fill = annotationGraphics.getFill();
+							setFillToolbar(fill, true);
+							gradientColorAction.setEnabled(false);
+							gradientDiagonalAction.setEnabled(false);
+							gradientHorizontalAction.setEnabled(false);
+							gradientVerticalAction.setEnabled(false);
+
+							// normalFillButton.setBackground(new Color(255, 0,
+							// 0,
+							// 100));
+							// normalFillButton.setForeground(new Color(255, 0,
+							// 255));
+							backgroundColorButton.repaint();
+
+							Line line = annotationGraphics.getLine();
+
+							setLineToolbar(line);
+							curveAction.setEnabled(false);
+						}
+
+						boldFontButton.setSelected(isBold);
+						italicFontButton.setSelected(isItalic);
+						underlineFontButton.setSelected(isUnderlined);
+						alignLeftButton.setSelected(isAlignLeft);
+						alignCenterButton.setSelected(isAlignCenter);
+						alignRightButton.setSelected(isAlignRight);
+						setFontEnabled((labelSelected && (isPlaceCell || isTransitionCell)) || isArcCell);
+					}
+
+				} else {
+					setFontEnabled(false);
+					this.selectedCell = null;
+				}
+			}
 		}
 	}
 
