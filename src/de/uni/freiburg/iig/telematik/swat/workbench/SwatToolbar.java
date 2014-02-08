@@ -4,8 +4,12 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -396,7 +400,29 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				LolaTransformator lola = new LolaTransformator(editor);
 				LolaPresenter presenter = new LolaPresenter(lola.getNetAsLolaFormat());
 				presenter.show();
+				System.out.println("Generating runtime...");
+				System.out.println("Starting Lola...");
+				Process p = Runtime.getRuntime().exec("lola-boundednet");
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+				System.out.println("Analyzing net...");
+				writer.write(lola.getNetAsLolaFormat());
+				writer.flush();
+				writer.close();
+				String result;
+				System.out.println("Getting results");
+				StringBuilder b = new StringBuilder();
+								while ((result = reader.readLine()) != null) {
+									b.append(result);
+									System.out.println(result);
+									b.append("\r\n");
+				}
+				//				System.out.println("result from lola: " + b.toString());
+								LolaPresenter outcome = new LolaPresenter(b.toString());
+								outcome.show();
+
 			} catch (Exception e) {
+				System.out.println("Something went wrong");
 				e.printStackTrace();
 
 			}

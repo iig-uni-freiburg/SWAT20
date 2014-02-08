@@ -33,6 +33,7 @@ public class LolaTransformator {
 		builder.append(getInitialMarking());
 		builder.append("\r\n");
 		builder.append(getTransitions());
+		//builder.append("$end");
 		return builder.toString();
 	}
 

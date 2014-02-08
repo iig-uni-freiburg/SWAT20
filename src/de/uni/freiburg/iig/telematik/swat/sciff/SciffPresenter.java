@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lola;
+package de.uni.freiburg.iig.telematik.swat.sciff;
 
 import java.awt.Dimension;
 import java.awt.ScrollPane;
@@ -8,12 +8,12 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-public class LolaPresenter {
+public class SciffPresenter {
 
 	protected JFrame result;
 	protected String output;
 
-	public LolaPresenter(String output) {
+	public SciffPresenter(String output) {
 		//this.output = "<html><body>" + output.replaceAll("(\r\n|\n)", "<br />" + "</body></html>");
 		this.output = output;
 		makeWindow();
@@ -54,7 +54,7 @@ public class LolaPresenter {
 
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
-			//result.dispose();
+			result.dispose();
 			
 		}
 

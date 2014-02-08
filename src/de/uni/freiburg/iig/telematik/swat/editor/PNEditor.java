@@ -270,7 +270,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 			return propertiesView;
 		}
 		else{
-			//TODO: Hier bitte die Lola einbauen... :-)
+			//TODO: Hier bitte den Lola Knopf einbauen... :-)
 			return propertiesView;
 		}
 	}

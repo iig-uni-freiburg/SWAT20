@@ -33,5 +33,9 @@
 	<classpathentry kind="lib" path="lib/batik/xerces_2_5_0.jar"/>
 	<classpathentry kind="lib" path="lib/batik/xml-apis-ext.jar"/>
 	<classpathentry kind="lib" path="lib/batik/xml-apis.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JAWL"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SCIFF"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SWATPlugin_SCIFF"/>
+	<classpathentry kind="lib" path="lib/jdom-1.1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
