@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 
@@ -57,7 +56,7 @@ public class XMLFileViewer extends JEditorPane implements SwatComponent {
 				ImageIcon icon = new ImageIcon(XMLFileViewer.this.getClass().getResource(
 					String.format(iconNameFormat, ICON_SIZE, "search", ICON_SIZE)));
 			runWithLoLA.setIcon(icon);
-			runWithLoLA.addActionListener(new LolaAnalyzeAction(file));
+			//runWithLoLA.addActionListener(new LolaAnalyzeAction(file));
 		}
 		return runWithLoLA;
 	}

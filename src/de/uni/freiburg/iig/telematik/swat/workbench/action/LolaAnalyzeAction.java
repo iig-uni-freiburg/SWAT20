@@ -1,49 +1,34 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 
-import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.lola.LolaRunner;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
 public class LolaAnalyzeAction extends AbstractAction {
 
 	private static final long serialVersionUID = 9111775745565090191L;
-	private File file;
-	LolaRunner lola = null;
+	private SwatTabView tabView;
 
-	public LolaAnalyzeAction(File file) {
-		this.file = file;
-		//Generate LoLA Runner
-		try {
-			this.lola = new LolaRunner(file);
-			//lola.analyze();
-		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public LolaAnalyzeAction(SwatTabView tabView) {
+		this.tabView = tabView;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-			SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
-			System.out.println("Analayze " + file.getCanonicalPath());
-			try {
-				lola.analyze();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (ParameterException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			LolaTransformator lola = new LolaTransformator((PNEditor) tabView.getSelectedComponent());
+			//run LoLA
+
+			//present results
+		} catch (ClassCastException e) {
+			MessageDialog.getInstance().addMessage("This is not a Petri Net");
 		}
+
 
 	}
 
