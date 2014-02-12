@@ -34,6 +34,7 @@ import com.mxgraph.model.mxGraphModel.mxChildChange;
 import com.mxgraph.model.mxGraphModel.mxGeometryChange;
 import com.mxgraph.model.mxGraphModel.mxTerminalChange;
 import com.mxgraph.model.mxGraphModel.mxValueChange;
+import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
@@ -67,9 +68,11 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterEditingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.NewNodeAction;
@@ -96,6 +99,32 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
+//		selectionModel = createSelectionModel();
+////		setModel((model != null) ? model : new mxGraphModel(){
+////
+////			@Override
+////			public Object setValue(Object cell, Object value) {
+////				
+////				System.out.println("hey");
+////				if(!(value instanceof Multiset))
+//////					try {
+//////						updatePlaceState((PNGraphCell)cell,(Multiset<String>) value);
+//////					} catch (ParameterException e) {
+//////						// TODO Auto-generated catch block
+//////						e.printStackTrace();
+//////					}
+//////					return null;
+//////				}
+//////				else
+////				return super.setValue(cell, value);
+////				else
+////				return null;
+////			}
+////			
+////		});
+//		setStylesheet((stylesheet != null) ? stylesheet : createStylesheet());
+//		setView(createGraphView());
+
 		Validate.notNull(netContainer);
 		Validate.notNull(properties);
 		this.netContainer = netContainer;
@@ -119,6 +148,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 		initialize();
 	}
+
+//	@Override
+//	public void setModel(mxIGraphModel value) {
+//		// TODO Auto-generated method stub
+//		super.setModel(value);
+//	}
 
 	@SuppressWarnings("rawtypes")
 	private void initialize() throws ParameterException {
@@ -799,6 +834,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	 * @return
 	 */
 	protected abstract Multiset<String> getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup);
+	
+	
+	/** Method for incrementing or decrementing the current #AbstractMarking of the given #AbstractPNPlace
+	 * @param cell
+	 * @param wheelRotation
+	 * @return 
+	 * @throws ParameterException
+	 */
+	
+	protected abstract AbstractMarking inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException;
 
 	private void drawNumbers(PNGraphCell cell, String numbers, mxGraphics2DCanvas canvas, Rectangle temp, Point center) {
 		Graphics g = canvas.getGraphics();
@@ -1207,6 +1252,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
+		System.out.println(evt.getProperties() + "gerd");
 		// if (evt.getName().equals(mxEvent.CHANGE)) {
 		// ArrayList<mxAtomicGraphModelChange> changes =
 		// (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
@@ -1237,6 +1283,36 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 //			 System.out.println(changes + "changes");
 			if (changes != null) {
 				for (mxAtomicGraphModelChange change : changes) {
+//					if(change instanceof TokenChange){
+//						PNGraphCell labelCell = (PNGraphCell) ((mxValueChange) change).getCell();
+//						try {
+//						switch(labelCell.getType()){
+//						case ARC:
+//							setArcLabel(this, labelCell.getId(),((mxValueChange) change).getValue() + "");
+//							break;
+//						case PLACE:
+//							Object value = ((mxValueChange) change).getValue();
+//							System.out.println(value.getClass());
+////							if(!(value instanceof Multiset))
+////								updatePlaceState(labelCell,(Multiset<String>) value);
+////							else
+////							properties.setPlaceLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
+////							else
+////								updatePlaceState(labelCell, (Multiset<String>) value);
+//							break;
+//						case TRANSITION:
+//							properties.setTransitionLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
+//							break;
+//						default:
+//							break;
+//						
+//						}
+//						} catch (ParameterException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//						
+//					}
 					if(change instanceof mxValueChange){
 						PNGraphCell labelCell = (PNGraphCell) ((mxValueChange) change).getCell();
 						try {
@@ -1245,7 +1321,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 							setArcLabel(this, labelCell.getId(),((mxValueChange) change).getValue() + "");
 							break;
 						case PLACE:
-							properties.setPlaceLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
+							Object value = ((mxValueChange) change).getValue();
+							System.out.println(value.getClass());
+//							if(!(value instanceof Multiset))
+//								updatePlaceState(labelCell,(Multiset<String>) value);
+//							else
+//							properties.setPlaceLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
+//							else
+//								updatePlaceState(labelCell, (Multiset<String>) value);
 							break;
 						case TRANSITION:
 							properties.setTransitionLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
@@ -1734,6 +1817,10 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		}
 		
 	}
+
+
+
+//	protected abstract abstract Multiset<String> getMarkingForPlace(String id);
 
 //	public void highlightEnabledTransition() {
 //		Set<String> nameSet = null;

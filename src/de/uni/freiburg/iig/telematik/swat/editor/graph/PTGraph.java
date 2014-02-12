@@ -2,6 +2,9 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.event.MouseEvent;
 
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxGraphModel.mxValueChange;
+
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
 import de.invation.code.toval.graphic.misc.PColor;
 import de.invation.code.toval.types.Multiset;
@@ -9,6 +12,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
@@ -57,6 +61,7 @@ public class PTGraph extends PNGraph {
 	protected Multiset<String> getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup) {
 		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(cell.getId());
 		if(place!= null){
+			if(circularPointGroup != null)
 		circularPointGroup.addPoints(PColor.black, place.getState());
 		Multiset<String> multiSet = new Multiset<String>();
 		multiSet.setMultiplicity("black", place.getState());
@@ -64,23 +69,25 @@ public class PTGraph extends PNGraph {
 		return null;
 	}
 	
-
+@Override
 	/** Method for incrementing or decrementing the current #PTMarking of the given #PTPlace
 	 * @param cell
 	 * @param wheelRotation
+	 * @return 
 	 * @throws ParameterException
 	 */
-	public void inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException {
+	public AbstractMarking inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException {
 		PTMarking initialMarking = getNetContainer().getPetriNet().getInitialMarking();
+		PTMarking oldValue = initialMarking;
 		Integer current = initialMarking.get(cell.getId());
 		int capacity = getNetContainer().getPetriNet().getPlace(cell.getId()).getCapacity();	
 		if(current != null && (capacity<0 ^ capacity>=(current - wheelRotation))) // null means here that the value "zero" has been set before / capacity -1 means infinite
 		initialMarking.set(cell.getId(),  current - wheelRotation);
 		else if(current == null && wheelRotation < 0 ) // create new Marking
 		initialMarking.set(cell.getId(),  1);
-	
-		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
 		
+		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
+		return oldValue;
 	}
 
 

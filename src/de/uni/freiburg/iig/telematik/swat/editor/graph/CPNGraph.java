@@ -9,6 +9,7 @@ import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
@@ -65,17 +66,7 @@ public class CPNGraph extends PNGraph {
 		return place.getState( );
 	}
 
-	/**
-	 * Method for incrementing or decrementing the current #PTMarking of the
-	 * given #PTPlace
-	 * 
-	 * @param cell
-	 * @param wheelRotation
-	 * @throws ParameterException
-	 */
-	public void inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException {
-		// TODO adapt to CPN
-	}
+
 
 	@Override
 	protected String getPlaceToolTip(PNGraphCell cell) {
@@ -97,6 +88,12 @@ public class CPNGraph extends PNGraph {
 	protected void setArcLabel(PNGraph pnGraph, String id, String value) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected AbstractMarking inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

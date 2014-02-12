@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.mxgraph.model.mxGeometry;
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.swing.util.mxCellOverlay;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxPoint;
@@ -110,7 +112,7 @@ public class PTGraphComponent extends PNGraphComponent {
 			Validate.notNegativeInteger(tokens);
 			Multiset<String> multiSet = new Multiset<String>();
 			multiSet.setMultiplicity("black", new Integer(tokens));
-			getGraph().updatePlaceState(cell, multiSet);
+			((mxGraphModel) getGraph().getModel()).execute(new TokenChange((PNGraph)getGraph(),cell,multiSet));
 		} catch (ParameterException ex) {
 			JOptionPane.showMessageDialog(PTGraphComponent.this, "Input is not a positive integer.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
 		}
@@ -140,13 +142,8 @@ public class PTGraphComponent extends PNGraphComponent {
 
 	@Override
 	protected boolean mouseWheelOnPlace(PNGraphCell cell, MouseWheelEvent e) {
-		try {
-			
-		 getGraph().inOrDecrementPlaceState(cell, e.getWheelRotation());
-		} catch (ParameterException e1) {
-			System.out.println("Error while changing number of via mouseWheel");
-			e1.printStackTrace();
-		}
+			((mxGraphModel) getGraph().getModel()).execute(new TokenMouseWheelChange((PNGraph)getGraph(),cell,e.getWheelRotation()));
+	
 		return true;
 	}
 
