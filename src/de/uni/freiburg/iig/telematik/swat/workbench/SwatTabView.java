@@ -58,7 +58,14 @@ public class SwatTabView extends JTabbedPane {
 	public void componentSelected(SwatTreeNode node) {
 		for(Object openedComponent: openedSwatComponents.keySet()){
 			if(openedComponent == node.getUserObject()){
-				setSelectedComponent(openedSwatComponents.get(openedComponent));
+				try {
+					//due to close button: userObject might reside inside openendComponents but tab is not visible
+					setSelectedComponent(openedSwatComponents.get(openedComponent));
+				} catch (IllegalArgumentException e) {
+					//Tab no longer visible. Remove from openedSwatComponents
+					openedSwatComponents.remove(openedComponent);
+
+				}
 				return;
 			}
 		}
@@ -178,14 +185,15 @@ public class SwatTabView extends JTabbedPane {
 		openedSwatComponents.clear();
 	}
 	
-//	/** make Tab with close button **/
-//	@Override
-//	public void addTab(String title, Component component) {
-//		super.addTab(title, component);
-//		//Uncomment to make buttons removable
-//		//this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(title));
-//	}
+	/** make Tab with close button **/
+	@Override
+	public void addTab(String title, Component component) {
+		super.addTab(title, component);
+		//Uncomment to make buttons removable
+		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(title));
+	}
 	
+	/** notifies SwatTabViewListener if something interesting happened **/
 	public class SwatTabViewAdapter implements ChangeListener {
 
 		@Override
