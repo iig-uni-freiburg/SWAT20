@@ -22,13 +22,14 @@ public class LolaRunner {
 
 	String lolaDir;
 	private PTNet net;
+	private LolaTransformator lolaTransformator;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		LolaRunner runner = new LolaRunner();
-		for (TESTS test : TESTS.values()) {
+		for (LOLA_TEST test : LOLA_TEST.values()) {
 			System.out.println(test.toString() + ": " + runner.getExecString(test));
 		}
 
@@ -56,6 +57,7 @@ public class LolaRunner {
 
 	public LolaRunner(PTNet net) {
 		this.net = net;
+		this.lolaTransformator = new LolaTransformator(net);
 		//get defined lola path
 		try {
 			this.lolaDir = SwatProperties.getInstance().getLolaPath();
@@ -74,9 +76,14 @@ public class LolaRunner {
 		}
 	}
 
-	public HashMap<TESTS, String> analyse() {
-		HashMap<TESTS, String> result = new HashMap<LolaRunner.TESTS, String>();
-		for (TESTS test : TESTS.values()) {
+	public HashMap<LOLA_TEST, String> analyse() {
+		//Test for boundedness
+
+		if (!userContinueIfUnbound())
+			return null;
+
+		HashMap<LOLA_TEST, String> result = new HashMap<LolaRunner.LOLA_TEST, String>();
+		for (LOLA_TEST test : LOLA_TEST.values()) {
 			try {
 				result.put(test, exec(test));
 			} catch (IOException e) {
@@ -88,8 +95,31 @@ public class LolaRunner {
 		return result;
 	}
 
-	private String exec(TESTS test) throws IOException {
-		LolaTransformator lolaTransformator = new LolaTransformator(net);
+	/** If true user wants analysis even on unbounded net **/
+	private boolean userContinueIfUnbound() {
+		try {
+			if (!bounded()) {
+				int result = JOptionPane.showConfirmDialog(null, "Net is not bounded. Continue? \n\r This might take a long time",
+						"WARNING", JOptionPane.YES_NO_OPTION);
+				if (result != JOptionPane.YES_OPTION)
+					return false;
+
+			}
+		} catch (IOException e1) {
+			int result = JOptionPane.showConfirmDialog(null, "Boundedness of net is unknown. Continue? \n\r This might take a long time",
+					"WARNING", JOptionPane.YES_NO_OPTION);
+			if (result != JOptionPane.YES_OPTION)
+				return false;
+		}
+		return true;
+	}
+
+	private boolean bounded() throws IOException {
+		return !exec(LOLA_TEST.BOUNDEDNET).toLowerCase().contains("unbound");
+	}
+
+	private String exec(LOLA_TEST test) throws IOException {
+
 		//StringBuilder list = new StringBuilder();
 		ArrayList<String> list = new ArrayList<String>(5);
 		Process p = Runtime.getRuntime().exec(getExecString(test));
@@ -109,12 +139,12 @@ public class LolaRunner {
 			//list.append("\r\n");
 		}
 		//return second last entry -> its the result
-		if (test == TESTS.HOME)
+		if (test == LOLA_TEST.HOME)
 			return list.get(list.size() - 1);
 		return list.get(list.size() - 2);
 	}
 
-	public String getExecString(TESTS test) {
+	public String getExecString(LOLA_TEST test) {
 		//depending on the OS, return the execution string to run lola
 		String OS = System.getProperty("os.name").toLowerCase();
 		if (OS.contains("win"))
@@ -128,19 +158,19 @@ public class LolaRunner {
 
 	}
 
-	private String getExecStringLinux(TESTS test) {
+	private String getExecStringLinux(LOLA_TEST test) {
 		return new File(lolaDir, "lola-" + test.toString().toLowerCase()).getAbsolutePath();
 	}
 
-	private String getExecStringMac(TESTS test) {
+	private String getExecStringMac(LOLA_TEST test) {
 		return new File(lolaDir, "lola-" + test.toString().toLowerCase()).getAbsolutePath();
 	}
 
-	private String getExecStringWin(TESTS test) {
+	private String getExecStringWin(LOLA_TEST test) {
 		return new File(lolaDir, "lola-" + test.toString().toLowerCase() + ".exe").getAbsolutePath();
 	}
 
-	public enum TESTS {
+	public enum LOLA_TEST {
 		BOUNDEDNET, DEADLOCK, HOME
 	}
 }

@@ -16,6 +16,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 public class LolaTransformator {
 
 	private PTNet net;
+	private String lolaNet;
 
 	public LolaTransformator(PTNet net) {
 		this.net = net;
@@ -26,6 +27,7 @@ public class LolaTransformator {
 	}
 
 	public String getNetAsLolaFormat() {
+		if (lolaNet == null) {
 		StringBuilder builder = new StringBuilder(1000);
 		//builder.append("NET\r\n");
 		builder.append(getPlaces());
@@ -36,7 +38,9 @@ public class LolaTransformator {
 		//builder.append("$end");
 		//LolaPresenter p = new LolaPresenter(builder.toString());
 		//p.show();
-		return builder.toString();
+			lolaNet = builder.toString();
+		}
+		return lolaNet;
 	}
 
 	/**
