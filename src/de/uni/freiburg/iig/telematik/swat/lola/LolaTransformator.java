@@ -34,6 +34,8 @@ public class LolaTransformator {
 		builder.append("\r\n");
 		builder.append(getTransitions());
 		//builder.append("$end");
+		//LolaPresenter p = new LolaPresenter(builder.toString());
+		//p.show();
 		return builder.toString();
 	}
 

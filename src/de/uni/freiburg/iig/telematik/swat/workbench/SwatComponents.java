@@ -89,6 +89,7 @@ public class SwatComponents {
 		}
 		for (File logFile : mxmlFiles) {
 			try {
+				MessageDialog.getInstance().addMessage("Loading log file: " + FileUtils.getName(logFile) + "...   ");
 				logs.put(new LogFileViewer(logFile), logFile);
 				MessageDialog.getInstance().addMessage("Done.");
 			} catch (IOException e) {
@@ -107,6 +108,7 @@ public class SwatComponents {
 		}
 		for (File xmlFile : xmlFiles) {
 			try {
+				MessageDialog.getInstance().addMessage("Loading xml file: " + FileUtils.getName(xmlFile) + "...   ");
 				xml.put(new XMLFileViewer(xmlFile), xmlFile);
 				MessageDialog.getInstance().addMessage("Done.");
 			} catch (IOException e) {

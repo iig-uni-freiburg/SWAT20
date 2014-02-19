@@ -188,7 +188,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 						SwatProperties.getInstance().setLolaPath(lolaPath);
 					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot set Prism path.\n Reason: "
-								+ e1.getMessage(), "Error while setting Prism path", JOptionPane.ERROR_MESSAGE);
+								+ e1.getMessage(), "Error while setting LoLA path", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}

@@ -188,9 +188,10 @@ public class SwatProperties extends AbstractProperties{
 	
 	//------- LoLA Path -------------------------------------------------------------------
 
-	public void setLolaPath(String directory) {
+	public void setLolaPath(String directory) throws IOException {
 		//LolaSearcher.validatePrismPath(directory);
 		setProperty(SwatProperty.LOLA_PATH, directory);
+		store();
 	}
 
 	public String getLolaPath() throws PropertyException, ParameterException {
@@ -205,6 +206,7 @@ public class SwatProperties extends AbstractProperties{
 	public void setSciffPath(String directory) throws ParameterException, IOException, PropertyException {
 		//PrismSearcher.validatePrismPath(directory);
 		setProperty(SwatProperty.SCIFF_PATH, directory);
+		store();
 	}
 
 	public String getSciffPath() throws PropertyException, ParameterException {

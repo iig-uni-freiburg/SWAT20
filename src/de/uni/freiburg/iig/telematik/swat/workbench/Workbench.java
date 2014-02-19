@@ -62,7 +62,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		}
 		// Trigger the loading of swat components
 		SwatComponents.getInstance();
-		
+		MessageDialog.getInstance().addMessage("Starting workbench...");
 		setUpGUI();
 
 		try {

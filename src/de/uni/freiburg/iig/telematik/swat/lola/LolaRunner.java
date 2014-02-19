@@ -1,260 +1,146 @@
 package de.uni.freiburg.iig.telematik.swat.lola;
 
-import java.awt.Dimension;
-import java.awt.ScrollPane;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JOptionPane;
 
-import de.invation.code.toval.file.FileUtils;
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcherFactory;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 
 public class LolaRunner {
 
-	File lolaPath;
-	File uml2owfnPath;
-	File analyzeFile;
+	String lolaDir;
+	private PTNet net;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		LolaRunner runner = new LolaRunner();
+		for (TESTS test : TESTS.values()) {
+			System.out.println(test.toString() + ": " + runner.getExecString(test));
+		}
+
+	}
+
+	public LolaRunner(PNEditor editor) {
+		this((PTNet) editor.getNetContainer().getPetriNet());
+	}
+
+	public LolaRunner() {
 		try {
-			LolaRunner test = new LolaRunner(new File("/home/richard/service-tech.xml"));
-			//test.transormToLolaFormat(new File("/home/richard/service-tech.xml"));
-			String result = test.analyze();
-			System.out.println(result);
+			this.lolaDir = SwatProperties.getInstance().getLolaPath();
+		} catch (PropertyException e) {
+			JOptionPane.showMessageDialog(null, "LoLA Path not set", "Path error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, "LoLA Path not set", "Path error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, "Cannot access LoLA path or path not set", "Path error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 
 	}
 
-	public LolaRunner(File analyzeFile) throws ParameterException {
-		//String lolaPath = null;
-			// Check if prism path is set as property.
-		this.analyzeFile = analyzeFile;
+	public LolaRunner(PTNet net) {
+		this.net = net;
+		//get defined lola path
+		try {
+			this.lolaDir = SwatProperties.getInstance().getLolaPath();
+		} catch (PropertyException e) {
+			JOptionPane.showMessageDialog(null, "LoLA Path not set", "Path error",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		} catch (ParameterException e) {
+			JOptionPane.showMessageDialog(null, "LoLA Path not set", "Path error",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Cannot access LoLA path or path not set",
+					"Path error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+	}
+
+	public HashMap<TESTS, String> analyse() {
+		HashMap<TESTS, String> result = new HashMap<LolaRunner.TESTS, String>();
+		for (TESTS test : TESTS.values()) {
 			try {
-			lolaPath = new File(getLolaPath());
-			uml2owfnPath = new File(getUml2OWfnPath());
-			} catch (Exception e) {
-				// Exception while extracting prism path.
-				// -> Search for prism path
-				File searchedPrismPath = null;
-				try {
-					searchedPrismPath = PrismSearcherFactory.getPrismSearcher().getPrismPath();
-				} catch (Exception e1) {
-					// Exception while searching for prism path
-				}
-				if(searchedPrismPath == null)
-					throw new ParameterException("Cannot find Prism executable.");
-				try {
-					SwatProperties.getInstance().setPrismPath(searchedPrismPath.getAbsolutePath());
-				} catch (Exception e1) {
-					// Exception while setting the prism path
-					throw new ParameterException("Cannot store Prism path in swat properties.\n Path: "+searchedPrismPath.getAbsolutePath());
-				}
-			//lolaPath = searchedPrismPath.getAbsolutePath();
+				result.put(test, exec(test));
+			} catch (IOException e) {
+				result.put(test, "ERROR");
+				JOptionPane.showMessageDialog(null, "Could not run test: " + test, "Analyse error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
 			}
-		//this.lolaPath = new File(lolaPath);
-		System.out.println("lola Path is: " + this.lolaPath);
-		System.out.println("uml2ofwn Path is: " + this.uml2owfnPath);
-		
-	}
-	
-	public String analyze() throws IOException, InterruptedException {
-		transormToLolaFormat(analyzeFile);
-		//Process p = Runtime.getRuntime().exec(lolaPath.getAbsolutePath());
-
-		StringBuilder builder = new StringBuilder();
-
-		//run lola
-		File tmp = new File(FileUtils.getTempDir());
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("xml", "task");
-		for (File task : tmp.listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.endsWith("task");
-			}
-		})) {
-			System.out.println("Task: " + task.toString());
-			for (File lolaType : getLolaNets(new File(FileUtils.getTempDir()))) {
-				System.out.println("Net: " + lolaType);
-				String execute = "lola " + lolaType.getAbsolutePath() + " -a " + task.getAbsolutePath();
-				System.out.println("executing: " + execute);
-				Process p = Runtime.getRuntime().exec(execute);
-				BufferedReader br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-				String result = null;
-				while ((result = br.readLine()) != null) {
-					builder.append(result);
-					builder.append("\n");
-					System.out.println(result);
-				}
-
-			}
-
-
 		}
-		createWindow(builder.toString());
-
-		return builder.toString();
+		return result;
 	}
 
-	private void createWindow(final String string) throws IOException {
-		FileWriter writer = new FileWriter(new File("/tmp/result.out"));
-		writer.write(string);
+	private String exec(TESTS test) throws IOException {
+		LolaTransformator lolaTransformator = new LolaTransformator(net);
+		//StringBuilder list = new StringBuilder();
+		ArrayList<String> list = new ArrayList<String>(5);
+		Process p = Runtime.getRuntime().exec(getExecString(test));
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+		//feed lola-process with PTnet through STDIN
+		writer.write(lolaTransformator.getNetAsLolaFormat());
+		writer.flush();
 		writer.close();
-		final JFrame result = new JFrame();
-		result.setSize(new Dimension(600, 600));
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.add(new JEditorPane(new File("/tmp/result.out").toURI().toURL()));
-		result.add(scrollPane);
-		result.setVisible(true);
-		result.addWindowListener(new WindowListener() {
-			
-			@Override
-			public void windowOpened(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowIconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowDeiconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowDeactivated(WindowEvent arg0) {
-				result.dispose();
-				
-			}
-			
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				result.dispose();
-				
-			}
-			
-			@Override
-			public void windowClosed(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
 
-	}
-
-	private String getLolaPath() throws IOException {
-		//HACK: Only for Linux. Hardcoded. Put into property file
-		Process p = Runtime.getRuntime().exec("which lola");
-		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		//asume there is a line
-		try {
-			p.waitFor();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//get results
+		String result;
+		while ((result = reader.readLine()) != null) {
+			list.add(result);
+			System.out.println(result);
+			//list.append("\r\n");
 		}
-		return br.readLine();
+		//return second last entry -> its the result
+		if (test == TESTS.HOME)
+			return list.get(list.size() - 1);
+		return list.get(list.size() - 2);
 	}
 
-	private String getUml2OWfnPath() throws IOException {
-		//HACK: Only for Linux. Hardcoded. Put into property file
-		Process p = Runtime.getRuntime().exec("which uml2owfn");
-		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		//asume there is a line
-		try {
-			p.waitFor();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return br.readLine();
+	public String getExecString(TESTS test) {
+		//depending on the OS, return the execution string to run lola
+		String OS = System.getProperty("os.name").toLowerCase();
+		if (OS.contains("win"))
+			return getExecStringWin(test);
+		if (OS.contains("mac"))
+			return getExecStringMac(test);
+		if (OS.contains("nux") || OS.contains("sunos"))
+			return getExecStringLinux(test);
+
+		return null;
+
 	}
 
-	public void transormToLolaFormat(File xmlFile) throws IOException, InterruptedException {
-		//Transform xml to lola-Format within tmp dir
-		File tmpDir = new File(FileUtils.getTempDir());
-		File tempFile = new File(tmpDir, analyzeFile.getName());
-		copyFileUsingStream(analyzeFile, tempFile);
-		String execCommand = uml2owfnPath.getAbsolutePath() + " " + "-i " + tempFile.getAbsolutePath()
-				+ " -f lola -a soundness -a safe -a orJoin -p ctl -o";
-		System.out.println("Running: " + execCommand);
-		Process p = Runtime.getRuntime().exec(execCommand, null, new File("/tmp/"));
-		//		p.getErrorStream();
-		//		p.getOutputStream();
-		//		p.getInputStream();
-		p.waitFor();
-		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		String output = null;
-		while ((output = br.readLine()) != null) {
-			System.out.println(output);
-		}
+	private String getExecStringLinux(TESTS test) {
+		return new File(lolaDir, "lola-" + test.toString().toLowerCase()).getAbsolutePath();
 	}
 
-	private static void copyFileUsingStream(File source, File dest) throws IOException {
-		InputStream is = null;
-		OutputStream os = null;
-		try {
-			is = new FileInputStream(source);
-			os = new FileOutputStream(dest);
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = is.read(buffer)) > 0) {
-				os.write(buffer, 0, length);
-			}
-		} finally {
-			is.close();
-			os.close();
-		}
+	private String getExecStringMac(TESTS test) {
+		return new File(lolaDir, "lola-" + test.toString().toLowerCase()).getAbsolutePath();
 	}
 
-	private File[] getLolaNets(File dir) {
-		File[] files = dir.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String name) {
-				// TODO Auto-generated method stub
-				return name.endsWith("lola");
-			}
-		});
-		return files;
+	private String getExecStringWin(TESTS test) {
+		return new File(lolaDir, "lola-" + test.toString().toLowerCase() + ".exe").getAbsolutePath();
 	}
 
-
+	public enum TESTS {
+		BOUNDEDNET, DEADLOCK, HOME
+	}
 }

@@ -13,7 +13,7 @@ public class PrismSearcherFactory {
 			return new WindowsSearcher();
 		if (OS.contains("mac"))
 			return new MacOSSearcher();
-		if (OS.contains("nix") || OS.contains("sunos"))
+		if (OS.contains("nux") || OS.contains("sunos"))
 			return new LinuxSearcher();
 		
 		return null;

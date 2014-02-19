@@ -36,6 +36,7 @@ import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
@@ -312,7 +313,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				break;
 			case LOLA:
 				setToolTipText("Convert to Lola");
-				addActionListener(new LolaTransformAction());
+				//addActionListener(new LolaTransformAction());
+				addActionListener(new LolaAnalyzeAction(tabView));
 				break;
 			}
 		}
@@ -333,16 +335,16 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			this.type = type;
 		}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent e) {
 
 			String netName = requestFileName("Please choose a name for the new net:", "New Petri-Net");
-		if(netName != null){
-			//IFNet newNet = new IFNet();
+			if (netName != null) {
+				//IFNet newNet = new IFNet();
 				//AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> newNet = null;
-			try {
-				// Test new file name
-				File file = getAbsolutePathToWorkingDir(netName);
+				try {
+					// Test new file name
+					File file = getAbsolutePathToWorkingDir(netName);
 					switch (type) {
 					case NEW_CPN:
 						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalCPN(), file);

@@ -12,8 +12,13 @@ public class LolaPathChooser extends ConditionalFileDialog {
 
 	private static final String errorMessage = "Cannot find lola executables in chosen directory.\n Please choose another directory.";
 
+	public static void main(String[] args) {
+		LolaPathChooser lola = new LolaPathChooser(null);
+		System.out.println(lola.chooseFile());
+	}
+
 	public LolaPathChooser(Window parent) {
-		super(parent, ConditionalFileDialog.FileChooserType.DIRECTORY, "Choose Prism directory");
+		super(parent, ConditionalFileDialog.FileChooserType.DIRECTORY, "Choose Lola directory");
 
 	}
 
@@ -34,10 +39,7 @@ public class LolaPathChooser extends ConditionalFileDialog {
 		return true;
 	}
 	
-	
-	public static void main(String[] args) {
-		new LolaPathChooser(null).chooseFile();
-	}
+
 	
 	
 }
