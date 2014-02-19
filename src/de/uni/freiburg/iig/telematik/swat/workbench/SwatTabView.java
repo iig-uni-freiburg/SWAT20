@@ -153,8 +153,8 @@ public class SwatTabView extends JTabbedPane {
 		// Change it all to only use SwatComponent?
 		addTab(node.getDisplayName(), ((XMLFileViewer) node.getUserObject()).getMainComponent());
 		setSelectedIndex(getTabCount() - 1);
-		openedSwatComponents.put((XMLFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
-
+		//openedSwatComponents.put((XMLFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
+		openedSwatComponents.put((XMLFileViewer) node.getUserObject(), ((XMLFileViewer) node.getUserObject()).getMainComponent());
 	}
 
 	private void addNewTab(SwatComponent swatComponent) {
@@ -177,7 +177,8 @@ public class SwatTabView extends JTabbedPane {
 		// ((LogFileViewer) node.getUserObject()).getMainComponent());
 		addTab(node.getDisplayName(), ((LogFileViewer) node.getUserObject()).getMainComponent());
 		setSelectedIndex(getTabCount() - 1);
-		openedSwatComponents.put((LogFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
+		//openedSwatComponents.put((LogFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
+		openedSwatComponents.put((LogFileViewer) node.getUserObject(), ((LogFileViewer) node.getUserObject()).getMainComponent());
 	}
 	
 	public void removeAll() {
