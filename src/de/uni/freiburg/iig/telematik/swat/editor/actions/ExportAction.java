@@ -10,6 +10,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.fop.svg.PDFGraphics2D;
@@ -21,12 +25,14 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxRectangle;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 
@@ -62,26 +68,29 @@ public class ExportAction extends AbstractPNEditorAction {
 				filename += ".pdf";
 
 			PNEditor editor = getEditor();
-			Dimension size = editor.getGraphComponent().getSize();
 			PNGraph pnGraph = editor.getGraphComponent().getGraph();
-			
-			//unselect selected nodes, otherwise would be selected in pdf too
-			pnGraph.setSelectionCell(new Object() {});
-
-			// hide gird, background white
-			editor.getGraphComponent().getViewport().setBackground(Color.WHITE);
-			editor.getGraphComponent().setGridColor(new Color(255, 255, 255));
-			editor.getGraphComponent().setGridVisible(false);
 
 			
 			try {
-				Document document = new Document(new Rectangle(size.width, size.height));
+				JFrame f = new JFrame();
+				PNGraphComponent forPrint = new PNGraphComponent(pnGraph) {
+				};
+				mxRectangle size = forPrint.getGraph().getGraphBounds();
+				float x =  (float) (size.getRectangle().getWidth() + size.getRectangle().getX() + 3);
+				float y = (float) (size.getRectangle().getHeight() + size.getRectangle().getY() + 3);
+				f.setSize((int)x,(int) y);
+				Document document = new Document(new Rectangle(x, y));
 				PdfWriter writer = null;
 				writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
 				document.open();
 				PdfContentByte canvas = writer.getDirectContent();
-				PdfGraphics2D g2 = new PdfGraphics2D(canvas, size.width, size.height);
-				editor.getGraphComponent().paint(g2);
+				PdfGraphics2D g2 = new PdfGraphics2D(canvas, x, y);		
+				forPrint.getViewport().setBackground(Color.WHITE);
+				forPrint.setGridColor(new Color(255, 255, 255));
+				forPrint.setGridVisible(false);
+				f.getContentPane().add(forPrint);
+				f.pack();
+				forPrint.paint(g2);
 				g2.dispose();
 				document.close();
 			} catch (FileNotFoundException e1) {
@@ -89,12 +98,7 @@ public class ExportAction extends AbstractPNEditorAction {
 			} catch (DocumentException e1) {
 				e1.printStackTrace();
 			}
-		
 
-			// initial grid setting
-			editor.getGraphComponent().getViewport().setBackground(MXConstants.blueBG);
-			editor.getGraphComponent().setGridColor(MXConstants.bluehigh);
-			editor.getGraphComponent().setGridVisible(true);
 
 		}
 	}
