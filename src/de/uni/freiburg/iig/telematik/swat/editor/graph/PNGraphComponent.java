@@ -58,6 +58,24 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
 
+	@Override
+	/**
+	 * 
+	 * @param event
+	 * @return Returns true if the given event should toggle selected cells.
+	 */
+	public boolean isToggleEvent(MouseEvent event)
+	{
+		// NOTE: IsMetaDown always returns true for right-clicks on the Mac, so
+		// toggle selection for left mouse buttons requires CMD key to be pressed,
+		// but toggle for right mouse buttons requires CTRL to be pressed.
+		return (event != null) ? ((mxUtils.IS_MAC) ? 
+				((SwingUtilities.isLeftMouseButton(event) && event.isMetaDown()) || 
+						(SwingUtilities.isRightMouseButton(event) && event.isControlDown() || event.isShiftDown()))
+				: event.isControlDown())
+				: false;
+	}
+
 	private static final long serialVersionUID = 1411737962538427287L;
 
 	private EditorPopupMenu popupMenu = null;

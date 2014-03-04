@@ -919,7 +919,7 @@ public class ToolBar extends JToolBar {
 				
 				// addImageAction.setEnabled(true);
 
-				if (selectedComponents.size() == 1) {
+				if (selectedComponents.size() >= 1) {
 					// Enables Toolbar Buttons
 					this.selectedCell = selectedComponents.iterator().next();
 					boolean isPlaceCell = selectedCell.getType() == PNComponent.PLACE;
