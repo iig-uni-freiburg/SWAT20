@@ -1252,7 +1252,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-		System.out.println(evt.getProperties() + "gerd");
 		// if (evt.getName().equals(mxEvent.CHANGE)) {
 		// ArrayList<mxAtomicGraphModelChange> changes =
 		// (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
@@ -1322,7 +1321,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 							break;
 						case PLACE:
 							Object value = ((mxValueChange) change).getValue();
-							System.out.println(value.getClass());
 //							if(!(value instanceof Multiset))
 //								updatePlaceState(labelCell,(Multiset<String>) value);
 //							else
@@ -1397,7 +1395,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 					}
 					if (change instanceof mxChildChange) {
 						mxChildChange childChange = ((mxChildChange) change);
-						// System.out.println(childChange);
 						if (childChange.getChild() instanceof PNGraphCell) {
 							PNGraphCell cell = (PNGraphCell) ((mxChildChange) change).getChild();
 							if (childChange.getPrevious() == null) {

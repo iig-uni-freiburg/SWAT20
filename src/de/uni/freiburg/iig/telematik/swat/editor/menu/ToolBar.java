@@ -58,6 +58,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterEditingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterExecutionAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ExportAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
@@ -131,6 +132,7 @@ public class ToolBar extends JToolBar {
 
 	// Buttons
 	private JButton saveButton;
+	private JButton pdfButton;
 	private JButton cutButton;
 	private JButton copyButton;
 	private JButton pasteButton;
@@ -181,6 +183,7 @@ public class ToolBar extends JToolBar {
 	private String gradientHorizontalTooltip = "hirizontal rotation";
 	private String gradientVerticalTooltip = "vertical rotation";
 	private String saveButtonTooltip = "save";
+	private String pdfButtonTooltip = "export to pdf";
 	private String cutButtonTooltip = "cut";
 	private String copyTooltip = "copy";
 	private String pasteTooltip = "paste";
@@ -262,6 +265,8 @@ public class ToolBar extends JToolBar {
 
 	private String editingButtonTooltip = " editing mode";
 
+	private ExportAction pdfAction;
+
 
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
@@ -272,6 +277,7 @@ public class ToolBar extends JToolBar {
 
 		try {
 			saveAction = new SaveAction(pnEditor);
+			pdfAction = new ExportAction(pnEditor);
 			enterExecutionAction = new EnterExecutionAction(pnEditor);
 			enterEditingAction = new EnterEditingAction(pnEditor);
 			cutAction = new CutAction(pnEditor, TransferHandler.getCutAction());
@@ -327,6 +333,7 @@ public class ToolBar extends JToolBar {
 		// setLayout(layout);
 
 		saveButton = add(saveAction);
+		pdfButton = add(pdfAction);
 		addSeparator();
 		
 		enterExecutionButton = (JToggleButton)  add(enterExecutionAction,true);
@@ -449,6 +456,7 @@ public class ToolBar extends JToolBar {
 		doLayout();
 
 		saveButton.setToolTipText(saveButtonTooltip);
+		pdfButton.setToolTipText(pdfButtonTooltip);
 		enterExecutionButton.setToolTipText(executionButtonTooltip);
 		enterEditingButton.setToolTipText(editingButtonTooltip);
 		cutButton.setToolTipText(cutButtonTooltip);

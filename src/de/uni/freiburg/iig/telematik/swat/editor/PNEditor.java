@@ -60,6 +60,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ExportAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.MoveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.NewNodeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PrintAction;
@@ -176,8 +177,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 			graphComponent = createGraphComponent();
 			graphComponent.setPopupMenu(getPopupMenu());
 			graphComponent.setTransitionPopupMenu(getTransitionPopupMenu());
-			graphComponent.getViewport().setOpaque(true);
-			graphComponent.getViewport().setBackground(MXConstants.blueBG);
+			
 
 			Map<String, Object> style = getGraph().getStylesheet().getDefaultEdgeStyle();
 			style.put("strokeWidth", 2.0);
@@ -360,7 +360,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, commandKey), "paste");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandAndShift), "printNet");
 				map.put(KeyStroke.getKeyStroke("DELETE"), "delete");
-				
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_L,commandKey), "export");
 				
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,commandKey), "newNodeLeft");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,commandKey), "newNodeRight");
@@ -392,6 +392,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 				map.put("undo", new UndoAction(PNEditor.this));
 				map.put("redo", new RedoAction(PNEditor.this));
 				map.put("printNet", new PrintAction(PNEditor.this));
+				
+				map.put("export", new ExportAction(PNEditor.this));
 				
 				int offset = EditorProperties.getInstance().getDefaultPlaceSize()*4;
 				map.put("newNodeLeft", new NewNodeAction(PNEditor.this,-offset ,0));

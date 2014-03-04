@@ -100,7 +100,6 @@ public class TokenMouseWheelChange extends mxAtomicGraphModelChange {
 	
 	protected int valueForCellChanged(PNGraphCell cell, int previous)
 	{
-		System.out.println(previous);
 	int oldValue = (previous == 1)? -1:1;
 		try {
 			graph.inOrDecrementPlaceState(cell,previous);
