@@ -58,7 +58,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterEditingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterExecutionAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ExportAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ExportPDFAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
@@ -265,7 +265,7 @@ public class ToolBar extends JToolBar {
 
 	private String editingButtonTooltip = " editing mode";
 
-	private ExportAction pdfAction;
+	private ExportPDFAction pdfAction;
 
 
 
@@ -277,7 +277,7 @@ public class ToolBar extends JToolBar {
 
 		try {
 			saveAction = new SaveAction(pnEditor);
-			pdfAction = new ExportAction(pnEditor);
+			pdfAction = new ExportPDFAction(pnEditor);
 			enterExecutionAction = new EnterExecutionAction(pnEditor);
 			enterEditingAction = new EnterEditingAction(pnEditor);
 			cutAction = new CutAction(pnEditor, TransferHandler.getCutAction());

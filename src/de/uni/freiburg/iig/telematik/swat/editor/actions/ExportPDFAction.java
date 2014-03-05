@@ -21,6 +21,7 @@ import org.apache.fop.svg.PDFGraphics2D;
 import com.itextpdf.awt.PdfGraphics2D;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfDictionary;
@@ -29,6 +30,7 @@ import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfRectangle;
 import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxRectangle;
@@ -43,9 +45,9 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 
 
-public class ExportAction extends AbstractPNEditorAction {
+public class ExportPDFAction extends AbstractPNEditorAction {
 
-	public ExportAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+	public ExportPDFAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "export", IconFactory.getIcon("pdf"));
 		// TODO Auto-generated constructor stub
 	}
@@ -82,44 +84,46 @@ public class ExportAction extends AbstractPNEditorAction {
 				PNGraphComponent forPrint = new PNGraphComponent(pnGraph) {
 				};
 				mxRectangle size = forPrint.getGraph().getGraphBounds();
-				float x =  (float) (size.getRectangle().getWidth() + size.getRectangle().getX() + 30);
-				float y = (float) (size.getRectangle().getHeight() + size.getRectangle().getY() + 30);
-//				f.setSize((int)size.getRectangle().getWidth(),(int) y);
+				double space = 4;
+				float x = (float) (size.getRectangle().getWidth() + size.getRectangle().getX() + space);
+				float y = (float) (size.getRectangle().getHeight() + size.getRectangle().getY() + space);
 				Document document = new Document(new Rectangle(x, y));
 				PdfWriter writer = null;
 				writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
+
+				// set crop of pdf doc = ll=lowerleft; ur=upper right
+				float llx = (float) size.getX();
+				float lly = 0;
+				float urx = x;
+				float ury = (float) ((float) size.getRectangle().getHeight() + space);
+				com.itextpdf.text.Rectangle crop = new com.itextpdf.text.Rectangle(llx, lly, urx, ury);
+				writer.setCropBoxSize(crop);
+
 				document.open();
+
 				PdfContentByte canvas = writer.getDirectContent();
-				PdfContentByte cb = writer.getDirectContent();
+
+				// make pdf-background transparent
 				PdfGState gState = new PdfGState();
 				gState.setFillOpacity(0.0f);
-				cb.setGState(gState);
-			
-				PdfGraphics2D g2 = new PdfGraphics2D(canvas, x, y);		
-
-				forPrint.getViewport().setOpaque(false);
-
-				forPrint.setGridColor(new Color(255, 255, 255));
+				canvas.setGState(gState);
+				
 				forPrint.setGridVisible(false);
-				forPrint.getGraph().setBorder(0);
+
+				PdfGraphics2D g2 = new PdfGraphics2D(canvas, x, y);
 
 				f.getContentPane().add(forPrint);
 				f.pack();
 				forPrint.paint(g2);
-				g2.dispose();		
+				g2.dispose();
+
 				document.close();
-			
+
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (DocumentException e1) {
 				e1.printStackTrace();
 			}
-			
-
-			
-
-
 		}
 	}
-
 }

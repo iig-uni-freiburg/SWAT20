@@ -60,7 +60,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ExportAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ExportPDFAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.MoveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.NewNodeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PrintAction;
@@ -393,7 +393,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 				map.put("redo", new RedoAction(PNEditor.this));
 				map.put("printNet", new PrintAction(PNEditor.this));
 				
-				map.put("export", new ExportAction(PNEditor.this));
+				map.put("export", new ExportPDFAction(PNEditor.this));
 				
 				int offset = EditorProperties.getInstance().getDefaultPlaceSize()*4;
 				map.put("newNodeLeft", new NewNodeAction(PNEditor.this,-offset ,0));
