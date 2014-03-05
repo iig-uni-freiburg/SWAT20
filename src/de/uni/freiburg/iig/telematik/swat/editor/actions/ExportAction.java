@@ -23,6 +23,12 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfDictionary;
+import com.itextpdf.text.pdf.PdfGState;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfRectangle;
+import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxRectangle;
@@ -76,30 +82,44 @@ public class ExportAction extends AbstractPNEditorAction {
 				PNGraphComponent forPrint = new PNGraphComponent(pnGraph) {
 				};
 				mxRectangle size = forPrint.getGraph().getGraphBounds();
-				float x =  (float) (size.getRectangle().getWidth() + size.getRectangle().getX() + 3);
-				float y = (float) (size.getRectangle().getHeight() + size.getRectangle().getY() + 3);
-				f.setSize((int)x,(int) y);
+				float x =  (float) (size.getRectangle().getWidth() + size.getRectangle().getX() + 30);
+				float y = (float) (size.getRectangle().getHeight() + size.getRectangle().getY() + 30);
+//				f.setSize((int)size.getRectangle().getWidth(),(int) y);
 				Document document = new Document(new Rectangle(x, y));
 				PdfWriter writer = null;
 				writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
 				document.open();
 				PdfContentByte canvas = writer.getDirectContent();
+				PdfContentByte cb = writer.getDirectContent();
+				PdfGState gState = new PdfGState();
+				gState.setFillOpacity(0.0f);
+				cb.setGState(gState);
+			
 				PdfGraphics2D g2 = new PdfGraphics2D(canvas, x, y);		
-				forPrint.getViewport().setBackground(Color.WHITE);
+
+				forPrint.getViewport().setOpaque(false);
+
 				forPrint.setGridColor(new Color(255, 255, 255));
 				forPrint.setGridVisible(false);
+				forPrint.getGraph().setBorder(0);
+
 				f.getContentPane().add(forPrint);
 				f.pack();
 				forPrint.paint(g2);
-				g2.dispose();
+				g2.dispose();		
 				document.close();
+			
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (DocumentException e1) {
 				e1.printStackTrace();
 			}
+			
+
+			
 
 
 		}
 	}
+
 }
