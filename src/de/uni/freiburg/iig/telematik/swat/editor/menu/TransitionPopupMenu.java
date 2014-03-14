@@ -26,21 +26,21 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ShowHideLabelsAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.TransitionSilentAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.fill.FillBackgroundColorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.fill.FillGradientColorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.fill.FillGradientDirectionAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.fill.FillImageAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.font.FontAlignCenterAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.font.FontAlignLeftAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.font.FontAlignRightAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.font.FontBoldStyleAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.font.FontItalicStyleAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.font.FontLineThroughStyleAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.font.FontRotationAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.font.FontUnderlineStyleAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.line.LineShapeAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.line.LineStrokeColorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.line.LineStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillBackgroundColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillGradientColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillGradientDirectionAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillImageAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.LineShapeAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.LineStrokeColorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.LineStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontAlignCenterAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontAlignLeftAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontAlignRightAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontBoldStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontItalicStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontLineThroughStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontRotationAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontUnderlineStyleAction;
 
 public class TransitionPopupMenu extends JPopupMenu {
 	
