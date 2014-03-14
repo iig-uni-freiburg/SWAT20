@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.actions;
+package de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
@@ -7,18 +7,18 @@ import javax.swing.Action;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
-public class SelectAction extends AbstractPNEditorAction {
+public class MoveAction extends AbstractPNEditorAction {
 
 	private int deltaX;
 	private int deltaY;
-	private PNComponent type;
 
-	public SelectAction(PNEditor editor, PNComponent type) throws ParameterException {
+	public MoveAction(PNEditor editor, int dx, int dy) throws ParameterException {
 		super(editor);
-		this.type =type;
+		deltaX = dx;
+		deltaY = dy;
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class SelectAction extends AbstractPNEditorAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		 graph.selectPNGraphCells(type);
+		 graph.moveCells(graph.getSelectionCells(), deltaX, deltaY);
 		
 	}
 

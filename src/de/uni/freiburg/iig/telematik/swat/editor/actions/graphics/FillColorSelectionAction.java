@@ -31,7 +31,6 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ColorChooser;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -80,7 +79,7 @@ public class FillColorSelectionAction extends AbstractPNEditorAction {
 		switch (fillStlye) {
 		case SOLID:
 			if (!graph.isSelectionEmpty()) {
-				backgroundColor = ColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
+				backgroundColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
 if(backgroundColor != null){
 				if (graph.isLabelSelected()) {
 					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(backgroundColor));
@@ -95,7 +94,7 @@ if(backgroundColor != null){
 			break;
 		case GRADIENT:
 			if (!graph.isSelectionEmpty()) {
-				Color gradientColor = ColorChooser.showDialog(getEditor().getGraphComponent(), "Gradient Color", null);
+				Color gradientColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Gradient Color", null);
 				if(gradientColor != null){
 				if (graph.isLabelSelected()) {
 					graph.setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, mxUtils.hexString(gradientColor));
@@ -109,7 +108,7 @@ if(backgroundColor != null){
 			break;
 		case NOFILL:
 			if (!graph.isSelectionEmpty()) {
-				Color newColor = ColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
+				Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
 				if(newColor != null){
 				if (graph.isLabelSelected()){
 					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(newColor));

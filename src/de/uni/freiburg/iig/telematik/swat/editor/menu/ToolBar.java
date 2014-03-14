@@ -54,15 +54,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.S
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.CopyAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.CutAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterEditingAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.EnterExecutionAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.PasteAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ShowHideLabelsAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.export.ExportPDFAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillBackgroundColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillColorSelectionAction;
@@ -81,6 +73,13 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.LineShapeActio
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.LineSolidAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.LineStrokeColorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.LineStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.history.RedoAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.history.UndoAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.CopyAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.CutAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.PasteAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterEditingAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterExecutionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontAlignCenterAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontAlignLeftAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontAlignRightAction;
@@ -89,6 +88,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontItalicStyleAct
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontLineThroughStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontRotationAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontUnderlineStyleAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.ShowHideLabelsAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
@@ -112,9 +112,7 @@ public class ToolBar extends JToolBar {
 	private FillNoFillAction noFillAction;
 	private LineNoFillAction noLineAction;
 	private SaveAction saveAction = null;
-	private CutAction cutAction = null;
-	private CopyAction copyAction = null;
-	private PasteAction pasteAction = null;
+	
 	private UndoAction undoAction = null;
 	private RedoAction redoAction = null;
 	private FontBoldStyleAction boldFontAction;
@@ -184,9 +182,7 @@ public class ToolBar extends JToolBar {
 	private String gradientVerticalTooltip = "vertical rotation";
 	private String saveButtonTooltip = "save";
 	private String pdfButtonTooltip = "export to pdf";
-	private String cutButtonTooltip = "cut";
-	private String copyTooltip = "copy";
-	private String pasteTooltip = "paste";
+
 	private String undoTooltip = "undo";
 	private String redoTooltip = "redo";
 	private String fontTooltip = "choose fontfamily";
@@ -280,9 +276,7 @@ public class ToolBar extends JToolBar {
 			pdfAction = new ExportPDFAction(pnEditor);
 			enterExecutionAction = new EnterExecutionAction(pnEditor);
 			enterEditingAction = new EnterEditingAction(pnEditor);
-			cutAction = new CutAction(pnEditor, TransferHandler.getCutAction());
-			copyAction = new CopyAction(pnEditor, TransferHandler.getCopyAction());
-			pasteAction = new PasteAction(pnEditor, TransferHandler.getPasteAction());
+	
 			undoAction = new UndoAction(pnEditor);
 			redoAction = new RedoAction(pnEditor);
 			boldFontAction = new FontBoldStyleAction(pnEditor);
@@ -341,11 +335,6 @@ public class ToolBar extends JToolBar {
 		editOrExecutionGroup = new ButtonGroup();
 		addSeparator();
 
-		cutButton = add(cutAction);
-		copyButton = add(copyAction);
-		pasteButton = add(pasteAction);
-		addSeparator();
-		addSeparator();
 
 		undoButton = add(undoAction);
 		redoButton = add(redoAction);
@@ -459,9 +448,7 @@ public class ToolBar extends JToolBar {
 		pdfButton.setToolTipText(pdfButtonTooltip);
 		enterExecutionButton.setToolTipText(executionButtonTooltip);
 		enterEditingButton.setToolTipText(editingButtonTooltip);
-		cutButton.setToolTipText(cutButtonTooltip);
-		copyButton.setToolTipText(copyTooltip);
-		pasteButton.setToolTipText(pasteTooltip);
+
 		undoButton.setToolTipText(undoTooltip);
 		redoButton.setToolTipText(redoTooltip);
 		fontComboBox.setToolTipText(fontTooltip);
@@ -839,9 +826,7 @@ public class ToolBar extends JToolBar {
 	}
 
 	public void deactivate() {
-		copyAction.setEnabled(false);
-		pasteAction.setEnabled(isCellInClipboard());
-		cutAction.setEnabled(false);
+	
 //		editOrExecutionGroup.clearSelection();
 		setFontEnabled(false);
 
@@ -911,10 +896,7 @@ public class ToolBar extends JToolBar {
 				return;
 			}
 			if (!selectedComponents.isEmpty()) {
-				copyAction.setEnabled(true);
-				pasteAction.setEnabled(isCellInClipboard());
-				cutAction.setEnabled(true);
-
+			
 			
 				
 				// addImageAction.setEnabled(true);

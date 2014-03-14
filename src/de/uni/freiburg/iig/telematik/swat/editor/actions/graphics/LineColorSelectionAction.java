@@ -1,14 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions.graphics;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,24 +10,14 @@ import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 
-import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractObjectGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ColorChooser;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;

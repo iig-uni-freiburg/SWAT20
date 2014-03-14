@@ -1,8 +1,7 @@
-package de.uni.freiburg.iig.telematik.swat.editor.actions;
+package de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -19,54 +18,62 @@ import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.layout.mxStackLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.util.mxMorphing;
-import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
-import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 
-public class TransitionSilentAction extends AbstractPNEditorAction {
+public class LayoutAction extends AbstractPNEditorAction {
 
 	private int deltaX;
 	private int deltaY;
-	private boolean silent;
+	mxIGraphLayout layout;
 
-	public TransitionSilentAction(PNEditor editor, String layoutName, boolean setSilent) throws ParameterException {
+	public LayoutAction(PNEditor editor, String layoutName, boolean animate) throws ParameterException {
 		super(editor, layoutName);
-		silent = setSilent;
+		layout = createLayout(layoutName, animate);
 	}
 
 	private static final long serialVersionUID = 1728027231812006823L;
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		PNGraphCell selectedCell =  (PNGraphCell) graph.getSelectionCell();
-		if(selectedCell != null){
-			graph.setTransitionSilent(selectedCell.getId(), silent);
-			if(silent){
-			graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#00000");
-			graph.setCellStyles(mxConstants.STYLE_NOLABEL, "1");
-			}
-			else{
-				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, EditorProperties.getInstance().getDefaultNodeColor());
-				graph.setCellStyles(mxConstants.STYLE_NOLABEL, "0");
-			}
+		if(layout != null){
+		mxGraph graph = getEditor().getGraphComponent().getGraph();
+		Object cell = graph.getSelectionCell();
+
+		if (cell == null || graph.getModel().getChildCount(cell) == 0) {
+			cell = graph.getDefaultParent();
 		}
 
+		graph.getModel().beginUpdate();
+		try {
+			long t0 = System.currentTimeMillis();
+			layout.execute(cell);
+		} finally {
+			mxMorphing morph = new mxMorphing(getEditor().getGraphComponent(), 20, 1.2, 20);
+
+			morph.addListener(mxEvent.DONE, new mxIEventListener() {
+
+				public void invoke(Object sender, mxEventObject evt) {
+					getEditor().getGraphComponent().getGraph().getModel().endUpdate();
+//					getGraph().updatePositionPropertiesFromCells();
+				}
+
+			});
+
+			morph.startAnimation();
+		}
+		}
+		
 	}
 	/**
 	 * Creates an action that executes the specified layout.
@@ -132,11 +139,26 @@ public class TransitionSilentAction extends AbstractPNEditorAction {
 
 		if (ident != null) {
 			mxGraph graph = getEditor().getGraphComponent().getGraph();
-
 			if (ident.equals("verticalHierarchical")) {
-				layout = new mxHierarchicalLayout(graph);
+				layout = new mxHierarchicalLayout(graph){
+
+					@Override
+					public void execute(Object parent) {
+						getEditor().getGraphComponent().getGraph().removeAllArcPoints();
+						super.execute(parent);
+					}
+					
+				};
 			} else if (ident.equals("horizontalHierarchical")) {
-				layout = new mxHierarchicalLayout(graph, JLabel.WEST);
+				layout = new mxHierarchicalLayout(graph, JLabel.WEST){
+
+					@Override
+					public void execute(Object parent) {
+						getEditor().getGraphComponent().getGraph().removeAllArcPoints();
+						super.execute(parent);
+					}
+					
+				};
 			} else if (ident.equals("verticalTree")) {
 				layout = new mxCompactTreeLayout(graph, false);
 			} else if (ident.equals("horizontalTree")) {
@@ -146,7 +168,15 @@ public class TransitionSilentAction extends AbstractPNEditorAction {
 			} else if (ident.equals("placeEdgeLabels")) {
 				layout = new mxEdgeLabelLayout(graph);
 			} else if (ident.equals("organicLayout")) {
-				layout = new mxOrganicLayout(graph);
+				layout = new mxOrganicLayout(graph){
+
+					@Override
+					public void execute(Object parent) {
+						getEditor().getGraphComponent().getGraph().removeAllArcPoints();
+						super.execute(parent);
+					}
+					
+				};
 			}
 			if (ident.equals("verticalPartition")) {
 				layout = new mxPartitionLayout(graph, false) {
@@ -189,7 +219,15 @@ public class TransitionSilentAction extends AbstractPNEditorAction {
 					}
 				};
 			} else if (ident.equals("circleLayout")) {
-				layout = new mxCircleLayout(graph);
+				layout = new mxCircleLayout(graph){
+
+					@Override
+					public void execute(Object parent) {
+						getEditor().getGraphComponent().getGraph().removeAllArcPoints();
+						super.execute(parent);
+					}
+					
+				};
 			}
 		}
 
