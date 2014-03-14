@@ -238,7 +238,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			swatComponent = getTabView().addNewTab(node);
 			getPropertiesPanel().removeAll();
 			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
-			pack();
+			//pack();
 			getPropertiesPanel().repaint();
 		}
 
@@ -290,7 +290,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		// Update Properties Panel according to active tab
 		getPropertiesPanel().removeAll();
 		getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
-		pack();
+		//pack();
 		getPropertiesPanel().repaint();
 
 		//Update Toolbar
@@ -326,7 +326,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		}
 
 		getSwatToolbar().validate();
-		getSwatToolbar().repaint();
+		//getSwatToolbar().repaint();
 
 	}
 

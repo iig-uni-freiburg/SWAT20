@@ -46,6 +46,9 @@ public class LolaAnalyzeAction extends AbstractAction {
 		} catch (ClassCastException e) {
 			MessageDialog.getInstance().addMessage("This is not a Petri Net");
 		}
+ catch (NullPointerException e) {
+			MessageDialog.getInstance().addMessage("This is not a Petri Net");
+		}
 
 
 	}
