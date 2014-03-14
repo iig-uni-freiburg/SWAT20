@@ -326,7 +326,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		}
 
 		getSwatToolbar().validate();
-		//getSwatToolbar().repaint();
+		getSwatToolbar().repaint();
 
 	}
 
