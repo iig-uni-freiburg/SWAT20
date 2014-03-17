@@ -30,7 +30,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.FillStyle;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -60,7 +60,7 @@ public class FillBackgroundColorAction extends AbstractPNEditorAction{
 					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(fillColor));
 					}
 				PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
-				getEditor().getEditorToolbar().setFillStyle(FillStyle.SOLID);
+				getEditor().getEditorToolbar().getGraphicsToolbar().setFillStyle(FillStyle.SOLID);
 				Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
 				setWithOneCell.add(selectedCell);
 				getEditor().getEditorToolbar().updateView(setWithOneCell);

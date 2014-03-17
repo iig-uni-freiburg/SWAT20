@@ -21,7 +21,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.FillStyle;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -63,7 +63,7 @@ public class LineColorSelectionAction extends AbstractPNEditorAction {
 
 	public void actionPerformed(ActionEvent e) {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		FillStyle fillStlye = getEditor().getEditorToolbar().getFillStyle();
+		FillStyle fillStlye = getEditor().getEditorToolbar().getGraphicsToolbar().getFillStyle();
 		Color backgroundColor;
 		if (!graph.isSelectionEmpty()) {
 			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Stroke Color", null);

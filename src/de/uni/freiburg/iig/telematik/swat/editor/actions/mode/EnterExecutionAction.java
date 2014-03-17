@@ -30,31 +30,16 @@ public class EnterExecutionAction extends AbstractPNEditorAction {
 	
 	public EnterExecutionAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "Exeuctin", IconFactory.getIcon("play"));
-		play = getIcon().getImage();
-		reset = IconFactory.getIcon("restart").getImage();
+//		play = getIcon().getImage();
+//		reset = IconFactory.getIcon("restart").getImage();
 		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		getEditor().getEditorToolbar().setExecutionMode();
-		getEditor().getGraphComponent().getGraph().clearSelection();
-		getEditor().getGraphComponent().getGraph().setExecution(true);
-		if (getIcon().getImage() == play) {
-			getEditor().getGraphComponent().highlightEnabledTransitions();
-			getIcon().setImage(reset);
-		}
-		else if (getIcon().getImage() == reset) {
-			getEditor().getGraphComponent().getGraph().getNetContainer().getPetriNet().reset();
-			getEditor().getGraphComponent().getGraph().refresh();
-			getEditor().getGraphComponent().highlightEnabledTransitions();
-		}
-	
+
 		
 	}
 
 
-	public void setExecutionImage() {
-		getIcon().setImage(play);
-		
-	}
 }

@@ -75,7 +75,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphListener;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.PalettePanel;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.NodePalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
@@ -92,7 +92,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	private static final String scaleMessageFormat = "Scale: %s %%";
 
 	protected JPanel statusPanel = null;
-	protected PalettePanel palettePanel = null;
+	protected NodePalettePanel palettePanel = null;
 	protected PNGraphComponent graphComponent;
 	protected ToolBar toolbar = null;
 	protected mxRubberband rubberband;
@@ -159,7 +159,6 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	private void setUpGUI() throws ParameterException {
 		setLayout(new BorderLayout());
 		toolbar = new ToolBar(this, JToolBar.HORIZONTAL);
-		add(getPalettePanel(), BorderLayout.LINE_START);
 		add(getGraphComponent(), BorderLayout.CENTER);
 		// add(getStatusPanel(), BorderLayout.SOUTH);
 
@@ -241,12 +240,12 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		return this;
 	}
 
-	private JPanel getPalettePanel() throws ParameterException {
-		if (palettePanel == null) {
-			palettePanel = new PalettePanel();
-		}
-		return palettePanel;
-	}
+//	private JPanel getPalettePanel() throws ParameterException {
+//		if (palettePanel == null) {
+//			palettePanel = new PalettePanel();
+//		}
+//		return palettePanel;
+//	}
 
 	private JPanel getStatusPanel() {
 		if (statusPanel == null) {

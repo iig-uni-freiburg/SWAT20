@@ -1,18 +1,11 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions.graphics;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-
-import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -20,7 +13,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.FillStyle;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -44,7 +37,7 @@ public class FillNoFillAction extends AbstractPNEditorAction{
 				} else {
 					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "none");
 				}
-				getEditor().getEditorToolbar().setFillStyle(FillStyle.NOFILL);
+				getEditor().getEditorToolbar().getGraphicsToolbar().setFillStyle(FillStyle.NOFILL);
 				Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
 				setWithOneCell.add(selectedCell);
 				getEditor().getEditorToolbar().updateView(setWithOneCell);

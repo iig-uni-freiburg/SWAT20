@@ -9,12 +9,14 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.FontToolBar;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 @SuppressWarnings("serial")
 public class ShowHideLabelsAction extends AbstractPNEditorAction {
 	private Image visible;
 	private Image invisible;
+	private FontToolBar fontTB;
 
 	public ShowHideLabelsAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "visible", IconFactory.getIcon("visible"));
@@ -28,11 +30,13 @@ public class ShowHideLabelsAction extends AbstractPNEditorAction {
 
 		if (getIcon().getImage() == visible) {
 			graph.setCellStyles("noLabel", "1");
-			getIcon().setImage(invisible);
+			fontTB.setFontEnabled(false);
+			
 		}
 		else if (getIcon().getImage() == invisible) {
 			graph.setCellStyles("noLabel", "0");
-			getIcon().setImage(visible);
+			fontTB.setFontEnabled(true);
+
 		}
 
 	}
@@ -44,6 +48,11 @@ public class ShowHideLabelsAction extends AbstractPNEditorAction {
 
 	public void setShowIconImage() {
 		getIcon().setImage(visible);
+	}
+
+	public void setFontToolbar(FontToolBar fontToolBar) {
+		fontTB = fontToolBar;
+		
 	}
 
 }

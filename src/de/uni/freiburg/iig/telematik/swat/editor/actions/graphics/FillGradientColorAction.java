@@ -1,24 +1,14 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions.graphics;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.JColorChooser;
-
-import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -31,7 +21,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar.FillStyle;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -104,7 +94,7 @@ public class FillGradientColorAction extends AbstractPNEditorAction{
 			}
 
 		}
-		getEditor().getEditorToolbar().setFillStyle(FillStyle.GRADIENT);
+		getEditor().getEditorToolbar().getGraphicsToolbar().setFillStyle(FillStyle.GRADIENT);
 		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
 		setWithOneCell.add(selectedCell);
 		getEditor().getEditorToolbar().updateView(setWithOneCell);
