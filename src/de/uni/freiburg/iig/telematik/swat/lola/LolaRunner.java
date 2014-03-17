@@ -121,10 +121,14 @@ public class LolaRunner {
 	private String exec(LOLA_TEST test) throws IOException {
 
 		//StringBuilder list = new StringBuilder();
-		ArrayList<String> list = new ArrayList<String>(5);
+		ArrayList<String> list = new ArrayList<String>(5); //Store result
 		Process p = Runtime.getRuntime().exec(getExecString(test));
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+		BufferedReader reader;
+		if (test == LOLA_TEST.ONEBOUNDED)
+			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		else
+			reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
 		//feed lola-process with PTnet through STDIN
 		writer.write(lolaTransformator.getNetAsLolaFormat());
@@ -141,7 +145,17 @@ public class LolaRunner {
 		//return second last entry -> its the result
 		if (test == LOLA_TEST.HOME)
 			return list.get(list.size() - 1);
+		if (test == LOLA_TEST.ONEBOUNDED)
+			return testOneBoundedResult(list);
 		return list.get(list.size() - 2);
+	}
+
+	private String testOneBoundedResult(ArrayList<String> list) {
+		for (String s : list) {
+			if (s.contains("BAD: 1"))
+				return "Net is NOT 1-bounded";
+		}
+		return "Net IS 1-bounded";
 	}
 
 	public String getExecString(LOLA_TEST test) {
@@ -159,18 +173,27 @@ public class LolaRunner {
 	}
 
 	private String getExecStringLinux(LOLA_TEST test) {
+		if (test == LOLA_TEST.ONEBOUNDED) {
+			return new File(lolaDir, "lola-boundedgraph").getAbsolutePath() + " --capacity=1 -M";
+		}
 		return new File(lolaDir, "lola-" + test.toString().toLowerCase()).getAbsolutePath();
 	}
 
 	private String getExecStringMac(LOLA_TEST test) {
+		if (test == LOLA_TEST.ONEBOUNDED) {
+			return new File(lolaDir, "lola-boundedgraph").getAbsolutePath() + " --capacity=1 -M";
+		}
 		return new File(lolaDir, "lola-" + test.toString().toLowerCase()).getAbsolutePath();
 	}
 
 	private String getExecStringWin(LOLA_TEST test) {
+		if (test == LOLA_TEST.ONEBOUNDED) {
+			return new File(lolaDir, "lola-boundedgraph.exe").getAbsolutePath() + " --capacity=1 -M";
+		}
 		return new File(lolaDir, "lola-" + test.toString().toLowerCase() + ".exe").getAbsolutePath();
 	}
 
 	public enum LOLA_TEST {
-		BOUNDEDNET, DEADLOCK, HOME
+		BOUNDEDNET, DEADLOCK, HOME, ONEBOUNDED
 	}
 }
