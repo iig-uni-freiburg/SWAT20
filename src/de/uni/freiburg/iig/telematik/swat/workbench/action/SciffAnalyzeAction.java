@@ -16,6 +16,8 @@ import adapter.LogParserAdapter;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParser;
+import de.uni.freiburg.iig.telematik.jawl.parser.LogParserInterface;
+import de.uni.freiburg.iig.telematik.jawl.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.swat.sciff.SciffPresenter;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
@@ -36,8 +38,8 @@ public class SciffAnalyzeAction extends AbstractAction {
 			System.out.println("Analayze " + file.getCanonicalPath());
 
 			try {
-				LogParser parser = new LogParser();
-				parser.parse(file);
+				LogParserInterface parser = LogParser.getParser(file, LogParsingFormat.XES);
+				parser.parse(file, true);
 				LogParserAdapter adapter = new LogParserAdapter(parser);
 				CompositeRule rule = org.processmining.analysis.sciffchecker.gui.SciffRuleDialog.showRuleDialog(null);
 				System.out.println("Total Entries in Log: " + adapter.getInstances().size());
