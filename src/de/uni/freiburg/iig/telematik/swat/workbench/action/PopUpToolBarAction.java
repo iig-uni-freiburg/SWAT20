@@ -21,6 +21,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.PopupToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBarDialog;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchPopupToolBar;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -28,15 +29,17 @@ public class PopUpToolBarAction extends AbstractAction {
 
 	private JDialog popupDialog;
 	private JButton button;
-	private JToolBar fontToolbarContent;
+	private SwatNewNetToolbar fontToolbarContent;
 	private JButton newDialogButton;
 	private WorkbenchPopupToolBar popupFontToolBar;
 	protected JDialog dialog;
 
-	public PopUpToolBarAction(String name, String iconName, JToolBar toolbar ) throws ParameterException, PropertyException, IOException {
+	public PopUpToolBarAction(String name, String iconName, SwatNewNetToolbar toolbar ) throws ParameterException, PropertyException, IOException {
 		super(name, IconFactory.getIcon(iconName));
 		popupFontToolBar = new WorkbenchPopupToolBar();
+		popupFontToolBar.disposeAllWindows();
 		fontToolbarContent = toolbar;
+		fontToolbarContent.setToolbar(popupFontToolBar);
 		newDialogButton = new JButton(IconFactory.getIcon("maximize"));
 		newDialogButton.setBorderPainted(false);
 		newWindowButton(popupFontToolBar, fontToolbarContent, newDialogButton);
@@ -47,7 +50,7 @@ public class PopUpToolBarAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(getPopupFrame() == null){	
-			popupFontToolBar.setButton(getButton(), false);
+			popupFontToolBar.setButton(getButton(), false, true);
 			
 			popupFontToolBar.add(fontToolbarContent);
 			 popupFontToolBar.add(newDialogButton);
@@ -93,7 +96,7 @@ public class PopUpToolBarAction extends AbstractAction {
 		newDialogButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					popupFontToolBar2.setButton(getButton(), true);
+					popupFontToolBar2.setButton(getButton(), true, false);
 					Window window = SwingUtilities.getWindowAncestor(getButton());
 					JDialog dialog = new ToolBarDialog(window, fontToolbarContent2.getName(), false);
 					dialog.setTitle("Font");
@@ -138,7 +141,11 @@ public class PopUpToolBarAction extends AbstractAction {
 	public JDialog getDialog() {
 		return dialog;
 	}
-
+	
+	
+	public void disposeAllWindows() {
+		popupFontToolBar.disposeAllWindows();
+	}
 	
 	
 

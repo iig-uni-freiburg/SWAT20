@@ -302,6 +302,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				break;
 			case NEW:
 				SwatNewNetToolbar newNetTB = new SwatNewNetToolbar(tabView, treeView);
+			
 				PopUpToolBarAction newNetAction = new PopUpToolBarAction("new net", "new", newNetTB);
 				newNetAction.setButton(this);
 				addActionListener(newNetAction);

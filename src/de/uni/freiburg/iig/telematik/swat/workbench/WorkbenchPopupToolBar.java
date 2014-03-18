@@ -40,6 +40,7 @@ public class WorkbenchPopupToolBar {
 				return;
 			}
 			if (!Arrays.asList(windows).contains(e.getOppositeWindow())) {
+				if(!waitForNewName)
 				disposeAllWindows();
 				if(!dialogOpen)
 				button.setSelected(false);
@@ -60,6 +61,10 @@ public class WorkbenchPopupToolBar {
 	private JButton button;
 
 	private boolean dialogOpen;
+
+	private boolean waitForNewName;
+
+	private JToolBar fontToolbarContent;
 	
 	public WorkbenchPopupToolBar() {
 		
@@ -206,6 +211,7 @@ public class WorkbenchPopupToolBar {
 	 * @param y
 	 */
 	public void show(Component comp, int x, int y) {
+
 		disposeAllWindows();
 		Window horizontalWindow = createWindow(comp, JToolBar.HORIZONTAL, new Point(x, y));
 		Window verticalWindow = createWindow(comp, JToolBar.VERTICAL, new Point(x, y));
@@ -236,7 +242,7 @@ public class WorkbenchPopupToolBar {
 		this.focusListener = focusListener;
 	}
 
-	private void disposeAllWindows() {
+	public void disposeAllWindows() {
 		if (windows == null) {
 			return;
 		}
@@ -258,12 +264,14 @@ public class WorkbenchPopupToolBar {
 		
 		
 
-		public void setButton(JButton jButton, boolean dialogOpen) {
+		public void setButton(JButton jButton, boolean dialogOpen, boolean  waitForNewName) {
 			this.button = jButton;
 			this.dialogOpen = dialogOpen;
+			this.waitForNewName =  waitForNewName;
 			
 		}
-		
+
+
 		
 	
 

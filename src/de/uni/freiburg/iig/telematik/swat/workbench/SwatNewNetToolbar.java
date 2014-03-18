@@ -74,6 +74,8 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 
 	private List<Component> standardItems = new LinkedList<Component>();
 
+	private WorkbenchPopupToolBar popupFontToolBar;
+
 	public SwatNewNetToolbar(SwatTabView tabView, SwatTreeView treeView) {
 		this.tabView = tabView;
 		this.treeView = treeView;
@@ -358,6 +360,7 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 		public void actionPerformed(ActionEvent e) {
 
 			String netName = requestFileName("Please choose a name for the new net:", "New Petri-Net");
+			popupFontToolBar.disposeAllWindows();
 			if (netName != null) {
 				//IFNet newNet = new IFNet();
 				//AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> newNet = null;
@@ -401,6 +404,7 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 	private String requestFileName(String message, String title){
 			return new FileNameDialog(SwingUtilities.getWindowAncestor(SwatNewNetToolbar.this.getParent()), message, title, false)
 					.requestInput();
+			
 	}
 
 		private File getAbsolutePathToWorkingDir(String name) throws PropertyException, ParameterException, IOException {
@@ -450,6 +454,11 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 
 		}
 
+	}
+
+	public void setToolbar(WorkbenchPopupToolBar popupFontToolBar) {
+		this.popupFontToolBar = popupFontToolBar;
+		
 	}
 
 }
