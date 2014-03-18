@@ -145,7 +145,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		}
 		setFileReference(fileReference);
 		properties = createPNProperties();
-		 UIManager.put("Tree.rendererFillBackground", false);
+//		 UIManager.put("Tree.rendererFillBackground", false);
 		propertiesView = new PropertiesView(properties, fileReference);
 		propertiesView.addTreeSelectionListener(this);
 		properties.addPNPropertiesListener(propertiesView);

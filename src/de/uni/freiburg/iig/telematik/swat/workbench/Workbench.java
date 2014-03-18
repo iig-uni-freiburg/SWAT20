@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import de.invation.code.toval.properties.PropertyException;
@@ -175,6 +177,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	}
 	
 	private SwatTreeView getTreeView(){
+		 UIManager.put("Tree.rendererFillBackground", false);
 		if(treeView == null){
 			treeView = new SwatTreeView();
 			treeView.setPreferredSize(PREFERRED_SIZE_TREEVIEW_PANEL);
