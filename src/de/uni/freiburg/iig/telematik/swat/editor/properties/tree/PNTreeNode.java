@@ -32,7 +32,6 @@ public class PNTreeNode extends DefaultMutableTreeNode {
 	public PNTreeNode(String title, PNTreeNodeType type) {
         super(title);
         this.fieldType = type;
-        
     }
     
     public PNTreeNode(String title, PNTreeNodeType type, PropertiesField field) {

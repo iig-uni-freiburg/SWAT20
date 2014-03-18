@@ -14,7 +14,7 @@ public class RedoAction extends AbstractPNEditorAction {
 	private static final long serialVersionUID = 4315293729223367039L;
 	
 	public RedoAction(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
-		super(pnEditor, "Redo", IconFactory.getIcon("right_circular"));
+		super(pnEditor, "Redo", IconFactory.getIcon("redo"));
 	}
 
 	public void actionPerformed(ActionEvent e) {

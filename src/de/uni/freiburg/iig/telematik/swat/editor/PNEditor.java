@@ -25,6 +25,7 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
+import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
@@ -144,7 +145,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		}
 		setFileReference(fileReference);
 		properties = createPNProperties();
-		propertiesView = new PropertiesView(properties);
+		 UIManager.put("Tree.rendererFillBackground", false);
+		propertiesView = new PropertiesView(properties, fileReference);
 		propertiesView.addTreeSelectionListener(this);
 		properties.addPNPropertiesListener(propertiesView);
 		properties.setPropertiesView(propertiesView);

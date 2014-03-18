@@ -50,7 +50,7 @@ public class PTGraphComponent extends PNGraphComponent {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (PNException e1) {
-				JOptionPane.showMessageDialog(PTGraphComponent.this, e1.getMessage(), "Execution Error", JOptionPane.ERROR_MESSAGE);
+//				JOptionPane.showMessageDialog(PTGraphComponent.this, e1.getMessage(), "Execution Error", JOptionPane.ERROR_MESSAGE);
 
 			}
 		}
@@ -142,6 +142,8 @@ public class PTGraphComponent extends PNGraphComponent {
 
 	@Override
 	protected boolean mouseWheelOnPlace(PNGraphCell cell, MouseWheelEvent e) {
+		isExecution = getGraph().isExecution();
+		if(!isExecution)
 			((mxGraphModel) getGraph().getModel()).execute(new TokenMouseWheelChange((PNGraph)getGraph(),cell,e.getWheelRotation()));
 	
 		return true;

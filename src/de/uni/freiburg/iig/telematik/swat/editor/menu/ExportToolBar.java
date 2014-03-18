@@ -12,6 +12,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.export.ExportPDFAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.export.ExportPNGAction;
 
 public class ExportToolBar extends JToolBar {
 
@@ -28,6 +29,15 @@ public class ExportToolBar extends JToolBar {
 	// Tooltips
 	private String pdfButtonTooltip = "Export to PDF";
 
+
+	private ExportPNGAction pngAction;
+
+
+	private JButton pngButton;
+
+
+	private String pngButtonTooltip = "Export to PNG";
+
 	public ExportToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
 		Validate.notNull(pnEditor);
@@ -36,6 +46,7 @@ public class ExportToolBar extends JToolBar {
 		try {
 
 			pdfAction = new ExportPDFAction(pnEditor);	
+			pngAction = new ExportPNGAction(pnEditor);	
 			
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
@@ -51,8 +62,11 @@ public class ExportToolBar extends JToolBar {
 
 		pdfButton = add(pdfAction);
 		setButtonSettings(pdfButton);
-		
 		pdfButton.setToolTipText(pdfButtonTooltip);
+		
+		pngButton = add(pngAction);
+		setButtonSettings(pngButton);
+		pngButton.setToolTipText(pngButtonTooltip );
 
 	
 		

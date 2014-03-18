@@ -14,7 +14,7 @@ public class UndoAction extends AbstractPNEditorAction {
 	private static final long serialVersionUID = 4315293729223367039L;
 
 	public UndoAction(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
-		super(pnEditor, "Undo", IconFactory.getIcon("left_circular"));
+		super(pnEditor, "Undo", IconFactory.getIcon("undo"));
 	}
 
 	public void actionPerformed(ActionEvent e) {

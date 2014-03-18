@@ -1,8 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -12,10 +14,12 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -51,11 +55,13 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 	private PNTreeNode root;
 	private DefaultTreeModel treeModel;
 
-	public PropertiesView(PNProperties properties) throws ParameterException {
+	private String netName;
+
+	public PropertiesView(PNProperties properties, File fileReference) throws ParameterException {
 		Validate.notNull(properties);
 		this.properties = properties;
-		
-
+		String fileReferenceName = fileReference.getName();
+		netName = fileReferenceName.replace(".pnml", "");
 		// expand all nodes in the tree to be visible
 		for (int i = 0; i < getRowCount(); i++) {
 			expandRow(i);
@@ -68,7 +74,8 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 	 * @throws ParameterException
 	 */
 	public void setUpGUI() throws ParameterException {
-		root = new PNTreeNode("root", PNTreeNodeType.ROOT);
+		add(new JLabel(netName));
+		root = new PNTreeNode(netName, PNTreeNodeType.ROOT);
 
 		root.add(placesNode);
 		root.add(transitionsNode);
@@ -79,6 +86,8 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 		setInvokesStopCellEditing(false);
 		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		setRootVisible(false);
+        Color bgcolor = UIManager.getColor ( "Panel.background" );
+		this.setBackground(bgcolor);
 
 		// Set Editor for Property Fields
 		JTextField textField = new JTextField();
@@ -158,6 +167,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 		// Order of Properties corresponds to Order of PropertiesClass
 
 		final JTable table = new JTable(tableModel);
+
 		TableColumnModel colModel = table.getColumnModel();
 		TableColumn col1 = colModel.getColumn(1);
 		col1.setCellRenderer(new JTableRenderer());

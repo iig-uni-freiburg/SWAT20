@@ -789,7 +789,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 				Set<String> keyset = placeState.support();
 				//
 				for (String s : keyset) {
-					try {
+					
 
 						Color color = colors.get(s);
 						int number = placeState.multiplicity(s);
@@ -801,10 +801,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 						}
 
 						circularPointGroup.addPoints(pco, number);
-					} catch (ParameterException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				
 				}
 			}
 			int k = placeState.size();

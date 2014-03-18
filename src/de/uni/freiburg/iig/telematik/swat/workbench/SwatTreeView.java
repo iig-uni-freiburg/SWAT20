@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
@@ -7,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -28,6 +30,8 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 	public SwatTreeView() {
 		root = new DefaultMutableTreeNode("Working Directory");
 		treeModel = new DefaultTreeModel(root);
+        Color bgcolor = UIManager.getColor ( "Panel.background" );
+		this.setBackground(bgcolor);
 		this.setModel(treeModel);
 		this.setShowsRootHandles(true);
 		this.setEditable(false);

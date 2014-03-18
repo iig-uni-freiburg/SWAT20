@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
@@ -106,7 +107,6 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 
 	private Component getTextPanel(PNTreeNode node) {
 		JPanel panel = new JPanel();
-		panel.setBackground(Color.WHITE);
 		panel.setLayout(new BorderLayout());
 		JLabel label = new JLabel(node.toString() + ": ");
 		label.setSize(new Dimension(200, 30));
