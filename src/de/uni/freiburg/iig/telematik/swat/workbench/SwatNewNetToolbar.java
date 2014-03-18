@@ -40,7 +40,6 @@ import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
@@ -56,7 +55,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  * @author richard
  * 
  */
-public class SwatToolbar extends JToolBar implements ActionListener, SwatStateListener {
+public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatStateListener {
 
 	private static final long serialVersionUID = -4279345402764581310L;
 	
@@ -75,7 +74,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	private List<Component> standardItems = new LinkedList<Component>();
 
-	public SwatToolbar(SwatTabView tabView, SwatTreeView treeView) {
+	public SwatNewNetToolbar(SwatTabView tabView, SwatTreeView treeView) {
 		this.tabView = tabView;
 		this.treeView = treeView;
 
@@ -128,18 +127,18 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	 * @throws PropertyException 
 	 * @throws ParameterException **/
 	private void createButtons() throws ParameterException, PropertyException, IOException {
-		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE));
-		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
-		standardItems.add(getSwitchworkingDirectoryButton());
-		standardItems.add(getNewNetButton());
-//		standardItems.add(getNewCPNButton());
-//		standardItems.add(getNewIFNetButton());
-		standardItems.add(getImportButon());
-		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
-//		standardItems.add(getEditRadioButton());
-//		standardItems.add(getAnalysisRadioButton());
-		standardItems.add(getLolaButton());
-		
+//		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE));
+//		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
+//		standardItems.add(getSwitchworkingDirectoryButton());
+		standardItems.add(getNewPTNetButton());
+		standardItems.add(getNewCPNButton());
+		standardItems.add(getNewIFNetButton());
+//		standardItems.add(getImportButon());
+//		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
+////		standardItems.add(getEditRadioButton());
+////		standardItems.add(getAnalysisRadioButton());
+//		standardItems.add(getLolaButton());
+//		
 //		ButtonGroup group = new ButtonGroup();
 //		group.add(getAnalysisRadioButton());
 //		group.add(getEditRadioButton());
@@ -185,24 +184,23 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	
-	private JButton getNewNetButton() throws ParameterException, PropertyException, IOException{
-		
-		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);		
+	private JButton getNewPTNetButton() throws ParameterException, PropertyException, IOException{
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_PT);
 		//newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_PT));
 
 		return newButton;
 	}
 	
-//	private JButton getNewCPNButton() throws ParameterException, PropertyException, IOException{
-//		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_CPN);
-//		//newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_CPN));
-//		return newButton;
-//	}
-//	
-//	private JButton getNewIFNetButton() throws ParameterException, PropertyException, IOException{
-//		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_IF);
-//		return newButton;
-//	}
+	private JButton getNewCPNButton() throws ParameterException, PropertyException, IOException{
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_CPN);
+		//newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_CPN));
+		return newButton;
+	}
+	
+	private JButton getNewIFNetButton() throws ParameterException, PropertyException, IOException{
+		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_IF);
+		return newButton;
+	}
 	
 	private String requestFileName(String message, String title){
 		return new FileNameDialog(SwingUtilities.getWindowAncestor(getParent()), message, title, false).requestInput();
@@ -220,9 +218,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	public void actionPerformed(ActionEvent e) {
 		try {
 			if (e.getActionCommand().equals(ACTION_COMMAND_ANALYSIS_MODE)) {
-				SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.ANALYSIS_MODE);
+				SwatState.getInstance().setOperatingMode(SwatNewNetToolbar.this, OperatingMode.ANALYSIS_MODE);
 			} else if (e.getActionCommand().equals(ACTION_COMMAND_EDIT_MODE)) {
-				SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.EDIT_MODE);
+				SwatState.getInstance().setOperatingMode(SwatNewNetToolbar.this, OperatingMode.EDIT_MODE);
 			}
 		} catch (ParameterException ex) {
 			ex.printStackTrace();
@@ -231,7 +229,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	public static void main(String[] args) {
 		JPanel panel = new JPanel();
-		panel.add(new SwatToolbar(new SwatTabView(), new SwatTreeView()));
+		panel.add(new SwatNewNetToolbar(new SwatTabView(), new SwatTreeView()));
 		new DisplayFrame(panel, true);
 	}
 
@@ -301,10 +299,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				addActionListener(new ImportAction(treeView));
 				break;
 			case NEW:
-				SwatNewNetToolbar newNetTB = new SwatNewNetToolbar(tabView, treeView);
-				PopUpToolBarAction newNetAction = new PopUpToolBarAction("new net", "new", newNetTB);
-				newNetAction.setButton(this);
-				addActionListener(newNetAction);
 				break;
 			case OPEN:
 				break;
@@ -356,7 +350,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 		private ToolbarButtonType type;
 
-		public createNewAction(SwatToolbar.ToolbarButtonType type) {
+		public createNewAction(SwatNewNetToolbar.ToolbarButtonType type) {
 			this.type = type;
 		}
 
@@ -395,7 +389,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (ParameterException e1) {
-					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this), e1.getMessage(), "Error",
+					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(SwatNewNetToolbar.this), e1.getMessage(), "Error",
 							JOptionPane.ERROR_MESSAGE);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -405,7 +399,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private String requestFileName(String message, String title){
-			return new FileNameDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this.getParent()), message, title, false)
+			return new FileNameDialog(SwingUtilities.getWindowAncestor(SwatNewNetToolbar.this.getParent()), message, title, false)
 					.requestInput();
 	}
 

@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.menu;
+package de.uni.freiburg.iig.telematik.swat.workbench;
 
 
 import java.awt.BorderLayout;
@@ -24,7 +24,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-public class PopupToolBar {
+public class WorkbenchPopupToolBar {
 
 
 	private class DialogFocusListener implements WindowFocusListener {
@@ -57,15 +57,15 @@ public class PopupToolBar {
 
 	private DialogFocusListener focusListener;
 
-	private JToggleButton button;
+	private JButton button;
 
 	private boolean dialogOpen;
 	
-	public PopupToolBar() {
+	public WorkbenchPopupToolBar() {
 		
 	}
 	
-	public PopupToolBar(int inset) {
+	public WorkbenchPopupToolBar(int inset) {
 		this.inset = inset;
 	}
 	
@@ -258,8 +258,8 @@ public class PopupToolBar {
 		
 		
 
-		public void setButton(JToggleButton jToggleButton, boolean dialogOpen) {
-			this.button = jToggleButton;
+		public void setButton(JButton jButton, boolean dialogOpen) {
+			this.button = jButton;
 			this.dialogOpen = dialogOpen;
 			
 		}

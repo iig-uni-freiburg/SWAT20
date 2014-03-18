@@ -26,7 +26,7 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PopUpToolBarAction;
 //import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
+//import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterEditingAction;
@@ -50,7 +50,7 @@ public class ToolBar extends JToolBar {
 	}
 
 	// Actions
-	private SaveAction saveAction = null;
+//	private SaveAction saveAction = null;
 	private UndoAction undoAction = null;
 	private RedoAction redoAction = null;
 	private EnterExecutionAction enterExecutionAction;
@@ -63,7 +63,7 @@ public class ToolBar extends JToolBar {
 	private ToggleModeAction toggleModeAction;
 	private ReloadExecutionAction reloadExecutionAction;
 	// Buttons
-	private JButton saveButton;
+//	private JButton saveButton;
 	private JToggleButton undoButton;
 	private JToggleButton redoButton;
 	private JToggleButton fontButton = null;
@@ -101,7 +101,7 @@ public class ToolBar extends JToolBar {
 		this.pnEditor = pnEditor;
 
 		try {
-			saveAction = new SaveAction(pnEditor);
+//			saveAction = new SaveAction(pnEditor);
 			exportToolbar = new ExportToolBar(pnEditor, JToolBar.HORIZONTAL);
 			exportAction = new PopUpToolBarAction(pnEditor, "Export", "export", exportToolbar);
 
@@ -134,8 +134,8 @@ public class ToolBar extends JToolBar {
 			e.printStackTrace();
 		}
 
-		saveButton = add(saveAction);
-		setButtonSettings(saveButton);
+//		saveButton = add(saveAction);
+//		setButtonSettings(saveButton);
 
 
 		exportButton = (JToggleButton) add(exportAction, true);
@@ -178,7 +178,7 @@ public class ToolBar extends JToolBar {
 
 		doLayout();
 
-		saveButton.setToolTipText(saveButtonTooltip);
+//		saveButton.setToolTipText(saveButtonTooltip);
 		exportButton.setToolTipText(exportButtonTooltip);
 		enterExecutionButton.setToolTipText(executionButtonTooltip);
 		enterEditingButton.setToolTipText(editingButtonTooltip);
