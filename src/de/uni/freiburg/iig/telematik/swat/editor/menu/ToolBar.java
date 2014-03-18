@@ -299,11 +299,11 @@ public class ToolBar extends JToolBar {
 		nodeButton.setVisible(b);
 		fontButton.setVisible(b);
 		graphicsButton.setVisible(b);
-		if(nodeAction.getDialog()!=null && !nodeButton.isSelected())
+		if(nodeAction.getDialog()!=null && nodeButton.isSelected())
 		nodeAction.getDialog().setVisible(b);
-		if(fontAction.getDialog()!=null && !fontButton.isSelected())
+		if(fontAction.getDialog()!=null && fontButton.isSelected())
 		fontAction.getDialog().setVisible(b);
-		if(graphicsAction.getDialog()!=null && !graphicsButton.isSelected())
+		if(graphicsAction.getDialog()!=null && graphicsButton.isSelected())
 		graphicsAction.getDialog().setVisible(b);
 	}
 
