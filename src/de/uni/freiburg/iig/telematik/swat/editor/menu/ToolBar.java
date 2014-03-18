@@ -265,6 +265,7 @@ public class ToolBar extends JToolBar {
 		}
 		b.setHorizontalTextPosition(JButton.CENTER);
 		b.setVerticalTextPosition(JButton.BOTTOM);
+		b.setBorderPainted(false);
 		return b;
 	}
 
@@ -298,11 +299,11 @@ public class ToolBar extends JToolBar {
 		nodeButton.setVisible(b);
 		fontButton.setVisible(b);
 		graphicsButton.setVisible(b);
-		if(nodeAction.getDialog()!=null)
+		if(nodeAction.getDialog()!=null && !nodeButton.isSelected())
 		nodeAction.getDialog().setVisible(b);
-		if(fontAction.getDialog()!=null)
+		if(fontAction.getDialog()!=null && !fontButton.isSelected())
 		fontAction.getDialog().setVisible(b);
-		if(graphicsAction.getDialog()!=null)
+		if(graphicsAction.getDialog()!=null && !graphicsButton.isSelected())
 		graphicsAction.getDialog().setVisible(b);
 	}
 

@@ -462,6 +462,7 @@ private JToggleButton lineSolidButton;
 		}
 		b.setHorizontalTextPosition(JButton.CENTER);
 		b.setVerticalTextPosition(JButton.BOTTOM);
+		b.setBorderPainted(false);
 		return b;
 	}
 
