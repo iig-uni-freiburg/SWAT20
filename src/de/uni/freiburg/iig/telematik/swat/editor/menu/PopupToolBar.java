@@ -51,7 +51,6 @@ public class PopupToolBar {
 	
 	protected JToolBar horizontalToolBar;
 	
-	private int inset = 2;
 	
 	private Window[] windows;
 
@@ -65,10 +64,7 @@ public class PopupToolBar {
 		
 	}
 	
-	public PopupToolBar(int inset) {
-		this.inset = inset;
-	}
-	
+
 	protected JToolBar createToolBar(int alignment) {
 		JToolBar toolBar = new JToolBar(alignment) {
 			@Override
@@ -156,13 +152,21 @@ public class PopupToolBar {
 	private Point adujstPoint(Point initPoint, int popupWidth, int popupHeight, int alignment) {
 		switch (alignment) {
 		case JToolBar.VERTICAL:
-			return new Point(initPoint.x - popupWidth - inset, initPoint.y);
+			return new Point(initPoint.x - popupWidth , initPoint.y);
 		case JToolBar.HORIZONTAL:
-			return new Point(initPoint.x, initPoint.y - popupHeight - inset);
+			return new Point(initPoint.x, initPoint.y - popupHeight );
 		default:
 			throw new IllegalArgumentException("Unknown alignment " + alignment);
 		}
 	}
+	
+	private Point adujstPoint(Point initPoint) {
+
+			return new Point(initPoint.x, initPoint.y );
+
+	}
+	
+	
 	/**
 	 * Create the Window for the given alignment and 
 	 * @param comp father component
@@ -191,10 +195,7 @@ public class PopupToolBar {
 		dialog.add(bar);
 		dialog.pack();
 
-		Point loc = adujstPoint(point, 
-				dialog.getPreferredSize().width, 
-				dialog.getPreferredSize().height, 
-				alignment);
+		Point loc = adujstPoint(point);
 		SwingUtilities.convertPointToScreen(loc, comp);
 		dialog.setLocation(loc);
 		return dialog;

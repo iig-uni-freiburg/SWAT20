@@ -40,6 +40,9 @@ public class ToolBar extends JToolBar {
 
 	private static final long serialVersionUID = -6491749112943066366L;
 
+
+	private static final int DEFAULT_TB_HEIGHT = 50;
+
 	
 	// further variables
 	private PNEditor pnEditor = null;

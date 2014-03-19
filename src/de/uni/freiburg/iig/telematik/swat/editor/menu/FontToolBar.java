@@ -177,9 +177,7 @@ public class FontToolBar extends JToolBar {
 		alignCenterButton.setToolTipText(alingCenterTooltip);
 		alignRightButton.setToolTipText(alignRightTooltip);
 		textRotationButton.setToolTipText(textRotationTooltip);
-	
-		
-		
+
 	}
 	private JComponent add(Action action, boolean asToggleButton) {
 		if (!asToggleButton)

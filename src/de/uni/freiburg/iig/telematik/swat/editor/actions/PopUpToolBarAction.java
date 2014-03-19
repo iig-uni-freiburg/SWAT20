@@ -50,12 +50,17 @@ public class PopUpToolBarAction extends AbstractPNEditorAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println(fontToolbarContent.getSize());
 		if(getPopupFrame() == null){	
 			popupFontToolBar.setButton(getButton(), false);
 			
 			popupFontToolBar.add(fontToolbarContent);
 			 popupFontToolBar.add(newDialogButton);
-			
+//				Dimension tbSize = fontToolbarContent.getSize();
+//				Dimension defaultSize = new Dimension((int) tbSize.getWidth(), 50);
+//				fontToolbarContent.setPreferredSize(defaultSize );
+//				fontToolbarContent.setMaximumSize(defaultSize);
+//				fontToolbarContent.setMaximumSize(defaultSize);
 
 		    int size = 0;
 			try {
@@ -67,7 +72,8 @@ public class PopUpToolBarAction extends AbstractPNEditorAction {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			popupFontToolBar.show(getButton(), 0, size*3+size/5);
+			
+			popupFontToolBar.show(getButton(), 0, size + size/2);
 			
 				}
 		
