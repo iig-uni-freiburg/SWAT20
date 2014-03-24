@@ -40,7 +40,7 @@ public class WorkbenchPopupToolBar {
 				return;
 			}
 			if (!Arrays.asList(windows).contains(e.getOppositeWindow())) {
-				if(!waitForNewName)
+				if(!(e.getOppositeWindow() instanceof JDialog))
 				disposeAllWindows();
 				if(!dialogOpen)
 				button.setSelected(false);
@@ -61,10 +61,6 @@ public class WorkbenchPopupToolBar {
 	private JButton button;
 
 	private boolean dialogOpen;
-
-	private boolean waitForNewName;
-
-	private JToolBar fontToolbarContent;
 	
 	public WorkbenchPopupToolBar() {
 		
@@ -196,14 +192,15 @@ public class WorkbenchPopupToolBar {
 		dialog.add(bar);
 		dialog.pack();
 
-		Point loc = adujstPoint(point, 
-				dialog.getPreferredSize().width, 
-				dialog.getPreferredSize().height, 
-				alignment);
+		Point loc = adujstPoint(point);
 		SwingUtilities.convertPointToScreen(loc, comp);
 		dialog.setLocation(loc);
 		return dialog;
 	}
+	private Point adujstPoint(Point initPoint) {
+		return new Point(initPoint.x, initPoint.y);
+	}
+
 	/**
 	 * Creates the windows with the according toolbars and display them
 	 * @param comp
@@ -264,10 +261,9 @@ public class WorkbenchPopupToolBar {
 		
 		
 
-		public void setButton(JButton jButton, boolean dialogOpen, boolean  waitForNewName) {
+		public void setButton(JButton jButton, boolean dialogOpen) {
 			this.button = jButton;
 			this.dialogOpen = dialogOpen;
-			this.waitForNewName =  waitForNewName;
 			
 		}
 

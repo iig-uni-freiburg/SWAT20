@@ -345,9 +345,6 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 	private enum ToolbarButtonType {
 		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE;
 	}
-
-
-
 	class createNewAction implements ActionListener {
 
 		private ToolbarButtonType type;

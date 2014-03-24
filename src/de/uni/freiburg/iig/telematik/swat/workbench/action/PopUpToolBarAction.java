@@ -50,7 +50,7 @@ public class PopUpToolBarAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(getPopupFrame() == null){	
-			popupFontToolBar.setButton(getButton(), false, true);
+			popupFontToolBar.setButton(getButton(), false);
 			
 			popupFontToolBar.add(fontToolbarContent);
 			 popupFontToolBar.add(newDialogButton);
@@ -66,7 +66,7 @@ public class PopUpToolBarAction extends AbstractAction {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			popupFontToolBar.show(getButton(), 0, size*3+size/5);
+			popupFontToolBar.show(getButton(), 0, size + size/2);
 			
 				}
 		
@@ -96,7 +96,7 @@ public class PopUpToolBarAction extends AbstractAction {
 		newDialogButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					popupFontToolBar2.setButton(getButton(), true, false);
+					popupFontToolBar2.setButton(getButton(), true);
 					Window window = SwingUtilities.getWindowAncestor(getButton());
 					JDialog dialog = new ToolBarDialog(window, fontToolbarContent2.getName(), false);
 					dialog.setTitle("Font");
