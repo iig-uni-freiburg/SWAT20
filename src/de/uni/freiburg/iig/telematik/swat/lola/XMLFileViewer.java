@@ -71,6 +71,9 @@ public class XMLFileViewer extends JEditorPane implements SwatComponent {
 	}
 
 	public String getName() {
+		//for Nimbus LookAndFeel
+		if (file == null)
+			return "null";
 		return file.getName();
 	}
 

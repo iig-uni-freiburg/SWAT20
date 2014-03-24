@@ -72,6 +72,9 @@ public class LogFileViewer extends JEditorPane implements SwatComponent {
 	}
 
 	public String getName() {
+		//Wegen Nimbus LookaAndFeel
+		if (file == null)
+			return "null";
 		return file.getName();
 	}
 
