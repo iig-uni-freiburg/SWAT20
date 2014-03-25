@@ -78,24 +78,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private void setLookAndFeel() {
 		if (System.getProperty("os.name").toLowerCase().contains("nux")) {
 			try {
-				//				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				//					System.out.println(info.getClassName());
-				//					if ("Nimbus".equals(info.getName())) {
-				//						UIManager.setLookAndFeel(info.getClassName());
-				//						break;
-				//					}
-				//				}
-				//				//UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-				//				//UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-				//				//UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 				UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 			} catch (Exception e) {
-				//System.out.println("Could not set ");
 				MessageDialog.getInstance().addMessage("Could not set Look and Feel. Using standard");
-			// If Nimbus is not available, you can set the GUI to another look and feel.
+			}
 		}
-		}
-
 	}
 
 	private boolean checkWorkingDirectory(){

@@ -27,8 +27,6 @@ public class LolaAnalyzeAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
-			//LolaTransformator lola = new LolaTransformator((PNEditor) tabView.getSelectedComponent());
-
 			LolaRunner lola = new LolaRunner((PNEditor) tabView.getSelectedComponent());
 			HashMap<LOLA_TEST, String> result = lola.analyse();
 			if (result == null)

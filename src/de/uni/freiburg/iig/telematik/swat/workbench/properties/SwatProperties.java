@@ -228,7 +228,9 @@ public class SwatProperties extends AbstractProperties{
 	public IconSize getIconSize() throws PropertyException {
 		String propertyValue = getProperty(SwatProperty.ICON_SIZE);
 		if (propertyValue == null || propertyValue.equals("")) {
-			throw new PropertyException(SwatProperty.ICON_SIZE, propertyValue);
+			IconSize result = IconSize.valueOf("MEDIUM");
+			return result;
+			//throw new PropertyException(SwatProperty.ICON_SIZE, propertyValue);
 		}
 		try {
 			IconSize result = IconSize.valueOf(propertyValue);

@@ -88,7 +88,7 @@ public class LolaRunner {
 				result.put(test, exec(test));
 			} catch (IOException e) {
 				result.put(test, "ERROR");
-				JOptionPane.showMessageDialog(null, "Could not run test: " + test, "Analyse error", JOptionPane.ERROR_MESSAGE);
+				//JOptionPane.showMessageDialog(null, "Could not run test: " + test, "Analyse error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}
