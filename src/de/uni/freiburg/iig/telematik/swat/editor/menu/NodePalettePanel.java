@@ -32,14 +32,17 @@ public class NodePalettePanel extends JPanel {
 	
 	private final int PREFERRED_ICON_SIZE = 30;
 	private final Dimension PREFERRED_PALETTE_COMPONENT_SIZE = new Dimension(80,60);
+	private String nodeColor = "#333333";
 	
 	private JPanel transitionPanel = new JPanel(){
-	       public void paintComponent(Graphics g) {
+	       
+
+		public void paintComponent(Graphics g) {
 	           super.paintComponent(g);
 	           Graphics2D g2 = (Graphics2D) g;
 	           g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-	           String defaultColorString = EditorProperties.getInstance().getDefaultNodeColor();
-	          Color defaultColor = de.uni.freiburg.iig.telematik.swat.editor.graph.Utils.parseColor(defaultColorString);
+//	           String defaultColorString = EditorProperties.getInstance().getDefaultNodeColor();
+	          Color defaultColor = de.uni.freiburg.iig.telematik.swat.editor.graph.Utils.parseColor(nodeColor );
 	           g2.setColor (defaultColor);
 	         double w = PREFERRED_PALETTE_COMPONENT_SIZE.getWidth();
 	         double h = PREFERRED_PALETTE_COMPONENT_SIZE.getHeight();
@@ -54,8 +57,8 @@ public class NodePalettePanel extends JPanel {
 		           super.paintComponent(g);
 		           Graphics2D g2 = (Graphics2D) g;
 		           g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		           String defaultColorString = EditorProperties.getInstance().getDefaultNodeColor();
-		          Color defaultColor = de.uni.freiburg.iig.telematik.swat.editor.graph.Utils.parseColor(defaultColorString);
+//		           String defaultColorString = EditorProperties.getInstance().getDefaultNodeColor();
+		          Color defaultColor = de.uni.freiburg.iig.telematik.swat.editor.graph.Utils.parseColor(nodeColor);
 		           g2.setColor (defaultColor);
 		         double w = PREFERRED_PALETTE_COMPONENT_SIZE.getWidth();
 		         double h = PREFERRED_PALETTE_COMPONENT_SIZE.getHeight();

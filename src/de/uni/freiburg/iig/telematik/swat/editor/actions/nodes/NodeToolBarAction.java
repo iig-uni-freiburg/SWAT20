@@ -48,6 +48,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 public class NodeToolBarAction extends PopUpToolBarAction {
 
 	private static final long serialVersionUID = -381740152242776391L;
+	private static String nodeColor = "#333333";
 
 	public NodeToolBarAction(PNEditor editor,String name, JToolBar toolbar ) throws ParameterException, PropertyException, IOException {
 		super(editor, name, "plus", toolbar);
@@ -56,7 +57,7 @@ public class NodeToolBarAction extends PopUpToolBarAction {
 
 	public static Image createIconImage() {
 		String fillColorString = EditorProperties.getInstance().getDefaultNodeColor();
-		Color defaultFillColor = Utils.parseColor(fillColorString);
+		Color defaultFillColor = Utils.parseColor(nodeColor );
 		IconSize iconsize = null;
 		try {
 			iconsize = SwatProperties.getInstance().getIconSize();

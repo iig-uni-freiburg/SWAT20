@@ -1,11 +1,19 @@
 package de.uni.freiburg.iig.telematik.swat.editor.properties.tree;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -15,14 +23,79 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import com.mxgraph.util.mxRectangle;
+
+import de.invation.code.toval.properties.PropertyException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
+import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory.IconSize;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+
 public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 
 	private static final long serialVersionUID = -7829208008630231526L;
+	private static String nodeColor = "#333333";
 	private ImageIcon placeIcon = new ImageIcon(getClass().getResource("/images/ellipse.png"));
 	private ImageIcon transitionIcon = new ImageIcon(getClass().getResource("/images/rectangle.png"));
+	//	private ImageIcon placeIcon = new ImageIcon(createPlaceImage());
+//	private ImageIcon transitionIcon = new ImageIcon(createTransitionImage());
 	private ImageIcon arcIcon = new ImageIcon(getClass().getResource("/images/arrow.png"));
 	private ImageIcon rootIcon = new ImageIcon(getClass().getResource("/images/cloud.png"));
+	public static Image createPlaceImage() {
+		Color defaultFillColor = Utils.parseColor(nodeColor  );
+		IconSize iconsize = null;
+		try {
+			iconsize = SwatProperties.getInstance().getIconSize();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int size = iconsize.getSize();
 
+
+        Image image = new BufferedImage (size, size, BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics g = image.getGraphics();
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        int placeSize = (size-size/5);
+        g2.setColor(defaultFillColor);
+        g2.fillOval(size/10, size/10, placeSize, placeSize);
+        g2.dispose ();
+        return image;
+
+	}
+	
+	public static Image createTransitionImage() {
+		Color defaultFillColor = Utils.parseColor(nodeColor  );
+		IconSize iconsize = null;
+		try {
+			iconsize = SwatProperties.getInstance().getIconSize();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int size = iconsize.getSize();
+
+
+        Image image = new BufferedImage (size, size, BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics g = image.getGraphics();
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        int placeSize = (size-size/5);
+        g2.setColor(defaultFillColor);
+        g2.fillRect(size/10, size/10, 	placeSize, placeSize);
+        g2.dispose ();
+        return image;
+
+	}
+	
 	@Override
 	public Component getTreeCellRendererComponent(final JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 		Component container = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
