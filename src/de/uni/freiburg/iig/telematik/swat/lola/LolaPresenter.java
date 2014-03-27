@@ -14,7 +14,6 @@ public class LolaPresenter {
 	protected String output;
 
 	public LolaPresenter(String output) {
-		//this.output = "<html><body>" + output.replaceAll("(\r\n|\n)", "<br />" + "</body></html>");
 		this.output = output;
 		makeWindow();
 	}

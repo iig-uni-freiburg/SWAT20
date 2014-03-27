@@ -301,21 +301,10 @@ public class SwatTabView extends JTabbedPane {
 					for (Map.Entry<Object, Component> entry : openedSwatComponents.entrySet()) {
 						if (entry.getValue().equals(SwatTabView.this.getComponent(i))) {
 							openedSwatComponents.remove(entry.getKey());
-							System.out.println("removed");
 							break;
 						}
 					}
 
-					//					Iterator<Component> it = openedSwatComponents.values().iterator();
-					//					while (it.hasNext()) {
-					//						if (it.next().equals(SwatTabView.this.getComponent(i))) {
-					//							it.remove();
-					//							System.out.println("removed");
-					//						}
-					//					}
-					//boolean test = openedSwatComponents.values().remove(SwatTabView.this.getComponent(i));
-					//openedSwatComponents.valueSet().remove(SwatTabView.this.getComponent(i).get);
-					//System.out.println("removed: " + test);
 					SwatTabView.this.remove(i);
 				}
 			}

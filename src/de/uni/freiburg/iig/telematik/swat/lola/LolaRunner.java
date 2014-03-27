@@ -186,14 +186,6 @@ public class LolaRunner {
 		writer.flush();
 		writer.close();
 
-		//get exit code
-		try {
-			p.waitFor();
-			System.out.println("Exit code for " + test + ": " + p.exitValue());
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		//get results
 		String result;
@@ -203,6 +195,15 @@ public class LolaRunner {
 			list.add(result);
 			//System.out.println(result);
 		}
+		reader.close();
+
+		//get exit code. Available AFTER InputStream is read.
+		try {
+			p.waitFor();
+		} catch (InterruptedException e) {
+		}
+
+		System.out.println("Exit code for " + test + ": " + p.exitValue());
 
 		if (test == LOLA_TEST.HOME)
 			return list.get(list.size() - 1); //use second last entry for HOME marking -> its the result

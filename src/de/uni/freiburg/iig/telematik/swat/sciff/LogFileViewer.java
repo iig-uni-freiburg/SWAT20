@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
@@ -23,19 +24,23 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  * presents view on mxml files. extends {@link JEditorPane}, implements
  * {@link SwatComponent}
  **/
-public class LogFileViewer extends JEditorPane implements SwatComponent {
+public class LogFileViewer extends JScrollPane implements SwatComponent {
 	private static final long serialVersionUID = 7051631037013916120L;
 	private File file = null;
 	JComponent properties = null;
 	private JButton runWithSciff = null;
 	private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
 	private static int ICON_SIZE = 32;
+	private JEditorPane editor;
 
 	public LogFileViewer(File file) throws IOException {
+		super(new JEditorPane(file.toURI().toURL()));
 		// Initialize JEditorPane
-		super(file.toURI().toURL());
+		editor = new JEditorPane(file.toURI().toURL());
 		this.file = file;
-		setEditable(false);
+		editor.setEditable(false);
+		//this.add(editor);
+		validate();
 
 		// get icon size
 		try {
@@ -93,6 +98,8 @@ public class LogFileViewer extends JEditorPane implements SwatComponent {
 		properties.add(new JLabel("Size: " + file.length() / 1024 + "kB"));
 		properties.add(new JLabel("Lines: " + FileHelper.getLinesCount(file.getAbsolutePath(), Charset.defaultCharset().toString())));
 		properties.add(getSciffButton());
+		properties.validate();
+		properties.repaint();
 	}
 
 	/**
