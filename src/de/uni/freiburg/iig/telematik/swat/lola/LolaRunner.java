@@ -20,9 +20,12 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class LolaRunner {
 
+	private final String confirm = "Net is not bounded. Continue? \n\r This might take a long time";
+	private final String unknown = "Boundedness of net is unknown. Continue? \n\r This might take a long time";
 	String lolaDir;
-	private PTNet net;
 	private LolaTransformator lolaTransformator;
+
+	//private PTNet net;
 
 	/**
 	 * @param args
@@ -56,7 +59,7 @@ public class LolaRunner {
 	}
 
 	public LolaRunner(PTNet net) {
-		this.net = net;
+		//this.net = net;
 		this.lolaTransformator = new LolaTransformator(net);
 		//get defined lola path
 		try {
@@ -76,6 +79,14 @@ public class LolaRunner {
 		}
 	}
 
+	public void changePTNet(PTNet net) {
+		this.lolaTransformator = new LolaTransformator(net);
+	}
+
+	public void changePTNet(PNEditor editor) {
+		this.lolaTransformator = new LolaTransformator(editor);
+	}
+
 	public HashMap<LOLA_TEST, String> analyse() {
 		//Test for boundedness
 
@@ -85,7 +96,9 @@ public class LolaRunner {
 		HashMap<LOLA_TEST, String> result = new HashMap<LolaRunner.LOLA_TEST, String>();
 		for (LOLA_TEST test : LOLA_TEST.values()) {
 			try {
-				result.put(test, exec(test));
+				Long start = System.currentTimeMillis();
+				//result.put(test, execExitCode(test) + " (" + (System.currentTimeMillis() - start) + "ms)");
+				result.put(test, exec(test) + " (" + (System.currentTimeMillis() - start) + "ms)");
 			} catch (IOException e) {
 				result.put(test, "ERROR");
 				//JOptionPane.showMessageDialog(null, "Could not run test: " + test, "Analyse error", JOptionPane.ERROR_MESSAGE);
@@ -98,33 +111,71 @@ public class LolaRunner {
 	/** If true user wants analysis even on unbounded net **/
 	private boolean userContinueIfUnbound() {
 		try {
-			if (!bounded()) {
-				int result = JOptionPane.showConfirmDialog(null, "Net is not bounded. Continue? \n\r This might take a long time",
-						"WARNING", JOptionPane.YES_NO_OPTION);
+			if (!isBounded()) {
+				int result = JOptionPane.showConfirmDialog(null, confirm, "WARNING", JOptionPane.YES_NO_OPTION);
 				if (result != JOptionPane.YES_OPTION)
 					return false;
 
 			}
 		} catch (IOException e1) {
-			int result = JOptionPane.showConfirmDialog(null, "Boundedness of net is unknown. Continue? \n\r This might take a long time",
-					"WARNING", JOptionPane.YES_NO_OPTION);
+			int result = JOptionPane.showConfirmDialog(null, unknown, "WARNING", JOptionPane.YES_NO_OPTION);
 			if (result != JOptionPane.YES_OPTION)
 				return false;
 		}
 		return true;
 	}
 
-	private boolean bounded() throws IOException {
-		return !exec(LOLA_TEST.BOUNDEDNET).toLowerCase().contains("unbound");
+	public boolean isBounded() throws IOException {
+		//return !exec(LOLA_TEST.BOUNDEDNET).toLowerCase().contains("unbound");
+		return execWithExitCode(LOLA_TEST.BOUNDEDNET);
+	}
+
+	private boolean execWithExitCode(LOLA_TEST test) throws IOException {
+
+		//StringBuilder list = new StringBuilder();
+		Process p = Runtime.getRuntime().exec(getExecString(test));
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
+
+		//feed lola-process with PTnet through STDIN
+		writer.write(lolaTransformator.getNetAsLolaFormat());
+		writer.flush();
+		writer.close();
+
+		//get exit code
+		try {
+			p.waitFor();
+			System.out.println("Exit code for " + test + ": " + p.exitValue());
+			return interpretResult(test, p.exitValue());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	private boolean interpretResult(LOLA_TEST test, int exitCode) {
+		switch (test) {
+		case BOUNDEDNET:
+			return exitCode == 1;
+		case DEADLOCK:
+			return exitCode == 1;
+		case HOME:
+			return exitCode == 0;
+		case ONEBOUNDED:
+			return exitCode == 1; //exit code always 0... can't do.
+		default:
+			return false;
+		}
 	}
 
 	private String exec(LOLA_TEST test) throws IOException {
 
 		//StringBuilder list = new StringBuilder();
-		ArrayList<String> list = new ArrayList<String>(5); //Store result
 		Process p = Runtime.getRuntime().exec(getExecString(test));
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
 		BufferedReader reader;
+		//One-Bound test writes on STDOUT. On other tests LoLA uses ERROUT
 		if (test == LOLA_TEST.ONEBOUNDED)
 			reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		else
@@ -135,19 +186,29 @@ public class LolaRunner {
 		writer.flush();
 		writer.close();
 
+		//get exit code
+		try {
+			p.waitFor();
+			System.out.println("Exit code for " + test + ": " + p.exitValue());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		//get results
 		String result;
+		ArrayList<String> list = new ArrayList<String>(5); //Store result
+
 		while ((result = reader.readLine()) != null) {
 			list.add(result);
-			System.out.println(result);
-			//list.append("\r\n");
+			//System.out.println(result);
 		}
-		//return second last entry -> its the result
+
 		if (test == LOLA_TEST.HOME)
-			return list.get(list.size() - 1);
+			return list.get(list.size() - 1); //use second last entry for HOME marking -> its the result
 		if (test == LOLA_TEST.ONEBOUNDED)
-			return testOneBoundedResult(list);
-		return list.get(list.size() - 2);
+			return testOneBoundedResult(list); // Output for ONE-Bounded test is tricky
+		return list.get(list.size() - 2); //use this index as result for the remaining tests
 	}
 
 	private String testOneBoundedResult(ArrayList<String> list) {
@@ -158,7 +219,18 @@ public class LolaRunner {
 		return "Net IS 1-bounded";
 	}
 
-	public String getExecString(LOLA_TEST test) {
+	public boolean isOneBounded(){
+		try {
+			String result = exec(LOLA_TEST.ONEBOUNDED);
+			if (result == "Net IS 1-bounded")
+				return true;
+			return false;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	private String getExecString(LOLA_TEST test) {
 		//depending on the OS, return the execution string to run lola
 		String OS = System.getProperty("os.name").toLowerCase();
 		if (OS.contains("win"))

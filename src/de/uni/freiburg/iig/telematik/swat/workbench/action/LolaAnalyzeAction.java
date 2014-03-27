@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 
@@ -12,7 +13,7 @@ import de.uni.freiburg.iig.telematik.swat.lola.LolaRunner.LOLA_TEST;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
-public class LolaAnalyzeAction extends AbstractAction {
+public class LolaAnalyzeAction<K> extends AbstractAction {
 
 	private static final long serialVersionUID = 9111775745565090191L;
 	private SwatTabView tabView;
@@ -31,24 +32,30 @@ public class LolaAnalyzeAction extends AbstractAction {
 			HashMap<LOLA_TEST, String> result = lola.analyse();
 			if (result == null)
 				return;
-			StringBuilder b = new StringBuilder();
-			for (String singleResult : result.values()) {
-				b.append(singleResult);
-				b.append("\r\n");
-			}
-			LolaPresenter presenter = new LolaPresenter(b.toString());
+			LolaPresenter presenter = new LolaPresenter(hashToString(result));
 			presenter.show();
-			//run LoLA
 
-			//present results
 		} catch (ClassCastException e) {
 			MessageDialog.getInstance().addMessage("This is not a Petri Net");
 		}
- catch (NullPointerException e) {
-			MessageDialog.getInstance().addMessage("This is not a Petri Net");
-		}
 
+		catch (NullPointerException e) {
+			MessageDialog.getInstance().addMessage("Could not analyse with LoLA Reason: " + e.getMessage() + " " + e.getCause());
+		}
+	}
+	
+
+	private String hashToString(HashMap<LOLA_TEST, String> hashMap) {
+		StringBuilder builder = new StringBuilder();
+		for (Map.Entry<LOLA_TEST, String> entry : hashMap.entrySet()) {
+			builder.append(entry.getKey().toString());
+			builder.append(" - ");
+			builder.append(entry.getValue());
+			builder.append("\r\n");
+		}
+		return builder.toString();
 
 	}
+
 
 }

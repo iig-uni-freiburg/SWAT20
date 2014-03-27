@@ -28,16 +28,15 @@ public class LolaTransformator {
 
 	public String getNetAsLolaFormat() {
 		if (lolaNet == null) {
-		StringBuilder builder = new StringBuilder(1000);
-		//builder.append("NET\r\n");
-		builder.append(getPlaces());
-		builder.append("\r\n");
-		builder.append(getInitialMarking());
-		builder.append("\r\n");
-		builder.append(getTransitions());
-		//builder.append("$end");
-		//LolaPresenter p = new LolaPresenter(builder.toString());
-		//p.show();
+			StringBuilder builder = new StringBuilder(1000);
+			builder.append(getPlaces());
+			builder.append("\r\n");
+			builder.append(getInitialMarking());
+			builder.append("\r\n");
+			builder.append(getTransitions());
+			//	builder.append("$end");
+			LolaPresenter p = new LolaPresenter(builder.toString());
+			p.show();
 			lolaNet = builder.toString();
 		}
 		return lolaNet;

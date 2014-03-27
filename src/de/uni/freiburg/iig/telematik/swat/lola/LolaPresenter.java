@@ -25,7 +25,7 @@ public class LolaPresenter {
 
 	private void makeWindow() {
 		result = new JFrame();
-		result.setSize(new Dimension(600, 600));
+		result.setSize(new Dimension(400, 300));
 		ScrollPane scrollPane = new ScrollPane();
 		result.add(scrollPane);
 		JTextArea area = new JTextArea(output);

@@ -75,6 +75,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	}
 	
+	/** Changes Look and Feel if running on Linux **/
 	private void setLookAndFeel() {
 		if (System.getProperty("os.name").toLowerCase().contains("nux")) {
 			try {
@@ -247,12 +248,10 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	public void componentActivated(SwatTreeNode node) {
 		SwatComponent swatComponent = null;
 		if (!getTabView().containsComponent(node)) {
-			System.out.println("tab view does not contain element");
 			// add SwatTreeNode to tab and get its swatComponent to make its propertyView
 			swatComponent = getTabView().addNewTab(node);
 			getPropertiesPanel().removeAll();
 			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
-			pack();
 			getPropertiesPanel().repaint();
 		}
 
