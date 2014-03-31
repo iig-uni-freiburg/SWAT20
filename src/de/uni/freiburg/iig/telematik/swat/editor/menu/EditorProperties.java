@@ -88,7 +88,7 @@ public class EditorProperties {
 
 	public double getDefaultZoomStep() {
 		// TODO Auto-generated method stub
-		return 0.5;
+		return 0.2;
 	}
 
 
