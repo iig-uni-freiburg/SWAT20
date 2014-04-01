@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -8,12 +9,19 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
@@ -30,9 +38,11 @@ import com.mxgraph.shape.mxRectangleShape;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxCellHandler;
+import com.mxgraph.swing.handler.mxCellMarker;
 import com.mxgraph.swing.handler.mxEdgeHandler;
 import com.mxgraph.swing.handler.mxElbowEdgeHandler;
 import com.mxgraph.swing.handler.mxVertexHandler;
+import com.mxgraph.swing.util.mxCellOverlay;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
@@ -42,7 +52,9 @@ import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxEdgeStyle;
 import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
 
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.ConnectionHandler;
@@ -55,6 +67,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.HtmlTextShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.RectangleShape;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
 
@@ -82,8 +95,6 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 
 	private TransitionPopupMenu transitionPopupMenu;
 
-
-
 	public PNGraphComponent(PNGraph graph) {
 		super(graph);
 		initialize();
@@ -104,13 +115,102 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for(String n:nameSet){
-			PNGraphCell cell =getGraph().nodeReferences.get(n);
+		removeCellOverlays();
+		getGraph().setCellsSelectable(false);
+		for(final String n:nameSet){
+			final PNGraphCell cell =getGraph().nodeReferences.get(n);
 			Rectangle geo = cell.getGeometry().getRectangle();
 //			enabledTransitionsPanel =
-			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;	
-		}		
+			mxCellOverlay overlay = null;
+			try {
+				overlay = new mxCellOverlay(IconFactory.getIcon("playred"), null);
+				overlay.setAlign(mxConstants.ALIGN_CENTER);
+				overlay.setVerticalAlign(mxConstants.ALIGN_MIDDLE);
+				final mxCellMarker marker = new mxCellMarker(getGraphComponent());
+			
+				
+				overlay.addMouseListener(new MouseListener() {
+					
+					@Override
+					public void mouseReleased(MouseEvent arg0) {
+					
+						
+					}
+					
+					@Override
+					public void mousePressed(MouseEvent arg0) {
+					
+						
+					}
+					
+					@Override
+					public void mouseExited(MouseEvent arg0) {
+						marker.setVisible(false);
+						
+					}
+					
+					@Override
+					public void mouseEntered(MouseEvent arg0) {
+						marker.setVisible(true);
+						marker.highlight(graph.getView().getState(cell), Color.RED);
+						
+					}
+					
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						try {
+							getGraph().fireTransition(cell);
+							marker.setVisible(false);
+							highlightEnabledTransitions();
+							//							getGraph().refresh();
+						} catch (ParameterException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (PNException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}
+				});
+			} catch (ParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			addCellOverlay(cell, overlay);
+//			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;
+			
+		}
+//		getGraph().setCellsSelectable(false);
+//		Set<String> nameSet = null;
+//		try {
+//			nameSet = PNUtils.getNameSetFromTransitions(getGraph().getNetContainer().getPetriNet().getEnabledTransitions(), true);
+//		} catch (ParameterException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		for(String n:nameSet){
+//			PNGraphCell cell =getGraph().nodeReferences.get(n);
+//			
+//			Rectangle geo = cell.getGeometry().getRectangle();
+////			enabledTransitionsPanel =
+//			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;	
+//		}		
 	}
+
+
+	protected mxGraphComponent getGraphComponent() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
 	@Override
 	public PNGraph getGraph() {
 		return (PNGraph) super.getGraph();
@@ -490,8 +590,13 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 	public void removeCellOverlays() {
 		for(Entry<String, PNGraphCell> cell : getGraph().nodeReferences.entrySet())
 			removeCellOverlays(cell.getValue());
+			
 		
 	}
+
+
+
+
 
 	// public class PaletteTransferHandler extends TransferHandler {
 	//

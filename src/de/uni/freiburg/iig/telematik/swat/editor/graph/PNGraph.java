@@ -57,6 +57,7 @@ import de.invation.code.toval.graphic.util.GraphicUtils;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
@@ -1521,6 +1522,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 			}
 			if (evt.getName().equals(mxEvent.CHANGE)) {
 				if (sender instanceof mxGraphSelectionModel || sender instanceof PNGraphComponent) {
+//					if(!isExecution)
 					notifyComponentsSelected();
 				}
 			}
@@ -1784,11 +1786,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	public void enterEditingMode() {
 		setExecution(false);
+		setCellsSelectable(true);
 		getNetContainer().getPetriNet().reset();
 		refresh();
 		
 	}
+	public void fireTransition(PNGraphCell cell) throws ParameterException, PNException {
+		getNetContainer().getPetriNet().fire(cell.getId());
+		refresh();
 
+}
 	public void setTransitionSilent(String id, boolean setSilent) {
 		getNetContainer().getPetriNet().getTransition(id).setSilent(setSilent);	
 	

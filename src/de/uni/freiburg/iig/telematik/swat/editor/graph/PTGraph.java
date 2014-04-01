@@ -110,10 +110,7 @@ public class PTGraph extends PNGraph {
 		return "";
 	}
 
-	public void fireTransition(PNGraphCell cell) throws ParameterException, PNException {
-			getNetContainer().getPetriNet().fire(cell.getId());
-	
-	}
+
 
 	@Override
 	protected void setArcLabel(PNGraph sender, String arcName, String weight) {
