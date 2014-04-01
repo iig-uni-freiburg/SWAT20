@@ -72,7 +72,7 @@ public class PTGraphComponent extends PNGraphComponent {
 //			enabledTransitionsPanel =
 			mxCellOverlay overlay = null;
 			try {
-				overlay = new mxCellOverlay(IconFactory.getIcon("playgreen"), null);
+				overlay = new mxCellOverlay(IconFactory.getIcon("playred"), null);
 				overlay.setAlign(mxConstants.ALIGN_CENTER);
 				overlay.setVerticalAlign(mxConstants.ALIGN_MIDDLE);
 			} catch (ParameterException e) {
