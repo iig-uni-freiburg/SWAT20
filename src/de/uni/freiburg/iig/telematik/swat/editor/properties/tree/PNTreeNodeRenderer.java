@@ -120,12 +120,15 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 
 		case ARCS:
 			setIcon(new ImageIcon(arcIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
+			setText(getText() + " ("+ node.getChildCount()+ ")");
 			break;
 		case PLACES:
-			setIcon(new ImageIcon(placeIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
+			setIcon(new ImageIcon(placeIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));	
+			setText(getText() + " ("+ node.getChildCount()+ ")");
 			break;
 		case TRANSITIONS:
 			setIcon(new ImageIcon(transitionIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH)));
+			setText(getText() + " ("+ node.getChildCount()+ ")");
 			break;
 		default:
 			break;

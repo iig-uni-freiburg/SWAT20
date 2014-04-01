@@ -117,6 +117,10 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 		for(String arcName: arcNames){
 			insertArcNode(arcName);
 		}
+		for (int i = 0; i < getRowCount(); i++) {
+			expandRow(i);
+		}
+		deselect();
 
 	}
 
