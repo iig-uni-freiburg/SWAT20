@@ -8,11 +8,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.batik.parser.ParseException;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogEntry;
@@ -24,7 +26,6 @@ public class AristFlowParser implements ISciffLogReader {
 	private File log;
 	private LinkedHashMap<String, ISciffLogTrace> instances = new LinkedHashMap<String, ISciffLogTrace>();
 	private BufferedReader br;
-	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss:SSS");
 
 	private HashMap<AristFlowTokens, Integer> firstLine;
 
@@ -59,6 +60,10 @@ public class AristFlowParser implements ISciffLogReader {
 
 	}
 
+	public Set<String> getUniqueActivityNames() {
+		return instances.keySet();
+	}
+
 	public AristFlowParser(File logFile) throws FileNotFoundException {
 		this.log = logFile;
 		this.br = new BufferedReader(new java.io.FileReader(log));
@@ -80,16 +85,8 @@ public class AristFlowParser implements ISciffLogReader {
 
 			String[] entries = nextLine.split(";");
 
-			AristaFlowLogEntry entry = new AristaFlowLogEntry();
-			entry.originator = entries[firstLine.get(AristFlowTokens.NAME)];
-			entry.element = entries[firstLine.get(AristFlowTokens.NODENAME)];
-			entry.type = EventType.COMPLETE;
-			try {
-				entry.timestamp = formatter.parse(entries[firstLine.get(AristFlowTokens.END)]);
-			} catch (java.text.ParseException e) {
-				System.out.println(this.getClass().getName() + ": Could not parse date: " + entries[firstLine.get(AristFlowTokens.END)]);
-				e.printStackTrace();
-			}
+			AristaFlowLogEntry entry = new AristaFlowLogEntry(entries, firstLine);
+
 
 			String instance = entries[firstLine.get(AristFlowTokens.INSTANCENAME)];
 
@@ -138,30 +135,81 @@ public class AristFlowParser implements ISciffLogReader {
 
 	@Override
 	public List<ISciffLogTrace> getInstances() {
-		// TODO Auto-generated method stub
-		return new LinkedList<ISciffLogTrace>(instances.values());
+		LinkedList<ISciffLogTrace> list = new LinkedList<ISciffLogTrace>(instances.values());
+		return list;
 	}
 
 	@Override
 	public ISciffLogTrace getInstance(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		//instances.keySet();
+		LinkedList<ISciffLogTrace> list = new LinkedList<ISciffLogTrace>(instances.values());
+		return list.get(index);
 	}
 
 	@Override
 	public int traceCount() {
-		// TODO Auto-generated method stub
-		return 0;
+
+		return instances.size();
+
+		//		int count = 0;
+		//		for (ISciffLogTrace trace : getInstances()) {
+		//			count = count + trace.size();
+		//		}
+		//		return count - 1;
 	}
 
 	@Override
 	public ISciffLogSummary getSummary() {
-		// TODO Auto-generated method stub
-		return null;
+		return new AristaFlowLogSummary(this);
 	}
 
 }
 
+class AristaFlowLogSummary implements ISciffLogSummary {
+	private AristFlowParser parser;
+
+	public AristaFlowLogSummary(AristFlowParser parser) {
+		this.parser = parser;
+	}
+
+	@Override
+	public String[] getModelElements() {
+		Set<String> list = parser.getUniqueActivityNames();
+		int size = list.size();
+
+		String result[] = new String[size];
+
+		int i = 0;
+		for (String s : parser.getUniqueActivityNames()) {
+			result[i] = s;
+		}
+
+		return result;
+	}
+
+	@Override
+	public String[] getOriginators() {
+		HashSet<String> set = new HashSet<String>();
+		for (ISciffLogTrace trace : parser.getInstances()) {
+			Iterator<ISciffLogEntry> iter = trace.iterator();
+			while (iter.hasNext()) {
+				ISciffLogEntry entry = iter.next();
+				set.add(entry.getOriginator());
+			}
+
+		}
+		
+		int i = 0;
+		String[] result = new String[set.size()];
+		
+		for (String s:set){
+			result[i] = s;
+		}
+
+		return result;
+	}
+
+}
 
 class AristaFlowLogTrace implements ISciffLogTrace {
 
@@ -215,7 +263,23 @@ class AristaFlowLogEntry implements ISciffLogEntry {
 	public String originator;
 	public EventType type;
 	public Date timestamp;
-	public Map<String, String> attributes;
+	public Map<String, String> attributes = new HashMap<String, String>(5);
+	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss:SSS");
+
+	public AristaFlowLogEntry(String[] entries, HashMap<AristFlowTokens, Integer> firstLine) {
+
+		originator = entries[firstLine.get(AristFlowTokens.NAME)];
+		element = entries[firstLine.get(AristFlowTokens.NODENAME)];
+		type = EventType.COMPLETE;
+		try {
+			timestamp = formatter.parse(entries[firstLine.get(AristFlowTokens.END)]);
+		} catch (java.text.ParseException e) {
+			System.out.println(this.getClass().getName() + ": Could not parse date: " + entries[firstLine.get(AristFlowTokens.END)]);
+			e.printStackTrace();
+		}
+		attributes.put("Activity", entries[firstLine.get(AristFlowTokens.NODENAME)]);
+		attributes.put("User", entries[firstLine.get(AristFlowTokens.LASTNAME)]);
+	}
 
 	@Override
 	public String getElement() {
@@ -257,7 +321,7 @@ class AristaFlowLogEntry implements ISciffLogEntry {
 }
 
 enum AristFlowTokens {
-	START, END, NODENAME, NAME, INSTANCENAME;
+	START, END, NODENAME, NAME, INSTANCENAME, LASTNAME;
 }
 
 enum EventType {

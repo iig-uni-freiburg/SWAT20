@@ -80,7 +80,9 @@ public class SwatComponents {
 		MessageDialog.getInstance().newLine();
 
 		// 2. Load logfiles
-		MessageDialog.getInstance().addMessage("2. Searching for mxml log files:");
+		MessageDialog.getInstance().addMessage("2. Searching for log files:");
+
+		//First mxml
 		List<File> mxmlFiles = null;
 		try {
 			mxmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "mxml");
@@ -88,6 +90,24 @@ public class SwatComponents {
 			throw new ParameterException("Cannot access working directory.\nReason: " + e.getMessage());
 		}
 		for (File logFile : mxmlFiles) {
+			try {
+				MessageDialog.getInstance().addMessage("Loading log file: " + FileUtils.getName(logFile) + "...   ");
+				logs.put(new LogFileViewer(logFile), logFile);
+				MessageDialog.getInstance().addMessage("Done.");
+			} catch (IOException e) {
+				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		//Second csv-Files
+		List<File> csvFiles = null;
+		try {
+			csvFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "csv");
+		} catch (Exception e) {
+			throw new ParameterException("Cannot access working directory.\nReason: " + e.getMessage());
+		}
+		for (File logFile : csvFiles) {
 			try {
 				MessageDialog.getInstance().addMessage("Loading log file: " + FileUtils.getName(logFile) + "...   ");
 				logs.put(new LogFileViewer(logFile), logFile);
