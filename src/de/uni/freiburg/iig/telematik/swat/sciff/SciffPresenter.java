@@ -8,6 +8,8 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
+
 public class SciffPresenter {
 
 	protected JFrame result;
@@ -17,6 +19,49 @@ public class SciffPresenter {
 		//this.output = "<html><body>" + output.replaceAll("(\r\n|\n)", "<br />" + "</body></html>");
 		this.output = output;
 		makeWindow();
+	}
+
+	public SciffPresenter(CheckerReport report) {
+		StringBuilder b = new StringBuilder();
+		b.append(getReportOverview(report));
+		b.append("\r\n \r\n");
+		b.append(getWrongDetails(report));
+		b.append("\r\n \r\n");
+		b.append(getCorrectDetails(report));
+		this.output = b.toString();
+		makeWindow();
+
+	}
+
+
+	public StringBuilder getReportOverview(CheckerReport report) {
+		StringBuilder b = new StringBuilder();
+		b.append("Report:\r\n");
+		b.append("Number of correct instances: ");
+		b.append(report.correctInstances().size());
+		b.append("\r\n Number of wrong instances: ");
+		b.append(report.wrongInstances().size());
+		return b;
+	}
+
+	private StringBuilder getWrongDetails(CheckerReport report) {
+		StringBuilder b = new StringBuilder();
+		b.append("Wrong Instances: \r\n");
+		for (int i : report.wrongInstances()) {
+			b.append(report.getLog().getInstances().get(i).getName());
+			b.append("\r\n");
+		}
+		return b;
+	}
+
+	private StringBuilder getCorrectDetails(CheckerReport report) {
+		StringBuilder b = new StringBuilder();
+		b.append("Corect Instances: \r\n");
+		for (int i : report.correctInstances()) {
+			b.append(report.getLog().getInstances().get(i).getName());
+			b.append("\r\n");
+		}
+		return b;
 	}
 
 	public void show() {
