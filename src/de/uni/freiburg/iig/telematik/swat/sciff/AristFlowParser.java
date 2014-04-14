@@ -60,7 +60,7 @@ public class AristFlowParser implements ISciffLogReader {
 	}
 
 	/** Returns trace names **/
-	public Set<String> getUniqueActivityNames() {
+	public Set<String> getUniqueTraceNames() {
 		return traces.keySet();
 	}
 
@@ -79,7 +79,7 @@ public class AristFlowParser implements ISciffLogReader {
 
 	}
 
-	private void parseAllInstances(whichTimestamp useStartAndStop) throws IOException {
+	private void parseAllInstances(whichTimestamp useStartOrStop) throws IOException {
 		String nextLine;
 		while ((nextLine = br.readLine()) != null) {
 
@@ -94,7 +94,7 @@ public class AristFlowParser implements ISciffLogReader {
 			AristaFlowLogEntry endEntry;
 			AristaFlowLogEntry startEntry;
 			
-			switch (useStartAndStop) {
+			switch (useStartOrStop) {
 			case END:
 				endEntry = new AristaFlowLogEntry(entries, header, EventType.COMPLETE);
 				((AristaFlowLogTrace) traces.get(instance)).add(endEntry);
@@ -106,8 +106,8 @@ public class AristFlowParser implements ISciffLogReader {
 			case BOTH:
 				endEntry = new AristaFlowLogEntry(entries, header, EventType.COMPLETE);
 				startEntry = new AristaFlowLogEntry(entries, header, EventType.START);
-				((AristaFlowLogTrace) traces.get(instance)).add(endEntry);
 				((AristaFlowLogTrace) traces.get(instance)).add(startEntry);
+				((AristaFlowLogTrace) traces.get(instance)).add(endEntry);
 				break;
 			default:
 				break;
@@ -187,16 +187,19 @@ class AristaFlowLogSummary implements ISciffLogSummary {
 	}
 
 	@Override
+	/** returns unique trace names **/
 	public String[] getModelElements() {
-		Set<String> list = parser.getUniqueActivityNames();
-		int size = list.size();
-
-		String result[] = new String[size];
-
-		int i = 0;
-		for (String s : parser.getUniqueActivityNames()) {
-			result[i] = s;
-		}
+		Set<String> list = parser.getUniqueTraceNames();
+		String[] result = new String[list.size()];
+		result = list.toArray(result);
+		//		int size = list.size();
+		//
+		//		String result[] = new String[size];
+		//
+		//		int i = 0;
+		//		for (String s : parser.getUniqueTraceNames()) {
+		//			result[i] = s;
+		//		}
 
 		return result;
 	}
@@ -267,7 +270,7 @@ class AristaFlowLogTrace implements ISciffLogTrace {
 	}
 
 	public String toString() {
-		return name + " [" + entries.size() + " entries]";
+		return name + " (" + entries.size() + " entries)";
 	}
 
 }
