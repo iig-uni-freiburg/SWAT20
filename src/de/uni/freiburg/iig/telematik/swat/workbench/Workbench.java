@@ -9,6 +9,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -39,7 +40,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	
 	private static final Dimension PREFERRED_SIZE_WORKBENCH = new Dimension(1024,768);
 	private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200,768);
-	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(200,768);
+	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(250, 200);
 	private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(300,80);
 	private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(300, 550);
 	
@@ -146,12 +147,19 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		if(content == null){
 			content = new JPanel(new BorderLayout());
 			content.add(getSwatToolbar(), BorderLayout.NORTH);
-			content.add(getTreeView(), BorderLayout.WEST);
+
+			//content.add(getTreeView(), BorderLayout.WEST);
 			content.add(getPropertiesPanel(), BorderLayout.EAST);
 			JSplitPane centerPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
 			centerPanel.add(getTabView());
 			centerPanel.add(getMessagePanel());
-			content.add(centerPanel, BorderLayout.CENTER);
+			JSplitPane middlePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
+			JScrollPane scrollPane = new JScrollPane(getTreeView(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			middlePanel.add(scrollPane);
+			middlePanel.add(centerPanel);
+			//content.add(centerPanel, BorderLayout.CENTER);
+			content.add(middlePanel, BorderLayout.CENTER);
 		}
 		return content;
 	}
