@@ -26,6 +26,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParser;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParserInterface;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParsingFormat;
+import de.uni.freiburg.iig.telematik.jawl.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristFlowParser;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.sciff.SciffPresenter;
@@ -127,7 +128,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	private ISciffLogReader createMxmlParser() throws ParserException, ParameterException, IOException {
 		LogParserInterface parser = LogParser.getParser(file, LogParsingFormat.XES);
-		parser.parse(file, true);
+		parser.parse(file, ParsingMode.DISTINCT_TRACES);
 		return new LogParserAdapter(parser);
 
 	}
