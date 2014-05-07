@@ -46,5 +46,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/SWATPlugin_SCIFF"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SCIFF"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JAWL"/>
+	<classpathentry kind="lib" path="lib/postgresql-9.3-1101.jdbc4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

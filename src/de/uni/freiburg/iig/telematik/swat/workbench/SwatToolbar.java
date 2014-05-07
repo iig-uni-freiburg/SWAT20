@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
@@ -40,6 +42,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -128,13 +131,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
 		standardItems.add(getSwitchworkingDirectoryButton());
 		standardItems.add(getNewNetButton());
-//		standardItems.add(getNewCPNButton());
-//		standardItems.add(getNewIFNetButton());
 		standardItems.add(getImportButon());
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
-//		standardItems.add(getEditRadioButton());
-//		standardItems.add(getAnalysisRadioButton());
 		standardItems.add(getLolaButton());
+		standardItems.add(getAristaFlowButton());
 		
 //		ButtonGroup group = new ButtonGroup();
 //		group.add(getAnalysisRadioButton());
@@ -150,6 +150,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private Component getImportButon() throws ParameterException, PropertyException, IOException {
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.IMPORT);
 		return newButton;
+	}
+
+	private JButton getAristaFlowButton() throws ParameterException, PropertyException, IOException {
+		JButton aristaFlow = new SwatToolbarButton(ToolbarButtonType.ARISTAFLOW);
+		return aristaFlow;
 	}
 
 //	private JRadioButton getAnalysisRadioButton(){
@@ -188,17 +193,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 		return newButton;
 	}
-	
-//	private JButton getNewCPNButton() throws ParameterException, PropertyException, IOException{
-//		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_CPN);
-//		//newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_CPN));
-//		return newButton;
-//	}
-//	
-//	private JButton getNewIFNetButton() throws ParameterException, PropertyException, IOException{
-//		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW_IF);
-//		return newButton;
-//	}
 	
 	private String requestFileName(String message, String title){
 		return new FileNameDialog(SwingUtilities.getWindowAncestor(getParent()), message, title, false).requestInput();
@@ -299,7 +293,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				break;
 			case NEW:
 				SwatNewNetToolbar newNetTB = new SwatNewNetToolbar(tabView, treeView);
-			
 				PopUpToolBarAction newNetAction = new PopUpToolBarAction("new net", "new", newNetTB);
 				newNetAction.setButton(this);
 				addActionListener(newNetAction);
@@ -333,19 +326,43 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				break;
 			case DETECTIVE:
 				setToolTipText("Convert to Lola");
-				setHorizontalTextPosition(SwingConstants.CENTER);			setVerticalTextPosition(SwingConstants.BOTTOM);
+				setHorizontalTextPosition(SwingConstants.CENTER);
+				setVerticalTextPosition(SwingConstants.BOTTOM);
 				setIconTextGap(0);
 				setText("LOLA");
 				//addActionListener(new LolaTransformAction());
 				addActionListener(new LolaAnalyzeAction(tabView));
 				break;
+			case ARISTAFLOW:
+				setToolTipText("Analyze active AristaFlow instance");
+				addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						try {
+							AristaFlowSQLConnector con = new AristaFlowSQLConnector("127.0.0.1", "ADEPT2", "ADEPT2DB");
+							con.parse();
+							SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(con.getTempFile());
+							sciffAction.actionPerformed(arg0);
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+				});
 			}
 		}
 		
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW;
 	}
 
 

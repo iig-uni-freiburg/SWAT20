@@ -76,18 +76,26 @@ public class AristFlowParser implements ISciffLogReader {
 		}
 		getHeader();
 		parseAllInstances(useStartStopTimestamp);
+	}
 
+	private String sanitize(String s) {
+		s = s.replace("\"", "");
+		s = s.replace("%s", "");
+		s = s.replace("%", "");
+		return s;
 	}
 
 	private void parseAllInstances(whichTimestamp useStartOrStop) throws IOException {
 		String nextLine;
 		while ((nextLine = br.readLine()) != null) {
+			nextLine = sanitize(nextLine);
 
 			String[] entries = nextLine.split(";");
 			
 			//check if trace (instance) with given name already exists
 			String instance = entries[header.get(AristFlowTokens.INSTANCENAME)];
 			if (traces.isEmpty() || traces.get(instance) == null) {
+				//Insance is not available. Create new one
 				traces.put(instance, new AristaFlowLogTrace(instance));
 			}
 
@@ -117,10 +125,12 @@ public class AristFlowParser implements ISciffLogReader {
 
 	}
 
+	/** Scan first line for header info **/
 	private void getHeader() throws IOException {
 		this.header = new LinkedHashMap<AristFlowTokens, Integer>(5);
-		String first = br.readLine();
-		String[] tokens = first.split(";");
+		String first = br.readLine(); //read first line
+		first = sanitize(first);
+		String[] tokens = first.split(";"); //get individual columns
 
 		for (AristFlowTokens token : AristFlowTokens.values()) {
 			header.put(token, searchIndex(tokens, token));
@@ -128,7 +138,7 @@ public class AristFlowParser implements ISciffLogReader {
 		//return firstLine;
 	}
 
-	/** Returns the index where to find the token **/
+	/** find token in tokens and return index **/
 	private int searchIndex(String[] tokens, AristFlowTokens token) {
 		for (int i = 0; i < tokens.length; i++) {
 			if (tokens[i].toLowerCase().equals(token.toString().toLowerCase()))
@@ -141,8 +151,9 @@ public class AristFlowParser implements ISciffLogReader {
 	private boolean isAristaFlowCSV() {
 		try {
 			String firstLine = new BufferedReader(new java.io.FileReader(log)).readLine();
-			return firstLine.contains("START") && firstLine.contains("END") && firstLine.contains("NAME") && firstLine.contains("NODENAME")
-					&& firstLine.contains("INSTANCENAME");
+			return firstLine.toUpperCase().contains("START") && firstLine.toUpperCase().contains("END")
+					&& firstLine.toUpperCase().contains("NAME") && firstLine.toUpperCase().contains("NODENAME")
+					&& firstLine.toUpperCase().contains("INSTANCENAME");
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -282,7 +293,8 @@ class AristaFlowLogEntry implements ISciffLogEntry {
 	public EventType type;
 	public Date timestamp;
 	public Map<String, String> attributes = new HashMap<String, String>(5);
-	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss:SSS");
+	private SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss:SSS");
+	private SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSS");
 
 	public AristaFlowLogEntry(String[] entries, HashMap<AristFlowTokens, Integer> firstLine, EventType type) {
 
@@ -290,10 +302,16 @@ class AristaFlowLogEntry implements ISciffLogEntry {
 		element = entries[firstLine.get(AristFlowTokens.NODENAME)];
 		this.type = type;
 		try {
-			timestamp = formatter.parse(entries[firstLine.get(AristFlowTokens.END)]);
+			timestamp = formatter1.parse(entries[firstLine.get(AristFlowTokens.END)]);
 		} catch (java.text.ParseException e) {
-			System.out.println(this.getClass().getName() + ": Could not parse date: " + entries[firstLine.get(AristFlowTokens.END)]);
-			e.printStackTrace();
+			try {
+				timestamp = formatter2.parse(entries[firstLine.get(AristFlowTokens.END)]);
+			} catch (java.text.ParseException e1) {
+				System.out.println(this.getClass().getName() + ": Could not parse date: " + entries[firstLine.get(AristFlowTokens.END)]);
+				e1.printStackTrace();
+			}
+
+
 		}
 		attributes.put("Activity", entries[firstLine.get(AristFlowTokens.NODENAME)]);
 		attributes.put("User", entries[firstLine.get(AristFlowTokens.LASTNAME)]);

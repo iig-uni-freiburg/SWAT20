@@ -39,8 +39,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private static final long serialVersionUID = 6109154620023481119L;
 	
 	private static final Dimension PREFERRED_SIZE_WORKBENCH = new Dimension(1024,768);
-	private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200,768);
-	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(250, 200);
+	private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200, 768);
+	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(250, 500);
 	private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(300,80);
 	private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(300, 550);
 	
@@ -149,17 +149,30 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			content.add(getSwatToolbar(), BorderLayout.NORTH);
 
 			//content.add(getTreeView(), BorderLayout.WEST);
+
+			//content.add(new JScrollPane(getPropertiesPanel(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+			//		JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.EAST);
 			content.add(getPropertiesPanel(), BorderLayout.EAST);
+			//content.add(propertieSplit, BorderLayout.EAST);
 			JSplitPane centerPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
 			centerPanel.add(getTabView());
 			centerPanel.add(getMessagePanel());
 			JSplitPane middlePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
 			JScrollPane scrollPane = new JScrollPane(getTreeView(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			scrollPane.setSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			middlePanel.add(scrollPane);
 			middlePanel.add(centerPanel);
+			//middlePanel.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
+			//middlePanel.add(propertieSplit);
 			//content.add(centerPanel, BorderLayout.CENTER);
+			//JSplitPane thirdSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
+			//thirdSplit.add(middlePanel);
+			//thirdSplit.add(getPropertiesPanel());
+			//thirdSplit.setSize(PREFERRED_SIZE_PROPERTIES_PANEL);
+			//thirdSplit.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 			content.add(middlePanel, BorderLayout.CENTER);
+			//content.add(thirdSplit, BorderLayout.CENTER);
 		}
 		return content;
 	}
@@ -176,6 +189,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			properties = new JPanel(new BorderLayout());
 			properties.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 			properties.setMinimumSize(PREFERRED_SIZE_PROPERTIES_PANEL);
+			properties.setSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 		}
 		return properties;
 	}
@@ -239,6 +253,22 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	}
 
 	public static void main(String[] args) {
+		if (args.length == 1) {
+			try {
+				SwatProperties.getInstance().setWorkingDirectory(args[0]);
+				//SwatProperties.getInstance().store();
+			} catch (ParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		new Workbench();
 	}
 
@@ -321,6 +351,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	@Override
 	public void operatingModeChanged() {
+		try {
 		//Update Properties View
 		SwatComponent swatComponent = (SwatComponent) getTabView().getSelectedComponent();
 		getPropertiesPanel().removeAll();
@@ -330,6 +361,9 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 		//Update Toolbar
 		updateToolbar();
+		} catch (NullPointerException e) {
+
+		}
 	}
 
 	/** check if a PNEditor got activated and update Toolbar if needed **/

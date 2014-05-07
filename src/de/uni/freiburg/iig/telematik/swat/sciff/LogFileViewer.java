@@ -14,7 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
+import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -59,9 +61,24 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 	public JButton getSciffButton() {
 		if (runWithSciff == null) {
 			runWithSciff = new JButton("Analyze with SCIFF");
-				ImageIcon icon = new ImageIcon(LogFileViewer.this.getClass().getResource(
-					String.format(iconNameFormat, ICON_SIZE, "search", ICON_SIZE)));
-			runWithSciff.setIcon(icon);
+			ImageIcon icon;
+			try {
+				icon = IconFactory.getIcon("search");
+				runWithSciff.setIcon(icon);
+			} catch (ParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//ImageIcon icon = new ImageIcon(LogFileViewer.this.getClass().getResource(
+			//		String.format(iconNameFormat, ICON_SIZE, "search", ICON_SIZE)));
+
+
 			runWithSciff.addActionListener(new SciffAnalyzeAction(file));
 		}
 		return runWithSciff;

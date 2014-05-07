@@ -32,7 +32,7 @@ public class LolaAnalyzeAction<K> extends AbstractAction {
 			HashMap<LOLA_TEST, String> result = lola.analyse();
 			if (result == null)
 				return;
-			LolaPresenter presenter = new LolaPresenter(hashToString(result));
+			LolaPresenter presenter = new LolaPresenter(hashMapToString(result));
 			presenter.show();
 
 		} catch (ClassCastException e) {
@@ -45,7 +45,7 @@ public class LolaAnalyzeAction<K> extends AbstractAction {
 	}
 	
 
-	private String hashToString(HashMap<LOLA_TEST, String> hashMap) {
+	private String hashMapToString(HashMap<LOLA_TEST, String> hashMap) {
 		StringBuilder builder = new StringBuilder();
 		for (Map.Entry<LOLA_TEST, String> entry : hashMap.entrySet()) {
 			builder.append(entry.getKey().toString());

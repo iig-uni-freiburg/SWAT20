@@ -69,14 +69,10 @@ public class SciffAnalyzeAction extends AbstractAction {
 				sciff.show();
 				//System.out.println("Wrong: " + reader.getInstance(report.wrongInstances().get(0)).getName());
 			} catch (ParserException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JDOMException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			// TODO: implement system call to sciff
 		} catch (ParameterException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
