@@ -27,8 +27,8 @@ import de.uni.freiburg.iig.telematik.jawl.parser.LogParser;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParserInterface;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.jawl.parser.ParsingMode;
-import de.uni.freiburg.iig.telematik.swat.sciff.AristFlowParser;
-import de.uni.freiburg.iig.telematik.swat.sciff.AristFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser;
+import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.sciff.SciffPresenter;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
@@ -117,7 +117,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 	}
 
 	private ISciffLogReader createAristaFlowParser() throws IOException {
-		AristFlowParser parser = new AristFlowParser(file);
+		AristaFlowParser parser = new AristaFlowParser(file);
 		parser.parse(whichTimestamp.BOTH);
 		return parser;
 	}

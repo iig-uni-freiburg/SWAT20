@@ -22,7 +22,7 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogSummary;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
 
-public class AristFlowParser implements ISciffLogReader {
+public class AristaFlowParser implements ISciffLogReader {
 	private File log;
 	private LinkedHashMap<String, ISciffLogTrace> traces = new LinkedHashMap<String, ISciffLogTrace>();
 	private BufferedReader br;
@@ -33,7 +33,7 @@ public class AristFlowParser implements ISciffLogReader {
 		File test = new File("/home/richard/ReisekostenabrechnungSE.csv");
 		System.out.println("using file " + test.getAbsolutePath());
 		try {
-			AristFlowParser parser = new AristFlowParser(test);
+			AristaFlowParser parser = new AristaFlowParser(test);
 			parser.parse(whichTimestamp.BOTH);
 			System.out.println(parser.traces.keySet());
 			System.out.println("Erster Eintrag: ");
@@ -64,7 +64,7 @@ public class AristFlowParser implements ISciffLogReader {
 		return traces.keySet();
 	}
 
-	public AristFlowParser(File logFile) throws FileNotFoundException {
+	public AristaFlowParser(File logFile) throws FileNotFoundException {
 		this.log = logFile;
 		this.br = new BufferedReader(new java.io.FileReader(log));
 		//parse();
@@ -191,9 +191,9 @@ public class AristFlowParser implements ISciffLogReader {
 }
 
 class AristaFlowLogSummary implements ISciffLogSummary {
-	private AristFlowParser parser;
+	private AristaFlowParser parser;
 
-	public AristaFlowLogSummary(AristFlowParser parser) {
+	public AristaFlowLogSummary(AristaFlowParser parser) {
 		this.parser = parser;
 	}
 

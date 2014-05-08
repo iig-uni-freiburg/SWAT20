@@ -245,6 +245,46 @@ public class SwatProperties extends AbstractProperties{
 		setProperty(SwatProperty.ICON_SIZE, size.toString());
 	}
 	
+	//-------  SQL Properties --------------------------------------------------------------
+	
+	public String getAristaFlowURL() {
+		String result = getProperty(SwatProperty.ARISTA_FLOW_URL);
+		if (result == null || result == "")
+			result = "jdbc:postgresql://127.0.0.1:5432/InvoiceLocal";
+		return result;
+	}
+	
+	public void setAristaFlowURL(String url) {
+		Validate.notNull(url);
+		setProperty(SwatProperty.ARISTA_FLOW_URL, url);
+	}
+
+	public String getAristaFlowUser() {
+		String result = getProperty(SwatProperty.ARISTA_FLOW_USER);
+		if (result == null || result == "")
+			result = "ADEPT2";
+		return result;
+	}
+
+	public void setAristaFlowUser(String user) {
+		Validate.notNull(user);
+		setProperty(SwatProperty.ARISTA_FLOW_USER, user);
+	}
+
+	public String getAristaFlowPass() {
+		String result = getProperty(SwatProperty.ARISTA_FLOW_PASS);
+		if (result == null || result == "")
+			result = "ADEPT2DB";
+		return result;
+	}
+
+	public void setAristaFlowPass(String pass) {
+		Validate.notNull(pass);
+		setProperty(SwatProperty.ARISTA_FLOW_PASS, pass);
+	}
+
+	//--------------------------------------------------------------------------------------
+	
 	//------- Default Properties -----------------------------------------------------------
 	
 	@Override

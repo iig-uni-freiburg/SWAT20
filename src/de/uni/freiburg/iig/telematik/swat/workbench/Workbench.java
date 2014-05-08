@@ -339,29 +339,27 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	public void activeTabChanged(int index, SwatComponent component) {
 		if (index < 0)
 			return; //no tabs inside
-		// Update Properties Panel according to active tab
+		// Update Properties Panel & Toolbar according to active tab
 		getPropertiesPanel().removeAll();
 		getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
 		//pack();
 		getPropertiesPanel().repaint();
 
-		//Update Toolbar
 		updateToolbar();
 	}
 
 	@Override
 	public void operatingModeChanged() {
 		try {
-		//Update Properties View
+			//Update Properties View & Toolbar
 		SwatComponent swatComponent = (SwatComponent) getTabView().getSelectedComponent();
 		getPropertiesPanel().removeAll();
 		getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 		pack();
 		//getPropertiesPanel().repaint();
-
-		//Update Toolbar
 		updateToolbar();
 		} catch (NullPointerException e) {
+			//Can happens when Arista-Flow analysis is called with no active tabs
 
 		}
 	}

@@ -9,7 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import de.uni.freiburg.iig.telematik.swat.sciff.AristFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /** Reads AristaFlow database and converts to csv file **/
 public class AristaFlowSQLConnector {
@@ -22,10 +23,23 @@ public class AristaFlowSQLConnector {
 	private File tempFile = new File(System.getProperty("java.io.tmpdir") + "/aristaFlowExport.csv");
 
 	public static void main(String[] args) {
+
+		try {
+			SwatProperties prop = SwatProperties.getInstance();
+			prop.setAristaFlowURL("jdbc:postgresql://127.0.0.1:5432/InvoiceLocal");
+			prop.setAristaFlowUser("ADEPT2");
+			prop.setAristaFlowPass("ADEPT2DB");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		AristaFlowSQLConnector con;
 		try {
-			con = new AristaFlowSQLConnector("127.0.0.1", "ADEPT2", "ADEPT2DB");
-			con.parse();
+			//con = new AristaFlowSQLConnector("127.0.0.1", "ADEPT2", "ADEPT2DB");
+			con = new AristaFlowSQLConnector();
+			AristaFlowParser result = con.parse();
+			System.out.println(result);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,23 +54,42 @@ public class AristaFlowSQLConnector {
 
 	}
 
-	public AristaFlowSQLConnector(String server, String user, String password) throws SQLException, ClassNotFoundException, IOException {
+	public AristaFlowSQLConnector(String ip, String user, String password) throws SQLException, ClassNotFoundException, IOException {
 		//Create PostreSQL connection
 		Class.forName("org.postgresql.Driver");
-		con = DriverManager.getConnection("jdbc:postgresql://" + server + "/InvoiceLocal", user, password);
+		con = DriverManager.getConnection("jdbc:postgresql://" + ip + "/InvoiceLocal", user, password);
 		//con = DriverManager.getConnection(server + "/InvoiceLocal", user, password);
 		st = con.createStatement();
 		fileWriter = new FileWriter(tempFile);
 	}
 
-	public AristFlowParser parse() throws SQLException, IOException {
+	/**
+	 * Reads Credentials from Properties
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 * @throws SQLException
+	 **/
+	public AristaFlowSQLConnector() throws ClassNotFoundException, IOException, SQLException {
+		//Create PostreSQL connection
+		Class.forName("org.postgresql.Driver");
+		String url = SwatProperties.getInstance().getAristaFlowURL();
+		String user = SwatProperties.getInstance().getAristaFlowUser();
+		String pass = SwatProperties.getInstance().getAristaFlowPass();
+		con = DriverManager.getConnection(url, user, pass);
+		//con = DriverManager.getConnection(server + "/InvoiceLocal", user, password);
+		st = con.createStatement();
+		fileWriter = new FileWriter(tempFile);
+	}
+
+	public AristaFlowParser parse() throws SQLException, IOException {
 		createFirstLine();
 		ResultSet rs = st.executeQuery(QUERY);
 		while (rs.next()) {
 			writeLine(rs);
 		}
 		fileWriter.close();
-		AristFlowParser parser = new AristFlowParser(tempFile);
+		AristaFlowParser parser = new AristaFlowParser(tempFile);
 		parser.parse(whichTimestamp.BOTH);
 
 		return parser;
