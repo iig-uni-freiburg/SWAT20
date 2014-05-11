@@ -80,6 +80,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private void setLookAndFeel() {
 		if (System.getProperty("os.name").toLowerCase().contains("nux")) {
 			try {
+				setLocationByPlatform(true);
 				UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 			} catch (Exception e) {
 				MessageDialog.getInstance().addMessage("Could not set Look and Feel. Using standard");
@@ -137,13 +138,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		setPreferredSize(PREFERRED_SIZE_WORKBENCH);
 		setResizable(true);
 		
-		setContentPane(getContent2());
+		setContentPane(getContent());
 		setJMenuBar(getSwatMenu());
 		pack();
 		setVisible(true);
 	}
 	
-	private JComponent getContent2(){
+	private JComponent getContent(){
 		if(content == null){
 			content = new JPanel(new BorderLayout());
 			content.add(getSwatToolbar(), BorderLayout.NORTH);
@@ -154,7 +155,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			//		JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.EAST);
 			content.add(getPropertiesPanel(), BorderLayout.EAST);
 			//content.add(propertieSplit, BorderLayout.EAST);
-			JSplitPane centerPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+			JSplitPane centerPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
 			centerPanel.add(getTabView());
 			centerPanel.add(getMessagePanel());
 			JSplitPane middlePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
@@ -163,6 +164,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			scrollPane.setSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			middlePanel.add(scrollPane);
 			middlePanel.add(centerPanel);
+
 			//middlePanel.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
 			//middlePanel.add(propertieSplit);
 			//content.add(centerPanel, BorderLayout.CENTER);
@@ -172,6 +174,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			//thirdSplit.setSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 			//thirdSplit.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 			content.add(middlePanel, BorderLayout.CENTER);
+			centerPanel.setDividerLocation(0.8);
 			//content.add(thirdSplit, BorderLayout.CENTER);
 		}
 		return content;
@@ -228,6 +231,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			messagePanel.add(getConsoleArea(), "Console");
 			messagePanel.setPreferredSize(PREFERRED_SIZE_CONSOLE_PANEL);
 			messagePanel.setMinimumSize(PREFERRED_SIZE_CONSOLE_PANEL);
+			messagePanel.setMaximumSize(PREFERRED_SIZE_CONSOLE_PANEL);
 		}
 		return messagePanel;
 	}

@@ -108,11 +108,10 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		JMenuItem exit = new JMenuItem("Exit");
 
 		try {
-		ImageIcon icon = new ImageIcon(SwatMenuBar.this.getClass().getResource(
-				String.format(iconNameFormat, ICON_SIZE, "close_window", ICON_SIZE)));
-		exit.setIcon(icon);
+			ImageIcon icon = new ImageIcon(this.getClass().getResource(String.format(iconNameFormat, ICON_SIZE, "close_window", ICON_SIZE)));
+			exit.setIcon(icon);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//do nothing. Could not load icon
 		}
 
 		exit.addActionListener(new ActionListener() {

@@ -29,6 +29,7 @@ public class AristaFlowSQLConnector {
 			prop.setAristaFlowURL("jdbc:postgresql://127.0.0.1:5432/InvoiceLocal");
 			prop.setAristaFlowUser("ADEPT2");
 			prop.setAristaFlowPass("ADEPT2DB");
+			prop.store();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

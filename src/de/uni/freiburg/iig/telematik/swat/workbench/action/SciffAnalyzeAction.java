@@ -37,9 +37,15 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	private static final long serialVersionUID = 9111775745565090191L;
 	private File file;
+	private ISciffLogReader reader;
 
 	public SciffAnalyzeAction(File file) {
 		this.file = file;
+	}
+
+	public SciffAnalyzeAction(ISciffLogReader reader) {
+		this.reader = reader;
+
 	}
 
 	@Override
@@ -49,8 +55,8 @@ public class SciffAnalyzeAction extends AbstractAction {
 			System.out.println("Analayze " + file.getCanonicalPath());
 
 			try {
-				
-				ISciffLogReader reader = getReader();
+				if (reader == null && file != null)
+					reader = getReader();
 
 				//CompositeRule rule = org.processmining.analysis.sciffchecker.gui.SciffRuleDialog.showRuleDialog(null);
 				CompositeRule rule;

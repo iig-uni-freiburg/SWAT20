@@ -335,27 +335,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				break;
 			case ARISTAFLOW:
 				setToolTipText("Analyze active AristaFlow instance");
-				addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						try {
-							AristaFlowSQLConnector con = new AristaFlowSQLConnector("127.0.0.1", "ADEPT2", "ADEPT2DB");
-							con.parse();
-							SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(con.getTempFile());
-							sciffAction.actionPerformed(arg0);
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (ClassNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-					}
-				});
+				addActionListener(new AristaFlowAction());
 			}
 		}
 		
@@ -363,6 +343,30 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	private enum ToolbarButtonType {
 		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW;
+	}
+
+	class AristaFlowAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				AristaFlowSQLConnector con = new AristaFlowSQLConnector();
+				con.parse();
+				SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(con.getTempFile());
+				sciffAction.actionPerformed(e);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (IOException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+
+		}
+
 	}
 
 
