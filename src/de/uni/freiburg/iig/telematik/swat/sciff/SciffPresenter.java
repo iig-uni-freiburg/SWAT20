@@ -1,10 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.sciff;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.ScrollPane;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -14,7 +14,11 @@ import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
+import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogSummary;
+import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
 import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
+
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 
 public class SciffPresenter {
 
@@ -72,6 +76,7 @@ public class SciffPresenter {
 	}
 
 	public void show() {
+		result.setLocationByPlatform(true);
 		result.setVisible(true);
 	}
 
@@ -83,10 +88,11 @@ public class SciffPresenter {
 		result.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		result.setSize(new Dimension(600, 600));
 		ScrollPane scrollPane = new ScrollPane();
-		result.add(scrollPane);
 		JTextArea area = new JTextArea(output);
 		area.setEditable(false);
 		scrollPane.add(area);
+		result.add(scrollPane, BorderLayout.CENTER);
+		result.add(getBottomButtons(), BorderLayout.PAGE_END);
 		//result.addWindowListener(new CloseListener());
 		//split.add(getBottomButtons());
 		//split.setDividerLocation(0.05);
@@ -98,30 +104,63 @@ public class SciffPresenter {
 		pane.setLayout(new GridLayout(1, 2));
 		JButton correct = new JButton("Analyse " + report.correctInstances().size() + " CORRECT Instances");
 		//correct.addActionListener(new SciffAnalyzeAction(report.getLog().getInstances(report.correctInstances())));
+		correct.addActionListener(new SciffAnalyzeAction(new LogBuilder(report.getLog(), report.correctInstances())));
+		report.correctInstances();
 		pane.add(correct);
 		JButton wrong = new JButton("Analyse " + report.wrongInstances().size() + " WRONG Instances");
+		wrong.addActionListener(new SciffAnalyzeAction(new LogBuilder(report.getLog(), report.wrongInstances())));
 		pane.add(wrong);
 		//pane.pack();
 		return pane;
 	}
 
-	/** TODO: get new LogReader with specific entries **/
-	private ISciffLogReader extractLog(List<Integer> instances) {
-		report.getLog().getInstances();
+}
 
+class LogBuilder implements ISciffLogReader {
+	ArrayList<ISciffLogTrace> traces = new ArrayList<ISciffLogTrace>();
+
+	public LogBuilder(List<ISciffLogTrace> listOfTraces) {
+		addTraces(listOfTraces);
+	}
+
+	public LogBuilder(ISciffLogReader log, List<Integer> tracesWithinLog) {
+		for (int i : tracesWithinLog) {
+			addTrace(log.getInstance(i));
+		}
+	}
+
+	@Override
+	public List<ISciffLogTrace> getInstances() {
+		// TODO Auto-generated method stub
+		return traces;
+	}
+
+	@Override
+	public ISciffLogTrace getInstance(int index) {
+		// TODO Auto-generated method stub
+		return traces.get(index);
+	}
+
+	@Override
+	public int traceCount() {
+		// TODO Auto-generated method stub
+		return traces.size();
+	}
+
+	@Override
+	public ISciffLogSummary getSummary() {
+		// TODO Auto-generated method stub
 		return null;
-
 	}
 
-	private class CloseListener extends WindowAdapter {
-		@Override
-		public void windowDeactivated(WindowEvent arg0) {
-			result.dispose();
-		}
+	public void addTrace(ISciffLogTrace trace) {
+		traces.add(trace);
+	}
 
-		@Override
-		public void windowClosing(WindowEvent arg0) {
-			result.dispose();
+	public void addTraces(List<ISciffLogTrace> listOfTraces) {
+		for (ISciffLogTrace trace : listOfTraces) {
+			addTrace(trace);
 		}
 	}
+
 }

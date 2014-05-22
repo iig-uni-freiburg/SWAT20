@@ -50,10 +50,12 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		try {
-			SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
-			System.out.println("Analayze " + file.getCanonicalPath());
+		SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
 
+
+		try {
+			if (file != null)
+				System.out.println("Analayze " + file.getCanonicalPath());
 			try {
 				if (reader == null && file != null)
 					reader = getReader();

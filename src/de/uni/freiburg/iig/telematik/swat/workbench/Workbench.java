@@ -201,6 +201,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		if(tabView == null){
 			tabView = new SwatTabView();
 			tabView.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
+			tabView.setPreferredSize(MINIMUM_SIZE_TAB_PANEL);
 			tabView.addTabViewListener(this);
 		}
 		return tabView;
@@ -359,7 +360,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		SwatComponent swatComponent = (SwatComponent) getTabView().getSelectedComponent();
 		getPropertiesPanel().removeAll();
 		getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
-		pack();
+			//pack();
+			getPropertiesPanel().repaint();
 		//getPropertiesPanel().repaint();
 		updateToolbar();
 		} catch (NullPointerException e) {

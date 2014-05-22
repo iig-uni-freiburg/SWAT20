@@ -27,7 +27,7 @@ public class AristaFlowParser implements ISciffLogReader {
 	private LinkedHashMap<String, ISciffLogTrace> traces = new LinkedHashMap<String, ISciffLogTrace>();
 	private BufferedReader br;
 
-	private LinkedHashMap<AristFlowTokens, Integer> header;
+	private LinkedHashMap<AristaFlowTokens, Integer> header;
 
 	public static void main(String args[]) {
 		File test = new File("/home/richard/ReisekostenabrechnungSE.csv");
@@ -41,8 +41,8 @@ public class AristaFlowParser implements ISciffLogReader {
 
 			while (iter.hasNext()) {
 				ISciffLogTrace trace = iter.next();
-				System.out.println(trace.getName() + ": ");
-				System.out.println(trace.get(0));
+				//System.out.println(trace.getName() + ": ");
+				//System.out.println(trace.get(0));
 			}
 
 			System.out.println("Instances: ");
@@ -63,6 +63,7 @@ public class AristaFlowParser implements ISciffLogReader {
 	public Set<String> getUniqueTraceNames() {
 		return traces.keySet();
 	}
+
 
 	public AristaFlowParser(File logFile) throws FileNotFoundException {
 		this.log = logFile;
@@ -87,33 +88,33 @@ public class AristaFlowParser implements ISciffLogReader {
 
 	private void parseAllInstances(whichTimestamp useStartOrStop) throws IOException {
 		String nextLine;
+		AristaFlowLogEntry endEntry;
+		AristaFlowLogEntry startEntry;
 		while ((nextLine = br.readLine()) != null) {
 			nextLine = sanitize(nextLine);
 
-			String[] entries = nextLine.split(";");
+			String[] currentLine = nextLine.split(";");
 			
 			//check if trace (instance) with given name already exists
-			String instance = entries[header.get(AristFlowTokens.INSTANCENAME)];
+			String instance = currentLine[header.get(AristaFlowTokens.INSTANCENAME)];
 			if (traces.isEmpty() || traces.get(instance) == null) {
 				//Insance is not available. Create new one
 				traces.put(instance, new AristaFlowLogTrace(instance));
 			}
 
-			AristaFlowLogEntry endEntry;
-			AristaFlowLogEntry startEntry;
-			
+
 			switch (useStartOrStop) {
 			case END:
-				endEntry = new AristaFlowLogEntry(entries, header, EventType.COMPLETE);
+				endEntry = new AristaFlowLogEntry(currentLine, header, EventType.COMPLETE);
 				((AristaFlowLogTrace) traces.get(instance)).add(endEntry);
 				break;
 			case START:
-				startEntry = new AristaFlowLogEntry(entries, header, EventType.START);
+				startEntry = new AristaFlowLogEntry(currentLine, header, EventType.START);
 				((AristaFlowLogTrace) traces.get(instance)).add(startEntry);
 				break;
 			case BOTH:
-				endEntry = new AristaFlowLogEntry(entries, header, EventType.COMPLETE);
-				startEntry = new AristaFlowLogEntry(entries, header, EventType.START);
+				endEntry = new AristaFlowLogEntry(currentLine, header, EventType.COMPLETE);
+				startEntry = new AristaFlowLogEntry(currentLine, header, EventType.START);
 				((AristaFlowLogTrace) traces.get(instance)).add(startEntry);
 				((AristaFlowLogTrace) traces.get(instance)).add(endEntry);
 				break;
@@ -127,19 +128,19 @@ public class AristaFlowParser implements ISciffLogReader {
 
 	/** Scan first line for header info **/
 	private void getHeader() throws IOException {
-		this.header = new LinkedHashMap<AristFlowTokens, Integer>(5);
+		this.header = new LinkedHashMap<AristaFlowTokens, Integer>(5);
 		String first = br.readLine(); //read first line
-		first = sanitize(first);
+		first = sanitize(first); //sanitize header
 		String[] tokens = first.split(";"); //get individual columns
 
-		for (AristFlowTokens token : AristFlowTokens.values()) {
+		for (AristaFlowTokens token : AristaFlowTokens.values()) {
 			header.put(token, searchIndex(tokens, token));
 		}
 		//return firstLine;
 	}
 
 	/** find token in tokens and return index **/
-	private int searchIndex(String[] tokens, AristFlowTokens token) {
+	private int searchIndex(String[] tokens, AristaFlowTokens token) {
 		for (int i = 0; i < tokens.length; i++) {
 			if (tokens[i].toLowerCase().equals(token.toString().toLowerCase()))
 				return i;
@@ -296,26 +297,34 @@ class AristaFlowLogEntry implements ISciffLogEntry {
 	private SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss:SSS");
 	private SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSS");
 
-	public AristaFlowLogEntry(String[] entries, HashMap<AristFlowTokens, Integer> firstLine, EventType type) {
+	public AristaFlowLogEntry(String[] entries, HashMap<AristaFlowTokens, Integer> firstLine, EventType type) {
 
-		originator = entries[firstLine.get(AristFlowTokens.NAME)];
-		element = entries[firstLine.get(AristFlowTokens.NODENAME)];
+		originator = entries[firstLine.get(AristaFlowTokens.NAME)];
+		element = entries[firstLine.get(AristaFlowTokens.NODENAME)];
 		this.type = type;
+		AristaFlowTokens token;
+
+		if (type.equals(EventType.START))
+			token = AristaFlowTokens.START;
+		else
+			token = AristaFlowTokens.END;
+
 		try {
-			timestamp = formatter1.parse(entries[firstLine.get(AristFlowTokens.END)]);
+			timestamp = formatter1.parse(entries[firstLine.get(token)]);
 		} catch (java.text.ParseException e) {
 			try {
-				timestamp = formatter2.parse(entries[firstLine.get(AristFlowTokens.END)]);
+				timestamp = formatter2.parse(entries[firstLine.get(token)]);
 			} catch (java.text.ParseException e1) {
-				System.out.println(this.getClass().getName() + ": Could not parse date: " + entries[firstLine.get(AristFlowTokens.END)]);
+				System.out.println(this.getClass().getName() + ": Could not parse date: " + entries[firstLine.get(token)]);
 				e1.printStackTrace();
 			}
 
 
 		}
-		attributes.put("Activity", entries[firstLine.get(AristFlowTokens.NODENAME)]);
-		attributes.put("User", entries[firstLine.get(AristFlowTokens.LASTNAME)]);
+		attributes.put("Activity", entries[firstLine.get(AristaFlowTokens.NODENAME)]);
+		attributes.put("User", entries[firstLine.get(AristaFlowTokens.LASTNAME)]);
 	}
+
 
 	@Override
 	public String getElement() {
@@ -358,10 +367,11 @@ class AristaFlowLogEntry implements ISciffLogEntry {
 
 
 
-enum AristFlowTokens {
+enum AristaFlowTokens {
 	START, END, NODENAME, NAME, INSTANCENAME, LASTNAME;
 }
 
 enum EventType {
 	COMPLETE, START, END;
 }
+
