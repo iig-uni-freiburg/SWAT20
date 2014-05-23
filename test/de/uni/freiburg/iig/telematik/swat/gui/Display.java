@@ -1,4 +1,4 @@
-package gui;
+package de.uni.freiburg.iig.telematik.swat.gui;
 
 public class Display {
 

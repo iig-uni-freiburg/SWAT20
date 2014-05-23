@@ -13,8 +13,8 @@ import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcher;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatPropertyChangeListener;
 
 

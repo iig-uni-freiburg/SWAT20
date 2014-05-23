@@ -9,7 +9,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class SaveAction extends AbstractPNEditorAction {
 

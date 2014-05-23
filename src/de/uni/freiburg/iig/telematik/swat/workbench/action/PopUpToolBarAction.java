@@ -20,7 +20,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.PopupToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBarDialog;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchPopupToolBar;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;

@@ -22,7 +22,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class LineColorSelectionAction extends AbstractPNEditorAction {

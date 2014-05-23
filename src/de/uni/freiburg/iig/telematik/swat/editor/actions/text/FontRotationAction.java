@@ -11,7 +11,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class FontRotationAction extends AbstractPNEditorAction {
 	

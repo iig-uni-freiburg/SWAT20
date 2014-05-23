@@ -67,7 +67,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.HtmlTextShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.RectangleShape;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
 

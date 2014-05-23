@@ -1,4 +1,4 @@
-package gui;
+package de.uni.freiburg.iig.telematik.swat.gui;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

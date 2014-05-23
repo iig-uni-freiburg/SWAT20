@@ -46,7 +46,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.UpdateTokenChanges;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class ConstraintsConfigurer extends JDialog {
 	private static final double TOKEN_ROW_WIDTH = 300;

@@ -15,8 +15,8 @@ import javax.swing.JScrollPane;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;

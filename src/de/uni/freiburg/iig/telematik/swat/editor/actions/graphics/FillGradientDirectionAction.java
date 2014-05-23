@@ -22,8 +22,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory.IconSize;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperty;
 

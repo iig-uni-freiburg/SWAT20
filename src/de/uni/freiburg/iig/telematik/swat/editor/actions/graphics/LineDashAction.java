@@ -13,7 +13,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 @SuppressWarnings("serial")
 public class LineDashAction extends AbstractPNEditorAction {

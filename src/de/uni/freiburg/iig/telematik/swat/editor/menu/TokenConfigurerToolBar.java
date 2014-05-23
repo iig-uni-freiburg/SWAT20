@@ -55,7 +55,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenColorChange;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class TokenConfigurerToolBar extends JToolBar {
 

@@ -41,8 +41,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.FontToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.PopupToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBarDialog;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory.IconSize;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class NodeToolBarAction extends PopUpToolBarAction {

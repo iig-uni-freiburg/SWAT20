@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.resources.icons;
+package de.uni.freiburg.iig.telematik.swat.icons;
 
 import java.awt.Image;
 import java.io.IOException;

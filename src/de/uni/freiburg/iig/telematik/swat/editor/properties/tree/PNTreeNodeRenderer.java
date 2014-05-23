@@ -29,8 +29,8 @@ import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory.IconSize;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {

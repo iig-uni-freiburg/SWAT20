@@ -29,7 +29,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenColorChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class TokenColorSelectionAction extends AbstractPNEditorAction {

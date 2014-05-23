@@ -1,4 +1,4 @@
-package gui;
+package de.uni.freiburg.iig.telematik.swat.gui;
 
 //: c14:Separation.java
 //Separating GUI logic and business objects.

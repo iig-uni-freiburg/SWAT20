@@ -11,7 +11,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 @SuppressWarnings("serial")
 public class LineShapeAction extends AbstractPNEditorAction {

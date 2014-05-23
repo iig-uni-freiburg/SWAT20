@@ -1,7 +1,7 @@
 /**
  * 
  */
-package gui;
+package de.uni.freiburg.iig.telematik.swat.gui;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
