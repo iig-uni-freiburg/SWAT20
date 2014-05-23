@@ -9,7 +9,6 @@ import java.util.Map;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.shape.mxDefaultTextShape;
-import com.mxgraph.shape.mxITextShape;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
