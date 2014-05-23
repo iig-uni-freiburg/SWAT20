@@ -82,8 +82,6 @@ public class SwatProperties extends AbstractProperties{
 		if(!directoryFile.exists()){
 			directoryFile.mkdir();
 		}
-
-
 	}
 	
 	public String getWorkingDirectory() throws PropertyException, ParameterException {

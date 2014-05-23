@@ -164,7 +164,6 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 				break;
 			default:
 				break;
-
 			}
 		}
 

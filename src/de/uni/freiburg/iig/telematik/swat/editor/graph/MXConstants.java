@@ -5,23 +5,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxPoint;
-import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.NodeGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Dimension;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.GradientRotation;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font;
@@ -30,8 +22,6 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Font.D
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Shape;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Position;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
@@ -68,6 +58,7 @@ public abstract class MXConstants {
 	public static final Color bluemid = new Color(214, 227, 242);
 	public static final Color bluehigh = new Color(182, 202, 228);
 	public static final Color blueBG = new Color(234, 243, 252);
+//	public static final Color blueBG = new Color(255, 255, 255);
 	public static final Color SHADOW_COLOR = Color.gray;
 	public static final Color DEFAULT_VALID_COLOR = MXConstants.bluehigh;
 	public static final Color DEFAULT_INVALID_COLOR = Color.RED;
@@ -198,12 +189,10 @@ public abstract class MXConstants {
 		String shortendStyle = convertedStyle.substring(1, convertedStyle.length() - 1);
 		return shortendStyle;
 	}
-	public static String decodePath(URI uriFile) { 
-	      return uriFile.getPath(); 
-	       
-	   } 
-
 	
+	public static String decodePath(URI uriFile) { 
+		return uriFile.getPath(); 
+	} 
 	
 	public static String getArcStyle(ArcGraphics arcGraphics, AnnotationGraphics annotationGraphics) throws ParameterException {
 		Hashtable<String, Object> style = new Hashtable<String, Object>();

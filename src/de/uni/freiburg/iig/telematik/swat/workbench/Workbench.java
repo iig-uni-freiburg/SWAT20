@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -28,7 +27,6 @@ import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
-import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
@@ -58,22 +56,9 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	public Workbench() {
 		super();
 		setLookAndFeel();
-		// Check if there is a path to a working directory.
-		if (!checkWorkingDirectory()) {
-			// There is no path and it is either not possible to set a path or the user aborted the corresponding dialog.
-			System.exit(0);
-		}
-		// Trigger the loading of swat components
-		SwatComponents.getInstance();
-		MessageDialog.getInstance().addMessage("Starting workbench...");
-
 		setUpGUI();
-
-		try {
-			SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
-			SwatState.getInstance().addListener(this);
-		} catch (ParameterException e) {}
-
+		SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
+		SwatState.getInstance().addListener(this);
 	}
 	
 	/** Changes Look and Feel if running on Linux **/
@@ -85,50 +70,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			} catch (Exception e) {
 				MessageDialog.getInstance().addMessage("Could not set Look and Feel. Using standard");
 			}
-		}
-	}
-
-	private boolean checkWorkingDirectory(){
-		try {
-			SwatProperties.getInstance().getWorkingDirectory();
-			return true;
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Internal exception: Cannot load/create swat property file:\n" + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
-			return false;
-		} catch (PropertyException e) {
-			// There is no recent working directory
-			// -> Let the user choose a path for the working directory
-			return chooseWorkingDirectory();
-		} catch (ParameterException e) {
-			// Value for wokring directory is invalid, possibly due to moved directories
-			// -> Remove entry for actual working directory
-			try {
-				SwatProperties.getInstance().removeWorkingDirectory();
-			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, "Internal exception: Cannot fix corrupt property entries:\n" + e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
-				return false;
-			}
-			// -> Let the user choose a path for the working directory
-			return chooseWorkingDirectory();
-		}
-	}
-	
-	private boolean chooseWorkingDirectory(){
-		String workingDirectory = WorkingDirectoryDialog.showDialog(Workbench.this);
-		if(workingDirectory == null)
-			return false;
-		try {
-			SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
-			return true;
-		} catch (ParameterException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-			return false;
-		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "I/O Exception", JOptionPane.ERROR_MESSAGE);
-			return false;
-		} catch (PropertyException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
-			return false;
 		}
 	}
 	

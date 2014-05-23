@@ -263,7 +263,8 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		getViewport().setBackground(MXConstants.blueBG);
 		setGridStyle(mxGraphComponent.GRID_STYLE_LINE);
 		setGridColor(MXConstants.bluehigh);
-		setGridVisible(true);
+//		setGridVisible(true);
+		setGridVisible(false);
 		setToolTips(true);
 		getGraphControl().addMouseListener(new GCMouseAdapter());
 		addMouseWheelListener(new GCMouseWheelListener());
