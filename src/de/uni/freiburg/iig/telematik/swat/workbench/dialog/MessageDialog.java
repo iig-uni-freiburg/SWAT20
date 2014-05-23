@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.dialog;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,19 +18,22 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+
 public class MessageDialog extends JDialog {
 
 	private static final long serialVersionUID = 463955903504300506L;
+	public static final Dimension PREFERRED_SIZE = new Dimension(500,500);
 	
 	private static MessageDialog instance = null;
 	
 	private DefaultListModel messageListModel = new DefaultListModel();
-	
 	private MessageDialog(){
+		super();
 		setTitle("Message Dialog");
 		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setPreferredSize(new Dimension(600,500));
+		setPreferredSize(PREFERRED_SIZE);
 		
 		getContentPane().setLayout(new BorderLayout());
 		
@@ -42,7 +46,7 @@ public class MessageDialog extends JDialog {
 		midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.X_AXIS));
 		midPanel.add(Box.createRigidArea(new Dimension(20,0)));
 		
-		JList list = new JList(messageListModel);
+		final JList list = new JList(messageListModel);
 		list.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -81,8 +85,11 @@ public class MessageDialog extends JDialog {
 		bottomPanel.add(Box.createHorizontalGlue());
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
+		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+		int wdwLeft = (int) ((screenSize.width/2.0) + ((PREFERRED_SIZE.width + Workbench.PREFERRED_SIZE_WORKBENCH.width + 10)/2.0)) - PREFERRED_SIZE.width;
+	    int wdwTop = screenSize.height / 2 - PREFERRED_SIZE.height / 2; 
 		pack();
-		setLocationRelativeTo(null);
+	    setLocation(wdwLeft, wdwTop);
 		setVisible(true);
 	}
 	
@@ -94,31 +101,19 @@ public class MessageDialog extends JDialog {
 	}
 	
 	public void addMessage(String message){
-		addMessage(message, true);
+		messageListModel.addElement(message);
 	}
 	
-	public void addMessage(String message, boolean printInNewLine){
-		if(message != null){
-			if(!printInNewLine){
-				messageListModel.set(messageListModel.size()-1, messageListModel.get(messageListModel.size()-1).toString().concat(message));
-			} else {
-				messageListModel.addElement(message);
-			}
-		}
-	}
-	
-	public void addMessageOverride(String message){
-		if(message != null){
-			messageListModel.removeElementAt(messageListModel.size()-1);
-			messageListModel.addElement(message);
-		}
-	}
+//	public static void main(String[] args) {
+//		MessageDialog.getInstance().addMessage("Trst1");
+//		MessageDialog.getInstance().newLine();
+//		MessageDialog.getInstance().addMessage("Trst2");
+//		MessageDialog.getInstance().addMessage("Trst3");
+//		MessageDialog.getInstance().addMessage("Trst4");
+//	}
 	
 	public void newLine(){
 		messageListModel.addElement(" ");
 	}
-	
-	public static void main(String[] args) {
-		new MessageDialog();
-	}
 }
+

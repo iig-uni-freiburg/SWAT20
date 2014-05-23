@@ -20,13 +20,13 @@ import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
 import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 import org.processmining.analysis.sciffchecker.logic.util.TimeGranularity;
 
-import adapter.LogParserAdapter;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParser;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParserInterface;
 import de.uni.freiburg.iig.telematik.jawl.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.jawl.parser.ParsingMode;
+import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.sciff.SciffPresenter;

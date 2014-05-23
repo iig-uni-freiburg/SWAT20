@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
+import java.awt.Toolkit;
 import java.io.IOException;
 
 import javax.swing.JComponent;
@@ -36,7 +37,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	private static final long serialVersionUID = 6109154620023481119L;
 	
-	private static final Dimension PREFERRED_SIZE_WORKBENCH = new Dimension(1024,768);
+	public static final Dimension PREFERRED_SIZE_WORKBENCH = new Dimension(1024,768);
 	private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200, 768);
 	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(250, 500);
 	private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(300,80);
@@ -57,6 +58,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		super();
 		setLookAndFeel();
 		setUpGUI();
+		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+		int wdwLeft = (int) ((screenSize.width/2.0) - ((PREFERRED_SIZE_WORKBENCH.width + MessageDialog.PREFERRED_SIZE.width + 10)/2.0));
+	    int wdwTop = screenSize.height / 2 - PREFERRED_SIZE_WORKBENCH.height / 2; 
+		pack();
+	    setLocation(wdwLeft, wdwTop);
 		SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
 		SwatState.getInstance().addListener(this);
 	}
