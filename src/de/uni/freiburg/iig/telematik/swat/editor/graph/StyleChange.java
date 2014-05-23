@@ -19,7 +19,7 @@ public class StyleChange extends mxStyleChange {
 	 * @param value 
 	 * @param key 
 	 * @param style 
-	 * @param cell 
+	 * @param name 
 	 * @param model 
 	 * 
 	 */

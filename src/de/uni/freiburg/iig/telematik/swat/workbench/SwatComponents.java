@@ -52,7 +52,7 @@ public class SwatComponents {
 		return instance;
 	}
 	
-	public void putIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net, File file) {
+	public void putIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, File file) {
 		nets.put(net, file);
 	}
 
@@ -68,7 +68,7 @@ public class SwatComponents {
 		for (File netFile : pnmlFiles) {
 			MessageDialog.getInstance().addMessage("Loading Petri net: " + FileUtils.getName(netFile) + "...   ");
 			try {
-				AbstractGraphicalPN<?,?,?,?,?,?,?> loadedNet = null;
+				AbstractGraphicalPN<?,?,?,?,?,?,?, ?, ?> loadedNet = null;
 				loadedNet = new PNMLParser().parse(netFile, SwatProperties.getInstance().getRequestNetType(), SwatProperties.getInstance().getPNValidation());
 				nets.put(loadedNet, netFile);
 				MessageDialog.getInstance().addMessage("Done.");
@@ -178,7 +178,7 @@ public class SwatComponents {
 	}
 
 	public boolean containsNetWithID(String name){
-		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> pn : getPetriNets()) {
+		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pn : getPetriNets()) {
 			if (name.equals(pn.getPetriNet().getName()))
 				return true;
 		}
@@ -189,7 +189,7 @@ public class SwatComponents {
 		return nets.containsValue(new File(name));
 	}
 
-	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetFromFileName(String name) {
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNetFromFileName(String name) {
 		// TODO: unimplemented
 		System.out.println("UNIMPLEMENTED: getNetFromFileName");
 		return null;
@@ -197,7 +197,7 @@ public class SwatComponents {
 
 	/** Stores every {@link AbstractGraphicalPN} within the project */
 	public void storeAllPetriNets() throws ParameterException {
-		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> pn : getPetriNets()) {
+		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pn : getPetriNets()) {
 			try {
 				storePetriNet(pn);
 			} catch (ParameterException e) {
@@ -223,7 +223,7 @@ public class SwatComponents {
 		File file;
 		//nets
 		if (currentComponent instanceof PNEditor) {
-		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> pnet : nets.keySet()) {
+		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pnet : nets.keySet()) {
 			if (pnet == ((PNEditor) currentComponent).getNetContainer())
 				return nets.get(pnet);
 		}}

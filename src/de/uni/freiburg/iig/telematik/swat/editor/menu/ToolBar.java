@@ -23,6 +23,7 @@ import com.mxgraph.view.mxGraphView;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PopUpToolBarAction;
 //import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAction;
@@ -85,6 +86,7 @@ public class ToolBar extends JToolBar {
 	private ExportToolBar exportToolbar;
 	private ZoomToolBar zoomToolbar;
 	private NodeToolBar nodeToolbar;
+	private TokenToolBar tokenToolbar;
 
 	// Tooltips
 	private String executionButtonTooltip = "execution mode";
@@ -94,6 +96,15 @@ public class ToolBar extends JToolBar {
 	private String exportButtonTooltip = "export to pdf";
 	private String undoTooltip = "undo";
 	private String redoTooltip = "redo";
+
+
+	
+
+
+	private PopUpToolBarAction tokenAction;
+
+
+	private JToggleButton tokenButton;
 
 	
 
@@ -128,6 +139,9 @@ public class ToolBar extends JToolBar {
 
 			zoomToolbar = new ZoomToolBar(pnEditor, JToolBar.HORIZONTAL);
 			zoomAction = new PopUpToolBarAction(pnEditor, "Zoom", "zoom_in", zoomToolbar);
+			if(pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() != NetType.PTNet){
+			tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
+			tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);}
 
 			setFloatable(false);
 
@@ -178,7 +192,12 @@ public class ToolBar extends JToolBar {
 		zoomButtonSettings();
 
 		zoomAction.setButton(zoomButton);
-
+		
+	if(tokenAction != null){
+		tokenButton = (JToggleButton) add(tokenAction, true);
+	
+		tokenAction.setButton(tokenButton);
+	}
 		doLayout();
 
 //		saveButton.setToolTipText(saveButtonTooltip);
@@ -334,6 +353,11 @@ public class ToolBar extends JToolBar {
 	public GraphicsToolBar getGraphicsToolbar() {
 		// TODO Auto-generated method stub
 		return graphicsToolbar;
+	}
+
+	public void updateGlobalTokenConfigurer() {
+		tokenToolbar.updateView();
+		
 	}
 
 }

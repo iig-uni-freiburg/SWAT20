@@ -132,7 +132,7 @@ public class PTNetEditor extends PNEditor {
 	
 
 	public static JPanel createFrame(JFrame frame) throws IOException, ParserException, ParameterException {
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML, false,false);
+		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML, false,false);
 		JPanel panel = new PTNetEditor(((GraphicalPTNet) netContainer), new File(PNML));
 		frame.setTitle("PTNet Editor");
 		frame.setSize(800, 500);

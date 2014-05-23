@@ -10,7 +10,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 
-public class TokenChange extends mxAtomicGraphModelChange {
+public class ConstraintChange extends mxAtomicGraphModelChange {
 
 	/**
 	 *
@@ -22,7 +22,7 @@ public class TokenChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public TokenChange()
+	public ConstraintChange()
 	{
 		this(null, null, null);
 	}
@@ -38,7 +38,7 @@ public class TokenChange extends mxAtomicGraphModelChange {
 //		this.previous = this.value;
 //	}
 
-	public TokenChange(PNGraph graph, String name, Multiset<String> multiSet) {
+	public ConstraintChange(PNGraph graph, String name, Multiset<String> multiSet) {
 		this.graph = graph;
 		this.name = name;
 		this.value = multiSet;
@@ -98,8 +98,7 @@ public class TokenChange extends mxAtomicGraphModelChange {
 	 */
 	public void execute()
 	{
-		System.out.println("I AM TOKENCHANGE");
-
+		System.out.println("I AM ConstraintCHANGE");
 		value = previous;
 		previous = valueForCellChanged(name,
 				previous);
@@ -107,9 +106,9 @@ public class TokenChange extends mxAtomicGraphModelChange {
 	
 	protected Multiset valueForCellChanged(String name, Multiset value)
 	{
-		Multiset<String> oldValue = graph.getPlaceStateForCell(name, null);
+		Multiset<String> oldValue = graph.getConstraintforArc(name, null);
 		try {
-			graph.updatePlaceState(name, value);
+			graph.updateConstraint(name, value);
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

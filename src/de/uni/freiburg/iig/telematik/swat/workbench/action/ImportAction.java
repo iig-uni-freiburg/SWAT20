@@ -25,7 +25,7 @@ public class ImportAction implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = PNParserDialog
+		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = PNParserDialog
 .showPetriNetDialog(SwingUtilities.getWindowAncestor(treeView
 				.getParent()));
 		if (net == null)

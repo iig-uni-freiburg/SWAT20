@@ -10,22 +10,24 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 
-public class TokenChange extends mxAtomicGraphModelChange {
+public class CapacityChange extends mxAtomicGraphModelChange {
 
 	/**
 	 *
 	 */
 	protected String name;
-	protected Multiset value, previous;
+	int value;
+	protected int previous;
 	private PNGraph graph;
+	private String color;
 
 	/**
+	 * @param newCapacity 
+	 * @param color 
+	 * @param string 
+	 * @param graph2 
 	 * 
 	 */
-	public TokenChange()
-	{
-		this(null, null, null);
-	}
 
 	/**
 	 * 
@@ -38,10 +40,11 @@ public class TokenChange extends mxAtomicGraphModelChange {
 //		this.previous = this.value;
 //	}
 
-	public TokenChange(PNGraph graph, String name, Multiset<String> multiSet) {
+	public CapacityChange(PNGraph graph, String name, String color, int newCapacity) {
 		this.graph = graph;
 		this.name = name;
-		this.value = multiSet;
+		this.color = color;
+		this.value = newCapacity;
 		this.previous = this.value;	
 		}
 
@@ -64,7 +67,7 @@ public class TokenChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setValue(Multiset value)
+	public void setValue(int value)
 	{
 		this.value = value;
 	}
@@ -80,7 +83,7 @@ public class TokenChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setPrevious(Multiset value)
+	public void setPrevious(int value)
 	{
 		previous = value;
 	}
@@ -98,18 +101,19 @@ public class TokenChange extends mxAtomicGraphModelChange {
 	 */
 	public void execute()
 	{
-		System.out.println("I AM TOKENCHANGE");
-
+		System.out.println("I AM CapacityCHANGE");
 		value = previous;
-		previous = valueForCellChanged(name,
+		previous = valueForCellChanged(name,color,
 				previous);
+		System.out.println(color+": " +value + "#p: " + previous);
+		
 	}
 	
-	protected Multiset valueForCellChanged(String name, Multiset value)
+	protected int valueForCellChanged(String name, String color, int newCapacity)
 	{
-		Multiset<String> oldValue = graph.getPlaceStateForCell(name, null);
+		int oldValue = graph.getCapacityforPlace(name,color);
 		try {
-			graph.updatePlaceState(name, value);
+			graph.updatePlaceCapacity(name, color,newCapacity);
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

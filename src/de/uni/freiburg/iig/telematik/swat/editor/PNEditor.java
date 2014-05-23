@@ -111,7 +111,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	protected File fileReference = null;
 	protected PNProperties properties = null;
 	protected PropertiesView propertiesView = null;
-	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = null;
 
 	// ------- Constructors --------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		setUpGUI();
 	}
 
-	public PNEditor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) throws ParameterException {
+	public PNEditor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) throws ParameterException {
 		super();
 		Validate.notNull(netContainer);
 		initialize(netContainer, fileReference);
@@ -136,7 +136,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		return fileReference.getName();
 	}
 
-	private void initialize(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) throws ParameterException {
+	private void initialize(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) throws ParameterException {
 		if (netContainer == null) {
 			this.netContainer = createNetContainer();
 		} else {
@@ -151,7 +151,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		properties.setPropertiesView(propertiesView);
 	}
 
-	protected abstract AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> createNetContainer();
+	protected abstract AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> createNetContainer();
 
 	protected abstract PNProperties createPNProperties();
 
@@ -261,7 +261,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	// ------- Functionality
 	// --------------------------------------------------------------------
 
-	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetContainer() {
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNetContainer() {
 		return netContainer;
 	}
 

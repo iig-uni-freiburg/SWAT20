@@ -34,7 +34,7 @@ public abstract class PNProperties {
 	 * Note: This field is private, because subclasses should use {@link #getNetContainer()},
 	 * which returns a net container of the expected type.
 	 */
-	private AbstractGraphicalPN<?,?,?,?,?,?,?> netContainer = null;
+	private AbstractGraphicalPN<?,?,?,?,?,?,?, ?, ?> netContainer = null;
 	private PropertiesView propertiesView;
 	
 	/**
@@ -45,7 +45,7 @@ public abstract class PNProperties {
 	 * @param netContainer The net container.
 	 * @throws ParameterException If the given net container is <code>null</code>.
 	 */
-	public PNProperties(AbstractGraphicalPN<?,?,?,?,?,?,?> netContainer) throws ParameterException{
+	public PNProperties(AbstractGraphicalPN<?,?,?,?,?,?,?, ?, ?> netContainer) throws ParameterException{
 		Validate.notNull(netContainer);
 		this.netContainer = netContainer;
 	}
@@ -57,7 +57,7 @@ public abstract class PNProperties {
 	 * Subclasses should override this method and adjust the return type based on the concrete net container type.
 	 * @return The net container.
 	 */
-	protected AbstractGraphicalPN<?,?,?,?,?,?,?> getNetContainer(){
+	protected AbstractGraphicalPN<?,?,?,?,?,?,?,?,?> getNetContainer(){
 		return netContainer;
 	}
 

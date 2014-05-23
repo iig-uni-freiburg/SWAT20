@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 
 import com.mxgraph.model.mxGraphModel;
@@ -45,10 +46,10 @@ public class PTGraph extends PNGraph {
 	}
 
 	@Override
-	public void updatePlaceState(PNGraphCell cell, Multiset<String> state) throws ParameterException {
+	public void updatePlaceState(String name, Multiset<String> state) throws ParameterException {
 		Integer tokens =  state.multiplicity("black");
 		PTMarking initialMarking = getNetContainer().getPetriNet().getInitialMarking();
-		initialMarking.set(cell.getId(), new Integer(tokens));
+		initialMarking.set(name, new Integer(tokens));
 		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
 	}
 	
@@ -58,8 +59,8 @@ public class PTGraph extends PNGraph {
 	 * @param circularPointGroup
 	 * @return
 	 */
-	protected Multiset<String> getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup) {
-		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(cell.getId());
+	protected Multiset<String> getPlaceStateForCell(String name, CircularPointGroup circularPointGroup) {
+		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(name);
 		if(place!= null){
 			if(circularPointGroup != null)
 		circularPointGroup.addPoints(PColor.black, place.getState());
@@ -120,6 +121,54 @@ public class PTGraph extends PNGraph {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+
+	@Override
+	public Color getTokenColorForName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateTokenColor(String name, Color value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Multiset<String> getConstraintforArc(String name, Object object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateConstraint(String name, Multiset value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateTokenConfigurer(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getCapacityforPlace(String name, String color) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void updatePlaceCapacity(String name, String color, int newCapacity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateViews() {
+		// TODO Auto-generated method stub
 		
 	}
 

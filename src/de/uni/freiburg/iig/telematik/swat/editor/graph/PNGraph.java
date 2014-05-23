@@ -86,11 +86,11 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNPropertyChangeEven
 
 public abstract class PNGraph extends mxGraph implements PNPropertiesListener, mxIEventListener {
 
-	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = null;
+	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = null;
 	private PNProperties properties = null;
 	@SuppressWarnings("rawtypes")
 	public Map<String, PNGraphCell> nodeReferences = new HashMap<String, PNGraphCell>();
-	private Map<String, PNGraphCell> arcReferences = new HashMap<String, PNGraphCell>();
+	public Map<String, PNGraphCell> arcReferences = new HashMap<String, PNGraphCell>();
 
 	private Set<PNGraphListener> listeners = new HashSet<PNGraphListener>();
 
@@ -98,7 +98,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	private boolean isExecution = false;
 	private Set<String> nameSetFromTransitions;
 
-	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
+	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
 //		selectionModel = createSelectionModel();
 ////		setModel((model != null) ? model : new mxGraphModel(){
@@ -302,7 +302,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		return nodeReferences.get(pnNode);
 	}
 
-	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNetContainer() {
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNetContainer() {
 		return netContainer;
 	}
 
@@ -570,7 +570,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		return vertex;
 	}
 
-	public abstract void updatePlaceState(PNGraphCell cell, Multiset<String> input) throws ParameterException;
+	public abstract void updatePlaceState(String name, Multiset<String> input) throws ParameterException;
 
 	@Override
 	public boolean isCellLocked(Object cell) {
@@ -778,7 +778,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 		// TODO Making method more general to be able to handle colored marking
 		// in cpn
-		Multiset<String> placeState = getPlaceStateForCell(cell, circularPointGroup);
+		Multiset<String> placeState = getPlaceStateForCell(cell.getId(), circularPointGroup);
 		if (placeState != null) {
 			CPNGraphics cpnGraphics;
 			Map<String, Color> colors = null;
@@ -827,11 +827,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	}
 
 	/**
-	 * @param cell
+	 * @param name
 	 * @param circularPointGroup
 	 * @return
 	 */
-	protected abstract Multiset<String> getPlaceStateForCell(PNGraphCell cell, CircularPointGroup circularPointGroup);
+	protected abstract Multiset<String> getPlaceStateForCell(String id, CircularPointGroup circularPointGroup);
 	
 	
 	/** Method for incrementing or decrementing the current #AbstractMarking of the given #AbstractPNPlace
@@ -1819,7 +1819,21 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		
 	}
 
+	public abstract Color getTokenColorForName(String name) ;
 
+	public abstract void updateTokenColor(String name, Color value);
+
+	public abstract Multiset<String> getConstraintforArc(String name, Object object);
+
+	public abstract void  updateConstraint(String name, Multiset value);
+
+	public abstract void updateTokenConfigurer(String name) ;
+
+	public abstract int getCapacityforPlace(String name, String color) ;
+
+	public abstract void updatePlaceCapacity(String name, String color, int newCapacity) ;
+
+	public abstract void updateViews();
 
 //	protected abstract abstract Multiset<String> getMarkingForPlace(String id);
 

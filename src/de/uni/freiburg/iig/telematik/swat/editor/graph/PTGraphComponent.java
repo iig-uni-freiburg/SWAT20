@@ -104,7 +104,7 @@ public class PTGraphComponent extends PNGraphComponent {
 			Validate.notNegativeInteger(tokens);
 			Multiset<String> multiSet = new Multiset<String>();
 			multiSet.setMultiplicity("black", new Integer(tokens));
-			((mxGraphModel) getGraph().getModel()).execute(new TokenChange((PNGraph)getGraph(),cell,multiSet));
+			((mxGraphModel) getGraph().getModel()).execute(new TokenChange((PNGraph)getGraph(),cell.getId(),multiSet));
 		} catch (ParameterException ex) {
 			JOptionPane.showMessageDialog(PTGraphComponent.this, "Input is not a positive integer.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
 		}

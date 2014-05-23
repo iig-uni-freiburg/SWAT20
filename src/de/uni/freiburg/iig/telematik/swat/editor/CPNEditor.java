@@ -133,7 +133,7 @@ public class CPNEditor extends AbstractCPNEditor {
 	
 
 	public static JPanel createFrame(JFrame frame) throws IOException, ParserException, ParameterException {
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML, false,false);
+		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML, false,false);
 		JPanel panel = new CPNEditor(((GraphicalCPN) netContainer), new File(PNML));
 		frame.setTitle("CPNet Editor");
 		frame.setSize(800, 500);

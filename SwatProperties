@@ -1,10 +1,10 @@
 #
-#Thu May 08 10:20:53 CEST 2014
-WORKING_DIRECTORY=/home/richard/
+#Mon May 19 13:25:26 CEST 2014
+WORKING_DIRECTORY=/Users/julius/Desktop/stuff/SwatWorkingDirectory/
 ARISTA_FLOW_URL=jdbc\:postgresql\://127.0.0.1\:5432/InvoiceLocal
 ARISTA_FLOW_PASS=ADEPT2DB
 REQUIRE_NET_TYPE=false
-KNOWN_WORKING_DIRECTORIES=['/home/richard/' '/Users/stocker/Desktop/SwatWorkingDirectory/']
+KNOWN_WORKING_DIRECTORIES=['/home/richard/' '/Users/julius/Desktop/stuff/SwatWorkingDirectory/' '/Users/stocker/Desktop/SwatWorkingDirectory/' '/Users/julius/Desktop/SwatWorkingDirectory1/']
 LOLA_PATH=/usr/local/bin
 ARISTA_FLOW_USER=ADEPT2
 VERIFY_PNML_SCHEMA=false
