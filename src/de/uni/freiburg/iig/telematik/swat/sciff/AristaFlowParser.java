@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.batik.parser.ParseException;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogEntry;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogSummary;
@@ -55,6 +54,9 @@ public class AristaFlowParser implements ISciffLogReader {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -71,9 +73,9 @@ public class AristaFlowParser implements ISciffLogReader {
 		//parse();
 	}
 
-	public void parse(whichTimestamp useStartStopTimestamp) throws IOException {
+	public void parse(whichTimestamp useStartStopTimestamp) throws Exception {
 		if (!isAristaFlowCSV()) {
-			throw new ParseException(this.getClass().getName() + ": Is not an Arista-Flow CSV log", -1, -1);
+			throw new Exception(this.getClass().getName() + ": Is not an Arista-Flow CSV log");
 		}
 		getHeader();
 		parseAllInstances(useStartStopTimestamp);

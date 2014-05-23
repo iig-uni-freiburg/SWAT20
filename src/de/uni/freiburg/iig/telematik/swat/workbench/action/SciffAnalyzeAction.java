@@ -38,6 +38,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 	private static final long serialVersionUID = 9111775745565090191L;
 	private File file;
 	private ISciffLogReader reader;
+	private String previousRule;
 
 	public SciffAnalyzeAction(File file) {
 		this.file = file;
@@ -45,7 +46,11 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	public SciffAnalyzeAction(ISciffLogReader reader) {
 		this.reader = reader;
+	}
 
+	public SciffAnalyzeAction(SciffPresenter presenter) {
+		this.reader = presenter.getReport().getLog();
+		this.previousRule = presenter.generateRuleOverview();
 	}
 
 	@Override
@@ -64,6 +69,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 				CompositeRule rule;
 				try {
 					rule = SciffRuleDialog.showRuleDialog(null, null, getActivityCandidates(reader), getOriginatorCandidates(reader));
+					//System.out.println(new .visitRule(rule));
 				} catch (Exception e) {
 					rule = SciffRuleDialog.showRuleDialog(null);
 				}
@@ -73,12 +79,15 @@ public class SciffAnalyzeAction extends AbstractAction {
 				CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
 				System.out.println("Wrong: " + report.wrongInstances().size() + " - Right: " + report.correctInstances().size()
 						+ " - Exceptions: " + report.exceptionInstances().size());
-				SciffPresenter sciff = new SciffPresenter(report);
+				SciffPresenter sciff = new SciffPresenter(report, rule);
 				sciff.show();
 				//System.out.println("Wrong: " + reader.getInstance(report.wrongInstances().get(0)).getName());
 			} catch (ParserException e) {
 				e.printStackTrace();
 			} catch (JDOMException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} catch (ParameterException e) {
@@ -118,13 +127,13 @@ public class SciffAnalyzeAction extends AbstractAction {
 		return Collections.unmodifiableSet(result);
 	}
 
-	private ISciffLogReader getReader() throws ParserException, ParameterException, IOException {
+	private ISciffLogReader getReader() throws Exception {
 		if (file.getName().endsWith("mxml"))
 			return createMxmlParser();
 		return createAristaFlowParser();
 	}
 
-	private ISciffLogReader createAristaFlowParser() throws IOException {
+	private ISciffLogReader createAristaFlowParser() throws Exception {
 		AristaFlowParser parser = new AristaFlowParser(file);
 		parser.parse(whichTimestamp.BOTH);
 		return parser;

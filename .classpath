@@ -4,8 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="xml"/>
 	<classpathentry kind="lib" path="lib/com.springsource.org.apache.commons.collections-3.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/MultiSplit.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/SEPIA"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TOVAL"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JAGAL"/>
 	<classpathentry kind="lib" path="lib/jgraphx.jar" sourcepath="lib/jgraphXwithsources.jar"/>
@@ -47,5 +45,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/SCIFF"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JAWL"/>
 	<classpathentry kind="lib" path="lib/postgresql-9.3-1101.jdbc4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SEPIA"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

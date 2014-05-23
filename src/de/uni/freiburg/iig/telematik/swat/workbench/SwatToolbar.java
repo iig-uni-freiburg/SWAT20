@@ -363,6 +363,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			} catch (IOException e3) {
 				// TODO Auto-generated catch block
 				e3.printStackTrace();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 
 		}

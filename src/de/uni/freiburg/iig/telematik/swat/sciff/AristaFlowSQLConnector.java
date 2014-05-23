@@ -50,6 +50,9 @@ public class AristaFlowSQLConnector {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 
@@ -83,7 +86,7 @@ public class AristaFlowSQLConnector {
 		fileWriter = new FileWriter(tempFile);
 	}
 
-	public AristaFlowParser parse() throws SQLException, IOException {
+	public AristaFlowParser parse() throws Exception {
 		createFirstLine();
 		ResultSet rs = st.executeQuery(QUERY);
 		while (rs.next()) {
