@@ -29,6 +29,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line.Style;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
+import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.resources.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -36,12 +37,12 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 
 	private static final long serialVersionUID = -7829208008630231526L;
 	private static String nodeColor = "#333333";
-	private ImageIcon placeIcon = new ImageIcon(getClass().getResource("/images/ellipse.png"));
-	private ImageIcon transitionIcon = new ImageIcon(getClass().getResource("/images/rectangle.png"));
+	private ImageIcon placeIcon = new ImageIcon(IconFactory.class.getResource("ellipse.png"));
+	private ImageIcon transitionIcon = new ImageIcon(IconFactory.class.getResource("rectangle.png"));
 	//	private ImageIcon placeIcon = new ImageIcon(createPlaceImage());
 //	private ImageIcon transitionIcon = new ImageIcon(createTransitionImage());
-	private ImageIcon arcIcon = new ImageIcon(getClass().getResource("/images/arrow.png"));
-	private ImageIcon rootIcon = new ImageIcon(getClass().getResource("/images/cloud.png"));
+	private ImageIcon arcIcon = new ImageIcon(IconFactory.class.getResource("arrow.png"));
+	private ImageIcon rootIcon = new ImageIcon(IconFactory.class.getResource("cloud.png"));
 	public static Image createPlaceImage() {
 		Color defaultFillColor = Utils.parseColor(nodeColor  );
 		IconSize iconsize = null;

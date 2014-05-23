@@ -17,9 +17,6 @@ import javax.swing.tree.TreePath;
 public class PNCellEditor extends DefaultCellEditor {
 
 	private static final long serialVersionUID = -8137148608944410589L;
-	private ImageIcon placeIcon = new ImageIcon(getClass().getResource("/images/ellipse.png"));
-	private ImageIcon transitionIcon = new ImageIcon(getClass().getResource("/images/rectangle.png"));
-	private ImageIcon arcIcon = new ImageIcon(getClass().getResource("/images/arrow.png"));
 
 	@Override
 	public Component getTreeCellEditorComponent(final JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
