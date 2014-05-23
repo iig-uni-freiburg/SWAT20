@@ -1,4 +1,4 @@
-package test;
+package gui;
 
 //: c14:Separation.java
 //Separating GUI logic and business objects.

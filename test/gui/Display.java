@@ -1,4 +1,4 @@
-package test;
+package gui;
 
 public class Display {
 
