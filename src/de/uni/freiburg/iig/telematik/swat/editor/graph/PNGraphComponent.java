@@ -67,7 +67,9 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.HtmlTextShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.RectangleShape;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.graph.GraphResource;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
 
@@ -271,7 +273,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 //		addKeyListener(new GCKeyListener());
 		getConnectionHandler().setCreateTarget(true);
 		mxCodec codec = new mxCodec();
-		Document doc = mxUtils.loadDocument(PNEditor.class.getResource("/default-style.xml").toString());
+		Document doc = mxUtils.loadDocument(GraphResource.class.getResource("default-style.xml").toString());
 		codec.decode(doc.getDocumentElement(), graph.getStylesheet());
 	}
 
