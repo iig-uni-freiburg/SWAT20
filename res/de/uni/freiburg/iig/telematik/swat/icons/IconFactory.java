@@ -20,9 +20,12 @@ public class IconFactory {
 	}
 	
 	private static ImageIcon getIcon(String name, IconSize size) throws ParameterException{
+		System.out.println("name: " + name);
+		System.out.println("size: " + size);
 		Validate.notNull(name);
 		Validate.notEmpty(name);
 		Validate.notNull(size);
+		System.out.println("ddd");
 		
 		String imagePath = String.format(imagePathFormat, size.getSize(), name, size.getSize());
 		URL imageURL = IconFactory.class.getResource(imagePath);

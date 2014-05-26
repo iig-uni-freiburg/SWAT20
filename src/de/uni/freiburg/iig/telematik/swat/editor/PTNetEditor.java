@@ -25,6 +25,9 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 
 public class PTNetEditor extends PNEditor {
+	
+//	public final static String PNML = PNEditor.class.getResource("/samples/samplePTnet.pnml").getPath();
+//	public final static String LABELING = PNEditor.class.getResource("/samples/sampleIFnetLabeling01.xml").getPath();
 
 	private static final long serialVersionUID = -5130690639223735136L;
 
@@ -90,26 +93,6 @@ public class PTNetEditor extends PNEditor {
 		}
 		return null;
 	}
-	
- 
-
-
-	
-
-	
-	public final static String PNML = PNEditor.class.getResource("/samples/samplePTnet.pnml").getPath();
-	public final static String LABELING = PNEditor.class.getResource("/samples/sampleIFnetLabeling01.xml").getPath();
-
-	public static void main(String[] args) throws IOException, ParserException, ParameterException {
-		JFrame frame = new JFrame();
-//		 testEmptyNet(frame);
-		openSampleNetWithProperties(frame);
-		
-		// show all
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(true);
-	}
 
 	private static void testEmptyNet(JFrame frame) throws IOException, ParserException, ParameterException {
 		JPanel panel = createFrameEpmtyNet(frame);
@@ -121,24 +104,24 @@ public class PTNetEditor extends PNEditor {
 	}
 
 
-	private static void openSampleNetWithProperties(JFrame frame) throws IOException, ParserException, ParameterException {
-		JPanel panel = createFrame(frame);
-		PropertiesView pV = ((PNEditor) panel).getPropertiesView();
-		frame.setLayout(new BorderLayout());
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
-		frame.getContentPane().add(pV, BorderLayout.LINE_END);
-
-	}
+//	private static void openSampleNetWithProperties(JFrame frame) throws IOException, ParserException, ParameterException {
+//		JPanel panel = createFrame(frame);
+//		PropertiesView pV = ((PNEditor) panel).getPropertiesView();
+//		frame.setLayout(new BorderLayout());
+//		frame.getContentPane().add(panel, BorderLayout.CENTER);
+//		frame.getContentPane().add(pV, BorderLayout.LINE_END);
+//
+//	}
 	
 
-	public static JPanel createFrame(JFrame frame) throws IOException, ParserException, ParameterException {
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML, false,false);
-		JPanel panel = new PTNetEditor(((GraphicalPTNet) netContainer), new File(PNML));
-		frame.setTitle("PTNet Editor");
-		frame.setSize(800, 500);
-		panel.setBackground(Color.black);
-		return panel;
-	}
+//	public static JPanel createFrame(JFrame frame) throws IOException, ParserException, ParameterException {
+//		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML, false,false);
+//		JPanel panel = new PTNetEditor(((GraphicalPTNet) netContainer), new File(PNML));
+//		frame.setTitle("PTNet Editor");
+//		frame.setSize(800, 500);
+//		panel.setBackground(Color.black);
+//		return panel;
+//	}
 
 	
 	public static JPanel createFrameEpmtyNet(JFrame frame) throws IOException, ParserException, ParameterException {
@@ -170,7 +153,16 @@ public class PTNetEditor extends PNEditor {
 	}
 
 	
-
+//	public static void main(String[] args) throws IOException, ParserException, ParameterException {
+//		JFrame frame = new JFrame();
+////		 testEmptyNet(frame);
+//		openSampleNetWithProperties(frame);
+//		
+//		// show all
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.pack();
+//		frame.setVisible(true);
+//	}
 
 }
 
