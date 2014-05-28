@@ -35,6 +35,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterExecutionActi
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.ReloadExecutionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.ToggleModeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.nodes.NodeToolBarAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.ChecKSoundnessAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 
 public class ToolBar extends JToolBar {
@@ -106,6 +107,12 @@ public class ToolBar extends JToolBar {
 
 	private JToggleButton tokenButton;
 
+
+	private ChecKSoundnessAction checkSoundnessAction;
+
+
+	private JToggleButton checkSoundnessButton;
+
 	
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
@@ -141,7 +148,11 @@ public class ToolBar extends JToolBar {
 			zoomAction = new PopUpToolBarAction(pnEditor, "Zoom", "zoom_in", zoomToolbar);
 			if(pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() != NetType.PTNet){
 			tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
-			tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);}
+			tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
+			
+			checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
+			
+			}
 
 			setFloatable(false);
 
@@ -197,6 +208,8 @@ public class ToolBar extends JToolBar {
 		tokenButton = (JToggleButton) add(tokenAction, true);
 	
 		tokenAction.setButton(tokenButton);
+		
+		checkSoundnessButton = (JToggleButton) add(checkSoundnessAction, true);
 	}
 		doLayout();
 
