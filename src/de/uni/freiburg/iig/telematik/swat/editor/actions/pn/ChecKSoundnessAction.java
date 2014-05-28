@@ -57,6 +57,10 @@ public class ChecKSoundnessAction extends AbstractPNEditorAction {
 
 				cwn = new CWN(places, transitions, marking);
 
+				for (CPNPlace p : cpn.getPlaces()){
+					for(String c:p.getColorsWithCapacityRestriction())
+					cwn.getPlace(p.getName()).setColorCapacity(c, p.getColorCapacity(c));
+				}
 				for (CPNFlowRelation fr : cpn.getFlowRelations()) {
 					Multiset<String> constraint = fr.getConstraint();
 					CWNFlowRelation newFR = null;
@@ -66,14 +70,19 @@ public class ChecKSoundnessAction extends AbstractPNEditorAction {
 						newFR = cwn.addFlowRelationTP(fr.getSource().getName(), fr.getTarget().getName(), false);
 					newFR.setConstraint(constraint);
 				}
+				
+			
 
 				try {
 					cwn.checkSoundness();
+					JOptionPane.showMessageDialog(editor.getGraphComponent(), "Awesome! You just created a Coloured Workflow Net.", "CWN created - Awesome Job!", JOptionPane.INFORMATION_MESSAGE);
+
 				} catch (PNValidationException e1) {
 					JOptionPane.showMessageDialog(editor.getGraphComponent(), e1.getMessage(), "CWN Validation Failed", JOptionPane.ERROR_MESSAGE);
 				} catch (PNSoundnessException e1) {
 					JOptionPane.showMessageDialog(editor.getGraphComponent(), e1.getMessage(), "CWN Is Not Sound", JOptionPane.ERROR_MESSAGE);
 				}
+				
 			}
 		}
 	}

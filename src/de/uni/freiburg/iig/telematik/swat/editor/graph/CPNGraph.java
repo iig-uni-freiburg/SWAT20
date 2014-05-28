@@ -139,7 +139,12 @@ public class CPNGraph extends PNGraph {
 	@Override
 	public void updateConstraint(String name, Multiset value) {
 		CPNFlowRelation flowrelation = (CPNFlowRelation) getNetContainer().getPetriNet().getFlowRelation(name);
-		flowrelation.setConstraint(value);		
+		if(value != null)
+			flowrelation.setConstraint(value);	
+		else{
+				flowrelation.setConstraint(new Multiset<String>());
+		}
+//		flowrelation.setConstraint(value);		
 		PNGraphCell cell = arcReferences.get(name);
 		cell.setValue(getArcConstraint(flowrelation));
 		refresh();
@@ -156,37 +161,53 @@ int spacing;
 switch(cell.getType()){
 case ARC:
 	CPNFlowRelation flowRelation = getNetContainer().getPetriNet().getFlowRelation(cell.getId());
-	ConstraintsConfigurer cc = new ConstraintsConfigurer(window, flowRelation, this);
-	cc.setVisible(true);
-	cc.pack();
-	ccWindows.add(cc);
-	break;
-case PLACE:
-	CPNPlace place = getNetContainer().getPetriNet().getPlace(cell.getId());
-	if(!tcWindows.containsKey(cell.getId())){
-	TokenConfigurer tc = new TokenConfigurer(window, place, this);
-//	tc.setLocationRelativeTo(cpnGraphComponent);
-	System.out.println(window.getBounds());
-	System.out.println(cpnGraphComponent.getBounds());
-//	tc.setLocation(x, y);
-	spacing =  (int) (window.getBounds().getY() +120);
-	if(lastTC != null){
-		height = lastTC.getBounds().getHeight();
-		deltaY = lastTC.getBounds().getY();	
-		spacing = (int) (height + deltaY);}
-	
-	x = window.getBounds().getX();
-	y = spacing ;
-	tc.setLocation((int)x,(int) y);
-	tc.setVisible(true);
-	tc.pack();
-	tcWindows.put(cell.getId(), tc);
-	lastTC = tc;
-	}
-	else {
+	if (!tcWindows.containsKey(cell.getId())) {
+		TokenConfigurer tc = new TokenConfigurer(window, flowRelation, this);
+		spacing = (int) (window.getBounds().getY() + 120);
+		if (lastTC != null) {
+			height = lastTC.getBounds().getHeight();
+			deltaY = lastTC.getBounds().getY();
+			spacing = (int) (height + deltaY);
+		}
+
+		x = window.getBounds().getX();
+		y = spacing;
+		tc.setLocation((int) x, (int) y);
+		tc.setVisible(true);
+		tc.pack();
+		tcWindows.put(cell.getId(), tc);
+		lastTC = tc;
+	} else {
 		tcWindows.get(cell.getId()).setVisible(false);
 		tcWindows.get(cell.getId()).setVisible(true);
 	}
+//	ConstraintsConfigurer cc = new ConstraintsConfigurer(window, flowRelation, this);
+//	cc.setVisible(true);
+//	cc.pack();
+//	ccWindows.add(cc);
+	break;
+		case PLACE:
+			CPNPlace place = getNetContainer().getPetriNet().getPlace(cell.getId());
+			if (!tcWindows.containsKey(cell.getId())) {
+				TokenConfigurer tc = new TokenConfigurer(window, place, this);
+				spacing = (int) (window.getBounds().getY() + 120);
+				if (lastTC != null) {
+					height = lastTC.getBounds().getHeight();
+					deltaY = lastTC.getBounds().getY();
+					spacing = (int) (height + deltaY);
+				}
+
+				x = window.getBounds().getX();
+				y = spacing;
+				tc.setLocation((int) x, (int) y);
+				tc.setVisible(true);
+				tc.pack();
+				tcWindows.put(cell.getId(), tc);
+				lastTC = tc;
+			} else {
+				tcWindows.get(cell.getId()).setVisible(false);
+				tcWindows.get(cell.getId()).setVisible(true);
+			}
 
 	break;
 case TRANSITION:
@@ -239,10 +260,9 @@ default:
 	}
 
 	@Override
-	public Multiset<String> getConstraintforArc(String name, Object object) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Multiset<String> getConstraintforArc(String name) {
+		return getNetContainer().getPetriNet().getFlowRelation(name).getConstraint();
+		}
 
 
 

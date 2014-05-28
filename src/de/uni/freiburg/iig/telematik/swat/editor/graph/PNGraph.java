@@ -1824,7 +1824,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	public abstract void updateTokenColor(String name, Color value);
 
-	public abstract Multiset<String> getConstraintforArc(String name, Object object);
+	public abstract Multiset<String> getConstraintforArc(String name);
 
 	public abstract void  updateConstraint(String name, Multiset value);
 

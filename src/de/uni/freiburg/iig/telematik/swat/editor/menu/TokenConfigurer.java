@@ -46,6 +46,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.CPNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.CapacityChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.UpdateTokenChanges;
@@ -62,32 +63,20 @@ public class TokenConfigurer extends JDialog {
 //	private JPanel topPanel;
 	private JToggleButton boundButton;
 	private JToggleButton infiniteButton;
-	private Multiset<String> placeMarking;
+	private Multiset<String> multisetPA;
 	private Map<String, Color> colors;
-	private String placeName;
+	private String paName;
 	private JPanel panel;
+	private boolean isPlace;
 
 	public TokenConfigurer(Window window, CPNPlace place2, CPNGraph cpnGraph) {
 		super(window, place2.getName());
-//		setLayout(manager);
-//		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-
-//		Dimension dimension = new Dimension(300,100);
-//		setPreferredSize(dimension );
-//		setMinimumSize(dimension);
-////		setMaximumSize(dim2);
-//		setSize(dimension);
-
+		isPlace = true;
 		panel = new JPanel();
 		panel.setLayout(new SpringLayout());
-//		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		add(panel);
-//		add(new JLabel("gerd"));
-		placeName = place2.getName();
+		paName = place2.getName();
 		graph = cpnGraph;
-//		topPanel = new JPanel();
-//		dialog = dialog2;
-//		add(this);
 		updateView();
 		
 
@@ -95,23 +84,34 @@ public class TokenConfigurer extends JDialog {
 
 
 
+	public TokenConfigurer(Window window, CPNFlowRelation flowRelation, CPNGraph cpnGraph) {
+		super(window, flowRelation.getName());
+		isPlace = false;
+		panel = new JPanel();
+		panel.setLayout(new SpringLayout());
+		add(panel);
+		paName = flowRelation.getName();
+		graph = cpnGraph;
+		updateView();
+	}
+
+
+
 	private void addRow(String tokenLabel) {
-//		final JPanel row = new JPanel();
 		Dimension dim = new Dimension();
 		double width = TOKEN_ROW_WIDTH;
 		double height = TOKEN_ROW_HEIGHT;
 		dim.setSize(width, height);
-//		row.setPreferredSize(dim);
-//		row.setMinimumSize(dim);
-//		row.setMaximumSize(dim);
-//		row.setSize(dim);
+
 		
 		final String tokenName = tokenLabel;
-		int size = placeMarking.multiplicity(tokenLabel);
+		int size = multisetPA.multiplicity(tokenLabel);
 		Color tokenColor = colors.get(tokenLabel);
 		CirclePanel circle = new CirclePanel(tokenColor);
-		int cap = (place.getColorCapacity(tokenName) <0)?99:place.getColorCapacity(tokenName);
-		System.out.println(tokenLabel+" = "+size + "#" + cap);
+		int cap = 99;
+		if(isPlace && !(place.getColorCapacity(tokenName) <0))
+		cap = place.getColorCapacity(tokenName);
+
 		SpinnerModel model = new SpinnerNumberModel(size, -1, cap, 1);
 		JSpinner spinner = new JSpinner(model);
 		spinner.addChangeListener(new ChangeListener() {
@@ -120,11 +120,15 @@ public class TokenConfigurer extends JDialog {
 			public void stateChanged(ChangeEvent e) {
 				JSpinner spinner = (JSpinner) e.getSource();
 				Integer currentValue = (Integer)spinner.getValue();
-				Multiset<String> newMarking = (Multiset<String>) graph.getNetContainer().getPetriNet().getInitialMarking().get(placeName);
+				
+				Multiset<String> newMarking = getMultiSet();
 				if(newMarking == null)
 					newMarking = new Multiset<String>();
 				newMarking.setMultiplicity(tokenName, currentValue);
-				((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,placeName,newMarking));
+				if(isPlace)
+				((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,paName,newMarking));
+				else 
+					((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph)graph,paName,newMarking));
 //				graph.updateTokenConfigurer(placeName);
 			}
 		});
@@ -145,23 +149,27 @@ public class TokenConfigurer extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Multiset<String> newMarking = (Multiset<String>) graph.getNetContainer().getPetriNet().getInitialMarking().get(placeName);
+				Multiset<String> newMarking = getMultiSet();
 
 				((mxGraphModel) graph.getModel()).beginUpdate();
-//				((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
+				if(isPlace){
 				if(newMarking != null){
 				newMarking.setMultiplicity(tokenName, 0);
-				((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,place.getName(),newMarking));}
-				((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,place.getName(),tokenName,0));
-//				((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
+				((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,paName,newMarking));}
+				((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,paName,tokenName,0));}
+				else{
+					newMarking.setMultiplicity(tokenName, 0);
+					((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph)graph,paName,newMarking));
+					}
+
 				((mxGraphModel) graph.getModel()).endUpdate();
 				addButton.setEnabled(true);
 				pack();
 				updateView();
 			}
 		});
-		if(place != null){
-			JPanel capElement = new JPanel();
+		
+		if(isPlace && place != null){
 
 			panel.add(Box.createGlue());		
 			JSpinner capacitySpinner;
@@ -172,7 +180,7 @@ public class TokenConfigurer extends JDialog {
 			} 
 			else {
 				int capacitiy = place.getColorCapacity(tokenName);
-				SpinnerModel capacityModel = new SpinnerNumberModel(capacitiy, placeMarking.multiplicity(tokenName), 99, 1);
+				SpinnerModel capacityModel = new SpinnerNumberModel(capacitiy, multisetPA.multiplicity(tokenName), 99, 1);
 				capacitySpinner = new JSpinner(capacityModel);
 			}
 		
@@ -183,43 +191,33 @@ public class TokenConfigurer extends JDialog {
 			JSpinner capacitySpinner = (JSpinner)e.getSource();
 				Integer currentValue = (Integer)capacitySpinner.getValue();
 
-//				((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
 				((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,place.getName(),tokenName,currentValue ));
-//				((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
-updateView();
+				updateView();
 			}
 		});
 		panel.add(capacitySpinner);
-//		panel.add(capElement);
+		}
+		else {
+		panel.add(Box.createGlue());
+		panel.add(Box.createGlue());
 		}
 		panel.add(remove);
-//		tokenPanel.add(row);
 
 	}
 	
-//	private void addLastRow(final Multiset<String> newPlaceMarking, final Map<String, Color> colors, String tokenLabel) {
-//		final JPanel lastRow = new JPanel();
-//		lastRow.setLayout(new BorderLayout());
-//		Dimension dim = new Dimension();
-//		double width = TOKEN_ROW_WIDTH;
-//		double height = TOKEN_ROW_HEIGHT;
-//		dim.setSize(width, height);
-//		lastRow.setPreferredSize(dim);
-//		lastRow.setMinimumSize(dim);
-//		lastRow.setMaximumSize(dim);
-//		lastRow.setSize(dim);
-//	
-//
-//		
-//		JPanel firstElement = new JPanel();
-//		lastRow.add(firstElement, BorderLayout.LINE_START);
-//		lastRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-//
-//		
-//		}
+
 
 
 	
+
+	protected Multiset<String> getMultiSet() {
+		if(isPlace)
+		return (Multiset<String>) graph.getNetContainer().getPetriNet().getInitialMarking().get(paName);
+		else
+		return (Multiset<String>) graph.getNetContainer().getPetriNet().getFlowRelation(paName).getConstraint();
+	}
+
+
 
 	protected void setNewMarking(Multiset<String> newPlaceMarking) {	
 	}
@@ -247,11 +245,11 @@ updateView();
 					super.mouseClicked(e);
 					Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), addButton);
 					JPopupMenu popup = new JPopupMenu();
-					if(placeMarking == null)
-						placeMarking = new Multiset<String>();
+					if(multisetPA == null)
+						multisetPA = new Multiset<String>();
 					for (Entry<String, Color> c : colors.entrySet()) {
 						final String color = c.getKey();
-						if (!placeMarking.contains(color)) {
+						if (!multisetPA.contains(color)) {
 							JMenuItem item = new JMenuItem(color);
 							item.setName(color);
 							item.addActionListener(new ActionListener() {
@@ -259,14 +257,16 @@ updateView();
 								@Override
 								public void actionPerformed(ActionEvent arg0) {
 									((mxGraphModel) graph.getModel()).beginUpdate();
+									if(isPlace){
 									if(place.getColorCapacity(color) ==0)
-										((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,place.getName(),color,1 ));
-									
-									placeMarking.setMultiplicity(color, 1);
-									
-									((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,place.getName(),placeMarking));
+										((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,paName,color,1 ));
+									multisetPA.setMultiplicity(color, 1);	
+									((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,paName,multisetPA));}
+									else {
+										multisetPA.setMultiplicity(color, 1);	
+										((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph)graph,paName,multisetPA));}
 									((mxGraphModel) graph.getModel()).endUpdate();
-									if (placeMarking.contains(colors.keySet())) {
+									if (multisetPA.contains(colors.keySet())) {
 										addButton.setEnabled(false);
 									}
 									updateView();
@@ -282,7 +282,7 @@ updateView();
 					popup.show(addButton, addButton.getWidth() * 4 / 5, addButton.getHeight() * 4 / 5);
 				}
 			});
-			
+			if(isPlace){
 			infiniteButton = new JToggleButton(IconFactory.getIcon("infinite"));
 			infiniteButton.setBorder(BorderFactory.createEmptyBorder());
 			boundButton = new JToggleButton(IconFactory.getIcon("bounded"));
@@ -303,10 +303,8 @@ updateView();
 					Set<String> tokencolors = graph.getNetContainer().getPetriNet().getTokenColors();
 					int newCapacity = -1;
 					((mxGraphModel) graph.getModel()).beginUpdate();
-//					((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
 					for(String color:tokencolors)
-						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,place.getName(),color,newCapacity ));
-//					((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
+						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,paName,color,newCapacity ));
 					((mxGraphModel) graph.getModel()).endUpdate();	
 					updateView();
 				}
@@ -321,43 +319,40 @@ updateView();
 				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					placeMarking = graph.getNetContainer().getPetriNet().getInitialMarking().get(placeName);
-if(placeMarking == null) placeMarking = new Multiset<String>();
-					//					restrictedColors = place.getColorsWithCapacityRestriction();
+					multisetPA = getMultiSet();
+					if(multisetPA == null) multisetPA = new Multiset<String>();
 					Set<String> tokencolors = graph.getNetContainer().getPetriNet().getTokenColors();
-//					int newCapacity = -1;
-					//capacity bounded wechsel window update
 					((mxGraphModel) graph.getModel()).beginUpdate();
-//					((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
 					for(String color:tokencolors){
-					int newCapacity = placeMarking.multiplicity(color);
-//					if(newCapacity ==0) newCapacity =1;
-					
-						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,place.getName(),color,newCapacity ));
+					int newCapacity = multisetPA.multiplicity(color);
+						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,paName,color,newCapacity ));
 					}
-//					((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
 					((mxGraphModel) graph.getModel()).endUpdate();
-//					graph.updateViews();
 					updateView();
-//					((CPNGraph)graph).updateTokenConfigurer(placeName);
-					
+				
 				}
 			});
-		
+			}
 		} catch (ParameterException e) {
 		} catch (PropertyException e) {
 		} catch (IOException e) {
-		}	
+		}
+		
 		panel.add(addButton);
 		
 //		JPanel capacityPanel = new JPanel();
 		
 		
-		
+		if(isPlace)
 		panel.add(new JLabel("Tokens"));
+		else
+			panel.add(new JLabel("Constraints"));
 		panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
+		if(isPlace)
 		panel.add(new JLabel("Capacity"));
+		else
+			panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
 		int size = 0;
 		CPNGraphics cpnGraphics = graph.getNetContainer().getPetriNetGraphics();
@@ -369,20 +364,25 @@ if(placeMarking == null) placeMarking = new Multiset<String>();
 //		tokenPanel = new JPanel();
 //		tokenPanel.setLayout(new BoxLayout(tokenPanel, BoxLayout.Y_AXIS));
 //		System.out.println(placeName);
-		placeMarking = graph.getNetContainer().getPetriNet().getInitialMarking().get(placeName);
-		place = graph.getNetContainer().getPetriNet().getPlace(placeName);
+		multisetPA = getMultiSet();
+
+		place = graph.getNetContainer().getPetriNet().getPlace(paName);
 		colors = cpnGraphics.getColors();
 		for (String color : colors.keySet()) {
-			if (placeMarking == null){
-				placeMarking = new Multiset<String>();
+			if (multisetPA == null){
+				multisetPA = new Multiset<String>();
 //				if(place.isBounded())
 //					addRow(color);
 			}
-			if (place.getColorCapacity(color) > 0 || placeMarking.contains(color)){
-					addRow(color);
-			
+			if (isPlace && (place.getColorCapacity(color) > 0 || multisetPA.contains(color))){
+					addRow(color);			
 			size++;		
 			}
+			if(!isPlace && multisetPA.contains(color)){
+				addRow(color);
+			size++;	
+			}
+			
 		}
 
 
@@ -403,7 +403,7 @@ if(placeMarking == null) placeMarking = new Multiset<String>();
 		panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
 		JPanel boundOrInfinite = new JPanel();
-		
+		if(isPlace){
 		boundOrInfinite.add(infiniteButton);
 		boundOrInfinite.add(boundButton);
 		if(place.isBounded()){
@@ -414,38 +414,25 @@ if(placeMarking == null) placeMarking = new Multiset<String>();
 			boundButton.setEnabled(true);
 			infiniteButton.setEnabled(false);
 		}
+		}
+		else{
+			panel.add(Box.createGlue());
+			panel.add(Box.createGlue());
+		}
 			
 		
 		SpringUtilities.makeCompactGrid(boundOrInfinite, 1, 2,1,1,1,1); 
 		panel.add(boundOrInfinite);
 		
 		panel.add(Box.createGlue());
-		
-		
-//		panel.add(Box.createGlue());
-
-//		topPanel.add(lastRow);
 	
 		
 		SpringUtilities.makeCompactGrid(panel, size+2, 6, 6, 6, 6, 6); 
 		pack();
-//		System.out.println("+"+SwingUtilities.getWindowAncestor(this));
-//		dialog = (JDialog) SwingUtilities.getWindowAncestor(this);
-//		dialog.pack();
-//		System.out.println(getDialog());
-////		if (getDialog() != null) {
-//			getDialog().pack();
-////		}
+
 
 	}
 
-//	private void putIntoChangeCommand(mxAtomicGraphModelChange command) {
-//		((mxGraphModel) graph.getModel()).beginUpdate();
-////		((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
-//		((mxGraphModel) graph.getModel()).execute(command);
-////		((mxGraphModel) graph.getModel()).execute(new UpdateTokenChanges((PNGraph)graph,place.getName()));
-//		((mxGraphModel) graph.getModel()).endUpdate();
-//	}
 
 
 }

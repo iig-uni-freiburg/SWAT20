@@ -137,7 +137,7 @@ public class PTGraph extends PNGraph {
 	}
 
 	@Override
-	public Multiset<String> getConstraintforArc(String name, Object object) {
+	public Multiset<String> getConstraintforArc(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

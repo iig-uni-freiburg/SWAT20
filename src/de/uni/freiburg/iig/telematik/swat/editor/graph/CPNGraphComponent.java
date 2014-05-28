@@ -88,10 +88,10 @@ public class CPNGraphComponent extends PNGraphComponent {
 		// TODO Table which lists constraints
 
 		try {
-			Window window = SwingUtilities.getWindowAncestor(getGraphComponent());
+			
 //			JDialog dialog = 
 //			Multiset<String> marking = getGraph().getNetContainer().getPetriNet().getMarking().get(cell.getId());
-//			getGraph().newTokenConfigurer(cell,window);
+			getGraph().newTokenConfigurer(cell,this);
 //			loadTokenConfigurer(cell, dialog);
 		} catch (ParameterException e1) {
 			// TODO Auto-generated catch block
