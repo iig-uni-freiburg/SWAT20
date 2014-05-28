@@ -31,7 +31,7 @@ public class ChecKSoundnessAction extends AbstractPNEditorAction {
 	private static final long serialVersionUID = 4315293729223367039L;
 
 	public ChecKSoundnessAction(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
-		super(pnEditor, "CheckSoundness", IconFactory.getIcon("checkmark"));
+		super(pnEditor, "CheckSoundness", IconFactory.getIcon("checkcwn"));
 	}
 
 	public void actionPerformed(ActionEvent e) {
