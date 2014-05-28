@@ -100,7 +100,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
-		setGridSize(5);
+		setGridSize(10);
 //		selectionModel = createSelectionModel();
 ////		setModel((model != null) ? model : new mxGraphModel(){
 ////
