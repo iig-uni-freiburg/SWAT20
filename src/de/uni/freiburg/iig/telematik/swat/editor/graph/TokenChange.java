@@ -98,8 +98,6 @@ public class TokenChange extends mxAtomicGraphModelChange {
 	 */
 	public void execute()
 	{
-		System.out.println("I AM TOKENCHANGE");
-
 		value = previous;
 		previous = valueForCellChanged(name,
 				previous);

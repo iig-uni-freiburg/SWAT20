@@ -3,12 +3,9 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 import java.awt.Color;
 import java.awt.Window;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
@@ -21,7 +18,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ConstraintsConfigurer;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.TokenConfigurer;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.CPNProperties;
 
@@ -31,10 +27,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.CPNProperties;
  */
 public class CPNGraph extends PNGraph {
 
-//	private JDialog dialog;
-//	private HashMap<String, TokenConfigurer> newTokenConfigurerMap = new HashMap<String, TokenConfigurer>();
-	private HashMap<String, TokenConfigurer> tcWindows = new HashMap<String, TokenConfigurer>();
-	private HashSet<ConstraintsConfigurer> ccWindows = new HashSet<ConstraintsConfigurer>();
+	private HashMap<String, TokenConfigurer> tokenConfigurerWindows = new HashMap<String, TokenConfigurer>();
 	private TokenConfigurer lastTC;
 	public CPNGraph(GraphicalCPN graphicalCPN, CPNProperties cpnProperties) throws ParameterException {
 		super(graphicalCPN, cpnProperties);
@@ -70,12 +63,6 @@ public class CPNGraph extends PNGraph {
 		initialMarking.set(name, state);
 		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
 	}
-
-//	public void updateTokenConfigurer(String name) {
-//		System.out.println(newTokenConfigurerMap.size() + "#" + name);
-//		if(!newTokenConfigurerMap.isEmpty())
-//		newTokenConfigurerMap.get(name).updateView();
-//	}
 
 	@Override
 	/**
@@ -127,9 +114,7 @@ public class CPNGraph extends PNGraph {
 	@Override
 	public void updateTokenColor(String name, Color value) {
 		CPN cpn = getNetContainer().getPetriNet();
-		System.out.println(cpn.getInitialMarking());
 		Map<String, Color> colors = getNetContainer().getPetriNetGraphics().getColors();
-		System.out.println("#colors" +name+ ":" + value);
 		if(value != null)
 		colors.put(name, value);
 		else{
@@ -162,7 +147,7 @@ int spacing;
 switch(cell.getType()){
 case ARC:
 	CPNFlowRelation flowRelation = getNetContainer().getPetriNet().getFlowRelation(cell.getId());
-	if (!tcWindows.containsKey(cell.getId())) {
+	if (!tokenConfigurerWindows.containsKey(cell.getId())) {
 		TokenConfigurer tc = new TokenConfigurer(window, flowRelation, this);
 		spacing = (int) (window.getBounds().getY() + 120);
 		if (lastTC != null) {
@@ -176,20 +161,16 @@ case ARC:
 		tc.setLocation((int) x, (int) y);
 		tc.setVisible(true);
 		tc.pack();
-		tcWindows.put(cell.getId(), tc);
+		tokenConfigurerWindows.put(cell.getId(), tc);
 		lastTC = tc;
 	} else {
-		tcWindows.get(cell.getId()).setVisible(false);
-		tcWindows.get(cell.getId()).setVisible(true);
+		tokenConfigurerWindows.get(cell.getId()).setVisible(false);
+		tokenConfigurerWindows.get(cell.getId()).setVisible(true);
 	}
-//	ConstraintsConfigurer cc = new ConstraintsConfigurer(window, flowRelation, this);
-//	cc.setVisible(true);
-//	cc.pack();
-//	ccWindows.add(cc);
 	break;
 		case PLACE:
 			CPNPlace place = getNetContainer().getPetriNet().getPlace(cell.getId());
-			if (!tcWindows.containsKey(cell.getId())) {
+			if (!tokenConfigurerWindows.containsKey(cell.getId())) {
 				TokenConfigurer tc = new TokenConfigurer(window, place, this);
 				spacing = (int) (window.getBounds().getY() + 120);
 				if (lastTC != null) {
@@ -203,11 +184,11 @@ case ARC:
 				tc.setLocation((int) x, (int) y);
 				tc.setVisible(true);
 				tc.pack();
-				tcWindows.put(cell.getId(), tc);
+				tokenConfigurerWindows.put(cell.getId(), tc);
 				lastTC = tc;
 			} else {
-				tcWindows.get(cell.getId()).setVisible(false);
-				tcWindows.get(cell.getId()).setVisible(true);
+				tokenConfigurerWindows.get(cell.getId()).setVisible(false);
+				tokenConfigurerWindows.get(cell.getId()).setVisible(true);
 			}
 
 	break;
@@ -237,21 +218,8 @@ default:
 
 	@Override
 	public void updateViews() {
-		for(TokenConfigurer w:tcWindows.values())
+		for(TokenConfigurer w:tokenConfigurerWindows.values())
 			w.updateView();
-		for(ConstraintsConfigurer w:ccWindows)
-			w.updateView();
-//		System.out.println(newTokenConfigurerMap);
-//		// System.out.println(newTokenConfigurerMap.size() + "#" + name);
-//		for (CPNPlace name : getNetContainer().getPetriNet().getPlaces()) {
-//			if (newTokenConfigurerMap.containsKey(name)){
-////				System.out.println(newTokenConfigurerMap.get(name).getDialog());
-//				newTokenConfigurerMap.get(name).updateView();
-//				newTokenConfigurerMap.get(name).pack();
-//			}
-//				
-//		}
-
 	}
 
 	@Override

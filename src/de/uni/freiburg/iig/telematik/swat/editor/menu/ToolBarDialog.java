@@ -1,7 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
-import java.awt.Dialog;
-import java.awt.Frame;
 import java.awt.Window;
 
 import javax.swing.JDialog;

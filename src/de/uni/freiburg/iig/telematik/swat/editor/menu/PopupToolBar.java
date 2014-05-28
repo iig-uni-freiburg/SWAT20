@@ -5,12 +5,10 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 

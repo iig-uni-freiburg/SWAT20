@@ -1,8 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Window;
@@ -17,7 +15,6 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -35,7 +32,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.invation.code.toval.graphic.util.SpringUtilities;
 import de.invation.code.toval.properties.PropertyException;
@@ -49,7 +45,6 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.CapacityChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.UpdateTokenChanges;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class TokenConfigurer extends JDialog {
@@ -360,10 +355,7 @@ public class TokenConfigurer extends JDialog {
 		if(graph.getNetContainer().getPetriNet().getTokenColors().contains("black"))
 		colors.put("black", Color.BLACK);
 
-//		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-//		tokenPanel = new JPanel();
-//		tokenPanel.setLayout(new BoxLayout(tokenPanel, BoxLayout.Y_AXIS));
-//		System.out.println(placeName);
+
 		multisetPA = getMultiSet();
 
 		place = graph.getNetContainer().getPetriNet().getPlace(paName);
@@ -371,8 +363,6 @@ public class TokenConfigurer extends JDialog {
 		for (String color : colors.keySet()) {
 			if (multisetPA == null){
 				multisetPA = new Multiset<String>();
-//				if(place.isBounded())
-//					addRow(color);
 			}
 			if (isPlace && (place.getColorCapacity(color) > 0 || multisetPA.contains(color))){
 					addRow(color);			

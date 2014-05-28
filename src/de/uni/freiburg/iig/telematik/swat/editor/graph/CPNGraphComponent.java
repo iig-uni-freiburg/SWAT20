@@ -45,43 +45,7 @@ public class CPNGraphComponent extends PNGraphComponent {
 		}
 		return true;
 	}
-//
-//	public void loadTokenConfigurer(PNGraphCell cell, JDialog dialog) {
-//		Map<String, Color> colors = getGraph().getNetContainer().getPetriNetGraphics().getColors();
-//		Multiset<String> marking = getGraph().getNetContainer().getPetriNet().getMarking().get(cell.getId());
-//		CPNPlace place = getGraph().getNetContainer().getPetriNet().getPlace(cell.getId());
-//		if (marking == null)
-//			marking = new Multiset<String>();
-//		TokenConfigurer tokenConfigurer = new TokenConfigurer(place, getGraph());
-//		dialog.add(tokenConfigurer);
-//		dialog.pack();
-//		dialog.setVisible(true);		
-//		tokenConfigurer.setDialog(dialog);
-//	}
 
-//	@Override
-//	protected boolean doubleClickOnArc(PNGraphCell cell, MouseEvent e) {
-//		
-
-////			System.out.println(marking);
-//			TokenConfigurer tC = new TokenConfigurer(cell.getId(),getGraph());
-//			
-//		Window window = SwingUtilities.getWindowAncestor(this);
-//			JDialog dialog = new ToolBarDialog(window, "tokens",true);
-//	
-//			dialog.add(tC);
-//
-//			dialog.pack();
-////			final Toolkit toolkit = Toolkit.getDefaultToolkit();
-////			final java.awt.Dimension screenSize = toolkit.getScreenSize();
-////			final int x = (screenSize.width - dialog.getWidth()) / 2;
-////			final int y = (screenSize.height - dialog.getHeight()) / 2;
-////			dialog.setLocation(x, y);
-//			dialog.setVisible(true);
-//			tC.setDialog(dialog);
-//	
-//		return false;
-//	}
 
 	@Override
 	protected boolean doubleClickOnArc(PNGraphCell cell, MouseEvent e) {

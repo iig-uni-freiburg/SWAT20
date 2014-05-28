@@ -85,9 +85,6 @@ public class GraphicsToolBar extends JToolBar {
 	private FillBackgroundColorAction backgroundColorAction;
 
 	// Buttons
-	private JButton lineStyleButton;
-	private JButton lineShapeButton;
-	private JButton strokeColorButton;
 	private JToggleButton backgroundColorButton;
 	private JToggleButton gradientColorButton;
 	private JToggleButton colorSelectionButton;

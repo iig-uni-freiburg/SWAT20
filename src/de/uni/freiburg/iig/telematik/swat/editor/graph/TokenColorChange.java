@@ -104,7 +104,6 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	 */
 	public void execute()
 	{
-		System.out.println("I AM COLORCHANGE");
 		value = previous;
 		previous = valueForCellChanged(name,
 				previous);

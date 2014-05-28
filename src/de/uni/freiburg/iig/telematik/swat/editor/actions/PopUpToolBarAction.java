@@ -50,27 +50,17 @@ public class PopUpToolBarAction extends AbstractPNEditorAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(fontToolbarContent.getSize());
 		if(getPopupFrame() == null){	
 			popupFontToolBar.setButton(getButton(), false);
 			
 			popupFontToolBar.add(fontToolbarContent);
 			 popupFontToolBar.add(newDialogButton);
-//				Dimension tbSize = fontToolbarContent.getSize();
-//				Dimension defaultSize = new Dimension((int) tbSize.getWidth(), 50);
-//				fontToolbarContent.setPreferredSize(defaultSize );
-//				fontToolbarContent.setMaximumSize(defaultSize);
-//				fontToolbarContent.setMaximumSize(defaultSize);
 
 		    int size = 0;
 			try {
 				size = SwatProperties.getInstance().getIconSize().getSize();
 			} catch (PropertyException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
 			
 			popupFontToolBar.show(getButton(), 0, size + size/2);
@@ -107,7 +97,6 @@ public class PopUpToolBarAction extends AbstractPNEditorAction {
 					Window window = SwingUtilities.getWindowAncestor(getButton());
 					JDialog dialog = new ToolBarDialog(window, fontToolbarContent2.getName(), false);
 					dialog.setTitle("Font");
-//					dialog.setSize(new Dimension(fontToolbarContent2.getSize().width, fontToolbarContent2.getSize().height + 20));
 					dialog.setLocationRelativeTo(window);
 					dialog.add(fontToolbarContent2);
 					dialog.setModal(false);

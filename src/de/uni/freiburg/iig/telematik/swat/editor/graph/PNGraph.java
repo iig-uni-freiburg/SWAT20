@@ -10,10 +10,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,8 +19,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
-
-import javax.naming.spi.DirStateFactory.Result;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
@@ -34,7 +29,6 @@ import com.mxgraph.model.mxGraphModel.mxChildChange;
 import com.mxgraph.model.mxGraphModel.mxGeometryChange;
 import com.mxgraph.model.mxGraphModel.mxTerminalChange;
 import com.mxgraph.model.mxGraphModel.mxValueChange;
-import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
@@ -73,10 +67,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
-import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.NewNodeAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterEditingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
@@ -101,31 +91,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
 		setGridSize(10);
-//		selectionModel = createSelectionModel();
-////		setModel((model != null) ? model : new mxGraphModel(){
-////
-////			@Override
-////			public Object setValue(Object cell, Object value) {
-////				
-////				System.out.println("hey");
-////				if(!(value instanceof Multiset))
-//////					try {
-//////						updatePlaceState((PNGraphCell)cell,(Multiset<String>) value);
-//////					} catch (ParameterException e) {
-//////						// TODO Auto-generated catch block
-//////						e.printStackTrace();
-//////					}
-//////					return null;
-//////				}
-//////				else
-////				return super.setValue(cell, value);
-////				else
-////				return null;
-////			}
-////			
-////		});
-//		setStylesheet((stylesheet != null) ? stylesheet : createStylesheet());
-//		setView(createGraphView());
 
 		Validate.notNull(netContainer);
 		Validate.notNull(properties);
@@ -280,8 +245,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		return placeCells;
 	}
 
-	@SuppressWarnings("rawtypes")
-	protected abstract String getArcConstraint(AbstractFlowRelation relation) throws ParameterException;
+	
 
 	@SuppressWarnings("rawtypes")
 	public void addNodeReference(AbstractPNNode pnNode, PNGraphCell cell) {
@@ -630,6 +594,41 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	protected abstract String getArcToolTip(PNGraphCell cell);
 
+	protected abstract String getArcConstraint(AbstractFlowRelation relation) throws ParameterException;
+	
+	public abstract Color getTokenColorForName(String name) ;
+
+	public abstract void updateTokenColor(String name, Color value);
+
+	public abstract Multiset<String> getConstraintforArc(String name);
+
+	public abstract void  updateConstraint(String name, Multiset value);
+
+	public abstract void updateTokenConfigurer(String name) ;
+
+	public abstract int getCapacityforPlace(String name, String color) ;
+
+	public abstract void updatePlaceCapacity(String name, String color, int newCapacity) ;
+
+	public abstract void updateViews();
+
+	/**
+	 * @param name
+	 * @param circularPointGroup
+	 * @return
+	 */
+	protected abstract Multiset<String> getPlaceStateForCell(String id, CircularPointGroup circularPointGroup);
+	
+	
+	/** Method for incrementing or decrementing the current #AbstractMarking of the given #AbstractPNPlace
+	 * @param cell
+	 * @param wheelRotation
+	 * @return 
+	 * @throws ParameterException
+	 */
+	
+	protected abstract AbstractMarking inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException;
+
 	/**
 	 * Selects all vertices and/or edges depending on the given boolean
 	 * arguments recursively, starting at the given parent or the default parent
@@ -826,24 +825,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		}
 
 	}
-
-	/**
-	 * @param name
-	 * @param circularPointGroup
-	 * @return
-	 */
-	protected abstract Multiset<String> getPlaceStateForCell(String id, CircularPointGroup circularPointGroup);
 	
-	
-	/** Method for incrementing or decrementing the current #AbstractMarking of the given #AbstractPNPlace
-	 * @param cell
-	 * @param wheelRotation
-	 * @return 
-	 * @throws ParameterException
-	 */
-	
-	protected abstract AbstractMarking inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException;
-
 	private void drawNumbers(PNGraphCell cell, String numbers, mxGraphics2DCanvas canvas, Rectangle temp, Point center) {
 		Graphics g = canvas.getGraphics();
 		Graphics2D g2 = (Graphics2D) g;
@@ -1251,66 +1233,16 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-		// if (evt.getName().equals(mxEvent.CHANGE)) {
-		// ArrayList<mxAtomicGraphModelChange> changes =
-		// (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
-		// System.out.println(changes + "changes");
-		// }
 
-		// if (evt.getName().equals(mxEvent.EXECUTE)){
-		// Object change = evt.getProperty("change");
-		// if(change instanceof StyleChange)
-		// System.out.println(((StyleChange) change).getStyle());
-		// }
-
-		// if (evt.getName().equals(mxEvent.UNDO)){
-		// System.out.println(evt.getProperties());
-		// Object change = evt.getProperty("change");
-		// System.out.println(change);
-		// if(change instanceof StyleChange)
-		// System.out.println(((StyleChange) change).getStyle());
-		// }
-		// System.out.println("EVENT:" + evt.getName());
 		if (evt.getName().equals(mxEvent.UNDO)) {
 			mxUndoableEdit edit = (mxUndoableEdit) evt.getProperty("edit");
-			// System.out.println("#"+evt.getProperties() + "#" +
-			// edit.getChanges() );
+
 		}
 		if (evt.getName().equals(mxEvent.CHANGE)) {
 			ArrayList<mxAtomicGraphModelChange> changes = (ArrayList<mxAtomicGraphModelChange>) evt.getProperty("changes");
-//			 System.out.println(changes + "changes");
 			if (changes != null) {
 				for (mxAtomicGraphModelChange change : changes) {
-//					if(change instanceof TokenChange){
-//						PNGraphCell labelCell = (PNGraphCell) ((mxValueChange) change).getCell();
-//						try {
-//						switch(labelCell.getType()){
-//						case ARC:
-//							setArcLabel(this, labelCell.getId(),((mxValueChange) change).getValue() + "");
-//							break;
-//						case PLACE:
-//							Object value = ((mxValueChange) change).getValue();
-//							System.out.println(value.getClass());
-////							if(!(value instanceof Multiset))
-////								updatePlaceState(labelCell,(Multiset<String>) value);
-////							else
-////							properties.setPlaceLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
-////							else
-////								updatePlaceState(labelCell, (Multiset<String>) value);
-//							break;
-//						case TRANSITION:
-//							properties.setTransitionLabel(this, labelCell.getId(), (String) ((mxValueChange) change).getValue());
-//							break;
-//						default:
-//							break;
-//						
-//						}
-//						} catch (ParameterException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//						
-//					}
+
 					if(change instanceof mxValueChange){
 						PNGraphCell labelCell = (PNGraphCell) ((mxValueChange) change).getCell();
 						try {
@@ -1355,18 +1287,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 									PNGraphCell sourceCell = (PNGraphCell) arc.getSource();
 									PNGraphCell targetCell = (PNGraphCell) arc.getTarget();
-									// // removeFlowRelation(arc.getId());
-									// PNGraphCell newArc = (PNGraphCell)
-									// addNewFlowRelation(sourceCell,
-									// targetCell);
-									//
-									// annotationGraphics.setOffset(new
-									// Offset(0, 0));
-									// getNetContainer().getPetriNetGraphics().getArcGraphics().put(newArc.getId()
-									// , arcGraphics);
-									// getNetContainer().getPetriNetGraphics().getArcAnnotationGraphics().put(newArc.getId(),
-									// annotationGraphics);
-									//
 
 									AbstractFlowRelation relation = null;
 
@@ -1820,41 +1740,6 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		
 	}
 
-	public abstract Color getTokenColorForName(String name) ;
 
-	public abstract void updateTokenColor(String name, Color value);
 
-	public abstract Multiset<String> getConstraintforArc(String name);
-
-	public abstract void  updateConstraint(String name, Multiset value);
-
-	public abstract void updateTokenConfigurer(String name) ;
-
-	public abstract int getCapacityforPlace(String name, String color) ;
-
-	public abstract void updatePlaceCapacity(String name, String color, int newCapacity) ;
-
-	public abstract void updateViews();
-
-//	protected abstract abstract Multiset<String> getMarkingForPlace(String id);
-
-//	public void highlightEnabledTransition() {
-//		Set<String> nameSet = null;
-//		try {
-//			nameSet = PNUtils.getNameSetFromTransitions(getNetContainer().getPetriNet().getEnabledTransitions(), true);
-//		} catch (ParameterException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		for(String n:nameSet){
-//			PNGraphCell cell =nodeReferences.get(n);
-//			Rectangle geo = cell.getGeometry().getRectangle();
-//			getca
-////			enabledTransitionsPanel =
-//			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;
-//			
-//		}
-//		
-//		
-//	}
 }

@@ -98,7 +98,6 @@ public class ConstraintChange extends mxAtomicGraphModelChange {
 	 */
 	public void execute()
 	{
-		System.out.println("I AM ConstraintCHANGE");
 		value = previous;
 		previous = valueForCellChanged(name,
 				previous);
@@ -110,8 +109,6 @@ public class ConstraintChange extends mxAtomicGraphModelChange {
 		try {
 			graph.updateConstraint(name, value);
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}		
 
 		return oldValue;

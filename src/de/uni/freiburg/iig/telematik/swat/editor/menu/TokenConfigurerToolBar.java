@@ -48,8 +48,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNMarking
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillColorSelectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.TokenColorSelectionAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.zoom.ZoomInAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.zoom.ZoomOutAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -138,7 +136,7 @@ public class TokenConfigurerToolBar extends JToolBar {
 				for (String colorName : colorsTemp) {
 					addRow(cpn.getInitialMarking(), colorName);
 				}
-				editor.getGraphComponent().repaint(); 
+				editor.getGraphComponent().repaint();
 
 			}
 		});
@@ -169,10 +167,8 @@ public class TokenConfigurerToolBar extends JToolBar {
 		int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter Name and Color of the new Token", JOptionPane.OK_CANCEL_OPTION);
 
 		String newTokenColor = textField.getText();
-		System.out.println(newTokenColor.equals(""));
 		AbstractMarking cpnMarking = cpn.getMarking();
 		Multiset<String> placeMarking = (Multiset<String>) cpnMarking.get(name);
-		System.out.println("#" + newTokenColor);
 		if (placeMarking == null)
 			placeMarking = new Multiset<String>();
 		if (placeMarking.contains(newTokenColor))
@@ -181,8 +177,8 @@ public class TokenConfigurerToolBar extends JToolBar {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(editor.getGraphComponent()), "Token Name is empty", "Problem", JOptionPane.ERROR_MESSAGE);
 		else {
 			placeMarking.add(newTokenColor);
-			
-			//UpdateBlock
+
+			// UpdateBlock
 			PNGraph graph = editor.getGraphComponent().getGraph();
 			mxGraphModel model = ((mxGraphModel) graph.getModel());
 			model.beginUpdate();
@@ -198,43 +194,41 @@ public class TokenConfigurerToolBar extends JToolBar {
 	private void addRow(final AbstractMarking wholeMarking, final String tokenLabel) {
 		final String name = tokenLabel;
 		Color tokenColor = colorMap.get(tokenLabel);
-		
-				final JPanel row = new JPanel();
-				row.setLayout(new BorderLayout());
-				Dimension dim = new Dimension();
-				double width = TOKEN_ROW_WIDTH;
-				double height = TOKEN_ROW_HEIGHT;
-				dim.setSize(width, height);
-				row.setPreferredSize(dim);
-				row.setMinimumSize(dim);
-				row.setMaximumSize(dim);
-				row.setSize(dim);	
-				row.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		
+		final JPanel row = new JPanel();
+		row.setLayout(new BorderLayout());
+		Dimension dim = new Dimension();
+		double width = TOKEN_ROW_WIDTH;
+		double height = TOKEN_ROW_HEIGHT;
+		dim.setSize(width, height);
+		row.setPreferredSize(dim);
+		row.setMinimumSize(dim);
+		row.setMaximumSize(dim);
+		row.setSize(dim);
+		row.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-					JPanel firstElement = new JPanel();
-						try {
-						TokenColorSelectionAction tokenColorAction = new TokenColorSelectionAction(editor, tokenLabel);
-						if (tokenColor != null)
-							tokenColorAction.setTokenColor(tokenColor);
-						else
-						tokenColorAction.setTokenColor(Color.BLACK);
-						JComponent tokenColorButton = nestedAdd(tokenColorAction);
-					firstElement.add(tokenColorButton);
+		JPanel firstElement = new JPanel();
+		try {
+			TokenColorSelectionAction tokenColorAction = new TokenColorSelectionAction(editor, tokenLabel);
+			if (tokenColor != null)
+				tokenColorAction.setTokenColor(tokenColor);
+			else
+				tokenColorAction.setTokenColor(Color.BLACK);
+			JComponent tokenColorButton = nestedAdd(tokenColorAction);
+			firstElement.add(tokenColorButton);
 
-						RestrictedTextField textField = new RestrictedTextField(Restriction.NOT_EMPTY, name);
-			
-						addTokenRenamingListener(tokenLabel, textField);
-			
-					firstElement.add(textField);
-					
-				row.add(firstElement, BorderLayout.LINE_START);
-			
-					JButton remove = new JButton(IconFactory.getIcon("minimize"));
-					addColorRemovalListener(tokenLabel, remove);
-			
-				row.add(remove, BorderLayout.LINE_END);
+			RestrictedTextField textField = new RestrictedTextField(Restriction.NOT_EMPTY, name);
+
+			addTokenRenamingListener(tokenLabel, textField);
+
+			firstElement.add(textField);
+
+			row.add(firstElement, BorderLayout.LINE_START);
+
+			JButton remove = new JButton(IconFactory.getIcon("minimize"));
+			addColorRemovalListener(tokenLabel, remove);
+
+			row.add(remove, BorderLayout.LINE_END);
 			tokenPanel.add(row);
 
 		} catch (ParameterException e1) {
@@ -255,32 +249,32 @@ public class TokenConfigurerToolBar extends JToolBar {
 				CPN cpn = (CPN) editor.getNetContainer().getPetriNet();
 				AbstractCPNMarking im = (AbstractCPNMarking) editor.getNetContainer().getPetriNet().getInitialMarking();
 
-				//UpdateBlock
+				// UpdateBlock
 				model.beginUpdate();
-					((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, null));
+				((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, null));
 
-					for (CPNFlowRelation flowrelation : cpn.getFlowRelations()) {
+				for (CPNFlowRelation flowrelation : cpn.getFlowRelations()) {
 
-						Multiset<String> constraint = flowrelation.getConstraint();
-						if (constraint != null) {
-							if (constraint.contains(tokenLabel)) {
-								constraint.setMultiplicity(tokenLabel, 0);
-								model.execute(new ConstraintChange((PNGraph) graph, flowrelation.getName(), constraint));
-							}
+					Multiset<String> constraint = flowrelation.getConstraint();
+					if (constraint != null) {
+						if (constraint.contains(tokenLabel)) {
+							constraint.setMultiplicity(tokenLabel, 0);
+							model.execute(new ConstraintChange((PNGraph) graph, flowrelation.getName(), constraint));
 						}
 					}
+				}
 
-					for (CPNPlace place : cpn.getPlaces()) {
-						Multiset<String> multiSet = (Multiset<String>) im.get(place.getName());
-						if (multiSet != null) {
-							if (multiSet.contains(tokenLabel)) {
-								multiSet.remove(tokenLabel);
-								model.execute(new TokenChange((PNGraph) graph, place.getName(), multiSet));
-							}
+				for (CPNPlace place : cpn.getPlaces()) {
+					Multiset<String> multiSet = (Multiset<String>) im.get(place.getName());
+					if (multiSet != null) {
+						if (multiSet.contains(tokenLabel)) {
+							multiSet.remove(tokenLabel);
+							model.execute(new TokenChange((PNGraph) graph, place.getName(), multiSet));
 						}
 					}
+				}
 
-					((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, null));
+				((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, null));
 
 				model.endUpdate();
 			}
@@ -306,35 +300,35 @@ public class TokenConfigurerToolBar extends JToolBar {
 
 				// UpdateBlock
 				model.beginUpdate();
-					((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, color));
-					
-					for (CPNFlowRelation flowrelation : pn.getFlowRelations()) {
-						Multiset<String> constraint = flowrelation.getConstraint();
-						if (constraint != null) {
-							if (constraint.contains(tokenLabel)) {
-								int constraintMultiplicity = constraint.multiplicity(tokenLabel);
-								constraint.setMultiplicity(newTokenName, constraintMultiplicity);
-								constraint.setMultiplicity(tokenLabel, 0);
-								model.execute(new ConstraintChange((PNGraph) graph, flowrelation.getName(), constraint));
-							}
+				((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, color));
+
+				for (CPNFlowRelation flowrelation : pn.getFlowRelations()) {
+					Multiset<String> constraint = flowrelation.getConstraint();
+					if (constraint != null) {
+						if (constraint.contains(tokenLabel)) {
+							int constraintMultiplicity = constraint.multiplicity(tokenLabel);
+							constraint.setMultiplicity(newTokenName, constraintMultiplicity);
+							constraint.setMultiplicity(tokenLabel, 0);
+							model.execute(new ConstraintChange((PNGraph) graph, flowrelation.getName(), constraint));
+						}
+					}
+				}
+
+				for (CPNPlace place : pn.getPlaces()) {
+					Multiset<String> multiSet = (Multiset<String>) am.get(place.getName());
+					if (multiSet != null) {
+						if (multiSet.contains(tokenLabel)) {
+							int multiplicity = multiSet.multiplicity(tokenLabel);
+							multiSet.setMultiplicity(newTokenName, multiplicity);
+							multiSet.remove(tokenLabel);
+							model.execute(new TokenChange((PNGraph) graph, place.getName(), multiSet));
 						}
 					}
 
-					for (CPNPlace place : pn.getPlaces()) {
-						Multiset<String> multiSet = (Multiset<String>) am.get(place.getName());
-						if (multiSet != null) {
-							if (multiSet.contains(tokenLabel)) {
-								int multiplicity = multiSet.multiplicity(tokenLabel);
-								multiSet.setMultiplicity(newTokenName, multiplicity);
-								multiSet.remove(tokenLabel);
-								model.execute(new TokenChange((PNGraph) graph, place.getName(), multiSet));
-							}
-						}
+				}
 
-					}
-
-					((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, newTokenName, color));
-					((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, null));
+				((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, newTokenName, color));
+				((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, null));
 				model.endUpdate();
 			}
 		});

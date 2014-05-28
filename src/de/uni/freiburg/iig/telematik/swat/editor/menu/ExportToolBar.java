@@ -41,7 +41,6 @@ public class ExportToolBar extends JToolBar {
 	public ExportToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
 		Validate.notNull(pnEditor);
-//		setLayout(new WrapLayout(FlowLayout.LEFT));
 
 		try {
 

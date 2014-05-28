@@ -101,11 +101,9 @@ public class CapacityChange extends mxAtomicGraphModelChange {
 	 */
 	public void execute()
 	{
-		System.out.println("I AM CapacityCHANGE");
 		value = previous;
 		previous = valueForCellChanged(name,color,
 				previous);
-		System.out.println(color+": " +value + "#p: " + previous);
 		
 	}
 	
@@ -115,8 +113,6 @@ public class CapacityChange extends mxAtomicGraphModelChange {
 		try {
 			graph.updatePlaceCapacity(name, color,newCapacity);
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}		
 
 		return oldValue;
