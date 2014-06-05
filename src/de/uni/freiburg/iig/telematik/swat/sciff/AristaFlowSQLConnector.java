@@ -18,9 +18,9 @@ public class AristaFlowSQLConnector {
 	private Connection con;
 	private Statement st;
 	private FileWriter fileWriter;
-	private String[] header = { "START", "END", "NODEID", "ITERATION", "FIRSTNAME", "LASTNAME", "NAME", "NODENAME", "INSTANCENAME",
+	private final String[] HEADER = { "START", "END", "NODEID", "ITERATION", "FIRSTNAME", "LASTNAME", "NAME", "NODENAME", "INSTANCENAME",
 			"INSTANCELOGID", "TEMPLATENAME" };
-	private File tempFile = new File(System.getProperty("java.io.tmpdir") + "/aristaFlowExport.csv");
+	private final File tempFile = new File(System.getProperty("java.io.tmpdir") + "/aristaFlowExport.csv");
 
 	public static void main(String[] args) {
 
@@ -29,7 +29,7 @@ public class AristaFlowSQLConnector {
 			prop.setAristaFlowURL("jdbc:postgresql://127.0.0.1:5432/InvoiceLocal");
 			prop.setAristaFlowUser("ADEPT2");
 			prop.setAristaFlowPass("ADEPT2DB");
-			prop.store();
+			//prop.store();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -106,11 +106,11 @@ public class AristaFlowSQLConnector {
 	private void writeLine(ResultSet rs) throws SQLException, IOException {
 		StringBuilder sb = new StringBuilder();
 		boolean firstElement = true;
-		for (int i = 0; i < header.length; i++) {
+		for (int i = 0; i < HEADER.length; i++) {
 			if (!firstElement)
 				sb.append(";");
 			firstElement = false;
-			sb.append(rs.getString(header[i]));
+			sb.append(rs.getString(HEADER[i]));
 		}
 		sb.append("\r\n");
 		fileWriter.write(sb.toString());

@@ -131,11 +131,13 @@ public class SciffPresenter {
 		pane.setLayout(new GridLayout(1, 2));
 		JButton correct = new JButton("Analyse " + report.correctInstances().size() + " CORRECT Instances");
 		//correct.addActionListener(new SciffAnalyzeAction(report.getLog().getInstances(report.correctInstances())));
-		correct.addActionListener(new SciffAnalyzeAction(new LogBuilder(report.getLog(), report.correctInstances())));
+		//correct.addActionListener(new SciffAnalyzeAction(new LogBuilder(report.getLog(), report.correctInstances())));
+		correct.addActionListener(new SciffAnalyzeAction(new LogFilePartitioner(report.getLog(), report.correctInstances())));
 		report.correctInstances();
 		pane.add(correct);
 		JButton wrong = new JButton("Analyse " + report.wrongInstances().size() + " WRONG Instances");
-		wrong.addActionListener(new SciffAnalyzeAction(new LogBuilder(report.getLog(), report.wrongInstances())));
+		// wrong.addActionListener(new SciffAnalyzeAction(new LogBuilder(report.getLog(), report.wrongInstances())));
+		wrong.addActionListener(new SciffAnalyzeAction(new LogFilePartitioner(report.getLog(), report.wrongInstances())));
 		pane.add(wrong);
 		//pane.pack();
 		return pane;
