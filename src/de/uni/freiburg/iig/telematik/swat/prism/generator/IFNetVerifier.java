@@ -8,7 +8,7 @@ import java.util.List;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 
-public class SNetVerifier {
+public class IFNetVerifier {
 
 	//The IFNet which should be checked
 	private IFNet IFNet;
@@ -38,7 +38,7 @@ public class SNetVerifier {
    
     
     
-	public SNetVerifier(IFNet IFNet) {
+	public IFNetVerifier(IFNet IFNet) {
 		this.IFNet = IFNet;
     }
     
@@ -51,7 +51,7 @@ public class SNetVerifier {
     		
     		
     		//1) Generate Prism model
-			SNetToPrismConverter converter = new SNetToPrismConverter(IFNet);
+			IFNetToPrismConverter converter = new IFNetToPrismConverter(IFNet);
 			StringBuilder prismModel = converter.ConvertIFNetToPrism();
     		
     		// Create file containing the prism model   		 

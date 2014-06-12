@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 
 public class FileHelper {
 
+	/** efficiently get number of lines in a file **/
 	public static long getLinesCount(String fileName, String encodingName) {
 		long linesCount = 0;
 		File file = new File(fileName);

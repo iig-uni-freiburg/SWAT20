@@ -4,8 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.ScrollPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -24,12 +28,42 @@ import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 
-public class SciffPresenter {
+public class SciffPresenter implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	protected JFrame result;
 	protected String output;
 	protected CheckerReport report;
+
 	protected CompositeRule rule;
+	protected String oldRule = "";
+
+	private String operatorString = "";
+
+	public SciffPresenter(CheckerReport report, CompositeRule rule, String oldRule) {
+		this.report = report;
+		this.rule = rule;
+		this.oldRule = oldRule;
+		StringBuilder b = new StringBuilder();
+		b.append("<b>RULE</b> ");
+		b.append(getRuleString() + "<br>");
+
+		b.append(getReportOverview(report));
+		b.append("<br> <br>");
+
+		b.append(getWrongDetails(report));
+		b.append("<br> <br>");
+
+		b.append(getCorrectDetails(report));
+		b.append("</body></html>");
+		this.output = b.toString();
+
+		makeWindow();
+	}
+
+	public SciffPresenter(CheckerReport report, CompositeRule rule) {
+		this(report, rule, null);
+	}
 
 	public SciffPresenter(String output) {
 		//this.output = "<html><body>" + output.replaceAll("(\r\n|\n)", "<br />" + "</body></html>");
@@ -39,31 +73,20 @@ public class SciffPresenter {
 
 	public SciffPresenter(CheckerReport report) {
 		this(report, null);
-
 	}
 
-	public SciffPresenter(CheckerReport report, CompositeRule rule) {
-		this.report = report;
-		this.rule = rule;
-		StringBuilder b = new StringBuilder();
-		b.append(generateRuleOverview() + "<br>");
-		b.append(getReportOverview(report));
-		b.append("<br> <br>");
-		b.append(getWrongDetails(report));
-		b.append("<br> <br>");
-		b.append(getCorrectDetails(report));
-		b.append("</body></html>");
-		this.output = b.toString();
-		makeWindow();
-	}
-
-	public String generateRuleOverview() {
+	public String getRuleString() {
 		if (rule == null)
 			return "";
+		if (oldRule == null)
+			oldRule = "";
+		if (operatorString == null)
+			operatorString = "";
+
 		URL css = ResourceHandler.getInstance().getURL(ResourceHandler.CSS);
 		HTMLRuleVisitor visitor = new HTMLRuleVisitor(css);
-		System.out.println("Rule: " + visitor.visitRule(rule));
-		return "RULE: " + visitor.visitRule(rule).replace("</body>", "").replace("</html>", "");
+		//return "RULE: " + visitor.visitRule(rule).replace("</body>", "").replace("</html>", "");
+		return this.oldRule + operatorString + "<br /><blockquote>" + visitor.visitRule(rule, false) + "</blockquote>";
 	}
 
 	public CheckerReport getReport() {
@@ -73,9 +96,9 @@ public class SciffPresenter {
 	public StringBuilder getReportOverview(CheckerReport report) {
 		StringBuilder b = new StringBuilder();
 		b.append("<b><font size=Report:</b><br>");
-		b.append("Number of correct instances: ");
+		b.append("Number of <b>correct</b> instances: ");
 		b.append(report.correctInstances().size());
-		b.append("<br><b>Number of wrong instances: </b>");
+		b.append("<br>Number of <b>wrong</b> instances: ");
 		b.append(report.wrongInstances().size());
 		return b;
 	}
@@ -107,9 +130,6 @@ public class SciffPresenter {
 
 	private void makeWindow() {
 		result = new JFrame();
-		//JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		//result.setLayout(new GridLayout(2, 1));
-		//result.add(new Spl)
 		result.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		result.setSize(new Dimension(600, 600));
 		ScrollPane scrollPane = new ScrollPane();
@@ -121,26 +141,61 @@ public class SciffPresenter {
 		result.add(scrollPane, BorderLayout.CENTER);
 		result.add(getBottomButtons(), BorderLayout.PAGE_END);
 		//result.addWindowListener(new CloseListener());
-		//split.add(getBottomButtons());
-		//split.setDividerLocation(0.05);
-		//result.add(split);
 	}
 
 	private JPanel getBottomButtons() {
 		JPanel pane = new JPanel();
 		pane.setLayout(new GridLayout(1, 2));
-		JButton correct = new JButton("Analyse " + report.correctInstances().size() + " CORRECT Instances");
-		//correct.addActionListener(new SciffAnalyzeAction(report.getLog().getInstances(report.correctInstances())));
-		//correct.addActionListener(new SciffAnalyzeAction(new LogBuilder(report.getLog(), report.correctInstances())));
-		correct.addActionListener(new SciffAnalyzeAction(new LogFilePartitioner(report.getLog(), report.correctInstances())));
-		report.correctInstances();
+
+		JButton correct = new JButton("Analyse CORRECT Instances (" + report.correctInstances().size() + ")");
+		//correct.addActionListener(new SciffAnalyzeAction(new LogFilePartitioner(report.getLog(), report.correctInstances()), this));
+		correct.addActionListener(new FurtherAnalyzeAction(true, this));
+		//report.correctInstances();
 		pane.add(correct);
-		JButton wrong = new JButton("Analyse " + report.wrongInstances().size() + " WRONG Instances");
-		// wrong.addActionListener(new SciffAnalyzeAction(new LogBuilder(report.getLog(), report.wrongInstances())));
-		wrong.addActionListener(new SciffAnalyzeAction(new LogFilePartitioner(report.getLog(), report.wrongInstances())));
+
+		JButton wrong = new JButton("Analyse WRONG Instances (" + report.wrongInstances().size() + ")");
+		//wrong.addActionListener(new SciffAnalyzeAction(new LogFilePartitioner(report.getLog(), report.wrongInstances()), this));
+		wrong.addActionListener(new FurtherAnalyzeAction(false, this));
 		pane.add(wrong);
-		//pane.pack();
 		return pane;
+	}
+
+	private JButton getSaveButton() {
+		JButton save = new JButton("Save");
+
+		return null;
+	}
+
+	/**
+	 * action listener to filter results. boolean is true if positive results
+	 * are filtered.
+	 **/
+	class FurtherAnalyzeAction implements ActionListener {
+		private boolean positiveSet;
+		private SciffPresenter presenter;
+
+		public FurtherAnalyzeAction(boolean positiveSet, SciffPresenter presenter) {
+			this.positiveSet = positiveSet;
+			this.presenter = presenter;
+			if (positiveSet)
+				operatorString = "<b>AND </b>";
+			else
+				operatorString = "<i><b>AND NOT</b></i>";
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			List<Integer> reportSet = new LinkedList<Integer>();
+			if (positiveSet)
+				reportSet=report.correctInstances();
+			else if (!positiveSet)
+				reportSet=report.wrongInstances();
+			LogFilePartitioner partitioner = new LogFilePartitioner(report.getLog(), reportSet);
+			SciffAnalyzeAction sciffAnalzeAction = new SciffAnalyzeAction(partitioner, this.presenter);
+			sciffAnalzeAction.actionPerformed(e);
+
+		}
+
 	}
 
 }

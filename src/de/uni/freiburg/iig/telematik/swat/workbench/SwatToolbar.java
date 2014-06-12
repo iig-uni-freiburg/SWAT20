@@ -39,6 +39,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.PrismAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
@@ -135,6 +136,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		standardItems.add(getLolaButton());
 		standardItems.add(getAristaFlowButton());
+		standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));
 		
 //		ButtonGroup group = new ButtonGroup();
 //		group.add(getAnalysisRadioButton());
@@ -336,13 +338,17 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case ARISTAFLOW:
 				setToolTipText("Analyze active AristaFlow instance");
 				addActionListener(new AristaFlowAction());
+				break;
+			case PRISM:
+				setToolTipText("Analyze with PRISM");
+				addActionListener(new PrismAnalyzeAction(tabView));
 			}
 		}
 		
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM;
 	}
 
 	class AristaFlowAction implements ActionListener {

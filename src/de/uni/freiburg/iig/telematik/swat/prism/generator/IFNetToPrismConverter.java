@@ -20,7 +20,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetTestUtil;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 
-public class SNetToPrismConverter {
+public class IFNetToPrismConverter {
 
 	//The IFNet which should be exported to prism
 	private IFNet IFNet;
@@ -31,7 +31,7 @@ public class SNetToPrismConverter {
 	//The name of the variable used to reset the _last variables
 	private final String RESET_VARIABLE = "reset_last";
 	
-	public SNetToPrismConverter(IFNet IFNet) {
+	public IFNetToPrismConverter(IFNet IFNet) {
 		this.IFNet = IFNet;
 	}
 	
@@ -408,7 +408,7 @@ public class SNetToPrismConverter {
 	 * 
 	 * @throws ParameterException
 	 */
-	protected StringBuilder ConvertIFNetToPrism() throws ParameterException {
+	public StringBuilder ConvertIFNetToPrism() throws ParameterException {
 		
 		//The StringBuilder which is going to contain the whole prism model of the IFNet
 		StringBuilder prismModelBuilder = new StringBuilder();
@@ -497,7 +497,7 @@ public class SNetToPrismConverter {
 		IFNet IFNet = IFNetTestUtil.createSimpleSnetWithDeclassification();
 		
 		//Create convert to prism
-		SNetToPrismConverter converter = new SNetToPrismConverter(IFNet);
+		IFNetToPrismConverter converter = new IFNetToPrismConverter(IFNet);
 		StringBuilder prismModel = converter.ConvertIFNetToPrism();
 		System.out.println(prismModel);
 						

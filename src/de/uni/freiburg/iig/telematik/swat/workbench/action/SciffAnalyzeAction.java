@@ -50,7 +50,12 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	public SciffAnalyzeAction(SciffPresenter presenter) {
 		this.reader = presenter.getReport().getLog();
-		this.previousRule = presenter.generateRuleOverview();
+		this.previousRule = presenter.getRuleString();
+	}
+
+	public SciffAnalyzeAction(ISciffLogReader reader, SciffPresenter presenter) {
+		this(reader);
+		this.previousRule = presenter.getRuleString();
 	}
 
 	@Override
@@ -79,7 +84,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 				CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
 				System.out.println("Wrong: " + report.wrongInstances().size() + " - Right: " + report.correctInstances().size()
 						+ " - Exceptions: " + report.exceptionInstances().size());
-				SciffPresenter sciff = new SciffPresenter(report, rule);
+				SciffPresenter sciff = new SciffPresenter(report, rule, previousRule);
 				sciff.show();
 				//System.out.println("Wrong: " + reader.getInstance(report.wrongInstances().get(0)).getName());
 			} catch (ParserException e) {
