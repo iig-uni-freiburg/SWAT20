@@ -8,7 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,15 +38,21 @@ public class SciffPresenter implements Serializable {
 	protected CheckerReport report;
 
 	protected CompositeRule rule;
-	protected String oldRule = "";
+	protected CompositeRule oldRule;
+	
 
-	private String operatorString = "";
+	private String operatorString = "<b>CURRENT RULE: </b><br />";
+	private String oldRuleString;
 
-	public SciffPresenter(CheckerReport report, CompositeRule rule, String oldRule) {
+	public SciffPresenter(CheckerReport report, CompositeRule rule, String oldRuleString) {
 		this.report = report;
 		this.rule = rule;
 		this.oldRule = oldRule;
+		this.oldRuleString=oldRuleString;
 		StringBuilder b = new StringBuilder();
+
+		b.append(currentHeaderDateAndTime());
+
 		b.append("<b>RULE</b> ");
 		b.append(getRuleString() + "<br>");
 
@@ -59,6 +67,36 @@ public class SciffPresenter implements Serializable {
 		this.output = b.toString();
 
 		makeWindow();
+	}
+
+
+	private StringBuilder currentHeaderDateAndTime() {
+
+
+		StringBuilder b = new StringBuilder();
+
+		b.append("Analysis from ");
+		b.append(System.getProperty("user.name"));
+		b.append(", on ");
+		b.append(getHostname());
+		b.append(" (");
+		b.append(new Date());
+		b.append(") <br>");
+		return b;
+	}
+
+	private String getHostname() {
+		String localMachine;
+		try {
+			localMachine = java.net.InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			try {
+				localMachine = java.net.Inet4Address.getLocalHost().getHostAddress();
+			} catch (UnknownHostException e1) {
+				localMachine = "unknown computer";
+			}
+		}
+		return localMachine;
 	}
 
 	public SciffPresenter(CheckerReport report, CompositeRule rule) {
@@ -78,15 +116,15 @@ public class SciffPresenter implements Serializable {
 	public String getRuleString() {
 		if (rule == null)
 			return "";
-		if (oldRule == null)
-			oldRule = "";
-		if (operatorString == null)
-			operatorString = "";
 
 		URL css = ResourceHandler.getInstance().getURL(ResourceHandler.CSS);
 		HTMLRuleVisitor visitor = new HTMLRuleVisitor(css);
 		//return "RULE: " + visitor.visitRule(rule).replace("</body>", "").replace("</html>", "");
-		return this.oldRule + operatorString + "<br /><blockquote>" + visitor.visitRule(rule, false) + "</blockquote>";
+		return oldRuleString + "<br /><blockquote>" + operatorString + visitor.visitRule(rule, false) + "</blockquote>";
+	}
+	
+	public CompositeRule getRule() {
+		return this.rule;
 	}
 
 	public CheckerReport getReport() {
@@ -166,6 +204,10 @@ public class SciffPresenter implements Serializable {
 		return null;
 	}
 
+	public void setOperatorString(String operator) {
+		this.operatorString = operator;
+	}
+}
 	/**
 	 * action listener to filter results. boolean is true if positive results
 	 * are filtered.
@@ -175,22 +217,26 @@ public class SciffPresenter implements Serializable {
 		private SciffPresenter presenter;
 
 		public FurtherAnalyzeAction(boolean positiveSet, SciffPresenter presenter) {
-			this.positiveSet = positiveSet;
-			this.presenter = presenter;
-			if (positiveSet)
-				operatorString = "<b>AND </b>";
-			else
-				operatorString = "<i><b>AND NOT</b></i>";
+		this.positiveSet = positiveSet;
+		this.presenter = presenter;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//generate LogFile according to pressed button
 			List<Integer> reportSet = new LinkedList<Integer>();
-			if (positiveSet)
-				reportSet=report.correctInstances();
-			else if (!positiveSet)
-				reportSet=report.wrongInstances();
-			LogFilePartitioner partitioner = new LogFilePartitioner(report.getLog(), reportSet);
+			
+			//change operator String of this SciffPresenter depending on which button was pressed
+			if (positiveSet) {
+				presenter.setOperatorString("<b>MUST MATCH: </b><br />");
+				reportSet = presenter.getReport().correctInstances();
+				System.out.println("MUST MATCH");
+			} else if (!positiveSet) {
+				presenter.setOperatorString("<i><b>MUST NOT MATCH: </b></i><br />");
+				reportSet = presenter.getReport().wrongInstances();
+			}
+		LogFilePartitioner partitioner = new LogFilePartitioner(presenter.getReport().getLog(), reportSet);
+
 			SciffAnalyzeAction sciffAnalzeAction = new SciffAnalyzeAction(partitioner, this.presenter);
 			sciffAnalzeAction.actionPerformed(e);
 
@@ -198,7 +244,6 @@ public class SciffPresenter implements Serializable {
 
 	}
 
-}
 
 class LogBuilder implements ISciffLogReader {
 	ArrayList<ISciffLogTrace> traces = new ArrayList<ISciffLogTrace>();
@@ -245,6 +290,7 @@ class LogBuilder implements ISciffLogReader {
 		for (ISciffLogTrace trace : listOfTraces) {
 			addTrace(trace);
 		}
-	}
+	
 
+}
 }

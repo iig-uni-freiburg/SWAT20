@@ -38,7 +38,8 @@ public class SciffAnalyzeAction extends AbstractAction {
 	private static final long serialVersionUID = 9111775745565090191L;
 	private File file;
 	private ISciffLogReader reader;
-	private String previousRule;
+	private CompositeRule previousRule;
+	private String previouseRuleString = "";
 
 	public SciffAnalyzeAction(File file) {
 		this.file = file;
@@ -50,12 +51,14 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	public SciffAnalyzeAction(SciffPresenter presenter) {
 		this.reader = presenter.getReport().getLog();
-		this.previousRule = presenter.getRuleString();
+		this.previousRule = presenter.getRule();
+		this.previouseRuleString = presenter.getRuleString();
 	}
 
 	public SciffAnalyzeAction(ISciffLogReader reader, SciffPresenter presenter) {
 		this(reader);
-		this.previousRule = presenter.getRuleString();
+		this.previousRule = presenter.getRule();
+		this.previouseRuleString = presenter.getRuleString();
 	}
 
 	@Override
@@ -84,7 +87,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 				CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
 				System.out.println("Wrong: " + report.wrongInstances().size() + " - Right: " + report.correctInstances().size()
 						+ " - Exceptions: " + report.exceptionInstances().size());
-				SciffPresenter sciff = new SciffPresenter(report, rule, previousRule);
+				SciffPresenter sciff = new SciffPresenter(report, rule, previouseRuleString);
 				sciff.show();
 				//System.out.println("Wrong: " + reader.getInstance(report.wrongInstances().get(0)).getName());
 			} catch (ParserException e) {
