@@ -3,7 +3,11 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.swing.SwingUtilities;
 
@@ -32,8 +36,10 @@ public class ImportAction implements ActionListener {
 			return;
 		String fileName = requestFileName("Name for imported net?", "New name?");
 		try {
+			//Put File into Swat Workspace and save
 			File file = getAbsolutePathToWorkingDir(fileName);
 			SwatComponents.getInstance().putIntoSwatComponent(net, file);
+			SwatComponents.getInstance().storePetriNet(net);
 			treeView.removeAndUpdateSwatComponents();
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
@@ -58,5 +64,22 @@ public class ImportAction implements ActionListener {
 			throw new ParameterException("File already exists");
 		//TODO: Validate, test if SWATComponent already contains net with same name... etc?
 		return file;
+	}
+
+	private static void copyFileUsingStream(File source, File dest) throws IOException {
+		InputStream is = null;
+		OutputStream os = null;
+		try {
+			is = new FileInputStream(source);
+			os = new FileOutputStream(dest);
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = is.read(buffer)) > 0) {
+				os.write(buffer, 0, length);
+			}
+		} finally {
+			is.close();
+			os.close();
+		}
 	}
 }
