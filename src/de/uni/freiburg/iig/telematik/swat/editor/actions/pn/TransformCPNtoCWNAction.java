@@ -12,6 +12,9 @@ import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNSoundnessException;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNValidationException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCWN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CWNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
@@ -21,17 +24,20 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNMarking;
+import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
+import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
+import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
-public class ChecKSoundnessAction extends AbstractPNEditorAction {
+public class TransformCPNtoCWNAction extends AbstractPNEditorAction {
 
 	private static final long serialVersionUID = 4315293729223367039L;
 
-	public ChecKSoundnessAction(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
-		super(pnEditor, "CheckSoundness", IconFactory.getIcon("soundcwn"));
+	public TransformCPNtoCWNAction(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
+		super(pnEditor, "CheckSoundness", IconFactory.getIcon("cwn_transform"));
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -74,14 +80,34 @@ public class ChecKSoundnessAction extends AbstractPNEditorAction {
 			
 
 				try {
-					cwn.checkSoundness(true);
-					JOptionPane.showMessageDialog(editor.getGraphComponent(), "Awesome! You have a SOUND Coloured Workflow Net.", "CWN is Sound - Awesome Job!", JOptionPane.INFORMATION_MESSAGE);
+					cwn.checkSoundness();
+					String filename = editor.getFileReference().getAbsolutePath();
+					CPNGraphics cpnGraphics = (CPNGraphics) editor.getNetContainer().getPetriNetGraphics();
+					CWNGraphics cwnGraphics = new CWNGraphics();
+					cwnGraphics.setArcAnnotationGraphics(cpnGraphics.getArcAnnotationGraphics());
+					cwnGraphics.setArcGraphics(cpnGraphics.getArcGraphics());
+					cwnGraphics.setColors(cpnGraphics.getColors());
+					cwnGraphics.setPlaceGraphics(cpnGraphics.getPlaceGraphics());
+					cwnGraphics.setPlaceLabelAnnotationGraphics(cpnGraphics.getPlaceLabelAnnotationGraphics());
+					cwnGraphics.setTokenGraphics(cpnGraphics.getTokenGraphics());
+					cwnGraphics.setTransitionGraphics(cpnGraphics.getTransitionGraphics());
+					cwnGraphics.setTransitionLabelAnnotationGraphics(cpnGraphics.getTransitionLabelAnnotationGraphics());			
+					GraphicalCWN newCWNNetContainer = new GraphicalCWN(cwn, cwnGraphics);
+					PNSerialization.serialize(newCWNNetContainer, PNSerializationFormat.PNML, filename);
+					JOptionPane.showMessageDialog(editor.getGraphComponent(), "Awesome! You're Coloured Workflow Net is VALID.", "CWN is VALID - Awesome Job!", JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (PNValidationException e1) {
 					JOptionPane.showMessageDialog(editor.getGraphComponent(), e1.getMessage(), "CWN Validation Failed", JOptionPane.ERROR_MESSAGE);
+				} catch (SerializationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				} catch (PNSoundnessException e1) {
-					JOptionPane.showMessageDialog(editor.getGraphComponent(), e1.getMessage(), "CWN Is Not Sound", JOptionPane.ERROR_MESSAGE);
-				}
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} 
 				
 			}
 		}

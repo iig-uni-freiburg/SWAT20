@@ -36,6 +36,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.ReloadExecutionAct
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.ToggleModeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.nodes.NodeToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.ChecKSoundnessAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.CheckValidityAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.TransformCPNtoCWNAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 
 public class ToolBar extends JToolBar {
@@ -113,6 +115,16 @@ public class ToolBar extends JToolBar {
 
 	private JToggleButton checkSoundnessButton;
 
+
+	private CheckValidityAction checkValidityAction;
+
+	private JToggleButton checkValidityButton;
+
+
+	private TransformCPNtoCWNAction transformAction;
+
+
+	private JToggleButton transformButton;
 	
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
@@ -150,7 +162,10 @@ public class ToolBar extends JToolBar {
 			tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
 			tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
 			
+			
+			checkValidityAction = new CheckValidityAction(pnEditor);
 			checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
+			transformAction = new TransformCPNtoCWNAction(pnEditor);
 			
 			}
 
@@ -209,7 +224,11 @@ public class ToolBar extends JToolBar {
 	
 		tokenAction.setButton(tokenButton);
 		
+		checkValidityButton = (JToggleButton) add(checkValidityAction, true);
 		checkSoundnessButton = (JToggleButton) add(checkSoundnessAction, true);
+		transformButton = (JToggleButton) add(transformAction, true);
+		
+		
 	}
 		doLayout();
 

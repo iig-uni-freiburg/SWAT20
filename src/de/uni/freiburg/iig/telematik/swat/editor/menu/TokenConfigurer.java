@@ -238,7 +238,6 @@ public class TokenConfigurer extends JDialog {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					super.mouseClicked(e);
-					Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), addButton);
 					JPopupMenu popup = new JPopupMenu();
 					if(multisetPA == null)
 						multisetPA = new Multiset<String>();
@@ -247,6 +246,7 @@ public class TokenConfigurer extends JDialog {
 						if (!multisetPA.contains(color)) {
 							JMenuItem item = new JMenuItem(color);
 							item.setName(color);
+							
 							item.addActionListener(new ActionListener() {
 
 								@Override

@@ -26,12 +26,12 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
-public class ChecKSoundnessAction extends AbstractPNEditorAction {
+public class CheckValidityAction extends AbstractPNEditorAction {
 
 	private static final long serialVersionUID = 4315293729223367039L;
 
-	public ChecKSoundnessAction(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
-		super(pnEditor, "CheckSoundness", IconFactory.getIcon("soundcwn"));
+	public CheckValidityAction(PNEditor pnEditor) throws ParameterException, PropertyException, IOException {
+		super(pnEditor, "CheckSoundness", IconFactory.getIcon("validcwn"));
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -74,14 +74,12 @@ public class ChecKSoundnessAction extends AbstractPNEditorAction {
 			
 
 				try {
-					cwn.checkSoundness(true);
-					JOptionPane.showMessageDialog(editor.getGraphComponent(), "Awesome! You have a SOUND Coloured Workflow Net.", "CWN is Sound - Awesome Job!", JOptionPane.INFORMATION_MESSAGE);
+					cwn.checkValidity();
+					JOptionPane.showMessageDialog(editor.getGraphComponent(), "Awesome! You're Coloured Workflow Net is VALID.", "CWN is VALID - Awesome Job!", JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (PNValidationException e1) {
 					JOptionPane.showMessageDialog(editor.getGraphComponent(), e1.getMessage(), "CWN Validation Failed", JOptionPane.ERROR_MESSAGE);
-				} catch (PNSoundnessException e1) {
-					JOptionPane.showMessageDialog(editor.getGraphComponent(), e1.getMessage(), "CWN Is Not Sound", JOptionPane.ERROR_MESSAGE);
-				}
+				} 
 				
 			}
 		}
