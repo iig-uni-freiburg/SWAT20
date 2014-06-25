@@ -41,7 +41,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
 import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
-import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 
@@ -355,7 +355,10 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 
 	@Override
 	public void modificationStateChanged(boolean modified) {
-		// TODO Auto-generated method stub
+		if (modified)
+			getSelectedComponent().setName(getSelectedComponent().getName() + "*");
+		else
+			getSelectedComponent().setName(getSelectedComponent().getName().replace("*", ""));
 		
 	}
 
