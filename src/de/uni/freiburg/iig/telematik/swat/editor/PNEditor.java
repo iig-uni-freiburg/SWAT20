@@ -65,6 +65,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.MoveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.NewNodeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.PrintAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.SelectAction;
+import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
+import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListenerSupport;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -95,6 +97,7 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	protected mxRubberband rubberband;
 	protected mxKeyboardHandler keyboardHandler;
 	protected mxUndoManager undoManager;
+	
 	protected mxIEventListener undoHandler = new mxIEventListener() {
 		public void invoke(Object source, mxEventObject evt) {
 			undoManager.undoableEditHappened((mxUndoableEdit) evt.getProperty("edit"));
@@ -112,6 +115,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	protected PNProperties properties = null;
 	protected PropertiesView propertiesView = null;
 	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = null;
+	
+	private PNEditorListenerSupport editorListenerSupport = new PNEditorListenerSupport();
 
 	// ------- Constructors --------------------------------------------------------------------
 
@@ -154,6 +159,10 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	protected abstract AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> createNetContainer();
 
 	protected abstract PNProperties createPNProperties();
+	
+	public void addEditorListener(PNEditorListener listener){
+		editorListenerSupport.addEditorListener(listener);
+	}
 
 	// ------- Set Up GUI -----------------------------------------------------------------------
 
@@ -310,8 +319,8 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 	public void setModified(boolean modified) {
 		boolean oldValue = this.modified;
 		this.modified = modified;
-
 		firePropertyChange("modified", oldValue, modified);
+		editorListenerSupport.notifyModificationStateChange(modified);
 	}
 
 	public boolean isModified() {

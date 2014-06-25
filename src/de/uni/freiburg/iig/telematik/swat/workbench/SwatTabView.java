@@ -39,13 +39,14 @@ import de.uni.freiburg.iig.telematik.swat.editor.CPNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
 import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 
 @SuppressWarnings("serial")
-public class SwatTabView extends JTabbedPane {
+public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	
 	private Map<Object, Component> openedSwatComponents = new HashMap<Object, Component>();
 
@@ -352,5 +353,10 @@ public class SwatTabView extends JTabbedPane {
 		};
 	}
 
+	@Override
+	public void modificationStateChanged(boolean modified) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
