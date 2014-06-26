@@ -72,7 +72,7 @@ public abstract class MXConstants {
 	public static final Color EDGE_SELECTION_COLOR = MXConstants.bluelow;
 	public static final Color VERTEX_SELECTION_COLOR = MXConstants.bluelow;
 	
-	
+	public static int EDGE_HANDLE_SIZE = 10;
 	
 	public static final String PLACE_NAME_PREFIX = "p";
 	public static final String TRANSITION_NAME_PREFIX = "t";
