@@ -24,7 +24,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
-import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
@@ -56,7 +56,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	public Workbench() {
 		super();
-		setLookAndFeel();
+		//setLookAndFeel();
 		setUpGUI();
 		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
 		int wdwLeft = (int) ((screenSize.width/2.0) - ((PREFERRED_SIZE_WORKBENCH.width + MessageDialog.PREFERRED_SIZE.width + 10)/2.0));
