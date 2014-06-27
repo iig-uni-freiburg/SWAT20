@@ -288,6 +288,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			super(IconFactory.getIcon(type.toString().toLowerCase()));
 			setBorder(BorderFactory.createEmptyBorder(0, ICON_SPACING, 0, ICON_SPACING));
 			setBorderPainted(false);
+			setRollover(true);
+			setFocusable(false);
 			switch(type){
 			case IMPORT:
 				setToolTipText("Import PT-Net from filesystem");

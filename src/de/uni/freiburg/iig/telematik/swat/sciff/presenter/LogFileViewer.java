@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.sciff;
+package de.uni.freiburg.iig.telematik.swat.sciff.presenter;
 
 import java.awt.FlowLayout;
 import java.io.File;
@@ -35,22 +35,34 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 	private static int ICON_SIZE = 32;
 	private JEditorPane editor;
 
-	public LogFileViewer(File file) throws IOException {
+	public LogFileViewer(File file) throws Exception {
 		super(new JEditorPane(file.toURI().toURL()));
-		// Initialize JEditorPane
-		editor = new JEditorPane(file.toURI().toURL());
-		this.file = file;
-		editor.setEditable(false);
-		//this.add(editor);
-		validate();
+		if (file.getName().endsWith("analysis")) {
+			openAnalysisFile(file);
+		} else {
+			// Initialize JEditorPane
+			editor = new JEditorPane(file.toURI().toURL());
+			this.file = file;
+			editor.setEditable(false);
+			//this.add(editor);
+			validate();
 
-		// get icon size
-		try {
-			ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
-		} catch (PropertyException e) {
-			// Stay with default value
+			// get icon size
+			try {
+				ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
+			} catch (PropertyException e) {
+				// Stay with default value
+			}
+			//SCIFFChecker test = new SCIFFChecker();
 		}
-		//SCIFFChecker test = new SCIFFChecker();
+	}
+
+	private void openAnalysisFile(File file) throws Exception {
+		//		FileReader fr = new FileReader(file.getAbsolutePath());
+		//		XStream xStream = new XStream();
+		//		LogFileViewer viewer = (SciffPresenter) xStream.fromXML(file);
+		LogFileViewer viewer = new LogFileViewer(LogSerializer.read(file).getLogFile());
+
 	}
 
 	@Override

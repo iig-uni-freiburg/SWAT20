@@ -28,9 +28,6 @@ public class LogFilePartitioner implements ISciffLogReader {
 				logMapping[i] = oldMapping[keepAsArray[i]];
 			}
 
-			//free arrays
-			keepAsArray = null;
-			oldMapping = null;
 		}
 		else {
 			logMapping = new Integer[keep.size()];
@@ -41,16 +38,17 @@ public class LogFilePartitioner implements ISciffLogReader {
 
 	@Override
 	public List<ISciffLogTrace> getInstances() {
+		//prepare output
 		LinkedList<ISciffLogTrace> filteredList = new LinkedList<ISciffLogTrace>();
 
-		//Buffer original Reader list as Array for faster access
+		//originalReader output as Array for faster access
 		ISciffLogTrace traces[] = {};
 		traces = originalReader.getInstances().toArray(traces);
 
 		for (Integer i : logMapping) {
 			filteredList.add(traces[i]);
 		}
-		traces = null;
+
 		return filteredList;
 	}
 

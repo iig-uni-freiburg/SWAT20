@@ -29,7 +29,7 @@ import de.uni.freiburg.iig.telematik.jawl.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
-import de.uni.freiburg.iig.telematik.swat.sciff.SciffPresenter;
+import de.uni.freiburg.iig.telematik.swat.sciff.presenter.SciffPresenter;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 
@@ -65,10 +65,6 @@ public class SciffAnalyzeAction extends AbstractAction {
 	public void actionPerformed(ActionEvent arg0) {
 		SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
 
-
-		try {
-			if (file != null)
-				System.out.println("Analayze " + file.getCanonicalPath());
 			try {
 				if (reader == null && file != null)
 					reader = getReader();
@@ -87,7 +83,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 				CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
 				System.out.println("Wrong: " + report.wrongInstances().size() + " - Right: " + report.correctInstances().size()
 						+ " - Exceptions: " + report.exceptionInstances().size());
-				SciffPresenter sciff = new SciffPresenter(report, rule, previouseRuleString);
+			SciffPresenter sciff = new SciffPresenter(report, rule, previouseRuleString, file);
 				sciff.show();
 				//System.out.println("Wrong: " + reader.getInstance(report.wrongInstances().get(0)).getName());
 			} catch (ParserException e) {
@@ -98,11 +94,6 @@ public class SciffAnalyzeAction extends AbstractAction {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} catch (ParameterException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 	}
 
@@ -136,6 +127,9 @@ public class SciffAnalyzeAction extends AbstractAction {
 	}
 
 	private ISciffLogReader getReader() throws Exception {
+		if (file != null)
+			System.out.println("Analayze " + file.getCanonicalPath());
+
 		if (file.getName().endsWith("mxml"))
 			return createMxmlParser();
 		return createAristaFlowParser();

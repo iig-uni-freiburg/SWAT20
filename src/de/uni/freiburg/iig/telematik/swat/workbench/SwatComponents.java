@@ -17,7 +17,7 @@ import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
-import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 public class SwatComponents {
@@ -97,13 +97,18 @@ public class SwatComponents {
 			} catch (IOException e) {
 				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
 				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
 		//Second csv-Files
 		List<File> csvFiles = null;
+		List<File> analysisFile = null;
 		try {
 			csvFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "csv");
+			analysisFile = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "analysis");
 		} catch (Exception e) {
 			throw new ParameterException("Cannot access working directory.\nReason: " + e.getMessage());
 		}
@@ -115,8 +120,12 @@ public class SwatComponents {
 			} catch (IOException e) {
 				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
 				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
+
 
 		// 3. Load xml files for Lola
 		MessageDialog.getInstance().addMessage("2. Searching for xml files:");

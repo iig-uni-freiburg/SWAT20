@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.sciff;
+package de.uni.freiburg.iig.telematik.swat.sciff.presenter;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -6,7 +6,8 @@ import java.awt.GridLayout;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serializable;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -28,13 +29,17 @@ import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
 import org.processmining.analysis.sciffchecker.logic.properties.ResourceHandler;
 import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 
+import de.invation.code.toval.graphic.dialog.FileNameDialog;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.sciff.LogFilePartitioner;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class SciffPresenter implements Serializable {
+public class SciffPresenter {
 
 	private static final long serialVersionUID = 1L;
 	protected JFrame result;
-	protected String output;
 	protected CheckerReport report;
 
 	protected CompositeRule rule;
@@ -43,15 +48,37 @@ public class SciffPresenter implements Serializable {
 
 	private String operatorString = "<b>CURRENT RULE: </b><br />";
 	private String oldRuleString;
+	private File logFile;
+
+	private String createdBy;
+	private String lastModifiedBy;
+	private JTextPane area;
+
+	public SciffPresenter(CheckerReport report, CompositeRule rule, String oldRuleString, File logFile) {
+		this(report, rule, oldRuleString);
+		this.logFile = logFile;
+	}
 
 	public SciffPresenter(CheckerReport report, CompositeRule rule, String oldRuleString) {
 		this.report = report;
 		this.rule = rule;
-		this.oldRule = oldRule;
+		//this.oldRule = oldRule;
 		this.oldRuleString=oldRuleString;
+
+		makeWindow();
+	}
+
+	private String generateOutput() {
 		StringBuilder b = new StringBuilder();
 
-		b.append(currentHeaderDateAndTime());
+		if (createdBy == null || createdBy.equals(""))
+			createdBy = currentHeaderDateAndTime().toString();
+
+		lastModifiedBy = currentHeaderDateAndTime().toString();
+
+		b.append("Analysis from: " + createdBy);
+
+		b.append("Last modified by: " + lastModifiedBy);
 
 		b.append("<b>RULE</b> ");
 		b.append(getRuleString() + "<br>");
@@ -64,18 +91,26 @@ public class SciffPresenter implements Serializable {
 
 		b.append(getCorrectDetails(report));
 		b.append("</body></html>");
-		this.output = b.toString();
+		//this.output = b.toString();
+		return b.toString();
+	}
 
-		makeWindow();
+	public File getLogFile() {
+		return this.logFile;
+	}
+
+	public String getCreatedByString() {
+		return createdBy;
+	}
+
+	public void setCreatedByString(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 
 	private StringBuilder currentHeaderDateAndTime() {
-
-
 		StringBuilder b = new StringBuilder();
 
-		b.append("Analysis from ");
 		b.append(System.getProperty("user.name"));
 		b.append(", on ");
 		b.append(getHostname());
@@ -103,11 +138,11 @@ public class SciffPresenter implements Serializable {
 		this(report, rule, null);
 	}
 
-	public SciffPresenter(String output) {
-		//this.output = "<html><body>" + output.replaceAll("(\r\n|\n)", "<br />" + "</body></html>");
-		this.output = output;
-		makeWindow();
-	}
+	//	public SciffPresenter(String output) {
+	//		//this.output = "<html><body>" + output.replaceAll("(\r\n|\n)", "<br />" + "</body></html>");
+	//		this.output = output;
+	//		makeWindow();
+	//	}
 
 	public SciffPresenter(CheckerReport report) {
 		this(report, null);
@@ -115,10 +150,11 @@ public class SciffPresenter implements Serializable {
 
 	public String getRuleString() {
 		if (rule == null)
-			return "";
+			return oldRuleString + "<br /><blockquote>" + operatorString + "</blockquote>";
 
 		URL css = ResourceHandler.getInstance().getURL(ResourceHandler.CSS);
 		HTMLRuleVisitor visitor = new HTMLRuleVisitor(css);
+		//System.out.println("DEBUG: Old Rule String " + oldRuleString);
 		//return "RULE: " + visitor.visitRule(rule).replace("</body>", "").replace("</html>", "");
 		return oldRuleString + "<br /><blockquote>" + operatorString + visitor.visitRule(rule, false) + "</blockquote>";
 	}
@@ -162,6 +198,7 @@ public class SciffPresenter implements Serializable {
 	}
 
 	public void show() {
+		this.area.setText(generateOutput());
 		result.setLocationByPlatform(true);
 		result.setVisible(true);
 	}
@@ -171,14 +208,14 @@ public class SciffPresenter implements Serializable {
 		result.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		result.setSize(new Dimension(600, 600));
 		ScrollPane scrollPane = new ScrollPane();
-		JTextPane area = new JTextPane();
+		this.area = new JTextPane();
 		area.setContentType("text/html");
-		area.setText(output);
+		area.setText(generateOutput());
 		area.setEditable(false);
 		scrollPane.add(area);
 		result.add(scrollPane, BorderLayout.CENTER);
 		result.add(getBottomButtons(), BorderLayout.PAGE_END);
-		//result.addWindowListener(new CloseListener());
+		result.add(getSaveButton(), BorderLayout.PAGE_START);
 	}
 
 	private JPanel getBottomButtons() {
@@ -186,63 +223,99 @@ public class SciffPresenter implements Serializable {
 		pane.setLayout(new GridLayout(1, 2));
 
 		JButton correct = new JButton("Analyse CORRECT Instances (" + report.correctInstances().size() + ")");
-		//correct.addActionListener(new SciffAnalyzeAction(new LogFilePartitioner(report.getLog(), report.correctInstances()), this));
 		correct.addActionListener(new FurtherAnalyzeAction(true, this));
-		//report.correctInstances();
 		pane.add(correct);
 
 		JButton wrong = new JButton("Analyse WRONG Instances (" + report.wrongInstances().size() + ")");
-		//wrong.addActionListener(new SciffAnalyzeAction(new LogFilePartitioner(report.getLog(), report.wrongInstances()), this));
 		wrong.addActionListener(new FurtherAnalyzeAction(false, this));
 		pane.add(wrong);
+
 		return pane;
+	}
+	
+	private void save(File file) {
+		LogSerializer.store(file, this);
 	}
 
 	private JButton getSaveButton() {
 		JButton save = new JButton("Save");
+		save.addActionListener(new ActionListener() {
 
-		return null;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String file = requestFileName("Name for Analysis Log?", "Analysis Log");
+				try {
+					save(new File(SwatProperties.getInstance().getWorkingDirectory(), file));
+				} catch (ParameterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (PropertyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+		return save;
 	}
 
 	public void setOperatorString(String operator) {
 		this.operatorString = operator;
 	}
-}
-	/**
-	 * action listener to filter results. boolean is true if positive results
-	 * are filtered.
-	 **/
-	class FurtherAnalyzeAction implements ActionListener {
-		private boolean positiveSet;
-		private SciffPresenter presenter;
 
-		public FurtherAnalyzeAction(boolean positiveSet, SciffPresenter presenter) {
+	public String getOperatorString() {
+		return this.operatorString;
+	}
+
+	private String requestFileName(String message, String title) {
+		String fileName = new FileNameDialog(null, message, title, false).requestInput();
+		if (fileName.endsWith("analysis"))
+			return fileName;
+		else
+			return fileName + ".analysis";
+	}
+
+
+}
+	
+/**
+ * action listener to filter results. boolean is true if positive results are
+ * taken. False otherwise.
+ **/
+class FurtherAnalyzeAction implements ActionListener {
+	private boolean positiveSet;
+	private SciffPresenter presenter;
+
+	/** constructor **/
+	public FurtherAnalyzeAction(boolean positiveSet, SciffPresenter presenter) {
 		this.positiveSet = positiveSet;
 		this.presenter = presenter;
-		}
+	}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			//generate LogFile according to pressed button
-			List<Integer> reportSet = new LinkedList<Integer>();
+			List<Integer> filterSet = new LinkedList<Integer>();
 			
 			//change operator String of this SciffPresenter depending on which button was pressed
 			if (positiveSet) {
 				presenter.setOperatorString("<b>MUST MATCH: </b><br />");
-				reportSet = presenter.getReport().correctInstances();
+				filterSet = presenter.getReport().correctInstances();
 				System.out.println("MUST MATCH");
 			} else if (!positiveSet) {
 				presenter.setOperatorString("<i><b>MUST NOT MATCH: </b></i><br />");
-				reportSet = presenter.getReport().wrongInstances();
+				filterSet = presenter.getReport().wrongInstances();
 			}
-		LogFilePartitioner partitioner = new LogFilePartitioner(presenter.getReport().getLog(), reportSet);
+		LogFilePartitioner partitioner = new LogFilePartitioner(presenter.getReport().getLog(), filterSet);
 
 			SciffAnalyzeAction sciffAnalzeAction = new SciffAnalyzeAction(partitioner, this.presenter);
 			sciffAnalzeAction.actionPerformed(e);
 
 		}
-
-	}
+}
 
 
 class LogBuilder implements ISciffLogReader {
@@ -292,5 +365,5 @@ class LogBuilder implements ISciffLogReader {
 		}
 	
 
-}
+	}
 }
