@@ -283,7 +283,6 @@ class SwatComperator implements Comparator<Object> {
 
 	public int compare(AbstractGraphicalPN a, AbstractGraphicalPN b) {
 		return base.get(a).getName().compareTo(base.get(b).getName());
-		//return a.getName().compareTo(b.getName());
 		} // returning 0 would merge keys
 
 	public int compare(SwatComponent comp1, SwatComponent comp2) {

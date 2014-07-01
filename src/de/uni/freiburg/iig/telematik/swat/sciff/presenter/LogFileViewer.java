@@ -1,8 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.sciff.presenter;
 
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 
 import javax.swing.ImageIcon;
@@ -33,19 +35,22 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 	private JButton runWithSciff = null;
 	private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
 	private static int ICON_SIZE = 32;
-	private JEditorPane editor;
+
+	//private JEditorPane editor;
 
 	public LogFileViewer(File file) throws Exception {
-		super(new JEditorPane(file.toURI().toURL()));
+		super();
+		//super(new JEditorPane(file.toURI().toURL()));
+		//super(new JEditorPane());
 		if (file.getName().endsWith("analysis")) {
 			openAnalysisFile(file);
 		} else {
 			// Initialize JEditorPane
-			editor = new JEditorPane(file.toURI().toURL());
+			//editor = new JEditorPane(file.toURI().toURL());
 			this.file = file;
-			editor.setEditable(false);
-			//this.add(editor);
-			validate();
+			//			editor.setEditable(false);
+			//			this.add(editor);
+			//			validate();
 
 			// get icon size
 			try {
@@ -67,6 +72,17 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 
 	@Override
 	public JComponent getMainComponent() {
+		try {
+			JPanel pane = new JPanel();
+			pane.setLayout(new GridLayout());
+			JEditorPane editor = new JEditorPane(file.toURI().toURL());
+			editor.setEditable(false);
+			getViewport().add(editor);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return this;
 	}
 

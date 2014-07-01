@@ -191,7 +191,7 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	@Override
 	public void addTab(String title, Component component) {
 		super.addTab(title, component);
-		//Uncomment to make buttons removable
+		//make tab removable
 		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(title));
 	}
 	

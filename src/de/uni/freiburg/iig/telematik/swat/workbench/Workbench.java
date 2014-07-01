@@ -227,7 +227,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	@Override
 	public void componentSelected(SwatTreeNode node) {
 		//Information from TreeView: New node activated -> relay to TabView
-		// Or: Let SwatTabView implement SwatTreeChangeListener and add it to
 		getTabView().componentSelected(node);
 
 		//Update Toolbar
