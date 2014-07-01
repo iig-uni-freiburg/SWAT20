@@ -223,7 +223,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	public static void main(String[] args) {
 		JPanel panel = new JPanel();
-		panel.add(new SwatToolbar(new SwatTabView(), new SwatTreeView()));
+		panel.add(new SwatToolbar(new SwatTabView(), SwatTreeView.getInstance()));
 		new DisplayFrame(panel, true);
 	}
 

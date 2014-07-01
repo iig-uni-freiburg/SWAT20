@@ -13,7 +13,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
-import de.uni.freiburg.iig.telematik.swat.sciff.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
@@ -46,8 +46,10 @@ public class RenameAction implements ActionListener {
 				//tabView.setTitleAt(tabView.getSelectedIndex(), newFile.getName().split("\\.")[0]);
 				tabView.remove(tabView.getSelectedIndex());
 				//////HACK: reload is not good - it destroys the linkage between tabView and TreeView
-				SwatComponents.getInstance().reload();
-				treeView.removeAndUpdateSwatComponents();
+				//SwatComponents.getInstance().reload();
+				//treeView.removeAndUpdateSwatComponents();
+				//treeView.getComponent(currentComponent).updateDisplayName();
+				treeView.update();
 				return;
 			}
  else { //Something went wrong

@@ -26,8 +26,10 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 	
 	private Set<SwatTreeViewListener> listeners = new HashSet<SwatTreeViewListener>();
 	
+	private static SwatTreeView tree = new SwatTreeView();
+
 	@SuppressWarnings("rawtypes")
-	public SwatTreeView() {
+	private SwatTreeView() {
 		root = new DefaultMutableTreeNode("Working Directory");
 		treeModel = new DefaultTreeModel(root);
         Color bgcolor = UIManager.getColor ( "Panel.background" );
@@ -39,6 +41,10 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 
 		// this.setSelectionInterval(0,0);
 		addMouseListener(new TreeViewMouseAdapter());
+	}
+
+	public static SwatTreeView getInstance() {
+		return tree;
 	}
 
 	public void removeAndUpdateSwatComponents() {
@@ -56,6 +62,8 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 	@SuppressWarnings("rawtypes")
 	private void createChildren() {
 		// Petri Nets
+		Set<AbstractGraphicalPN> bla = SwatComponents.getInstance().getPetriNets();
+
 		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNets()){
 			root.add(new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET));
 		}

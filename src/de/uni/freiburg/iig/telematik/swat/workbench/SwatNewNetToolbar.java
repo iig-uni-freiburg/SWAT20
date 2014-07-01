@@ -3,7 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,10 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -231,7 +227,7 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 	
 	public static void main(String[] args) {
 		JPanel panel = new JPanel();
-		panel.add(new SwatNewNetToolbar(new SwatTabView(), new SwatTreeView()));
+		panel.add(new SwatNewNetToolbar(new SwatTabView(), SwatTreeView.getInstance()));
 		new DisplayFrame(panel, true);
 	}
 

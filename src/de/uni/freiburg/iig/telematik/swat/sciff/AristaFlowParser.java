@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +22,7 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogSummary;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
 
-public class AristaFlowParser implements ISciffLogReader {
+public class AristaFlowParser implements ISciffLogReader, Serializable {
 	private File log;
 	private LinkedHashMap<String, ISciffLogTrace> traces = new LinkedHashMap<String, ISciffLogTrace>();
 	private BufferedReader br;
@@ -193,7 +194,7 @@ public class AristaFlowParser implements ISciffLogReader {
 
 }
 
-class AristaFlowLogSummary implements ISciffLogSummary {
+class AristaFlowLogSummary implements ISciffLogSummary, Serializable {
 	private AristaFlowParser parser;
 
 	public AristaFlowLogSummary(AristaFlowParser parser) {
@@ -243,7 +244,7 @@ class AristaFlowLogSummary implements ISciffLogSummary {
 
 }
 
-class AristaFlowLogTrace implements ISciffLogTrace {
+class AristaFlowLogTrace implements ISciffLogTrace, Serializable {
 
 	ArrayList<ISciffLogEntry> entries = new ArrayList<ISciffLogEntry>();
 	public String name;
@@ -289,7 +290,7 @@ class AristaFlowLogTrace implements ISciffLogTrace {
 
 }
 
-class AristaFlowLogEntry implements ISciffLogEntry {
+class AristaFlowLogEntry implements ISciffLogEntry, Serializable {
 
 	public String element;
 	public String originator;
@@ -369,11 +370,11 @@ class AristaFlowLogEntry implements ISciffLogEntry {
 
 
 
-enum AristaFlowTokens {
+enum AristaFlowTokens implements Serializable {
 	START, END, NODENAME, NAME, INSTANCENAME, LASTNAME;
 }
 
-enum EventType {
+enum EventType implements Serializable {
 	COMPLETE, START, END;
 }
 

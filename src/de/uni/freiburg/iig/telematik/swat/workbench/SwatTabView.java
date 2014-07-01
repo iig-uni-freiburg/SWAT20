@@ -160,10 +160,10 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 
 	private void addNewTab(SwatComponent swatComponent) {
 		if (swatComponent instanceof PNEditor) {
-			addTab(((PNEditor) swatComponent).getName(), swatComponent.getMainComponent());
+			addTab(swatComponent.getName(), swatComponent.getMainComponent());
 		}
 		if (swatComponent instanceof LogFileViewer) {
-			addTab(((LogFileViewer) swatComponent).getName(), swatComponent.getMainComponent());
+			addTab(swatComponent.getName(), swatComponent.getMainComponent());
 		}
 		// addTab(swatComponent.getName(), swatComponent.getMainComponent());
 		// openedSwatComponents.put(swatComponent.getName(),

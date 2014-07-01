@@ -2,10 +2,14 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.JOptionPane;
 
@@ -151,15 +155,21 @@ public class SwatComponents {
 	
 	@SuppressWarnings("rawtypes")
 	public Set<AbstractGraphicalPN> getPetriNets(){
-		return nets.keySet();
+		TreeMap<AbstractGraphicalPN, File> sort = new TreeMap<AbstractGraphicalPN, File>(new SwatComperator(nets));
+		sort.putAll(nets);//here: sort done through TreeMap
+		return sort.keySet();
 	}
 	
 	public Set<LogFileViewer> getLogFiles() {
-		return logs.keySet();
+		TreeMap<LogFileViewer, File> sort = new TreeMap<LogFileViewer, File>(new SwatComperator());
+		sort.putAll(logs);
+		return sort.keySet();
 	}
 
 	public Set<XMLFileViewer> getXMLFiles() {
-		return xml.keySet();
+		TreeMap<XMLFileViewer, File> sort = new TreeMap<XMLFileViewer, File>(new SwatComperator());
+		sort.putAll(xml);
+		return sort.keySet();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -249,4 +259,42 @@ public class SwatComponents {
 		throw new ParameterException("not a valid SwatComponent");
 	}
 
+	public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
+		List<T> list = new ArrayList<T>(c);
+		java.util.Collections.sort(list);
+		return list;
+	}
+
+}
+
+/** For use with TreeMap **/
+class SwatComperator implements Comparator<Object> {
+	// Note: this comparator imposes orderings that are inconsistent with equals. Only compares File Names   
+	Map<AbstractGraphicalPN, File> base;
+
+	/** because AbstractGraphicalPN does not carry its name:need mapping **/
+	public SwatComperator(Map<AbstractGraphicalPN, File> base) {
+		this.base = base;
+	}
+
+	public SwatComperator() {
+		this.base = null;
+	}
+
+	public int compare(AbstractGraphicalPN a, AbstractGraphicalPN b) {
+		return base.get(a).getName().compareTo(base.get(b).getName());
+		//return a.getName().compareTo(b.getName());
+		} // returning 0 would merge keys
+
+	public int compare(SwatComponent comp1, SwatComponent comp2) {
+		return comp1.getName().compareTo(comp2.getName());
+	}
+
+	@Override
+	public int compare(Object o1, Object o2) {
+		if (o1 instanceof SwatComponent)
+			return compare((SwatComponent) o1, (SwatComponent) o2);
+		else
+			return compare((AbstractGraphicalPN) o1, (AbstractGraphicalPN) o2);
+	}
 }
