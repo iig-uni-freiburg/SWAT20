@@ -4,6 +4,8 @@
  */
 package de.uni.freiburg.iig.telematik.swat.editor.graph.handler;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
@@ -161,5 +163,34 @@ public class ConnectionHandler extends mxConnectionHandler {
 
 		reset();
 	}
+	
+	@Override
+	/**
+	 * 
+	 */
+	public void paint(Graphics g)
+	{
+		if (bounds != null)
+		{
+			if (connectIcon != null)
+			{
+				g.drawImage(connectIcon.getImage(), bounds.x, bounds.y,
+						bounds.width, bounds.height, null);
+			}
+			else if (handleEnabled)
+			{
+				g.setColor(Color.BLACK);
+				g.draw3DRect(bounds.x, bounds.y, bounds.width - 1,
+						bounds.height - 1, true);
+				g.setColor(Color.LIGHT_GRAY);
+				g.fill3DRect(bounds.x + 1, bounds.y + 1, bounds.width - 2,
+						bounds.height - 2, true);
+				g.setColor(Color.BLUE);
+				g.drawRect(bounds.x + bounds.width / 2 - 1, bounds.y
+						+ bounds.height / 2 - 1, 1, 1);
+			}
+		}
+	}
+
 
 }

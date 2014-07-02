@@ -53,6 +53,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractCPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AnnotationGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.ArcGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
@@ -67,6 +68,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.StyleChange;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
@@ -617,7 +619,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	 * @param circularPointGroup
 	 * @return
 	 */
-	protected abstract Multiset<String> getPlaceStateForCell(String id, CircularPointGroup circularPointGroup);
+	public abstract Multiset<String> getPlaceStateForCell(String id, CircularPointGroup circularPointGroup);
 	
 	
 	/** Method for incrementing or decrementing the current #AbstractMarking of the given #AbstractPNPlace
@@ -627,7 +629,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	 * @throws ParameterException
 	 */
 	
-	protected abstract AbstractMarking inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException;
+	public abstract AbstractMarking inOrDecrementPlaceState(PNGraphCell cell, int wheelRotation) throws ParameterException;
 
 	/**
 	 * Selects all vertices and/or edges depending on the given boolean
@@ -780,11 +782,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		// in cpn
 		Multiset<String> placeState = getPlaceStateForCell(cell.getId(), circularPointGroup);
 		if (placeState != null) {
-			CPNGraphics cpnGraphics;
+			AbstractCPNGraphics cpnGraphics;
 			Map<String, Color> colors = null;
-			if (getNetContainer().getPetriNetGraphics() instanceof CPNGraphics) {
+			if (getNetContainer().getPetriNetGraphics() instanceof AbstractCPNGraphics) {
 				{
-					cpnGraphics = (CPNGraphics) getNetContainer().getPetriNetGraphics();
+					cpnGraphics = (AbstractCPNGraphics) getNetContainer().getPetriNetGraphics();
 					colors = cpnGraphics.getColors();
 				}
 				Set<String> keyset = placeState.support();
@@ -1726,6 +1728,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		for(Entry<String, PNGraphCell> arc : arcReferences.entrySet()){
 			PNGraphCell arcCell = arc.getValue();
 			arcCell.getGeometry().setPoints(new ArrayList<mxPoint>());
+			mxPoint point = getView().getState(arcCell).getAbsolutePoint(0);
 			ArcGraphics arcGraphics = getNetContainer().getPetriNetGraphics().getArcGraphics().get(arcCell.getId());
 			try {
 				arcGraphics.setPositions(new Vector<Position>());

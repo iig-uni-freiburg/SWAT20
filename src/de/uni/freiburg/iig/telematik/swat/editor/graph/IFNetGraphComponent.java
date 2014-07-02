@@ -1,34 +1,21 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
-import java.awt.Color;
-import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.util.Map;
 
-import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
-
-import com.mxgraph.util.mxPoint;
-
-import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractCPNTokenConfigurer;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBarDialog;
 
-public class CPNGraphComponent extends PNGraphComponent {
+public class IFNetGraphComponent extends PNGraphComponent {
 
 	private static final long serialVersionUID = -1698182711658593407L;
 
-	public CPNGraphComponent(CPNGraph cpnGraph) {
-		super(cpnGraph);
+	public IFNetGraphComponent(IFNetGraph IFNetGraph) {
+		super(IFNetGraph);
 	}
 
 	@Override
-	public CPNGraph getGraph() {
-		return (CPNGraph) super.getGraph();
+	public IFNetGraph getGraph() {
+		return (IFNetGraph) super.getGraph();
 	}
 
 	@Override

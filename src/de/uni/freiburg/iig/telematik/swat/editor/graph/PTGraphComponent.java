@@ -16,6 +16,8 @@ import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenMouseWheelChange;
 
 public class PTGraphComponent extends PNGraphComponent {
 

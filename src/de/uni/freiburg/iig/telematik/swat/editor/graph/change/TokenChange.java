@@ -1,6 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
-
-import java.awt.Color;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
@@ -11,23 +9,21 @@ import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
-public class TokenColorChange extends mxAtomicGraphModelChange {
+public class TokenChange extends mxAtomicGraphModelChange {
 
 	/**
 	 *
 	 */
 	protected String name;
-	Color value;
-	protected Color previous;
+	protected Multiset value, previous;
 	private PNGraph graph;
-	private PNEditor editor;
 
 	/**
 	 * 
 	 */
-	public TokenColorChange()
+	public TokenChange()
 	{
 		this(null, null, null);
 	}
@@ -43,11 +39,10 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 //		this.previous = this.value;
 //	}
 
-	public TokenColorChange(PNEditor editor, String name, Color color) {
-		this.editor = editor;
-		this.graph = editor.getGraphComponent().getGraph();
+	public TokenChange(PNGraph graph, String name, Multiset<String> multiSet) {
+		this.graph = graph;
 		this.name = name;
-		this.value = color;
+		this.value = multiSet;
 		this.previous = this.value;	
 		}
 
@@ -70,7 +65,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setValue(Color value)
+	public void setValue(Multiset value)
 	{
 		this.value = value;
 	}
@@ -86,7 +81,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setPrevious(Color value)
+	public void setPrevious(Multiset value)
 	{
 		previous = value;
 	}
@@ -107,16 +102,13 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 		value = previous;
 		previous = valueForCellChanged(name,
 				previous);
-		editor.getEditorToolbar().updateGlobalTokenConfigurer();
-		editor.getGraphComponent().getGraph().updateViews();
 	}
 	
-	protected Color valueForCellChanged(String name, Color value)
+	protected Multiset valueForCellChanged(String name, Multiset value)
 	{
-		Color oldValue = graph.getTokenColorForName(name);
+		Multiset<String> oldValue = graph.getPlaceStateForCell(name, null);
 		try {
-			graph.updateTokenColor(name, value);
-			
+			graph.updatePlaceState(name, value);
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

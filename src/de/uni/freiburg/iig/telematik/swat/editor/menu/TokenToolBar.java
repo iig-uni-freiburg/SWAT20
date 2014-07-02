@@ -35,6 +35,7 @@ import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
@@ -43,13 +44,14 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNMarking;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillColorSelectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.TokenColorSelectionAction;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenColorChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenColorChange;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class TokenToolBar extends JToolBar {
@@ -89,7 +91,14 @@ public class TokenToolBar extends JToolBar {
 			
 			colorMap = graphics.getColors();
 			colorMap.put("black", Color.BLACK);
-
+		}
+		if (net instanceof IFNet) {
+			IFNet IFNet = (IFNet) net;
+			IFNetGraphics graphics = (IFNetGraphics) pnEditor.getNetContainer().getPetriNetGraphics();
+			colors = IFNet.getTokenColors();
+			
+			colorMap = graphics.getColors();
+			colorMap.put("black", Color.BLACK);
 		}
 		setFloatable(false);
 

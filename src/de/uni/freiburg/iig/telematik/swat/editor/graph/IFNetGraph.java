@@ -11,36 +11,36 @@ import javax.swing.SwingUtilities;
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractCPNTokenConfigurer;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.CPNProperties;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
 
 /**
  * @author julius
  * 
  */
-public class CPNGraph extends PNGraph {
+public class IFNetGraph extends PNGraph {
 
 	private HashMap<String, AbstractCPNTokenConfigurer> tokenConfigurerWindows = new HashMap<String, AbstractCPNTokenConfigurer>();
 	private AbstractCPNTokenConfigurer lastTC;
-	public CPNGraph(GraphicalCPN graphicalCPN, CPNProperties cpnProperties) throws ParameterException {
-		super(graphicalCPN, cpnProperties);
+	public IFNetGraph(GraphicalIFNet GraphicalIFNet, IFNetProperties IFNetProperties) throws ParameterException {
+		super(GraphicalIFNet, IFNetProperties);
 	}
 
 	@Override
-	public GraphicalCPN getNetContainer() {
-		return (GraphicalCPN) super.getNetContainer();
+	public GraphicalIFNet getNetContainer() {
+		return (GraphicalIFNet) super.getNetContainer();
 	}
 
 	@Override
-	protected CPNProperties getPNProperties() {
-		return (CPNProperties) super.getPNProperties();
+	protected IFNetProperties getPNProperties() {
+		return (IFNetProperties) super.getPNProperties();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -50,16 +50,16 @@ public class CPNGraph extends PNGraph {
 		colors.put("black", Color.BLACK);
 		String arcString = "";
 		for (Entry<String, Color> color : colors.entrySet()) {
-			int colorNumber = ((CPNFlowRelation) relation).getConstraint(color.getKey());
+			int colorNumber = ((IFNetFlowRelation) relation).getConstraint(color.getKey());
 			if (colorNumber > 0)
-				arcString += color.getKey() + ": " + String.valueOf(((CPNFlowRelation) relation).getConstraint(color.getKey())) + "\n";
+				arcString += color.getKey() + ": " + String.valueOf(((IFNetFlowRelation) relation).getConstraint(color.getKey())) + "\n";
 		}
 		return arcString;
 	}
 
 	@Override
 	public void updatePlaceState(String name, Multiset<String> state) throws ParameterException {
-		CPNMarking initialMarking = getNetContainer().getPetriNet().getInitialMarking();
+		IFNetMarking initialMarking = getNetContainer().getPetriNet().getInitialMarking();
 		initialMarking.set(name, state);
 		getNetContainer().getPetriNet().setInitialMarking(initialMarking);
 	}
@@ -71,7 +71,7 @@ public class CPNGraph extends PNGraph {
 	 * @param circularPointGroup
 	 * @return
 	 */ Multiset<String> getPlaceStateForCell(String id, CircularPointGroup circularPointGroup) {
-		CPNPlace place = (CPNPlace) getNetContainer().getPetriNet().getPlace(id);
+		IFNetPlace place = (IFNetPlace) getNetContainer().getPetriNet().getPlace(id);
 		return place.getState( );
 	}
 
@@ -79,7 +79,7 @@ public class CPNGraph extends PNGraph {
 
 	@Override
 	protected String getPlaceToolTip(PNGraphCell cell) {
-		CPNPlace ptPlace = getNetContainer().getPetriNet().getPlace(cell.getId());
+		IFNetPlace ptPlace = getNetContainer().getPetriNet().getPlace(cell.getId());
 		return "Cap:" + ((ptPlace.getCapacity() == -1) ? "\u221e" : ptPlace.getCapacity());
 	}
 
@@ -113,7 +113,7 @@ public class CPNGraph extends PNGraph {
 
 	@Override
 	public void updateTokenColor(String name, Color value) {
-		CPN cpn = getNetContainer().getPetriNet();
+		IFNet IFNet = getNetContainer().getPetriNet();
 		Map<String, Color> colors = getNetContainer().getPetriNetGraphics().getColors();
 		if(value != null)
 		colors.put(name, value);
@@ -124,7 +124,7 @@ public class CPNGraph extends PNGraph {
 		} 
 	@Override
 	public void updateConstraint(String name, Multiset value) {
-		CPNFlowRelation flowrelation = (CPNFlowRelation) getNetContainer().getPetriNet().getFlowRelation(name);
+		IFNetFlowRelation flowrelation = (IFNetFlowRelation) getNetContainer().getPetriNet().getFlowRelation(name);
 		if(value != null)
 			flowrelation.setConstraint(value);	
 		else{
@@ -137,8 +137,8 @@ public class CPNGraph extends PNGraph {
 		
 	}
 
-	public void newTokenConfigurer(PNGraphCell cell, CPNGraphComponent cpnGraphComponent) {
-		Window window = SwingUtilities.getWindowAncestor(cpnGraphComponent);
+	public void newTokenConfigurer(PNGraphCell cell, IFNetGraphComponent IFNetGraphComponent) {
+		Window window = SwingUtilities.getWindowAncestor(IFNetGraphComponent);
 double x;
 double y;
 double height = 0;
@@ -146,7 +146,7 @@ double deltaY = 0;
 int spacing;
 switch(cell.getType()){
 case ARC:
-	CPNFlowRelation flowRelation = getNetContainer().getPetriNet().getFlowRelation(cell.getId());
+	IFNetFlowRelation flowRelation = getNetContainer().getPetriNet().getFlowRelation(cell.getId());
 	if (!tokenConfigurerWindows.containsKey(cell.getId())) {
 		AbstractCPNTokenConfigurer tc = new AbstractCPNTokenConfigurer(window, flowRelation, this);
 		spacing = (int) (window.getBounds().getY() + 120);
@@ -169,7 +169,7 @@ case ARC:
 	}
 	break;
 		case PLACE:
-			CPNPlace place = getNetContainer().getPetriNet().getPlace(cell.getId());
+			IFNetPlace place = getNetContainer().getPetriNet().getPlace(cell.getId());
 			if (!tokenConfigurerWindows.containsKey(cell.getId())) {
 				AbstractCPNTokenConfigurer tc = new AbstractCPNTokenConfigurer(window, place, this);
 				spacing = (int) (window.getBounds().getY() + 120);
@@ -209,7 +209,7 @@ default:
 
 	@Override
 	public void updatePlaceCapacity(String name, String color, int newCapacity) {
-		CPNPlace place = getNetContainer().getPetriNet().getPlace(name);
+		IFNetPlace place = getNetContainer().getPetriNet().getPlace(name);
 		if(newCapacity <= 0)
 			place.removeColorCapacity(color);
 		else

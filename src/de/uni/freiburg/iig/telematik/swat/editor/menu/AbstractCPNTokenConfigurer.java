@@ -2,7 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +26,6 @@ import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -37,24 +35,34 @@ import de.invation.code.toval.graphic.util.SpringUtilities;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalCPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractCPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.CPNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.CapacityChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.CapacityChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
-public class TokenConfigurer extends JDialog {
+public class AbstractCPNTokenConfigurer extends JDialog {
 	private static final double TOKEN_ROW_WIDTH = 250;
 	private static final double TOKEN_ROW_HEIGHT = 40;
 //	private static JDialog dialog;
 //	JPanel tokenPanel = new JPanel();
 	private JButton addButton;
-	private CPNGraph graph;
-	private CPNPlace place;
+	private PNGraph graph;
+	private AbstractCPNPlace place;
 //	private JPanel topPanel;
 	private JToggleButton boundButton;
 	private JToggleButton infiniteButton;
@@ -64,7 +72,7 @@ public class TokenConfigurer extends JDialog {
 	private JPanel panel;
 	private boolean isPlace;
 
-	public TokenConfigurer(Window window, CPNPlace place2, CPNGraph cpnGraph) {
+	public AbstractCPNTokenConfigurer(Window window, AbstractCPNPlace place2, PNGraph cpnGraph) {
 		super(window, place2.getName());
 		isPlace = true;
 		panel = new JPanel();
@@ -79,7 +87,7 @@ public class TokenConfigurer extends JDialog {
 
 
 
-	public TokenConfigurer(Window window, CPNFlowRelation flowRelation, CPNGraph cpnGraph) {
+	public AbstractCPNTokenConfigurer(Window window, AbstractCPNFlowRelation flowRelation, PNGraph cpnGraph) {
 		super(window, flowRelation.getName());
 		isPlace = false;
 		panel = new JPanel();
@@ -89,6 +97,10 @@ public class TokenConfigurer extends JDialog {
 		graph = cpnGraph;
 		updateView();
 	}
+
+
+
+
 
 
 
@@ -295,7 +307,7 @@ public class TokenConfigurer extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					
-					Set<String> tokencolors = graph.getNetContainer().getPetriNet().getTokenColors();
+					Set<String> tokencolors = getTokenColors();
 					int newCapacity = -1;
 					((mxGraphModel) graph.getModel()).beginUpdate();
 					for(String color:tokencolors)
@@ -316,7 +328,7 @@ public class TokenConfigurer extends JDialog {
 				public void actionPerformed(ActionEvent arg0) {
 					multisetPA = getMultiSet();
 					if(multisetPA == null) multisetPA = new Multiset<String>();
-					Set<String> tokencolors = graph.getNetContainer().getPetriNet().getTokenColors();
+					Set<String> tokencolors = getTokenColors();
 					((mxGraphModel) graph.getModel()).beginUpdate();
 					for(String color:tokencolors){
 					int newCapacity = multisetPA.multiplicity(color);
@@ -350,15 +362,16 @@ public class TokenConfigurer extends JDialog {
 			panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
 		int size = 0;
-		CPNGraphics cpnGraphics = graph.getNetContainer().getPetriNetGraphics();
+		
+		AbstractCPNGraphics cpnGraphics = (AbstractCPNGraphics) getNetContainer().getPetriNetGraphics();
 		colors = cpnGraphics.getColors();
-		if(graph.getNetContainer().getPetriNet().getTokenColors().contains("black"))
+		if(getTokenColors().contains("black"))
 		colors.put("black", Color.BLACK);
 
 
 		multisetPA = getMultiSet();
 
-		place = graph.getNetContainer().getPetriNet().getPlace(paName);
+		place = (AbstractCPNPlace) getNetContainer().getPetriNet().getPlace(paName);
 		colors = cpnGraphics.getColors();
 		for (String color : colors.keySet()) {
 			if (multisetPA == null){
@@ -422,6 +435,20 @@ public class TokenConfigurer extends JDialog {
 
 
 	}
+
+
+
+private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNetContainer() {
+	AbstractGraphicalCPN graphicalNet = (AbstractGraphicalCPN) graph.getNetContainer();
+		return graphicalNet;
+	}
+
+
+
+protected Set<String> getTokenColors() {
+	AbstractCPN net = (AbstractCPN) graph.getNetContainer().getPetriNet();
+	return net.getTokenColors();
+}
 
 
 

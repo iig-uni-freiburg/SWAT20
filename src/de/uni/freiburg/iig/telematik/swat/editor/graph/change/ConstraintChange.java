@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
@@ -9,25 +9,24 @@ import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
-public class CapacityChange extends mxAtomicGraphModelChange {
+public class ConstraintChange extends mxAtomicGraphModelChange {
 
 	/**
 	 *
 	 */
 	protected String name;
-	int value;
-	protected int previous;
+	protected Multiset value, previous;
 	private PNGraph graph;
-	private String color;
 
 	/**
-	 * @param newCapacity 
-	 * @param color 
-	 * @param string 
-	 * @param graph2 
 	 * 
 	 */
+	public ConstraintChange()
+	{
+		this(null, null, null);
+	}
 
 	/**
 	 * 
@@ -40,11 +39,10 @@ public class CapacityChange extends mxAtomicGraphModelChange {
 //		this.previous = this.value;
 //	}
 
-	public CapacityChange(PNGraph graph, String name, String color, int newCapacity) {
+	public ConstraintChange(PNGraph graph, String name, Multiset<String> multiSet) {
 		this.graph = graph;
 		this.name = name;
-		this.color = color;
-		this.value = newCapacity;
+		this.value = multiSet;
 		this.previous = this.value;	
 		}
 
@@ -67,7 +65,7 @@ public class CapacityChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setValue(int value)
+	public void setValue(Multiset value)
 	{
 		this.value = value;
 	}
@@ -83,7 +81,7 @@ public class CapacityChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setPrevious(int value)
+	public void setPrevious(Multiset value)
 	{
 		previous = value;
 	}
@@ -102,16 +100,15 @@ public class CapacityChange extends mxAtomicGraphModelChange {
 	public void execute()
 	{
 		value = previous;
-		previous = valueForCellChanged(name,color,
+		previous = valueForCellChanged(name,
 				previous);
-		
 	}
 	
-	protected int valueForCellChanged(String name, String color, int newCapacity)
+	protected Multiset valueForCellChanged(String name, Multiset value)
 	{
-		int oldValue = graph.getCapacityforPlace(name,color);
+		Multiset<String> oldValue = graph.getConstraintforArc(name);
 		try {
-			graph.updatePlaceCapacity(name, color,newCapacity);
+			graph.updateConstraint(name, value);
 		} catch (ParameterException e) {
 		}		
 

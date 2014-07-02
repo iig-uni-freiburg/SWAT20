@@ -1,26 +1,34 @@
-package de.uni.freiburg.iig.telematik.swat.editor.graph;
+package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxICell;
+import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
-public class TokenMouseWheelChange extends mxAtomicGraphModelChange {
+public class CapacityChange extends mxAtomicGraphModelChange {
 
-	
-	protected PNGraphCell cell;
+	/**
+	 *
+	 */
+	protected String name;
 	int value;
 	protected int previous;
 	private PNGraph graph;
+	private String color;
 
 	/**
+	 * @param newCapacity 
+	 * @param color 
+	 * @param string 
+	 * @param graph2 
 	 * 
 	 */
-	public TokenMouseWheelChange()
-	{
-		this(null, null, (Integer) null);
-	}
 
 	/**
 	 * 
@@ -33,27 +41,28 @@ public class TokenMouseWheelChange extends mxAtomicGraphModelChange {
 //		this.previous = this.value;
 //	}
 
-	public TokenMouseWheelChange(PNGraph graph, PNGraphCell cell, int i) {
+	public CapacityChange(PNGraph graph, String name, String color, int newCapacity) {
 		this.graph = graph;
-		this.cell = cell;
-		this.value = i;
+		this.name = name;
+		this.color = color;
+		this.value = newCapacity;
 		this.previous = this.value;	
 		}
 
 	/**
 	 * 
 	 */
-	public void setCell(PNGraphCell value)
+	public void setCell(String value)
 	{
-		cell = (PNGraphCell) value;
+		name =  value;
 	}
 
 	/**
 	 * @return the cell
 	 */
-	public Object getCell()
+	public Object getName()
 	{
-		return cell;
+		return name;
 	}
 
 	/**
@@ -94,21 +103,22 @@ public class TokenMouseWheelChange extends mxAtomicGraphModelChange {
 	public void execute()
 	{
 		value = previous;
-		previous = valueForCellChanged(cell,
+		previous = valueForCellChanged(name,color,
 				previous);
+		
 	}
 	
-	protected int valueForCellChanged(PNGraphCell cell, int previous)
+	protected int valueForCellChanged(String name, String color, int newCapacity)
 	{
-	int oldValue = (previous == 1)? -1:1;
+		int oldValue = graph.getCapacityforPlace(name,color);
 		try {
-			graph.inOrDecrementPlaceState(cell,previous);
+			graph.updatePlaceCapacity(name, color,newCapacity);
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}		
 
 		return oldValue;
 	}
+
+
 
 }

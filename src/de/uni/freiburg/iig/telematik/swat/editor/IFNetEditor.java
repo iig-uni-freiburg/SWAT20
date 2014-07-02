@@ -7,12 +7,15 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 
-public class IFNetEditor extends AbstractCPNEditor {
+public class IFNetEditor extends AbstractIFNetEditor {
 
 	private static final long serialVersionUID = 8612413737377657095L;
 
@@ -36,7 +39,12 @@ public class IFNetEditor extends AbstractCPNEditor {
 
 	@Override
 	protected PNProperties createPNProperties() {
-		//TODO:		return new IFNetProperties(getNetContainer());
+		try {
+			return new IFNetProperties(getNetContainer());
+		} catch (ParameterException e) {
+			// Should not happen, since getNetContainer never returns null;
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -48,14 +56,19 @@ public class IFNetEditor extends AbstractCPNEditor {
 	}
 
 	@Override
-	protected PNProperties getPNProperties() {
-		//TODO:		return (IFNetProperties) super.getPNProperties();
-		return null;
+	protected IFNetProperties getPNProperties() {
+		return (IFNetProperties) super.getPNProperties();
+
 	}
 
 	@Override
 	protected PNGraphComponent createGraphComponent() {
-		// TODO Auto-generated method stub
+		try {
+			return new IFNetGraphComponent(new IFNetGraph(getNetContainer(), getPNProperties()));
+		} catch (ParameterException e) {
+			// Should not happen, since getNetContainer() and getPNProperties() never return null;
+			e.printStackTrace();
+		}
 		return null;
 	}
 

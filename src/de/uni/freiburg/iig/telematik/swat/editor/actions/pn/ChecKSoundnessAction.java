@@ -23,7 +23,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNMarking;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class ChecKSoundnessAction extends AbstractPNEditorAction {

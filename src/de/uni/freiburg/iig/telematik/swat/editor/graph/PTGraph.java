@@ -54,12 +54,12 @@ public class PTGraph extends PNGraph {
 	}
 	
 	@Override
+	public
 	/**
 	 * @param cell
 	 * @param circularPointGroup
 	 * @return
-	 */
-	protected Multiset<String> getPlaceStateForCell(String name, CircularPointGroup circularPointGroup) {
+	 */ Multiset<String> getPlaceStateForCell(String name, CircularPointGroup circularPointGroup) {
 		PTPlace place = (PTPlace) getNetContainer().getPetriNet().getPlace(name);
 		if(place!= null){
 			if(circularPointGroup != null)

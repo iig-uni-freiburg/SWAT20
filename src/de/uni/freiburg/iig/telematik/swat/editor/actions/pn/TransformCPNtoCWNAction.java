@@ -29,7 +29,7 @@ import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class TransformCPNtoCWNAction extends AbstractPNEditorAction {

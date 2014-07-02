@@ -48,11 +48,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNMarking
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillColorSelectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.TokenColorSelectionAction;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.TokenColorChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenColorChange;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class TokenConfigurerToolBar extends JToolBar {
