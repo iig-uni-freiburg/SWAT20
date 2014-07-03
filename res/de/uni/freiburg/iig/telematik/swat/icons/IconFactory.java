@@ -14,18 +14,30 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 public class IconFactory {
 	
 	private static final String imagePathFormat = "%s/%s-%s.png";
+	private static final String imagePathFormatPressed = "%s/%s-%s-pressed.png";
 	
 	public static ImageIcon getIcon(String name) throws ParameterException, PropertyException, IOException{
-		return getIcon(name, SwatProperties.getInstance().getIconSize());
+		return getIcon(name, SwatProperties.getInstance().getIconSize(), false);
 	}
 	
-	private static ImageIcon getIcon(String name, IconSize size) throws ParameterException{
+	public static ImageIcon getIconPressed(String name) throws ParameterException, PropertyException, IOException {
+		return getIcon(name, SwatProperties.getInstance().getIconSize(), true);
+	}
+
+	private static ImageIcon getIcon(String name, IconSize size, boolean pressed) throws ParameterException {
 		Validate.notNull(name);
 		Validate.notEmpty(name);
 		Validate.notNull(size);
-		
-		String imagePath = String.format(imagePathFormat, size.getSize(), name, size.getSize());
+		String imagePath;
+
+		if (pressed){
+			imagePath = String.format(imagePathFormatPressed, size.getSize(), name, size.getSize());
+		}
+		else{
+			imagePath = String.format(imagePathFormat, size.getSize(), name, size.getSize());}
+
 		URL imageURL = IconFactory.class.getResource(imagePath);
+
 		try {
 			return new ImageIcon(imageURL);
 		} catch(Exception e){

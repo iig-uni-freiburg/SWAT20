@@ -290,6 +290,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			setBorderPainted(false);
 			setRollover(true);
 			setFocusable(false);
+			//setVerticalAlignment(CENTER);
 			switch(type){
 			case IMPORT:
 				setToolTipText("Import PT-Net from filesystem");
@@ -304,6 +305,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case OPEN:
 				break;
 			case SAVE:
+				setPressedIcon(IconFactory.getIconPressed(type.toString().toLowerCase()));
 				addActionListener(new SaveActiveComponentAction(tabView));
 				break;
 			case SAVE_ALL:
