@@ -291,6 +291,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			setRollover(true);
 			setFocusable(false);
 			//setVerticalAlignment(CENTER);
+			tryToSetPressedButton(type);
+
 			switch(type){
 			case IMPORT:
 				setToolTipText("Import PT-Net from filesystem");
@@ -305,7 +307,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case OPEN:
 				break;
 			case SAVE:
-				setPressedIcon(IconFactory.getIconPressed(type.toString().toLowerCase()));
 				addActionListener(new SaveActiveComponentAction(tabView));
 				break;
 			case SAVE_ALL:
@@ -349,11 +350,22 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			}
 		}
 		
+		private void tryToSetPressedButton(ToolbarButtonType type) {
+			try {
+				setPressedIcon(IconFactory.getIconPressed(type.toString().toLowerCase()));
+			} catch (ParameterException e) {
+			} catch (PropertyException e) {
+			} catch (IOException e) {
+			}
+
+		}
+
 	}
 	
 	private enum ToolbarButtonType {
 		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM;
 	}
+	
 
 	class AristaFlowAction implements ActionListener {
 
