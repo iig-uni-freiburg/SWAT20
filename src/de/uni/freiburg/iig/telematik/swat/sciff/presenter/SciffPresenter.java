@@ -89,7 +89,7 @@ public class SciffPresenter {
 		b.append(getWrongDetails(report));
 		b.append("<br> <br>");
 
-		b.append(getCorrectDetails(report));
+		//b.append(getCorrectDetails(report));
 		b.append("</body></html>");
 		//this.output = b.toString();
 		return b.toString();
@@ -179,7 +179,11 @@ public class SciffPresenter {
 
 	private StringBuilder getWrongDetails(CheckerReport report) {
 		StringBuilder b = new StringBuilder();
-		b.append("Wrong Instances: <br>");
+		
+		if (report.wrongInstances().isEmpty())
+			return b; //No Counterexamples
+
+		b.append("Counterexamples: <br>");
 		for (int i : report.wrongInstances()) {
 			b.append(report.getLog().getInstances().get(i).getName());
 			b.append("<br>");

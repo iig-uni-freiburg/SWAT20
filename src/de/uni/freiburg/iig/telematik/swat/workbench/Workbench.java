@@ -56,7 +56,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	public Workbench() {
 		super();
-		//setLookAndFeel();
+		setLookAndFeel();
 		setUpGUI();
 		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
 		int wdwLeft = (int) ((screenSize.width/2.0) - ((PREFERRED_SIZE_WORKBENCH.width + MessageDialog.PREFERRED_SIZE.width + 10)/2.0));
