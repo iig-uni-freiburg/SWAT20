@@ -62,22 +62,29 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 	@SuppressWarnings("rawtypes")
 	private void createChildren() {
 		// Petri Nets
-		Set<AbstractGraphicalPN> bla = SwatComponents.getInstance().getPetriNets();
 
+		DefaultMutableTreeNode petriNets = new DefaultMutableTreeNode("Petri Nets");
 		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNets()){
-			root.add(new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET));
+			petriNets.add(new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET));
 		}
+		root.add(petriNets);
 
 		// LogFiles
+		DefaultMutableTreeNode logFiles = new DefaultMutableTreeNode("Logfiles");
 		for (LogFileViewer logFileViewer : SwatComponents.getInstance().getLogFiles()) {
-			root.add(new SwatTreeNode(logFileViewer, SwatComponentType.LOG_FILE));
+			logFiles.add(new SwatTreeNode(logFileViewer, SwatComponentType.LOG_FILE));
 		}
+		root.add(logFiles);
 
+		DefaultMutableTreeNode xmlFiles = new DefaultMutableTreeNode("XML files");
 		for (XMLFileViewer xmlFileViewer : SwatComponents.getInstance().getXMLFiles()) {
-			root.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE));
+			xmlFiles.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE));
 		}
+		root.add(xmlFiles);
 		try {
-			expandRow(0);
+			for (int i = 0; i < getRowCount(); i++) {
+				expandRow(i);
+			}
 		} catch (Exception e) {
 		}
 	}
