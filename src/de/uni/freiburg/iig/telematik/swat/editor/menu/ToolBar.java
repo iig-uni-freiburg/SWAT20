@@ -24,6 +24,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PopUpToolBarAction;
 //import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAction;
@@ -58,6 +59,7 @@ public class ToolBar extends JToolBar {
 
 	// Actions
 //	private SaveAction saveAction = null;
+	private AnalyzeAction analyzeAction;
 	private UndoAction undoAction = null;
 	private RedoAction redoAction = null;
 	private EnterExecutionAction enterExecutionAction;
@@ -82,6 +84,9 @@ public class ToolBar extends JToolBar {
 	private JToggleButton nodeButton;
 	private JToggleButton exportButton;
 	private JButton toggleModeButton;
+	
+	// analyze button
+	private JButton analyzeButton;
 	
 	//Sub-Toolbars
 	private FontToolBar fontToolbar;
@@ -139,7 +144,7 @@ public class ToolBar extends JToolBar {
 			exportAction = new PopUpToolBarAction(pnEditor, "Export", "export", exportToolbar);
 
 			toggleModeAction = new ToggleModeAction(pnEditor);
-
+			analyzeAction=new AnalyzeAction(pnEditor);
 			enterExecutionAction = new EnterExecutionAction(pnEditor);
 			reloadExecutionAction = new ReloadExecutionAction(pnEditor);
 			enterEditingAction = new EnterEditingAction(pnEditor);
@@ -179,8 +184,11 @@ public class ToolBar extends JToolBar {
 
 //		saveButton = add(saveAction);
 //		setButtonSettings(saveButton);
-
-
+		analyzeButton = add(analyzeAction);
+		analyzeButton.setBorderPainted(false);
+		analyzeButton.setIconTextGap(0);
+		analyzeButton.setText("ANALYZE");
+		
 		exportButton = (JToggleButton) add(exportAction, true);
 		exportAction.setButton(exportButton);
 
