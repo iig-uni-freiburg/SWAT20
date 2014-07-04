@@ -24,11 +24,14 @@ public class SaveActiveComponentAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		try {
 			SwatComponent component = (SwatComponent) tabView.getComponent(tabView.getSelectedIndex());
 			if (component.getMainComponent() instanceof PNEditor) {
 				savePN((PNEditor) component.getMainComponent());
 			}
+		} catch (ArrayIndexOutOfBoundsException e1) {
+			//No open tabs. Nothing to do
+		}
 	}
 	
 
