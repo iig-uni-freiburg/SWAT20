@@ -159,7 +159,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 								if (graph.getNetContainer().getPetriNet().containsPlace(cell.getId())){
 									if(!graph.getNetContainer().getPetriNet().getPlace(cell.getId()).getLabel().equals(cell.getId()))
 										place.setLabel(graph.getNetContainer().getPetriNet().getPlace(cell.getId()).getLabel());}
-								
+								else place.setLabel((String) cell.getValue());
 								
 								
 								NodeGraphics nodeGraphics = new NodeGraphics();
@@ -184,6 +184,7 @@ public class GraphTransferHandler extends mxGraphTransferHandler {
 							if (graph.getNetContainer().getPetriNet().containsTransition(cell.getId())){
 								if(!graph.getNetContainer().getPetriNet().getTransition(cell.getId()).getLabel().equals(cell.getId()))
 								transition.setLabel(graph.getNetContainer().getPetriNet().getTransition(cell.getId()).getLabel());}
+							else transition.setLabel((String) cell.getValue());
 
 							NodeGraphics nodeGraphics = new NodeGraphics();
 							AnnotationGraphics annotationGraphics = new AnnotationGraphics();
