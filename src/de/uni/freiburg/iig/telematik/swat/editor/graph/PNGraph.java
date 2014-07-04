@@ -92,7 +92,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
-		setGridSize(10);
+		setGridSize(5);
 
 		Validate.notNull(netContainer);
 		Validate.notNull(properties);
@@ -1743,6 +1743,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		
 	}
 
+	public abstract Set getAccessModeforTransition(String name, String color);
 
+	public abstract void updateAccessModeTransition(String name, String color, Set newAM);
 
 }
