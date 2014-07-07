@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -200,7 +201,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	}
 	
 	public static void consoleMessage(String message) {
+		getConsoleArea().append(
+				Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
+						+ Calendar.getInstance().get(Calendar.SECOND) + " - ");
 		getConsoleArea().append(message);
+		getConsoleArea().append("\n\r");
 		try {
 			messagePanel.setSelectedIndex(1);
 		} catch (ArrayIndexOutOfBoundsException e) {
