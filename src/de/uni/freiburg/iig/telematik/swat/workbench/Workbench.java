@@ -165,7 +165,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		 UIManager.put("Tree.rendererFillBackground", false);
 		if(treeView == null){
 			treeView = SwatTreeView.getInstance();
-			treeView.setPreferredSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			treeView.setMinimumSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			treeView.addTreeViewListener(this);
 		}
