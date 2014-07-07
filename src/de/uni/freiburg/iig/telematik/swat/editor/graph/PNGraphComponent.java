@@ -152,13 +152,13 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 					@Override
 					public void mouseExited(MouseEvent arg0) {
 						marker.setVisible(false);
-						unhighlightArcs();
+//						unhighlightArcs();
 						
 					}
 					
 					@Override
 					public void mouseEntered(MouseEvent arg0) {
-						highlightArcs();
+//						highlightArcs();
 						marker.setVisible(true);
 						marker.highlight(graph.getView().getState(cell), Color.BLUE);
 						
@@ -170,7 +170,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 							getGraph().fireTransition(cell);
 							marker.setVisible(false);
 							highlightEnabledTransitions();
-							highlightArcs();
+//							highlightArcs();
 							//							getGraph().refresh();
 						} catch (ParameterException e) {
 							// TODO Auto-generated catch block
