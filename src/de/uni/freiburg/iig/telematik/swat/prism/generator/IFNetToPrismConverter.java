@@ -491,13 +491,13 @@ public class IFNetToPrismConverter {
 	}
 	
 	
-	public static void main(String[] args) throws ParameterException{
+	public static void main(String[] args) {
 		
 		//create a simple IFNet
-		IFNet IFNet = IFNetTestUtil.createSimpleIFNetWithDeclassification();
+		IFNet iFNet = IFNetTestUtil.createSimpleIFNetWithDeclassification();
 		
 		//Create convert to prism
-		IFNetToPrismConverter converter = new IFNetToPrismConverter(IFNet);
+		IFNetToPrismConverter converter = new IFNetToPrismConverter(iFNet);
 		StringBuilder prismModel = converter.ConvertIFNetToPrism();
 		System.out.println(prismModel);
 						
