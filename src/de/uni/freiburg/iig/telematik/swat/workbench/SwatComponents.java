@@ -37,7 +37,7 @@ public class SwatComponents {
 		try {
 			loadSwatComponents();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Cannot access working directory:\n" + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Cannot access working directory:<br>" + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 			
 		}
 	}
@@ -67,11 +67,12 @@ public class SwatComponents {
 		try {
 			pnmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "pnml");
 		} catch (Exception e) {
-			throw new ParameterException("Cannot access working directory.\nReason: "+e.getMessage());
+			throw new ParameterException("Cannot access working directory.<br>Reason: "+e.getMessage());
 		} 
 		for (File netFile : pnmlFiles) {
 			MessageDialog.getInstance().addMessage("Loading Petri net: " + FileUtils.getName(netFile) + "...   ");
 			try {
+				MessageDialog.getInstance().addMessage(netFile.getCanonicalPath());
 				AbstractGraphicalPN<?,?,?,?,?,?,?, ?, ?> loadedNet = null;
 				loadedNet = new PNMLParser().parse(netFile, SwatProperties.getInstance().getRequestNetType(), SwatProperties.getInstance().getPNValidation());
 				nets.put(loadedNet, netFile);
@@ -91,7 +92,7 @@ public class SwatComponents {
 		try {
 			mxmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "mxml");
 		} catch (Exception e) {
-			throw new ParameterException("Cannot access working directory.\nReason: " + e.getMessage());
+			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
 		}
 		for (File logFile : mxmlFiles) {
 			try {
@@ -114,7 +115,7 @@ public class SwatComponents {
 			csvFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "csv");
 			analysisFile = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "analysis");
 		} catch (Exception e) {
-			throw new ParameterException("Cannot access working directory.\nReason: " + e.getMessage());
+			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
 		}
 		for (File logFile : csvFiles) {
 			try {
@@ -137,7 +138,7 @@ public class SwatComponents {
 		try {
 			xmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "xml");
 		} catch (Exception e) {
-			throw new ParameterException("Cannot access working directory.\nReason: " + e.getMessage());
+			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
 		}
 		for (File xmlFile : xmlFiles) {
 			try {
@@ -177,7 +178,7 @@ public class SwatComponents {
 		try {
 			PNSerialization.serialize(net, PNSerializationFormat.PNML, nets.get(net).getCanonicalPath());
 		} catch (Exception e) {
-			throw new ParameterException("Cannot store Petri net.\nReason: "+e.getMessage());
+			throw new ParameterException("Cannot store Petri net.<br>Reason: "+e.getMessage());
 		}
 	}
 	
