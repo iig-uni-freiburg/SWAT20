@@ -3,8 +3,10 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 import java.awt.Color;
 import java.awt.Window;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
@@ -18,8 +20,12 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractRegularIFNetTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractCPNTokenConfigurer;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
+import de.uni.freiburg.iig.telematik.swat.lukas.Transition;
 
 /**
  * @author julius
@@ -193,6 +199,27 @@ case ARC:
 
 	break;
 case TRANSITION:
+	AbstractIFNetTransition<IFNetFlowRelation> transition = getNetContainer().getPetriNet().getTransition(cell.getId());
+	if (!tokenConfigurerWindows.containsKey(cell.getId())) {
+		AbstractCPNTokenConfigurer tc = new AbstractCPNTokenConfigurer(window, transition, this);
+		spacing = (int) (window.getBounds().getY() + 120);
+		if (lastTC != null) {
+			height = lastTC.getBounds().getHeight();
+			deltaY = lastTC.getBounds().getY();
+			spacing = (int) (height + deltaY);
+		}
+
+		x = window.getBounds().getX();
+		y = spacing;
+		tc.setLocation((int) x, (int) y);
+		tc.setVisible(true);
+		tc.pack();
+		tokenConfigurerWindows.put(cell.getId(), tc);
+		lastTC = tc;
+	} else {
+		tokenConfigurerWindows.get(cell.getId()).setVisible(false);
+		tokenConfigurerWindows.get(cell.getId()).setVisible(true);
+	}
 	break;
 default:
 	break;
@@ -232,6 +259,28 @@ default:
 	public Multiset<String> getConstraintforArc(String name) {
 		return getNetContainer().getPetriNet().getFlowRelation(name).getConstraint();
 		}
+
+	@Override
+	public Set getAccessModeforTransition(String name, String color) {
+		AbstractIFNetTransition<IFNetFlowRelation> transition = getNetContainer().getPetriNet().getTransition(name);
+		if(transition instanceof AbstractRegularIFNetTransition)
+		return	(Set) ((AbstractRegularIFNetTransition) transition).getAccessModes().get(color);
+		else
+			return new HashSet<AccessMode>();
+	}
+
+	@Override
+	public void updateAccessModeTransition(String name, String color, Set newAM) {
+		AbstractIFNetTransition<IFNetFlowRelation> transition = getNetContainer().getPetriNet().getTransition(name);
+		if(transition instanceof AbstractRegularIFNetTransition){
+//			if(!newAM.isEmpty())
+		((AbstractRegularIFNetTransition) transition).setAccessMode(color, newAM);
+//			else
+//				((AbstractRegularIFNetTransition) transition).removeAccessModes(color);
+			 }
+		
+		
+	}
 
 
 

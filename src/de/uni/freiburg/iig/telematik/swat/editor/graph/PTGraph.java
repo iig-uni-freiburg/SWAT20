@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.util.Set;
 
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxGraphModel.mxValueChange;
@@ -168,6 +169,18 @@ public class PTGraph extends PNGraph {
 
 	@Override
 	public void updateViews() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Set getAccessModeforTransition(String name, String color) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateAccessModeTransition(String name, String color, Set newAM) {
 		// TODO Auto-generated method stub
 		
 	}

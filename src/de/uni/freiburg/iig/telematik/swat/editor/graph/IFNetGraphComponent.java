@@ -52,6 +52,24 @@ public class IFNetGraphComponent extends PNGraphComponent {
 		}
 		return true;
 	}
+	
+	@Override
+	protected boolean doubleClickOnTransition(PNGraphCell cell, MouseEvent e) {
+		// TODO Table which lists constraints
+
+		try {
+			
+//			JDialog dialog = 
+//			Multiset<String> marking = getGraph().getNetContainer().getPetriNet().getMarking().get(cell.getId());
+			getGraph().newTokenConfigurer(cell,this);
+//			loadTokenConfigurer(cell, dialog);
+		} catch (ParameterException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return true;
+	}
+	
 	@Override
 	protected boolean mouseWheelOnPlace(PNGraphCell cell, MouseWheelEvent e) {
 		// TODO decrementing or incrementing tokennumber of selected color with

@@ -5,6 +5,7 @@ import java.awt.Window;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
@@ -232,6 +233,18 @@ default:
 	public Multiset<String> getConstraintforArc(String name) {
 		return getNetContainer().getPetriNet().getFlowRelation(name).getConstraint();
 		}
+
+	@Override
+	public Set getAccessModeforTransition(String name, String color) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateAccessModeTransition(String name, String color, Set newAM) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 
