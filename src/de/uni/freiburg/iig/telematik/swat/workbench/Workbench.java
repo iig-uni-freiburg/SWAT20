@@ -48,7 +48,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private SwatTreeView treeView = null;
 	private SwatTabView tabView = null;
 	private SwatMenuBar menuBar = null;
-	private static JComponent messagePanel = null;
+	private static JTabbedPane messagePanel = null;
 	private JPanel properties = null;
 	private JPanel content = null;
 	private static JTextArea console = null;
@@ -201,11 +201,18 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	
 	public static void consoleMessage(String message) {
 		getConsoleArea().append(message);
+		try {
+			messagePanel.setSelectedIndex(1);
+		} catch (ArrayIndexOutOfBoundsException e) {
+		}
 	}
 
 	public static void errorMessage(String message) {
 		getErrorArea().append(message);
-		//getConsoleArea().
+		try {
+			messagePanel.setSelectedIndex(0);
+		} catch (ArrayIndexOutOfBoundsException e) {
+		}
 	}
 
 	public static void main(String[] args) {
