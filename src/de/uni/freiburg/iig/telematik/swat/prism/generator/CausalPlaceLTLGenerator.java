@@ -16,7 +16,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel
 public class CausalPlaceLTLGenerator {
 
 	//The IFNet for whose causal places the LTL formulas should be generated.
-	private IFNet IFNet;
+	private IFNet iFNet;
 	
 	//How it works:
 	//1) iterate over all places
@@ -25,7 +25,7 @@ public class CausalPlaceLTLGenerator {
 	//4) generate the LTL formula and a comment for each H and L pair where 3) holds
 	
 	public CausalPlaceLTLGenerator(IFNet IFNet) {
-		this.IFNet = IFNet;
+		this.iFNet = IFNet;
 	}
 
 	
@@ -38,7 +38,7 @@ public class CausalPlaceLTLGenerator {
 		StringBuilder ltlFormulaBuilder = new StringBuilder();
 		
 		// Iterate over all Places
-		for (IFNetPlace currentPlace : IFNet.getPlaces()) {
+		for (IFNetPlace currentPlace : iFNet.getPlaces()) {
 
 			// Get the high transitions in the preset of the place and the low
 			// transitions in the postset.
@@ -227,7 +227,7 @@ public class CausalPlaceLTLGenerator {
 		StringBuilder ltlFormulaBuilder = new StringBuilder();
 
 		// Iterate over all Places
-		for (IFNetPlace currentPlace : IFNet.getPlaces()) {
+		for (IFNetPlace currentPlace : iFNet.getPlaces()) {
 
 			// Get the high transitions in the preset of the place and the low
 			// transitions in the postset.
@@ -399,7 +399,7 @@ public class CausalPlaceLTLGenerator {
 			AbstractIFNetTransition preTrans = (AbstractIFNetTransition) inRel.getSource();
 			
 			//check whether the transition is classified as High
-			if (IFNet.getAnalysisContext().getLabeling().getActivityClassification(preTrans.getName()).equals(SecurityLevel.HIGH)) {
+			if (iFNet.getAnalysisContext().getLabeling().getActivityClassification(preTrans.getName()).equals(SecurityLevel.HIGH)) {
 				
 				highTransitions.add(preTrans);
 			}																
@@ -417,7 +417,7 @@ public class CausalPlaceLTLGenerator {
 			AbstractIFNetTransition postTrans = (AbstractIFNetTransition) outRel.getTarget();
 			
 			//check whether the transition is classified as Low
-			if (IFNet.getAnalysisContext().getLabeling().getActivityClassification(postTrans.getName()).equals(SecurityLevel.LOW)) {
+			if (iFNet.getAnalysisContext().getLabeling().getActivityClassification(postTrans.getName()).equals(SecurityLevel.LOW)) {
 				lowTransitions.add(postTrans);
 			}																
 		}

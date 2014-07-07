@@ -9,7 +9,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
+import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem.OperatingSystems;
+
 public class FileHelper {
+
+	public static void main (String[] args) {
+		String[] command = { "/bin/sh", "-c", "echo hallo > /tmp/test.txt" };
+		runCommand(command);
+	}
 
 	/** efficiently get number of lines in a file **/
 	public static long getLinesCount(String fileName, String encodingName) {
@@ -81,6 +88,67 @@ public class FileHelper {
 			}
 		}
 		return linesCount;
+	}
+
+	public static void removeLinkOnly(File file) {
+		if (file == null)
+			return;
+
+		OperatingSystems os = OperatingSystem.getOperatingSystem();
+
+		String[] command = new String[3];
+		String path = file.getPath();
+		switch (os) {
+		case win:
+			command[0] = "cmd";
+			command[1] = "/C";
+			command[2] = "del \"" + path + "\"";
+			break;
+		case mac:
+			command[0] = "/bin/sh";
+			command[1] = "-c";
+			command[2] = "rm \"" + path + "\"";
+			break;
+		default:
+			command[0] = "/bin/sh";
+			command[1] = "-c";
+			command[2] = "rm \"" + path + "\"";
+			break;
+		}
+
+		//command = "/bin/sh -c echo hallo > /tmp/test.txt";
+		System.out.println("Running command:" + command[0] + command[1] + command[2]);
+		runCommand(command);
+
+	}
+
+	static void runCommand(String[] command) {
+		try {
+			Process p = Runtime.getRuntime().exec(command);
+			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+			String output = null;
+			while ((output = in.readLine()) != null) {
+				System.out.println(output);
+			}
+			output = null;
+			while ((output = err.readLine()) != null) {
+				System.out.println(output);
+			}
+
+			in.close();
+			p.waitFor();
+			System.out.println("ExitValue: " + p.exitValue());
+			//			System.out.println(p.getInputStream().read());
+			//			System.out.println(p.getErrorStream().read());
+			p.exitValue();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

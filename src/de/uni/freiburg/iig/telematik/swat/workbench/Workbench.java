@@ -48,11 +48,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private SwatTreeView treeView = null;
 	private SwatTabView tabView = null;
 	private SwatMenuBar menuBar = null;
-	private JComponent messagePanel = null;
+	private static JComponent messagePanel = null;
 	private JPanel properties = null;
 	private JPanel content = null;
-	private JTextArea console = null;
-	private JTextArea errors = null;
+	private static JTextArea console = null;
+	private static JTextArea errors = null;
 
 	public Workbench() {
 		super();
@@ -171,7 +171,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return treeView;
 	}
 	
-	private JComponent getMessagePanel(){
+	public static JComponent getMessagePanel() {
 		if(messagePanel == null){
 			messagePanel = new JTabbedPane();
 			messagePanel.add(getErrorArea(), "Errors");
@@ -183,7 +183,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return messagePanel;
 	}
 	
-	private JTextArea getConsoleArea(){
+	private static JTextArea getConsoleArea() {
 		if(console == null){
 			console = new JTextArea();
 			console.setEditable(false);
@@ -191,7 +191,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return console;
 	}
 	
-	private JTextArea getErrorArea(){
+	private static JTextArea getErrorArea() {
 		if(errors == null){
 			errors = new JTextArea();
 			errors.setEditable(false);
@@ -199,8 +199,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return errors;
 	}
 	
-	public void consoleMessage(String message){
+	public static void consoleMessage(String message) {
 		getConsoleArea().append(message);
+	}
+
+	public static void errorMessage(String message) {
+		getErrorArea().append(message);
+		//getConsoleArea().
 	}
 
 	public static void main(String[] args) {

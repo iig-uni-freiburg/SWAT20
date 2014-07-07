@@ -10,6 +10,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
 public class SaveActiveComponentAction extends AbstractAction {
@@ -32,6 +33,7 @@ public class SaveActiveComponentAction extends AbstractAction {
 				savePN((PNEditor) component.getMainComponent());
 			}
 		} else {
+			Workbench.errorMessage("Could not save: Active pane is not of type PNEditor");
 			
 		}
 	}
@@ -41,8 +43,10 @@ public class SaveActiveComponentAction extends AbstractAction {
 		try {
 			SwatComponents.getInstance().storePetriNet(mainComponent.getNetContainer());
 			MessageDialog.getInstance().addMessage("Successfully saved Petri Net");
+			Workbench.consoleMessage("Successfully saved Petri Net");
 		} catch (ParameterException e1) {
 			MessageDialog.getInstance().addMessage("ERROR: Could not save Petri Net");
+			Workbench.errorMessage("Could not save Petri Net");
 			e1.printStackTrace();
 		}
 		

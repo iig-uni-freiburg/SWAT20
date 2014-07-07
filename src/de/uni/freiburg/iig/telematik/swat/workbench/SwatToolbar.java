@@ -34,6 +34,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
+import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
@@ -130,6 +131,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private void createButtons() throws ParameterException, PropertyException, IOException {
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
+		standardItems.add(new SwatToolbarButton(ToolbarButtonType.DELETE));
 		standardItems.add(getSwitchworkingDirectoryButton());
 		standardItems.add(getNewNetButton());
 		standardItems.add(getImportButon());
@@ -290,6 +292,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			setBorderPainted(false);
 			setRollover(true);
 			setFocusable(false);
+			//setContentAreaFilled(false);
 			//setVerticalAlignment(CENTER);
 			tryToSetPressedButton(type);
 
@@ -347,12 +350,17 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case PRISM:
 				setToolTipText("Analyze with PRISM");
 				addActionListener(new PrismAnalyzeAction(tabView));
+				break;
+			case DELETE:
+				setToolTipText("Remove from Workbench");
+				addActionListener(new DeleteAction());
 			}
 		}
 		
 		private void tryToSetPressedButton(ToolbarButtonType type) {
 			try {
 				setPressedIcon(IconFactory.getIconPressed(type.toString().toLowerCase()));
+				//setOpaque(false);
 			} catch (ParameterException e) {
 			} catch (PropertyException e) {
 			} catch (IOException e) {
@@ -363,7 +371,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE;
 	}
 	
 
@@ -389,6 +397,25 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
+		}
+
+	}
+
+	class DeleteAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			File file = null;
+			try {
+				file = SwatComponents.getInstance().getFile((SwatComponent) tabView.getSelectedComponent());
+				FileHelper.removeLinkOnly(file);
+				tabView.remove(tabView.getSelectedIndex());
+				SwatComponents.getInstance().reload();
+			} catch (ArrayIndexOutOfBoundsException e) {
+
+			}
+
 
 		}
 

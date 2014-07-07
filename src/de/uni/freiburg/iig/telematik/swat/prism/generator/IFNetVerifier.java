@@ -11,7 +11,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 public class IFNetVerifier {
 
 	//The IFNet which should be checked
-	private IFNet IFNet;
+	private IFNet iFNet;
 	
     //The path to Prism
     //e.g. /home/boehr/prism-4.0.3-linux64/bin/prism    
@@ -39,7 +39,7 @@ public class IFNetVerifier {
     
     
 	public IFNetVerifier(IFNet IFNet) {
-		this.IFNet = IFNet;
+		this.iFNet = IFNet;
     }
     
   
@@ -47,11 +47,11 @@ public class IFNetVerifier {
     
     public List<PrismResult> verify(boolean exportStateSpace) throws ParameterException, IOException{
     	
-		if (IFNet != null & prismPath != null & modelFilePath != null & propertyFilePath != null & resultFilePath != null) {
+		if (iFNet != null & prismPath != null & modelFilePath != null & propertyFilePath != null & resultFilePath != null) {
     		
     		
     		//1) Generate Prism model
-			IFNetToPrismConverter converter = new IFNetToPrismConverter(IFNet);
+			IFNetToPrismConverter converter = new IFNetToPrismConverter(iFNet);
 			StringBuilder prismModel = converter.ConvertIFNetToPrism();
     		
     		// Create file containing the prism model   		 
@@ -62,13 +62,13 @@ public class IFNetVerifier {
   		
     		    		
     		 //2) Generate Properties of Causal Places
-			CausalPlaceLTLGenerator ltlGen = new CausalPlaceLTLGenerator(IFNet);
+			CausalPlaceLTLGenerator ltlGen = new CausalPlaceLTLGenerator(iFNet);
     		StringBuilder monoCausalLTLFormulas = ltlGen.generateMonoCausalPlaceLTL();
     		StringBuilder multiCausalLTLFormulas = ltlGen.generateMultiCausalPlaceLTL();
     		
     		
     		// Generate Properties of Reversed Causal Places
-			ReversedCausalPlaceLTLGenerator ltlRevGen = new ReversedCausalPlaceLTLGenerator(IFNet);
+			ReversedCausalPlaceLTLGenerator ltlRevGen = new ReversedCausalPlaceLTLGenerator(iFNet);
     		StringBuilder monoReversedLTLFormulas = ltlRevGen.generateMonoReversedCausalPlaceLTL();
     		StringBuilder multiReversedLTLFormulas = ltlRevGen.generateMultiReversedCausalPlaceLTL();
 

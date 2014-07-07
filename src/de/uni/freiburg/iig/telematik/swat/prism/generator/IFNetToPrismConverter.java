@@ -23,7 +23,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTra
 public class IFNetToPrismConverter {
 
 	//The IFNet which should be exported to prism
-	private IFNet IFNet;
+	private IFNet iFNet;
 	
 	//The version of the converter
 	private final String VERSION = "0.2";
@@ -32,7 +32,7 @@ public class IFNetToPrismConverter {
 	private final String RESET_VARIABLE = "reset_last";
 	
 	public IFNetToPrismConverter(IFNet IFNet) {
-		this.IFNet = IFNet;
+		this.iFNet = IFNet;
 	}
 	
 	
@@ -57,10 +57,10 @@ public class IFNetToPrismConverter {
 		//Check whether the current place is the source place of the IFNet
 		//since the sourceplace is handled differntly (it has always the initial
 		//Marking 1x black and no further capacities).
-		if (!IFNet.getSourcePlaces().contains(p)) {
+		if (!iFNet.getSourcePlaces().contains(p)) {
 		
 		//add an additional comment if the place ist a drainPlace
-			if (IFNet.getDrainPlaces().contains(p)) {
+			if (iFNet.getDrainPlaces().contains(p)) {
 			placeBuilder.append("//drainPlace" + "\n");
 		}
 			
@@ -86,9 +86,9 @@ public class IFNetToPrismConverter {
 			//find out how many tokens of this color are contained in p
 			//in the initial marking and add the initial marking part
 			//to the string builder e.g. init 0;
-				if (IFNet.getInitialMarking().get(p.getName()) != null) {
+				if (iFNet.getInitialMarking().get(p.getName()) != null) {
 				//The token color is contained in the initial marking in the place
-					placeBuilder.append("init " + IFNet.getInitialMarking().get(p.getName()).multiplicity(color) + ";" + "\n");
+					placeBuilder.append("init " + iFNet.getInitialMarking().get(p.getName()).multiplicity(color) + ";" + "\n");
 			}else{
 				//The token color is NOT contained in the initial marking in the place
 				placeBuilder.append("init 0;" + "\n");
@@ -100,7 +100,7 @@ public class IFNetToPrismConverter {
 			//The current place is a sourceplace ==> always 1xControlflowToken
 			//global p1_Green : [0..1] init 0;
 			placeBuilder.append("//SourcePlace" + "\n");
-			placeBuilder.append("global " + p.getName() + "_" + IFNet.CONTROL_FLOW_TOKEN_COLOR + " : [0..1] init 1;" + "\n");
+			placeBuilder.append("global " + p.getName() + "_" + iFNet.CONTROL_FLOW_TOKEN_COLOR + " : [0..1] init 1;" + "\n");
 		}
 		
 		return placeBuilder.append("\n");
@@ -155,9 +155,9 @@ public class IFNetToPrismConverter {
 		StringBuilder transitionCommentBuilder = new StringBuilder();
 		
 		//Add some general comments first
-		String transitionClassification = IFNet.getAnalysisContext().getLabeling().getActivityClassification(t.getName()).toString();
-		String subjectDescriptor = IFNet.getAnalysisContext().getSubjectDescriptor(t.getName());
-		String subjectClearence = IFNet.getAnalysisContext().getLabeling().getSubjectClearance(subjectDescriptor).toString();
+		String transitionClassification = iFNet.getAnalysisContext().getLabeling().getActivityClassification(t.getName()).toString();
+		String subjectDescriptor = iFNet.getAnalysisContext().getSubjectDescriptor(t.getName());
+		String subjectClearence = iFNet.getAnalysisContext().getLabeling().getSubjectClearance(subjectDescriptor).toString();
 		transitionCommentBuilder.append("//Transition: " + t.getName() + " with clearence "+ transitionClassification +"\n");
 		transitionCommentBuilder.append("//Assigned Subject: " + subjectDescriptor + " with clearence "+ subjectClearence +  "\n");
 		
@@ -391,7 +391,7 @@ public class IFNetToPrismConverter {
 		resetTransitionBuilder.append("[] " + RESET_VARIABLE + ">0 -> ");
 		 
 		//reset all _last variables
-		for (AbstractIFNetTransition t : IFNet.getTransitions()) {
+		for (AbstractIFNetTransition t : iFNet.getTransitions()) {
 				resetTransitionBuilder.append("(" + t.getName()+"_last'=0"+ ") & ");
 		}
 		
@@ -414,10 +414,10 @@ public class IFNetToPrismConverter {
 		StringBuilder prismModelBuilder = new StringBuilder();
 		
 		//Add a comment about the model first
-		if (IFNet.getName().trim().isEmpty()) {
+		if (iFNet.getName().trim().isEmpty()) {
 			prismModelBuilder.append("//Prism Model of IFNet: NAME NOT SET ..." + "\n");
 		}else{
-			prismModelBuilder.append("//Prism Model of IFNet: " + IFNet.getName() + "\n");
+			prismModelBuilder.append("//Prism Model of IFNet: " + iFNet.getName() + "\n");
 		}
 		
 		
@@ -437,7 +437,7 @@ public class IFNetToPrismConverter {
 	    prismModelBuilder.append("//Define variables for places//"+ "\n");
 		prismModelBuilder.append("///////////////////////////////"+ "\n");
 		
-		for (IFNetPlace p : IFNet.getPlaces()) {
+		for (IFNetPlace p : iFNet.getPlaces()) {
 			prismModelBuilder.append(this.IFNetPlaceToPrism(p));
 		}
 		
@@ -452,7 +452,7 @@ public class IFNetToPrismConverter {
 		prismModelBuilder.append("//Variables ending with _last are set to one if corresponding transition is the last one that fired." + "\n");
 		prismModelBuilder.append("\n");
 		prismModelBuilder.append("\n");
-		for (AbstractIFNetTransition t : IFNet.getTransitions()) {
+		for (AbstractIFNetTransition t : iFNet.getTransitions()) {
 			prismModelBuilder.append(this.createIFNetTransitionVariable(t));
 		}
 		
@@ -471,7 +471,7 @@ public class IFNetToPrismConverter {
 		prismModelBuilder.append("\n");		
 		prismModelBuilder.append("module IFNet" + "\n");
 		prismModelBuilder.append("\n");
-		for (AbstractIFNetTransition t : IFNet.getTransitions()) {
+		for (AbstractIFNetTransition t : iFNet.getTransitions()) {
 			prismModelBuilder.append(this.IFNetTransitionToPrismComment(t));
 			prismModelBuilder.append(this.IFNetTransitionToPrismFiring(t));
 		}
@@ -491,13 +491,13 @@ public class IFNetToPrismConverter {
 	}
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParameterException{
 		
 		//create a simple IFNet
-		IFNet iFNet = IFNetTestUtil.createSimpleIFNetWithDeclassification();
+		IFNet IFNet = IFNetTestUtil.createSimpleSnetWithDeclassification();
 		
 		//Create convert to prism
-		IFNetToPrismConverter converter = new IFNetToPrismConverter(iFNet);
+		IFNetToPrismConverter converter = new IFNetToPrismConverter(IFNet);
 		StringBuilder prismModel = converter.ConvertIFNetToPrism();
 		System.out.println(prismModel);
 						

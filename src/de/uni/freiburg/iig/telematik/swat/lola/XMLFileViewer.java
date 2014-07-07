@@ -54,7 +54,7 @@ public class XMLFileViewer extends JEditorPane implements SwatComponent {
 		if (runWithLoLA == null) {
 			runWithLoLA = new JButton("Analyze with LoLA");
 				ImageIcon icon = new ImageIcon(XMLFileViewer.this.getClass().getResource(
-					String.format(iconNameFormat, ICON_SIZE, "search", ICON_SIZE)));
+					String.format(iconNameFormat, ICON_SIZE, "detective", ICON_SIZE)));
 			runWithLoLA.setIcon(icon);
 			//runWithLoLA.addActionListener(new LolaAnalyzeAction(file));
 		}
