@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -24,13 +25,14 @@ public class SaveActiveComponentAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		try {
-			SwatComponent component = (SwatComponent) tabView.getComponent(tabView.getSelectedIndex());
+		Component selectedComponent = tabView.getSelectedComponent();
+		if(selectedComponent instanceof SwatComponent){
+			SwatComponent component = (SwatComponent) tabView.getSelectedComponent();
 			if (component.getMainComponent() instanceof PNEditor) {
 				savePN((PNEditor) component.getMainComponent());
 			}
-		} catch (ArrayIndexOutOfBoundsException e1) {
-			//No open tabs. Nothing to do
+		} else {
+			
 		}
 	}
 	
