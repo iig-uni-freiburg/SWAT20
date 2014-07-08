@@ -3,6 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -354,6 +356,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case DELETE:
 				setToolTipText("Remove from Workbench");
 				addActionListener(new DeleteAction());
+				//addKeyListener(new DeleteAction());
+				setMnemonic(KeyEvent.VK_DELETE);
+				//set
 			}
 		}
 		
@@ -402,20 +407,45 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	}
 
-	class DeleteAction implements ActionListener {
+	class DeleteAction implements ActionListener, KeyListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			File file = null;
 			try {
 				file = SwatComponents.getInstance().getFile((SwatComponent) tabView.getSelectedComponent());
-				FileHelper.removeLinkOnly(file);
-				tabView.remove(tabView.getSelectedIndex());
-				SwatComponents.getInstance().reload();
+				boolean deleted = FileHelper.removeLinkOnly(file);
+				if (deleted) {
+					tabView.remove(tabView.getSelectedIndex());
+					SwatComponents.getInstance().remove(file);
+					//SwatComponents.getInstance().reload();
+					//SwatTreeView.getInstance().removeAndUpdateSwatComponents();
+				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 
 			}
 
+
+		}
+
+		@Override
+		public void keyPressed(KeyEvent arg0) {
+			int code=arg0.getKeyCode();
+			if (code == KeyEvent.VK_DELETE) {
+				actionPerformed(null);
+			}
+
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub
 
 		}
 

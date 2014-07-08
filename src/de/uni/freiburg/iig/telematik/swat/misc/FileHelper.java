@@ -9,13 +9,21 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem.OperatingSystems;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 
 public class FileHelper {
 
 	public static void main (String[] args) {
-		String[] command = { "/bin/sh", "-c", "echo hallo > /tmp/test.txt" };
-		runCommand(command);
+		//String[] command = { "/bin/sh", "-c", "echo hallo > /tmp/test.txt" };
+		//runCommand(command);
+		//final JOptionPane optionPane = new JOptionPane("run " + "bla", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+		int i = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(SwatTreeView.getInstance()), "really delete?", "run "
+				+ "bla bla bla", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		System.out.println(i);
 	}
 
 	/** efficiently get number of lines in a file **/
@@ -90,9 +98,9 @@ public class FileHelper {
 		return linesCount;
 	}
 
-	public static void removeLinkOnly(File file) {
+	public static boolean removeLinkOnly(File file) {
 		if (file == null)
-			return;
+			return false;
 
 		OperatingSystems os = OperatingSystem.getOperatingSystem();
 
@@ -117,8 +125,18 @@ public class FileHelper {
 		}
 
 		//command = "/bin/sh -c echo hallo > /tmp/test.txt";
-		System.out.println("Running command:" + command[0] + command[1] + command[2]);
-		runCommand(command);
+		String readableCommand = "run command: " + " " + command[0] + " " + command[1] + " " + command[2];
+		//final JOptionPane optionPane = new JOptionPane("run " + readableCommand, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+		//int i = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(SwatTreeView.getInstance()), "run " + readableCommand);
+		int i = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(SwatTreeView.getInstance()), readableCommand, "delete?",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		System.out.println("USER: " + i);
+		if (i == 0) {
+			//user choice YES
+			runCommand(command);
+			return true;
+		}
+		return false;
 
 	}
 

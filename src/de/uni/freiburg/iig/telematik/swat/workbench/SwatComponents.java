@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.validate.ParameterException;
@@ -22,17 +26,22 @@ import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationForm
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 public class SwatComponents {
 	
 	private static SwatComponents instance = null;
 	
+	private Set<SwatComponentListener> listener = new HashSet<SwatComponentListener>();
+
 	@SuppressWarnings("rawtypes")
 	private Map<AbstractGraphicalPN, File> nets = new HashMap<AbstractGraphicalPN, File>();
 	private Map<LogFileViewer, File> logs = new HashMap<LogFileViewer, File>();
-	private Map<XMLFileViewer, File> xml = new HashMap<XMLFileViewer, File>();
+	private Map<XMLFileViewer, File> xml = new LinkedHashMap<XMLFileViewer, File>();
 	
+
 	private SwatComponents(){
 		try {
 			loadSwatComponents();
@@ -56,6 +65,36 @@ public class SwatComponents {
 		return instance;
 	}
 	
+	public void remove(File file) {
+		HashMap<Object, File> all = new HashMap<Object, File>();
+		all.putAll(xml);
+		all.putAll(logs);
+		all.putAll(nets);
+		for (Entry<Object, File> entry : all.entrySet()) {
+			if (entry.getValue().equals(file))
+			remove(entry.getKey());
+		}
+	}
+
+	private void remove(Object key) {
+		boolean found=false;
+		if (xml.containsKey(key)) {
+			xml.remove(key);
+			found=true;
+		}
+
+		if (logs.containsKey(key)) {
+			logs.remove(key);
+			found=true;
+		}
+		if (nets.containsKey(key)) {
+			nets.remove(key);
+			found=true;
+		}
+		
+		if(found) informElementRemoved(key);
+	}
+
 	public void putIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, File file) {
 		nets.put(net, file);
 	}
@@ -178,6 +217,10 @@ public class SwatComponents {
 		try {
 			PNSerialization.serialize(net, PNSerializationFormat.PNML, nets.get(net).getCanonicalPath());
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(SwatTreeView.getInstance()), "Could not save PT-net",
+					"Could not save",
+					JOptionPane.ERROR_MESSAGE);
+			Workbench.errorMessage("Cannot store petri net: " + net.getPetriNet().getName());
 			throw new ParameterException("Cannot store Petri net.<br>Reason: "+e.getMessage());
 		}
 	}
@@ -222,9 +265,11 @@ public class SwatComponents {
 				storePetriNet(pn);
 			} catch (ParameterException e) {
 				try {
+					Workbench.errorMessage("Cannot store petri net: " + pn.getPetriNet().getName());
 					throw new ParameterException("Cannot store Petri net " + nets.get(pn).getCanonicalPath() + "\nReason: "
 							+ e.getMessage());
 				} catch (IOException e1) {
+					Workbench.errorMessage("Cannot store petri net: " + pn.getPetriNet().getName() + " (Could not resolve canonical name)");
 					MessageDialog.getInstance().addMessage("Could not get (canonical) filepath for: " + pn.getPetriNet().getName());
 				}
 			}
@@ -264,6 +309,35 @@ public class SwatComponents {
 		List<T> list = new ArrayList<T>(c);
 		java.util.Collections.sort(list);
 		return list;
+	}
+
+	public void addSwatComponentListener(SwatComponentListener listener) {
+		try {
+			this.listener.add(listener);
+		} catch (Exception e) {//listener may be null
+		}
+	}
+
+	public void removeSwatComponentListener(SwatComponentListener listener) {
+		this.listener.remove(listener);
+	}
+
+	private void informListenerOfModelChange() {
+		for (SwatComponentListener listener : this.listener) {
+			listener.modelChanged();
+		}
+	}
+
+	private void informAnalysisAdded(SwatTreeNode node, Object AnalysisElement) {
+		for (SwatComponentListener listener : this.listener) {
+			listener.analysisAdded(node, AnalysisElement);
+		}
+	}
+
+	private void informElementRemoved(Object elem) {
+		for (SwatComponentListener listener : this.listener) {
+			listener.elementRemoved(elem);
+		}
 	}
 
 }

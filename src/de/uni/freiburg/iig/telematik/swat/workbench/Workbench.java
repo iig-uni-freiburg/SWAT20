@@ -66,6 +66,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	    setLocation(wdwLeft, wdwTop);
 		SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
 		SwatState.getInstance().addListener(this);
+		SwatComponents.getInstance().addSwatComponentListener(treeView);
 	}
 	
 	/** Changes Look and Feel if running on Linux **/
@@ -172,7 +173,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return treeView;
 	}
 	
-	public static JComponent getMessagePanel() {
+	private static JComponent getMessagePanel() {
 		if(messagePanel == null){
 			messagePanel = new JTabbedPane();
 			messagePanel.add(getErrorArea(), "Errors");
@@ -213,7 +214,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	}
 
 	public static void errorMessage(String message) {
-		getErrorArea().append(message);
+		getConsoleArea().append(
+				Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
+						+ Calendar.getInstance().get(Calendar.SECOND) + " - ");
+		getConsoleArea().append(message);
+		getConsoleArea().append("\n\r");
 		try {
 			messagePanel.setSelectedIndex(0);
 		} catch (ArrayIndexOutOfBoundsException e) {

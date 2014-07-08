@@ -15,11 +15,12 @@ import javax.swing.tree.DefaultTreeModel;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 
 @SuppressWarnings("serial")
-public class SwatTreeView extends JTree implements SwatStateListener {
+public class SwatTreeView extends JTree implements SwatStateListener, SwatComponentListener {
 
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel treeModel;
@@ -51,6 +52,9 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 		root.removeAllChildren();
 		createChildren();
 		treeModel.reload();
+		for (int i = 0; i < getRowCount(); i++) {
+			expandRow(i);
+		}
 		repaint();
 	}
 
@@ -133,12 +137,12 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 		
 		@SuppressWarnings("rawtypes")
 		private void setDisplayName(){
-			switch(objectType){
+			switch (objectType) {
 			case LABELING:
 				//TODO:
 				break;
 			case PETRI_NET:
-				displayName = SwatComponents.getInstance().getFileName((AbstractGraphicalPN) getUserObject()); 
+				displayName = SwatComponents.getInstance().getFileName((AbstractGraphicalPN) getUserObject());
 				break;
 			case LOG_FILE:
 				// userObject is of instance LogFileViewer
@@ -201,6 +205,23 @@ public class SwatTreeView extends JTree implements SwatStateListener {
 				notifyComponentActivated(swatNode);
 			}
 		}
+	}
+
+	@Override
+	public void analysisAdded(SwatTreeNode node, Object AnalysisElement) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void modelChanged() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void elementRemoved(Object elem) {
+		removeAndUpdateSwatComponents();
 	}
 
 }
