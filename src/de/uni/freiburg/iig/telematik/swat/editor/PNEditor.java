@@ -672,4 +672,9 @@ public abstract class PNEditor extends JPanel implements SwatComponent, TreeSele
 		// statusBar.setText(msg);
 	}
 
+	@Override
+	public File getFile() {
+		return fileReference;
+	}
+
 }

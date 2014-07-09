@@ -155,23 +155,23 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		addTab(node.getDisplayName(), ((XMLFileViewer) node.getUserObject()).getMainComponent());
 		setSelectedIndex(getTabCount() - 1);
 		//openedSwatComponents.put((XMLFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
-		openedSwatComponents.put((XMLFileViewer) node.getUserObject(), ((XMLFileViewer) node.getUserObject()).getMainComponent());
+		openedSwatComponents.put((XMLFileViewer) node.getUserObject(), ((XMLFileViewer) node.getUserObject()));
 	}
 
-	private void addNewTab(SwatComponent swatComponent) {
-		if (swatComponent instanceof PNEditor) {
-			addTab(swatComponent.getName(), swatComponent.getMainComponent());
-		}
-		if (swatComponent instanceof LogFileViewer) {
-			addTab(swatComponent.getName(), swatComponent.getMainComponent());
-		}
-		// addTab(swatComponent.getName(), swatComponent.getMainComponent());
-		// openedSwatComponents.put(swatComponent.getName(),
-		// getComponentAt(getComponentCount() - 1));
-
-		setSelectedIndex(getTabCount() - 1);
-
-	}
+	//	private void addNewTab(SwatComponent swatComponent) {
+	//		if (swatComponent instanceof PNEditor) {
+	//			addTab(swatComponent.getName(), swatComponent.getMainComponent());
+	//		}
+	//		if (swatComponent instanceof LogFileViewer) {
+	//			addTab(swatComponent.getName(), swatComponent.getMainComponent());
+	//		}
+	//		// addTab(swatComponent.getName(), swatComponent.getMainComponent());
+	//		// openedSwatComponents.put(swatComponent.getName(),
+	//		// getComponentAt(getComponentCount() - 1));
+	//
+	//		setSelectedIndex(getTabCount() - 1);
+	//
+	//	}
 
 	private void addLogFile(SwatTreeNode node) {
 		// addTab(((LogFileViewer) node.getUserObject()).getName(),
@@ -179,7 +179,7 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		addTab(node.getDisplayName(), ((LogFileViewer) node.getUserObject()).getMainComponent());
 		setSelectedIndex(getTabCount() - 1);
 		//openedSwatComponents.put((LogFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
-		openedSwatComponents.put((LogFileViewer) node.getUserObject(), ((LogFileViewer) node.getUserObject()).getMainComponent());
+		openedSwatComponents.put((LogFileViewer) node.getUserObject(), ((LogFileViewer) node.getUserObject()));
 	}
 	
 	public void removeAll() {
@@ -187,6 +187,38 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		openedSwatComponents.clear();
 	}
 	
+	private void remove(AbstractGraphicalPN ptnet) {
+		Component component = openedSwatComponents.get(ptnet);
+		for (int i = 0; i < getTabCount(); i++) {
+			System.out.println("Component: " + component + " TabComponent: " + getTabComponentAt(i));
+			if (getComponentAt(i) == (component)) {
+				removeTabAt(i);
+				openedSwatComponents.remove(component);
+			}
+		}
+
+	}
+
+	public void remove(SwatTreeNode node) {
+		switch (node.getObjectType()) {
+		case LABELING:
+			// TODO:
+			break;
+		case PETRI_NET:
+			remove((AbstractGraphicalPN) node.getUserObject());
+			break;
+		case LOG_FILE:
+			remove((LogFileViewer) node.getUserObject());
+			openedSwatComponents.remove(node.getUserObject());
+			break;
+		case XML_FILE:
+			remove((XMLFileViewer) node.getUserObject());
+			openedSwatComponents.remove(node.getUserObject());
+			break;
+
+		}
+	}
+
 	/** make Tab with close button **/
 	@Override
 	public void addTab(String title, Component component) {

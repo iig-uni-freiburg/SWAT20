@@ -38,5 +38,4 @@ public abstract class AbstractCPNEditor extends PNEditor {
 		return (CPNProperties) super.getPNProperties();
 	}
 	
-	
 }

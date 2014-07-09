@@ -11,10 +11,8 @@ import javax.swing.JPanel;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
-import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.CPNGraph;
@@ -148,6 +146,7 @@ public class CPNEditor extends AbstractCPNEditor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 //	public static void main(String[] args) throws IOException, ParserException, ParameterException {
 //		JFrame frame = new JFrame();

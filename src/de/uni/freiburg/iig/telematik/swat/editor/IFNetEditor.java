@@ -84,5 +84,4 @@ public class IFNetEditor extends AbstractIFNetEditor {
 		return null;
 	}
 
-
 }

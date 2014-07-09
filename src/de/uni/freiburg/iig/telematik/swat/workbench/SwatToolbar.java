@@ -28,6 +28,7 @@ import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
@@ -41,6 +42,7 @@ import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.sciff.DatabaseChooser;
 import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
@@ -417,13 +419,30 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		public void actionPerformed(ActionEvent arg0) {
 			File file = null;
 			try {
-				file = SwatComponents.getInstance().getFile((SwatComponent) tabView.getSelectedComponent());
+				SwatTreeNode selectedNode = (SwatTreeNode) treeView.getSelectionPath().getLastPathComponent();
+				switch (selectedNode.getObjectType()) {
+				case PETRI_NET:
+					file=SwatComponents.getInstance().getFile((AbstractGraphicalPN) selectedNode.getUserObject());
+					break;
+				default:
+					file=((SwatComponent)selectedNode.getUserObject()).getFile();
+					break;
+				}
+
 				boolean deleted = FileHelper.removeLinkOnly(file);
 				if (deleted) {
-					tabView.remove(tabView.getSelectedIndex());
+					try {
+						//tabView.remove(tabView.getSelectedIndex());
+						tabView.remove(selectedNode);
+//						for (int i = 0; i < tabView.getTabCount(); i++) {
+//							if (tabView.getTabComponentAt(i) == selectedNode.getUserObject()) {
+//								tabView.remove(i);
+//							}
+						//						}
+					} catch (java.lang.IndexOutOfBoundsException e) {
+						//Tab wasn't open
+					}
 					SwatComponents.getInstance().remove(file);
-					//SwatComponents.getInstance().reload();
-					//SwatTreeView.getInstance().removeAndUpdateSwatComponents();
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 
