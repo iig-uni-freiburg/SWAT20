@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,7 +77,7 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 
 	public void parse(whichTimestamp useStartStopTimestamp) throws Exception {
 		if (!isAristaFlowCSV()) {
-			throw new Exception(this.getClass().getName() + ": Is not an Arista-Flow CSV log");
+			throw new ParseException(this.getClass().getName() + " - " + log.getName() + ": Is not an Arista-Flow CSV log", 0);
 		}
 		getHeader();
 		parseAllInstances(useStartStopTimestamp);

@@ -38,6 +38,8 @@ import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
+import de.uni.freiburg.iig.telematik.swat.sciff.DatabaseChooser;
+import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
@@ -385,7 +387,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				AristaFlowSQLConnector con = new AristaFlowSQLConnector();
+				AristaFlowSQLConnector con = DatabaseChooser.DatabaseChooser();
+				LogFileViewer viewer = con.dumpIntoWorkbench();
+				SwatComponents.getInstance();
 				con.parse();
 				SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(con.getTempFile());
 				sciffAction.actionPerformed(e);

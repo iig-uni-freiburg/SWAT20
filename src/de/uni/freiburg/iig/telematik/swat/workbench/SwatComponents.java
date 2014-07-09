@@ -76,6 +76,8 @@ public class SwatComponents {
 		}
 	}
 
+	//public void add
+
 	private void remove(Object key) {
 		boolean found=false;
 		if (xml.containsKey(key)) {
@@ -98,6 +100,7 @@ public class SwatComponents {
 	public void putIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, File file) {
 		nets.put(net, file);
 	}
+
 
 	private void loadSwatComponents() throws ParameterException {
 		// 1. Load Petri nets
