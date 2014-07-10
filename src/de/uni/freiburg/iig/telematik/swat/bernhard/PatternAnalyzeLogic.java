@@ -13,18 +13,16 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 
 public class PatternAnalyzeLogic {
-	private PatternWindow patternWindow;
+	public static final int MAX_PATTERNS = 10;
 
-	public PatternAnalyzeLogic(PatternWindow patternWindow) {
+	public PatternAnalyzeLogic() {
 		super();
-		this.patternWindow = patternWindow;
 	}
 	/**
 	 * hightlight the path given by the Counterexample
 	 * @param ce
 	 */
-	public void highLightCounterExample(CounterExample ce) {
-		PNEditor pneditor=patternWindow.getPneditor();
+	public void highLightCounterExample(CounterExample ce, PNEditor pneditor) {
 		Map<String, PNGraphCell> nodemap = pneditor.getGraphComponent().getGraph().nodeReferences;
 		Map<String, PNGraphCell> arcmap = pneditor.getGraphComponent().getGraph().arcReferences;
 

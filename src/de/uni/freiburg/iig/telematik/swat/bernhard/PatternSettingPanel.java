@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -43,33 +44,22 @@ public class PatternSettingPanel {
 	private JPanel panel;
 	private JPanel rightPanel;
 	private JButton removeButton;
-	private JButton counterExampleButton;
-	private String patternName;
-	private List<PatternParameter> parameterList;
-	String[] transactions = { "A", "B", "C" };
-	String[] data = { "red", "green", "blue" };
+	private Pattern pattern;
+	private List<PatternParameterPanel> parameterList;
+	private HashMap<String, String> transitionDic;
+	private PatternWindow patternWindow;
 
-	/**
-	 * create a panel for a given pattern
-	 * @param pattern
-	 * @param parent give the patternPanel to which this panel will be added
-	 * @param pneditor the current pneditor
-	 */
-	public PatternSettingPanel(String pattern, final JPanel parent,
-			PNEditor pneditor) {
-		patternName = pattern;
-		List<String> paraList = PatternDatabase
-				.getParameterForPattern(pattern);
-		panel = new JPanel(new GridLayout(paraList.size() + 1, 2));
+	public PatternSettingPanel(String patternName, PatternWindow patternWindow, HashMap<String, String> transitionDic, List<String> dataList) {
+		pattern = PatternDatabase.getInstance()
+				.getPattern(patternName);
+		this.transitionDic=transitionDic;
+		this.patternWindow=patternWindow;
+		panel = new JPanel(new GridLayout(pattern.getParameters().size() + 1, 2));
 		// System.out.println(paraList);
 		// System.out.println(paraList.size());
-		parameterList = new ArrayList<PatternParameter>();
-		if (pneditor != null) {
-			transactions = getTransactionLabelList(pneditor);
-			//data= getDataTypeList(pneditor);
-		}
+		parameterList = new ArrayList<PatternParameterPanel>();
 
-		JLabel label = new JLabel(pattern);
+		JLabel label = new JLabel(patternName);
 		Font font = label.getFont();
 		// same font but bold
 		Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize()+3);
@@ -81,14 +71,11 @@ public class PatternSettingPanel {
 			removeButton = new JButton(IconFactory.getIcon("minimize"));
 			removeButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					parent.remove(panel);
-					parent.updateUI();
+					remove();
 				}
 			});
 			rightPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
 			rightPanel.add(removeButton);
-			counterExampleButton=new JButton("Show CounterExample");
-			rightPanel.add(counterExampleButton);
 			panel.add(rightPanel);
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
@@ -101,50 +88,29 @@ public class PatternSettingPanel {
 			e.printStackTrace();
 		}
 
-		for (String para : paraList) {
-			PatternParameter patternPara = null;
-			if (para.equals("Data")) {
-				patternPara = new PatternDataParameter(data);
-				panel.add(new JLabel("Choose Data:"));
-				panel.add(patternPara.getjComponent());
-			} else if (para.equals("Activity")) {
-				panel.add(new JLabel("Activity:"));
-				patternPara = new PatternActivityParameter("A", transactions);
-				panel.add(patternPara.getjComponent());
+		// add ParameterPanels for each Parameter
+		for (PatternParameter para : pattern.getParameters()) {
+			PatternParameterPanel patternPara = null;
+			panel.add(new JLabel("Choose "+para.name));
+			//System.out.println(para.type);
+			if (para.type.equals("data")) {
+				patternPara = new PatternDataParameter(para.name, dataList.toArray(new String[0]));
+			} else if (para.type.equals("activity")) {
+				patternPara = new PatternActivityParameter(para.name, transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
 			}
+			panel.add(patternPara.getjComponent());
 			parameterList.add(patternPara);
 		}
-
-		parent.add(panel);
-		parent.updateUI();
-		;
 	}
 
-	public void removeCounterExampleButtons() {
-		
+	
+
+	protected void remove() {
+		// TODO Auto-generated method stub
+		patternWindow.removePatternPanel(this);
 	}
-	public void addCounterExample(final CounterExample ce, final PatternWindow w) {
-		counterExampleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					w.highLightCounterExample(ce);
-				}
-			});
-	}
-	private String[] getDataTypeList(PNEditor pneditor) {
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pn=pneditor.getNetContainer();
-		AbstractPetriNet apn=pn.getPetriNet();
-		if(apn.getNetType()==NetType.IFNet) {
-			IFNet net=(IFNet) apn;
-			Iterator it=net.getTransitions().iterator();
-			//Set<String> colors=Arrays.;
-			//colors.addAll(arg0)
-			while(it.hasNext()) {
-				AbstractCPNTransition t=(AbstractCPNTransition) it.next();
-				t.getProcessedColors();
-			}
-		}
-		return null;
-	}
+
+
 
 	/**
 	 * return a list of the entered values
@@ -152,37 +118,47 @@ public class PatternSettingPanel {
 	 */
 	public String getValues() {
 		String paraString = "";
-		for (PatternParameter para : parameterList) {
+		for (PatternParameterPanel para : parameterList) {
 			paraString += para.getValue() + ":";
 		}
 		return paraString;
 	}
-
-	public String getPatternName() {
-		return patternName;
-	}
-
-	public void setPatternName(String patternName) {
-		this.patternName = patternName;
+	public Pattern getPattern() {
+		return pattern;
 	}
 
 	public JPanel getJPanel() {
 		return panel;
 	}
 
-	/**
-	 * Helpfunction to get the List of all Labels of the current PN of editor
-	 * @param editor
-	 * @return
-	 */
-	private String[] getTransactionLabelList(PNEditor editor) {
+	
+	
+	public void updatePatternValues() {
+		// first store the values taken from the jcomponents
 		
-		List<String> result = new ArrayList<String>();
-		for(AbstractTransition transition : editor.getNetContainer().getPetriNet().getTransitions()){
-			result.add(transition.getLabel());
+		for (PatternParameterPanel para : parameterList) {
+			for(PatternParameter patternPara: pattern.getParameters()) {
+				if(para.name.equals(patternPara.name)) {
+					// if its an activity, take the name and not the label
+					patternPara.value=para.getValue();
+				}
+			}
+			
 		}
-		Collections.sort(result);
-		return result.toArray(new String[0]);
+		// update the pattern representation
+		pattern.updateParameterAppliedString();
+		for(PatternParameter patternPara: pattern.getParameters()) {
+			if(patternPara.type=="activity") {
+					// if its an activity, take the name and not the label
+				patternPara.value=transitionDic.get(patternPara.value);
+			}
+		}
+			
+	}
+
+	public String getPatternName() {
+		// TODO Auto-generated method stub
+		return pattern.getName();
 	}
 	
 }

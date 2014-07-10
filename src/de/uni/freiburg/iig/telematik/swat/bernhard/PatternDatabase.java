@@ -12,22 +12,23 @@ import java.util.Map;
  *
  */
 public class PatternDatabase  {
-	static Map<String, List<String>> patternDB=null;
+	private static PatternDatabase instance;
+	private Map<String, Pattern> patternDB=null;
 	/**
 	 * return the ParameterList for a specific pattern
 	 * @param patternName
 	 * @return
 	 */
-	public static List<String> getParameterForPattern(String patternName) {
-		if (patternDB == null) {
-			init();
+	public static PatternDatabase getInstance() {
+		if(instance == null) {
+			instance=new PatternDatabase();
 		}
+		return instance;
+	}
+	public Pattern getPattern(String patternName) {
 		return patternDB.get(patternName);
 	}
-	public static List<String> getPatternList() {
-		if (patternDB == null) {
-			init();
-		}
+	public List<String> getPatternList() {
 		return new ArrayList<String>( patternDB.keySet());
 	}
 
@@ -36,33 +37,33 @@ public class PatternDatabase  {
 	 * @param netType
 	 * @return
 	 */
-	public static List<String> getPatternListForNetType(String netType) {
-		if (patternDB == null) {
-			init();
-		}
+	public List<String> getPatternListForNetType(String netType) {
 		return new ArrayList<String>( patternDB.keySet());
+	}
+	public PatternDatabase() {
+		init();
 	}
 	/**
 	 * initialize the pattern Database
 	 */
-	private static void init() {
+	private void init() {
 		// TODO Auto-generated method stub
-		patternDB=new HashMap<String, List<String>>();
+		patternDB=new HashMap<String, Pattern>();
 		// dataflow patterns
-		patternDB.put("Missing Data", Arrays.asList( "Data" ));
-		patternDB.put("Strongly Redundant Data", Arrays.asList( "Data" ));
-		patternDB.put("Weakly Redundant Data", Arrays.asList( "Data" ));
-		patternDB.put("Strongly Lost Data", Arrays.asList( "Data" ));
-		patternDB.put("Weakly Lost Data", Arrays.asList( "Data" ));
-		patternDB.put("Inconsistent Data", Arrays.asList( "Data" ));
-		patternDB.put("Never Destroyed", Arrays.asList( "Data" ));
-		patternDB.put("Twice Destroyed", Arrays.asList( "Data" ));
-		patternDB.put("Not Deleted on Time", Arrays.asList( "Data" ));
+		patternDB.put("Missing Data", new Pattern("Missing Data", Arrays.asList(new PatternParameter("Data","data",""))));
+		patternDB.put("Strongly Redundant Data", new Pattern("Strongly Redundant Data", Arrays.asList(new PatternParameter("Data","data",""))));
+		patternDB.put("Weakly Redundant Data", new Pattern("Weakly Redundant Data", Arrays.asList(new PatternParameter("Data","data",""))));
+		patternDB.put("Strongly Lost Data", new Pattern("Strongly Lost Data", Arrays.asList(new PatternParameter("Data","data",""))));
+		patternDB.put("Weakly Lost Data", new Pattern("Weakly Lost Data", Arrays.asList(new PatternParameter("Data","data",""))));
+		patternDB.put("Inconsistent Data", new Pattern("Inconsistent Data", Arrays.asList(new PatternParameter("Data","data",""))));
+		patternDB.put("Never Destroyed", new Pattern("Never Destroyed Data", Arrays.asList(new PatternParameter("Data","data",""))));
+		patternDB.put("Twice Destroyed", new Pattern("Twice Destroyed Data", Arrays.asList(new PatternParameter("Data","data",""))));
+		patternDB.put("Not Deleted on Time", new Pattern("Not Deleted on Time Data", Arrays.asList(new PatternParameter("Data","data",""))));
 		
 		// control flow patterns
-		patternDB.put("Q Precedes P", Arrays.asList( "Activity", "Activity" ));
-		patternDB.put("P LeadsTo Q", Arrays.asList( "Activity", "Activity"));
-		patternDB.put("P XleadsTo Q", Arrays.asList( "Activity", "Activity"));
-		patternDB.put("P PleadsTo Q", Arrays.asList( "Activity", "Activity"));
+		patternDB.put("Q Precedes P", new Pattern("Q Precedes P", Arrays.asList(new PatternParameter("Q","activity",""), new PatternParameter("P","activity",""))));
+		patternDB.put("P LeadsTo Q", new Pattern("P LeadsTo Q", Arrays.asList(new PatternParameter("P","activity",""), new PatternParameter("Q","activity",""))));
+		patternDB.put("P XleadsTo Q", new Pattern("P XleadsTo Q", Arrays.asList(new PatternParameter("P","activity",""), new PatternParameter("Q","activity",""))));
+		patternDB.put("P PleadsTo Q", new Pattern("P PleadsTo Q", Arrays.asList(new PatternParameter("P","activity",""), new PatternParameter("Q","activity",""))));
 	}
 }

@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import javax.swing.JTextField;
 
-public class PatternNumberParameter extends PatternParameter {
+public class PatternNumberParameter extends PatternParameterPanel {
 
 	
 	public PatternNumberParameter(String name) {

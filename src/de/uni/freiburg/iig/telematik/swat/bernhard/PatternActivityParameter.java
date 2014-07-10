@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 
-public class PatternActivityParameter extends PatternParameter {
+public class PatternActivityParameter extends PatternParameterPanel {
 
 	public PatternActivityParameter(String name, String[] values) {
 		super(name, "activity");

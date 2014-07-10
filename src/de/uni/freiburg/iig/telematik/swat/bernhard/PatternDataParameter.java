@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 
-public class PatternDataParameter extends PatternParameter {
+public class PatternDataParameter extends PatternParameterPanel {
 
-	public PatternDataParameter(String values[]) {
-		super("Data Object", "data");
+	public PatternDataParameter(String name, String values[]) {
+		super(name, "data");
 		jComponent=new JComboBox(values);
 		// TODO Auto-generated constructor stub
 	}

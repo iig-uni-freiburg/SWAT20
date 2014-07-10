@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -59,53 +60,47 @@ public class PatternWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = -7132881901662491907L;
 	public final static int maxPatterns = 10;
-	private int patternId=0;
-	private List<String> transactions;
-	private List<String> data;
-	private JButton plusButton;
+	private HashMap<String, String> transitionDic;
+	private List<String> dataList;
+	private JButton plusButton, okButton;
 	private JPanel patternPanel;
-	private HashMap<Integer,PatternSettingPanel> patternPanelDic;
+	private List<PatternSettingPanel> patternPanelList;
 	private PNEditor pneditor = null;
-	private PatternAnalyzeLogic analyzeLogic;
+	private AnalyzePanel analyzePanel;
 	// List<Pattern> activePatterns;
-	public PatternWindow() throws ParameterException, PropertyException,
-			IOException {
-
-		super("Choose Patterns");
-		analyzeLogic=new PatternAnalyzeLogic(this);
-		transactions = Arrays.asList("A", "B", "C");
-		data = Arrays.asList("red", "green", "blue");
+	private void initGui() {
 		BorderLayout bl = new BorderLayout();
 		Container c = getContentPane();
 		this.setLayout(bl);
 
-		JButton analyzeButton = new JButton("Analyze!");
-		analyzeButton.addActionListener(new ActionListener() {
+		okButton = new JButton(" OK ");
+		okButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				analyze();
+				updatePanel();
 			}
 			});
 		
 		JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		south.add(analyzeButton);
-		patternPanelDic=new HashMap<Integer,PatternSettingPanel>();
-		/*
-		 * JPanel test=new JPanel(new SpringLayout());
-		 * //middle.add(patternDropDown); op1=new JLabel("Choose A:"); op2=new
-		 * JLabel("Choose B:"); op3=new JLabel("Choose k:"); JComboBox
-		 * transactionsA=new JComboBox(patternList); JComboBox transactionsB=new
-		 * JComboBox(patternList); JTextField number=new JTextField(20);
-		 * test.add(jpanelLeft(op1)); test.add(jpanelLeft(transactionsA));
-		 * test.add(jpanelLeft(op2)); test.add(jpanelLeft(transactionsB));
-		 * test.add(jpanelLeft(op3)); test.add(jpanelLeft(number));
-		 */
-		patternPanel = new JPanel(new GridLayout(maxPatterns, 1, 10, 10));
+		south.add(okButton);
+		patternPanelList=new ArrayList<PatternSettingPanel>();
+		patternPanel = new JPanel(new GridLayout(PatternAnalyzeLogic.MAX_PATTERNS, 1, 10, 10));
 		JScrollPane jsp = new JScrollPane(patternPanel);
-		final List<String> itemNames = PatternDatabase.getPatternList();
+		final List<String> itemNames = PatternDatabase.getInstance().getPatternList();
 
-		plusButton = new JButton(IconFactory.getIcon("maximize"));
+		try {
+			plusButton = new JButton(IconFactory.getIcon("maximize"));
+		} catch (ParameterException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (PropertyException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		plusButton.addMouseListener(new MouseAdapter() {
 
 			@Override
@@ -151,49 +146,35 @@ public class PatternWindow extends JFrame {
 		setSize(800, 600);
 	}
 	
-	
+	protected void updatePanel() {
+		// TODO Auto-generated method stub
+		setVisible(false);
+		analyzePanel.update();
+	}
 
-	
-
+	public PatternWindow(AnalyzePanel p, HashMap<String, String> transactionDic, List<String> data)
+			throws HeadlessException {
+		super();
+		this.transitionDic = transactionDic;
+		this.dataList = data;
+		analyzePanel=p;
+		initGui();
+	}
 	protected void analyze() {
 		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pn=pneditor.getNetContainer();
 		AbstractPetriNet apn=pn.getPetriNet();
 		NetType netType = apn.getNetType();
 		MessageDialog.getInstance().addMessage(netType.toString());
 		// TODO Auto-generated method stub
-		for(PatternSettingPanel pp:patternPanelDic.values()) {
+		for(PatternSettingPanel pp:patternPanelList) {
 			MessageDialog.getInstance().addMessage(pp.getPatternName());
 			MessageDialog.getInstance().addMessage((pp.getValues()));
 		}
 		//highLightCounterExample(new CounterExample());
 	}
-
-
-
-	public void setVisible(PNEditor editor) {
-		if(this.isVisible() == false) {
-			setVisible(true);
-			pneditor=editor;
-		}
-		//transactions = getTransactionList(editor);
-	}
-
-	
-
-	public static void main(String args[]) throws ParameterException,
-			PropertyException, IOException {
-		try {
-			UIManager
-					.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	    
-		new PatternWindow().setVisible(true);
-	}
 	
 	private void addPanelforPatternClick(String name) throws ParameterException, PropertyException, IOException {
-		if (patternPanelDic.size() < 10) {
+		if (patternPanelList.size() < 10) {
 			addPanelforPattern(name);
 		} else {
 				JOptionPane.showMessageDialog(this,
@@ -203,29 +184,31 @@ public class PatternWindow extends JFrame {
 		}
 	}
 	private void addPanelforPattern(String p) throws ParameterException, PropertyException, IOException {
-		PatternSettingPanel pSPanel=new PatternSettingPanel(p, patternPanel,pneditor);
-		pSPanel.addCounterExample(new CounterExample(), this);
+		PatternSettingPanel pSPanel=new PatternSettingPanel(p, this, transitionDic, dataList);
+		//pSPanel.addCounterExample(new CounterExample(), this);
 		patternPanel.add(pSPanel.getJPanel());
 		
-		patternPanelDic.put(patternId, pSPanel);
-		patternId++;
+		patternPanelList.add(pSPanel);
 		patternPanel.updateUI();;
 	}
 
-
-
-
-
-	public void highLightCounterExample(CounterExample ce) {
-		// TODO Auto-generated method stub
-		analyzeLogic.highLightCounterExample(ce);
-	}
-
-
-
-
-
 	public PNEditor getPneditor() {
 		return pneditor;
+	}
+	
+	public List<Pattern> getPatterns() {
+		List<Pattern> patternList=new ArrayList<Pattern>();
+		for(PatternSettingPanel panel : patternPanelList) {
+			panel.updatePatternValues();
+			patternList.add(panel.getPattern());
+		}
+		return patternList;
+	}
+	
+	public void removePatternPanel(PatternSettingPanel panel) {
+		patternPanel.remove(panel.getJPanel());
+		patternPanel.repaint();
+		patternPanel.updateUI();
+		patternPanelList.remove(panel);
 	}
 }

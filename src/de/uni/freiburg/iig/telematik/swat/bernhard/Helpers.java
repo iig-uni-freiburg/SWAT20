@@ -3,10 +3,13 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
 /**
  * a class containing some help functions
  * @author bernhard
