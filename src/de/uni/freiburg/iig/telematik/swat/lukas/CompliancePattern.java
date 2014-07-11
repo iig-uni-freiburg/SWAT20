@@ -2,18 +2,31 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 
 import java.util.ArrayList;
 
+/**
+ * This abstract class is a superclass of all implementented compliance patterns.
+ * 
+ * */
 public abstract class CompliancePattern {
 	
 	protected ArrayList<Operand> mOperands;
 	
 	private String mPattern;
 	
-	private String mPrismRep;
+	private String mPrismProperty;
+	
+	public CompliancePattern() {
+		mOperands = new ArrayList<Operand>();
+	}
 
-	public CompliancePattern(String formula) {
+	public CompliancePattern(String formula, boolean antipattern) {
 		mOperands = new ArrayList<Operand>();
 		mPattern = formula;
-		buildPatternRep(formula);
+		
+		if (antipattern) {
+			buildAntiPatternRep(formula);
+		} else {
+			buildPatternRep(formula);
+		}
 	}
 	
 	public String toString() {
@@ -21,7 +34,7 @@ public abstract class CompliancePattern {
 	}
 	
 	public String getPrismRep() {
-		return mPrismRep;
+		return mPrismProperty;
 	}
 	
 	public int getOperatorCount() {
@@ -29,8 +42,22 @@ public abstract class CompliancePattern {
 	}
 	
 	private void buildPatternRep(String formula) {
-		mPrismRep = "P>=1 [" + formula + "]";
+		mPrismProperty = "P>=1 [" + formula + "]";
 	}
 	
+	private void buildAntiPatternRep(String formula) {
+		mPrismProperty = "P>0 [" + formula + "]";
+	}
+	
+	protected void setPattern(String formula, boolean antipattern) {
+		
+		if (antipattern) {
+			mPattern = formula;
+			buildAntiPatternRep(formula);
+		} else {
+			mPattern = formula;
+			buildPatternRep(formula);
+		}
+	}
 
 }

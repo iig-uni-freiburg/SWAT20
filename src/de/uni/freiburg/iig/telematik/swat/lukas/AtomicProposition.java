@@ -7,7 +7,7 @@ public class AtomicProposition extends Statepredicate {
 	private String mPlaceName;
 	private int mNumber;
 
-	public AtomicProposition(String placeName, int number, Relation r) {
+	public AtomicProposition(String placeName, Relation r, int number) {
 		try {
 			setRelationSymbol(r);
 		} catch (UnsupportedRelation e) {

@@ -1,16 +1,15 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
-public class Transition implements Operand {
+public class Transition extends NetElementExpression {
 	
-	private String mTransitionName;
+	private String mTransition;
 
 	public Transition(String name) {
-		mTransitionName = "(" + name + "=1)";
+		mTransition = "(" + name + "_last=1)";
 	}
 	
 	public String toString() {
-		return mTransitionName;
-		
+		return mTransition;	
 	}
 
 }

@@ -1,7 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
-public interface Operand {
+public abstract class Operand {
 	
-	public String toString();
+	public abstract String toString();
 
 }

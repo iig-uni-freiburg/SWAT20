@@ -2,8 +2,10 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 
 public class LeadsTo extends AtomicPattern {
 	
-	public LeadsTo(Operand op1, Operand op2) {
-		super("(G(" + op1.toString() + "->" + "F" + op2.toString() + "))");
+	public static final String NAME = "Leads To";
+	
+	public LeadsTo(NetElementExpression op1, NetElementExpression op2) {
+		super("G(" + op1.toString() + " => (" + "F" + op2.toString() + "))");
 		mOperands.add(op1);
 		mOperands.add(op2);
 	} 

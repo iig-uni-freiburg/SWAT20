@@ -1,10 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
-public class Absent extends AtomicPattern {
 
-	public Absent(Operand op) {
+public class Absent extends AtomicPattern {
+	
+	public static final String NAME = "Absent";
+	
+	public Absent(NetElementExpression op) {
 		super("G(!" + op.toString() + ")");
 		mOperands.add(op);
 	}
-
 }
