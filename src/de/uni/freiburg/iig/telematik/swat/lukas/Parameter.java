@@ -14,6 +14,7 @@ public class Parameter {
 		mTypes = types;
 		mMultiplicity = mul;
 		mName = name;
+		mValues = new ArrayList<ParamValue>();
 	}
 
 	public Set<OperandType> getTypes() {
