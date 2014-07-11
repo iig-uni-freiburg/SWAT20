@@ -28,15 +28,14 @@ public class Parameter {
 		return mValues;
 	}
 
-	public void setValue(ParamValue value) {
+	public void setValue(ParamValue value, OperandType type) {
 		mValues.add(value);
+		mTypes.clear();
+		mTypes.add(type);
 	}
 	
-	public void setValue(ArrayList<ParamValue> values) {
+	public void setValue(ArrayList<ParamValue> values, OperandType type) {
 		mValues = values;
-	}
-	
-	public void setType(OperandType type) {
 		mTypes.clear();
 		mTypes.add(type);
 	}
