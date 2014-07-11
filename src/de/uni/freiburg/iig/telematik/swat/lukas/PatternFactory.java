@@ -10,10 +10,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 
 public class PatternFactory {
 	
-	private IFNet mIFNet;
+	private AbstractPetriNet<?,?,?,?,?,?,?> mNet;
 
-	public PatternFactory(IFNet net) {
-		mIFNet = net;
+	public PatternFactory(AbstractPetriNet<?,?,?,?,?,?,?> net) {
+		mNet = net;
 	}
 
 	public ArrayList<String> getApplicablePatterns(AbstractPetriNet<?,?,?,?,?,?,?> net) {
