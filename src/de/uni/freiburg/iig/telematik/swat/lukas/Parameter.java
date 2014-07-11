@@ -33,5 +33,10 @@ public class Parameter {
 	public void setValue(ArrayList<ParamValue> values) {
 		mValues = values;
 	}
+	
+	public void setType(OperandType type) {
+		mTypes.clear();
+		mTypes.add(type);
+	}
 
 }
