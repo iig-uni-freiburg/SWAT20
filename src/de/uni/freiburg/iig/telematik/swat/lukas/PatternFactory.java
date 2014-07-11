@@ -16,16 +16,16 @@ public class PatternFactory {
 		mNet = net;
 	}
 
-	public ArrayList<String> getApplicablePatterns(AbstractPetriNet<?,?,?,?,?,?,?> net) {
+	public ArrayList<String> getApplicablePatterns() {
 		
 		ArrayList<String> supportedPatterns = new ArrayList<String>();
-		if (net instanceof PTNet) {
+		if (mNet instanceof PTNet) {
 			supportedPatterns.addAll(AtomicPattern.getPatternNames());
 			supportedPatterns.addAll(CompositePattern.getPatternNames());
-		} else if (net instanceof CPN) {
+		} else if (mNet instanceof CPN) {
 			supportedPatterns.addAll(AtomicPattern.getPatternNames());
 			supportedPatterns.addAll(CompositePattern.getPatternNames());
-		} else if (net instanceof IFNet) {
+		} else if (mNet instanceof IFNet) {
 			supportedPatterns.addAll(AtomicPattern.getPatternNames());
 			supportedPatterns.addAll(CompositePattern.getPatternNames());
 			supportedPatterns.addAll(DataflowPattern.getPatternNames());
