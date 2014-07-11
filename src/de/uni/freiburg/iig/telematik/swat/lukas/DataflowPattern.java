@@ -70,15 +70,5 @@ public abstract class DataflowPattern extends CompliancePattern {
 				WeaklyLostData.NAME, InconsistentData.NAME, NeverDestroyed.NAME, TwiceDestroyed.NAME, NotDeletedOnTime.NAME));
 		
 	}
-	
-    public static ArrayList<Parameter> getParameter() {
-		
-		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-		HashSet<OperandType> types =  new HashSet<OperandType>();
-		types.add(OperandType.TOKEN);
-		parameters.add(new Parameter(types, 1));
-		return parameters;
-		
-	}
 
 }
