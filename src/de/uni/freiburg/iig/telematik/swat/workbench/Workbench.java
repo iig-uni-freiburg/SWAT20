@@ -23,6 +23,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
@@ -261,9 +262,15 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			// add SwatTreeNode to tab and get its swatComponent to make its propertyView
 			swatComponent = getTabView().addNewTab(node);
 			getPropertiesPanel().removeAll();
-			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+			if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+				getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+			} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+				if(swatComponent instanceof PNEditor)
+					getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(node.getDisplayName(),(PNEditor) swatComponent).getPanel());
+			}
 			getPropertiesPanel().validate();
 			getPropertiesPanel().repaint();
+			getPropertiesPanel().updateUI();
 		}
 
 		//Update Toolbar
@@ -313,10 +320,16 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			return; //no tabs inside
 		// Update Properties Panel & Toolbar according to active tab
 		getPropertiesPanel().removeAll();
-		getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
+		
 		//pack();
+		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+			getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
+		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+			if(component instanceof PNEditor)
+				getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(component.getName(), (PNEditor) component).getPanel());
+		}
 		getPropertiesPanel().repaint();
-
+		getPropertiesPanel().updateUI();
 		updateToolbar();
 	}
 
@@ -326,9 +339,16 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			//Update Properties View & Toolbar
 		SwatComponent swatComponent = (SwatComponent) getTabView().getSelectedComponent();
 		getPropertiesPanel().removeAll();
-		getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+			if(swatComponent instanceof PNEditor)
+				getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(swatComponent.getName(), (PNEditor) swatComponent).getPanel());
+		}
+		
 			//pack();
 			getPropertiesPanel().repaint();
+			getPropertiesPanel().updateUI();
 		//getPropertiesPanel().repaint();
 		updateToolbar();
 		} catch (NullPointerException e) {

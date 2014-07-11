@@ -1,14 +1,13 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import java.awt.List;
-import java.util.ArrayList;
-
 import javax.swing.JComboBox;
+
+import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 
 public class PatternDataParameter extends PatternParameterPanel {
 
 	public PatternDataParameter(String name, String values[]) {
-		super(name, "data");
+		super(name, OperandType.TOKEN);
 		jComponent=new JComboBox(values);
 		// TODO Auto-generated constructor stub
 	}

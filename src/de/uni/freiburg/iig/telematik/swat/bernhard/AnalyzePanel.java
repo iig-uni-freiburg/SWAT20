@@ -9,9 +9,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,23 +41,31 @@ public class AnalyzePanel {
 	private PatternWindow patternWindow;
 	private PNEditor pneditor;
 	private HashMap<String, String> transitionLabelDic;
-
+	private List<String> dataTypeList;
+	
+	public void netChanged() {
+		updateTransitionLabelDic();
+		if(pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
+			updateDataTypeList();
+		}
+	}
 	/**
 	 * Helpfunction to get the List of all Labels of the current PN of editor
 	 * @param editor
 	 * @return
 	 */
 	public void updateTransitionLabelDic() {
-		
 		List<String> result = new ArrayList<String>();
 		for(AbstractTransition transition : pneditor.getNetContainer().getPetriNet().getTransitions()){
 			transitionLabelDic.put(transition.getLabel(), transition.getName());
 		}
 	}
 	
-	private List<String> getDataTypeList(PNEditor pneditor) {
+	public void updateDataTypeList() {
 		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pn=pneditor.getNetContainer();
 		AbstractPetriNet apn=pn.getPetriNet();
+		dataTypeList =new ArrayList<String>();
+		Set<String> dataTypes=new HashSet<String>();
 		if(apn.getNetType()==NetType.IFNet) {
 			IFNet net=(IFNet) apn;
 			Iterator it=net.getTransitions().iterator();
@@ -63,18 +73,25 @@ public class AnalyzePanel {
 			//colors.addAll(arg0)
 			while(it.hasNext()) {
 				AbstractCPNTransition t=(AbstractCPNTransition) it.next();
-				t.getProcessedColors();
+				dataTypes.addAll(t.getProcessedColors());
 			}
+			dataTypeList.addAll(dataTypes);
 		}
-		return Arrays.asList("red", "green", "blue");
+		
+		System.out.println(dataTypeList);
 	}
 	public AnalyzePanel(PNEditor pneditor) {
 		this.pneditor=pneditor;
 		transitionLabelDic=new HashMap<String, String>();
-		updateTransitionLabelDic();
+		netChanged();
 		panel=new JPanel(new GridLayout(PatternAnalyzeLogic.MAX_PATTERNS, 1, 10, 10));
 		analyzeDescription=new JLabel("Analyze from "+getDate());
 		editButton=new JButton("Edit");
+		
+		runButton=new JButton("Run");
+		saveButton=new JButton("Save");
+		
+		patternWindow=new PatternWindow(this, pneditor);
 		editButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -82,13 +99,19 @@ public class AnalyzePanel {
 				showPatternWindow();
 			}
 		});
-		runButton=new JButton("Run");
-		saveButton=new JButton("Save");
-		
-		patternWindow=new PatternWindow(this, transitionLabelDic, getDataTypeList(pneditor));
+		runButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				analyze();
+			}
+		});
 		update();
 	}
 	
+	public HashMap<String, String> getTransitionLabelDic() {
+		return transitionLabelDic;
+	}
 	private void addButtons() {
 		panel.add(Helpers.jPanelLeft(editButton));
 		panel.add(Helpers.jPanelLeft(runButton));
@@ -106,10 +129,16 @@ public class AnalyzePanel {
 		patternWindow.setVisible(true);
 	}
 
+	/**
+	 * the function invoked when Analyze is pressed
+	 */
+	private void analyze() {
+		
+	}
 	public void update() {
 		panel.removeAll();
 		panel.add(Helpers.jPanelLeft(analyzeDescription));
-		for(Pattern p: patternWindow.getPatterns()) {
+		for(PatternSetting p: patternWindow.getPatterns()) {
 			panel.add(Helpers.jPanelLeft(new JLabel(p.toString())));
 		}
 		addButtons();
@@ -135,6 +164,10 @@ public class AnalyzePanel {
 
 	public void setNetName(String netName) {
 		this.netName = netName;
+	}
+	public List<String> getDataList() {
+		// TODO Auto-generated method stub
+		return dataTypeList;
 	}
 	
 }

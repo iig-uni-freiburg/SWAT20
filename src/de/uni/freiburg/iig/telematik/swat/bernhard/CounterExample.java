@@ -13,6 +13,7 @@ public class CounterExample {
 
 	private java.util.List<String> path;
 	private String textInfo;
+	private float probability;
 	public CounterExample() {
 		path=Arrays.asList("t0", "t1", "t2");
 	}

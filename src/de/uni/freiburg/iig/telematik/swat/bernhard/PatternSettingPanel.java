@@ -34,6 +34,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.lukas.Operand;
+import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 /**
  * This class represents a Panel with all its Components Labels, Remove Button
  * A PatternSettingPanel can be added to the patternPanel of the PatternWindow
@@ -44,20 +49,22 @@ public class PatternSettingPanel {
 	private JPanel panel;
 	private JPanel rightPanel;
 	private JButton removeButton;
-	private Pattern pattern;
-	private List<PatternParameterPanel> parameterList;
+	private PatternSetting patternSetting;
+	private List<PatternParameterPanel> parameterPanelList;
 	private HashMap<String, String> transitionDic;
 	private PatternWindow patternWindow;
 
-	public PatternSettingPanel(String patternName, PatternWindow patternWindow, HashMap<String, String> transitionDic, List<String> dataList) {
-		pattern = PatternDatabase.getInstance()
-				.getPattern(patternName);
-		this.transitionDic=transitionDic;
+	public PatternSettingPanel(String patternName, PatternWindow patternWindow, PatternFactory patternFactory) {
+		//pattern = PatternDatabase.getInstance()
+			//	.getPattern(patternName);
+		List<Parameter> parameters = patternFactory.getParametersOfPattern(patternName);
 		this.patternWindow=patternWindow;
-		panel = new JPanel(new GridLayout(pattern.getParameters().size() + 1, 2));
+		transitionDic=patternWindow.getTransitionDic();
+		patternSetting=new PatternSetting(patternName,parameters);
+		panel = new JPanel(new GridLayout(patternSetting.getParameters().size() + 1, 2));
 		// System.out.println(paraList);
 		// System.out.println(paraList.size());
-		parameterList = new ArrayList<PatternParameterPanel>();
+		parameterPanelList = new ArrayList<PatternParameterPanel>();
 
 		JLabel label = new JLabel(patternName);
 		Font font = label.getFont();
@@ -89,17 +96,22 @@ public class PatternSettingPanel {
 		}
 
 		// add ParameterPanels for each Parameter
-		for (PatternParameter para : pattern.getParameters()) {
+		//for (PatternParameter para : pattern.getParameters()) {
+		
+		for (Parameter pp : parameters) {
 			PatternParameterPanel patternPara = null;
-			panel.add(new JLabel("Choose "+para.name));
+			panel.add(new JLabel("Choose "+pp.getName()));
 			//System.out.println(para.type);
-			if (para.type.equals("data")) {
-				patternPara = new PatternDataParameter(para.name, dataList.toArray(new String[0]));
-			} else if (para.type.equals("activity")) {
-				patternPara = new PatternActivityParameter(para.name, transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
+			//if (para.type.equals("data")) {
+			Set<OperandType> operandSet=pp.getTypes();
+			if(operandSet.contains(OperandType.TOKEN)) {
+				List<String> dataList=patternWindow.getDataList();
+				patternPara = new PatternDataParameter(pp.getName(), dataList.toArray(new String[dataList.size()]));
+			} else if (operandSet.contains(OperandType.TRANSITION)) {
+				patternPara = new PatternActivityParameter(pp.getName(), transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
 			}
 			panel.add(patternPara.getjComponent());
-			parameterList.add(patternPara);
+			parameterPanelList.add(patternPara);
 		}
 	}
 
@@ -118,13 +130,13 @@ public class PatternSettingPanel {
 	 */
 	public String getValues() {
 		String paraString = "";
-		for (PatternParameterPanel para : parameterList) {
+		for (PatternParameterPanel para : parameterPanelList) {
 			paraString += para.getValue() + ":";
 		}
 		return paraString;
 	}
-	public Pattern getPattern() {
-		return pattern;
+	public PatternSetting getPattern() {
+		return patternSetting;
 	}
 
 	public JPanel getJPanel() {
@@ -136,21 +148,25 @@ public class PatternSettingPanel {
 	public void updatePatternValues() {
 		// first store the values taken from the jcomponents
 		
-		for (PatternParameterPanel para : parameterList) {
-			for(PatternParameter patternPara: pattern.getParameters()) {
-				if(para.name.equals(patternPara.name)) {
+		for (PatternParameterPanel paraPanel : parameterPanelList) {
+			for(Parameter patternPara: patternSetting.getParameters()) {
+				if(paraPanel.getName().equals(patternPara.getName())) {
 					// if its an activity, take the name and not the label
-					patternPara.value=para.getValue();
+					if(paraPanel.getType()==OperandType.TRANSITION) {
+						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TRANSITION));
+					} else if(paraPanel.getType()==OperandType.TOKEN) {
+						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TOKEN));
+					}
 				}
 			}
 			
 		}
 		// update the pattern representation
-		pattern.updateParameterAppliedString();
-		for(PatternParameter patternPara: pattern.getParameters()) {
-			if(patternPara.type=="activity") {
+		patternSetting.updateParameterAppliedString();
+		for(Parameter patternPara: patternSetting.getParameters()) {
+			if(patternPara.getTypes().contains(OperandType.TRANSITION)) {
 					// if its an activity, take the name and not the label
-				patternPara.value=transitionDic.get(patternPara.value);
+				patternPara.setValue(new ParamValue(transitionDic.get(Helpers.getFirst(patternPara.getValue()).getOperandName()), Helpers.getFirst(patternPara.getValue()).getOperandType()));
 			}
 		}
 			
@@ -158,7 +174,7 @@ public class PatternSettingPanel {
 
 	public String getPatternName() {
 		// TODO Auto-generated method stub
-		return pattern.getName();
+		return patternSetting.getName();
 	}
 	
 }

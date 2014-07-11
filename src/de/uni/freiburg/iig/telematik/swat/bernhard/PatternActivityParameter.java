@@ -1,14 +1,14 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import java.util.ArrayList;
-
 import javax.swing.JComboBox;
+
+import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 
 public class PatternActivityParameter extends PatternParameterPanel {
 
 	public PatternActivityParameter(String name, String[] values) {
-		super(name, "activity");
-		jComponent=new JComboBox(values);
+		super(name, OperandType.TRANSITION);
+		jComponent = new JComboBox(values);
 
 	}
 

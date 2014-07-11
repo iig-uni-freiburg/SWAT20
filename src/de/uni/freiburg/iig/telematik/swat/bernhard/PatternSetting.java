@@ -2,26 +2,25 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 /**
  * the pattern class represents are pattern with its name and parameters
  * @author bernhard
  *
  */
-public class Pattern {
+public class PatternSetting {
 
-	private String name;
-	private String parameterAppliedString;
-	public Pattern(String name, List<PatternParameter> parameters) {
+	public PatternSetting(String name, List<Parameter> parameters) {
 		super();
 		this.name = name;
 		this.parameters = parameters;
 	}
-	private List<PatternParameter> parameters;
+	private String name;
+	private String parameterAppliedString;
+	private List<Parameter> parameters;
 	
-	public Pattern clone() {
-		List<PatternParameter> para=new ArrayList<PatternParameter>(parameters);
-		return new Pattern(new String(name), para);
-	}
+	
 
 	public String getName() {
 		return name;
@@ -31,13 +30,11 @@ public class Pattern {
 		this.name = name;
 	}
 
-	public List<PatternParameter> getParameters() {
+	public List<Parameter> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(List<PatternParameter> parameters) {
-		this.parameters = parameters;
-	}
+
 	/**
 	 * returns the String representation of the pattern e.g:
 	 * Q precedes P
@@ -50,11 +47,16 @@ public class Pattern {
 		return parameterAppliedString;
 		
 	}
+	/*
+	 * replace several things at once
+	 */
 	public void updateParameterAppliedString() {
 		parameterAppliedString=new String(name);
-		for(PatternParameter p: parameters) {
-			parameterAppliedString=parameterAppliedString.replaceFirst(p.name, p.value);
+		for(Parameter p: parameters) {
+			// take this random name to help for replace
+			String random="__#12345#__";
+			parameterAppliedString.replaceFirst(p.getName(), random);
+			parameterAppliedString=parameterAppliedString.replaceFirst(random, Helpers.getFirst(p.getValue()).getOperandName());
 		}
-		//System.out.println(parameterAppliedString);
 	}
 }

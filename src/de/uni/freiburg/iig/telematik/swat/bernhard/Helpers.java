@@ -6,9 +6,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
+import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 
 /**
  * a class containing some help functions
@@ -44,5 +47,8 @@ public class Helpers {
         }
 
         return list;
+	}
+	public static ParamValue getFirst(ArrayList<ParamValue> arrayList) {
+		return arrayList.iterator().next();
 	}
 }

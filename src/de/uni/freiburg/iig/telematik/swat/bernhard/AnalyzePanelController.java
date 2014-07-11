@@ -10,10 +10,9 @@ public class AnalyzePanelController {
 
 	private HashMap<String, AnalyzePanel> panelDic;
 	private static AnalyzePanelController instance;
-	private PatternAnalyzeLogic analyzeLogic;
+
 	public AnalyzePanelController() {
 		panelDic=new HashMap<String, AnalyzePanel>();
-		analyzeLogic=new PatternAnalyzeLogic();
 	}
 	
 	public static AnalyzePanelController getInstance() {
