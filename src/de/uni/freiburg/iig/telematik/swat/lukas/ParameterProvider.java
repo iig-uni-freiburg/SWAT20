@@ -30,50 +30,52 @@ public class ParameterProvider {
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		if (mOneParameterCFPatterns.contains(patternName)) {
 			
-			addControlFlowParameters(parameters, 1);
+			ArrayList<String> paramNames = new ArrayList<String>(Arrays.asList("P"));
+			addControlFlowParameters(parameters, 1, paramNames);
 			
 		} else if (mTwoParameterCFPatterns.contains(patternName)) {
 			
-			addControlFlowParameters(parameters, 2);
+			ArrayList<String> paramNames = new ArrayList<String>(Arrays.asList("P", "Q"));
+			addControlFlowParameters(parameters, 2, paramNames);
 			
 		} else if (mThreeParameterCFPatterns.contains(patternName)) {
-			
-			addControlFlowParameters(parameters, 3);
+			ArrayList<String> paramNames = new ArrayList<String>(Arrays.asList("P", "Q", "R"));
+			addControlFlowParameters(parameters, 3, paramNames);
 			
 		} else if (mDFPatterns.contains(patternName)) {
 			
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TOKEN)),1));
+					Arrays.asList(OperandType.TOKEN)),1, "D"));
 			
 		} else if (mTwoTransitionRP.contains(patternName)) {
 			
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1));
+					Arrays.asList(OperandType.TRANSITION)),1, "T1"));
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1));
+					Arrays.asList(OperandType.TRANSITION)),1, "T2"));
 			
 		} else if (patternName.equals(PerformedBy.NAME)) {
 			
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1));
+					Arrays.asList(OperandType.TRANSITION)),1, "T"));
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.ROLE)),1));
+					Arrays.asList(OperandType.ROLE)), 1 , "R"));
 			
 		} else if (patternName.equals(RBoundedWith.NAME)) {
 			
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1));
+					Arrays.asList(OperandType.TRANSITION)),1, "T1"));
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1));
+					Arrays.asList(OperandType.TRANSITION)),1, "T2"));
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.ROLE)),1));
+					Arrays.asList(OperandType.ROLE)),1, "R"));
 			
 		} else if (patternName.equals(MSegregated.NAME)) {
 			
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)), -1));
+					Arrays.asList(OperandType.TRANSITION)), -1, "(T1, ..., TN)"));
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.ROLE)), -1));
+					Arrays.asList(OperandType.ROLE)), -1, "(R1, ..., RM)"));
 			
 		} else {
 			try {
@@ -89,11 +91,11 @@ public class ParameterProvider {
 		
 	}
 
-	private void addControlFlowParameters(ArrayList<Parameter> parameters, int i) {
+	private void addControlFlowParameters(ArrayList<Parameter> parameters, int i, ArrayList<String> paramNames) {
 		
 		for (int j = 0; j < i; j++) {
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.STATEPREDICATE, OperandType.TRANSITION)), 1));	
+					Arrays.asList(OperandType.STATEPREDICATE, OperandType.TRANSITION)), 1, paramNames.get(j)));	
 		}
 	}
 
