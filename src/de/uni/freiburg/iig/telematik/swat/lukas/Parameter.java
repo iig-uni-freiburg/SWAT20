@@ -28,16 +28,12 @@ public class Parameter {
 		return mValues;
 	}
 
-	public void setValue(ParamValue value, OperandType type) {
+	public void setValue(ParamValue value) {
 		mValues.add(value);
-		mTypes.clear();
-		mTypes.add(type);
 	}
 	
-	public void setValue(ArrayList<ParamValue> values, OperandType type) {
+	public void setValue(ArrayList<ParamValue> values) {
 		mValues = values;
-		mTypes.clear();
-		mTypes.add(type);
 	}
 	
 	public String getName() {
