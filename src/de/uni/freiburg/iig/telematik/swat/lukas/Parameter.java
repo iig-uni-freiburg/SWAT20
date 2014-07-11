@@ -8,10 +8,12 @@ public class Parameter {
 	private Set<OperandType> mTypes;
 	private int mMultiplicity;
 	private ArrayList<ParamValue> mValues;
+	private String mName;
 
-	public Parameter(Set<OperandType> types, int mul) {
+	public Parameter(Set<OperandType> types, int mul, String name) {
 		mTypes = types;
 		mMultiplicity = mul;
+		mName = name;
 	}
 
 	public Set<OperandType> getTypes() {
@@ -38,5 +40,9 @@ public class Parameter {
 		mTypes.clear();
 		mTypes.add(type);
 	}
+	
+	public String getName() {
+		return mName;
+	} 
 
 }
