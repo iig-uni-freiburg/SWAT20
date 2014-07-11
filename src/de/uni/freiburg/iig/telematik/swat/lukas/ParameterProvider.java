@@ -21,7 +21,7 @@ public class ParameterProvider {
 		mThreeParameterCFPatterns = new HashSet<String>(Arrays.asList(ChainPrecedes.NAME, ChainLeadsTo.NAME));
 		mTwoTransitionRP = new HashSet<String>(Arrays.asList(SegregatedFrom.NAME, USegregatedFrom.NAME,
 				BoundedWith.NAME));
-		HashSet<String> mDFPatterns = new HashSet<String>();
+		mDFPatterns = new HashSet<String>();
 		mDFPatterns.addAll(DataflowPattern.getPatternNames());
 	}
 	
