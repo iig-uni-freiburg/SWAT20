@@ -1,10 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -20,7 +20,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class RenameAction implements ActionListener {
+public class RenameAction extends AbstractAction {
 
 	private SwatTabView tabView;
 	private SwatTreeView treeView;

@@ -1,7 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
@@ -20,7 +20,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class ImportAction implements ActionListener {
+public class ImportAction extends AbstractAction {
 
 	private SwatTreeView treeView;
 

@@ -41,7 +41,8 @@ public class Startup {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Cannot launch Swat", "Exception during startup:<br>Reason: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
 		}
-		new Workbench();
+		//new Workbench();
+		Workbench.getInstance();
 	}
 	
 	private static boolean checkWorkingDirectory(){

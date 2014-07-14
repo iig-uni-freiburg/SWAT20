@@ -56,7 +56,9 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private static JTextArea console = null;
 	private static JTextArea errors = null;
 
-	public Workbench() {
+	private static Workbench myWorkbench;
+
+	private Workbench() {
 		super();
 		setLookAndFeel();
 		setUpGUI();
@@ -70,6 +72,14 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		SwatComponents.getInstance().addSwatComponentListener(treeView);
 	}
 	
+	public static Workbench getInstance() {
+		if (myWorkbench == null) {
+			myWorkbench = new Workbench();
+		}
+		return myWorkbench;
+
+	}
+
 	/** Changes Look and Feel if running on Linux **/
 	private void setLookAndFeel() {
 		if (System.getProperty("os.name").toLowerCase().contains("nux")) {

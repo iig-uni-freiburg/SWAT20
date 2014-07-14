@@ -1,9 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -15,7 +15,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class SwitchWorkingDirectoryAction implements ActionListener {
+public class SwitchWorkingDirectoryAction extends AbstractAction {
 
 	private SwatTreeView treeView;
 	private SwatTabView tabView;
