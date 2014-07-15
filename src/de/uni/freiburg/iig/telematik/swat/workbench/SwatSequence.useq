@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.6" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.Startup" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/Startup.java" binary="false" label="startup" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="80" y="0"/>    
+    <execution id="2">      
+      <position height="76" width="190" x="5" y="108"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="19" width="190" x="5" y="146"/>    
+    </execution>    
+    <execution id="5">      
+      <position height="883" width="190" x="5" y="202"/>    
+    </execution>    
+    <execution id="10">      
+      <position height="19" width="7" x="97" y="323"/>    
+    </execution>  
+  </object>  
+  <object id="11" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatComponents.java" binary="false" 
+    label="swatComponents" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="336" y="0"/>    
+    <execution id="7">      
+      <position height="140" width="190" x="199" y="221"/>    
+    </execution>    
+    <execution id="13">      
+      <position height="19" width="7" x="291" y="279"/>    
+    </execution>    
+    <execution id="15">      
+      <position height="19" width="7" x="294" y="324"/>    
+    </execution>    
+    <execution id="16">      
+      <position height="19" width="190" x="199" y="686"/>    
+    </execution>    
+    <execution id="17">      
+      <position height="19" width="190" x="199" y="728"/>    
+    </execution>    
+    <execution id="18">      
+      <position height="19" width="190" x="199" y="647"/>    
+    </execution>  
+  </object>  
+  <object id="19" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatComponent.java" binary="false" 
+    label="swatComponent" type="interface" autoSize="true">    
+    <position height="-1" width="-1" x="390" y="0"/>    
+    <execution id="20">      
+      <position height="57" width="190" x="393" y="305"/>    
+    </execution>  
+  </object>  
+  <object id="22" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.Workbench" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/Workbench.java" binary="false" label="workbench" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="496" y="0"/>    
+    <execution id="9">      
+      <position height="696" width="190" x="393" y="370"/>    
+    </execution>    
+    <execution id="24">      
+      <position height="622" width="190" x="393" y="425"/>    
+    </execution>    
+    <execution id="29">      
+      <position height="122" width="7" x="682" y="868"/>    
+    </execution>  
+  </object>  
+  <object id="32" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTabView.java" binary="false" label="swatTabView" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="777" y="0"/>    
+    <execution id="26">      
+      <position height="114" width="190" x="781" y="444"/>    
+    </execution>    
+    <execution id="34">      
+      <position height="57" width="7" x="873" y="482"/>    
+    </execution>    
+    <execution id="31">      
+      <position height="76" width="190" x="781" y="895"/>    
+    </execution>    
+    <execution id="38">      
+      <position height="19" width="7" x="873" y="933"/>    
+    </execution>  
+  </object>  
+  <object id="39" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView.SwatTabViewAdapter" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTabView.java" binary="false" 
+    label="swatTabViewAdapter1" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="971" y="0"/>    
+    <execution id="36">      
+      <position height="19" width="190" x="975" y="501"/>    
+    </execution>  
+  </object>  
+  <object id="40" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTreeView.java" binary="false" 
+    label="swatTreeView" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="715" y="0"/>    
+    <execution id="28">      
+      <position height="445" width="190" x="781" y="583"/>    
+    </execution>    
+    <execution id="42">      
+      <position height="388" width="7" x="873" y="621"/>    
+    </execution>  
+  </object>  
+  <object id="53" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTreeView.java" binary="false" 
+    label="swatTreeNode" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="715" y="0"/>    
+    <execution id="45">      
+      <position height="49" width="190" x="1144" y="660"/>    
+    </execution>    
+    <execution id="48">      
+      <position height="57" width="190" x="975" y="724"/>    
+    </execution>    
+    <execution id="51">      
+      <position height="57" width="190" x="975" y="784"/>    
+    </execution>  
+  </object>  
+  <object id="60" language="java" 
+    name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView.ButtonTabComponent.TabButton" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTabView.java" binary="false" label="tabButton" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="777" y="0"/>  
+  </object>  
+  <object id="61" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView.ButtonTabComponent" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTabView.java" binary="false" 
+    label="buttonTabComponent" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="777" y="0"/>  
+  </object>  
+  <object id="62" language="java" name="javax.swing.tree.DefaultMutableTreeNode" project="SWAT20" 
+    file="/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/rt.jar" binary="true" label="defaultMutableTreeNode" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="424" y="0"/>    
+    <execution id="55">      
+      <position height="19" width="165" x="1169" y="671"/>    
+    </execution>    
+    <execution id="57">      
+      <position height="19" width="165" x="1169" y="743"/>    
+    </execution>    
+    <execution id="59">      
+      <position height="19" width="165" x="1169" y="803"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="checkWorkingDirectory():boolean">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="6" operation="getInstance():de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="7"/>  
+  </message>  
+  <message id="8" operation="getInstance():de.uni.freiburg.iig.telematik.swat.workbench.Workbench">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="9"/>  
+  </message>  
+  <message id="12" operation="loadSwatComponents():void">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="13"/>  
+  </message>  
+  <message id="14">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="21" operation="SwatComponents()">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="15"/>  
+  </message>  
+  <message id="23" operation="setUpGUI():void">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="24"/>  
+  </message>  
+  <message id="25" operation="SwatTabView()">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="26"/>  
+  </message>  
+  <message id="27" operation="getInstance():de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView" x="691" y="562">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="28"/>  
+  </message>  
+  <message id="30" 
+    operation="addNewTab(de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode):de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="31"/>  
+  </message>  
+  <message id="33" operation="addChangeListener(javax.swing.event.ChangeListener):void">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="34"/>  
+  </message>  
+  <message id="35" operation="SwatTabViewAdapter()">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="36"/>  
+  </message>  
+  <message id="37" 
+    operation="addNewTab(de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode):de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="38"/>  
+  </message>  
+  <message id="41" operation="createChildren():void">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="42"/>  
+  </message>  
+  <message id="43" operation="getPetriNets():java.util.Set&lt;AbstractGraphicalPN&gt;">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="18"/>  
+  </message>  
+  <message id="44" operation="setUserObject(java.lang.Object):void">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="45"/>  
+  </message>  
+  <message id="46" operation="getLogFiles():java.util.Set&lt;LogFileViewer&gt;">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="47" operation="setUserObject(java.lang.Object):void">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="48"/>  
+  </message>  
+  <message id="49" operation="getXMLFiles():java.util.Set&lt;XMLFileViewer&gt;">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="17"/>  
+  </message>  
+  <message id="50" operation="setUserObject(java.lang.Object):void">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="51"/>  
+  </message>  
+  <message id="52" 
+    operation="componentActivated(de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode):void">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="29"/>  
+  </message>  
+  <message id="54" operation="add(javax.swing.tree.MutableTreeNode):void">    
+    <end type="SOURCE" refId="45"/>    
+    <end type="TARGET" refId="55"/>  
+  </message>  
+  <message id="56" operation="add(javax.swing.tree.MutableTreeNode):void">    
+    <end type="SOURCE" refId="48"/>    
+    <end type="TARGET" refId="57"/>  
+  </message>  
+  <message id="58" operation="add(javax.swing.tree.MutableTreeNode):void">    
+    <end type="SOURCE" refId="51"/>    
+    <end type="TARGET" refId="59"/>  
+  </message>
+</sequence-diagram>

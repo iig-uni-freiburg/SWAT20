@@ -27,7 +27,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	
 	private Set<SwatTreeViewListener> listeners = new HashSet<SwatTreeViewListener>();
 	
-	private static SwatTreeView tree = new SwatTreeView();
+	private static SwatTreeView swatTreeInstance = new SwatTreeView();
 
 	@SuppressWarnings("rawtypes")
 	private SwatTreeView() {
@@ -45,7 +45,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	}
 
 	public static SwatTreeView getInstance() {
-		return tree;
+		return swatTreeInstance;
 	}
 
 	public void removeAndUpdateSwatComponents() {
