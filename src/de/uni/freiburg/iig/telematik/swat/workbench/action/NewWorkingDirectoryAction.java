@@ -16,7 +16,8 @@ public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
 	private static final long serialVersionUID = 3421975574956233676L;
 	
 	public NewWorkingDirectoryAction(Window parentWindow){
-		super(parentWindow, "New Working Directory");
+		super(parentWindow, "New Working Dir");
+		//super(parentWindow, "New Working Directory");
 	}
 
 	@Override

@@ -44,6 +44,11 @@ public class WorkingDirectoryDialog extends JDialog implements PropertyChangeLis
 	private NewWorkingDirectoryAction newDirectoryAction = null;
 	private OpenWorkingDirectoryAction openDirectoryAction = null;
 	
+	public static void main(String args[]) {
+		//WorkingDirectoryDialog dialog = new WorkingDirectoryDialog(null);
+		System.out.println(WorkingDirectoryDialog.showDialog(null));
+	}
+
 	public WorkingDirectoryDialog(Window owner) {
 		super(owner);
 		setResizable(false);
@@ -75,11 +80,13 @@ public class WorkingDirectoryDialog extends JDialog implements PropertyChangeLis
 		contentPanel.add(txtrThereAreNo);
 		
 		JButton btnExistingDirectory = new JButton(openDirectoryAction);
-		btnExistingDirectory.setBounds(45, 264, 157, 29);
+		//btnExistingDirectory.setBounds(45, 264, 157, 29);
+		btnExistingDirectory.setBounds(20, 264, 160, 29);
 		contentPanel.add(btnExistingDirectory);
 		
 		JButton btnNewButton = new JButton(newDirectoryAction);
-		btnNewButton.setBounds(214, 264, 133, 29);
+		//btnNewButton.setBounds(214, 264, 133, 29);
+		btnNewButton.setBounds(193, 264, 155, 29);
 		contentPanel.add(btnNewButton);
 
 		JPanel buttonPane = new JPanel();
