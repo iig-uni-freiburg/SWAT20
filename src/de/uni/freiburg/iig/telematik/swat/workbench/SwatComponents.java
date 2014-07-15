@@ -56,6 +56,7 @@ public class SwatComponents {
 		logs.clear();
 		xml.clear();
 		loadSwatComponents();
+		informListenerOfModelChange();
 	}
 
 	public static SwatComponents getInstance(){
@@ -99,6 +100,7 @@ public class SwatComponents {
 
 	public void putIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, File file) {
 		nets.put(net, file);
+		informListenerOfModelChange();
 	}
 
 

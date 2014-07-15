@@ -215,7 +215,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 
 	@Override
 	public void modelChanged() {
-		// TODO Auto-generated method stub
+		removeAndUpdateSwatComponents();
 
 	}
 

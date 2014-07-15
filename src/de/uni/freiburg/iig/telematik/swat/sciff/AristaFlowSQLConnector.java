@@ -139,13 +139,14 @@ public class AristaFlowSQLConnector {
 	}
 
 	public LogFileViewer dumpIntoWorkbench() throws Exception {
-		File file = new File(SwatProperties.getInstance().getWorkingDirectory(), "AristaFlowImport " + getCurrentTime());
+		File file = new File(SwatProperties.getInstance().getWorkingDirectory(), "AristaFlowImport " + getCurrentTime() + ".csv");
 		FileWriter fileWriter = new FileWriter(file);
 		createFirstLine(fileWriter);
 		ResultSet rs = st.executeQuery(QUERY);
 		while (rs.next()) {
 			writeLine(rs, fileWriter);
 		}
+		LogFileViewer logFile = new LogFileViewer(file);
 		return new LogFileViewer(file);
 	}
 

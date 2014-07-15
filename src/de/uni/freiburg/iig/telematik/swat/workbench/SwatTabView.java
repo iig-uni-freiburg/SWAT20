@@ -126,6 +126,8 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	 */
 	@SuppressWarnings("rawtypes")
 	public SwatComponent addNewTab(SwatTreeNode node) {
+		if (alreadyOpen(node.getDisplayName()))
+			return null;
 		try {
 			switch (node.getObjectType()) {
 			case LABELING:
@@ -147,6 +149,14 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
+	}
+
+	private boolean alreadyOpen(String name) {
+		for (int i = 0; i < this.getTabCount(); i++) {
+			if (getTitleAt(i).equals(name))
+				return true;
+		}
+		return false;
 	}
 
 	private void addXmlFile(SwatTreeNode node) {

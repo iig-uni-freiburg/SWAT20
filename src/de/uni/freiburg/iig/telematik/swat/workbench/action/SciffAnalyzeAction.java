@@ -81,8 +81,8 @@ public class SciffAnalyzeAction extends AbstractAction {
 				System.out.println("Total Entries in Log: " + reader.getInstances().size());
 				SCIFFChecker checker = new SCIFFChecker();
 				CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
-				System.out.println("Wrong: " + report.wrongInstances().size() + " - Right: " + report.correctInstances().size()
-						+ " - Exceptions: " + report.exceptionInstances().size());
+			//				System.out.println("Wrong: " + report.wrongInstances().size() + " - Right: " + report.correctInstances().size()
+			//						+ " - Exceptions: " + report.exceptionInstances().size());
 			SciffPresenter sciff = new SciffPresenter(report, rule, previouseRuleString, file);
 				sciff.show();
 				//System.out.println("Wrong: " + reader.getInstance(report.wrongInstances().get(0)).getName());

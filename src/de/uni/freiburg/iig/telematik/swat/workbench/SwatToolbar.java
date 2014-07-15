@@ -391,7 +391,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			try {
 				AristaFlowSQLConnector con = DatabaseChooser.DatabaseChooser();
 				LogFileViewer viewer = con.dumpIntoWorkbench();
-				SwatComponents.getInstance();
+				SwatComponents.getInstance().reload();
 				con.parse();
 				SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(con.getTempFile());
 				sciffAction.actionPerformed(e);
@@ -514,7 +514,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 					//GraphicalPTNet 
 					//SwatComponents.getInstance().putIntoSwatComponent(newNet, file);
 				//Inform Tree View of changed components
-				treeView.removeAndUpdateSwatComponents();
+					//treeView.removeAndUpdateSwatComponents();
 			} catch (PropertyException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

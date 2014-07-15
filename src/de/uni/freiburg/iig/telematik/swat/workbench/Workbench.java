@@ -140,7 +140,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return content;
 	}
 	
-	private SwatToolbar getSwatToolbar(){
+	public SwatToolbar getSwatToolbar() {
 		if(toolbar == null){
 			toolbar = new SwatToolbar(getTabView(), getTreeView());
 		}
@@ -157,7 +157,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return properties;
 	}
 	
-	private SwatTabView getTabView(){
+	public SwatTabView getTabView() {
 		if(tabView == null){
 			tabView = new SwatTabView();
 			tabView.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
@@ -167,14 +167,14 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return tabView;
 	}
 	
-	private SwatMenuBar getSwatMenu() {
+	public SwatMenuBar getSwatMenu() {
 		if(menuBar == null){
 			menuBar = new SwatMenuBar(getTabView(), getTreeView());
 		}
 		return menuBar;
 	}
 	
-	private SwatTreeView getTreeView(){
+	public SwatTreeView getTreeView() {
 		 UIManager.put("Tree.rendererFillBackground", false);
 		if(treeView == null){
 			treeView = SwatTreeView.getInstance();
@@ -354,6 +354,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
 			if(swatComponent instanceof PNEditor)
 				getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(swatComponent.getName(), (PNEditor) swatComponent).getPanel());
+			if (swatComponent instanceof LogFileViewer)
+				getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
 		}
 		
 			//pack();
