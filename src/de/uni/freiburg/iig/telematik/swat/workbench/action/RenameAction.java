@@ -18,6 +18,8 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class RenameAction extends AbstractAction {
@@ -32,29 +34,26 @@ public class RenameAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(tabView.getParent()), "Noch nicht fertig", "Obacht!",
-				JOptionPane.ERROR_MESSAGE);
 
 		SwatComponent currentComponent = (SwatComponent) tabView.getSelectedComponent();
+		SwatTreeNode node = (SwatTreeNode) Workbench.getInstance().getTreeView().getSelectionPath().getLastPathComponent();
 		//take current file, rename and update
 		try {
-			File oldFile = SwatComponents.getInstance().getFile(currentComponent);
-			File newFile = getAbsolutePathToWorkingDir(requestFileName("New name for net?", "New name"), currentComponent);
-			File deleteFile = new File(oldFile.getCanonicalFile().toURI());
+			File oldFile = node.getFileReference();
+			String extensions[] = oldFile.toString().split("\\.");
+			String extension = "." + extensions[extensions.length - 1];
+			File newFile = getAbsolutePathToWorkingDir(requestFileName("New name for net?", "New name") + extension, currentComponent);
 			if (oldFile.renameTo(newFile) ) {
-				deleteFile.delete();
-				//tabView.setTitleAt(tabView.getSelectedIndex(), newFile.getName().split("\\.")[0]);
-				tabView.remove(tabView.getSelectedIndex());
-				//////HACK: reload is not good - it destroys the linkage between tabView and TreeView
-				//SwatComponents.getInstance().reload();
-				//treeView.removeAndUpdateSwatComponents();
-				//treeView.getComponent(currentComponent).updateDisplayName();
-				treeView.update();
-				return;
+				tabView.remove(node);
+				SwatComponents.getInstance().remove(oldFile);
+				SwatComponents.getInstance().reload();
+				Workbench.consoleMessage("Rename of " + oldFile.getName() + " to " + newFile.getName() + " Successfull");
 			}
- else { //Something went wrong
+
+			else { //Something went wrong
 				JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(tabView.getParent()), "Rename not possible", "Problem",
 						JOptionPane.ERROR_MESSAGE);
+				Workbench.consoleMessage("Rename of " + oldFile.getName() + " to " + newFile.getName() + " NOT Successfull");
 				return;
 			}
 

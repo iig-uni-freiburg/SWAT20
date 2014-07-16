@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -69,20 +70,20 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 
 		DefaultMutableTreeNode petriNets = new DefaultMutableTreeNode("Petri Nets");
 		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNets()){
-			petriNets.add(new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET));
+			petriNets.add(new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET, SwatComponents.getInstance().getFile(petriNet)));
 		}
 		root.add(petriNets);
 
 		// LogFiles
 		DefaultMutableTreeNode logFiles = new DefaultMutableTreeNode("Logfiles");
 		for (LogFileViewer logFileViewer : SwatComponents.getInstance().getLogFiles()) {
-			logFiles.add(new SwatTreeNode(logFileViewer, SwatComponentType.LOG_FILE));
+			logFiles.add(new SwatTreeNode(logFileViewer, SwatComponentType.LOG_FILE, logFileViewer.getFile()));
 		}
 		root.add(logFiles);
 
 		DefaultMutableTreeNode xmlFiles = new DefaultMutableTreeNode("XML files");
 		for (XMLFileViewer xmlFileViewer : SwatComponents.getInstance().getXMLFiles()) {
-			xmlFiles.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE));
+			xmlFiles.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE, xmlFileViewer.getFile()));
 		}
 		root.add(xmlFiles);
 		try {
@@ -128,13 +129,19 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		
 		private SwatComponentType objectType = null;
 		private String displayName = null;
+		private File fileReference;
 
-		public SwatTreeNode(Object userObject, SwatComponentType objectType) {
+		public SwatTreeNode(Object userObject, SwatComponentType objectType, File fileReference) {
 			super(userObject, false);
 			this.objectType = objectType;
+			this.fileReference = fileReference;
 			setDisplayName();
 		}
 		
+		public File getFileReference() {
+			return fileReference;
+		}
+
 		@SuppressWarnings("rawtypes")
 		private void setDisplayName(){
 			switch (objectType) {

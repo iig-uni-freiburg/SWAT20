@@ -32,7 +32,7 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 	private static final long serialVersionUID = 7051631037013916120L;
 	private File file = null;
 	JComponent properties = null;
-	private JButton runWithSciff = null;
+	private JButton analyzeButton = null;
 	private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
 	private static int ICON_SIZE = 32;
 
@@ -87,29 +87,20 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 	}
 
 	public JButton getSciffButton() {
-		if (runWithSciff == null) {
-			runWithSciff = new JButton("Analyze with SCIFF");
+		if (analyzeButton == null) {
+			analyzeButton = new JButton("Analyze with SCIFF");
 			ImageIcon icon;
 			try {
 				icon = IconFactory.getIcon("search");
-				runWithSciff.setIcon(icon);
+				analyzeButton.setIcon(icon);
 			} catch (ParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (PropertyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-			//ImageIcon icon = new ImageIcon(LogFileViewer.this.getClass().getResource(
-			//		String.format(iconNameFormat, ICON_SIZE, "search", ICON_SIZE)));
 
-
-			runWithSciff.addActionListener(new SciffAnalyzeAction(file));
+			analyzeButton.addActionListener(new SciffAnalyzeAction(file));
 		}
-		return runWithSciff;
+		return analyzeButton;
 	}
 
 

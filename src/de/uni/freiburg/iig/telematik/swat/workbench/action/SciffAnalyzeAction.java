@@ -63,29 +63,26 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+
 		SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
 
+		try {
+			if (reader == null && file != null)
+				reader = getReader();
+
+			CompositeRule rule;
 			try {
-				if (reader == null && file != null)
-					reader = getReader();
+				//Try to generate Hints for RuleDialog
+				rule = SciffRuleDialog.showRuleDialog(null, null, getActivityCandidates(reader), getOriginatorCandidates(reader));
+			} catch (Exception e) {
+				//Could not generate Hints. Continue without
+				rule = SciffRuleDialog.showRuleDialog(null);
+			}
 
-				//CompositeRule rule = org.processmining.analysis.sciffchecker.gui.SciffRuleDialog.showRuleDialog(null);
-				CompositeRule rule;
-				try {
-					rule = SciffRuleDialog.showRuleDialog(null, null, getActivityCandidates(reader), getOriginatorCandidates(reader));
-					//System.out.println(new .visitRule(rule));
-				} catch (Exception e) {
-					rule = SciffRuleDialog.showRuleDialog(null);
-				}
-
-				System.out.println("Total Entries in Log: " + reader.getInstances().size());
-				SCIFFChecker checker = new SCIFFChecker();
-				CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
-			//				System.out.println("Wrong: " + report.wrongInstances().size() + " - Right: " + report.correctInstances().size()
-			//						+ " - Exceptions: " + report.exceptionInstances().size());
+			SCIFFChecker checker = new SCIFFChecker();
+			CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
 			SciffPresenter sciff = new SciffPresenter(report, rule, previouseRuleString, file);
-				sciff.show();
-				//System.out.println("Wrong: " + reader.getInstance(report.wrongInstances().get(0)).getName());
+			sciff.show();
 			} catch (ParserException e) {
 				e.printStackTrace();
 			} catch (JDOMException e) {
@@ -126,6 +123,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 		return Collections.unmodifiableSet(result);
 	}
 
+	/** ParserFactory: AristaFlowParser or mxml parser **/
 	private ISciffLogReader getReader() throws Exception {
 		if (file != null)
 			System.out.println("Analayze " + file.getCanonicalPath());
