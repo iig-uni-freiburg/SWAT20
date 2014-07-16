@@ -497,7 +497,7 @@ public class IFNetToPrismModelConverter {
 	}
 
 
-	public static void main(String[] args) throws ParameterException{
+	public static void main(String[] args) throws ParameterException {
 		
 		//create a simple IFNet
 		IFNet IFNet = IFNetTestUtil.createSimpleSnetWithDeclassification();

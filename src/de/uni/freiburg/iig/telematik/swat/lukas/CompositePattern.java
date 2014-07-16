@@ -18,5 +18,10 @@ public abstract class CompositePattern extends CompliancePattern {
 				CoAbsent.NAME, Exclusive.NAME, Corequisite.NAME, MutexChoice.NAME));
 		
 	}
+	
+	@Override
+	public boolean isAntiPattern() {
+		return false;
+	}
 
 }

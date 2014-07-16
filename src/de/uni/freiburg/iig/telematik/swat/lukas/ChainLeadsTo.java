@@ -27,6 +27,11 @@ public class ChainLeadsTo extends AtomicPattern {
 		}
 		setPattern(formula, false);
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }
 

@@ -10,5 +10,10 @@ public class Corequisite extends CompositePattern {
 		mOperands.add(t1);
 		mOperands.add(t2);
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

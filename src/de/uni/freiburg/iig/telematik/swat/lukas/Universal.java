@@ -8,5 +8,10 @@ public class Universal extends AtomicPattern {
 		super("G" + op.toString());
 		mOperands.add(op);
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

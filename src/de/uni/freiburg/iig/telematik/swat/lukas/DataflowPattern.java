@@ -70,5 +70,10 @@ public abstract class DataflowPattern extends CompliancePattern {
 				WeaklyLostData.NAME, InconsistentData.NAME, NeverDestroyed.NAME, TwiceDestroyed.NAME, NotDeletedOnTime.NAME));
 		
 	}
+	
+	@Override
+	public boolean isAntiPattern() {
+		return true;
+	}
 
 }

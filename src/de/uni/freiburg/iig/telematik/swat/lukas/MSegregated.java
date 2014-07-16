@@ -12,5 +12,10 @@ public class MSegregated extends ResourcePattern {
 
 		
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

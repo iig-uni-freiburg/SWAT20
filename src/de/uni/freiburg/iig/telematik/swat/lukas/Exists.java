@@ -8,5 +8,10 @@ public class Exists extends AtomicPattern {
 		super("F" + op1.toString());
 		mOperands.add(op1);
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

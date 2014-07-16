@@ -23,5 +23,10 @@ public class WeaklyLostData extends DataflowPattern {
 		setPattern(formula, true);
 		mOperands.add(t);
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

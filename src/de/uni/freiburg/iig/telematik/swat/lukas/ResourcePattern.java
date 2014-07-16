@@ -13,5 +13,10 @@ public abstract class ResourcePattern extends CompliancePattern {
 				USegregatedFrom.NAME, BoundedWith.NAME, MSegregated.NAME, RBoundedWith.NAME));
 		
 	}
+	
+	@Override
+	public boolean isAntiPattern() {
+		return false;
+	}
 
 }

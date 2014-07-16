@@ -15,10 +15,18 @@ public class MissingData extends DataflowPattern {
 		writeToken = getTransitionsAccessingToken(collection, t, AccessMode.WRITE);
 		readToken = getTransitionsAccessingToken(collection, t, AccessMode.READ);
 		deleteToken = getTransitionsAccessingToken(collection, t, AccessMode.DELETE);
-		formula = "((!" + writeToken + ") U (" + readToken + " | " + deleteToken + ")) | (F(" + deleteToken + ""
-				+ " & ((!" + writeToken + ") U (" + readToken + " | "+ deleteToken +"))))";
+		
+		formula = "((!" + writeToken + ") U (" + readToken + " | "
+				 + deleteToken + ")) | (F(" + deleteToken  
+				+ " & ((!" + writeToken + ") U (" + readToken +
+				" | "+ deleteToken +"))))";
 		setPattern(formula, true);
 		mOperands.add(t);
+	}
+	
+	@Override
+	public String getName() {
+		return NAME;
 	}
 
 }

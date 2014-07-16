@@ -59,5 +59,9 @@ public abstract class CompliancePattern {
 			buildPatternRep(formula);
 		}
 	}
+	
+	public abstract String getName();
+	
+	public abstract boolean isAntiPattern();
 
 }

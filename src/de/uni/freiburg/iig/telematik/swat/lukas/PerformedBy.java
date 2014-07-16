@@ -7,5 +7,10 @@ public class PerformedBy extends ResourcePattern {
 	public PerformedBy(Transition t, Role r) {
 		
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

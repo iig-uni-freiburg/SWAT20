@@ -20,4 +20,9 @@ public abstract class AtomicPattern extends CompliancePattern {
 		
 	}
 	
+	@Override
+	public boolean isAntiPattern() {
+		return false;
+	}
+	
 }

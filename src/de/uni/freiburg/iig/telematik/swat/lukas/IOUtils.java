@@ -3,6 +3,9 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class IOUtils {
 	
@@ -47,5 +50,19 @@ public class IOUtils {
     	}catch(Exception e){
     		e.printStackTrace();
     	}
+	}
+
+	public static String readFile(String filepath, Charset encoding) {
+		
+		String str = "";
+		try {
+			byte[] encoded;
+			encoded = Files.readAllBytes(Paths.get(filepath));
+		    str = new String(encoded, encoding);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return str;
+		  
 	}
 }

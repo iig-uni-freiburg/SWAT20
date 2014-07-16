@@ -7,5 +7,10 @@ public class SegregatedFrom extends ResourcePattern {
 	public SegregatedFrom(Transition t1, Transition t2) {
 		
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

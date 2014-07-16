@@ -29,6 +29,11 @@ public class NeverDestroyed extends DataflowPattern {
 		setPattern(formula, true);
 		
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 
 }

@@ -9,5 +9,10 @@ public class CoAbsent extends CompositePattern {
 		mOperands.add(op1);
 		mOperands.add(op2);
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

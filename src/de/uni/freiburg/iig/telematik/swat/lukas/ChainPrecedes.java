@@ -22,4 +22,9 @@ public class ChainPrecedes extends AtomicPattern {
 		
 		setPattern(formula, false);
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 }

@@ -8,4 +8,9 @@ public class USegregatedFrom extends ResourcePattern {
 		
 	}
 
+	@Override
+	public String getName() {
+		return NAME;
+	}
+
 }

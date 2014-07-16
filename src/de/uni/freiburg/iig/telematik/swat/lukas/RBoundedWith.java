@@ -7,5 +7,10 @@ public class RBoundedWith extends ResourcePattern {
 	public RBoundedWith(Transition t1, Transition t2, Role r) {
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 
 }

@@ -55,4 +55,9 @@ public class NotDeletedOnTime extends DataflowPattern {
 			setPattern(formula, true);
 		}
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 }

@@ -72,4 +72,10 @@ public class InconsistentData extends DataflowPattern {
 		formula = formula.substring(3, formula.length());
 		setPattern(formula, true);
 	}
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
+
 }

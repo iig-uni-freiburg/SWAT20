@@ -9,6 +9,9 @@ public class Else extends AtomicPattern {
 		// TODO Auto-generated constructor stub
 	}
 
-	
+	@Override
+	public String getName() {
+		return NAME;
+	}
 	
 }
