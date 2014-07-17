@@ -105,8 +105,13 @@ public abstract class PrismSearcher {
 
 	public static void validatePrismPath(String directory) throws ParameterException{
 		Validate.directory(directory);
-		
-		File testFile = new File(directory, "bin"+System.getProperty("file.separator")+"prism");
+		// linux
+		String path="bin"+System.getProperty("file.separator")+"prism";
+		// windows
+		if(System.getProperty("os.name").contains("Windows")) {
+			path+=".bat";
+		}
+		File testFile = new File(directory, path);
 		Validate.noDirectory(testFile);
 		if(!testFile.exists())
 			throw new ParameterException("");
