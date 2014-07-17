@@ -98,44 +98,21 @@
       <position height="388" width="7" x="873" y="621"/>    
     </execution>  
   </object>  
-  <object id="53" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode" 
-    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTreeView.java" binary="false" 
-    label="swatTreeNode" type="class" autoSize="true">    
-    <position height="-1" width="-1" x="715" y="0"/>    
-    <execution id="45">      
-      <position height="49" width="190" x="1144" y="660"/>    
-    </execution>    
-    <execution id="48">      
-      <position height="57" width="190" x="975" y="724"/>    
-    </execution>    
-    <execution id="51">      
-      <position height="57" width="190" x="975" y="784"/>    
-    </execution>  
-  </object>  
-  <object id="60" language="java" 
+  <object id="47" language="java" 
     name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView.ButtonTabComponent.TabButton" project="SWAT20" 
     file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTabView.java" binary="false" label="tabButton" 
     type="class" autoSize="true">    
     <position height="-1" width="-1" x="777" y="0"/>  
   </object>  
-  <object id="61" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView.ButtonTabComponent" 
+  <object id="48" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView.ButtonTabComponent" 
     project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/SwatTabView.java" binary="false" 
     label="buttonTabComponent" type="class" autoSize="true">    
     <position height="-1" width="-1" x="777" y="0"/>  
   </object>  
-  <object id="62" language="java" name="javax.swing.tree.DefaultMutableTreeNode" project="SWAT20" 
+  <object id="49" language="java" name="javax.swing.tree.DefaultMutableTreeNode" project="SWAT20" 
     file="/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/rt.jar" binary="true" label="defaultMutableTreeNode" type="class" 
     autoSize="true">    
-    <position height="-1" width="-1" x="424" y="0"/>    
-    <execution id="55">      
-      <position height="19" width="165" x="1169" y="671"/>    
-    </execution>    
-    <execution id="57">      
-      <position height="19" width="165" x="1169" y="743"/>    
-    </execution>    
-    <execution id="59">      
-      <position height="19" width="165" x="1169" y="803"/>    
-    </execution>  
+    <position height="-1" width="-1" x="424" y="0"/>  
   </object>  
   <message id="3" operation="checkWorkingDirectory():boolean">    
     <end type="SOURCE" refId="2"/>    
@@ -199,41 +176,17 @@
     <end type="SOURCE" refId="42"/>    
     <end type="TARGET" refId="18"/>  
   </message>  
-  <message id="44" operation="setUserObject(java.lang.Object):void">    
-    <end type="SOURCE" refId="42"/>    
-    <end type="TARGET" refId="45"/>  
-  </message>  
-  <message id="46" operation="getLogFiles():java.util.Set&lt;LogFileViewer&gt;">    
+  <message id="44" operation="getLogFiles():java.util.Set&lt;LogModel&gt;">    
     <end type="SOURCE" refId="42"/>    
     <end type="TARGET" refId="16"/>  
   </message>  
-  <message id="47" operation="setUserObject(java.lang.Object):void">    
-    <end type="SOURCE" refId="42"/>    
-    <end type="TARGET" refId="48"/>  
-  </message>  
-  <message id="49" operation="getXMLFiles():java.util.Set&lt;XMLFileViewer&gt;">    
+  <message id="45" operation="getXMLFiles():java.util.Set&lt;LogModel&gt;">    
     <end type="SOURCE" refId="42"/>    
     <end type="TARGET" refId="17"/>  
   </message>  
-  <message id="50" operation="setUserObject(java.lang.Object):void">    
-    <end type="SOURCE" refId="42"/>    
-    <end type="TARGET" refId="51"/>  
-  </message>  
-  <message id="52" 
+  <message id="46" 
     operation="componentActivated(de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode):void">    
     <end type="SOURCE" refId="42"/>    
     <end type="TARGET" refId="29"/>  
-  </message>  
-  <message id="54" operation="add(javax.swing.tree.MutableTreeNode):void">    
-    <end type="SOURCE" refId="45"/>    
-    <end type="TARGET" refId="55"/>  
-  </message>  
-  <message id="56" operation="add(javax.swing.tree.MutableTreeNode):void">    
-    <end type="SOURCE" refId="48"/>    
-    <end type="TARGET" refId="57"/>  
-  </message>  
-  <message id="58" operation="add(javax.swing.tree.MutableTreeNode):void">    
-    <end type="SOURCE" refId="51"/>    
-    <end type="TARGET" refId="59"/>  
   </message>
 </sequence-diagram>

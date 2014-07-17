@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.prism;
+package de.uni.freiburg.iig.telematik.swat.workbench.dialog;
 
 import java.awt.Window;
 import java.io.File;

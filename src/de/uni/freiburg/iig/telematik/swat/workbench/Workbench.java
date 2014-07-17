@@ -26,7 +26,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
-import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;

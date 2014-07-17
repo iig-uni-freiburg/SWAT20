@@ -16,13 +16,13 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.lola.LolaPathChooser;
-import de.uni.freiburg.iig.telematik.swat.prism.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.LolaPathChooser;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 

@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,31 +19,35 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.file.FileUtils;
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
-import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
+import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
-import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentListener;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+
 public class SwatComponents {
 	
 	private static SwatComponents instance = null;
 	
-	private Set<SwatComponentListener> listener = new HashSet<SwatComponentListener>();
+	private Set<SwatComponentsListener> listener = new HashSet<SwatComponentsListener>();
 
 	@SuppressWarnings("rawtypes")
 	private Map<AbstractGraphicalPN, File> nets = new HashMap<AbstractGraphicalPN, File>();
-	private Map<LogFileViewer, File> logs = new HashMap<LogFileViewer, File>();
-	private Map<XMLFileViewer, File> xml = new LinkedHashMap<XMLFileViewer, File>();
+	private Map<LogModel, File> logs = new HashMap<LogModel, File>();
+	private Map<LogModel, File> xml = new LinkedHashMap<LogModel, File>();
 	
 
-	private SwatComponents(){
+	private SwatComponents() {
 		try {
 			loadSwatComponents();
 		} catch (Exception e) {
@@ -51,7 +56,11 @@ public class SwatComponents {
 		}
 	}
 	
-	public void reload() throws ParameterException {
+	public static void main(String args[]) {
+		SwatComponents.getInstance();
+	}
+
+	public void reload() throws ParameterException, PropertyException, IOException {
 		nets.clear();
 		logs.clear();
 		xml.clear();
@@ -59,7 +68,7 @@ public class SwatComponents {
 		informListenerOfModelChange();
 	}
 
-	public static SwatComponents getInstance(){
+	public static SwatComponents getInstance() {
 		if(instance == null){
 			instance = new SwatComponents();
 		}
@@ -98,77 +107,151 @@ public class SwatComponents {
 		if(found) informElementRemoved(key);
 	}
 
-	public void putIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, File file) {
+	/** TODO: store petrinet and put into SwatComponents **/
+	private void putIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, File file) {
 		nets.put(net, file);
 		informListenerOfModelChange();
 	}
 
+	/** TODO: store petrinet and put into SwatComponents **/
+	public File putNetIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, String name) throws ParameterException,
+			PropertyException, IOException {
+		File file = generateNetPath(name);
+		nets.put(net, file);
+		storePetriNet(net);
+		informNodeAdded(SwatTreeView.getInstance().new SwatTreeNode(net, SwatComponentType.PETRI_NET, file));
+		return file;
+	}
 
-	private void loadSwatComponents() throws ParameterException {
+	public File putCsvIntoSwatComponent(LogModel model, String name) throws ParameterException, PropertyException, IOException {
+		File file = generateCsvLogPath(name);
+		//Copy file
+		FileHelper.copyFile(model.getFileReference(), file);
+		LogModel newModel = new LogModel(file);
+		logs.put(newModel, file);
+		//informListenerOfModelChange();
+		informNodeAdded(SwatTreeView.getInstance().new SwatTreeNode(newModel, SwatComponentType.LOG_FILE, file));
+		return file;
+	}
+
+	private void informNodeAdded(SwatTreeNode swatTreeNode) {
+		for (SwatComponentsListener listener : this.listener) {
+			listener.nodeAdded(swatTreeNode);
+		}
+
+	}
+
+	private File generateNetPath(String name) throws ParameterException, PropertyException, IOException {
+		//Make Directory
+		File folder = new File(SwatProperties.getInstance().getNetWorkingDirectory(), name);
+		folder.mkdir();
+		return new File(folder, name + ".pnml");
+	}
+
+	private File generateCsvLogPath(String name) throws ParameterException, PropertyException, IOException {
+		//Make Directory
+		File folder = new File(SwatProperties.getInstance().getLogWorkingDirectory(), name);
+		folder.mkdir();
+		return new File(folder, name + ".csv");
+	}
+
+
+	private void loadSwatComponents() throws ParameterException, PropertyException, IOException {
 		// 1. Load Petri nets
 		MessageDialog.getInstance().addMessage("1. Searching for Petri nets:");
-		List<File> pnmlFiles = null;
-		try {
-			pnmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "pnml");
-		} catch (Exception e) {
-			throw new ParameterException("Cannot access working directory.<br>Reason: "+e.getMessage());
-		} 
-		for (File netFile : pnmlFiles) {
-			MessageDialog.getInstance().addMessage("Loading Petri net: " + FileUtils.getName(netFile) + "...   ");
-			try {
-				MessageDialog.getInstance().addMessage(netFile.getCanonicalPath());
-				AbstractGraphicalPN<?,?,?,?,?,?,?, ?, ?> loadedNet = null;
-				loadedNet = new PNMLParser().parse(netFile, SwatProperties.getInstance().getRequestNetType(), SwatProperties.getInstance().getPNValidation());
-				nets.put(loadedNet, netFile);
-				MessageDialog.getInstance().addMessage("Done.");
-			} catch (Exception e) {
-				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
+		loadPetriNets();
+		MessageDialog.getInstance().addMessage("Done.");
 		MessageDialog.getInstance().newLine();
 
 		// 2. Load logfiles
 		MessageDialog.getInstance().addMessage("2. Searching for log files:");
+		loadLogFiles();
+		MessageDialog.getInstance().addMessage("Done.");
+		MessageDialog.getInstance().newLine();
 
-		//First mxml
-		List<File> mxmlFiles = null;
+
+
+
+
+
+
+
+	}
+	
+	
+	private void loadLogFiles() throws ParameterException, PropertyException, IOException {
+		
+		File logFolder = new File(SwatProperties.getInstance().getWorkingDirectory(), "logs");
+		
+		for (File folder : getAllFoldersFrom(logFolder)) {
+			loadMxmlLogFromFolder(folder);
+		}
+
+		for (File folder : getAllFoldersFrom(logFolder)) {
+			loadCsvLogFromFolder(folder);
+		}
+
+		for (File folder : getAllFoldersFrom(logFolder)) {
+			loadXmlLogFromFolder(folder);
+		}
+		
+		
+	}
+
+	private void loadXmlLogFromFolder(File folder) {
+
+		// 3. Load xml files for Lola
+		//MessageDialog.getInstance().addMessage("2. Searching for xml files:");
+		List<File> xmlFiles = null;
 		try {
-			mxmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "mxml");
+			xmlFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "xml");
 		} catch (Exception e) {
 			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
 		}
-		for (File logFile : mxmlFiles) {
-			try {
-				MessageDialog.getInstance().addMessage("Loading log file: " + FileUtils.getName(logFile) + "...   ");
-				logs.put(new LogFileViewer(logFile), logFile);
-				MessageDialog.getInstance().addMessage("Done.");
-			} catch (IOException e) {
-				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		for (File xmlFile : xmlFiles) {
+			MessageDialog.getInstance().addMessage("Loading xml file: " + FileUtils.getName(xmlFile) + "...   ");
+			xml.put(new LogModel(xmlFile), xmlFile);
+			MessageDialog.getInstance().addMessage("Done.");
 		}
 
+	}
+
+	private void loadCsvLogFromFolder(File folder) {
 		//Second csv-Files
 		List<File> csvFiles = null;
 		List<File> analysisFile = null;
 		try {
-			csvFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "csv");
-			analysisFile = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "analysis");
+			csvFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "csv");
+			analysisFile = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "analysis");
 		} catch (Exception e) {
 			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
 		}
 		for (File logFile : csvFiles) {
 			try {
 				MessageDialog.getInstance().addMessage("Loading log file: " + FileUtils.getName(logFile) + "...   ");
-				logs.put(new LogFileViewer(logFile), logFile);
+				logs.put(new LogModel(logFile), logFile);
 				MessageDialog.getInstance().addMessage("Done.");
-			} catch (IOException e) {
-				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+
+	}
+
+	private void loadMxmlLogFromFolder(File folder) {
+		//First mxml
+		List<File> mxmlFiles = null;
+		try {
+			mxmlFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "mxml");
+		} catch (Exception e) {
+			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
+		}
+		for (File logFile : mxmlFiles) {
+			try {
+				MessageDialog.getInstance().addMessage("Loading log file: " + FileUtils.getName(logFile) + "...   ");
+				logs.put(new LogModel(logFile), logFile);
+				MessageDialog.getInstance().addMessage("Done.");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -176,28 +259,70 @@ public class SwatComponents {
 		}
 
 
-		// 3. Load xml files for Lola
-		MessageDialog.getInstance().addMessage("2. Searching for xml files:");
-		List<File> xmlFiles = null;
+	}
+
+	/** load all petri nets and search for corresponding analysis **/
+	private void loadPetriNets() throws ParameterException, PropertyException, IOException {
+
+		//get all subfolders in $WorkingDir$/nets
+		File netFolder = new File(SwatProperties.getInstance().getNetWorkingDirectory());
+		for (File folder : getAllFoldersFrom(netFolder)) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet = loadPetriNetFromFolder(folder);
+			if (loadedNet != null)
+				getAnalysisFor(loadedNet, folder);
+		}
+	}
+
+	/** TODO: get all available Analysis on specified net **/
+	private void getAnalysisFor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet, File folder) {
+		List<File> analysisFiles = null;
 		try {
-			xmlFiles = FileUtils.getFilesInDirectory(SwatProperties.getInstance().getWorkingDirectory(), true, true, "xml");
+			analysisFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "analysis");
 		} catch (Exception e) {
 			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
 		}
-		for (File xmlFile : xmlFiles) {
-			try {
-				MessageDialog.getInstance().addMessage("Loading xml file: " + FileUtils.getName(xmlFile) + "...   ");
-				xml.put(new XMLFileViewer(xmlFile), xmlFile);
-				MessageDialog.getInstance().addMessage("Done.");
-			} catch (IOException e) {
-				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
 
 	}
-	
-	
+
+	/** loads the first found pnml net from folder **/
+	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadPetriNetFromFolder(File folder) {
+		List<File> pnmlFiles = null;
+		try {
+			pnmlFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "pnml");
+		} catch (Exception e) {
+			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
+		}
+		if (pnmlFiles.size() > 1)
+			throw new ParameterException("There is more than one PetriNet in " + folder.toString());
+
+		File netFile = pnmlFiles.get(0);
+		MessageDialog.getInstance().addMessage("Loading Petri net: " + FileUtils.getName(netFile) + "...   ");
+
+		try {
+			MessageDialog.getInstance().addMessage(netFile.getCanonicalPath());
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet = null;
+			loadedNet = new PNMLParser().parse(netFile, SwatProperties.getInstance().getRequestNetType(), SwatProperties.getInstance()
+					.getPNValidation());
+			nets.put(loadedNet, netFile);
+			return loadedNet;
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	/** get all folders within basePath **/
+	private List<File> getAllFoldersFrom(File basePath) throws NullPointerException {
+		List<File> folders = new LinkedList<File>();
+		for (File file : basePath.listFiles()) {
+			if (file.isDirectory())
+				folders.add(file);
+		}
+		return folders;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public Set<AbstractGraphicalPN> getPetriNets(){
 		TreeMap<AbstractGraphicalPN, File> sort = new TreeMap<AbstractGraphicalPN, File>(new SwatComperator(nets));
@@ -205,14 +330,14 @@ public class SwatComponents {
 		return sort.keySet();
 	}
 	
-	public Set<LogFileViewer> getLogFiles() {
-		TreeMap<LogFileViewer, File> sort = new TreeMap<LogFileViewer, File>(new SwatComperator());
+	public Set<LogModel> getLogFiles() {
+		TreeMap<LogModel, File> sort = new TreeMap<LogModel, File>(new SwatComperator());
 		sort.putAll(logs);
 		return sort.keySet();
 	}
 
-	public Set<XMLFileViewer> getXMLFiles() {
-		TreeMap<XMLFileViewer, File> sort = new TreeMap<XMLFileViewer, File>(new SwatComperator());
+	public Set<LogModel> getXMLFiles() {
+		TreeMap<LogModel, File> sort = new TreeMap<LogModel, File>(new SwatComperator());
 		sort.putAll(xml);
 		return sort.keySet();
 	}
@@ -239,6 +364,18 @@ public class SwatComponents {
 	public File getFile(AbstractGraphicalPN net){
 		return nets.get(net);
 	}
+
+	public File getFile(LogModel model) {
+		File file = logs.get(model);
+		if (file == null)
+			return xml.get(model);
+		return file;
+	}
+
+	//	
+	//	public File getFile(LogFile){
+	//		
+	//	}
 	
 	@SuppressWarnings("rawtypes")
 	public void changeFileforNet(AbstractGraphicalPN net, File newFile) {
@@ -296,16 +433,24 @@ public class SwatComponents {
 		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pnet : nets.keySet()) {
 			if (pnet == ((PNEditor) currentComponent).getNetContainer())
 				return nets.get(pnet);
-		}}
-		//xml
-		for (XMLFileViewer xmlFile:xml.keySet()){
-			if (xmlFile == currentComponent)
-				return xml.get(xmlFile);
 			}
-		//mnl Logs
-		for (LogFileViewer log : logs.keySet()) {
-			if (log == currentComponent)
-				return logs.get(log);
+		}
+
+		//csv file
+		if (currentComponent instanceof LogFileViewer) {
+			for (LogModel model : logs.keySet()) {
+				if (model == ((LogFileViewer) currentComponent).getModel())
+						return logs.get(model);
+			}
+
+		}
+		//xml file
+		if (currentComponent instanceof XMLFileViewer) {
+			for (LogModel model : xml.keySet()) {
+				if (model == ((XMLFileViewer) currentComponent).getModel())
+					return logs.get(model);
+			}
+
 		}
 		throw new ParameterException("not a valid SwatComponent");
 	}
@@ -316,33 +461,43 @@ public class SwatComponents {
 		return list;
 	}
 
-	public void addSwatComponentListener(SwatComponentListener listener) {
+	public void addSwatComponentListener(SwatComponentsListener listener) {
 		try {
 			this.listener.add(listener);
 		} catch (Exception e) {//listener may be null
 		}
 	}
 
-	public void removeSwatComponentListener(SwatComponentListener listener) {
+	public void removeSwatComponentListener(SwatComponentsListener listener) {
 		this.listener.remove(listener);
 	}
 
 	private void informListenerOfModelChange() {
-		for (SwatComponentListener listener : this.listener) {
+		for (SwatComponentsListener listener : this.listener) {
 			listener.modelChanged();
 		}
 	}
 
 	private void informAnalysisAdded(SwatTreeNode node, Object AnalysisElement) {
-		for (SwatComponentListener listener : this.listener) {
+		for (SwatComponentsListener listener : this.listener) {
 			listener.analysisAdded(node, AnalysisElement);
 		}
 	}
 
+	//	private void informNodeAdded(SwatTreeNode node) {
+	//		for (SwatComponentsListener listener : this.listener) {
+	//			listener.swatTreeNodeAdded(node);
+	//		}
+	//	}
+
 	private void informElementRemoved(Object elem) {
-		for (SwatComponentListener listener : this.listener) {
+		for (SwatComponentsListener listener : this.listener) {
 			listener.elementRemoved(elem);
 		}
+	}
+
+	public void putCsvIntoSwatComponent(LogModel model) throws ParameterException, PropertyException, IOException {
+		putCsvIntoSwatComponent(model, model.getName());
 	}
 
 }
@@ -369,10 +524,16 @@ class SwatComperator implements Comparator<Object> {
 		return comp1.getName().compareTo(comp2.getName());
 	}
 
+	public int compare(LogModel comp1, LogModel comp2) {
+		return comp1.getName().compareTo(comp2.getName());
+	}
+
 	@Override
 	public int compare(Object o1, Object o2) {
 		if (o1 instanceof SwatComponent)
 			return compare((SwatComponent) o1, (SwatComponent) o2);
+		if (o1 instanceof LogModel)
+			return compare((LogModel) o1, (LogModel) o2);
 		else
 			return compare((AbstractGraphicalPN) o1, (AbstractGraphicalPN) o2);
 	}

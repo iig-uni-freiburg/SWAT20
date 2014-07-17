@@ -12,8 +12,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
-import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /** Reads AristaFlow database and converts to csv file **/
@@ -25,6 +25,7 @@ public class AristaFlowSQLConnector {
 	private final String[] HEADER = { "START", "END", "NODEID", "ITERATION", "FIRSTNAME", "LASTNAME", "NAME", "NODENAME", "INSTANCENAME",
 			"INSTANCELOGID", "TEMPLATENAME" };
 	private final File tempFile = new File(System.getProperty("java.io.tmpdir") + "/aristaFlowExport.csv");
+	private LogModel model;
 
 	public static void main(String[] args) throws IOException {
 
@@ -138,17 +139,24 @@ public class AristaFlowSQLConnector {
 		return tempFile;
 	}
 
-	public LogFileViewer dumpIntoWorkbench() throws Exception {
-		File file = new File(SwatProperties.getInstance().getWorkingDirectory(), "AristaFlowImport " + getCurrentTime() + ".csv");
-		FileWriter fileWriter = new FileWriter(file);
-		createFirstLine(fileWriter);
-		ResultSet rs = st.executeQuery(QUERY);
-		while (rs.next()) {
-			writeLine(rs, fileWriter);
+	public LogModel getModel() throws Exception {
+		if (model == null) {
+			//File file = new File(SwatProperties.getInstance().getLogWorkingDirectory(), "AristaFlowImport " + getCurrentTime() + ".csv");
+			File file = File.createTempFile("AristaFlowImport", "csv");
+			FileWriter fileWriter = new FileWriter(file);
+			createFirstLine(fileWriter);
+			ResultSet rs = st.executeQuery(QUERY);
+			while (rs.next()) {
+				writeLine(rs, fileWriter);
+			}
+			//LogFileViewer logFile = new LogFileViewer(file);
+			model = new LogModel(file, "AristaFlowImport " + getCurrentTime());
+			//SwatComponents.getInstance().putCsvIntoSwatComponent(log, log.getName());
 		}
-		LogFileViewer logFile = new LogFileViewer(file);
-		return new LogFileViewer(file);
+
+		return model;
 	}
+
 
 	public String getCurrentTime() {
 		return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + "-" + Calendar.getInstance().get(Calendar.MINUTE);

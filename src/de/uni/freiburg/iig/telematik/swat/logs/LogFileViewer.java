@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.sciff.presenter;
+package de.uni.freiburg.iig.telematik.swat.logs;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -19,6 +19,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
+import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogSerializer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -30,44 +31,43 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  **/
 public class LogFileViewer extends JScrollPane implements SwatComponent {
 	private static final long serialVersionUID = 7051631037013916120L;
-	private File file = null;
 	JComponent properties = null;
 	private JButton analyzeButton = null;
 	private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
 	private static int ICON_SIZE = 32;
+	private LogModel model;
 
 	//private JEditorPane editor;
 
-	public LogFileViewer(File file) throws Exception {
+	public LogModel getModel() {
+		return model;
+	}
+
+	public void setModel(LogModel model) {
+		this.model = model;
+	}
+
+	private LogFileViewer(File file) throws Exception {
 		super();
-		//super(new JEditorPane(file.toURI().toURL()));
-		//super(new JEditorPane());
+		model = new LogModel(file);
 		if (file.getName().endsWith("analysis")) {
 			openAnalysisFile(file);
 		} else {
-			// Initialize JEditorPane
-			//editor = new JEditorPane(file.toURI().toURL());
-			this.file = file;
-			//			editor.setEditable(false);
-			//			this.add(editor);
-			//			validate();
-
-			// get icon size
 			try {
 				ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
 			} catch (PropertyException e) {
 				// Stay with default value
 			}
-			//SCIFFChecker test = new SCIFFChecker();
 		}
 	}
 
-	private void openAnalysisFile(File file) throws Exception {
-		//		FileReader fr = new FileReader(file.getAbsolutePath());
-		//		XStream xStream = new XStream();
-		//		LogFileViewer viewer = (SciffPresenter) xStream.fromXML(file);
-		LogFileViewer viewer = new LogFileViewer(LogSerializer.read(file).getLogFile());
+	public LogFileViewer(LogModel model) throws Exception {
+		this(model.getFileReference());
+		this.model = model;
+	}
 
+	private void openAnalysisFile(File file) throws Exception {
+		LogFileViewer viewer = new LogFileViewer(LogSerializer.read(file).getLogFile());
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 		try {
 			JPanel pane = new JPanel();
 			pane.setLayout(new GridLayout());
-			JEditorPane editor = new JEditorPane(file.toURI().toURL());
+			JEditorPane editor = new JEditorPane(model.getFileReference().toURI().toURL());
 			editor.setEditable(false);
 			getViewport().add(editor);
 		} catch (MalformedURLException e) {
@@ -98,7 +98,7 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 			} catch (IOException e) {
 			}
 
-			analyzeButton.addActionListener(new SciffAnalyzeAction(file));
+			analyzeButton.addActionListener(new SciffAnalyzeAction(model.getFileReference()));
 		}
 		return analyzeButton;
 	}
@@ -114,36 +114,29 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 
 	public String getName() {
 		//Wegen Nimbus LookaAndFeel
-		if (file == null)
+		if (model == null)
 			return "null";
-		return file.getName();
+		return model.getName();
 	}
 
 	public String toString() {
-		return file.getPath();
+		return model.getName();
 	}
 
 	public File getFile() {
-		return file;
+		return model.getFileReference();
 	}
 
 	private void createPropertiesView() {
 		properties = new JPanel();
 		properties.setLayout(new FlowLayout());
 		properties.add(new JLabel("Textual file"));
-		properties.add(new JLabel("Size: " + file.length() / 1024 + "kB"));
-		properties.add(new JLabel("Lines: " + FileHelper.getLinesCount(file.getAbsolutePath(), Charset.defaultCharset().toString())));
+		properties.add(new JLabel("Size: " + model.getFileReference().length() / 1024 + "kB"));
+		properties.add(new JLabel("Lines: "
+				+ FileHelper.getLinesCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
 		properties.add(getSciffButton());
 		properties.validate();
 		properties.repaint();
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

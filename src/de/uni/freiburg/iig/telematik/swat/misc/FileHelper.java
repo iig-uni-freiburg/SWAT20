@@ -1,17 +1,21 @@
 package de.uni.freiburg.iig.telematik.swat.misc;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import de.invation.code.toval.file.FileReader;
 import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem.OperatingSystems;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 
@@ -24,6 +28,19 @@ public class FileHelper {
 		int i = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(SwatTreeView.getInstance()), "really delete?", "run "
 				+ "bla bla bla", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		System.out.println(i);
+	}
+
+	public static void copyFile(File source, File destination) throws IOException {
+		FileReader fr = new FileReader(source.getAbsolutePath());
+		//BufferedWriter bw = new BufferedWriter(new FileOutputStream(destination));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destination)));
+
+		String buffer;
+		while ((buffer = fr.readLine()) != null) {
+			bw.write(buffer);
+			bw.write("\r\n");
+		}
+		fr.closeFile();
 	}
 
 	/** efficiently get number of lines in a file **/

@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lola;
+package de.uni.freiburg.iig.telematik.swat.logs;
 
 import java.awt.FlowLayout;
 import java.io.File;
@@ -24,16 +24,25 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  **/
 public class XMLFileViewer extends JEditorPane implements SwatComponent {
 	private static final long serialVersionUID = 7051631037013916120L;
-	private File file = null;
 	JComponent properties = null;
 	private JButton runWithLoLA = null;
 	private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
 	private static int ICON_SIZE = 32;
+	private LogModel model;
+
+	public LogModel getModel() {
+		return model;
+	}
+
+	public void setModel(LogModel model) {
+		this.model = model;
+	}
 
 	public XMLFileViewer(File file) throws IOException {
 		// Initialize JEditorPane
 		super(file.toURI().toURL());
-		this.file = file;
+
+		model = new LogModel(file);
 		setEditable(false);
 
 		// get icon size
@@ -43,6 +52,11 @@ public class XMLFileViewer extends JEditorPane implements SwatComponent {
 			// Stay with default value
 		}
 		//SCIFFChecker test = new SCIFFChecker();
+	}
+
+	public XMLFileViewer(LogModel model) throws IOException {
+		this(model.getFileReference());
+		this.model = model;
 	}
 
 	@Override
@@ -72,34 +86,27 @@ public class XMLFileViewer extends JEditorPane implements SwatComponent {
 
 	public String getName() {
 		//for Nimbus LookAndFeel
-		if (file == null)
+		if (model == null)
 			return "null";
-		return file.getName();
+		return model.getName();
 	}
 
 	public String toString() {
-		return file.getPath();
+		return model.getName();
 	}
 
 	public File getFile() {
-		return file;
+		return model.getFileReference();
 	}
 
 	private void createPropertiesView() {
 		properties = new JPanel();
 		properties.setLayout(new FlowLayout());
 		properties.add(new JLabel("Textual file"));
-		properties.add(new JLabel("Size: " + file.length() / 1024 + "kB"));
-		properties.add(new JLabel("Lines: " + FileHelper.getLinesCount(file.getAbsolutePath(), Charset.defaultCharset().toString())));
+		properties.add(new JLabel("Size: " + model.getFileReference().length() / 1024 + "kB"));
+		properties.add(new JLabel("Lines: "
+				+ FileHelper.getLinesCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
 		properties.add(getLolaButton());
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

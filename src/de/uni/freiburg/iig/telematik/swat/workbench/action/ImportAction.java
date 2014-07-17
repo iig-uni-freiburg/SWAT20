@@ -34,13 +34,14 @@ public class ImportAction extends AbstractAction {
 				.getParent()));
 		if (net == null)
 			return;
-		String fileName = requestFileName("Name for imported net?", "New name?");
+		String name = requestFileName("Name for imported net?", "New name?");
 		try {
+			SwatComponents.getInstance().putNetIntoSwatComponent(net, name);
 			//Put File into Swat Workspace and save
-			File file = getAbsolutePathToWorkingDir(fileName);
-			SwatComponents.getInstance().putIntoSwatComponent(net, file);
-			SwatComponents.getInstance().storePetriNet(net);
-			treeView.removeAndUpdateSwatComponents();
+			//			File file = getAbsolutePathToWorkingDir(fileName);
+			//			SwatComponents.getInstance().putIntoSwatComponent(net, file);
+			//			SwatComponents.getInstance().storePetriNet(net);
+			//			treeView.removeAndUpdateSwatComponents();
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

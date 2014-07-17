@@ -362,15 +362,15 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 					File file = getAbsolutePathToWorkingDir(netName);
 					switch (type) {
 					case NEW_CPN:
-						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalCPN(), file);
+						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalCPN(), netName);
 						//newNet = new GraphicalCPN();
 						break;
 					case NEW_PT:
-						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalPTNet(), file);
+						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalPTNet(), netName);
 						//newNet = new GraphicalPTNet();
 						break;
 					case NEW_IF:
-						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalIFNet(), file);
+						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalIFNet(), netName);
 						//newNet = new GraphicalIFNet();
 						break;
 

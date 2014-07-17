@@ -96,6 +96,38 @@ public class SwatProperties extends AbstractProperties{
 		removeProperty(SwatProperty.WORKING_DIRECTORY);
 	}
 	
+	public void setNetFolderName(String netFolderName) {
+		Validate.notNull(netFolderName);
+		setProperty(SwatProperty.NET_FOLDER_NAME, netFolderName);
+	}
+
+	public String getNetFolderName() {
+		String result = getProperty(SwatProperty.NET_FOLDER_NAME);
+		if (result == null || result.isEmpty())
+			result = "nets";
+		return result;
+	}
+
+	public void setLogFolderName(String logFolderName) {
+		Validate.notNull(logFolderName);
+		setProperty(SwatProperty.LOG_FOLDER_NAME, logFolderName);
+	}
+
+	public String getLogFolderName() {
+		String result = getProperty(SwatProperty.LOG_FOLDER_NAME);
+		if (result == null || result.isEmpty())
+			result = "logs";
+		return result;
+	}
+
+	public String getLogWorkingDirectory() throws ParameterException, PropertyException {
+		return new File(getWorkingDirectory(), getLogFolderName()).getAbsolutePath();
+	}
+
+	public String getNetWorkingDirectory() throws ParameterException, PropertyException {
+		return new File(getWorkingDirectory(), getNetFolderName()).getAbsolutePath();
+	}
+
 	//------- Known Working Directories ----------------------------------------------------
 	
 	public void addKnownWorkingDirectory(String workingDirectory) throws ParameterException{
@@ -283,6 +315,10 @@ public class SwatProperties extends AbstractProperties{
 
 	//--------------------------------------------------------------------------------------
 	
+	//-------  Folder Properties --------------------------------------------------------------
+
+	//--------------------------------------------------------------------------------------
+
 	//------- Default Properties -----------------------------------------------------------
 	
 	@Override

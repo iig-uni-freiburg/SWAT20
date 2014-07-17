@@ -14,14 +14,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
-import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
-import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentListener;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 
 @SuppressWarnings("serial")
-public class SwatTreeView extends JTree implements SwatStateListener, SwatComponentListener {
+public class SwatTreeView extends JTree implements SwatStateListener, SwatComponentsListener {
 
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel treeModel;
@@ -53,14 +52,14 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		root.removeAllChildren();
 		createChildren();
 		treeModel.reload();
-		for (int i = 0; i < getRowCount(); i++) {
-			expandRow(i);
-		}
+		expandAll();
+
 		repaint();
 	}
 
 	public void update() {
 		treeModel.reload();
+		expandAll();
 		repaint();
 	}
 
@@ -76,14 +75,15 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 
 		// LogFiles
 		DefaultMutableTreeNode logFiles = new DefaultMutableTreeNode("Logfiles");
-		for (LogFileViewer logFileViewer : SwatComponents.getInstance().getLogFiles()) {
-			logFiles.add(new SwatTreeNode(logFileViewer, SwatComponentType.LOG_FILE, logFileViewer.getFile()));
+		for (LogModel logFile : SwatComponents.getInstance().getLogFiles()) {
+			logFiles.add(new SwatTreeNode(logFile, SwatComponentType.LOG_FILE, logFile.getFileReference()));
 		}
 		root.add(logFiles);
 
+		//XML Files
 		DefaultMutableTreeNode xmlFiles = new DefaultMutableTreeNode("XML files");
-		for (XMLFileViewer xmlFileViewer : SwatComponents.getInstance().getXMLFiles()) {
-			xmlFiles.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE, xmlFileViewer.getFile()));
+		for (LogModel xmlFileViewer : SwatComponents.getInstance().getXMLFiles()) {
+			xmlFiles.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE, xmlFileViewer.getFileReference()));
 		}
 		root.add(xmlFiles);
 		expandAll();
@@ -102,6 +102,67 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	@Override
 	public void operatingModeChanged() {}
 	
+	public class SwatTreeNode extends DefaultMutableTreeNode {
+
+		private static final long serialVersionUID = 8746333990209477776L;
+		private SwatComponentType objectType = null;
+		private String displayName = null;
+		private File fileReference;
+
+		public SwatTreeNode(Object userObject, SwatComponentType objectType, File fileReference) {
+			super(userObject, false);
+			this.objectType = objectType;
+			this.fileReference = fileReference;
+			setDisplayName();
+		}
+
+		public File getFileReference() {
+			return fileReference;
+		}
+
+		@SuppressWarnings("rawtypes")
+		private void setDisplayName() {
+			switch (objectType) {
+			case LABELING:
+				//TODO:
+				break;
+			case PETRI_NET:
+				displayName = SwatComponents.getInstance().getFileName((AbstractGraphicalPN) getUserObject());
+				break;
+			case PETRI_NET_ANALYSIS:
+				displayName = (String) this.getUserObject();
+				break;
+			case LOG_FILE:
+				// userObject is of instance LogFileViewer
+				displayName = ((LogModel) this.getUserObject()).getName();
+				break;
+			case XML_FILE:
+				displayName = ((LogModel) this.getUserObject()).getName();
+
+			}
+		}
+
+		public String getDisplayName() {
+			setDisplayName();
+			return displayName;
+		}
+
+		/** Update the displayName for JTree if Filename changed **/
+		public void updateDisplayName() {
+			setDisplayName();
+		}
+
+		public SwatComponentType getObjectType() {
+			return objectType;
+		}
+
+		@Override
+		public String toString() {
+			return getDisplayName();
+		}
+
+	}
+
 	public void addTreeViewListener(SwatTreeViewListener listener){
 		listeners.add(listener);
 	}
@@ -129,65 +190,10 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		return null;
 	}
 
-	public class SwatTreeNode extends DefaultMutableTreeNode {
-		
-		private SwatComponentType objectType = null;
-		private String displayName = null;
-		private File fileReference;
 
-		public SwatTreeNode(Object userObject, SwatComponentType objectType, File fileReference) {
-			super(userObject, false);
-			this.objectType = objectType;
-			this.fileReference = fileReference;
-			setDisplayName();
-		}
-		
-		public File getFileReference() {
-			return fileReference;
-		}
 
-		@SuppressWarnings("rawtypes")
-		private void setDisplayName(){
-			switch (objectType) {
-			case LABELING:
-				//TODO:
-				break;
-			case PETRI_NET:
-				displayName = SwatComponents.getInstance().getFileName((AbstractGraphicalPN) getUserObject());
-				break;
-			case PETRI_NET_ANALYSIS:
-				displayName = (String) this.getUserObject();
-				break;
-			case LOG_FILE:
-				// userObject is of instance LogFileViewer
-				displayName = ((LogFileViewer) this.getUserObject()).getName();
-				break;
-			case XML_FILE:
-				displayName = ((XMLFileViewer) this.getUserObject()).getName();
 
-			}
-		}
-		
-		public String getDisplayName(){
-			setDisplayName();
-			return displayName;
-		}
-		
-		/** Update the displayName for JTree if Filename changed **/
-		public void updateDisplayName() {
-			setDisplayName();
-		}
 
-		public SwatComponentType getObjectType(){
-			return objectType;
-		}
-
-		@Override
-		public String toString() {
-			return getDisplayName();
-		}
-		
-	}
 	
 	private class TreeViewMouseAdapter extends MouseAdapter {
 		
@@ -236,6 +242,28 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	@Override
 	public void elementRemoved(Object elem) {
 		removeAndUpdateSwatComponents();
+	}
+
+	@Override
+	public void nodeAdded(SwatTreeNode node) {
+		if (node.getObjectType().equals(SwatComponentType.LOG_FILE))
+			find("Logfiles").add(node);
+		if (node.getObjectType().equals(SwatComponentType.PETRI_NET))
+			find("Petri Nets").add(node);
+
+		update();
+	}
+
+	private DefaultMutableTreeNode find(String s) {
+	    @SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) getModel().getRoot()).depthFirstEnumeration();
+	    while (e.hasMoreElements()) {
+	        DefaultMutableTreeNode node = e.nextElement();
+	        if (node.toString().equalsIgnoreCase(s)) {
+				return node;
+	        }
+	    }
+	    return null;
 	}
 
 }

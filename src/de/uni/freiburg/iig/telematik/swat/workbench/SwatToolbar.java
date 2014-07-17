@@ -35,12 +35,12 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.sciff.DatabaseChooser;
-import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
@@ -50,7 +50,6 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.PrismAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -389,12 +388,13 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				AristaFlowSQLConnector con = DatabaseChooser.DatabaseChooser();
-				LogFileViewer viewer = con.dumpIntoWorkbench();
-				SwatComponents.getInstance().reload();
-				con.parse();
-				SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(con.getTempFile());
-				sciffAction.actionPerformed(e);
+				AristaFlowSQLConnector connector = DatabaseChooser.DatabaseChooser();
+				//LogFileViewer viewer = con.dumpIntoWorkbench();
+				SwatComponents.getInstance().putCsvIntoSwatComponent(connector.getModel());
+				//SwatComponents.getInstance().reload();
+				//connector.parse();
+				//SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(connector.getTempFile());
+				//sciffAction.actionPerformed(e);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -425,7 +425,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 					file=SwatComponents.getInstance().getFile((AbstractGraphicalPN) selectedNode.getUserObject());
 					break;
 				default:
-					file=((SwatComponent)selectedNode.getUserObject()).getFile();
+					//file=((SwatComponent)selectedNode.getUserObject()).getFile();
+					file = SwatComponents.getInstance().getFile((LogModel) selectedNode.getUserObject());
 					break;
 				}
 
@@ -496,15 +497,15 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 					File file = getAbsolutePathToWorkingDir(netName);
 					switch (type) {
 					case NEW_CPN:
-						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalCPN(), file);
+						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalCPN(), netName);
 						//newNet = new GraphicalCPN();
 						break;
 					case NEW_PT:
-						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalPTNet(), file);
+						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalPTNet(), netName);
 						//newNet = new GraphicalPTNet();
 						break;
 					case NEW_IF:
-						SwatComponents.getInstance().putIntoSwatComponent(new GraphicalIFNet(), file);
+						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalIFNet(), netName);
 						//newNet = new GraphicalIFNet();
 						break;
 

@@ -500,7 +500,6 @@ public class IFNetToPrismConverter {
 		IFNetToPrismConverter converter = new IFNetToPrismConverter(IFNet);
 		StringBuilder prismModel = converter.ConvertIFNetToPrism();
 		System.out.println(prismModel);
-						
 	}
 	
 	

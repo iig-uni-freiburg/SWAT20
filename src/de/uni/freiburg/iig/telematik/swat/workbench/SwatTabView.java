@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,8 +41,9 @@ import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
-import de.uni.freiburg.iig.telematik.swat.lola.XMLFileViewer;
-import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 
@@ -65,7 +67,6 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 				} catch (IllegalArgumentException e) {
 					//Tab no longer visible. Remove from openedSwatComponents
 					openedSwatComponents.remove(openedComponent);
-
 				}
 				return;
 			}
@@ -79,15 +80,7 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	public boolean containsComponent(SwatTreeNode node) {
 		return openedSwatComponents.keySet().contains(node.getUserObject());
 	}
-	
-	// public boolean containsComponent(SwatComponent swatComponent) {
-	// for (SwatComponent component : openedSwatComponents.values()) {
-	// // TODO: Search for same object
-	// }
-	//
-	// return openedSwatComponents.values().contains(swatComponent.getName());
-	//
-	// }
+
 
 	private JTextArea getTextArea(String text){
 		JTextArea newArea = new JTextArea(text);
@@ -148,6 +141,10 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
 			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -159,10 +156,11 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		return false;
 	}
 
-	private void addXmlFile(SwatTreeNode node) {
+	private void addXmlFile(SwatTreeNode node) throws IOException {
 		// node holds XMLFileView
 		// Change it all to only use SwatComponent?
-		addTab(node.getDisplayName(), ((XMLFileViewer) node.getUserObject()).getMainComponent());
+		XMLFileViewer viewer = new XMLFileViewer((LogModel) node.getUserObject());
+		addTab(node.getDisplayName(), viewer.getMainComponent());
 		setSelectedIndex(getTabCount() - 1);
 		//openedSwatComponents.put((XMLFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
 		openedSwatComponents.put((XMLFileViewer) node.getUserObject(), ((XMLFileViewer) node.getUserObject()));
@@ -183,13 +181,14 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	//
 	//	}
 
-	private void addLogFile(SwatTreeNode node) {
+	private void addLogFile(SwatTreeNode node) throws Exception {
 		// addTab(((LogFileViewer) node.getUserObject()).getName(),
 		// ((LogFileViewer) node.getUserObject()).getMainComponent());
-		addTab(node.getDisplayName(), ((LogFileViewer) node.getUserObject()).getMainComponent());
+		LogFileViewer viewer = new LogFileViewer((LogModel) node.getUserObject());
+		addTab(node.getDisplayName(), viewer.getMainComponent());
 		setSelectedIndex(getTabCount() - 1);
 		//openedSwatComponents.put((LogFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
-		openedSwatComponents.put((LogFileViewer) node.getUserObject(), ((LogFileViewer) node.getUserObject()));
+		openedSwatComponents.put((LogModel) node.getUserObject(), viewer);
 	}
 	
 	public void removeAll() {
@@ -218,15 +217,27 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 			remove((AbstractGraphicalPN) node.getUserObject());
 			break;
 		case LOG_FILE:
-			remove((LogFileViewer) node.getUserObject());
+			remove((LogModel) node.getUserObject());
 			openedSwatComponents.remove(node.getUserObject());
 			break;
 		case XML_FILE:
-			remove((XMLFileViewer) node.getUserObject());
+			remove((LogModel) node.getUserObject());
 			openedSwatComponents.remove(node.getUserObject());
 			break;
 
 		}
+	}
+
+	private void remove(LogModel userObject) {
+		Component component = openedSwatComponents.get(userObject);
+		for (int i = 0; i < getTabCount(); i++) {
+			System.out.println("Component: " + component + " TabComponent: " + getTabComponentAt(i));
+			if (getComponentAt(i) == (component)) {
+				removeTabAt(i);
+				openedSwatComponents.remove(component);
+			}
+		}
+
 	}
 
 	/** make Tab with close button **/
