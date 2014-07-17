@@ -86,6 +86,10 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 			xmlFiles.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE, xmlFileViewer.getFile()));
 		}
 		root.add(xmlFiles);
+		expandAll();
+	}
+	
+	public void expandAll() {
 		try {
 			for (int i = 0; i < getRowCount(); i++) {
 				expandRow(i);
@@ -150,6 +154,9 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 				break;
 			case PETRI_NET:
 				displayName = SwatComponents.getInstance().getFileName((AbstractGraphicalPN) getUserObject());
+				break;
+			case PETRI_NET_ANALYSIS:
+				displayName = (String) this.getUserObject();
 				break;
 			case LOG_FILE:
 				// userObject is of instance LogFileViewer
