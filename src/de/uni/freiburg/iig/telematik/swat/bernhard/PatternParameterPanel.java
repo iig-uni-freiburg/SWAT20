@@ -38,4 +38,5 @@ public abstract class PatternParameterPanel {
 		this.jComponent = jComponent;
 	}
 	public abstract String getValue();
+	public abstract void setValue(String val);
 }

@@ -18,4 +18,10 @@ public class PatternDataParameter extends PatternParameterPanel {
 		return (String) ((JComboBox)jComponent).getSelectedItem();
 	}
 
+	@Override
+	public void setValue(String val) {
+		// TODO Auto-generated method stub
+		((JComboBox)jComponent).setSelectedItem(val);
+	}
+
 }

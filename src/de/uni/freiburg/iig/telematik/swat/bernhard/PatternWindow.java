@@ -150,13 +150,13 @@ public class PatternWindow extends JFrame {
 		analyzePanel.update();
 	}
 
-	public PatternWindow(AnalyzePanel p, PNEditor pneditor)
+	public PatternWindow(AnalyzePanel p, PNEditor pneditor, PatternFactory pf)
 			throws HeadlessException {
 		super();
 		this.transitionDic = p.getTransitionLabelDic();
 		this.pneditor=pneditor;
 		analyzePanel=p;
-		patternFactory=new PatternFactory(pneditor.getNetContainer().getPetriNet());
+		patternFactory=pf;
 		initGui();
 	}	
 	
@@ -191,11 +191,11 @@ public class PatternWindow extends JFrame {
 		return pneditor;
 	}
 	
-	public List<PatternSetting> getPatterns() {
+	public List<PatternSetting> getPatternSettings() {
 		List<PatternSetting> patternList=new ArrayList<PatternSetting>();
 		for(PatternSettingPanel panel : patternPanelList) {
 			panel.updatePatternValues();
-			patternList.add(panel.getPattern());
+			patternList.add(panel.getPatternSetting());
 		}
 		return patternList;
 	}

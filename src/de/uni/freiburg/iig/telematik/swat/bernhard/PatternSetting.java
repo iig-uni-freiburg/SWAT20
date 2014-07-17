@@ -1,9 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
 /**
  * the pattern class represents are pattern with its name and parameters
  * @author bernhard
@@ -11,15 +11,24 @@ import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
  */
 public class PatternSetting {
 
+	public PatternResult getResult() {
+		return result;
+	}
+
+	public void setResult(PatternResult result) {
+		this.result = result;
+	}
+
 	public PatternSetting(String name, List<Parameter> parameters) {
 		super();
 		this.name = name;
 		this.parameters = parameters;
+		result=null;
 	}
 	private String name;
 	private String parameterAppliedString;
 	private List<Parameter> parameters;
-	
+	private PatternResult result;
 	
 
 	public String getName() {

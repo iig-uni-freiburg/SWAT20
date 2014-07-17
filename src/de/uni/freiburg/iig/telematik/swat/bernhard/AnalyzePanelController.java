@@ -24,8 +24,7 @@ public class AnalyzePanelController {
 	
 	public AnalyzePanel getPanel(String name, PNEditor pneditor) {
 		if(panelDic.get(name) == null) {
-			AnalyzePanel a=new AnalyzePanel(pneditor);
-			a.setNetName(name);
+			AnalyzePanel a=new AnalyzePanel(pneditor, name);
 			panelDic.put(name, a);
 		}
 		return panelDic.get(name);
