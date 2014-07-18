@@ -12,13 +12,11 @@ import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.PopupToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBarDialog;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
@@ -27,22 +25,23 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class PopUpToolBarAction extends AbstractAction {
 
+	private static final long serialVersionUID = 7214726307740810351L;
 	private JDialog popupDialog;
 	private JButton button;
-	private SwatNewNetToolbar fontToolbarContent;
+	private SwatNewNetToolbar toolbarContent;
 	private JButton newDialogButton;
-	private WorkbenchPopupToolBar popupFontToolBar;
+	private WorkbenchPopupToolBar popupToolBar;
 	protected JDialog dialog;
 
 	public PopUpToolBarAction(String name, String iconName, SwatNewNetToolbar toolbar ) throws ParameterException, PropertyException, IOException {
 		super(name, IconFactory.getIcon(iconName));
-		popupFontToolBar = new WorkbenchPopupToolBar();
-		popupFontToolBar.disposeAllWindows();
-		fontToolbarContent = toolbar;
-		fontToolbarContent.setToolbar(popupFontToolBar);
+		popupToolBar = new WorkbenchPopupToolBar();
+		popupToolBar.disposeAllWindows();
+		toolbarContent = toolbar;
+		toolbarContent.setToolbar(popupToolBar);
 		newDialogButton = new JButton(IconFactory.getIcon("maximize"));
 		newDialogButton.setBorderPainted(false);
-		newWindowButton(popupFontToolBar, fontToolbarContent, newDialogButton);
+		newWindowButton(popupToolBar, toolbarContent, newDialogButton);
 		   
 		
 	}
@@ -50,59 +49,33 @@ public class PopUpToolBarAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(getPopupFrame() == null){	
-			popupFontToolBar.setButton(getButton(), false);
-			
-			popupFontToolBar.add(fontToolbarContent);
-			 popupFontToolBar.add(newDialogButton);
-			
+			popupToolBar.setButton(getButton(), false);			
+			popupToolBar.add(toolbarContent);
+			 popupToolBar.add(newDialogButton);
 
 		    int size = 0;
 			try {
 				size = SwatProperties.getInstance().getIconSize().getSize();
 			} catch (PropertyException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			popupFontToolBar.show(getButton(), 0, size + size/2);
-			
+			popupToolBar.show(getButton(), 0, size + size/2);
 				}
-		
 	}
 	
-	protected JDialog getPopupFrame() {
-		return popupDialog;
-	}
-	
-	public void setPopupFrame(JDialog dialog) {
-		this.popupDialog = dialog;
-	}
-
-	protected JButton getButton() {
-		// TODO Auto-generated method stub
-		return button;
-	}
-
-	public void setButton(JButton swatToolbarButton) {
-		this.button = swatToolbarButton;
-		
-	}
-	
-	
-
-	private void newWindowButton(final WorkbenchPopupToolBar popupFontToolBar2, final JToolBar fontToolbarContent2, JButton newDialogButton) {
+	private void newWindowButton(final WorkbenchPopupToolBar popupToolBar, final JToolBar toolbarContent, final JButton newDialogButton) {
 		newDialogButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					popupFontToolBar2.setButton(getButton(), true);
+					popupToolBar.setButton(getButton(), true);
 					Window window = SwingUtilities.getWindowAncestor(getButton());
-					JDialog dialog = new ToolBarDialog(window, fontToolbarContent2.getName(), false);
-					dialog.setTitle("Font");
-//					dialog.setSize(new Dimension(fontToolbarContent2.getSize().width, fontToolbarContent2.getSize().height + 20));
+					JDialog dialog = new ToolBarDialog(window, toolbarContent.getName(), false);
+					if(newDialogButton.getName() != null)
+					dialog.setTitle(newDialogButton.getName());
 					dialog.setLocationRelativeTo(window);
-					dialog.add(fontToolbarContent2);
+					dialog.add(toolbarContent);
 					dialog.setModal(false);
 					dialog.setResizable(false);
 					getButton().addMouseListener(new MouseAdapter() {
@@ -132,19 +105,34 @@ public class PopUpToolBarAction extends AbstractAction {
 			});
 	}
 
+	
+	protected JDialog getPopupFrame() {
+		return popupDialog;
+	}
+	
+	public void setPopupFrame(JDialog dialog) {
+		this.popupDialog = dialog;
+	}
+
+	protected JButton getButton() {
+		return button;
+	}
+
+	public void setButton(JButton swatToolbarButton) {
+		this.button = swatToolbarButton;		
+	}
+	
 
 	protected void setDialog(JDialog dialog) {
 		this.dialog = dialog;
 	}
 
-
 	public JDialog getDialog() {
 		return dialog;
 	}
 	
-	
 	public void disposeAllWindows() {
-		popupFontToolBar.disposeAllWindows();
+		popupToolBar.disposeAllWindows();
 	}
 	
 	
