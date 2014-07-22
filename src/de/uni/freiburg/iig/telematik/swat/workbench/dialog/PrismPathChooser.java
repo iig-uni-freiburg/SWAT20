@@ -10,7 +10,7 @@ import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcherFactory;
 
 public class PrismPathChooser extends ConditionalFileDialog {
 
-	private static final String errorMessage = "Cannot find prism executables in chosen directory.\n Please choose another directory.";
+	private static final String errorMessage = "Cannot find prism executables under bin/ within chosen directory.\n Please choose another directory.";
 
 	public PrismPathChooser(Window parent) {
 		super(parent, ConditionalFileDialog.FileChooserType.DIRECTORY, "Choose Prism directory");

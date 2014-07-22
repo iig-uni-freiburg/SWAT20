@@ -26,6 +26,7 @@ import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.logs.LogAnalysisModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
@@ -45,6 +46,7 @@ public class SwatComponents {
 	private Map<AbstractGraphicalPN, File> nets = new HashMap<AbstractGraphicalPN, File>();
 	private Map<LogModel, File> logs = new HashMap<LogModel, File>();
 	private Map<LogModel, File> xml = new LinkedHashMap<LogModel, File>();
+	private Map<LogModel, List<LogAnalysisModel>> logAnalysis = new HashMap<LogModel, List<LogAnalysisModel>>();
 	
 
 	private SwatComponents() {
@@ -499,7 +501,24 @@ public class SwatComponents {
 	public void putCsvIntoSwatComponent(LogModel model) throws ParameterException, PropertyException, IOException {
 		putCsvIntoSwatComponent(model, model.getName());
 	}
+	
+	public void putLogAnalysisIntoSwatComponent(LogAnalysisModel model, LogModel correspondingLog){
+		if(logAnalysis.containsKey(correspondingLog))
+			logAnalysis.get(correspondingLog).add(model);//put into list
+		ArrayList<LogAnalysisModel> list = new ArrayList<LogAnalysisModel>();
+		list.add(model);
+		logAnalysis.put(correspondingLog, list);
+		storeLogAnalysis(model, correspondingLog);
+	}
 
+	private void storeLogAnalysis(LogAnalysisModel model, LogModel correspondingLog) {
+		// copy correspondingLog
+
+	}
+
+	public List<LogAnalysisModel> getAnalysisForLog(LogModel model) {
+		return logAnalysis.get(model);
+	}
 }
 
 /** For use with TreeMap **/
