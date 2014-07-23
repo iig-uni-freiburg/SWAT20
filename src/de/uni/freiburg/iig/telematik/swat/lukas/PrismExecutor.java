@@ -62,11 +62,11 @@ public class PrismExecutor {
 		
 		String properties = "";
 		for (CompliancePattern pattern : patterns) {
-			properties = "P=? [" + pattern.toString() + "]\n";
+			properties += "P=? [" + pattern.toString() + "]\n\n";
 		}
 		
-		File modelFile = IOUtils.writeToFile(mFilesPath, "properties", properties);
-		File propertiesFile = IOUtils.writeToFile(mFilesPath, "model.pm", mConverter.convert().toString());
+		File modelFile = IOUtils.writeToFile(mFilesPath, "model.pm", mConverter.convert().toString());
+		File propertiesFile = IOUtils.writeToFile(mFilesPath, "properties", properties);
 		
 		try {
 			String resultStr = execToString(modelFile, propertiesFile);
@@ -82,7 +82,15 @@ public class PrismExecutor {
 	
 	private String execToString(File model, File properties) {
 		
-		String command = mPrismPath + File.separator + "bin" + File.separator + "prism " + model.getAbsolutePath() + " " + properties.getAbsolutePath();
+		String command;
+		if (mConverter.isUnboundedNet()) {
+			command = mPrismPath + File.separator + "bin" + File.separator + "prism " + model.getAbsolutePath() + 
+					" " + properties.getAbsolutePath(); 
+		} else {
+			command = mPrismPath + File.separator + "bin" + File.separator + "prism " + model.getAbsolutePath() + 
+					" " + properties.getAbsolutePath() + " -ex";
+		}
+		
 	    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	    ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
 	    CommandLine commandline = CommandLine.parse(command);

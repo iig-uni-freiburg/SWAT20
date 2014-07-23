@@ -16,6 +16,12 @@ public abstract class PrismConverter {
 	
 	protected AbstractPetriNet<?,?,?,?,?,?,?> mAbstractNet;
 	
+	protected boolean bounded = true;
+	
+	public boolean isUnboundedNet() {
+		return bounded;
+	}
+	
 	protected PrismConverter(AbstractPetriNet<?,?,?,?,?,?,?> net) {
 		mAbstractNet = net;
 	}

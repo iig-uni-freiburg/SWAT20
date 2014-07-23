@@ -18,7 +18,7 @@ public class ParameterProvider {
 		mOneParameterCFPatterns = new HashSet<String>(Arrays.asList(Exists.NAME, Universal.NAME, Absent.NAME));
 		mTwoParameterCFPatterns = new HashSet<String>(Arrays.asList(Precedes.NAME, LeadsTo.NAME, XLeadsTo.NAME, 
 				CoExists.NAME, CoAbsent.NAME, Exclusive.NAME, Corequisite.NAME, MutexChoice.NAME));
-		mThreeParameterCFPatterns = new HashSet<String>(Arrays.asList(ChainPrecedes.NAME, ChainLeadsTo.NAME));
+		mThreeParameterCFPatterns = new HashSet<String>(Arrays.asList(ChainPrecedes.NAME, ChainLeadsTo.NAME, PrecedesChain.NAME, LeadsToChain.NAME));
 		mTwoTransitionRP = new HashSet<String>(Arrays.asList(SegregatedFrom.NAME, USegregatedFrom.NAME,
 				BoundedWith.NAME));
 		mDFPatterns = new HashSet<String>();

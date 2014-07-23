@@ -13,8 +13,9 @@ public abstract class AtomicPattern extends CompliancePattern {
 	
 	public static ArrayList<String> getPatternNames() {
 		
-		return new ArrayList<String>(Arrays.asList(Precedes.NAME, ChainPrecedes.NAME,
-				LeadsTo.NAME, ChainLeadsTo.NAME, XLeadsTo.NAME, Else.NAME, Absent.NAME, Universal.NAME, Exists.NAME));
+		return new ArrayList<String>(Arrays.asList(Precedes.NAME, ChainPrecedes.NAME, PrecedesChain.NAME,
+				LeadsTo.NAME, ChainLeadsTo.NAME, LeadsToChain.NAME, 
+				XLeadsTo.NAME, Else.NAME, Absent.NAME, Universal.NAME, Exists.NAME));
 		
 	}
 	

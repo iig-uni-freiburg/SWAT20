@@ -59,32 +59,64 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(0).getValue().get(0);
+			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			p = new Precedes((NetElementExpression) o1, (NetElementExpression) o2);
 			
 		} else if (patternName.equals(ChainPrecedes.NAME)) {
 			
+			ParamValue value1 = params.get(0).getValue().get(0);
+			Operand o1 = createOperand(value1);
+			ParamValue value2 = params.get(1).getValue().get(0);
+			Operand o2 = createOperand(value2);
+			ParamValue value3 = params.get(2).getValue().get(0);
+			Operand o3 = createOperand(value3);
+			p = new ChainPrecedes((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
 			
+		} else if (patternName.equals(PrecedesChain.NAME)) {
+			
+			ParamValue value1 = params.get(0).getValue().get(0);
+			Operand o1 = createOperand(value1);
+			ParamValue value2 = params.get(1).getValue().get(0);
+			Operand o2 = createOperand(value2);
+			ParamValue value3 = params.get(2).getValue().get(0);
+			Operand o3 = createOperand(value3);
+			p = new PrecedesChain((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
 			
 		} else if (patternName.equals(LeadsTo.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(0).getValue().get(0);
+			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			p = new LeadsTo((NetElementExpression) o1, (NetElementExpression) o2);
 			
 			
 		} else if (patternName.equals(ChainLeadsTo.NAME)) {
 			
+			ParamValue value1 = params.get(0).getValue().get(0);
+			Operand o1 = createOperand(value1);
+			ParamValue value2 = params.get(1).getValue().get(0);
+			Operand o2 = createOperand(value2);
+			ParamValue value3 = params.get(2).getValue().get(0);
+			Operand o3 = createOperand(value3);
+			p = new ChainLeadsTo((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
 			
+		} else if (patternName.equals(LeadsToChain.NAME)) {
+			
+			ParamValue value1 = params.get(0).getValue().get(0);
+			Operand o1 = createOperand(value1);
+			ParamValue value2 = params.get(1).getValue().get(0);
+			Operand o2 = createOperand(value2);
+			ParamValue value3 = params.get(2).getValue().get(0);
+			Operand o3 = createOperand(value3);
+			p = new LeadsToChain((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
 			
 		} else if (patternName.equals(XLeadsTo.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(0).getValue().get(0);
+			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			p = new XLeadsTo((NetElementExpression) o1, (NetElementExpression) o2);
 			
@@ -115,7 +147,7 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(0).getValue().get(0);
+			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			p = new CoExists((NetElementExpression) o1, (NetElementExpression) o2);
 			
@@ -123,7 +155,7 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(0).getValue().get(0);
+			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			p = new CoAbsent((NetElementExpression) o1, (NetElementExpression) o2);
 			
@@ -131,7 +163,7 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(0).getValue().get(0);
+			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			p = new Exclusive((NetElementExpression) o1, (NetElementExpression) o2);
 			
@@ -140,7 +172,7 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(0).getValue().get(0);
+			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			p = new Corequisite((NetElementExpression) o1, (NetElementExpression) o2);
 			
@@ -149,7 +181,7 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(0).getValue().get(0);
+			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			p = new MutexChoice((NetElementExpression) o1, (NetElementExpression) o2);
 			

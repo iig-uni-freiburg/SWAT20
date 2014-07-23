@@ -55,6 +55,7 @@ public class CWNConverter extends PrismConverter {
 						placeBuilder.append("[0.." + p.getColorCapacity(color) + "] ");
 					} else {
 						placeBuilder.append("int ");
+						bounded = false;
 					}
 					
 					if (mNet.getInitialMarking().get(p.getName()) != null) {

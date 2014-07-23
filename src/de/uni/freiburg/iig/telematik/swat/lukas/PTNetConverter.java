@@ -35,6 +35,7 @@ public class PTNetConverter extends PrismConverter {
 				placeBuilder.append("[0.." + p.getCapacity() + "] ");
 			} else {
 				placeBuilder.append("int ");
+				bounded = false;
 			}
 				
 			if (mAbstractNet.getInitialMarking().get(p.getName()) != null) {
