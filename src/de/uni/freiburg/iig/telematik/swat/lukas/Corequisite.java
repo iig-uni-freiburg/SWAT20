@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 
 public class Corequisite extends CompositePattern {
 	
-	public static final String NAME = "Co-Requisite";
+	public static final String NAME = "P Co-Requisite Q";
 
 	public Corequisite(NetElementExpression t1, NetElementExpression t2) {
 		super("((F" + t1.toString() + ") & (F" + t2.toString() + ")) | "
