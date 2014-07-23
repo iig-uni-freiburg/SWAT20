@@ -1,8 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
+import java.io.File;
 import java.util.List;
 
 public interface LoadSave {
-	public boolean load(List<PatternSetting> patternSettings);
+	public boolean load(File f);
 	public boolean save();
 }

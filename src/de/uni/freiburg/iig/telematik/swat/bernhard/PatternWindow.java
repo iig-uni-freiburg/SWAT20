@@ -55,10 +55,11 @@ import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
 /**
- * This class represents the pattern wizard with a button to add a pattern
- * and the possibility to choose the parameters
+ * This class represents the pattern wizard with a button to add a pattern and
+ * the possibility to choose the parameters
+ * 
  * @author bernhard
- *
+ * 
  */
 public class PatternWindow extends JFrame {
 
@@ -76,6 +77,9 @@ public class PatternWindow extends JFrame {
 	private AnalyzePanel analyzePanel;
 	private PatternFactory patternFactory;
 
+	/**
+	 * init the GUI
+	 */
 	private void initGui() {
 		BorderLayout bl = new BorderLayout();
 		Container c = getContentPane();
@@ -88,15 +92,16 @@ public class PatternWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				updatePanel();
 			}
-			});
-		
+		});
+
 		JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		south.add(okButton);
-		patternPanelList=new ArrayList<PatternSettingPanel>();
-		patternPanel = new JPanel(new GridLayout(PatternAnalyzeLogic.MAX_PATTERNS, 1, 10, 10));
+		patternPanelList = new ArrayList<PatternSettingPanel>();
+		patternPanel = new JPanel(new GridLayout(
+				PatternAnalyzeLogic.MAX_PATTERNS, 1, 10, 10));
 		JScrollPane jsp = new JScrollPane(patternPanel);
 		// get applicable Patterns from Factory
-		final List<String> itemNames=patternFactory.getApplicablePatterns();
+		final List<String> itemNames = patternFactory.getApplicablePatterns();
 		plusButton = new JButton("Add Pattern");
 		// create the dropdown menu
 		plusButton.addMouseListener(new MouseAdapter() {
@@ -108,12 +113,13 @@ public class PatternWindow extends JFrame {
 				for (String itemName : itemNames) {
 
 					JMenuItem item = new JMenuItem(itemName);
-					final String name=itemName;
+					item.setToolTipText("Beschreibung");
+					final String name = itemName;
 					item.addActionListener(new ActionListener() {
 
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							//System.out.println("Create New Row");
+							// System.out.println("Create New Row");
 							try {
 								addPanelforPatternClick(name);
 							} catch (ParameterException e) {
@@ -134,7 +140,7 @@ public class PatternWindow extends JFrame {
 						plusButton.getHeight() * 4 / 5);
 			}
 		});
-		//this.addPanelforPattern("Q Precedes P");
+		// this.addPanelforPattern("Q Precedes P");
 		c.add(Helpers.jPanelLeft(plusButton), BorderLayout.NORTH);
 		// SpringUtilities.makeGrid(test,3,2,0,0,0,0);
 		// middle.add(test);
@@ -143,7 +149,10 @@ public class PatternWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(800, 600);
 	}
-	
+
+	/**
+	 * make the window invisible and update the analyze panel
+	 */
 	protected void updatePanel() {
 		// TODO Auto-generated method stub
 		setVisible(false);
@@ -154,29 +163,69 @@ public class PatternWindow extends JFrame {
 			throws HeadlessException {
 		super();
 		this.transitionDic = p.getTransitionLabelDic();
-		this.pneditor=pneditor;
-		analyzePanel=p;
-		patternFactory=pf;
+		this.pneditor = pneditor;
+		analyzePanel = p;
+		patternFactory = pf;
 		initGui();
-	}	
-	
-	private void addPanelforPatternClick(String name) throws ParameterException, PropertyException, IOException {
+	}
+
+	/**
+	 * try to add a new pattern
+	 * @param name Name of the pattern
+	 * @throws ParameterException
+	 * @throws PropertyException
+	 * @throws IOException
+	 */
+	private void addPanelforPatternClick(String name)
+			throws ParameterException, PropertyException, IOException {
 		if (patternPanelList.size() < 10) {
 			addPanelforPattern(name);
 		} else {
-				JOptionPane.showMessageDialog(this,
-					    "Cannot check more than 10 patterns",
-					    "Error",
-					    JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this,
+					"Cannot check more than 10 patterns", "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	private void addPanelforPattern(String p) throws ParameterException, PropertyException, IOException {
-		PatternSettingPanel pSPanel=new PatternSettingPanel(p, this, patternFactory);
-		//pSPanel.addCounterExample(new CounterExample(), this);
+	/**
+	 * invoked when a net is changed
+	 * just update the lists of transitions and data types
+	 * then, same as save and load ;)
+	 */
+	public void netChanged() {
+		transitionDic=analyzePanel.getTransitionLabelDic();
+		dataList=analyzePanel.getDataList();
+		List<PatternSetting> psList=getPatternSettings();
+		setPatternSettings(psList);
+	}
+
+	/**
+	 * add a Pattern Panel for pattern p and add it to the internal list
+	 * 
+	 * @param p
+	 *            Name of the Pattern to add
+	 */
+	private void addPanelforPattern(String p) {
+		PatternSettingPanel pSPanel = new PatternSettingPanel(p, this,
+				patternFactory);
+		// pSPanel.addCounterExample(new CounterExample(), this);
 		patternPanel.add(pSPanel.getJPanel());
-		
 		patternPanelList.add(pSPanel);
-		patternPanel.updateUI();;
+		patternPanel.updateUI();
+		;
+	}
+
+	/**
+	 * add a new patternsetting panel with the given settings
+	 * 
+	 * @param ps
+	 */
+	private void addPanelforPattern(PatternSetting ps) {
+		PatternSettingPanel pSPanel = new PatternSettingPanel(ps, this,
+				patternFactory);
+		patternPanel.add(pSPanel.getJPanel());
+		patternPanelList.add(pSPanel);
+		patternPanel.updateUI();
+		;
 	}
 
 	public HashMap<String, String> getTransitionDic() {
@@ -190,16 +239,32 @@ public class PatternWindow extends JFrame {
 	public PNEditor getPneditor() {
 		return pneditor;
 	}
-	
+
 	public List<PatternSetting> getPatternSettings() {
-		List<PatternSetting> patternList=new ArrayList<PatternSetting>();
-		for(PatternSettingPanel panel : patternPanelList) {
+		List<PatternSetting> patternList = new ArrayList<PatternSetting>();
+		for (PatternSettingPanel panel : patternPanelList) {
 			panel.updatePatternValues();
 			patternList.add(panel.getPatternSetting());
 		}
 		return patternList;
 	}
-	
+/**
+ * used to load a saved List of PatternSettings
+ * @param newList the list to load
+ */
+	public void setPatternSettings(List<PatternSetting> newList) {
+		patternPanel.removeAll();
+		patternPanelList.clear();
+
+		for (PatternSetting ps : newList) {
+			addPanelforPattern(ps);
+		}
+	}
+
+	/**
+	 * remove a pattern panel from the window
+	 * @param panel
+	 */
 	public void removePatternPanel(PatternSettingPanel panel) {
 		patternPanel.remove(panel.getJPanel());
 		patternPanel.repaint();

@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStore;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -69,7 +70,8 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 
 		DefaultMutableTreeNode petriNets = new DefaultMutableTreeNode("Petri Nets");
 		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNets()){
-			petriNets.add(new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET, SwatComponents.getInstance().getFile(petriNet)));
+			SwatTreeNode node =new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET, SwatComponents.getInstance().getFile(petriNet));
+			petriNets.add(node);
 		}
 		root.add(petriNets);
 
@@ -86,7 +88,31 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 			xmlFiles.add(new SwatTreeNode(xmlFileViewer, SwatComponentType.XML_FILE, xmlFileViewer.getFileReference()));
 		}
 		root.add(xmlFiles);
+		updateAnalysis();
 		expandAll();
+	}
+	
+	/**
+	 * update the analysis files in the tree
+	 */
+	public void updateAnalysis() {
+		int count = root.getChildCount();
+		// search for petri nets overview
+		for(int i=0; i < count; i++) {
+			DefaultMutableTreeNode node =(DefaultMutableTreeNode) root.getChildAt(i);
+			if(node.getUserObject().equals("Petri Nets")) {
+				// thats it
+				for(int j=0; j < node.getChildCount(); j++) {
+					SwatTreeNode netChild=(SwatTreeNode) node.getChildAt(j);
+					netChild.removeAllChildren();
+					netChild.setAllowsChildren(true);
+					for(File f : SwatComponents.getInstance().getAnalysisForNet(SwatComponents.getInstance().getFile((AbstractGraphicalPN) netChild.getUserObject()).getParentFile().getAbsolutePath())) {
+						netChild.add(new SwatTreeNode(AnalysisStore.getDisplayNameforFilename(f.getName()), SwatComponentType.PETRI_NET_ANALYSIS,f));
+					}
+				}
+				break;
+			}
+		}
 	}
 	
 	public void expandAll() {

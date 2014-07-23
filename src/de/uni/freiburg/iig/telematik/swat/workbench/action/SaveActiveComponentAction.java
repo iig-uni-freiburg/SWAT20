@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
@@ -31,6 +32,7 @@ public class SaveActiveComponentAction extends AbstractAction {
 			SwatComponent component = (SwatComponent) tabView.getSelectedComponent();
 			if (component.getMainComponent() instanceof PNEditor) {
 				savePN((PNEditor) component.getMainComponent());
+				AnalyzePanelController.getInstance().netChanged(component.getFile().getName());
 			}
 		} else {
 			Workbench.errorMessage("Could not save: Active pane is not of type PNEditor");

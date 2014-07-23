@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.awt.Color;
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import com.mxgraph.swing.handler.mxCellMarker;
@@ -22,13 +23,13 @@ public class PatternAnalyzeLogic {
 	 * hightlight the path given by the Counterexample
 	 * @param ce
 	 */
-	public void highLightCounterExample(CounterExample ce, PNEditor pneditor) {
+	public void highLightCounterExample(PNEditor pneditor) {
 		Map<String, PNGraphCell> nodemap = pneditor.getGraphComponent().getGraph().nodeReferences;
 		Map<String, PNGraphCell> arcmap = pneditor.getGraphComponent().getGraph().arcReferences;
 
 		//System.out.println(nodemap);
 		//get places to mark
-		java.util.List<String> transitions=ce.getPath();
+		java.util.List<String> transitions=Arrays.asList("t0", "t1", "t2");
 
 		AbstractPetriNet pn=pneditor.getNetContainer().getPetriNet();
 		java.util.List<String> nodeList=new ArrayList<String>();

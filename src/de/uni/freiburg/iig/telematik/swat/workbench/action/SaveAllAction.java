@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
@@ -17,6 +18,7 @@ public class SaveAllAction extends AbstractAction {
 		MessageDialog.getInstance().addMessage("Saving all Petri nets");
 		try {
 			SwatComponents.getInstance().storeAllPetriNets();
+			AnalyzePanelController.getInstance().allNetsChanged();
 			MessageDialog.getInstance().addMessage("Done.");
 		} catch (ParameterException e1) {
 			MessageDialog.getInstance().addMessage(e1.getMessage());

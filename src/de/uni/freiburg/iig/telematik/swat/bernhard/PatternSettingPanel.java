@@ -149,9 +149,31 @@ public class PatternSettingPanel {
 	public void setPatternSetting(PatternSetting ps) {
 		patternSetting=ps;
 		assert(ps.getParameters().size() == parameterPanelList.size());
-		for(int i=0; i <ps.getParameters().size(); i++) {
-			parameterPanelList.get(i).setValue(Helpers.getFirst(ps.getParameters().get(i).getValue()).getOperandName());
+		List<Parameter> paraList=ps.getParameters();
+		for(int i=0; i <paraList.size(); i++) {
+			String value=paraList.get(i).getValueS();
+			if(paraList.get(i).getTypes().contains(OperandType.TRANSITION)) {
+				//System.out.println("dic lookup");
+				String valueLookup=reverseLookUp(value);
+				if(valueLookup == null) {
+					System.out.println("value: "+value);
+					System.out.println(transitionDic);
+					assert(true == false);
+				} else {
+					value=valueLookup;
+				}
+			}
+			parameterPanelList.get(i).setValue(value);
 		}
+	}
+	
+	private String reverseLookUp(String transitionName) {
+		for(String l : transitionDic.keySet()) {
+			if (transitionDic.get(l).equals(transitionName)) {
+				return l;
+			}
+		}
+		return null;
 	}
 
 	public JPanel getJPanel() {
@@ -167,6 +189,7 @@ public class PatternSettingPanel {
 			for(Parameter patternPara: patternSetting.getParameters()) {
 				if(paraPanel.getName().equals(patternPara.getName())) {
 					// if its an activity, take the name and not the label
+					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
 					if(paraPanel.getType()==OperandType.TRANSITION) {
 						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TRANSITION));
 					} else if(paraPanel.getType()==OperandType.TOKEN) {

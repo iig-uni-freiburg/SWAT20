@@ -3,6 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 import java.util.ArrayList;
 import java.util.Set;
 
+import de.uni.freiburg.iig.telematik.swat.bernhard.Helpers;
+
 public class Parameter {
 	
 	private Set<OperandType> mTypes;
@@ -20,6 +22,10 @@ public class Parameter {
 	public Set<OperandType> getTypes() {
 		return mTypes;
 	}
+	
+	public String getValueS() {
+		return Helpers.getFirst(mValues).getOperandName();
+	}
 
 	public int getMultiplicity() {
 		return mMultiplicity;
@@ -30,6 +36,7 @@ public class Parameter {
 	}
 
 	public void setValue(ParamValue value) {
+		mValues.clear();
 		mValues.add(value);
 	}
 	

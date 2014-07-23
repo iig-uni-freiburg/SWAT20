@@ -25,6 +25,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStore;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogAnalysisModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
@@ -330,6 +331,15 @@ public class SwatComponents {
 		TreeMap<AbstractGraphicalPN, File> sort = new TreeMap<AbstractGraphicalPN, File>(new SwatComperator(nets));
 		sort.putAll(nets);//here: sort done through TreeMap
 		return sort.keySet();
+	}
+	public List<File> getAnalysisForNet(String basePath){
+		List<File> sort = new ArrayList<File>();
+		File dir=new File(basePath);
+		for (File file : dir.listFiles()) {
+			if (file.getName().startsWith(AnalysisStore.PREFIX))
+				sort.add(file);
+		}
+		return sort;
 	}
 	
 	public Set<LogModel> getLogFiles() {

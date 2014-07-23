@@ -36,6 +36,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.editor.CPNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
@@ -44,6 +45,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 
@@ -128,6 +130,19 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 				break;
 			case PETRI_NET:
 				addPNEditor((AbstractGraphicalPN) node.getUserObject(), node.getDisplayName());
+				break;
+			case PETRI_NET_ANALYSIS:
+				// show pn editor, parent is the node with the net 
+				SwatTreeNode parent=(SwatTreeNode) node.getParent();
+				if(!alreadyOpen(parent.getDisplayName())) {
+					addPNEditor((AbstractGraphicalPN) parent.getUserObject(), parent.getDisplayName());
+				} else {
+					// set the editor as active
+					componentSelected(parent);
+				}
+				// switch operation mode and load analysis
+				SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
+				AnalyzePanelController.getInstance().loadSetting(parent.getFileReference().getName(), node.getFileReference());
 				break;
 			case LOG_FILE:
 				addLogFile(node);

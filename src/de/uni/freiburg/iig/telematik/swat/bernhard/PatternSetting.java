@@ -5,7 +5,8 @@ import java.util.List;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
 /**
- * the pattern class represents are pattern with its name and parameters
+ * the pattern class represents are pattern with its name,
+ * parameters and the result from the analysis
  * @author bernhard
  *
  */
@@ -53,8 +54,12 @@ public class PatternSetting {
 	 */
 	@Override
 	public String toString() {
-		return parameterAppliedString;
-		
+		//return parameterAppliedString;
+		String s= name+" ";
+		for(Parameter p:parameters) {
+			s+=p.getValueS();
+		}
+		return s;
 	}
 	/*
 	 * replace several things at once

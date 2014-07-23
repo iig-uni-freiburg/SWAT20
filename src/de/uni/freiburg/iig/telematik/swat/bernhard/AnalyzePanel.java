@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,12 +17,15 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.thoughtworks.xstream.XStream;
 
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
@@ -37,8 +41,12 @@ import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismExecutor;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /**
  * this class represents a panel to be added on the right side
@@ -53,6 +61,8 @@ public class AnalyzePanel implements LoadSave {
 	private String netName;
 	private PatternWindow patternWindow;
 	private PNEditor pneditor;
+	// dictionary that maps the labels of the transitions
+	// to the real name in the net
 	private HashMap<String, String> transitionLabelDic;
 	private List<String> dataTypeList;
 	private PatternFactory patternFactory;
@@ -62,6 +72,8 @@ public class AnalyzePanel implements LoadSave {
 		if(pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
 			updateDataTypeList();
 		}
+		// update the parameter boxes
+		patternWindow.netChanged();
 	}
 	/**
 	 * Helpfunction to get the List of all Labels of the current PN of editor
@@ -70,15 +82,18 @@ public class AnalyzePanel implements LoadSave {
 	 */
 	public void updateTransitionLabelDic() {
 		List<String> result = new ArrayList<String>();
+		transitionLabelDic.clear();
 		for(AbstractTransition transition : pneditor.getNetContainer().getPetriNet().getTransitions()){
 			transitionLabelDic.put(transition.getLabel(), transition.getName());
 		}
 	}
-	
+	/**
+	 * update the list of colors
+	 */
 	public void updateDataTypeList() {
 		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pn=pneditor.getNetContainer();
 		AbstractPetriNet apn=pn.getPetriNet();
-		dataTypeList =new ArrayList<String>();
+		dataTypeList.clear();
 		Set<String> dataTypes=new HashSet<String>();
 		if(apn.getNetType()==NetType.IFNet) {
 			IFNet net=(IFNet) apn;
@@ -87,23 +102,25 @@ public class AnalyzePanel implements LoadSave {
 			//colors.addAll(arg0)
 			while(it.hasNext()) {
 				AbstractCPNTransition t=(AbstractCPNTransition) it.next();
+				dataTypes.addAll(t.getConsumedColors());
 				dataTypes.addAll(t.getProcessedColors());
+				dataTypes.addAll(t.getProducedColors());
 			}
 			dataTypeList.addAll(dataTypes);
 		}
 		
-		System.out.println(dataTypeList);
+		//System.out.println(dataTypeList);
 	}
 	public AnalyzePanel(PNEditor pneditor, String net) {
 		this.pneditor=pneditor;
 		netName=net.split("[.]")[0];
 		patternFactory=new PatternFactory(pneditor.getNetContainer().getPetriNet());
 		transitionLabelDic=new HashMap<String, String>();
-		netChanged();
-		panel=new JPanel(new GridLayout(PatternAnalyzeLogic.MAX_PATTERNS, 1, 10, 10));
-		analyzeDescription=new JLabel("Analysis from "+getDate());
-		editButton=new JButton("Edit");
+		dataTypeList=new ArrayList<String>();
 		
+		panel=new JPanel(new GridLayout(PatternAnalyzeLogic.MAX_PATTERNS, 1, 10, 10));
+		analyzeDescription=new JLabel("Analysis from "+getDateShort());
+		editButton=new JButton("Edit");
 		runButton=new JButton("Run");
 		saveButton=new JButton("Save");
 		
@@ -129,9 +146,13 @@ public class AnalyzePanel implements LoadSave {
 				save();
 			}
 		});
+		netChanged();
 		update();
 	}
 	
+	protected void showPatternWindow() {
+		patternWindow.setVisible(true);
+	}
 	public HashMap<String, String> getTransitionLabelDic() {
 		return transitionLabelDic;
 	}
@@ -141,15 +162,10 @@ public class AnalyzePanel implements LoadSave {
 		panel.add(Helpers.jPanelLeft(saveButton));
 	}
 	
-	private String getDate() {
+	private String getDateShort() {
 		Date today = new Date();
 		DateFormat formatter=DateFormat.getDateInstance(DateFormat.SHORT, new Locale(System.getProperty("user.language"),System.getProperty("user.country")));
 		return formatter.format(today);
-	}
-	
-	protected void showPatternWindow() {
-		// TODO Auto-generated method stub
-		patternWindow.setVisible(true);
 	}
 
 	/**
@@ -174,9 +190,10 @@ public class AnalyzePanel implements LoadSave {
 		panel.removeAll();
 		panel.add(Helpers.jPanelLeft(analyzeDescription));
 		for(PatternSetting p: patternWindow.getPatternSettings()) {
-			// check whether a result exists
+			System.out.println(p);
 			JPanel newPanel=new JPanel();
 			PatternResult result=p.getResult();
+			// check whether a result exists
 			if(result != null) {
 				int rows=2;
 				if(result.isFulfilled() == false) {
@@ -225,30 +242,22 @@ public class AnalyzePanel implements LoadSave {
 		return dataTypeList;
 	}
 	
-	public boolean load(List<PatternSetting> patternSettings) {
+	public boolean load(File f) {
+		MessageDialog.getInstance().addMessage("Loading Analysis Settings from "+f);
+		List<PatternSetting> newList=AnalysisStore.loadFromFile(f);
+		//System.out.println(newList);
+		patternWindow.setPatternSettings(newList);
+		update();
 		return true;
 	}
 	@Override
 	public boolean save() {
-		XStream xstream=new XStream();
-		String xml=xstream.toXML(patternWindow.getPatternSettings());
-		IOUtils.writeToFile(".", "analyse1.xml", xml);
-		SwatTreeView sw=SwatTreeView.getInstance();
-		DefaultMutableTreeNode tm= (DefaultMutableTreeNode) sw.getModel().getChild(sw.getModel().getRoot(), 0);
-		for(int i = 0; i < tm.getChildCount(); i++) {
-			SwatTreeNode child=(SwatTreeNode) tm.getChildAt(i);
-			System.out.println(child.getDisplayName());
-			System.out.println(netName);
-			if (child.getDisplayName().equals(netName)) {
-				System.out.println("hallo");
-				child.setAllowsChildren(true);
-				child.insert(sw.new SwatTreeNode("analysis1", SwatComponentType.PETRI_NET_ANALYSIS, new File("analyse1.xml")), 0);
-			}
-		}
-		sw.expandAll();
-		sw.repaint();
-		sw.updateUI();
-		return false;
+		AnalysisStore.store(patternWindow.getPatternSettings(), netName);
+		// update the tree
+		SwatTreeView.getInstance().updateAnalysis();
+		SwatTreeView.getInstance().expandAll();
+		SwatTreeView.getInstance().updateUI();
+		return true;
 	}
 
 	

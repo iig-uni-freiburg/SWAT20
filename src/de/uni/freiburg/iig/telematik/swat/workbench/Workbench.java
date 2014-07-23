@@ -275,8 +275,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 				getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 			} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-				if(swatComponent instanceof PNEditor)
-					getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(node.getDisplayName(),(PNEditor) swatComponent).getPanel());
+				if(swatComponent instanceof PNEditor) {
+					 String name=node.getDisplayName();
+					 if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
+						 name=((SwatTreeNode) node.getParent()).getFileReference().getName();
+					 }
+					getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(name,(PNEditor) swatComponent).getPanel());
+				}
 			}
 			getPropertiesPanel().validate();
 			getPropertiesPanel().repaint();

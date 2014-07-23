@@ -21,6 +21,7 @@ public class PatternActivityParameter extends PatternParameterPanel {
 	@Override
 	public void setValue(String val) {
 		// TODO Auto-generated method stub
+		// System.out.println("setze "+val);
 		((JComboBox)jComponent).setSelectedItem(val);
 	}
 
