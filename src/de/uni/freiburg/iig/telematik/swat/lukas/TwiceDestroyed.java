@@ -7,10 +7,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 
 public class TwiceDestroyed extends DataflowPattern {
 	
-	public static final String NAME = "Twice Destroyed";
+	public static final String NAME = "Twice Destroyed D";
 	
 	public TwiceDestroyed(Token t, Collection<RegularIFNetTransition> collection) {
-		super();
+		super("A data element D is destroyed twice without having been created in between.");
 		
 		String writeToken, deleteToken, formula;
 		writeToken = getTransitionsAccessingToken(collection, t, AccessMode.WRITE);

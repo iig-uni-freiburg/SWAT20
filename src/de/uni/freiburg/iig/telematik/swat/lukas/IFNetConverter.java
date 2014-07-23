@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNet;
 
 public class IFNetConverter extends CWNConverter {

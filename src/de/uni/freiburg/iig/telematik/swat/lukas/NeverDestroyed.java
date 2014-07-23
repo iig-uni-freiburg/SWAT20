@@ -8,12 +8,12 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 
 public class NeverDestroyed extends DataflowPattern {
 	
-	public static final String NAME = "Never Destroyed";
+	public static final String NAME = "Never Destroyed D";
 	
 	public NeverDestroyed(Token t, Collection<RegularIFNetTransition> ts,
 			Collection<IFNetPlace> outPlaces) {
 
-		super();
+		super("A data element D is created, but not destroyed afterwards.");
 		mOperands.add(t);
 		// determine transitions which write or delete the token
 		String writeToken, deleteToken, formula, terminationCondition;

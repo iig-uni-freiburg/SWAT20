@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.PumpStreamHandler;
 
 import de.invation.code.toval.properties.PropertyException;
@@ -72,7 +73,6 @@ public class PrismExecutor {
 			PrismResult pRes = new PrismResult(patterns, resultStr);
 			return pRes;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -80,15 +80,23 @@ public class PrismExecutor {
 		
 	}
 	
-	private String execToString(File model, File properties) throws Exception {
+	private String execToString(File model, File properties) {
 		
-		String command = mPrismPath + "prism " + model.getAbsolutePath() + " " + properties.getAbsolutePath();;
+		String command = mPrismPath + File.separator + "bin" + File.separator + "prism " + model.getAbsolutePath() + " " + properties.getAbsolutePath();
 	    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	    ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
 	    CommandLine commandline = CommandLine.parse(command);
 	    DefaultExecutor exec = new DefaultExecutor();
-	    PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+	    PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
 	    exec.setStreamHandler(streamHandler);
-	    exec.execute(commandline);
+	    try {
+			exec.execute(commandline);
+		} catch (ExecuteException e) {
+			System.out.println("SUBPROCESS OUTPUT: " + errorStream.toString());
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	    return(outputStream.toString());
 	    
 	}

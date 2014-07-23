@@ -85,7 +85,7 @@ public class PrismResult {
 		CompliancePattern leadsTo = new LeadsTo(new Transition("t1"), new Transition("t2"));
 		ArrayList<CompliancePattern> cps = new ArrayList<CompliancePattern>();
 		cps.add(leadsTo);
-		String str = IOUtils.readFile(System.getProperty("user.dir") + File.separator + "results", Charset.defaultCharset());
+		String str = IOUtils.readFile(System.getProperty("user.dir") + File.separator + "results");
 		PrismResult pr = new PrismResult(cps, str);
 		PatternResult pRes = pr.getPatternResult(leadsTo.getName());
 		System.out.println(pRes.getProbability());

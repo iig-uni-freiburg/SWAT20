@@ -13,11 +13,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 
 public class NotDeletedOnTime extends DataflowPattern {
 	
-	public static final String NAME = "Not Deleted On Time";
+	public static final String NAME = "D Not Deleted On Time";
 	
 	public NotDeletedOnTime(Token token, Collection<RegularIFNetTransition> collection) {
 		
-		super();
+		super("A data element D is read and not destroyed and afterwards it is never read again.");
 		String formula = "";
 		String readToken = getTransitionsAccessingToken(collection, token, AccessMode.READ);
 		// all transitions in ts which read the token, refer to it in the guard, but don't destroy it

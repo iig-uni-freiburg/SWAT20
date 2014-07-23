@@ -20,5 +20,30 @@ public class MissingDataTest {
 			fail(e.getMessage());
 		}
 	}
-
+	
+	@Test
+	public void test1() {
+		IFNet net = IFNetTestUtils.create6PlaceIFnetWithAccessModes();
+		MissingData p = new MissingData(new Token("green"), net.getRegularTransitions());
+		TestUtils tu = new TestUtils(net, p);
+		
+		try {
+			assertFalse(tu.isPropertySatisfied());
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void test2() {
+		IFNet net = IFNetTestUtils.createParallelExecIFNet();
+		MissingData p = new MissingData(new Token("green"), net.getRegularTransitions());
+		TestUtils tu = new TestUtils(net, p);
+		
+		try {
+			assertTrue(tu.isPropertySatisfied());
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
 }

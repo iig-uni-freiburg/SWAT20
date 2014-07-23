@@ -7,8 +7,8 @@ public abstract class CompositePattern extends CompliancePattern {
 	
 	public static final String NAME = "Composite Patterns";
 	
-	public CompositePattern(String formula) {
-		super(formula, false);
+	public CompositePattern(String formula, String text) {
+		super(formula, false, text);
 	}
 	
 

@@ -13,15 +13,17 @@ public abstract class CompliancePattern {
 	private String mPattern;
 	
 	private String mPrismProperty;
+
+	private String mTextualDescription;
 	
-	public CompliancePattern() {
+	public CompliancePattern(String text) {
 		mOperands = new ArrayList<Operand>();
+		mTextualDescription = text;
 	}
 
-	public CompliancePattern(String formula, boolean antipattern) {
-		mOperands = new ArrayList<Operand>();
+	public CompliancePattern(String formula, boolean antipattern, String text) {
+		this(text);
 		mPattern = formula;
-		
 		if (antipattern) {
 			buildAntiPatternRep(formula);
 		} else {
@@ -63,5 +65,9 @@ public abstract class CompliancePattern {
 	public abstract String getName();
 	
 	public abstract boolean isAntiPattern();
+	
+	public String getTextualDescription() {
+		return mTextualDescription;
+	}
 
 }

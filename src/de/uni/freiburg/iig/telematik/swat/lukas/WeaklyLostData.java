@@ -7,10 +7,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 
 public class WeaklyLostData extends DataflowPattern {
 	
-	public static final String NAME = "Weakly Lost Data";
+	public static final String NAME = "Weakly Lost Data D";
 	
 	public WeaklyLostData(Token t, Collection<RegularIFNetTransition> collection) {
-		super();
+		
+		super("A data elemend D is written and never read afterwards.");
 		String writeToken, readToken, deleteToken, formula;
 		
 		// determine transitions which write, read or delete the token

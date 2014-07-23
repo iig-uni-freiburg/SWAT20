@@ -3,7 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,11 +16,12 @@ public abstract class DataflowPattern extends CompliancePattern {
 	
 	public static final String NAME = "Dataflow Pattern";
 	
-	public DataflowPattern() {
+	public DataflowPattern(String text) {
+		super(text);
 	}
 	
-	public DataflowPattern(String formula) {
-		super(formula, true);
+	public DataflowPattern(String formula, String text) {
+		super(formula, true, text);
 	}
 	
 	protected String getTransitionsAccessingToken(Collection<RegularIFNetTransition> ts,

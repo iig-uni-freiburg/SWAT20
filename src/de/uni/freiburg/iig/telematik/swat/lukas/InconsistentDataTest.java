@@ -11,8 +11,8 @@ public class InconsistentDataTest {
 	
 	@Test
 	public void test0() {
-		IFNet net = IFNetTestUtils.create6PlaceIFnetWithAccessModes();
-		WeaklyLostData p = new WeaklyLostData(new Token("red"), net.getRegularTransitions());
+		IFNet net = IFNetTestUtils.createParallelExecIFNet();
+		InconsistentData p = new InconsistentData(new Token("red"), net.getRegularTransitions());
 		TestUtils tu = new TestUtils(net, p);
 		
 		try {

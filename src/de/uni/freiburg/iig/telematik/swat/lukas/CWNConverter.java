@@ -51,7 +51,11 @@ public class CWNConverter extends PrismConverter {
 				
 				for(String color : possibleColors){
 					placeBuilder.append(p.getName() +"_" + color + " : ");
-					placeBuilder.append("[0.." + p.getColorCapacity(color) + "] ");
+					if (p.getColorCapacity(color) != -1) {
+						placeBuilder.append("[0.." + p.getColorCapacity(color) + "] ");
+					} else {
+						placeBuilder.append("int ");
+					}
 					
 					if (mNet.getInitialMarking().get(p.getName()) != null) {
 						placeBuilder.append("init " + mNet.getInitialMarking().get(
@@ -114,10 +118,12 @@ public class CWNConverter extends PrismConverter {
 					int neededSpace = (outPlace.getColorCapacity(color) - outConstraint.multiplicity(color)) +1;
 					String prismVariableName = outPlace.getName() + "_" + color;				
 					
-					if(colorIter.hasNext() || outFlowIter.hasNext()) {
-						enablednessBuilder.append(prismVariableName + "<" + neededSpace + " & ");
-					} else {
-						enablednessBuilder.append(prismVariableName + "<" + neededSpace);
+					if (outPlace.getColorCapacity(color) != -1) {
+						if(colorIter.hasNext() || outFlowIter.hasNext()) {
+							enablednessBuilder.append(prismVariableName + "<" + neededSpace + " & ");
+						} else {
+							enablednessBuilder.append(prismVariableName + "<" + neededSpace);
+						}
 					}
 					
 					firingEffectBuilder.append("(" + prismVariableName + "'=" + prismVariableName + 

@@ -6,7 +6,7 @@ public class Corequisite extends CompositePattern {
 
 	public Corequisite(NetElementExpression t1, NetElementExpression t2) {
 		super("((F" + t1.toString() + ") & (F" + t2.toString() + ")) | "
-				+ "(!(F(" + t1.toString() + ")) & (!(F(" + t2.toString() + "))))");
+				+ "(!(F(" + t1.toString() + ")) & (!(F(" + t2.toString() + "))))", "Both P and Q must be present or absent.");
 		mOperands.add(t1);
 		mOperands.add(t2);
 	}

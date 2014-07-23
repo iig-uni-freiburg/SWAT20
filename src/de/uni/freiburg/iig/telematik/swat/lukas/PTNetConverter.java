@@ -30,7 +30,12 @@ public class PTNetConverter extends PrismConverter {
 			}
 			
 			placeBuilder.append(p.getName() + "_black : ");
-			placeBuilder.append("[0.." + p.getCapacity() + "] ");
+			
+			if (p.getCapacity() != -1) {
+				placeBuilder.append("[0.." + p.getCapacity() + "] ");
+			} else {
+				placeBuilder.append("int ");
+			}
 				
 			if (mAbstractNet.getInitialMarking().get(p.getName()) != null) {
 				placeBuilder.append("init " + mAbstractNet.getInitialMarking().get(
@@ -62,9 +67,9 @@ public class PTNetConverter extends PrismConverter {
 				AbstractPlace<?,?> inputPlace = (AbstractPlace<?,?>) inRel.getPlace();
 				int inConstraint = inRel.getConstraint();
 				String prismVariableName = inputPlace.getName() + "_black";
-				enablednessBuilder.append(prismVariableName + ">" + (inConstraint - 1) + " & "); 				
-				firingEffectBuilder.append("("+ prismVariableName +"'=" + prismVariableName +
-						"-" + inConstraint + ") & ");				
+				enablednessBuilder.append(" & " + prismVariableName + ">" + (inConstraint - 1)); 				
+				firingEffectBuilder.append("& ("+ prismVariableName +"'=" + prismVariableName +
+						"-" + inConstraint + ")");				
 			}						
 			
 			
@@ -80,18 +85,16 @@ public class PTNetConverter extends PrismConverter {
 				int neededSpace = (outPlace.getCapacity() - outConstraint) + 1;
 				String prismVariableName = outPlace.getName() + "_black";				
 				
-				if(outFlowIter.hasNext()) {
-					enablednessBuilder.append(prismVariableName + "<" + neededSpace + " & ");
-				} else {
-					enablednessBuilder.append(prismVariableName + "<" + neededSpace);
+				if (outPlace.getCapacity() != -1) {
+					enablednessBuilder.append(" & " + prismVariableName + "<" + neededSpace);
 				}
 				
-				firingEffectBuilder.append("(" + prismVariableName + "'=" + prismVariableName + 
-							"+" + outConstraint + ")" + " & ");										
+				firingEffectBuilder.append(" & (" + prismVariableName + "'=" + prismVariableName + 
+							"+" + outConstraint + ")");										
 			}
 			
-			firingEffectBuilder.append("(" + t.getName()+"'=1"+ ") & " );
-			firingEffectBuilder.append("(" + t.getName()+"_last'=1"+ ") & ");
+			firingEffectBuilder.append(" & (" + t.getName()+"'=1"+ ")");
+			firingEffectBuilder.append(" & (" + t.getName()+"_last'=1"+ ")");
 			
 			 @SuppressWarnings("unchecked")
 			Iterator<AbstractPTTransition<?>> tIterator = 
@@ -104,17 +107,8 @@ public class PTNetConverter extends PrismConverter {
 				currentTransition = tIterator.next();
 				
 				if (!currentTransition.equals(t)) {
-					if(tIterator.hasNext()){
-						firingEffectBuilder.append("(" + currentTransition.getName()+"_last'=0"+ ") & ");
-					} else {
-						firingEffectBuilder.append("(" + currentTransition.getName()+"_last'=0"+ ");");
-					}
+					firingEffectBuilder.append(" & (" + currentTransition.getName()+"_last'=0"+ ")");
 				}
-			}
-			
-			if (firingEffectBuilder.lastIndexOf("&") == firingEffectBuilder.length() - 2) {
-				firingEffectBuilder.delete(firingEffectBuilder.length() - 3, firingEffectBuilder.length());
-				firingEffectBuilder.append(";");
 			}
 			
 			for (AbstractPlace<?,?> p : mAbstractNet.getDrainPlaces()) {
@@ -124,9 +118,9 @@ public class PTNetConverter extends PrismConverter {
 			//Combine Part 1) and Part 2)
 			StringBuilder transitionBuilder = new StringBuilder();
 			transitionBuilder.append("[] ");
-			transitionBuilder.append(enablednessBuilder);
+			transitionBuilder.append(enablednessBuilder.subSequence(3, enablednessBuilder.length()));
 			transitionBuilder.append(" -> ");
-			transitionBuilder.append(firingEffectBuilder);
+			transitionBuilder.append(firingEffectBuilder.subSequence(2, firingEffectBuilder.length()) + ";");
 			transitionBuilder.append("\n\n");
 			completeTransitionBuilder.append(transitionBuilder);
 			

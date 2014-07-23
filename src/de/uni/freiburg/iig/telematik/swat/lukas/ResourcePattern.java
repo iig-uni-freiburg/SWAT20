@@ -5,6 +5,10 @@ import java.util.Arrays;
 
 public abstract class ResourcePattern extends CompliancePattern {
 	
+	public ResourcePattern(String text) {
+		super(text);
+	}
+
 	public static final String NAME = "Resource Pattern";
 	
 	public static ArrayList<String> getPatternNames() {
