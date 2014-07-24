@@ -65,6 +65,7 @@ public class AnalyzePanel implements LoadSave {
 	// to the real name in the net
 	private HashMap<String, String> transitionLabelDic;
 	private List<String> dataTypeList;
+	private List<String> placesList;
 	private PatternFactory patternFactory;
 	
 	public void netChanged() {
@@ -185,8 +186,8 @@ public class AnalyzePanel implements LoadSave {
 		System.out.println("Compliance Pattern: "+compliancePatterns.size());
 		PrismResult prismResult=prismExecuter.anaylaze(compliancePatterns);
 		for(PatternSetting setting : patternSettings) {
-			PatternResult patternResult =prismResult.getPatternResult(setting.getName());
-			setting.setResult(patternResult);
+			ArrayList<PatternResult> patternResult =prismResult.getPatternResult(setting.getName());
+			setting.setResult(patternResult.get(0));
 		}
 		update();
 	}

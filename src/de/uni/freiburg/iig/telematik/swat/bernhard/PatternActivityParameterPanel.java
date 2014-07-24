@@ -4,12 +4,12 @@ import javax.swing.JComboBox;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 
-public class PatternDataParameter extends PatternParameterPanel {
+public class PatternActivityParameterPanel extends PatternParameterPanel {
 
-	public PatternDataParameter(String name, String values[]) {
-		super(name, OperandType.TOKEN);
-		jComponent=new JComboBox(values);
-		// TODO Auto-generated constructor stub
+	public PatternActivityParameterPanel(String name, String[] values) {
+		super(name, OperandType.TRANSITION);
+		jComponent = new JComboBox(values);
+
 	}
 
 	@Override
@@ -21,6 +21,7 @@ public class PatternDataParameter extends PatternParameterPanel {
 	@Override
 	public void setValue(String val) {
 		// TODO Auto-generated method stub
+		// System.out.println("setze "+val);
 		((JComboBox)jComponent).setSelectedItem(val);
 	}
 

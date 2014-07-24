@@ -113,8 +113,8 @@ public class PatternWindow extends JFrame {
 				for (String itemName : itemNames) {
 
 					JMenuItem item = new JMenuItem(itemName);
-					String description="Beschreibung";
-					//String description=patternFactory.createPattern(itemName, null).getTextualDescription();
+					//String description="Beschreibung";
+					String description=patternFactory.getDescOfPattern(itemName);
 					item.setToolTipText(description);
 					final String name = itemName;
 					item.addActionListener(new ActionListener() {

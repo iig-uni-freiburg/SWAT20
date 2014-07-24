@@ -114,10 +114,13 @@ public class PatternSettingPanel {
 		Set<OperandType> operandSet=pp.getTypes();
 		if(operandSet.contains(OperandType.TOKEN)) {
 			List<String> dataList=patternWindow.getDataList();
-			patternPara = new PatternDataParameter(pp.getName(), dataList.toArray(new String[dataList.size()]));
+			patternPara = new PatternDataParameterPanel(pp.getName(), dataList.toArray(new String[dataList.size()]));
 		} else if (operandSet.contains(OperandType.TRANSITION)) {
-			patternPara = new PatternActivityParameter(pp.getName(), transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
+			patternPara = new PatternActivityParameterPanel(pp.getName(), transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
 		}
+		/*if (operandSet.contains(OperandType.STATEPREDICATE)) {
+			patternPara = new PatternStatePredicateParameter(pp.getName(), transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
+		}*/
 		panel.add(patternPara.getjComponent());
 		parameterPanelList.add(patternPara);
 	}
@@ -195,9 +198,9 @@ public class PatternSettingPanel {
 					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
 					if(paraPanel.getType()==OperandType.TRANSITION) {
 						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TRANSITION));
-					} else if(paraPanel.getType()==OperandType.TOKEN) {
+					} /*else if(paraPanel.getType()==OperandType.TOKEN) {
 						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TOKEN));
-					}
+					} */
 				}
 			}
 			
