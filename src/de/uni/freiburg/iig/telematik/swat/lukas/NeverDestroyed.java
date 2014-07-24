@@ -10,10 +10,12 @@ public class NeverDestroyed extends DataflowPattern {
 	
 	public static final String NAME = "Never Destroyed D";
 	
+	public static final String DESC = "A data element D is created, but not destroyed afterwards.";
+	
 	public NeverDestroyed(Token t, Collection<RegularIFNetTransition> ts,
 			Collection<IFNetPlace> outPlaces) {
 
-		super("A data element D is created, but not destroyed afterwards.");
+		super();
 		mOperands.add(t);
 		// determine transitions which write or delete the token
 		String writeToken, deleteToken, formula, terminationCondition;
@@ -29,10 +31,15 @@ public class NeverDestroyed extends DataflowPattern {
 		setPattern(formula, true);
 		
 	}
-	
+
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	@Override
+	public String getDescription() {
+		return DESC;
 	}
 
 

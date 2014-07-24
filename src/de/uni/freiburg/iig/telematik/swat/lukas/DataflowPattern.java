@@ -1,8 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,12 +15,14 @@ public abstract class DataflowPattern extends CompliancePattern {
 	
 	public static final String NAME = "Dataflow Pattern";
 	
-	public DataflowPattern(String text) {
-		super(text);
+	private static HashMap<String, String> mPatternDescription;
+	
+	public DataflowPattern() {
+		super();
 	}
 	
 	public DataflowPattern(String formula, String text) {
-		super(formula, true, text);
+		super(formula, true);
 	}
 	
 	protected String getTransitionsAccessingToken(Collection<RegularIFNetTransition> ts,
@@ -64,12 +65,21 @@ public abstract class DataflowPattern extends CompliancePattern {
 		
 	}
 	
-	public static ArrayList<String> getPatternNames() {
+    public static HashMap<String, String> getPatternDescription() {
 		
-		return new ArrayList<String>(Arrays.asList(MissingData.NAME, WeaklyRedData.NAME,
-				WeaklyLostData.NAME, InconsistentData.NAME, NeverDestroyed.NAME, TwiceDestroyed.NAME, NotDeletedOnTime.NAME));
+		if (mPatternDescription == null) {
+			mPatternDescription = new HashMap<String, String>();
+			mPatternDescription.put(MissingData.NAME, MissingData.DESC);
+			mPatternDescription.put(WeaklyRedData.NAME, WeaklyRedData.DESC);
+			mPatternDescription.put(WeaklyLostData.NAME, WeaklyLostData.DESC);
+			mPatternDescription.put(InconsistentData.NAME, InconsistentData.DESC);
+			mPatternDescription.put(TwiceDestroyed.NAME, TwiceDestroyed.DESC);
+			mPatternDescription.put(NotDeletedOnTime.NAME, NotDeletedOnTime.DESC); 
+		}
 		
+		return mPatternDescription;
 	}
+	
 	
 	@Override
 	public boolean isAntiPattern() {

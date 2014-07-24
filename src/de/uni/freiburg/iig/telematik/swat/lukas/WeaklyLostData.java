@@ -9,9 +9,11 @@ public class WeaklyLostData extends DataflowPattern {
 	
 	public static final String NAME = "Weakly Lost Data D";
 	
+	public static final String DESC = "A data elemend D is written and never read afterwards.";
+	
 	public WeaklyLostData(Token t, Collection<RegularIFNetTransition> collection) {
 		
-		super("A data elemend D is written and never read afterwards.");
+		super();
 		String writeToken, readToken, deleteToken, formula;
 		
 		// determine transitions which write, read or delete the token
@@ -24,10 +26,15 @@ public class WeaklyLostData extends DataflowPattern {
 		setPattern(formula, true);
 		mOperands.add(t);
 	}
-	
+
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	@Override
+	public String getDescription() {
+		return DESC;
 	}
 
 }

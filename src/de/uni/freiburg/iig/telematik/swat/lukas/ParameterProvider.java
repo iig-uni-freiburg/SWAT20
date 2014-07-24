@@ -22,7 +22,7 @@ public class ParameterProvider {
 		mTwoTransitionRP = new HashSet<String>(Arrays.asList(SegregatedFrom.NAME, USegregatedFrom.NAME,
 				BoundedWith.NAME));
 		mDFPatterns = new HashSet<String>();
-		mDFPatterns.addAll(DataflowPattern.getPatternNames());
+		mDFPatterns.addAll(DataflowPattern.getPatternDescription().keySet());
 	}
 	
 	public ArrayList<Parameter> getParameters(String patternName) {

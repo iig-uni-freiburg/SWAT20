@@ -51,12 +51,12 @@ public class TestAtomicPatterns {
 		Transition t1 = new Transition("t1");
 		Transition t2 = new Transition("t2");
 		Transition t3 = new Transition("t3");
-		ChainPrecedes p = new ChainPrecedes(t1, t2, t3, true);
+		ChainPrecedes p = new ChainPrecedes(t1, t2, t3);
 		assertEquals("P>=1 [F(t3_last=1) => ((!(t3_last=1)) U ((t1_last=1) & "
 				+ "(!(t3_last=1)) & (X((!(t3_last=1)) U (t2_last=1)))))]", 
 				p.getPrismRep());
 		assertEquals(3, p.getOperatorCount());
-		ChainPrecedes p2 = new ChainPrecedes(t1, t2, t3, false);
+		PrecedesChain p2 = new PrecedesChain(t1, t2, t3);
 		assertEquals("P>=1 [(F((t2_last=1) & (X(F(t3_last=1))))) => ((!(t2_last=1)) U (t1_last=1))]", 
 				p2.getPrismRep());
 	}
@@ -66,12 +66,12 @@ public class TestAtomicPatterns {
 		Transition t1 = new Transition("t1");
 		Transition t2 = new Transition("t2");
 		Transition t3 = new Transition("t3");
-		ChainLeadsTo p = new ChainLeadsTo(t1, t2, t3, true);
+		ChainLeadsTo p = new ChainLeadsTo(t1, t2, t3);
 		assertEquals("P>=1 [G(((t1_last=1) & (X(F(t2_last=1)))) => (X(F((t2_last=1) & "
 				+ "(F(t3_last=1))))))]", 
 				p.getPrismRep());
 		assertEquals(3, p.getOperatorCount());
-		ChainLeadsTo p2 = new ChainLeadsTo(t1, t2, t3, false);
+		LeadsToChain p2 = new LeadsToChain(t1, t2, t3);
 		assertEquals("P>=1 [G((t1_last=1) => (F((t2_last=1) & (X(F(t3_last=1)))))))]", 
 				p2.getPrismRep());
 	}

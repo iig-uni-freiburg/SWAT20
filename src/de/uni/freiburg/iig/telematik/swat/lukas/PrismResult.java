@@ -6,10 +6,12 @@ import java.util.HashMap;
 
 public class PrismResult {
 
-	HashMap<String, PatternResult> mResults;
+	//HashMap<CompliancePattern, PatternResult> mResults;
+	HashMap<String, ArrayList<PatternResult>> mResults;
 	
 	public PrismResult(ArrayList<CompliancePattern> patterns, String resultStr) {
-		mResults = new HashMap<String, PatternResult>();
+		mResults = new HashMap<String, ArrayList<PatternResult>>();
+		// mResults = new HashMap<CompliancePattern, PatternResult>();
 		fillResultMap(patterns, resultStr);
 	}
 
@@ -25,18 +27,23 @@ public class PrismResult {
 		} 
 		
 		for (int i = 0; i < patterns.size(); i++) {
+		
 			CompliancePattern cp = patterns.get(i);
-			String name = cp.getName();
 			boolean isAntiPattern = cp.isAntiPattern();
 			String resString = resultStrs.get(i);
 			double probability = getProb(resString);
 			boolean isFulfilled = isFulfilled(resString, isAntiPattern);
 			ArrayList<ArrayList<String>> violatingPaths = getViolatingExamplePaths();
 			PatternResult pr = new PatternResult(probability, isFulfilled, violatingPaths);
-			mResults.put(name, pr);
+			ArrayList<PatternResult> resultsForPattern = mResults.get(cp.getName());
+			if (resultsForPattern == null) {
+				resultsForPattern = new ArrayList<PatternResult>(); 
+			}
+			resultsForPattern.add(pr);
+			mResults.put(cp.getName(), resultsForPattern);
+			
 		}
-		
-		
+
 	}
 
 	private boolean isFulfilled(String resString, boolean isAntiPattern) {
@@ -72,19 +79,27 @@ public class PrismResult {
 		return paths;
 	}
 	
-	public HashMap<String, PatternResult> getResults() {
+	/*public HashMap<CompliancePattern, PatternResult> getResults() {
+		return mResults;
+	}*/
+	
+	public HashMap<String, ArrayList<PatternResult>> getResults() {
 		return mResults;
 	}
 	
-	public PatternResult getPatternResult(String patternName) {
+	public ArrayList<PatternResult> getPatternResult(String patternName) {
+		
+		
 		return mResults.get(patternName);
 	}
 	
 	/*public static void main(String [ ] args) {
 		
 		CompliancePattern leadsTo = new LeadsTo(new Transition("t1"), new Transition("t2"));
+		CompliancePattern leadsTo1 = new LeadsTo(new Transition("t2"), new Transition("t2"));
 		ArrayList<CompliancePattern> cps = new ArrayList<CompliancePattern>();
 		cps.add(leadsTo);
+		cps.add(leadsTo1);
 		String str = IOUtils.readFile(System.getProperty("user.dir") + File.separator + "results");
 		PrismResult pr = new PrismResult(cps, str);
 		PatternResult pRes = pr.getPatternResult(leadsTo.getName());

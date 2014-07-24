@@ -9,8 +9,10 @@ public class TwiceDestroyed extends DataflowPattern {
 	
 	public static final String NAME = "Twice Destroyed D";
 	
+	public static final String DESC = "A data element D is destroyed twice without having been created in between.";
+	
 	public TwiceDestroyed(Token t, Collection<RegularIFNetTransition> collection) {
-		super("A data element D is destroyed twice without having been created in between.");
+		super();
 		
 		String writeToken, deleteToken, formula;
 		writeToken = getTransitionsAccessingToken(collection, t, AccessMode.WRITE);
@@ -21,10 +23,15 @@ public class TwiceDestroyed extends DataflowPattern {
 		setPattern(formula, true);
 		mOperands.add(t);
 	}
-	
+
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	@Override
+	public String getDescription() {
+		return DESC;
 	}
 
 }

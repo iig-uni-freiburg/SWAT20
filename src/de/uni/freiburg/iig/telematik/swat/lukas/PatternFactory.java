@@ -3,9 +3,10 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition;
@@ -14,31 +15,36 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 public class PatternFactory {
 	
 	private AbstractPetriNet<?,?,?,?,?,?,?> mNet;
+	
+	private HashMap<String, String> mSupportedPatterns;
 
 	public PatternFactory(AbstractPetriNet<?,?,?,?,?,?,?> net) {
 		mNet = net;
+		mSupportedPatterns = new HashMap<String, String>();
+		
+		if (mNet instanceof PTNet || mNet instanceof CWN) {
+		
+			mSupportedPatterns.putAll(AtomicPattern.getPatternDescription());
+			mSupportedPatterns.putAll(CompositePattern.getPatternDescription());
+			
+		} 
+		if (mNet instanceof IFNet) {
+			
+			mSupportedPatterns.putAll(DataflowPattern.getPatternDescription());
+			mSupportedPatterns.putAll(ResourcePattern.getPatternDescription());
+		}
 	}
 
 	public ArrayList<String> getApplicablePatterns() {
-		
-		ArrayList<String> supportedPatterns = new ArrayList<String>();
-		if (mNet instanceof PTNet) {
-			supportedPatterns.addAll(AtomicPattern.getPatternNames());
-			supportedPatterns.addAll(CompositePattern.getPatternNames());
-		} else if (mNet instanceof CPN) {
-			supportedPatterns.addAll(AtomicPattern.getPatternNames());
-			supportedPatterns.addAll(CompositePattern.getPatternNames());
-		} else if (mNet instanceof IFNet) {
-			supportedPatterns.addAll(AtomicPattern.getPatternNames());
-			supportedPatterns.addAll(CompositePattern.getPatternNames());
-			supportedPatterns.addAll(DataflowPattern.getPatternNames());
-			supportedPatterns.addAll(ResourcePattern.getPatternNames());
-		}
-		
-		Collections.sort(supportedPatterns);
-		return supportedPatterns;
-		
+		ArrayList<String> supportedPatternList = new ArrayList<String>(mSupportedPatterns.keySet());
+		Collections.sort(supportedPatternList);
+		return supportedPatternList;
 	}
+	
+	public String getDescOfPattern(String name) {
+		return mSupportedPatterns.get(name);
+	}
+	
 	
 	public ArrayList<Parameter> getParametersOfPattern(String patternName) {
 		ParameterProvider pp = new ParameterProvider();
@@ -278,5 +284,14 @@ public class PatternFactory {
 		return op;
 		
 	}
+	
+	/*public static void main(String[] args) {
+		PatternFactory pf = new PatternFactory(new IFNet());
+		ArrayList<String> ap = pf.getApplicablePatterns();
+		
+		for (String str : ap) {
+			System.out.println(str + ": " + pf.mSupportedPatterns.get(str));
+		}
+	}*/
 
 }

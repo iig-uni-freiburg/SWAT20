@@ -13,4 +13,10 @@ public class SegregatedFrom extends ResourcePattern {
 		return NAME;
 	}
 
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

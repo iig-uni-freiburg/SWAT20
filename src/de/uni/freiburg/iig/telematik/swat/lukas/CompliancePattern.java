@@ -3,7 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 import java.util.ArrayList;
 
 /**
- * This abstract class is a superclass of all implementented compliance patterns.
+ * This abstract class is a superclass of all implemented compliance patterns.
  * 
  * */
 public abstract class CompliancePattern {
@@ -13,16 +13,13 @@ public abstract class CompliancePattern {
 	private String mPattern;
 	
 	private String mPrismProperty;
-
-	private String mTextualDescription;
 	
-	public CompliancePattern(String text) {
+	public CompliancePattern() {
 		mOperands = new ArrayList<Operand>();
-		mTextualDescription = text;
 	}
 
-	public CompliancePattern(String formula, boolean antipattern, String text) {
-		this(text);
+	public CompliancePattern(String formula, boolean antipattern) {
+		this();
 		mPattern = formula;
 		if (antipattern) {
 			buildAntiPatternRep(formula);
@@ -62,12 +59,10 @@ public abstract class CompliancePattern {
 		}
 	}
 	
-	public abstract String getName();
-	
 	public abstract boolean isAntiPattern();
 	
-	public String getTextualDescription() {
-		return mTextualDescription;
-	}
+	public abstract String getName();
+	
+	public abstract String getDescription();
 
 }

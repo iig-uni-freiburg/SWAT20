@@ -9,12 +9,14 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 public class WeaklyRedData extends DataflowPattern {
 	
 	public static final String NAME = "Weakly Redundant Data D";
+	
+	public static final String DESC = "A data element D is missing if there is an execution path along "
+				+ "which no writing to d happens until reading d or destroying d takes place.";
 
 	public WeaklyRedData(Token t, Collection<RegularIFNetTransition> ts,
 			Collection<IFNetPlace> outputPlaces) {
 		
-		super("A data element D is missing if there is an execution path along "
-				+ "which no writing to d happens until reading d or destroying d takes place.");
+		super();
 		String writeToken, readToken, deleteToken, formula, terminationCondition;
 
 		// determine transitions which write, read or delete the token 
@@ -31,10 +33,15 @@ public class WeaklyRedData extends DataflowPattern {
 		setPattern(formula, true);
 		mOperands.add(t);
 	}
-	
+
 	@Override
 	public String getName() {
 		return NAME;
 	}
 
+	@Override
+	public String getDescription() {
+		return DESC;
+	}
+	
 }

@@ -16,9 +16,9 @@ public class TestUtils {
 	private File mPropertyFile;
 	
 	public TestUtils(IFNet net, CompliancePattern pattern) {
-		IFNetToPrismModelConverter converter = new IFNetToPrismModelConverter(net);
+		IFNetConverter converter = new IFNetConverter(net);
 		mIFNetFile = IOUtils.writeToFile(mFilesPath, "model.pm",
-				converter.ConvertIFNetToPrism().toString());
+				converter.convert().toString());
 		mPropertyFile = IOUtils.writeToFile(mFilesPath, "property.pctl",
 				pattern.getPrismRep());
 		

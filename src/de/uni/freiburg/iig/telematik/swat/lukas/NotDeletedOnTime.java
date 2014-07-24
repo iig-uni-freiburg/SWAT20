@@ -15,9 +15,12 @@ public class NotDeletedOnTime extends DataflowPattern {
 	
 	public static final String NAME = "D Not Deleted On Time";
 	
+	public static final String DESC = "A data element D is read and not destroyed "
+			+ "and afterwards it is never read again.";
+	
 	public NotDeletedOnTime(Token token, Collection<RegularIFNetTransition> collection) {
 		
-		super("A data element D is read and not destroyed and afterwards it is never read again.");
+		super();
 		String formula = "";
 		String readToken = getTransitionsAccessingToken(collection, token, AccessMode.READ);
 		// all transitions in ts which read the token, refer to it in the guard, but don't destroy it
@@ -55,9 +58,15 @@ public class NotDeletedOnTime extends DataflowPattern {
 			setPattern(formula, true);
 		}
 	}
-	
+
 	@Override
 	public String getName() {
 		return NAME;
 	}
+
+	@Override
+	public String getDescription() {
+		return DESC;
+	}
+	
 }

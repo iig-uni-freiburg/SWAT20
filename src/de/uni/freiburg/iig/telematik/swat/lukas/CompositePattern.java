@@ -1,22 +1,29 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 
 public abstract class CompositePattern extends CompliancePattern {
 	
 	public static final String NAME = "Composite Patterns";
 	
-	public CompositePattern(String formula, String text) {
-		super(formula, false, text);
+	private static HashMap<String, String> mPatternDescription;
+	
+	public CompositePattern(String formula) {
+		super(formula, false);
 	}
 	
-
-	public static ArrayList<String> getPatternNames() {
+    public static HashMap<String, String> getPatternDescription() {
 		
-		return new ArrayList<String>(Arrays.asList(CoExists.NAME,
-				CoAbsent.NAME, Exclusive.NAME, Corequisite.NAME, MutexChoice.NAME));
+		if (mPatternDescription == null) {
+			mPatternDescription = new HashMap<String, String>();
+			mPatternDescription.put(CoExists.NAME, CoExists.DESC);
+			mPatternDescription.put(CoAbsent.NAME, CoAbsent.DESC);
+			mPatternDescription.put(Exclusive.NAME, Exclusive.DESC);
+			mPatternDescription.put(Corequisite.NAME, Corequisite.DESC);
+			mPatternDescription.put(MutexChoice.NAME, MutexChoice.DESC); 
+		}
 		
+		return mPatternDescription;
 	}
 	
 	@Override

@@ -8,9 +8,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 public class MissingData extends DataflowPattern {
 	
 	public static final String NAME = "Missing Data D";
+	
+	public static final String DESC = "A data element D needs to be red or destroyed, but has not been created.";
 
 	public MissingData(Token t, Collection<RegularIFNetTransition> collection) {
-		super("A data element D needs to be red or destroyed, but has not been created.");
+		super();
 		String writeToken, readToken, deleteToken, formula;
 		writeToken = getTransitionsAccessingToken(collection, t, AccessMode.WRITE);
 		readToken = getTransitionsAccessingToken(collection, t, AccessMode.READ);
@@ -23,10 +25,15 @@ public class MissingData extends DataflowPattern {
 		setPattern(formula, true);
 		mOperands.add(t);
 	}
-	
+
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	@Override
+	public String getDescription() {
+		return DESC;
 	}
 
 }

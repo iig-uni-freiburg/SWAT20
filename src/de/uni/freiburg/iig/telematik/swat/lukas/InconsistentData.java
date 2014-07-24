@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import de.invation.code.toval.constraint.AbstractConstraint;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition;
@@ -14,9 +15,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 public class InconsistentData extends DataflowPattern {
 	
 	public static final String NAME = "Inconsistent Data";
+	public static final String DESC = "blablalba";
 	
 	public InconsistentData(Token token, Collection<RegularIFNetTransition> collection) {
-		super("");
+		super();
 		String formula = "";
 		
 		// all transitions in ts which change (write or destroy) the token
@@ -120,6 +122,12 @@ public class InconsistentData extends DataflowPattern {
 		String str = getParallelExecExpr(a, b);
 		System.out.println(str);
 		
+	}
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	// (!A U (B & F(A))) & (!B U (A & F(B)))
