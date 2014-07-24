@@ -206,6 +206,7 @@ public class SwatProperties extends AbstractProperties{
 	public void setPrismPath(String directory) throws ParameterException, IOException, PropertyException {
 		PrismSearcher.validatePrismPath(directory);
 		setProperty(SwatProperty.PRISM_PATH, directory);
+		store();
 	}
 	
 	public String getPrismPath() throws PropertyException, ParameterException {
