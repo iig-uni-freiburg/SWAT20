@@ -148,6 +148,7 @@ public class PatternSettingPanel {
 	}
 	public void setPatternSetting(PatternSetting ps) {
 		patternSetting=ps;
+		ps.updateParameterAppliedString();
 		assert(ps.getParameters().size() == parameterPanelList.size());
 		List<Parameter> paraList=ps.getParameters();
 		for(int i=0; i <paraList.size(); i++) {
@@ -163,7 +164,9 @@ public class PatternSettingPanel {
 					value=valueLookup;
 				}
 			}
+			// set value
 			parameterPanelList.get(i).setValue(value);
+			
 		}
 	}
 	

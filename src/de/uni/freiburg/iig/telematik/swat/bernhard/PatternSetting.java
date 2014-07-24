@@ -54,23 +54,27 @@ public class PatternSetting {
 	 */
 	@Override
 	public String toString() {
-		//return parameterAppliedString;
-		String s= name+" ";
+		return parameterAppliedString;
+		/*String s= name+" ";
 		for(Parameter p:parameters) {
 			s+=p.getValueS();
 		}
-		return s;
+		return s;*/
 	}
 	/*
-	 * replace several things at once
+	 * replace the Parameter Name with its value eg
+	 * Q precedes P
+	 * Q=OpenDocument
+	 * P=PrintDocument
+	 * Result: OpenDocument precedes PrintDocument
 	 */
 	public void updateParameterAppliedString() {
 		parameterAppliedString=new String(name);
 		for(Parameter p: parameters) {
 			// take this random name to help for replace
 			String random="__#12345#__";
-			parameterAppliedString.replaceFirst(p.getName(), random);
-			parameterAppliedString=parameterAppliedString.replaceFirst(random, Helpers.getFirst(p.getValue()).getOperandName());
+			parameterAppliedString=parameterAppliedString.replaceFirst(p.getName(), random);
+			parameterAppliedString=parameterAppliedString.replaceFirst(random, p.getValueS());
 		}
 	}
 }

@@ -56,7 +56,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 public class AnalyzePanel implements LoadSave {
 
 	private JPanel panel;
-	private JLabel analyzeDescription;
+	private JLabel analysisTopLabelWithDate;
 	private JButton editButton, runButton, saveButton;
 	private String netName;
 	private PatternWindow patternWindow;
@@ -84,7 +84,7 @@ public class AnalyzePanel implements LoadSave {
 		List<String> result = new ArrayList<String>();
 		transitionLabelDic.clear();
 		for(AbstractTransition transition : pneditor.getNetContainer().getPetriNet().getTransitions()){
-			transitionLabelDic.put(transition.getLabel(), transition.getName());
+			transitionLabelDic.put(transition.getLabel()+" ("+transition.getName()+")", transition.getName());
 		}
 	}
 	/**
@@ -118,8 +118,8 @@ public class AnalyzePanel implements LoadSave {
 		transitionLabelDic=new HashMap<String, String>();
 		dataTypeList=new ArrayList<String>();
 		
-		panel=new JPanel(new GridLayout(PatternAnalyzeLogic.MAX_PATTERNS, 1, 10, 10));
-		analyzeDescription=new JLabel("Analysis from "+getDateShort());
+		panel=new JPanel(new GridLayout(PatternAnalyzeLogic.MAX_PATTERNS+3, 1, 10, 10));
+		analysisTopLabelWithDate=new JLabel("Analysis from "+getDateShort());
 		editButton=new JButton("Edit");
 		runButton=new JButton("Run");
 		saveButton=new JButton("Save");
@@ -157,9 +157,11 @@ public class AnalyzePanel implements LoadSave {
 		return transitionLabelDic;
 	}
 	private void addButtons() {
-		panel.add(Helpers.jPanelLeft(editButton));
-		panel.add(Helpers.jPanelLeft(runButton));
-		panel.add(Helpers.jPanelLeft(saveButton));
+		JPanel buttonPanel=new JPanel(new FlowLayout(FlowLayout.CENTER));
+		buttonPanel.add(editButton);
+		buttonPanel.add(runButton);
+		buttonPanel.add(saveButton);
+		panel.add(buttonPanel);
 	}
 	
 	private String getDateShort() {
@@ -175,10 +177,12 @@ public class AnalyzePanel implements LoadSave {
 		PrismExecutor prismExecuter = new PrismExecutor(pneditor.getNetContainer().getPetriNet());
 		// build list of patterns
 		List<PatternSetting> patternSettings=patternWindow.getPatternSettings();
+		MessageDialog.getInstance().addMessage("Giving "+patternSettings.size()+" Patterns to PRISM");
 		ArrayList<CompliancePattern> compliancePatterns=new ArrayList<CompliancePattern>();
 		for(PatternSetting setting : patternSettings) {
 			compliancePatterns.add(patternFactory.createPattern(setting.getName(), (ArrayList<Parameter>) setting.getParameters()));
 		}
+		System.out.println("Compliance Pattern: "+compliancePatterns.size());
 		PrismResult prismResult=prismExecuter.anaylaze(compliancePatterns);
 		for(PatternSetting setting : patternSettings) {
 			PatternResult patternResult =prismResult.getPatternResult(setting.getName());
@@ -188,7 +192,9 @@ public class AnalyzePanel implements LoadSave {
 	}
 	public void update() {
 		panel.removeAll();
-		panel.add(Helpers.jPanelLeft(analyzeDescription));
+		panel.add(Helpers.jPanelLeft(analysisTopLabelWithDate));
+		addButtons();
+		panel.add(Helpers.jPanelLeft(new JLabel("Patterns to Check: ")));
 		for(PatternSetting p: patternWindow.getPatternSettings()) {
 			System.out.println(p);
 			JPanel newPanel=new JPanel();
@@ -213,13 +219,13 @@ public class AnalyzePanel implements LoadSave {
 			
 			panel.add(newPanel);
 		}
-		addButtons();
+
 		panel.repaint();
 		panel.updateUI();
 	}
 	
 	public void setAnalyseName(String text) {
-		analyzeDescription.setText(text);
+		analysisTopLabelWithDate.setText(text);
 	}
 
 	public JPanel getPanel() {
