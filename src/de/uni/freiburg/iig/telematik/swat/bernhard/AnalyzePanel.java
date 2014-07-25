@@ -54,70 +54,30 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  *
  */
 public class AnalyzePanel implements LoadSave {
-
 	private JPanel panel;
 	private JLabel analysisTopLabelWithDate;
 	private JButton editButton, runButton, saveButton;
 	private String netName;
 	private PatternWindow patternWindow;
 	private PNEditor pneditor;
-	// dictionary that maps the labels of the transitions
-	// to the real name in the net
-	private HashMap<String, String> transitionLabelDic;
-	private List<String> dataTypeList;
-	private List<String> placesList;
+	private PetriNetInformation netInfo;
 	private PatternFactory patternFactory;
 	
 	public void netChanged() {
-		updateTransitionLabelDic();
-		if(pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
-			updateDataTypeList();
-		}
+		netInfo.netChanged();
 		// update the parameter boxes
 		patternWindow.netChanged();
 	}
-	/**
-	 * Helpfunction to get the List of all Labels of the current PN of editor
-	 * @param editor
-	 * @return
-	 */
-	public void updateTransitionLabelDic() {
-		List<String> result = new ArrayList<String>();
-		transitionLabelDic.clear();
-		for(AbstractTransition transition : pneditor.getNetContainer().getPetriNet().getTransitions()){
-			transitionLabelDic.put(transition.getLabel()+" ("+transition.getName()+")", transition.getName());
-		}
+	
+	public PetriNetInformationReader getNetInformation() {
+		return netInfo;
 	}
-	/**
-	 * update the list of colors
-	 */
-	public void updateDataTypeList() {
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pn=pneditor.getNetContainer();
-		AbstractPetriNet apn=pn.getPetriNet();
-		dataTypeList.clear();
-		Set<String> dataTypes=new HashSet<String>();
-		if(apn.getNetType()==NetType.IFNet) {
-			IFNet net=(IFNet) apn;
-			Iterator it=net.getTransitions().iterator();
-			//Set<String> colors=Arrays.;
-			//colors.addAll(arg0)
-			while(it.hasNext()) {
-				AbstractCPNTransition t=(AbstractCPNTransition) it.next();
-				dataTypes.addAll(t.getConsumedColors());
-				dataTypes.addAll(t.getProcessedColors());
-				dataTypes.addAll(t.getProducedColors());
-			}
-			dataTypeList.addAll(dataTypes);
-		}
 		
-		//System.out.println(dataTypeList);
-	}
 	public AnalyzePanel(PNEditor pneditor, String net) {
 		this.pneditor=pneditor;
 		netName=net.split("[.]")[0];
+		netInfo=new PetriNetInformation(pneditor);
 		patternFactory=new PatternFactory(pneditor.getNetContainer().getPetriNet());
-		transitionLabelDic=new HashMap<String, String>();
-		dataTypeList=new ArrayList<String>();
 		
 		panel=new JPanel(new GridLayout(PatternAnalyzeLogic.MAX_PATTERNS+3, 1, 10, 10));
 		analysisTopLabelWithDate=new JLabel("Analysis from "+getDateShort());
@@ -125,7 +85,7 @@ public class AnalyzePanel implements LoadSave {
 		runButton=new JButton("Run");
 		saveButton=new JButton("Save");
 		
-		patternWindow=new PatternWindow(this, pneditor, patternFactory);
+		patternWindow=new PatternWindow(this, patternFactory);
 		editButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -154,9 +114,7 @@ public class AnalyzePanel implements LoadSave {
 	protected void showPatternWindow() {
 		patternWindow.setVisible(true);
 	}
-	public HashMap<String, String> getTransitionLabelDic() {
-		return transitionLabelDic;
-	}
+
 	private void addButtons() {
 		JPanel buttonPanel=new JPanel(new FlowLayout(FlowLayout.CENTER));
 		buttonPanel.add(editButton);
@@ -243,10 +201,6 @@ public class AnalyzePanel implements LoadSave {
 
 	public void setNetName(String netName) {
 		this.netName=netName.split("[.]")[0];
-	}
-	public List<String> getDataList() {
-		// TODO Auto-generated method stub
-		return dataTypeList;
 	}
 	
 	public boolean load(File f) {

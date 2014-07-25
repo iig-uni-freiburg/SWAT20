@@ -68,12 +68,9 @@ public class PatternWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = -7132881901662491907L;
 	public final static int maxPatterns = 10;
-	private HashMap<String, String> transitionDic;
-	private List<String> dataList;
 	private JButton plusButton, okButton;
 	private JPanel patternPanel;
 	private List<PatternSettingPanel> patternPanelList;
-	private PNEditor pneditor;
 	private AnalyzePanel analyzePanel;
 	private PatternFactory patternFactory;
 
@@ -161,11 +158,9 @@ public class PatternWindow extends JFrame {
 		analyzePanel.update();
 	}
 
-	public PatternWindow(AnalyzePanel p, PNEditor pneditor, PatternFactory pf)
+	public PatternWindow(AnalyzePanel p, PatternFactory pf)
 			throws HeadlessException {
 		super();
-		this.transitionDic = p.getTransitionLabelDic();
-		this.pneditor = pneditor;
 		analyzePanel = p;
 		patternFactory = pf;
 		initGui();
@@ -194,10 +189,12 @@ public class PatternWindow extends JFrame {
 	 * then, same as save and load ;)
 	 */
 	public void netChanged() {
-		transitionDic=analyzePanel.getTransitionLabelDic();
-		dataList=analyzePanel.getDataList();
 		List<PatternSetting> psList=getPatternSettings();
 		setPatternSettings(psList);
+	}
+	
+	public PetriNetInformationReader getNetInformations() {
+		return analyzePanel.getNetInformation();
 	}
 
 	/**
@@ -228,18 +225,6 @@ public class PatternWindow extends JFrame {
 		patternPanelList.add(pSPanel);
 		patternPanel.updateUI();
 		;
-	}
-
-	public HashMap<String, String> getTransitionDic() {
-		return transitionDic;
-	}
-
-	public List<String> getDataList() {
-		return analyzePanel.getDataList();
-	}
-
-	public PNEditor getPneditor() {
-		return pneditor;
 	}
 
 	public List<PatternSetting> getPatternSettings() {

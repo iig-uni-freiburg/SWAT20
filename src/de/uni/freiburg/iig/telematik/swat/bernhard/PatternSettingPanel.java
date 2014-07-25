@@ -51,7 +51,6 @@ public class PatternSettingPanel {
 	private JButton removeButton;
 	private PatternSetting patternSetting;
 	private List<PatternParameterPanel> parameterPanelList;
-	private HashMap<String, String> transitionDic;
 	private PatternWindow patternWindow;
 
 	public PatternSettingPanel(PatternSetting ps, PatternWindow patternWindow, PatternFactory patternFactory) {
@@ -67,7 +66,6 @@ public class PatternSettingPanel {
 		//	.getPattern(patternName);
 	List<Parameter> parameters = patternFactory.getParametersOfPattern(patternName);
 	this.patternWindow=patternWindow;
-	transitionDic=patternWindow.getTransitionDic();
 	patternSetting=new PatternSetting(patternName,parameters);
 	panel = new JPanel(new GridLayout(patternSetting.getParameters().size() + 1, 2));
 	// System.out.println(paraList);
@@ -113,9 +111,10 @@ public class PatternSettingPanel {
 		//if (para.type.equals("data")) {
 		Set<OperandType> operandSet=pp.getTypes();
 		if(operandSet.contains(OperandType.TOKEN)) {
-			List<String> dataList=patternWindow.getDataList();
+			List<String> dataList=patternWindow.getNetInformations().getDataTypesList();
 			patternPara = new PatternDataParameterPanel(pp.getName(), dataList.toArray(new String[dataList.size()]));
 		} else if (operandSet.contains(OperandType.TRANSITION)) {
+			HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
 			patternPara = new PatternActivityParameterPanel(pp.getName(), transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
 		}
 		/*if (operandSet.contains(OperandType.STATEPREDICATE)) {
@@ -158,14 +157,8 @@ public class PatternSettingPanel {
 			String value=paraList.get(i).getValueS();
 			if(paraList.get(i).getTypes().contains(OperandType.TRANSITION)) {
 				//System.out.println("dic lookup");
-				String valueLookup=reverseLookUp(value);
-				if(valueLookup == null) {
-					System.out.println("value: "+value);
-					System.out.println(transitionDic);
-					assert(true == false);
-				} else {
-					value=valueLookup;
-				}
+				String valueLookup=transitionDicReverseLookUp(value);
+				value=valueLookup;
 			}
 			// set value
 			parameterPanelList.get(i).setValue(value);
@@ -173,7 +166,8 @@ public class PatternSettingPanel {
 		}
 	}
 	
-	private String reverseLookUp(String transitionName) {
+	private String transitionDicReverseLookUp(String transitionName) {
+		HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
 		for(String l : transitionDic.keySet()) {
 			if (transitionDic.get(l).equals(transitionName)) {
 				return l;
@@ -198,15 +192,16 @@ public class PatternSettingPanel {
 					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
 					if(paraPanel.getType()==OperandType.TRANSITION) {
 						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TRANSITION));
-					} /*else if(paraPanel.getType()==OperandType.TOKEN) {
+					} else if(paraPanel.getType()==OperandType.TOKEN) {
 						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TOKEN));
-					} */
+					}
 				}
 			}
 			
 		}
 		// update the pattern representation
 		patternSetting.updateParameterAppliedString();
+		HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
 		for(Parameter patternPara: patternSetting.getParameters()) {
 			if(patternPara.getTypes().contains(OperandType.TRANSITION)) {
 					// if its an activity, take the name and not the label
