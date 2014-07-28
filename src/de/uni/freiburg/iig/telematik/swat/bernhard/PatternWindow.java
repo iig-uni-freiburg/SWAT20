@@ -230,7 +230,7 @@ public class PatternWindow extends JFrame {
 	public List<PatternSetting> getPatternSettings() {
 		List<PatternSetting> patternList = new ArrayList<PatternSetting>();
 		for (PatternSettingPanel panel : patternPanelList) {
-			panel.updatePatternValues();
+			panel.updatePatternSettingValues();
 			patternList.add(panel.getPatternSetting());
 		}
 		return patternList;

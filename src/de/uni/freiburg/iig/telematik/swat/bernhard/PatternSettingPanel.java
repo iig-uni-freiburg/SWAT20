@@ -182,7 +182,7 @@ public class PatternSettingPanel {
 
 	
 	
-	public void updatePatternValues() {
+	public void updatePatternSettingValues() {
 		// first store the values taken from the jcomponents
 		
 		for (PatternParameterPanel paraPanel : parameterPanelList) {

@@ -135,20 +135,27 @@ public class AnalyzePanel implements LoadSave {
 	private void analyze() {
 		PrismExecutor prismExecuter = new PrismExecutor(pneditor.getNetContainer().getPetriNet());
 		// build list of patterns
+		HashMap<PatternSetting, CompliancePattern> resultMap=new HashMap<PatternSetting, CompliancePattern>();
+		
 		List<PatternSetting> patternSettings=patternWindow.getPatternSettings();
 		MessageDialog.getInstance().addMessage("Giving "+patternSettings.size()+" Patterns to PRISM");
 		ArrayList<CompliancePattern> compliancePatterns=new ArrayList<CompliancePattern>();
 		for(PatternSetting setting : patternSettings) {
-			compliancePatterns.add(patternFactory.createPattern(setting.getName(), (ArrayList<Parameter>) setting.getParameters()));
+			CompliancePattern compliancePattern=patternFactory.createPattern(setting.getName(), (ArrayList<Parameter>) setting.getParameters());
+			compliancePatterns.add(compliancePattern);
+			resultMap.put(setting, compliancePattern);
+			//resultMapReverse.put(compliancePattern, setting);
 		}
 		System.out.println("Compliance Pattern: "+compliancePatterns.size());
-		PrismResult prismResult=prismExecuter.anaylaze(compliancePatterns);
+		PrismResult prismResult=prismExecuter.analyze(compliancePatterns);
 		for(PatternSetting setting : patternSettings) {
-			ArrayList<PatternResult> patternResult =prismResult.getPatternResult(setting.getName());
-			setting.setResult(patternResult.get(0));
+			PatternResult patternResult =prismResult.getPatternResult(resultMap.get(setting));
+			setting.setResult(patternResult);
 		}
 		update();
 	}
+	
+
 	public void update() {
 		panel.removeAll();
 		panel.add(Helpers.jPanelLeft(analysisTopLabelWithDate));
