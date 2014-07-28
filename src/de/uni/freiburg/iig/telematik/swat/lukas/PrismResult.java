@@ -6,12 +6,13 @@ import java.util.HashMap;
 
 public class PrismResult {
 
-	//HashMap<CompliancePattern, PatternResult> mResults;
-	HashMap<String, ArrayList<PatternResult>> mResults;
+	HashMap<CompliancePattern, PatternResult> mResults;
+	
+	// HashMap<String, ArrayList<PatternResult>> mResults;
 	
 	public PrismResult(ArrayList<CompliancePattern> patterns, String resultStr) {
-		mResults = new HashMap<String, ArrayList<PatternResult>>();
-		// mResults = new HashMap<CompliancePattern, PatternResult>();
+		// mResults = new HashMap<String, ArrayList<PatternResult>>();
+		mResults = new HashMap<CompliancePattern, PatternResult>();
 		fillResultMap(patterns, resultStr);
 	}
 
@@ -35,12 +36,7 @@ public class PrismResult {
 			boolean isFulfilled = isFulfilled(resString, isAntiPattern);
 			ArrayList<ArrayList<String>> violatingPaths = getViolatingExamplePaths();
 			PatternResult pr = new PatternResult(probability, isFulfilled, violatingPaths);
-			ArrayList<PatternResult> resultsForPattern = mResults.get(cp.getName());
-			if (resultsForPattern == null) {
-				resultsForPattern = new ArrayList<PatternResult>(); 
-			}
-			resultsForPattern.add(pr);
-			mResults.put(cp.getName(), resultsForPattern);
+			mResults.put(cp, pr);
 			
 		}
 
@@ -81,16 +77,16 @@ public class PrismResult {
 	
 	/*public HashMap<CompliancePattern, PatternResult> getResults() {
 		return mResults;
-	}*/
+	}
 	
 	public HashMap<String, ArrayList<PatternResult>> getResults() {
 		return mResults;
-	}
+	}*/
 	
-	public ArrayList<PatternResult> getPatternResult(String patternName) {
+	public PatternResult getPatternResult(CompliancePattern pattern) {
 		
+		return mResults.get(pattern);
 		
-		return mResults.get(patternName);
 	}
 	
 	/*public static void main(String [ ] args) {
