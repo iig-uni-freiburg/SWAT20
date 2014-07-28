@@ -58,7 +58,7 @@ public class PrismExecutor {
 	}
 	
 	
-	public PrismResult anaylaze(ArrayList<CompliancePattern> patterns) {
+	public PrismResult analyze(ArrayList<CompliancePattern> patterns) {
 		
 		String properties = "";
 		for (CompliancePattern pattern : patterns) {
