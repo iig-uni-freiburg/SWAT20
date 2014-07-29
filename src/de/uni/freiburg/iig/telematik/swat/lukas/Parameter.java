@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import de.uni.freiburg.iig.telematik.swat.bernhard.Helpers;
@@ -22,10 +23,6 @@ public class Parameter {
 	public Set<OperandType> getTypes() {
 		return mTypes;
 	}
-	
-	public String getValueS() {
-		return Helpers.getFirst(mValues).getOperandName();
-	}
 
 	public int getMultiplicity() {
 		return mMultiplicity;
@@ -35,17 +32,12 @@ public class Parameter {
 		return mValues;
 	}
 
-	public void setValue(ParamValue value) {
-		mValues.clear();
-		mValues.add(value);
-	}
-	
 	public void setValue(ArrayList<ParamValue> values) {
 		mValues = values;
 	}
 	
 	public String getName() {
 		return mName;
-	} 
+	}
 
 }

@@ -2,6 +2,10 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 
 public class ParamValue {
 	
+	public void setOperandName(String mOperandName) {
+		this.mOperandName = mOperandName;
+	}
+
 	private String mOperandName;
 	private OperandType mOperandType;
 
