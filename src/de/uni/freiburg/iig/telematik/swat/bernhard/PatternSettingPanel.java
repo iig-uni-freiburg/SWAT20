@@ -103,24 +103,26 @@ public class PatternSettingPanel {
 
 	// add ParameterPanels for each Parameter
 	//for (PatternParameter para : pattern.getParameters()) {
-	
+	List<String> dataList=patternWindow.getNetInformations().getDataTypesList();
+	List<String> placesList=patternWindow.getNetInformations().getPlacesList();
+	HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
+	String transitionsArray[]=transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]);
+	String dataTypeArray[]=dataList.toArray(new String[dataList.size()]);
+	String placesArray[]=placesList.toArray(new String[placesList.size()]);
 	for (Parameter pp : parameters) {
 		PatternParameterPanel patternPara = null;
 		panel.add(new JLabel("Choose "+pp.getName()));
-		//System.out.println(para.type);
-		//if (para.type.equals("data")) {
 		Set<OperandType> operandSet=pp.getTypes();
+		// determine from which type parameter is
 		if(operandSet.contains(OperandType.TOKEN)) {
-			List<String> dataList=patternWindow.getNetInformations().getDataTypesList();
-			patternPara = new PatternDataParameterPanel(pp.getName(), dataList.toArray(new String[dataList.size()]));
+			patternPara = new PatternDataParameterPanel(pp.getName(), dataTypeArray);
+		} else if (operandSet.contains(OperandType.TRANSITION) && operandSet.contains(OperandType.STATEPREDICATE)) {
+			patternPara=new ActivityOrStatePredicateParameterPanel(pp.getName(), transitionsArray, placesArray);
 		} else if (operandSet.contains(OperandType.TRANSITION)) {
-			HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
-			patternPara = new PatternActivityParameterPanel(pp.getName(), transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
+			patternPara=new PatternActivityParameterPanel(pp.getName(), transitionsArray);
 		}
-		/*if (operandSet.contains(OperandType.STATEPREDICATE)) {
-			patternPara = new PatternStatePredicateParameter(pp.getName(), transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]));
-		}*/
-		panel.add(patternPara.getjComponent());
+
+		panel.add(patternPara.getContent());
 		parameterPanelList.add(patternPara);
 	}
 	}
@@ -154,14 +156,19 @@ public class PatternSettingPanel {
 		assert(ps.getParameters().size() == parameterPanelList.size());
 		List<Parameter> paraList=ps.getParameters();
 		for(int i=0; i <paraList.size(); i++) {
-			String value=paraList.get(i).getValueS();
-			if(paraList.get(i).getTypes().contains(OperandType.TRANSITION)) {
-				//System.out.println("dic lookup");
-				String valueLookup=transitionDicReverseLookUp(value);
-				value=valueLookup;
+			ArrayList<ParamValue> list=new ArrayList<ParamValue>();
+			for(ParamValue value:paraList.get(i).getValue() ) {
+				if(value.getOperandType()==OperandType.TRANSITION) {
+					String valueLookup=transitionDicReverseLookUp(value.getOperandName());
+					value.setOperandName(valueLookup);
+				}
+				list.add(value);
 			}
+
 			// set value
-			parameterPanelList.get(i).setValue(value);
+			
+			
+			parameterPanelList.get(i).setValue(list);
 			
 		}
 	}
@@ -190,11 +197,8 @@ public class PatternSettingPanel {
 				if(paraPanel.getName().equals(patternPara.getName())) {
 					// if its an activity, take the name and not the label
 					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
-					if(paraPanel.getType()==OperandType.TRANSITION) {
-						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TRANSITION));
-					} else if(paraPanel.getType()==OperandType.TOKEN) {
-						patternPara.setValue(new ParamValue(paraPanel.getValue(), OperandType.TOKEN));
-					}
+					
+					patternPara.setValue((ArrayList<ParamValue>) (paraPanel.getValue()));
 				}
 			}
 			
@@ -203,9 +207,11 @@ public class PatternSettingPanel {
 		patternSetting.updateParameterAppliedString();
 		HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
 		for(Parameter patternPara: patternSetting.getParameters()) {
-			if(patternPara.getTypes().contains(OperandType.TRANSITION)) {
-					// if its an activity, take the name and not the label
-				patternPara.setValue(new ParamValue(transitionDic.get(Helpers.getFirst(patternPara.getValue()).getOperandName()), Helpers.getFirst(patternPara.getValue()).getOperandType()));
+			for(ParamValue val: patternPara.getValue()) {
+				if(val.getOperandType()==OperandType.TRANSITION) {
+					//patternPara.setValue(new ParamValue(transitionDic.get(Helpers.getFirst(patternPara.getValue()).getOperandName()), Helpers.getFirst(patternPara.getValue()).getOperandType()));
+					val.setOperandName(transitionDic.get(val.getOperandName()));
+				}
 			}
 		}
 			

@@ -1,8 +1,11 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
+import java.util.List;
+
 import javax.swing.JComponent;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 /**
  * an abstract class representing a Parameter used by the choosepatternwindow
  * @author bernhard
@@ -11,12 +14,10 @@ import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 public abstract class PatternParameterPanel {
 
 	protected String name;
-	protected OperandType type;
-	protected JComponent jComponent;
-	public PatternParameterPanel(String name, OperandType type) {
+	protected JComponent content;
+	public PatternParameterPanel(String name) {
 		super();
 		this.name = name;
-		this.type = type;
 	}
 	public String getName() {
 		return name;
@@ -25,18 +26,12 @@ public abstract class PatternParameterPanel {
 		this.name = name;
 	}
 	
-	public OperandType getType() {
-		return type;
+	public JComponent getContent() {
+		return content;
 	}
-	public void setType(OperandType type) {
-		this.type = type;
+	public void setContent(JComponent jComponent) {
+		this.content = jComponent;
 	}
-	public JComponent getjComponent() {
-		return jComponent;
-	}
-	public void setjComponent(JComponent jComponent) {
-		this.jComponent = jComponent;
-	}
-	public abstract String getValue();
-	public abstract void setValue(String val);
+	public abstract List<ParamValue> getValue();
+	public abstract void setValue(List<ParamValue> value);
 }

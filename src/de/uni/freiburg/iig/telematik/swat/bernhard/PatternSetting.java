@@ -74,7 +74,7 @@ public class PatternSetting {
 			// take this random name to help for replace
 			String random="__#12345#__";
 			parameterAppliedString=parameterAppliedString.replaceFirst(p.getName(), random);
-			parameterAppliedString=parameterAppliedString.replaceFirst(random, p.getValueS());
+			parameterAppliedString=parameterAppliedString.replaceFirst(random, p.getValue().get(0).getOperandName());
 		}
 	}
 }
