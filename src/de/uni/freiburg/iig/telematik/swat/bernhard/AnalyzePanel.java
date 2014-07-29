@@ -63,6 +63,7 @@ public class AnalyzePanel implements LoadSave {
 	private PNEditor pneditor;
 	private PetriNetInformation netInfo;
 	private PatternFactory patternFactory;
+	private List<PatternSetting> patternSettings;
 
 	public void netChanged() {
 		netInfo.netChanged();
@@ -80,7 +81,7 @@ public class AnalyzePanel implements LoadSave {
 		netInfo = new PetriNetInformation(pneditor);
 		patternFactory = new PatternFactory(pneditor.getNetContainer()
 				.getPetriNet());
-
+		patternSettings=new ArrayList<PatternSetting>();
 		panel = new JPanel(new GridLayout(
 				PatternAnalyzeLogic.MAX_PATTERNS + 3, 1, 10, 10));
 		analysisTopLabelWithDate = new JLabel("Analysis from "
@@ -116,6 +117,7 @@ public class AnalyzePanel implements LoadSave {
 	}
 
 	protected void showPatternWindow() {
+		patternWindow.setPatternSettings(patternSettings);
 		patternWindow.setVisible(true);
 	}
 
@@ -167,12 +169,14 @@ public class AnalyzePanel implements LoadSave {
 		update();
 	}
 
+
 	public void update() {
 		panel.removeAll();
 		panel.add(Helpers.jPanelLeft(analysisTopLabelWithDate));
 		addButtons();
 		panel.add(Helpers.jPanelLeft(new JLabel("Patterns to Check: ")));
-		for (PatternSetting p : patternWindow.getPatternSettings()) {
+		patternSettings=patternWindow.getPatternSettings();
+		for (PatternSetting p : patternSettings) {
 			System.out.println(p);
 			JPanel newPanel = new JPanel();
 			PatternResult result = p.getResult();
@@ -224,9 +228,9 @@ public class AnalyzePanel implements LoadSave {
 	public boolean load(File f) {
 		MessageDialog.getInstance().addMessage(
 				"Loading Analysis Settings from " + f);
-		List<PatternSetting> newList = AnalysisStore.loadFromFile(f);
+		patternSettings = AnalysisStore.loadFromFile(f);
 		// System.out.println(newList);
-		patternWindow.setPatternSettings(newList);
+		patternWindow.setPatternSettings(patternSettings);
 		update();
 		return true;
 	}

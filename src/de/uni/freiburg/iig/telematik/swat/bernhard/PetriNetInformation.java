@@ -77,7 +77,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		for (AbstractTransition transition : pneditor.getNetContainer()
 				.getPetriNet().getTransitions()) {
 			transitionLabelDic
-					.put(transition.getLabel(), transition.getName());
+					.put(transition.getLabel()+" ("+transition.getName()+")", transition.getName());
 		}
 	}
 

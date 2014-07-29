@@ -87,7 +87,7 @@ public class PatternWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				updatePanel();
+				clickedOK();
 			}
 		});
 
@@ -152,7 +152,7 @@ public class PatternWindow extends JFrame {
 	/**
 	 * make the window invisible and update the analyze panel
 	 */
-	protected void updatePanel() {
+	protected void clickedOK() {
 		// TODO Auto-generated method stub
 		setVisible(false);
 		analyzePanel.update();

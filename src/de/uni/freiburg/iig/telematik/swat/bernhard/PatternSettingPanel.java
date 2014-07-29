@@ -39,6 +39,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 /**
  * This class represents a Panel with all its Components Labels, Remove Button
  * A PatternSettingPanel can be added to the patternPanel of the PatternWindow
@@ -152,7 +153,7 @@ public class PatternSettingPanel {
 	}
 	public void setPatternSetting(PatternSetting ps) {
 		patternSetting=ps;
-		ps.updateParameterAppliedString();
+		//ps.updateParameterAppliedString();
 		assert(ps.getParameters().size() == parameterPanelList.size());
 		List<Parameter> paraList=ps.getParameters();
 		for(int i=0; i <paraList.size(); i++) {
@@ -160,14 +161,14 @@ public class PatternSettingPanel {
 			for(ParamValue value:paraList.get(i).getValue() ) {
 				if(value.getOperandType()==OperandType.TRANSITION) {
 					String valueLookup=transitionDicReverseLookUp(value.getOperandName());
-					value.setOperandName(valueLookup);
+					// set value from reverse dictionary search
+					list.add(new ParamValue(valueLookup, OperandType.TRANSITION));
+				} else {
+					list.add(value);
 				}
-				list.add(value);
+				
 			}
-
 			// set value
-			
-			
 			parameterPanelList.get(i).setValue(list);
 			
 		}
@@ -180,7 +181,16 @@ public class PatternSettingPanel {
 				return l;
 			}
 		}
-		return null;
+		try {
+			System.out.println(transitionDic);
+			throw new Exception("not found");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		MessageDialog.getInstance().addMessage("WARNING: Did not find: "+transitionName+" in the TransitionDictionary");
+		return transitionName;
 	}
 
 	public JPanel getJPanel() {
@@ -206,20 +216,23 @@ public class PatternSettingPanel {
 		// update the pattern representation
 		patternSetting.updateParameterAppliedString();
 		HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
-		for(Parameter patternPara: patternSetting.getParameters()) {
-			for(ParamValue val: patternPara.getValue()) {
-				if(val.getOperandType()==OperandType.TRANSITION) {
-					//patternPara.setValue(new ParamValue(transitionDic.get(Helpers.getFirst(patternPara.getValue()).getOperandName()), Helpers.getFirst(patternPara.getValue()).getOperandType()));
-					val.setOperandName(transitionDic.get(val.getOperandName()));
+		
+		for (PatternParameterPanel paraPanel : parameterPanelList) {
+			for(Parameter patternPara: patternSetting.getParameters()) {
+				if(paraPanel.getName().equals(patternPara.getName())) {
+					// if its an activity, take the name and not the label
+					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
+					for(ParamValue val: patternPara.getValue()) {
+						if(val.getOperandType()==OperandType.TRANSITION) {
+							val.setOperandName(transitionDic.get(val.getOperandName()));
+						}
+					}
+					
 				}
 			}
+			
 		}
 			
-	}
-
-	public String getPatternName() {
-		// TODO Auto-generated method stub
-		return patternSetting.getName();
 	}
 	
 }

@@ -16,7 +16,6 @@ public abstract class PatternParameterPanel {
 	protected String name;
 	protected JComponent content;
 	public PatternParameterPanel(String name) {
-		super();
 		this.name = name;
 	}
 	public String getName() {
