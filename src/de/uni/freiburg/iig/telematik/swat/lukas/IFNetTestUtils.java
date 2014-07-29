@@ -292,8 +292,8 @@ public class IFNetTestUtils {
 		net.getPlace("pIn").setColorCapacity("black", 1);
 
 		net.addPlace("p1");
-		net.getPlace("p1").setColorCapacity("black", 1);
-		net.getPlace("p1").setColorCapacity("red", 1);
+		net.getPlace("p1").setColorCapacity("black", 2);
+		net.getPlace("p1").setColorCapacity("red", 2);
 		net.getPlace("p1").setColorCapacity("green", 1);
 
 		net.addPlace("p2");
@@ -354,6 +354,7 @@ public class IFNetTestUtils {
 		
 		f3.addConstraint("black", 1);
 		f3.addConstraint("green", 1);
+		f3.addConstraint("red", 1);
 		
 		f4.addConstraint("black", 1);
 		f4.addConstraint("red", 1);
@@ -367,9 +368,9 @@ public class IFNetTestUtils {
 		f7.addConstraint("black", 1);
 		f7.addConstraint("green", 1);
 		
-		f8.addConstraint("black", 1);
+		f8.addConstraint("black", 2);
 		f8.addConstraint("green", 1);
-		f8.addConstraint("red", 1);
+		f8.addConstraint("red", 2);
 		
 		f9.addConstraint("black", 1);
 		f9.addConstraint("red", 1);
@@ -401,6 +402,7 @@ public class IFNetTestUtils {
 		
 		RegularIFNetTransition t3 = (RegularIFNetTransition) net.getTransition("t3");
 		t3.addAccessMode("green", AccessMode.WRITE);
+		t3.addAccessMode("red", AccessMode.READ);
 		
 		RegularIFNetTransition t4 = (RegularIFNetTransition) net.getTransition("t4");
 		t4.addAccessMode("green", AccessMode.DELETE);
@@ -499,6 +501,15 @@ public class IFNetTestUtils {
 		f12.addConstraint("red", 1);
 		
 		f13.addConstraint("black", 1);
+		
+		RegularIFNetTransition tIn = (RegularIFNetTransition) net.getTransition("tIn");
+		tIn.addAccessMode("red", AccessMode.CREATE);
+		
+		RegularIFNetTransition t1 = (RegularIFNetTransition) net.getTransition("t1");
+		t1.addAccessMode("red", AccessMode.WRITE);
+		
+		RegularIFNetTransition tOut = (RegularIFNetTransition) net.getTransition("tOut");
+		tOut.addAccessMode("red", AccessMode.DELETE);
 		
 		AbstractRegularIFNetTransition<IFNetFlowRelation> t3 = 
 				(AbstractRegularIFNetTransition<IFNetFlowRelation>) net.getTransition("t3");

@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.DeclassificationTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 
 public abstract class PrismConverter {
@@ -81,7 +82,9 @@ public abstract class PrismConverter {
 		prismModelBuilder.append(transitions);
 		
 		// append termination transition
-		prismModelBuilder.append(createTerminationLoops());
+		if (mAbstractNet instanceof IFNet) {
+			prismModelBuilder.append(createTerminationLoops());
+		}
 							
 		prismModelBuilder.append("endmodule");
 		prismModelBuilder.append("\n");	
@@ -129,6 +132,7 @@ public abstract class PrismConverter {
 		return termLoopBuilder;
 		
 	}
+
 	
 	protected abstract StringBuilder createPlaceVars();
 	

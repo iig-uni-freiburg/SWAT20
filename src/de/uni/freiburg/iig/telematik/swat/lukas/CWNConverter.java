@@ -159,10 +159,6 @@ public class CWNConverter extends PrismConverter {
 				firingEffectBuilder.append(";");
 			}
 			
-			for (AbstractCWNPlace<?> p : mNet.getDrainPlaces()) {
-				enablednessBuilder.append(" & " + p.getName() + "_black < 1");
-			}
-
 			//Combine Part 1) and Part 2)
 			StringBuilder transitionBuilder = new StringBuilder();
 			transitionBuilder.append("[] ");

@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({AbsentTest.class, ChainLeadsToTest.class, ChainPrecedesTest.class, CoAbsentTest.class,
 	CoExistsTest.class, CorequisiteTest.class, ExistsTest.class, ExclusiveTest.class, InconsistentDataTest.class, MissingDataTest.class,
 	MutexChoiceTest.class, NeverDestroyedTest.class, NotDeletedOnTimeTest.class, PrecedesTest.class, TwiceDestroyedTest.class, 
-	UniversalTest.class, WeaklyLostDataTest.class, XLeadsToTest.class})
+	UniversalTest.class, WeaklyLostDataTest.class, XLeadsToTest.class, PLeadsToTest.class})
 
 public class PatternTestSuite {
 

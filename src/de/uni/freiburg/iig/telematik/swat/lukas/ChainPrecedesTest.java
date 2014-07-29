@@ -7,7 +7,7 @@ import org.junit.Test;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 
 public class ChainPrecedesTest {
-	/*
+	
 	@Test
 	public void test0() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
@@ -41,7 +41,7 @@ public class ChainPrecedesTest {
 				new Transition("t1"));
 		TestUtils tu = new TestUtils(ifnet, p);
 		try {
-			assertTrue(tu.isPropertySatisfied());
+			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -54,7 +54,7 @@ public class ChainPrecedesTest {
 				new Transition("tOut"));
 		TestUtils tu = new TestUtils(ifnet, p);
 		try {
-			assertTrue(tu.isPropertySatisfied());
+			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -67,7 +67,7 @@ public class ChainPrecedesTest {
 				new Transition("t4"));
 		TestUtils tu = new TestUtils(ifnet, p);
 		try {
-			assertTrue(tu.isPropertySatisfied());
+			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			fail();
@@ -128,7 +128,7 @@ public class ChainPrecedesTest {
 		} catch (Exception e) {
 			fail();
 		}
-	}*/
+	}
 	
 	@Test
 	public void test9() {

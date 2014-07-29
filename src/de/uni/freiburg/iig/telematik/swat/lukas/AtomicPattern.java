@@ -7,6 +7,10 @@ public abstract class AtomicPattern extends CompliancePattern {
 	public static final String NAME = "Atomic Pattern";
 	
 	private static HashMap<String, String> mPatternDescription;
+	
+	public AtomicPattern() {
+		
+	}
 
 	public AtomicPattern(String formula) {
 		super(formula, false);

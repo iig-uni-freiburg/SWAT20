@@ -6,20 +6,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import de.invation.code.toval.constraint.AbstractConstraint;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.invation.code.toval.types.Multiset;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 
 public class InconsistentData extends DataflowPattern {
 	
-	public static final String NAME = "Inconsistent Data";
-	public static final String DESC = "blablalba";
+	public static final String NAME = "Inconsistent Data D";
+	public static final String DESC = "A task is using a data element while another is writing or destroying it.";
 	
 	public InconsistentData(Token token, Collection<RegularIFNetTransition> collection) {
 		super();
-		String formula = "";
 		
 		// all transitions in ts which change (write or destroy) the token
 		ArrayList<RegularIFNetTransition> changeToken = 
@@ -51,86 +51,105 @@ public class InconsistentData extends DataflowPattern {
 				useToken.add(t);
 			}
 		}
+
+		String parallelExecExpr = "";
 		
-		HashMap<String, ArrayList<RegularIFNetTransition>> instOfSameTransMap = 
-				new HashMap<String, ArrayList<RegularIFNetTransition>>();
-		
-		/* check for each instance of a transition if there is another instance of this transition and store it 
-		 * in a map! */
-		
-		for (RegularIFNetTransition transOut : changeToken) {
-		
-			for (RegularIFNetTransition transIn : changeToken) {
-				if (transOut.equals(transIn)) {
+		for (RegularIFNetTransition transChange : changeToken) {
+			
+			for (RegularIFNetTransition transUse : useToken) {
+				
+				if (transUse.getName().equals(transChange.getName())) {
 					continue;
-				}   
-				if (transOut.getLabel().equals(transIn.getLabel())) {
-					ArrayList<RegularIFNetTransition> sameTransInsts = 
-							instOfSameTransMap.get(transOut.getName());
-					if (sameTransInsts == null) {
-						sameTransInsts = new ArrayList<RegularIFNetTransition>(); 
-					}
-					sameTransInsts.add(transIn);
-					instOfSameTransMap.put(transOut.getName(), sameTransInsts);
 				}
+				
+				String enabledPred = getEnabledTransPredicate(transChange, transUse);
+				parallelExecExpr += "(" + enabledPred + ") | ";
+				
 			}
-		}
-		
-		// build prism property as string
-		String part1 = "", part2 = "";
-		for (RegularIFNetTransition tChange : changeToken) {
-			for (RegularIFNetTransition tUse : useToken) {
-				part1 += getParallelExecExpr(tChange, tUse) + " | ";
-			}
-			ArrayList<RegularIFNetTransition> sameTransInsts = instOfSameTransMap.get(tChange.getName());
-			if (sameTransInsts != null) {
-				for (RegularIFNetTransition t : sameTransInsts) {
-					part2 += getParallelExecExpr(tChange, t) + " | ";
-				}
-			}
-			String str = part1 + "" + part2;
-			str = str.substring(0, str.length() - 3);
-			formula += "(F(" + str + ")) | ";
 			
 		}
 		
-		formula = formula.substring(0, formula.length() - 3);
-		setPattern(formula, true);
+		if (!parallelExecExpr.equals("")) {
+			setPattern("F(" + parallelExecExpr.substring(0, parallelExecExpr.length() - 3) + ")", true);
+		} else {
+			setPattern("false", true);
+		}
+		
 	}
 	
-	private static String getParallelExecExpr(RegularIFNetTransition a, 
-			RegularIFNetTransition b) {
+	private String getEnabledTransPredicate(RegularIFNetTransition transChange,
+			RegularIFNetTransition transUse) {
 		
-		Transition t1 = new Transition(a.getName());
-		Transition t2 = new Transition(b.getName());
+		String predicate = "";
 		
-		return "(((!" + t2.toString() + ") U (" + t1.toString() + " & (F" + t2.toString() + "))) "
-				+ "& ((!" + t1.toString() + ") U (" + t2.toString() + " & (F" + t1.toString() + "))))";
+		HashMap<String, HashMap<String, Integer>> placeToMulMap = new HashMap<String, HashMap<String, Integer>>();
+		
+		Iterator<IFNetFlowRelation> changeIt = transChange.getIncomingRelations().iterator();
+		Iterator<IFNetFlowRelation> transIt = transUse.getIncomingRelations().iterator();
+		
+		predicateHelper(changeIt, placeToMulMap);
+		predicateHelper(transIt, placeToMulMap);
+		
+		for (Map.Entry<String, HashMap<String, Integer>> colorOfPlace : placeToMulMap.entrySet()) {
+			
+			for (Map.Entry<String, Integer> mulOfColor : colorOfPlace.getValue().entrySet()) {
+				 predicate += " & " + colorOfPlace.getKey() + "_" + mulOfColor.getKey() 
+						 + ">" + (mulOfColor.getValue() - 1);
+			}
+			
+		}
+		
+		return predicate.substring(3, predicate.length());
 	}
-	
+
+
+
+
+
+	private void predicateHelper(Iterator<IFNetFlowRelation> it,
+			HashMap<String, HashMap<String, Integer>> placeToMulMap) {
+		
+		while(it.hasNext()) {
+			
+			IFNetFlowRelation flowRel = it.next();
+			IFNetPlace inputPlace = flowRel.getPlace();
+			Set<String> colors = flowRel.getConstraint().support();
+			Multiset<String> constraint = flowRel.getConstraint();
+			Iterator<String> colorIt = colors.iterator();
+			HashMap<String, Integer> colorToMulMap = placeToMulMap.get(inputPlace.getName());
+			if (colorToMulMap == null) {
+				colorToMulMap = new HashMap<String, Integer>();
+				
+			}
+			
+			while(colorIt.hasNext()) {
+				
+				String color = colorIt.next();
+				int multiplicity = constraint.multiplicity(color);
+				Integer mulInMap = colorToMulMap.get(color);
+				
+				if (mulInMap == null) {
+					colorToMulMap.put(color, multiplicity);
+				} else {
+					colorToMulMap.put(color, multiplicity + mulInMap);
+				}
+				
+			}
+			
+			placeToMulMap.put(inputPlace.getName(), colorToMulMap);
+			
+		}
+		
+	}
+
 	@Override
 	public String getName() {
 		return NAME;
 	}
-	
-	public static void main(String [] args)
-	{
-		IFNet inet = IFNetTestUtils.create6PlaceIFnetWithAccessModes();
-		Iterator<RegularIFNetTransition> it = inet.getRegularTransitions().iterator();
-		RegularIFNetTransition a = it.next();
-		RegularIFNetTransition b = it.next();
-		String str = getParallelExecExpr(a, b);
-		System.out.println(str);
-		
-	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return DESC;
 	}
 
-	// (!A U (B & F(A))) & (!B U (A & F(B)))
-	 /* ((!(t1_last=1)) U ((tIn_last=1) & (F(t1_last=1)))) & ((!(tIn_last=1)) U ((t1_last=1) & (F(tIn_last=1))))
-	 */
 }

@@ -30,6 +30,7 @@ public class AtomicProposition extends Statepredicate {
                  break;
         case GREATER_EQUAL:  mRelation = ">=";
                  break;
+        case NOT_EQUAL: mRelation = "!=";
         default: throw new UnsupportedRelation("This relation isn't supported!");
                  }
 	}
@@ -39,6 +40,33 @@ public class AtomicProposition extends Statepredicate {
 
 		return "(" + mPlaceName + mRelation + mNumber + ")";
 		
+	}
+
+	@Override
+	public String getNegation() {
+		String relation = negate();
+		return "(" + mPlaceName + relation + mNumber + ")";
+	}
+
+	private String negate() {
+		
+		String relation = "";
+		
+		if (mRelation.equals(">")) {
+			relation = "<=";
+		} else if (mRelation.equals("<")) {
+			relation = ">=";
+		} else if (mRelation.equals("=")) {
+			relation = "!=";
+		} else if (mRelation.equals("<=")) {
+			relation = ">";
+		} else if (mRelation.equals(">=")) {
+			relation = "<";
+		} else if (mRelation.equals("!=")) {
+			relation = "=";
+		}
+		
+		return relation;
 	}
 	
 }

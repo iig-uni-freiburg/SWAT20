@@ -8,7 +8,7 @@ public class Precedes extends AtomicPattern {
 	public static final String DESC = "Q must always be preceded by P.";
 	
 	public Precedes(NetElementExpression op1, NetElementExpression op2) {
-		super("((G " + op1.toString() + ") | (!" + op2.toString() + " U " + op1.toString() + ")"+ ")");
+		super("((G (!" + op2.toString() + ")) | (!" + op2.toString() + " U " + op1.toString() + ")"+ ")");
 		mOperands.add(op1);
 		mOperands.add(op2);
 	}

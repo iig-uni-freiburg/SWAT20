@@ -16,4 +16,9 @@ public class Clause extends Statepredicate {
 		return "(" + mSp1.toString() +" & " + mSp2.toString() + ")";
 	}
 
+	@Override
+	public String getNegation() {
+		return mSp1.getNegation() + " | " + mSp2.getNegation();
+	}
+
 }
