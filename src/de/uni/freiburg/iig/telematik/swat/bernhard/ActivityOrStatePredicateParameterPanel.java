@@ -49,6 +49,7 @@ public class ActivityOrStatePredicateParameterPanel extends
 		// TODO Auto-generated method stub
 		content.remove(activityPanel.getContent());
 		content.add(statePredicatePanel.getContent());
+		
 		activityActive=false;
 		content.repaint();
 		content.updateUI();
@@ -78,9 +79,11 @@ public class ActivityOrStatePredicateParameterPanel extends
 		// TODO Auto-generated method stub
 		ParamValue val=value.get(0);
 		if(val.getOperandType() == OperandType.TRANSITION) {
+			chooseTypeBox.setSelectedItem("Activity");
 			setTypeActivity();
 			activityPanel.setValue(value);
 		} else if (val.getOperandType() == OperandType.STATEPREDICATE) {
+			chooseTypeBox.setSelectedItem("State Predicate");
 			setTypeStatePredicate();
 			statePredicatePanel.setValue(value);
 		}
