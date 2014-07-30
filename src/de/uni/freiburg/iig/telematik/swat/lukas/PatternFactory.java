@@ -30,6 +30,8 @@ public class PatternFactory {
 		} 
 		if (mNet instanceof IFNet) {
 			
+			mSupportedPatterns.putAll(AtomicPattern.getPatternDescription());
+			mSupportedPatterns.putAll(CompositePattern.getPatternDescription());
 			mSupportedPatterns.putAll(DataflowPattern.getPatternDescription());
 			mSupportedPatterns.putAll(ResourcePattern.getPatternDescription());
 		}
