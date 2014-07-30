@@ -378,9 +378,9 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private void updateToolbar() {
 		if (getTabView().getSelectedComponent() instanceof PNEditor) {
 			try {
-			PNEditor editor = (PNEditor) getTabView().getSelectedComponent();
-			getSwatToolbar().clear();
-			getSwatToolbar().add(editor.getEditorToolbar());
+				PNEditor editor = (PNEditor) getTabView().getSelectedComponent();
+				getSwatToolbar().clear();
+				getSwatToolbar().add(editor.getEditorToolbar());
 			} catch (Exception e) {
 
 			}
