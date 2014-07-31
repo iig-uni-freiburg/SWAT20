@@ -89,6 +89,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			} catch (Exception e) {
 				MessageDialog.getInstance().addMessage("Could not set Look and Feel. Using standard");
 			}
+		} else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+			try {
+				UIManager
+						.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -380,7 +387,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			try {
 				PNEditor editor = (PNEditor) getTabView().getSelectedComponent();
 				getSwatToolbar().clear();
-				getSwatToolbar().add(editor.getEditorToolbar());
+			
+				if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+				} else {
+					getSwatToolbar().add(editor.getEditorToolbar());
+				}
 			} catch (Exception e) {
 
 			}
