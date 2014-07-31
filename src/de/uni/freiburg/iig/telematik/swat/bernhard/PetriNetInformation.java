@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,24 +24,29 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-
+/**
+ * this class reads all necessary information for the GUI from a petri net
+ * given by the PNEditor
+ * @author bernhard
+ *
+ */
 public class PetriNetInformation implements PetriNetInformationReader {
 
 	private PNEditor pneditor;
 	// dictionary that maps the labels of the transitions
 	// to the real name in the net
 	private HashMap<String, String> transitionLabelDic;
+	private HashMap<String, String> transitionLabelDicReverse;
 	private List<String> dataTypeList;
 	private List<String> placesList;
-	private List<String> subjectList;
 
 	public PetriNetInformation(PNEditor pneditor) {
 		super();
 		this.pneditor = pneditor;
 		transitionLabelDic = new HashMap<String, String>();
+		transitionLabelDicReverse = new HashMap<String, String>();
 		dataTypeList = new ArrayList<String>();
 		placesList = new ArrayList<String>();
-		subjectList = new ArrayList<String>();
 		netChanged();
 	}
 
@@ -49,13 +55,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		updatePlacesList();
 		if (pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
 			updateDataTypeList();
-			updateSubjectList();
 		}
-	}
-
-	private void updateSubjectList() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void updatePlacesList() {
@@ -64,6 +64,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 				.getPetriNet().getPlaces()) {
 			placesList.add(p.getName());
 		}
+		Collections.sort(placesList);
 	}
 
 	/**
@@ -78,6 +79,8 @@ public class PetriNetInformation implements PetriNetInformationReader {
 				.getPetriNet().getTransitions()) {
 			transitionLabelDic
 					.put(transition.getLabel()+" ("+transition.getName()+")", transition.getName());
+			transitionLabelDicReverse
+			.put(transition.getName(), transition.getLabel()+" ("+transition.getName()+")");
 		}
 	}
 
@@ -124,10 +127,9 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	}
 
 	@Override
-	public List<String> getSubjectList() {
+	public HashMap<String, String> getTransitionDictionaryReverse() {
 		// TODO Auto-generated method stub
-		return subjectList;
+		return transitionLabelDicReverse;
 	}
 	
-
 }

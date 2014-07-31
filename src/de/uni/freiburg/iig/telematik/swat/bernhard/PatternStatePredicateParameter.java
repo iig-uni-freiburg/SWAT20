@@ -16,7 +16,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 
 public class PatternStatePredicateParameter extends PatternParameterPanel {
 
-	private final String predicates[] = {"<", ">", "=", "<=", ">=" };
+	private final String predicates[] = {"<", ">", "=", "!=", "<=", ">=" };
 	private JSpinner numberSpinner;
 	private JComboBox relationsBox;
 	private JComboBox placesBox;

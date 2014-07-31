@@ -36,7 +36,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
-
+import javax.swing.BoxLayout;
 import com.itextpdf.text.log.SysoCounter;
 import com.mxgraph.swing.handler.mxCellMarker;
 
@@ -94,9 +94,15 @@ public class PatternWindow extends JFrame {
 		JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		south.add(okButton);
 		patternPanelList = new ArrayList<PatternSettingPanel>();
-		patternPanel = new JPanel(new GridLayout(
-				PatternAnalyzeLogic.MAX_PATTERNS, 1, 10, 10));
-		JScrollPane jsp = new JScrollPane(patternPanel);
+		patternPanel = new JPanel();
+		patternPanel.setLayout(new BoxLayout(patternPanel, BoxLayout.Y_AXIS));
+		
+		//patternPanel=new JPanel();
+		//patternPanel.setLayout(new BoxLayout(patternPanel, BoxLayout.Y_AXIS ));
+		JPanel northPanel=new JPanel(new BorderLayout());
+		northPanel.add(patternPanel, BorderLayout.NORTH);
+		JScrollPane jsp = new JScrollPane(northPanel);
+		jsp.setVisible(true);
 		// get applicable Patterns from Factory
 		final List<String> itemNames = patternFactory.getApplicablePatterns();
 		plusButton = new JButton("Add Pattern");
@@ -123,11 +129,7 @@ public class PatternWindow extends JFrame {
 								addPanelforPatternClick(name);
 							} catch (ParameterException e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (PropertyException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (IOException e) {
+						
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
@@ -139,10 +141,8 @@ public class PatternWindow extends JFrame {
 						plusButton.getHeight() * 4 / 5);
 			}
 		});
-		// this.addPanelforPattern("Q Precedes P");
+
 		c.add(Helpers.jPanelLeft(plusButton), BorderLayout.NORTH);
-		// SpringUtilities.makeGrid(test,3,2,0,0,0,0);
-		// middle.add(test);
 		c.add(jsp, BorderLayout.CENTER);
 		c.add(south, BorderLayout.SOUTH);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -173,8 +173,7 @@ public class PatternWindow extends JFrame {
 	 * @throws PropertyException
 	 * @throws IOException
 	 */
-	private void addPanelforPatternClick(String name)
-			throws ParameterException, PropertyException, IOException {
+	private void addPanelforPatternClick(String name) {
 		if (patternPanelList.size() < 10) {
 			addPanelforPattern(name);
 		} else {
@@ -183,6 +182,8 @@ public class PatternWindow extends JFrame {
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+
 	/**
 	 * invoked when a net is changed
 	 * just update the lists of transitions and data types
@@ -210,7 +211,6 @@ public class PatternWindow extends JFrame {
 		patternPanel.add(pSPanel.getJPanel());
 		patternPanelList.add(pSPanel);
 		patternPanel.updateUI();
-		;
 	}
 
 	/**
@@ -224,7 +224,6 @@ public class PatternWindow extends JFrame {
 		patternPanel.add(pSPanel.getJPanel());
 		patternPanelList.add(pSPanel);
 		patternPanel.updateUI();
-		;
 	}
 
 	public List<PatternSetting> getPatternSettings() {
@@ -232,6 +231,7 @@ public class PatternWindow extends JFrame {
 		for (PatternSettingPanel panel : patternPanelList) {
 			panel.updatePatternSettingValues();
 			patternList.add(panel.getPatternSetting());
+			
 		}
 		return patternList;
 	}
@@ -246,6 +246,7 @@ public class PatternWindow extends JFrame {
 		for (PatternSetting ps : newList) {
 			addPanelforPattern(ps);
 		}
+
 	}
 
 	/**

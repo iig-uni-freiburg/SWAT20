@@ -1,12 +1,18 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,11 +22,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SpringLayout;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import org.processmining.analysis.sciffchecker.gui.util.SpringUtilities;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -35,6 +50,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.lukas.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.lukas.IOUtils;
+import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
@@ -56,6 +73,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  */
 public class AnalyzePanel implements LoadSave {
 	private JPanel panel;
+	private JPanel propertyPanel;
 	private JLabel analysisTopLabelWithDate;
 	private JButton editButton, runButton, saveButton;
 	private String netName;
@@ -81,15 +99,40 @@ public class AnalyzePanel implements LoadSave {
 		netInfo = new PetriNetInformation(pneditor);
 		patternFactory = new PatternFactory(pneditor.getNetContainer()
 				.getPetriNet());
-		patternSettings=new ArrayList<PatternSetting>();
-		panel = new JPanel(new GridLayout(
-				PatternAnalyzeLogic.MAX_PATTERNS + 3, 1, 10, 10));
+		patternSettings = new ArrayList<PatternSetting>();
+		initGui();
+		netChanged();
+		update();
+	}
+	
+	private void initGui() {
+		panel=new JPanel(new GridBagLayout());
 		analysisTopLabelWithDate = new JLabel("Analysis from "
 				+ getDateShort());
 		editButton = new JButton("Edit");
 		runButton = new JButton("Run");
 		saveButton = new JButton("Save");
+		propertyPanel=new JPanel();
+		propertyPanel.setLayout(new BoxLayout(propertyPanel,BoxLayout.Y_AXIS));
+		Box box=Box.createVerticalBox();
+		
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		buttonPanel.add(editButton);
+		buttonPanel.add(runButton);
+		buttonPanel.add(saveButton);
+		box.add(Helpers.jPanelLeft(analysisTopLabelWithDate));
+		box.add(buttonPanel);
 
+		box.add(Helpers.jPanelLeft(new JLabel("Patterns to Check: ")));
+		JPanel northPanel=new JPanel(new BorderLayout());
+		northPanel.add(propertyPanel, BorderLayout.NORTH);
+		JScrollPane jsp=new JScrollPane(northPanel);
+		jsp.setVisible(true);
+		//jsp.setEnabled(true);
+		//jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		panel.setLayout(new BorderLayout());
+		panel.add(box,BorderLayout.NORTH);
+		panel.add(jsp,BorderLayout.CENTER);
 		patternWindow = new PatternWindow(this, patternFactory);
 		editButton.addActionListener(new ActionListener() {
 
@@ -112,8 +155,6 @@ public class AnalyzePanel implements LoadSave {
 				save();
 			}
 		});
-		netChanged();
-		update();
 	}
 
 	protected void showPatternWindow() {
@@ -121,13 +162,7 @@ public class AnalyzePanel implements LoadSave {
 		patternWindow.setVisible(true);
 	}
 
-	private void addButtons() {
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		buttonPanel.add(editButton);
-		buttonPanel.add(runButton);
-		buttonPanel.add(saveButton);
-		panel.add(buttonPanel);
-	}
+
 
 	private String getDateShort() {
 		Date today = new Date();
@@ -142,6 +177,13 @@ public class AnalyzePanel implements LoadSave {
 	 * the function invoked when Analyze is pressed
 	 */
 	private void analyze() {
+		if(patternWindow.isVisible()) {
+			JOptionPane.showMessageDialog(null,
+				    "Close PatternWindow first, before analyzing",
+				    "Warning",
+				    JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		PrismExecutor prismExecuter = new PrismExecutor(pneditor
 				.getNetContainer().getPetriNet());
 		// build list of patterns
@@ -169,36 +211,46 @@ public class AnalyzePanel implements LoadSave {
 		update();
 	}
 
-
 	public void update() {
-		panel.removeAll();
-		panel.add(Helpers.jPanelLeft(analysisTopLabelWithDate));
-		addButtons();
-		panel.add(Helpers.jPanelLeft(new JLabel("Patterns to Check: ")));
-		patternSettings=patternWindow.getPatternSettings();
+		propertyPanel.removeAll();
+		
+		patternSettings = patternWindow.getPatternSettings();
+		HashMap<String, String> transitionsReverse=netInfo.getTransitionDictionaryReverse();
 		for (PatternSetting p : patternSettings) {
 			System.out.println(p);
-			JPanel newPanel = new JPanel();
 			PatternResult result = p.getResult();
+			JPanel newPanel = new JPanel();
+			newPanel.setLayout(new BoxLayout(newPanel, BoxLayout.Y_AXIS));
+			for(Parameter para: p.getParameters()) {
+				String paraString=para.getName()+": ";
+				for(int i=0; i < para.getValue().size(); i++) {
+					ParamValue val=para.getValue().get(i);
+					if(val.getOperandType()==OperandType.TRANSITION) {
+						paraString+=transitionsReverse.get(val.getOperandName());
+					} else {
+						paraString+=val.getOperandName();
+					}
+					if(i < para.getValue().size() -1) {
+						paraString+=", ";
+					}
+				}
+				newPanel.add(Helpers.jPanelLeft(new JLabel(paraString)));
+			}
 			// check whether a result exists
 			if (result != null) {
-				int rows = 2;
+				DecimalFormat decimalFormat = new DecimalFormat("#.###");
+				newPanel.add(Helpers.jPanelLeft(new JLabel("\tProbability: "
+						+ decimalFormat.format(result.getProbability()))));
+				JButton counterButton = new JButton("Counterexample");
+				// counterButton.setPreferredSize(counterButton.getMaximumSize());
 				if (result.isFulfilled() == false) {
-					rows = 3;
+					newPanel.add(Helpers.jPanelLeft(counterButton));
 				}
-				newPanel = new JPanel(new GridLayout(rows, 1, 1, 1));
-				newPanel.add(new JLabel(p.toString()));
-				newPanel.add(new JLabel("\tProb:" + result.getProbability()));
-				if (result.isFulfilled() == false) {
-					JButton counterButton = new JButton("Counterexample");
-					newPanel.add(counterButton);
-				}
-			} else {
-				newPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-				newPanel.add(new JLabel(p.toString()));
 			}
-
-			panel.add(newPanel);
+			newPanel.setBorder(BorderFactory.createTitledBorder(p.getName()));
+			JPanel northPanel=new JPanel(new BorderLayout());
+			northPanel.add(newPanel, BorderLayout.NORTH);
+			propertyPanel.add(northPanel);
 		}
 
 		panel.repaint();

@@ -12,6 +12,5 @@ public interface PetriNetInformationReader {
 	public List<String> getDataTypesList();
 	public List<String> getPlacesList();
 	public HashMap<String, String> getTransitionDictionary();
-	public List<String> getSubjectList();
-
+	public HashMap<String, String> getTransitionDictionaryReverse();
 }

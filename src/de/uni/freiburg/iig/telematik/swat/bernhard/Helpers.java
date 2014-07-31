@@ -51,4 +51,23 @@ public class Helpers {
 	public static ParamValue getFirst(ArrayList<ParamValue> arrayList) {
 		return arrayList.iterator().next();
 	}
+	public static String formatString(String s, int n) {
+		String result="";
+		char arr[]=s.toCharArray();
+		int count =0;
+		for(int i=0; i < arr.length; i++) {
+			if(count == n) {
+				result+="\n";
+				count=0;
+			}
+			if (arr[i] == '\n') {
+				count=0;
+			} else {
+				count++;
+			}
+			result+=arr[i];
+		}
+		return result;
+	}
+
 }

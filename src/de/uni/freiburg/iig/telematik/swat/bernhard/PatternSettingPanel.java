@@ -156,11 +156,12 @@ public class PatternSettingPanel {
 		//ps.updateParameterAppliedString();
 		assert(ps.getParameters().size() == parameterPanelList.size());
 		List<Parameter> paraList=ps.getParameters();
+		HashMap<String, String> transitionDicReverse=patternWindow.getNetInformations().getTransitionDictionaryReverse();
 		for(int i=0; i <paraList.size(); i++) {
 			ArrayList<ParamValue> list=new ArrayList<ParamValue>();
 			for(ParamValue value:paraList.get(i).getValue() ) {
 				if(value.getOperandType()==OperandType.TRANSITION) {
-					String valueLookup=transitionDicReverseLookUp(value.getOperandName());
+					String valueLookup=transitionDicReverse.get(value.getOperandName());
 					// set value from reverse dictionary search
 					list.add(new ParamValue(valueLookup, OperandType.TRANSITION));
 				} else {
@@ -173,32 +174,11 @@ public class PatternSettingPanel {
 			
 		}
 	}
-	
-	private String transitionDicReverseLookUp(String transitionName) {
-		HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
-		for(String l : transitionDic.keySet()) {
-			if (transitionDic.get(l).equals(transitionName)) {
-				return l;
-			}
-		}
-		try {
-			System.out.println(transitionDic);
-			throw new Exception("not found");
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		MessageDialog.getInstance().addMessage("WARNING: Did not find: "+transitionName+" in the TransitionDictionary");
-		return transitionName;
-	}
 
 	public JPanel getJPanel() {
 		return panel;
 	}
 
-	
-	
 	public void updatePatternSettingValues() {
 		// first store the values taken from the jcomponents
 		
