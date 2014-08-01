@@ -68,7 +68,7 @@ public class PatternWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = -7132881901662491907L;
 	public final static int maxPatterns = 10;
-	private JButton plusButton, okButton;
+	private JButton plusButton, okButton, removeAllButton;
 	private JPanel patternPanel;
 	private List<PatternSettingPanel> patternPanelList;
 	private AnalyzePanel analyzePanel;
@@ -90,7 +90,14 @@ public class PatternWindow extends JFrame {
 				clickedOK();
 			}
 		});
+		removeAllButton=new JButton("Remove All");
+		removeAllButton.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				removeAllPatterns();
+			}
+		});
 		JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		south.add(okButton);
 		patternPanelList = new ArrayList<PatternSettingPanel>();
@@ -141,12 +148,22 @@ public class PatternWindow extends JFrame {
 						plusButton.getHeight() * 4 / 5);
 			}
 		});
-
-		c.add(Helpers.jPanelLeft(plusButton), BorderLayout.NORTH);
+		JPanel buttonPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		buttonPanel.add(plusButton);
+		buttonPanel.add(removeAllButton);
+		c.add(buttonPanel, BorderLayout.NORTH);
 		c.add(jsp, BorderLayout.CENTER);
 		c.add(south, BorderLayout.SOUTH);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(800, 600);
+	}
+
+	protected void removeAllPatterns() {
+		// TODO Auto-generated method stub
+		patternPanel.removeAll();
+		patternPanelList.clear();
+		patternPanel.repaint();
+		patternPanel.updateUI();
 	}
 
 	/**
@@ -254,9 +271,10 @@ public class PatternWindow extends JFrame {
 	 * @param panel
 	 */
 	public void removePatternPanel(PatternSettingPanel panel) {
+		patternPanelList.remove(panel);
 		patternPanel.remove(panel.getJPanel());
 		patternPanel.repaint();
 		patternPanel.updateUI();
-		patternPanelList.remove(panel);
+		
 	}
 }
