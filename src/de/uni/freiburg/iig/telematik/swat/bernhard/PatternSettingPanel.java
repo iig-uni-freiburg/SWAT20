@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -68,8 +69,11 @@ public class PatternSettingPanel {
 	List<Parameter> parameters = patternFactory.getParametersOfPattern(patternName);
 	this.patternWindow=patternWindow;
 	patternSetting=new PatternSetting(patternName,parameters);
-	panel = new JPanel(new GridLayout(patternSetting.getParameters().size() + 1, 2));
+	//panel = new JPanel(new GridLayout(patternSetting.getParameters().size() + 1, 2));
+	panel=new JPanel();
+	panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
 	// System.out.println(paraList);
+	
 	// System.out.println(paraList.size());
 	parameterPanelList = new ArrayList<PatternParameterPanel>();
 
@@ -78,7 +82,7 @@ public class PatternSettingPanel {
 	// same font but bold
 	Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize()+3);
 	label.setFont(boldFont);
-	panel.add(label);
+	
 
 	
 	try {
@@ -88,7 +92,9 @@ public class PatternSettingPanel {
 				removeFromPatternWindow();
 			}
 		});
+		
 		rightPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		rightPanel.add(label);
 		rightPanel.add(removeButton);
 		panel.add(rightPanel);
 	} catch (ParameterException e) {
@@ -112,18 +118,20 @@ public class PatternSettingPanel {
 	String placesArray[]=placesList.toArray(new String[placesList.size()]);
 	for (Parameter pp : parameters) {
 		PatternParameterPanel patternPara = null;
-		panel.add(new JLabel("Choose "+pp.getName()));
+		JPanel paraPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		paraPanel.add(new JLabel("Choose "+pp.getName()));
+		
 		Set<OperandType> operandSet=pp.getTypes();
 		// determine from which type parameter is
 		if(operandSet.contains(OperandType.TOKEN)) {
-			patternPara = new PatternDataParameterPanel(pp.getName(), dataTypeArray);
+			patternPara = new PatternDropDownParameterPanel(pp.getName(), OperandType.TOKEN, dataTypeArray);
 		} else if (operandSet.contains(OperandType.TRANSITION) && operandSet.contains(OperandType.STATEPREDICATE)) {
 			patternPara=new ActivityOrStatePredicateParameterPanel(pp.getName(), transitionsArray, placesArray);
 		} else if (operandSet.contains(OperandType.TRANSITION)) {
-			patternPara=new PatternActivityParameterPanel(pp.getName(), transitionsArray);
+			patternPara=new PatternDropDownParameterPanel(pp.getName(), OperandType.TRANSITION, transitionsArray);
 		}
-
-		panel.add(patternPara.getContent());
+		paraPanel.add(patternPara.getContent());
+		panel.add(paraPanel);
 		parameterPanelList.add(patternPara);
 	}
 	}

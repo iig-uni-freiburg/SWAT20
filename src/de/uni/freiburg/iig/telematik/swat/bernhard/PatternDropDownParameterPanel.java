@@ -8,20 +8,20 @@ import javax.swing.JComboBox;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 
-public class PatternActivityParameterPanel extends PatternParameterPanel {
+public class PatternDropDownParameterPanel extends PatternParameterPanel {
 
-	public PatternActivityParameterPanel(String name, String[] values) {
+	private OperandType type;
+	public PatternDropDownParameterPanel(String name, OperandType type, String[] values) {
 		super(name);
-		
+		this.type=type;
 		content = new JComboBox(values);
-
 	}
 
 	@Override
 	public List<ParamValue> getValue() {
 		// TODO Auto-generated method stub
 		ArrayList<ParamValue> list=new ArrayList<ParamValue>();
-		list.add(new ParamValue((String) ((JComboBox)content).getSelectedItem(), OperandType.TRANSITION));
+		list.add(new ParamValue((String) ((JComboBox)content).getSelectedItem(), type));
 		return list;
 	}
 

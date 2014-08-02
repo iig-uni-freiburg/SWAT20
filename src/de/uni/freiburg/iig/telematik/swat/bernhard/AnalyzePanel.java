@@ -223,8 +223,12 @@ public class AnalyzePanel implements LoadSave {
 			newPanel.setLayout(new BoxLayout(newPanel, BoxLayout.Y_AXIS));
 			for(Parameter para: p.getParameters()) {
 				String paraString=para.getName()+": ";
+				int count=0;
+				boolean labelsLeft=false;
 				for(int i=0; i < para.getValue().size(); i++) {
 					ParamValue val=para.getValue().get(i);
+					labelsLeft=true;
+					count++;
 					if(val.getOperandType()==OperandType.TRANSITION) {
 						paraString+=transitionsReverse.get(val.getOperandName());
 					} else {
@@ -233,8 +237,18 @@ public class AnalyzePanel implements LoadSave {
 					if(i < para.getValue().size() -1) {
 						paraString+=", ";
 					}
+					// maximum 3 values in a row
+					if(count==3) {
+						newPanel.add(Helpers.jPanelLeft(new JLabel(paraString)));
+						// move it to the right
+						paraString="    ";
+						count=0;
+						labelsLeft=false;
+					}
 				}
-				newPanel.add(Helpers.jPanelLeft(new JLabel(paraString)));
+				if(labelsLeft) {
+					newPanel.add(Helpers.jPanelLeft(new JLabel(paraString)));
+				}
 			}
 			// check whether a result exists
 			if (result != null) {

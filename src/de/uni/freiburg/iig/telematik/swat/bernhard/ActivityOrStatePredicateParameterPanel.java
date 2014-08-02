@@ -14,14 +14,14 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 public class ActivityOrStatePredicateParameterPanel extends
 		PatternParameterPanel {
 
-	private PatternActivityParameterPanel activityPanel;
-	private PatternStatePredicateParameter statePredicatePanel;
+	private PatternDropDownParameterPanel activityPanel;
+	private PatternMultipleParameterPanel statePredicatePanel;
 	boolean activityActive;
 	private JComboBox chooseTypeBox;
 	public ActivityOrStatePredicateParameterPanel(String name, String activities[], String places[]) {
 		super(name);
-		activityPanel=new PatternActivityParameterPanel(name, activities);
-		statePredicatePanel=new PatternStatePredicateParameter(name, places);
+		activityPanel=new PatternDropDownParameterPanel(name, OperandType.TRANSITION, activities);
+		statePredicatePanel=new MultipleStatePredicateParameter(name, "State Predicate", places);
 		activityActive=true;
 		String arr[]={"Activity","State Predicate"};
 		chooseTypeBox=new JComboBox(arr);
