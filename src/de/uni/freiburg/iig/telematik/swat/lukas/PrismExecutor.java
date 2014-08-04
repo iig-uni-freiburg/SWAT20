@@ -86,10 +86,10 @@ public class PrismExecutor {
 		String prism = (System.getProperty("os.name").contains("Windows"))? "prism.bat" : "prism";
 		
 		if (mConverter.isUnboundedNet()) {
-			command = mPrismPath + File.separator + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
+			command = mPrismPath + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
 					" " + properties.getAbsolutePath(); 
 		} else {
-			command = mPrismPath + File.separator + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
+			command = mPrismPath + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
 					" " + properties.getAbsolutePath() + " -ex";
 		}
 		
