@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
@@ -15,11 +16,13 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 public class PatternFactory {
 	
 	private AbstractPetriNet<?,?,?,?,?,?,?> mNet;
+	private AbstractPlace<?,?> mOutputPlace;
 	
 	private HashMap<String, String> mSupportedPatterns;
 
 	public PatternFactory(AbstractPetriNet<?,?,?,?,?,?,?> net) {
 		mNet = net;
+		mOutputPlace = mNet.getDrainPlaces().iterator().next();
 		mSupportedPatterns = new HashMap<String, String>();
 		
 		if (mNet instanceof PTNet || mNet instanceof CWN) {
@@ -28,6 +31,7 @@ public class PatternFactory {
 			mSupportedPatterns.putAll(CompositePattern.getPatternDescription());
 			
 		} 
+		
 		if (mNet instanceof IFNet) {
 			
 			mSupportedPatterns.putAll(AtomicPattern.getPatternDescription());
@@ -54,10 +58,6 @@ public class PatternFactory {
 	}
 	
 	
-	/*
-	 * 
-	 * */
-	
 	@SuppressWarnings("unchecked")
 	public CompliancePattern createPattern(String patternName, ArrayList<Parameter> params) {
 		
@@ -69,7 +69,11 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			p = new Precedes((NetElementExpression) o1, (NetElementExpression) o2);
+			if (o1 instanceof Transition & o2 instanceof Transition) {
+				p = new Precedes((Transition) o1, (Transition) o2);
+			} else {
+				p = new Precedes((Statepredicate) o1, (Statepredicate) o2);
+			}
 			
 		} else if (patternName.equals(ChainPrecedes.NAME)) {
 			
@@ -136,19 +140,31 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new Absent((NetElementExpression) o1);
+			if (o1 instanceof Transition) {
+				p = new Absent((Transition) o1);
+			} else {
+				p = new Absent((Statepredicate) o1);
+			}
 			
 		} else if (patternName.equals(Universal.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new Universal((NetElementExpression) o1);
+			if (o1 instanceof Transition) {
+				p = new Universal((Transition) o1, mNet.getSourcePlaces().iterator().next());
+			} else {
+				p = new Universal((Statepredicate) o1, mNet.getSourcePlaces().iterator().next());
+			}
 			
 		} else if (patternName.equals(Exists.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new Exists((NetElementExpression) o1);
+			if (o1 instanceof Transition) {
+				p = new Exists((Transition) o1, mNet.getDrainPlaces().iterator().next());
+			} else {
+				p = new Exists((Statepredicate) o1);
+			}
 			
 			
 		} else if (patternName.equals(CoExists.NAME)) {
@@ -157,7 +173,11 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			p = new CoExists((NetElementExpression) o1, (NetElementExpression) o2);
+			if (o1 instanceof Transition & o2 instanceof Transition) {
+				p = new CoExists((Transition) o1, (Transition) o2, mOutputPlace);
+			} else {
+				p = new CoExists((Statepredicate) o1, (Statepredicate) o2);
+			}
 			
 		} else if (patternName.equals(CoAbsent.NAME)) {
 			
@@ -165,7 +185,11 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			p = new CoAbsent((NetElementExpression) o1, (NetElementExpression) o2);
+			if (o1 instanceof Transition & o2 instanceof Transition) {
+				p = new CoAbsent((Transition) o1, (Transition) o2, mOutputPlace);
+			} else {
+				p = new CoAbsent((Statepredicate) o1, (Statepredicate) o2);
+			}
 			
 		} else if (patternName.equals(Exclusive.NAME)) {
 			
@@ -173,7 +197,11 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			p = new Exclusive((NetElementExpression) o1, (NetElementExpression) o2);
+			if (o1 instanceof Transition & o2 instanceof Transition) {
+				p = new Exclusive((Transition) o1, (Transition) o2, mOutputPlace);
+			} else {
+				p = new Exclusive((Statepredicate) o1, (Statepredicate) o2);
+			}
 			
 			
 		} else if (patternName.equals(Corequisite.NAME)) {
@@ -182,7 +210,11 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			p = new Corequisite((NetElementExpression) o1, (NetElementExpression) o2);
+			if (o1 instanceof Transition & o2 instanceof Transition) {
+				p = new Corequisite((Transition) o1, (Transition) o2, mOutputPlace);
+			} else {
+				p = new Corequisite((Statepredicate) o1, (Statepredicate) o2);
+			}
 			
 			
 		} else if (patternName.equals(MutexChoice.NAME)) {
@@ -191,7 +223,11 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			p = new MutexChoice((NetElementExpression) o1, (NetElementExpression) o2);
+			if (o1 instanceof Transition & o2 instanceof Transition) {
+				p = new MutexChoice((Transition) o1, (Transition) o2, mOutputPlace);
+			} else {
+				p = new MutexChoice((Statepredicate) o1, (Statepredicate) o2);
+			}
 			
 		} else if (patternName.equals(PerformedBy.NAME)) {
 			
@@ -274,8 +310,9 @@ public class PatternFactory {
 		OperandType ot = value.getOperandType();
 		String oValue = value.getOperandName();
 		Operand op = null;
+		
 		if (ot.equals(OperandType.STATEPREDICATE)) {
-			
+			op = createStatePredicate(oValue);
 		} else if (ot.equals(OperandType.TRANSITION)) {
 			op = new Transition(oValue);
 		} else if (ot.equals(OperandType.ROLE)) {
@@ -286,14 +323,67 @@ public class PatternFactory {
 		return op;
 		
 	}
-	
-	/*public static void main(String[] args) {
-		PatternFactory pf = new PatternFactory(new IFNet());
-		ArrayList<String> ap = pf.getApplicablePatterns();
-		
-		for (String str : ap) {
-			System.out.println(str + ": " + pf.mSupportedPatterns.get(str));
-		}
-	}*/
 
+	private Operand createStatePredicate(String oValue) {
+		
+		String[] atomicPropositions = oValue.split("&");
+		ArrayList<AtomicProposition> atomicPropObjects = new ArrayList<AtomicProposition>();
+		
+		for (int i = 0; i < atomicPropositions.length; i++) {
+			String atomicProp = atomicPropositions[i];
+			try {
+				Relation rel = getRelation(atomicProp);
+				String[] ops = getOperands(atomicProp);
+				atomicPropObjects.add(
+						new AtomicProposition(ops[0], rel, Integer.parseInt(ops[1])));
+			} catch (UnsupportedRelation e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (atomicPropObjects.size() == 1) {
+			
+			return atomicPropObjects.get(0);
+			
+		} else {
+			
+			Statepredicate sp = atomicPropObjects.get(0);
+			for (int i = 1; i < atomicPropObjects.size(); i++) {
+				sp = new Clause(sp, atomicPropObjects.get(i));
+			}
+			return sp;
+			
+		}
+		
+		
+	}
+
+	private String[] getOperands(String atomicProp) {
+		//atomicProp = atomicProp.substring(1, atomicProp.length() - 1);
+		String[] ops = atomicProp.split("=|!=|<|>|<=|>=");
+		ops[0] = ops[0].replaceAll("\\s+","");
+		ops[1] = ops[1].replaceAll("\\s+","");
+		return ops;
+	}
+
+	private Relation getRelation(String prop) throws UnsupportedRelation {
+		
+		if (prop.contains("<")) {
+			return Relation.SMALLER;
+		} else if (prop.contains(">")) {
+			return Relation.GREATER;
+		} else if (prop.contains("=")) {
+			return Relation.EQUALS;
+		} else if (prop.contains("<=")) {
+			return Relation.SMALLER_EQUAL;
+		} else if (prop.contains(">=")) {
+			return Relation.GREATER_EQUAL;
+		} else if (prop.contains("!=")) {
+			return Relation.NOT_EQUAL;
+		} else {
+			throw new UnsupportedRelation("This relation isn't supported!");
+		}
+		
+	}
+	
 }

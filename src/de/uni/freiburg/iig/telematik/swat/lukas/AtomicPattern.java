@@ -9,11 +9,15 @@ public abstract class AtomicPattern extends CompliancePattern {
 	private static HashMap<String, String> mPatternDescription;
 	
 	public AtomicPattern() {
-		
+		super(false);
 	}
 
-	public AtomicPattern(String formula) {
-		super(formula, false);
+	public AtomicPattern(String prismLtlProp, String prismCTLProp) {
+		super(prismLtlProp, prismCTLProp, false);
+	}
+	
+	public AtomicPattern(String prismLtlProp) {
+		super(prismLtlProp, false);
 	}
 	
 	public static HashMap<String, String> getPatternDescription() {

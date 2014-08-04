@@ -6,12 +6,16 @@ public class PatternResult {
 
 	private double mProb;
 	private boolean mFulfilled;
-	private ArrayList<ArrayList<String>> mViolatingPaths;
+	private ArrayList<String> mViolatingPath;
 
-	public PatternResult(double prob, boolean fulfilled, ArrayList<ArrayList<String>> violatingPaths) {
+	public PatternResult(double prob, boolean fulfilled, ArrayList<String> violatingPaths) {
+		this(prob, fulfilled);
+		mViolatingPath =  violatingPaths;
+	}
+	
+	public PatternResult(double prob, boolean fulfilled) {
 		mProb = prob;
 		mFulfilled = fulfilled;
-		mViolatingPaths =  violatingPaths;
 	}
 	
 	public double getProbability() {
@@ -22,11 +26,12 @@ public class PatternResult {
 		return mFulfilled;
 	}
 	
-	public ArrayList<ArrayList<String>> getViolatingPaths() {
-		return mViolatingPaths;
+	public ArrayList<String> getViolatingPath() {
+		return mViolatingPath;
 	}
 	
-	public ArrayList<String> getViolatingPath(int i) {
-		return mViolatingPaths.get(i);
+	public void setViolatingPath(ArrayList<String> path) {
+		mViolatingPath = path;
 	}
+	
 }

@@ -15,12 +15,12 @@ public class Else extends AtomicPattern {
 		if (operands.size() == 2) {
 		
 			LeadsTo p = new LeadsTo(operands.get(0), operands.get(1));
-			setPattern(p.toString(), false);
+			setPrismProperty(p.getPrismLTLProperty(), false);
 			
 		} else if (operands.size() > 2) {
 			
 			String formula = "G(" + operands.get(0) + " => " + getImplication(operands) + ")";
-			setPattern(formula, false);
+			setPrismProperty(formula, false);
 			
 		}
 		

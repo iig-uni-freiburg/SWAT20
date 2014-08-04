@@ -4,19 +4,25 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Collection;
+
 import org.junit.Test;
 
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 
 public class MutexChoiceTest {
 	
 	@Test
 	public void test0() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		MutexChoice p1 = new MutexChoice(new Transition("td"), new Transition("t1"));
+		Collection<IFNetPlace> outputPlaces = ifnet.getDrainPlaces();
+		AbstractPlace<?,?> outputPlace = outputPlaces.iterator().next();
+		MutexChoice p1 = new MutexChoice(new Transition("td"), new Transition("t1"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertFalse(tu.isPropertySatisfied());
+			assertFalse(tu.isPropertySatisfied(false));
 		} catch (Exception e) {
 			fail();
 		}
@@ -25,10 +31,12 @@ public class MutexChoiceTest {
 	@Test
 	public void test1() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		MutexChoice p1 = new MutexChoice(new Transition("t1"), new Transition("td"));
+		Collection<IFNetPlace> outputPlaces = ifnet.getDrainPlaces();
+		AbstractPlace<?,?> outputPlace = outputPlaces.iterator().next();
+		MutexChoice p1 = new MutexChoice(new Transition("t1"), new Transition("td"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertFalse(tu.isPropertySatisfied());
+			assertFalse(tu.isPropertySatisfied(false));
 		} catch (Exception e) {
 			fail();
 		}
@@ -37,10 +45,12 @@ public class MutexChoiceTest {
 	@Test
 	public void test2() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		MutexChoice p1 = new MutexChoice(new Transition("t0"), new Transition("t1"));
+		Collection<IFNetPlace> outputPlaces = ifnet.getDrainPlaces();
+		AbstractPlace<?,?> outputPlace = outputPlaces.iterator().next();
+		MutexChoice p1 = new MutexChoice(new Transition("t0"), new Transition("t1"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied());
+			assertTrue(tu.isPropertySatisfied(false));
 		} catch (Exception e) {
 			fail();
 		}
@@ -49,10 +59,12 @@ public class MutexChoiceTest {
 	@Test
 	public void test3() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		MutexChoice p1 = new MutexChoice(new Transition("t1"), new Transition("t0"));
+		Collection<IFNetPlace> outputPlaces = ifnet.getDrainPlaces();
+		AbstractPlace<?,?> outputPlace = outputPlaces.iterator().next();
+		MutexChoice p1 = new MutexChoice(new Transition("t1"), new Transition("t0"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied());
+			assertTrue(tu.isPropertySatisfied(false));
 		} catch (Exception e) {
 			fail();
 		}

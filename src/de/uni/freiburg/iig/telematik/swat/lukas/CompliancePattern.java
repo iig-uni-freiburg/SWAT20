@@ -10,53 +10,81 @@ public abstract class CompliancePattern {
 	
 	protected ArrayList<Operand> mOperands;
 	
-	private String mPattern;
+	private String mPrismLTLProperty;
 	
-	private String mPrismProperty;
-	
-	public CompliancePattern() {
-		mOperands = new ArrayList<Operand>();
-	}
+	private String mPrismCTLProperty;
 
-	public CompliancePattern(String formula, boolean antipattern) {
-		this();
-		mPattern = formula;
-		if (antipattern) {
-			buildAntiPatternRep(formula);
+	private boolean mIsAntipattern;
+	
+	public CompliancePattern(boolean isAntipatten) {
+		mOperands = new ArrayList<Operand>();
+		mIsAntipattern = isAntipatten;
+	}
+	
+	public CompliancePattern(String prismLTLProp, boolean isAntipattern) {
+		this(isAntipattern);
+		mPrismLTLProperty = prismLTLProp;
+		
+	}
+	
+	public CompliancePattern(String prismLTLProp, String prismCTLProp, boolean isAntipattern) {
+		this(prismLTLProp, isAntipattern);
+		mPrismCTLProperty = prismCTLProp;
+	}
+	
+	public String getPrismCTLProperty() {
+		return mPrismCTLProperty;
+	}
+	
+	public String getPrismLTLProperty() {
+		return mPrismLTLProperty;
+	}
+	
+	public String getPrismProp(boolean isBoundedNet) {
+		
+		if (isBoundedNet && mPrismCTLProperty != null) {
+			
+			return mPrismCTLProperty;
+			
 		} else {
-			buildPatternRep(formula);
+			return "P=? [" + mPrismLTLProperty + "]";
+		}
+	
+	}
+	
+	public String getPrismProperty(boolean isBoundedNet) {
+		
+		if (isBoundedNet && mPrismCTLProperty != null) {
+			
+			return mPrismCTLProperty;
+			
+		} else {
+			
+			if (mIsAntipattern) {
+				return "P<=0 [" + mPrismLTLProperty + "]";
+			} else {
+				return "P>=1 [" + mPrismLTLProperty + "]";
+			}
 		}
 	}
-	
-	public String toString() {
-		return mPattern;
-	}
-	
-	public String getPrismRep() {
-		return mPrismProperty;
-	}
-	
+
 	public int getOperatorCount() {
 		return mOperands.size();
 	}
 	
-	private void buildPatternRep(String formula) {
-		mPrismProperty = "P>=1 [" + formula + "]";
-	}
-	
-	private void buildAntiPatternRep(String formula) {
-		mPrismProperty = "P>0 [" + formula + "]";
-	}
-	
-	protected void setPattern(String formula, boolean antipattern) {
+	protected void setPrismProperty(String ltlProperty, String ctlProperty, boolean antipattern) {
 		
-		if (antipattern) {
-			mPattern = formula;
-			buildAntiPatternRep(formula);
-		} else {
-			mPattern = formula;
-			buildPatternRep(formula);
-		}
+		mIsAntipattern = antipattern;
+		mPrismCTLProperty = ctlProperty;
+		mPrismLTLProperty = ltlProperty;
+		
+	}
+	
+    protected void setPrismProperty(String ltlProperty, boolean antipattern) {
+		
+		mIsAntipattern = antipattern;
+		mPrismLTLProperty = ltlProperty;
+		
 	}
 	
 	public abstract boolean isAntiPattern();

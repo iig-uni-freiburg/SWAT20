@@ -8,7 +8,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.DeclassificationTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 
 public abstract class PrismConverter {
@@ -19,7 +18,7 @@ public abstract class PrismConverter {
 	
 	protected boolean bounded = true;
 	
-	public boolean isUnboundedNet() {
+	public boolean isBoundedNet() {
 		return bounded;
 	}
 	
@@ -33,6 +32,10 @@ public abstract class PrismConverter {
 		StringBuilder transitionVars = createTransitionVars();
 		StringBuilder transitions = createTransitions();
 		return composeModel(transitionVars, placeVars, transitions);
+	}
+	
+	public AbstractPetriNet<?,?,?,?,?,?,?> getNet() {
+		return mAbstractNet;
 	}
 	
 	private StringBuilder createTransitionVars() throws ParameterException {
@@ -81,10 +84,7 @@ public abstract class PrismConverter {
 		// append transitions
 		prismModelBuilder.append(transitions);
 		
-		// append termination transition
-		if (mAbstractNet instanceof IFNet) {
-			prismModelBuilder.append(createTerminationLoops());
-		}
+		prismModelBuilder.append(createTerminationLoops());
 							
 		prismModelBuilder.append("endmodule");
 		prismModelBuilder.append("\n");	

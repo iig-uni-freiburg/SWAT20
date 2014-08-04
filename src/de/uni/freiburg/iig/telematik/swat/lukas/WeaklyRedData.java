@@ -30,7 +30,7 @@ public class WeaklyRedData extends DataflowPattern {
 		formula = "F(" + writeToken + " & (X((!" + readToken 
 				+ ") U (" + terminationCondition + "| (" 
 				+ deleteToken + " & " + "(!" + readToken + ")" + ")))))";
-		setPattern(formula, true);
+		setPrismProperty(formula, true);
 		mOperands.add(t);
 	}
 

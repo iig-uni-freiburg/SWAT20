@@ -17,7 +17,7 @@ public class ParameterProvider {
 		
 		mOneParameterCFPatterns = new HashSet<String>(Arrays.asList(Exists.NAME, Universal.NAME, Absent.NAME));
 		mTwoParameterCFPatterns = new HashSet<String>(Arrays.asList(Precedes.NAME, LeadsTo.NAME, XLeadsTo.NAME, 
-				CoExists.NAME, CoAbsent.NAME, Exclusive.NAME, Corequisite.NAME, MutexChoice.NAME));
+				CoExists.NAME, CoAbsent.NAME, Exclusive.NAME, Corequisite.NAME, MutexChoice.NAME, PLeadsTo.NAME));
 		mThreeParameterCFPatterns = new HashSet<String>(Arrays.asList(ChainPrecedes.NAME, ChainLeadsTo.NAME, PrecedesChain.NAME, LeadsToChain.NAME));
 		mTwoTransitionRP = new HashSet<String>(Arrays.asList(SegregatedFrom.NAME, USegregatedFrom.NAME,
 				BoundedWith.NAME));
@@ -77,6 +77,11 @@ public class ParameterProvider {
 			parameters.add(new Parameter(new HashSet<OperandType>(
 					Arrays.asList(OperandType.ROLE)), -1, "(R1, ..., RM)"));
 			
+		} else if (patternName.equals(Else.NAME)) {
+			parameters.add(new Parameter(new HashSet<OperandType>(
+					Arrays.asList(OperandType.TRANSITION, OperandType.STATEPREDICATE)), 1, "P"));
+			parameters.add(new Parameter(new HashSet<OperandType>(
+					Arrays.asList(OperandType.TRANSITION, OperandType.STATEPREDICATE)), -1, "Q, R, S, ..."));
 		} else {
 			try {
 				throw new UnsupportedPattern("The given pattern is not supported! "

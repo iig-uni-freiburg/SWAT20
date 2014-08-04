@@ -9,7 +9,7 @@ public abstract class ResourcePattern extends CompliancePattern {
 	private static HashMap<String, String> mPatternDescription;
 
 	public ResourcePattern() {
-		super();
+		super(false);
 	}
 
 	public static final String NAME = "Resource Pattern";

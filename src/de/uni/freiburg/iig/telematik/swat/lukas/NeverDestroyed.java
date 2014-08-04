@@ -28,7 +28,7 @@ public class NeverDestroyed extends DataflowPattern {
 		formula = "F(" + writeToken + " & (X(!(" + deleteToken + " | " + writeToken + ") U "
 				+ terminationCondition + ")))";
 		
-		setPattern(formula, true);
+		setPrismProperty(formula, true);
 		
 	}
 

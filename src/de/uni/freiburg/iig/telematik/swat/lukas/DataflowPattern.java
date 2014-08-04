@@ -18,11 +18,11 @@ public abstract class DataflowPattern extends CompliancePattern {
 	private static HashMap<String, String> mPatternDescription;
 	
 	public DataflowPattern() {
-		super();
+		super(true);
 	}
 	
-	public DataflowPattern(String formula, String text) {
-		super(formula, true);
+	public DataflowPattern(String prismLTLProp, String text) {
+		super(prismLTLProp, true);
 	}
 	
 	protected String getTransitionsAccessingToken(Collection<RegularIFNetTransition> ts,

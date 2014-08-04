@@ -44,18 +44,18 @@ public class NotDeletedOnTime extends DataflowPattern {
 		}
 		
 		if (transitions.size() == 0) {
-			setPattern("false", true);
+			setPrismProperty("false", true);
 		} else if (transitions.size() == 1) {
 			AbstractRegularIFNetTransition<IFNetFlowRelation> t = transitions.iterator().next();
 			formula += "G((" + t.getName() + "_last=1) => ((" + t.getName() + "_last=1) U (G(!" + readToken + "))))";
-			setPattern(formula, true);
+			setPrismProperty(formula, true);
 		} else {
 			for (AbstractRegularIFNetTransition<IFNetFlowRelation> t : transitions) {
 				formula += " | (G((" + t.getName() + "_last=1) => ((" + t.getName() + 
 						"_last=1) U (G(!" + readToken + ")))))";
 			}
 			formula = formula.substring(3, formula.length());
-			setPattern(formula, true);
+			setPrismProperty(formula, true);
 		}
 	}
 

@@ -8,8 +8,12 @@ public abstract class CompositePattern extends CompliancePattern {
 	
 	private static HashMap<String, String> mPatternDescription;
 	
-	public CompositePattern(String formula) {
-		super(formula, false);
+	public CompositePattern(String prismLTLproperty, String prismCTLproperty) {
+		super(prismLTLproperty, prismCTLproperty, false);
+	}
+	
+	public CompositePattern(String prismLTLproperty) {
+		super(prismLTLproperty, false);
 	}
 	
     public static HashMap<String, String> getPatternDescription() {

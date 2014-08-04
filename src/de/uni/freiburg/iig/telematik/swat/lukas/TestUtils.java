@@ -20,7 +20,7 @@ public class TestUtils {
 		mIFNetFile = IOUtils.writeToFile(mFilesPath, "model.pm",
 				converter.convert().toString());
 		mPropertyFile = IOUtils.writeToFile(mFilesPath, "property.pctl",
-				pattern.getPrismRep());
+				pattern.getPrismProperty(converter.isBoundedNet()));
 		
 	}
 	
@@ -41,6 +41,15 @@ public class TestUtils {
 		IOUtils.deleteFile(mIFNetFile);
 		IOUtils.deleteFile(mPropertyFile);
 		return output1.contains("Result: true");
+	}
+	
+	public boolean isPropertySatisfied(boolean outputWhenSatisfied) throws Exception {
+
+		String command1 = "prism " + mIFNetFile.getAbsolutePath() + " " + mPropertyFile.getAbsolutePath();
+		String output1 = execToString(command1);
+		IOUtils.deleteFile(mIFNetFile);
+		IOUtils.deleteFile(mPropertyFile);
+		return output1.contains("Result: " + outputWhenSatisfied);
 	}
 
 }

@@ -1,23 +1,104 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
-public class PrismResult {
+public class PrismResult implements Iterable<Map.Entry<CompliancePattern, PatternResult>> {
 
 	HashMap<CompliancePattern, PatternResult> mResults;
 	
-	// HashMap<String, ArrayList<PatternResult>> mResults;
-	
 	public PrismResult(ArrayList<CompliancePattern> patterns, String resultStr) {
-		// mResults = new HashMap<String, ArrayList<PatternResult>>();
+		
 		mResults = new HashMap<CompliancePattern, PatternResult>();
-		fillResultMap(patterns, resultStr);
+		
+		ArrayList<String> resultStrs = getResultsStringForPattern(resultStr);
+
+		for (int i = 0; i < patterns.size(); i++) {
+			CompliancePattern cp = patterns.get(i);
+			boolean isAntiPattern = cp.isAntiPattern();
+			String resString = resultStrs.get(i);
+			double probability = getProb(resString);
+			boolean isFulfilled = isFulfilled(resString, isAntiPattern);
+			PatternResult pr = new PatternResult(probability, isFulfilled);
+			mResults.put(cp, pr);	
+		}
+		
 	}
 
-	private void fillResultMap(ArrayList<CompliancePattern> patterns, String resultStr) {
+	public PrismResult(ArrayList<CompliancePattern> patterns, String resultStr,
+			String states) {
 		
+		mResults = new HashMap<CompliancePattern, PatternResult>();
+			
+		ArrayList<String> resultStrs = getResultsStringForPattern(resultStr);
+		
+		for (int i=0, j=0; i<resultStrs.size(); i++, j++) {
+			String res = resultStrs.get(i);
+			if (res.contains("CTL")) {
+				j--;
+			}
+			CompliancePattern cp = patterns.get(j);
+			PatternResult pr = mResults.get(cp);
+			if (pr == null) {
+				double probability = getProb(res);
+				boolean isFulfilled = isFulfilled(res, cp.isAntiPattern());
+				pr = new PatternResult(probability, isFulfilled);
+				mResults.put(cp, pr);
+			} else {
+				ArrayList<String> path = getViolatingPath(res, states);
+				pr.setViolatingPath(path);
+				mResults.put(cp, pr);
+			}
+		}
+	}
+
+	private ArrayList<String> getViolatingPath(String resString, String states) {
+		
+		if (!resString.contains("Counterexample")) {
+			return null;
+		}
+		
+		ArrayList<String> transitionPath = new ArrayList<String>();
+		HashMap<Integer, String> indexTransitionMap = new HashMap<Integer, String>(); 
+		int index = states.indexOf(")");
+		String variablesStr = states.substring(0, index);
+		variablesStr = variablesStr.substring(1, variablesStr.length());
+		String[] variableNames = variablesStr.split(",");
+		
+		for (int i=0; i<variableNames.length; i++) {
+			if (variableNames[i].contains("_last")) {
+				indexTransitionMap.put(i, variableNames[i]);
+			}
+		}
+		
+		index = resString.indexOf("Counterexample");
+		int endIndex = resString.lastIndexOf(")");
+		resString = resString.substring(index, endIndex + 1);
+		index = resString.indexOf("(");
+		endIndex = resString.lastIndexOf(")");
+		resString = resString.substring(index, endIndex + 1);
+		
+		String[] nodes = resString.split("\n");
+		
+		for (int j=0; j<nodes.length; j++) {
+			String node = nodes[j];
+			node = node.substring(1, node.length() - 1);
+			String[] variableValues = node.split(",");
+			for (int i=0; i<variableValues.length; i++) {
+				String transitionName = indexTransitionMap.get(i);
+				if (transitionName != null && variableValues[i].equals("1")) {
+					transitionPath.add(transitionName);
+				}
+			}
+		}
+		
+		return transitionPath;
+	}
+
+	private ArrayList<String> getResultsStringForPattern(String resultStr) {
 		String[] strs = resultStr.split("---------------------------------------------------------------------");
 		ArrayList<String> resultStrs = new ArrayList<String>();
 		
@@ -25,22 +106,10 @@ public class PrismResult {
 			if(str.contains("Model checking:")) {
 				resultStrs.add(str);
 			}
-		} 
-		
-		for (int i = 0; i < patterns.size(); i++) {
-		
-			CompliancePattern cp = patterns.get(i);
-			boolean isAntiPattern = cp.isAntiPattern();
-			String resString = resultStrs.get(i);
-			double probability = getProb(resString);
-			boolean isFulfilled = isFulfilled(resString, isAntiPattern);
-			ArrayList<ArrayList<String>> violatingPaths = getViolatingExamplePaths();
-			PatternResult pr = new PatternResult(probability, isFulfilled, violatingPaths);
-			mResults.put(cp, pr);
-			
 		}
-
+		return resultStrs;
 	}
+
 
 	private boolean isFulfilled(String resString, boolean isAntiPattern) {
 		
@@ -51,6 +120,7 @@ public class PrismResult {
 		}
 
 	}
+	
 
 	private double getProb(String resString) {
 		
@@ -66,14 +136,6 @@ public class PrismResult {
 		}
 		return Double.parseDouble(prob);
 	}
-
-	private ArrayList<ArrayList<String>> getViolatingExamplePaths() {
-		
-		ArrayList<ArrayList<String>> paths = new ArrayList<ArrayList<String>>();
-		paths.add(new ArrayList<String>(Arrays.asList("t1", "t2", "t3", "t4", "t5")));
-		paths.add(new ArrayList<String>(Arrays.asList("t1", "t2", "t7")));
-		return paths;
-	}
 	
 	/*public HashMap<CompliancePattern, PatternResult> getResults() {
 		return mResults;
@@ -87,6 +149,11 @@ public class PrismResult {
 		
 		return mResults.get(pattern);
 		
+	}
+
+	@Override
+	public Iterator<Entry<CompliancePattern, PatternResult>> iterator() {
+		return mResults.entrySet().iterator();
 	}
 	
 	/*public static void main(String [ ] args) {

@@ -16,7 +16,7 @@ public class UniversalTest {
 		AtomicProposition ap1 = new AtomicProposition("pIn_black", Relation.SMALLER_EQUAL, 1);
 		AtomicProposition ap2 = new AtomicProposition("pOut_black", Relation.SMALLER_EQUAL, 1);
 		Clause c = new Clause(ap1, ap2);
-		Universal p1 = new Universal(c);
+		Universal p1 = new Universal(c, ifnet.getInputPlace());
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
 			assertTrue(tu.isPropertySatisfied());
@@ -29,7 +29,7 @@ public class UniversalTest {
 	public void test1() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
 		AtomicProposition ap1 = new AtomicProposition("pOut_black", Relation.GREATER_EQUAL, 1);
-		Universal p1 = new Universal(ap1);
+		Universal p1 = new Universal(ap1, ifnet.getInputPlace());
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
 			assertFalse(tu.isPropertySatisfied());

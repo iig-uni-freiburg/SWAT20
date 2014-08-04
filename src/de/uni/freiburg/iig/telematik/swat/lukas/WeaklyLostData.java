@@ -23,7 +23,7 @@ public class WeaklyLostData extends DataflowPattern {
 		
 		formula = "F(" + writeToken + " & (X(!(" + readToken+ " | " 
 				+ deleteToken + ") U (" + writeToken +" & " + "!" + readToken + "))))";
-		setPattern(formula, true);
+		setPrismProperty(formula, true);
 		mOperands.add(t);
 	}
 

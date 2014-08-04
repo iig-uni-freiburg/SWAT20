@@ -4,9 +4,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Collection;
+
 import org.junit.Test;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 
 public class ExistsTest {
 	
@@ -19,7 +22,7 @@ public class ExistsTest {
 		Exists p1 = new Exists(c);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertFalse(tu.isPropertySatisfied());
+			assertFalse(tu.isPropertySatisfied(false));
 		} catch (Exception e) {
 			fail();
 		}
@@ -32,7 +35,7 @@ public class ExistsTest {
 		Exists p1 = new Exists(ap1);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied());
+			assertTrue(tu.isPropertySatisfied(false));
 		} catch (Exception e) {
 			fail();
 		}
@@ -41,10 +44,11 @@ public class ExistsTest {
 	@Test
 	public void test2() {
 		IFNet ifnet = IFNetTestUtils.createDeadTransitionNet();
-		Exists p1 = new Exists(new Transition("t1"));
+		Collection<IFNetPlace> outplaces = ifnet.getDrainPlaces();
+		Exists p1 = new Exists(new Transition("t1"), outplaces.iterator().next());
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied());
+			assertTrue(tu.isPropertySatisfied(false));
 		} catch (Exception e) {
 			fail();
 		}

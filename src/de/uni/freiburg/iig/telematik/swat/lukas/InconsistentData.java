@@ -70,9 +70,9 @@ public class InconsistentData extends DataflowPattern {
 		}
 		
 		if (!parallelExecExpr.equals("")) {
-			setPattern("F(" + parallelExecExpr.substring(0, parallelExecExpr.length() - 3) + ")", true);
+			setPrismProperty("F(" + parallelExecExpr.substring(0, parallelExecExpr.length() - 3) + ")", true);
 		} else {
-			setPattern("false", true);
+			setPrismProperty("false", true);
 		}
 		
 	}

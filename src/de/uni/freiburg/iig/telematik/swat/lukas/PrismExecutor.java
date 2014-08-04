@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -25,6 +27,12 @@ public class PrismExecutor {
 	private PrismConverter mConverter;
 	
 	private String mFilesPath = System.getProperty("user.dir");
+	
+	private final String mPropertiesFileName = "properties";
+	
+	private final String mModelFileName = "model.pm";
+	
+	private final String mStatesFileName = "states";
 
 	public PrismExecutor(AbstractPetriNet<?,?,?,?,?,?,?> net) {
 		
@@ -62,16 +70,38 @@ public class PrismExecutor {
 		
 		String properties = "";
 		for (CompliancePattern pattern : patterns) {
-			properties += "P=? [" + pattern.toString() + "]\n\n";
+			properties += pattern.getPrismProp(false) + "\n\n";
+			if (mConverter.isBoundedNet() && pattern.getPrismCTLProperty() != null) {
+				properties += pattern.getPrismCTLProperty() + "\n\n";
+			}
 		}
 		
-		File modelFile = IOUtils.writeToFile(mFilesPath, "model.pm", mConverter.convert().toString());
-		File propertiesFile = IOUtils.writeToFile(mFilesPath, "properties", properties);
+		File modelFile = IOUtils.writeToFile(mFilesPath, mModelFileName, mConverter.convert().toString());
+		File propertiesFile = IOUtils.writeToFile(mFilesPath, mPropertiesFileName, properties);
 		
 		try {
+			
 			String resultStr = execToString(modelFile, propertiesFile);
-			PrismResult pRes = new PrismResult(patterns, resultStr);
+			PrismResult pRes;
+			
+			if (mConverter.isBoundedNet()) {
+				
+				String states = IOUtils.readFile(mFilesPath + File.separator + mStatesFileName);
+				pRes = new PrismResult(patterns, resultStr, states);
+				
+			} else {
+				
+				pRes = new PrismResult(patterns, resultStr);
+			}
+			
+			Iterator<Entry<CompliancePattern, PatternResult>> it = pRes.iterator();
+			while (it.hasNext()) {
+				PatternResult pr = it.next().getValue();
+				System.out.println(pr.getViolatingPath());
+			}
+			
 			return pRes;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,9 +115,9 @@ public class PrismExecutor {
 		String command;
 		String prism = (System.getProperty("os.name").contains("Windows"))? "prism.bat" : "prism";
 		
-		if (mConverter.isUnboundedNet()) {
+		if (mConverter.isBoundedNet()) {
 			command = mPrismPath + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
-					" " + properties.getAbsolutePath(); 
+					" " + properties.getAbsolutePath() + " -exportstates " + mStatesFileName; 
 		} else {
 			command = mPrismPath + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
 					" " + properties.getAbsolutePath() + " -ex";

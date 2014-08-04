@@ -20,7 +20,7 @@ public class TwiceDestroyed extends DataflowPattern {
 		
 		formula = "F(" + deleteToken + " & (X(!" + writeToken 
 				+ " U (" + deleteToken + " & !" + writeToken + "))))";
-		setPattern(formula, true);
+		setPrismProperty(formula, true);
 		mOperands.add(t);
 	}
 

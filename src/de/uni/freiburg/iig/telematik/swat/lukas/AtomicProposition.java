@@ -4,6 +4,7 @@ public class AtomicProposition extends Statepredicate {
 
 	
 	private String mRelation;
+	private String mPlaceId;
 	private String mPlaceName;
 	private int mNumber;
 
@@ -14,7 +15,7 @@ public class AtomicProposition extends Statepredicate {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		mPlaceName = placeName;
+		mPlaceId = placeName;
 		mNumber = number;
 	}
 
@@ -38,14 +39,14 @@ public class AtomicProposition extends Statepredicate {
 	@Override
 	public String toString() {
 
-		return "(" + mPlaceName + mRelation + mNumber + ")";
+		return "(" + mPlaceId + mRelation + mNumber + ")";
 		
 	}
 
 	@Override
 	public String getNegation() {
 		String relation = negate();
-		return "(" + mPlaceName + relation + mNumber + ")";
+		return "(" + mPlaceId + relation + mNumber + ")";
 	}
 
 	private String negate() {
@@ -67,6 +68,11 @@ public class AtomicProposition extends Statepredicate {
 		}
 		
 		return relation;
+	}
+
+	@Override
+	public String getName() {
+		return mPlaceName;
 	}
 	
 }

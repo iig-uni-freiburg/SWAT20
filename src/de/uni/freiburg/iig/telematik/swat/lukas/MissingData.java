@@ -22,7 +22,7 @@ public class MissingData extends DataflowPattern {
 				 + deleteToken + ")) | (F(" + deleteToken  
 				+ " & (X((!" + writeToken + ") U (" + readToken +
 				" | "+ deleteToken +")))))";
-		setPattern(formula, true);
+		setPrismProperty(formula, true);
 		mOperands.add(t);
 	}
 

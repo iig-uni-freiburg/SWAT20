@@ -1,10 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-
-import de.uni.freiburg.iig.telematik.swat.bernhard.Helpers;
 
 public class Parameter {
 	
