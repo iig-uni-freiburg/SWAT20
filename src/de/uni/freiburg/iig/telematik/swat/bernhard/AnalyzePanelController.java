@@ -33,14 +33,6 @@ public class AnalyzePanelController {
 			AnalyzePanel a=new AnalyzePanel(pneditor, name);
 			panelDic.put(name, a);
 		}
-		if(panelDic.keySet().contains("analysis_val.xml")) {
-			try {
-				throw new Exception();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		//System.out.println(panelDic);
 		return panelDic.get(name);
 	}

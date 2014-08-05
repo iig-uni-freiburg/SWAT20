@@ -72,16 +72,17 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  * 
  */
 public class AnalyzePanel implements LoadSave {
-	private JPanel panel;
+	private JPanel content;
 	private JPanel propertyPanel;
 	private JLabel analysisTopLabelWithDate;
 	private JButton editButton, runButton, saveButton;
 	private String netName;
 	private PatternWindow patternWindow;
-	private PNEditor pneditor;
+	private PNEditor pnEditor;
 	private PetriNetInformation netInfo;
 	private PatternFactory patternFactory;
 	private List<PatternSetting> patternSettings;
+	private AnalyzeToolBar toolBar;
 
 	public void netChanged() {
 		netInfo.netChanged();
@@ -93,8 +94,13 @@ public class AnalyzePanel implements LoadSave {
 		return netInfo;
 	}
 
+	public AnalyzeToolBar getToolBar() {
+		return toolBar;
+	}
+
 	public AnalyzePanel(PNEditor pneditor, String net) {
-		this.pneditor = pneditor;
+		this.pnEditor = pneditor;
+		toolBar=new AnalyzeToolBar(pneditor);
 		netName = net.split("[.]")[0];
 		netInfo = new PetriNetInformation(pneditor);
 		patternFactory = new PatternFactory(pneditor.getNetContainer()
@@ -106,7 +112,7 @@ public class AnalyzePanel implements LoadSave {
 	}
 	
 	private void initGui() {
-		panel=new JPanel(new GridBagLayout());
+		content=new JPanel(new GridBagLayout());
 		analysisTopLabelWithDate = new JLabel("Analysis from "
 				+ getDateShort());
 		editButton = new JButton("Edit");
@@ -130,9 +136,9 @@ public class AnalyzePanel implements LoadSave {
 		jsp.setVisible(true);
 		//jsp.setEnabled(true);
 		//jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		panel.setLayout(new BorderLayout());
-		panel.add(box,BorderLayout.NORTH);
-		panel.add(jsp,BorderLayout.CENTER);
+		content.setLayout(new BorderLayout());
+		content.add(box,BorderLayout.NORTH);
+		content.add(jsp,BorderLayout.CENTER);
 		patternWindow = new PatternWindow(this, patternFactory);
 		editButton.addActionListener(new ActionListener() {
 
@@ -184,7 +190,7 @@ public class AnalyzePanel implements LoadSave {
 				    JOptionPane.WARNING_MESSAGE);
 			return;
 		}
-		PrismExecutor prismExecuter = new PrismExecutor(pneditor
+		PrismExecutor prismExecuter = new PrismExecutor(pnEditor
 				.getNetContainer().getPetriNet());
 		// build list of patterns
 		HashMap<PatternSetting, CompliancePattern> resultMap = new HashMap<PatternSetting, CompliancePattern>();
@@ -256,6 +262,14 @@ public class AnalyzePanel implements LoadSave {
 				newPanel.add(Helpers.jPanelLeft(new JLabel("\tProbability: "
 						+ decimalFormat.format(result.getProbability()))));
 				JButton counterButton = new JButton("Counterexample");
+				final List<String> path=result.getViolatingPath();
+				counterButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				showCounterExample(path);
+			}
+		});
 				// counterButton.setPreferredSize(counterButton.getMaximumSize());
 				if (result.isFulfilled() == false) {
 					newPanel.add(Helpers.jPanelLeft(counterButton));
@@ -267,20 +281,20 @@ public class AnalyzePanel implements LoadSave {
 			propertyPanel.add(northPanel);
 		}
 
-		panel.repaint();
-		panel.updateUI();
+		content.repaint();
+		content.updateUI();
 	}
 
 	public void setAnalyseName(String text) {
 		analysisTopLabelWithDate.setText(text);
 	}
 
-	public JPanel getPanel() {
-		return panel;
+	public JPanel getContent() {
+		return content;
 	}
 
-	public void setPanel(JPanel panel) {
-		this.panel = panel;
+	public void setContent(JPanel panel) {
+		this.content = panel;
 	}
 
 	public String getNetName() {
@@ -309,6 +323,10 @@ public class AnalyzePanel implements LoadSave {
 		SwatTreeView.getInstance().expandAll();
 		SwatTreeView.getInstance().updateUI();
 		return true;
+	}
+	
+	private void showCounterExample(List<String> path) {
+		toolBar.setCounterExample(path);
 	}
 
 }
