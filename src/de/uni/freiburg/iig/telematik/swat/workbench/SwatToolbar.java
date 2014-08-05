@@ -17,12 +17,16 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
@@ -32,7 +36,10 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowToPnmlConverter;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
@@ -140,6 +147,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(getSwitchworkingDirectoryButton());
 		standardItems.add(getNewNetButton());
 		standardItems.add(getImportButon());
+		standardItems.add(new SwatToolbarButton(ToolbarButtonType.AF_TEMPLATE));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		standardItems.add(getLolaButton());
 		standardItems.add(getAristaFlowButton());
@@ -362,6 +370,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				//addKeyListener(new DeleteAction());
 				setMnemonic(KeyEvent.VK_DELETE);
 				//set
+				break;
+			case AF_TEMPLATE:
+				setToolTipText("Import AristaFlow Workflow template");
+				addActionListener(new AFtemplateImport());
 			}
 		}
 		
@@ -379,7 +391,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE;
 	}
 	
 
@@ -470,6 +482,58 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		@Override
 		public void keyTyped(KeyEvent arg0) {
 			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	class AFtemplateImport implements ActionListener {
+
+		private String requestFileName(String message, String title) {
+			String name = new FileNameDialog(SwingUtilities.getWindowAncestor(treeView.getParent()), message, title, false).requestInput();
+			if (name.endsWith(".pnml"))
+				return name;
+			else
+				return name + ".pnml";
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser fc = new JFileChooser();
+			int returnVal = fc.showOpenDialog(Workbench.getInstance());
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				Workbench.consoleMessage("Opening: " + file.getName());
+				AristaFlowToPnmlConverter converter = new AristaFlowToPnmlConverter(file);
+				try {
+					converter.parse();
+					String newFileName = requestFileName("Please enter a name for the imported net", "Please enter a new name");
+					File folder = new File(SwatProperties.getInstance().getNetWorkingDirectory(), newFileName);
+					folder.mkdir();
+					PTNetEditor editor = converter.getEditor(new File(folder, newFileName));
+					SaveAction sa = new SaveAction(editor);
+					sa.actionPerformed(new ActionEvent(this, 0, "save imported net"));
+					SwatComponents.getInstance().putNetIntoSwatComponent(editor.getNetContainer(), newFileName.split("\\.pnml")[0]);
+				} catch (ParserConfigurationException e1) {
+					Workbench.errorMessage("Opening: " + file.getName() + " FAILED");
+					e1.printStackTrace();
+				} catch (SAXException e1) {
+					Workbench.errorMessage("Opening: " + file.getName() + " FAILED");
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					Workbench.errorMessage("Opening: " + file.getName() + " FAILED");
+					e1.printStackTrace();
+				} catch (ParameterException e2) {
+					Workbench.errorMessage("Saving: " + file.getName() + " FAILED");
+					e2.printStackTrace();
+				} catch (PropertyException e3) {
+					Workbench.errorMessage("Saving: " + file.getName() + " FAILED");
+					e3.printStackTrace();
+				}
+			} else {
+
+			}
 
 		}
 
