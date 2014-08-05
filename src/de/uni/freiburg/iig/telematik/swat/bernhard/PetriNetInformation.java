@@ -131,5 +131,34 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		// TODO Auto-generated method stub
 		return transitionLabelDicReverse;
 	}
+
+	@Override
+	public List<String> getActivities() {
+		// TODO Auto-generated method stub
+		ArrayList<String> activities=new ArrayList<String>();
+		activities.addAll( transitionLabelDic.keySet());
+		Collections.sort(activities);
+		return activities;
+	}
+
+	@Override
+	public String[] getPlacesArray() {
+		// TODO Auto-generated method stub
+		List<String> places = placesList;
+		return places.toArray(new String[places.size()]);
+	}
+
+	@Override
+	public String[] getDataTypesArray() {
+		// TODO Auto-generated method stub
+		return dataTypeList.toArray(new String[dataTypeList.size()]);
+	}
+
+	@Override
+	public String[] getActivitiesArray() {
+		// TODO Auto-generated method stub
+		List<String> activities = getActivities();
+		return activities.toArray(new String[activities.size()]);
+	}
 	
 }

@@ -41,7 +41,7 @@ public class AnalysisStore {
 		if (path == null) {
 			return false;
 		}
-		AnalysisNameChooser ac = new AnalysisNameChooser(null,"Choose Name", path, PREFIX);
+		AnalysisNameChooser ac = new AnalysisNameChooser(null,"Choose Name", path);
 		String name = ac.requestInput();
 		IOUtils.writeToFile(path, PREFIX+name+SUFFIX, xml);
 		return true;

@@ -8,10 +8,10 @@ import javax.swing.JComboBox;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 
-public class PatternDropDownParameterPanel extends PatternParameterPanel {
+public class PatternDropDownParameter extends PatternParameterPanel {
 
 	private OperandType type;
-	public PatternDropDownParameterPanel(String name, OperandType type, String[] values) {
+	public PatternDropDownParameter(String name, OperandType type, String[] values) {
 		super(name);
 		this.type=type;
 		content = new JComboBox(values);

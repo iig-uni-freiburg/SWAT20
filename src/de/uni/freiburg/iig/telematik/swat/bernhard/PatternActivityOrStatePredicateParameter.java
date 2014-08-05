@@ -11,17 +11,19 @@ import javax.swing.JPanel;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 
-public class ActivityOrStatePredicateParameterPanel extends
+public class PatternActivityOrStatePredicateParameter extends
 		PatternParameterPanel {
 
-	private PatternDropDownParameterPanel activityPanel;
+	private PetriNetInformationReader informationReader;
+	private PatternDropDownParameter activityPanel;
 	private PatternMultipleParameterPanel statePredicatePanel;
 	boolean activityActive;
 	private JComboBox chooseTypeBox;
-	public ActivityOrStatePredicateParameterPanel(String name, String activities[], String places[]) {
+	public PatternActivityOrStatePredicateParameter(String name, PetriNetInformationReader pr) {
 		super(name);
-		activityPanel=new PatternDropDownParameterPanel(name, OperandType.TRANSITION, activities);
-		statePredicatePanel=new MultipleStatePredicateParameter(name, "State Predicate", places);
+		informationReader=pr;
+		activityPanel=new PatternDropDownParameter(name, OperandType.TRANSITION, informationReader.getActivitiesArray());
+		statePredicatePanel=new PatternStatePredicateParameter(name, informationReader);
 		activityActive=true;
 		String arr[]={"Activity","State Predicate"};
 		chooseTypeBox=new JComboBox(arr);

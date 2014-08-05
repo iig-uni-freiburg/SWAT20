@@ -12,21 +12,18 @@ public class AnalysisNameChooser extends FileNameDialog {
 	private static final String ANALYSIS_NAME_ALREADY_IN_USE = "This analysis name is already in use. Overwrite?";
 
 	private String netPath;
-	private String prefix;
 
-	public AnalysisNameChooser(Window parent, String title, String path,
-			String pf) {
+	public AnalysisNameChooser(Window parent, String title, String path) {
 		super(parent, "Choose name for analysis:", title, false);
 		// TODO Auto-generated constructor stub
 		netPath = path;
-		prefix = pf;
 	}
 
 	@Override
 	protected boolean isValid(String input) {
 		if (super.isValid(input)) {
-			String filePath = netPath + prefix + input + ".xml";
-			System.out.println(filePath);
+			String filePath = netPath + AnalysisStore.PREFIX + input + AnalysisStore.SUFFIX;
+			//System.out.println(filePath);
 			if (new File(filePath).exists()) {
 				errorMessage = ANALYSIS_NAME_ALREADY_IN_USE;
 				if (JOptionPane.showConfirmDialog(null,

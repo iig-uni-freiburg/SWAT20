@@ -8,9 +8,11 @@ import java.util.List;
  * @author bernhard
  *
  */
-public interface PetriNetInformationReader {
+public interface PetriNetInformationReader extends InformationReader {
 	public List<String> getDataTypesList();
 	public List<String> getPlacesList();
+	public String[] getPlacesArray();
+	public String[] getDataTypesArray();
 	public HashMap<String, String> getTransitionDictionary();
 	public HashMap<String, String> getTransitionDictionaryReverse();
 }

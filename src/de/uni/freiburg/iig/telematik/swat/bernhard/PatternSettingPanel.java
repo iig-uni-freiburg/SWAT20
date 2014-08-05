@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -41,11 +42,13 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+
 /**
- * This class represents a Panel with all its Components Labels, Remove Button
- * A PatternSettingPanel can be added to the patternPanel of the PatternWindow
+ * This class represents a Panel with all its Components Labels, Remove Button A
+ * PatternSettingPanel can be added to the patternPanel of the PatternWindow
+ * 
  * @author bernhard
- *
+ * 
  */
 public class PatternSettingPanel {
 	private JPanel panel;
@@ -55,98 +58,86 @@ public class PatternSettingPanel {
 	private List<PatternParameterPanel> parameterPanelList;
 	private PatternWindow patternWindow;
 
-	public PatternSettingPanel(PatternSetting ps, PatternWindow patternWindow, PatternFactory patternFactory) {
+	public PatternSettingPanel(PatternSetting ps, PatternWindow patternWindow,
+			PatternFactory patternFactory) {
 		init(ps.getName(), patternWindow, patternFactory);
 		setPatternSetting(ps);
 	}
-	public PatternSettingPanel(String patternName, PatternWindow patternWindow, PatternFactory patternFactory) {
+
+	public PatternSettingPanel(String patternName,
+			PatternWindow patternWindow, PatternFactory patternFactory) {
 		init(patternName, patternWindow, patternFactory);
 	}
-	
-	private void init(String patternName, PatternWindow patternWindow, PatternFactory patternFactory) {
-		//pattern = PatternDatabase.getInstance()
-		//	.getPattern(patternName);
-	List<Parameter> parameters = patternFactory.getParametersOfPattern(patternName);
-	this.patternWindow=patternWindow;
-	patternSetting=new PatternSetting(patternName,parameters);
-	//panel = new JPanel(new GridLayout(patternSetting.getParameters().size() + 1, 2));
-	panel=new JPanel();
-	panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-	// System.out.println(paraList);
-	
-	// System.out.println(paraList.size());
-	parameterPanelList = new ArrayList<PatternParameterPanel>();
 
-	JLabel label = new JLabel(patternName);
-	Font font = label.getFont();
-	// same font but bold
-	Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize()+3);
-	label.setFont(boldFont);
-	
+	private void init(String patternName, PatternWindow patternWindow,
+			PatternFactory patternFactory) {
+		// pattern = PatternDatabase.getInstance()
+		// .getPattern(patternName);
+		List<Parameter> parameters = patternFactory
+				.getParametersOfPattern(patternName);
+		this.patternWindow = patternWindow;
+		patternSetting = new PatternSetting(patternName, parameters);
+		// panel = new JPanel(new
+		// GridLayout(patternSetting.getParameters().size() + 1, 2));
+		panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		// System.out.println(paraList);
 
-	
-	try {
-		removeButton = new JButton(IconFactory.getIcon("minimize"));
-		removeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				removeFromPatternWindow();
-			}
-		});
-		
-		rightPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
-		rightPanel.add(label);
-		rightPanel.add(removeButton);
-		panel.add(rightPanel);
-	} catch (ParameterException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (PropertyException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+		// System.out.println(paraList.size());
+		parameterPanelList = new ArrayList<PatternParameterPanel>();
 
-	// add ParameterPanels for each Parameter
-	//for (PatternParameter para : pattern.getParameters()) {
-	List<String> dataList=patternWindow.getNetInformations().getDataTypesList();
-	List<String> placesList=patternWindow.getNetInformations().getPlacesList();
-	HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
-	String transitionsArray[]=transitionDic.keySet().toArray(new String[transitionDic.keySet().size()]);
-	String dataTypeArray[]=dataList.toArray(new String[dataList.size()]);
-	String placesArray[]=placesList.toArray(new String[placesList.size()]);
-	for (Parameter pp : parameters) {
-		PatternParameterPanel patternPara = null;
-		JPanel paraPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
-		paraPanel.add(new JLabel("Choose "+pp.getName()));
-		
-		Set<OperandType> operandSet=pp.getTypes();
-		// determine from which type parameter is
-		if(operandSet.contains(OperandType.TOKEN)) {
-			patternPara = new PatternDropDownParameterPanel(pp.getName(), OperandType.TOKEN, dataTypeArray);
-		} else if (operandSet.contains(OperandType.TRANSITION) && operandSet.contains(OperandType.STATEPREDICATE)) {
-			patternPara=new ActivityOrStatePredicateParameterPanel(pp.getName(), transitionsArray, placesArray);
-		} else if (operandSet.contains(OperandType.TRANSITION)) {
-			patternPara=new PatternDropDownParameterPanel(pp.getName(), OperandType.TRANSITION, transitionsArray);
+		JLabel label = new JLabel(patternName);
+		Font font = label.getFont();
+		// same font but bold
+		Font boldFont = new Font(font.getFontName(), Font.BOLD,
+				font.getSize() + 3);
+		label.setFont(boldFont);
+
+		try {
+			removeButton = new JButton(IconFactory.getIcon("minimize"));
+			removeButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					removeFromPatternWindow();
+				}
+			});
+
+			rightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			rightPanel.add(label);
+			rightPanel.add(Box.createHorizontalStrut(10));
+			rightPanel.add(removeButton);
+			panel.add(rightPanel);
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		paraPanel.add(patternPara.getContent());
-		panel.add(paraPanel);
-		parameterPanelList.add(patternPara);
-	}
-	}
 
-	
+		PatternParameterPanelFactory factory = new PatternParameterPanelFactory(
+				patternWindow.getNetInformations());
+		for (Parameter pp : parameters) {
+			PatternParameterPanel patternPara = factory.createPanel(pp);
+			JPanel paraPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			paraPanel.add(new JLabel("Choose " + pp.getName()));
+			paraPanel.add(Box.createHorizontalStrut(300));
+			paraPanel.add(patternPara.getContent());
+			panel.add(paraPanel);
+			parameterPanelList.add(patternPara);
+		}
+	}
 
 	protected void removeFromPatternWindow() {
 		// TODO Auto-generated method stub
 		patternWindow.removePatternPanel(this);
 	}
 
-
-
 	/**
 	 * return a list of the entered values
+	 * 
 	 * @return
 	 */
 	public String getValues() {
@@ -156,30 +147,35 @@ public class PatternSettingPanel {
 		}
 		return paraString;
 	}
+
 	public PatternSetting getPatternSetting() {
 		return patternSetting;
 	}
+
 	public void setPatternSetting(PatternSetting ps) {
-		patternSetting=ps;
-		//ps.updateParameterAppliedString();
-		assert(ps.getParameters().size() == parameterPanelList.size());
-		List<Parameter> paraList=ps.getParameters();
-		HashMap<String, String> transitionDicReverse=patternWindow.getNetInformations().getTransitionDictionaryReverse();
-		for(int i=0; i <paraList.size(); i++) {
-			ArrayList<ParamValue> list=new ArrayList<ParamValue>();
-			for(ParamValue value:paraList.get(i).getValue() ) {
-				if(value.getOperandType()==OperandType.TRANSITION) {
-					String valueLookup=transitionDicReverse.get(value.getOperandName());
+		patternSetting = ps;
+		// ps.updateParameterAppliedString();
+		assert (ps.getParameters().size() == parameterPanelList.size());
+		List<Parameter> paraList = ps.getParameters();
+		HashMap<String, String> transitionDicReverse = patternWindow
+				.getNetInformations().getTransitionDictionaryReverse();
+		for (int i = 0; i < paraList.size(); i++) {
+			ArrayList<ParamValue> list = new ArrayList<ParamValue>();
+			for (ParamValue value : paraList.get(i).getValue()) {
+				if (value.getOperandType() == OperandType.TRANSITION) {
+					String valueLookup = transitionDicReverse.get(value
+							.getOperandName());
 					// set value from reverse dictionary search
-					list.add(new ParamValue(valueLookup, OperandType.TRANSITION));
+					list.add(new ParamValue(valueLookup,
+							OperandType.TRANSITION));
 				} else {
 					list.add(value);
 				}
-				
+
 			}
 			// set value
 			parameterPanelList.get(i).setValue(list);
-			
+
 		}
 	}
 
@@ -189,38 +185,41 @@ public class PatternSettingPanel {
 
 	public void updatePatternSettingValues() {
 		// first store the values taken from the jcomponents
-		
+
 		for (PatternParameterPanel paraPanel : parameterPanelList) {
-			for(Parameter patternPara: patternSetting.getParameters()) {
-				if(paraPanel.getName().equals(patternPara.getName())) {
+			for (Parameter patternPara : patternSetting.getParameters()) {
+				if (paraPanel.getName().equals(patternPara.getName())) {
 					// if its an activity, take the name and not the label
 					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
-					
-					patternPara.setValue((ArrayList<ParamValue>) (paraPanel.getValue()));
+
+					patternPara.setValue((ArrayList<ParamValue>) (paraPanel
+							.getValue()));
 				}
 			}
-			
+
 		}
 		// update the pattern representation
 		patternSetting.updateParameterAppliedString();
-		HashMap<String, String> transitionDic=patternWindow.getNetInformations().getTransitionDictionary();
-		
+		HashMap<String, String> transitionDic = patternWindow
+				.getNetInformations().getTransitionDictionary();
+
 		for (PatternParameterPanel paraPanel : parameterPanelList) {
-			for(Parameter patternPara: patternSetting.getParameters()) {
-				if(paraPanel.getName().equals(patternPara.getName())) {
+			for (Parameter patternPara : patternSetting.getParameters()) {
+				if (paraPanel.getName().equals(patternPara.getName())) {
 					// if its an activity, take the name and not the label
 					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
-					for(ParamValue val: patternPara.getValue()) {
-						if(val.getOperandType()==OperandType.TRANSITION) {
-							val.setOperandName(transitionDic.get(val.getOperandName()));
+					for (ParamValue val : patternPara.getValue()) {
+						if (val.getOperandType() == OperandType.TRANSITION) {
+							val.setOperandName(transitionDic.get(val
+									.getOperandName()));
 						}
 					}
-					
+
 				}
 			}
-			
+
 		}
-			
+
 	}
-	
+
 }

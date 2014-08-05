@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -27,16 +28,26 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 
 	protected List<PatternParameterPanel> panelList;
 	protected JButton addButton;
-	protected String[] values;
 	protected String description;
-	public PatternMultipleParameterPanel(String name, String description, String pvalues[]) {
+	protected InformationReader informationReader;
+	protected int limit;
+	public PatternMultipleParameterPanel(String name, String description, InformationReader informationReader) {
 		super(name);
-		values=pvalues;
+		limit=Integer.MAX_VALUE;
+		init(description, informationReader);
+	}
+	public PatternMultipleParameterPanel(String name, String description, InformationReader informationReader, int limit) {
+		super(name);
+		this.limit=limit;
+		init(description, informationReader);
+	}
+	private void init(String description, InformationReader informationReader2) {
 		this.description=description;
+		informationReader=informationReader2;
 		panelList=new ArrayList<PatternParameterPanel>();
 		try {
 			addButton=new JButton(IconFactory.getIcon("maximize"));
-			addButton.setToolTipText("Add another "+description+". All "+description+"s must hold.");
+			addButton.setToolTipText("Add another "+description);
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,11 +71,16 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 
 	protected PatternParameterPanel addParameter() {
 		// TODO Auto-generated method stub
-		PatternParameterPanel p=new PatternStatePredicateParameter(name,values);
+		PatternParameterPanel p= getNewPanel();
 		panelList.add(p);
 		updateContent();
 		return p;
 	}
+	/**
+	 * this method implements the creation of a new parameterpanel
+	 * @return
+	 */
+	protected abstract PatternParameterPanel getNewPanel();
 	
 	protected void updateContent() {
 		content.removeAll();
@@ -96,12 +112,14 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 				panel.add(removeButton);
 			}
 			// the last gets the add Button
-			if(i == panelList.size()-1) {
+			if(i == panelList.size()-1 && panelList.size() < limit) {
 				panel.add(addButton);
 			}
 			content.add(panel);
 			
 		}
+		JPanel p=(JPanel) content;
+		//p.setBorder(BorderFactory.createTitledBorder(p.getName()));
 		content.repaint();
 		content.updateUI();
 	}
