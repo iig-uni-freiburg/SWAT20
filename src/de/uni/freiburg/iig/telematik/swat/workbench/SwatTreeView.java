@@ -40,6 +40,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		this.setShowsRootHandles(true);
 		this.setEditable(false);
 		createChildren();
+		setToggleClickCount(0);//prevent collapse on double click
 
 		// this.setSelectionInterval(0,0);
 		addMouseListener(new TreeViewMouseAdapter());
@@ -140,6 +141,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 			this.objectType = objectType;
 			this.fileReference = fileReference;
 			setDisplayName();
+
 		}
 
 		public File getFileReference() {
