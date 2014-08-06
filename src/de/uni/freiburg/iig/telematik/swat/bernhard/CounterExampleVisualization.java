@@ -18,12 +18,14 @@ public class CounterExampleVisualization {
 	}
 
 	public CounterExampleVisualization(List<String> counterExamplepath) {
-		super();
-		//this.path = path;
-		path=new ArrayList<String>();
-		path.add("t0");
-		path.add("t1");
-		path.add("t2");
+		if(counterExamplepath != null)
+			path = counterExamplepath;
+		else {
+			path=new ArrayList<String>();
+			path.add("t0");
+			path.add("t1");
+			path.add("t2");
+		}
 		currentPosition=0;
 	}
 	public CounterExampleVisualization() {
