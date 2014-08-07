@@ -48,6 +48,7 @@ public class SwatComponents {
 	private Map<LogModel, File> logs = new HashMap<LogModel, File>();
 	private Map<LogModel, File> xml = new LinkedHashMap<LogModel, File>();
 	private Map<LogModel, List<LogAnalysisModel>> logAnalysis = new HashMap<LogModel, List<LogAnalysisModel>>();
+	private List<String> needsLayout = new LinkedList<String>();
 	
 
 	private SwatComponents() {
@@ -78,6 +79,18 @@ public class SwatComponents {
 		return instance;
 	}
 	
+	public void setLayoutNeed(AbstractGraphicalPN net) {
+		needsLayout.add(net.getPetriNet().getName());
+	}
+
+	public boolean getLayoutNeed(AbstractGraphicalPN net) {
+		return needsLayout.contains(net.getPetriNet().getName());
+	}
+
+	public void removeLayoutNeed(AbstractGraphicalPN net) {
+		needsLayout.remove(net.getPetriNet().getName());
+	}
+
 	public void remove(File file) {
 		HashMap<Object, File> all = new HashMap<Object, File>();
 		all.putAll(xml);

@@ -58,7 +58,7 @@ public class AristaFlowToPnmlConverter {
 		return net;
 	}
 
-	public void parse() throws ParserConfigurationException, SAXException, IOException {
+	public PTNet parse() throws ParserConfigurationException, SAXException, IOException {
 		Document doc = getDOM();
 		insertElements(doc);
 		//insertTransition(doc);
@@ -68,6 +68,8 @@ public class AristaFlowToPnmlConverter {
 		aristaFlowElementsToIFnet();
 
 		enrichNames(doc);
+
+		return net;
 
 	}
 

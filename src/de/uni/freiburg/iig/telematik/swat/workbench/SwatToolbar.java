@@ -515,6 +515,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 					SaveAction sa = new SaveAction(editor);
 					sa.actionPerformed(new ActionEvent(this, 0, "save imported net"));
 					SwatComponents.getInstance().putNetIntoSwatComponent(editor.getNetContainer(), newFileName.split("\\.pnml")[0]);
+					SwatComponents.getInstance().setLayoutNeed(editor.getNetContainer());
 				} catch (ParserConfigurationException e1) {
 					Workbench.errorMessage("Opening: " + file.getName() + " FAILED");
 					e1.printStackTrace();

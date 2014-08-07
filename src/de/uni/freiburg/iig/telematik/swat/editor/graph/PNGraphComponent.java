@@ -3,27 +3,20 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 
@@ -31,23 +24,16 @@ import org.w3c.dom.Document;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.io.mxCodec;
-import com.mxgraph.shape.mxConnectorShape;
-import com.mxgraph.shape.mxDefaultTextShape;
-import com.mxgraph.shape.mxEllipseShape;
-import com.mxgraph.shape.mxHtmlTextShape;
-import com.mxgraph.shape.mxRectangleShape;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxCellHandler;
 import com.mxgraph.swing.handler.mxCellMarker;
-import com.mxgraph.swing.handler.mxEdgeHandler;
 import com.mxgraph.swing.handler.mxElbowEdgeHandler;
 import com.mxgraph.swing.handler.mxVertexHandler;
 import com.mxgraph.swing.util.mxCellOverlay;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxEdgeStyle;
@@ -58,7 +44,6 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.ConnectionHandler;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.EdgeHandler;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.handler.GraphTransferHandler;
@@ -71,7 +56,6 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.graph.GraphResource;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public abstract class PNGraphComponent extends mxGraphComponent {
 

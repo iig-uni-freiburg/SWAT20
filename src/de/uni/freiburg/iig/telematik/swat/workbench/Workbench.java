@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -23,10 +24,10 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzeToolBar;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.LayoutAction;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
@@ -279,6 +280,15 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		if (!getTabView().containsComponent(node)) {
 			// add SwatTreeNode to tab and get its swatComponent to make its propertyView
 			swatComponent = getTabView().addNewTab(node);
+			//test for layout need
+			if (swatComponent instanceof PNEditor
+					&& SwatComponents.getInstance().getLayoutNeed(((PNEditor) swatComponent).getNetContainer())) {
+				LayoutAction a = new LayoutAction((PNEditor) swatComponent, "horizontalHierarchical", false);
+				System.out.println("Doing Layout...");
+				a.actionPerformed(new ActionEvent(this, 0, "Layout required"));
+				SwatComponents.getInstance().removeLayoutNeed(((PNEditor) swatComponent).getNetContainer());
+			}
+
 			getPropertiesPanel().removeAll();
 			if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 				getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
