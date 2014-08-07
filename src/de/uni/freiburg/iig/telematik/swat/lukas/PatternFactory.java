@@ -69,7 +69,7 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			if (o1 instanceof Transition & o2 instanceof Transition) {
+			if (o1 instanceof Transition && o2 instanceof Transition) {
 				p = new Precedes((Transition) o1, (Transition) o2);
 			} else {
 				p = new Precedes((Statepredicate) o1, (Statepredicate) o2);

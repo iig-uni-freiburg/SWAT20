@@ -22,7 +22,7 @@ public class MutexChoiceTest {
 		MutexChoice p1 = new MutexChoice(new Transition("td"), new Transition("t1"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertFalse(tu.isPropertySatisfied(false));
+			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -36,7 +36,7 @@ public class MutexChoiceTest {
 		MutexChoice p1 = new MutexChoice(new Transition("t1"), new Transition("td"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertFalse(tu.isPropertySatisfied(false));
+			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -50,7 +50,7 @@ public class MutexChoiceTest {
 		MutexChoice p1 = new MutexChoice(new Transition("t0"), new Transition("t1"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied(false));
+			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -64,7 +64,7 @@ public class MutexChoiceTest {
 		MutexChoice p1 = new MutexChoice(new Transition("t1"), new Transition("t0"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied(false));
+			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}

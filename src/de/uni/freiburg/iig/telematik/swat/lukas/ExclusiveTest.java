@@ -22,7 +22,7 @@ public class ExclusiveTest {
 		Exclusive p1 = new Exclusive(new Transition("tIn"), new Transition("tOut"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertFalse(tu.isPropertySatisfied(false));
+			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -36,7 +36,7 @@ public class ExclusiveTest {
 		Exclusive p1 = new Exclusive(new Transition("tOut"), new Transition("t1"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied(false));
+			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -50,7 +50,7 @@ public class ExclusiveTest {
 		Exclusive p1 = new Exclusive(new Transition("t1"), new Transition("tOut"), outputPlace);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied(false));
+			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}

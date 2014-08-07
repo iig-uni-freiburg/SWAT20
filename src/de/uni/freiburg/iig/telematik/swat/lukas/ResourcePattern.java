@@ -3,10 +3,14 @@ package de.uni.freiburg.iig.telematik.swat.lukas;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+
+import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
 
 public abstract class ResourcePattern extends CompliancePattern {
 	
 	private static HashMap<String, String> mPatternDescription;
+	private List<CompositeRule> mRules;
 
 	public ResourcePattern() {
 		super(false);
@@ -39,6 +43,14 @@ public abstract class ResourcePattern extends CompliancePattern {
 	@Override
 	public boolean isAntiPattern() {
 		return false;
+	}
+
+	public List<CompositeRule> getRules() {
+		return mRules;
+	}
+	
+	protected void setRules(List<CompositeRule> rules) {
+		mRules = rules;
 	}
 
 }

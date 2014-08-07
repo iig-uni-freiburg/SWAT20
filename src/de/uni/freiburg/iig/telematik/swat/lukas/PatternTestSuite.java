@@ -6,8 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({AbsentTest.class, ChainLeadsToTest.class, ChainPrecedesTest.class, CoAbsentTest.class,
 	CoExistsTest.class, CorequisiteTest.class, ExistsTest.class, ExclusiveTest.class, MutexChoiceTest.class, PrecedesTest.class, 
-	UniversalTest.class, //WeaklyLostDataTest.class, XLeadsToTest.class, PLeadsToTest.class, InconsistentDataTest.class, MissingDataTest.class,
-	//NeverDestroyedTest.class, NotDeletedOnTimeTest.class, TwiceDestroyedTest.class
+	UniversalTest.class, WeaklyLostDataTest.class, XLeadsToTest.class, PLeadsToTest.class, InconsistentDataTest.class, MissingDataTest.class,
+	NeverDestroyedTest.class, NotDeletedOnTimeTest.class, TwiceDestroyedTest.class
 })
 public class PatternTestSuite {
 

@@ -22,7 +22,7 @@ public class ExistsTest {
 		Exists p1 = new Exists(c);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertFalse(tu.isPropertySatisfied(false));
+			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -35,7 +35,7 @@ public class ExistsTest {
 		Exists p1 = new Exists(ap1);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied(false));
+			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
@@ -48,7 +48,7 @@ public class ExistsTest {
 		Exists p1 = new Exists(new Transition("t1"), outplaces.iterator().next());
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
-			assertTrue(tu.isPropertySatisfied(false));
+			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
 			fail();
 		}
