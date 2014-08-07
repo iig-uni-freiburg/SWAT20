@@ -120,6 +120,22 @@ public class SwatProperties extends AbstractProperties{
 		return result;
 	}
 
+	public void setAnalysisContextFolderName(String analysisContextFolderName) {
+		Validate.notNull(analysisContextFolderName);
+		setProperty(SwatProperty.ANALYSIS_CONTEXT_NAME, analysisContextFolderName);
+	}
+
+	public String getAnalysisContextName() {
+		String result = getProperty(SwatProperty.ANALYSIS_CONTEXT_NAME);
+		if (result == null || result.isEmpty())
+			result = "analysis-context";
+		return result;
+	}
+
+	public String getAnalysisContextWorkingDirectory() throws ParameterException, PropertyException {
+		return new File(getWorkingDirectory(), getAnalysisContextName()).getAbsolutePath();
+	}
+
 	public String getLogWorkingDirectory() throws ParameterException, PropertyException {
 		return new File(getWorkingDirectory(), getLogFolderName()).getAbsolutePath();
 	}

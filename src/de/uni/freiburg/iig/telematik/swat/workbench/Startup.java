@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -80,7 +81,13 @@ public class Startup {
 		if(workingDirectory == null)
 			return false;
 		try {
-			SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
+			SwatProperties prop = SwatProperties.getInstance();
+			prop.setWorkingDirectory(workingDirectory);
+			//add needed folders
+			new File(prop.getLogWorkingDirectory()).mkdir();
+			new File(prop.getNetWorkingDirectory()).mkdir();
+			new File(prop.getAnalysisContextWorkingDirectory()).mkdir();
+
 			return true;
 		} catch (ParameterException e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);

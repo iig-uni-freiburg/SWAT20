@@ -197,18 +197,30 @@ public class SwatComponents {
 	
 	private void loadLogFiles() throws ParameterException, PropertyException, IOException {
 		
-		File logFolder = new File(SwatProperties.getInstance().getWorkingDirectory(), "logs");
+		SwatProperties prop = SwatProperties.getInstance();
+		File logFolder = new File(prop.getWorkingDirectory(), "logs");
 		
 		for (File folder : getAllFoldersFrom(logFolder)) {
-			loadMxmlLogFromFolder(folder);
+			try {
+				loadMxmlLogFromFolder(folder);
+			} catch (NullPointerException e) {
+				//folder does not exists. create
+				new File(prop.getLogWorkingDirectory()).mkdir();
+			}
 		}
 
 		for (File folder : getAllFoldersFrom(logFolder)) {
+			try {
 			loadCsvLogFromFolder(folder);
+			} catch (NullPointerException e) {
+			}
 		}
 
 		for (File folder : getAllFoldersFrom(logFolder)) {
+			try {
 			loadXmlLogFromFolder(folder);
+			} catch (NullPointerException e) {
+			}
 		}
 		
 		
@@ -283,10 +295,16 @@ public class SwatComponents {
 		//get all subfolders in $WorkingDir$/nets
 		File netFolder = new File(SwatProperties.getInstance().getNetWorkingDirectory());
 		for (File folder : getAllFoldersFrom(netFolder)) {
+			try {
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet = loadPetriNetFromFolder(folder);
 			if (loadedNet != null)
 				getAnalysisFor(loadedNet, folder);
+			} catch (NullPointerException e) {
+				//folder does not exists. create
+				new File(SwatProperties.getInstance().getNetWorkingDirectory()).mkdir();
+			}
 		}
+
 	}
 
 	/** TODO: get all available Analysis on specified net **/
