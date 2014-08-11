@@ -6,6 +6,7 @@ import java.awt.Window;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -17,28 +18,26 @@ import javax.swing.border.Border;
 
 import de.invation.code.toval.graphic.dialog.AbstractDialog;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.secsy.gui.GUIProperties;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 
 
 
-public class ACLDialog extends AbstractDialog {
+public class SWATACLDialog extends AbstractDialog {
 	
 	private static final long serialVersionUID = -5216821409053567193L;
 	public static final Dimension PREFERRED_SIZE = new Dimension(500, 540);
 	
 	private JCheckBox chckbxDeriveAttributePermissions;
 	private JComboBox viewComboBox;
-	private AdvancedACLTable aclTable;
+	private SWATAdvancedACLTable aclTable;
 	
 	private ACLModel aclModel;
-	private Context context;
+	private SWATContextForAC context;
 
 	
-	public ACLDialog(Window owner, String title, ACModel acModel, Context context) throws Exception {
+	public SWATACLDialog(Window owner, String title, ACModel acModel, SWATContextForAC context) throws Exception {
 		super(owner, true, new Object[]{title,acModel,context});
 	}
 	
@@ -56,7 +55,7 @@ public class ACLDialog extends AbstractDialog {
 		} else if(acModel instanceof RBACModel){
 			this.aclModel = ((RBACModel) acModel).getRolePermissions();
 		}
-		this.context = (Context) parameters[2];
+		this.context = (SWATContextForAC) parameters[2];
 	}
 	
 
@@ -110,17 +109,17 @@ public class ACLDialog extends AbstractDialog {
 				viewComboBox.addItem("Attribute Permissions");
 			}
 			viewComboBox.setSelectedIndex(0);
-			viewComboBox.setPreferredSize(new Dimension(200,GUIProperties.DEFAULT_LABEL_HEIGHT));
-			viewComboBox.setMaximumSize(new Dimension(200,GUIProperties.DEFAULT_LABEL_HEIGHT));
+			viewComboBox.setPreferredSize(new Dimension(200,24));
+			viewComboBox.setMaximumSize(new Dimension(200,24));
 			viewComboBox.addItemListener(new ItemListener(){
 
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					try {
 						if(viewComboBox.getSelectedIndex() == 0){
-							aclTable.setView(AdvancedACLTable.VIEW.TRANSACTION);
+							aclTable.setView(SWATAdvancedACLTable.VIEW.TRANSACTION);
 						} else {
-							aclTable.setView(AdvancedACLTable.VIEW.OBJECT);
+							aclTable.setView(SWATAdvancedACLTable.VIEW.OBJECT);
 						}
 					} catch (ParameterException e1) {
 						e1.printStackTrace();
@@ -135,10 +134,10 @@ public class ACLDialog extends AbstractDialog {
 	@Override
 	protected void setTitle() {}
 
-	private AdvancedACLTable getACLTable() throws ParameterException{
+	private SWATAdvancedACLTable getACLTable() throws ParameterException{
 		if(aclTable == null){
 //			if(aclModel != null){
-				aclTable = new AdvancedACLTable(aclModel, context);
+				aclTable = new SWATAdvancedACLTable(aclModel, context);
 //			} else {
 //				aclTable = new AdvancedACLTable(subjects, context);
 //				aclModel = aclTable.getACLModel();
@@ -152,13 +151,13 @@ public class ACLDialog extends AbstractDialog {
 		return aclModel;
 	}
 	
-	public static ACLModel showDialog(Window owner, String title, ACLModel aclModel, Context context) throws Exception{
-		ACLDialog activityDialog = new ACLDialog(owner, title, aclModel, context);
+	public static ACLModel showDialog(Window owner, String title, ACLModel aclModel, SWATContextForAC context) throws Exception{
+		SWATACLDialog activityDialog = new SWATACLDialog(owner, title, aclModel, context);
 		return activityDialog.getACLModel();
 	}
 
 	@Override
 	protected Border getBorder() {
-		return GUIProperties.DEFAULT_DIALOG_BORDER;
+		return BorderFactory.createEmptyBorder(5, 5, 5, 5);
 	}
 }

@@ -33,7 +33,6 @@ import de.invation.code.toval.graphic.dialog.ValueEditingDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
@@ -45,7 +44,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 
 
-public class ACModelForSWATDialog extends JDialog {
+public class SWATACModelDialog extends JDialog {
 	
 	private static final long serialVersionUID = -5216821409053567193L;
 
@@ -72,10 +71,10 @@ public class ACModelForSWATDialog extends JDialog {
 	
 	//---------------------------------------------------
 	
-	private Context context = null;
+	private SWATContextForAC context = null;
 	private ACModel acModel = null;
 
-	public ACModelForSWATDialog(Window owner, Context context) throws ParameterException {
+	public SWATACModelDialog(Window owner, SWATContextForAC context) throws ParameterException {
 		super(owner);
 		setTitle("Access Control Model");
 		Validate.notNull(context);
@@ -160,7 +159,7 @@ public class ACModelForSWATDialog extends JDialog {
 		btnEditRoleMembership = new JButton("Edit role membership");
 		btnEditRoleMembership.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new RoleMembershipDialog(ACModelForSWATDialog.this, (RBACModel) acModel);
+				new RoleMembershipDialog(SWATACModelDialog.this, (RBACModel) acModel);
 				updateTextArea();
 			}
 		});
@@ -207,7 +206,7 @@ public class ACModelForSWATDialog extends JDialog {
 							acModel = null;
 						}
 					} catch (ParameterException e1) {
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot update view.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "Cannot update view.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					} 
 					updateTextArea();
@@ -230,12 +229,12 @@ public class ACModelForSWATDialog extends JDialog {
 						return;
 					try {
 						if(acModel instanceof ACLModel){
-							ACLDialog.showDialog(ACModelForSWATDialog.this, "Edit subject permissions", (ACLModel) acModel, ACModelForSWATDialog.this.context);
+							SWATACLDialog.showDialog(SWATACModelDialog.this, "Edit subject permissions", (ACLModel) acModel, SWATACModelDialog.this.context);
 						} else {
-							ACLDialog.showDialog(ACModelForSWATDialog.this, "Edit role permissions", ((RBACModel) acModel).getRolePermissions(), ACModelForSWATDialog.this.context);
+							SWATACLDialog.showDialog(SWATACModelDialog.this, "Edit role permissions", ((RBACModel) acModel).getRolePermissions(), SWATACModelDialog.this.context);
 						}
 					}catch(Exception ex){
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "<html>Cannot launch permission dialog.<br>Reason: "+ex.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "<html>Cannot launch permission dialog.<br>Reason: "+ex.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					}
 					updateTextArea();
 				}
@@ -251,9 +250,9 @@ public class ACModelForSWATDialog extends JDialog {
 			btnEditRoleLattice.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						new RoleLatticeDialog(ACModelForSWATDialog.this, ((RBACModel) acModel).getRoleLattice());
+						new RoleLatticeDialog(SWATACModelDialog.this, ((RBACModel) acModel).getRoleLattice());
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "<html>Cannot launch role lattice dialog:<br>Reason: "+e1.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "<html>Cannot launch role lattice dialog:<br>Reason: "+e1.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 					}
 					updateTextArea();
 				}
@@ -269,12 +268,12 @@ public class ACModelForSWATDialog extends JDialog {
 			btnAdd = new JButton("Add");
 			btnAdd.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Object acModelName = JOptionPane.showInputDialog(ACModelForSWATDialog.this, "Please enter a name for the new Access Control model", "New Access Control model", JOptionPane.QUESTION_MESSAGE, null, null, "ACModel");
+					Object acModelName = JOptionPane.showInputDialog(SWATACModelDialog.this, "Please enter a name for the new Access Control model", "New Access Control model", JOptionPane.QUESTION_MESSAGE, null, null, "ACModel");
 					if(acModelName == null){
 						return;
 					}
 					if(SwatComponents.getInstance().containsACModel((String) acModelName)){
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "There is already an access control model with this name.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "There is already an access control model with this name.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					
@@ -285,7 +284,7 @@ public class ACModelForSWATDialog extends JDialog {
 							addNewRBACModel((String) acModelName);
 						}
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot add new access control model.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "Cannot add new access control model.\nReason: "+e1.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					
@@ -302,22 +301,22 @@ public class ACModelForSWATDialog extends JDialog {
 			btnOK.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(acModel == null){
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Please choose an Access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "Please choose an Access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
 						acModel.checkValidity();
 					} catch (ACMValidationException e2) {
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "<html>Chosen Access Control Model is not valid.<br>Reason: "+e2.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "<html>Chosen Access Control Model is not valid.<br>Reason: "+e2.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
 //						SwatComponents.getInstance().storeACModel(acModel);
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "<html>Access Control Model cannot be stored to disk.<br>Reason: "+e1.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "<html>Access Control Model cannot be stored to disk.<br>Reason: "+e1.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					ACModelForSWATDialog.this.dispose();
+					SWATACModelDialog.this.dispose();
 				}
 			});
 			btnOK.setActionCommand("OK");
@@ -331,7 +330,7 @@ public class ACModelForSWATDialog extends JDialog {
 			btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					acModel = null;
-					ACModelForSWATDialog.this.dispose();
+					SWATACModelDialog.this.dispose();
 				}
 			});
 			btnCancel.setActionCommand("Cancel");
@@ -346,13 +345,13 @@ public class ACModelForSWATDialog extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					Set<String> editedSubjects = null;
 					try {
-						editedSubjects = ValueEditingDialog.showDialog(ACModelForSWATDialog.this, "AC Model Subjects", acModel.getSubjects());
+						editedSubjects = ValueEditingDialog.showDialog(SWATACModelDialog.this, "AC Model Subjects", acModel.getSubjects());
 					} catch (Exception e2) {
-						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "<html>Cannot launch value editing dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(SWATACModelDialog.this, "<html>Cannot launch value editing dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 					}
 					if(editedSubjects != null){
 						if(editedSubjects.isEmpty()){
-							JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot remove all subjects from access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(SWATACModelDialog.this, "Cannot remove all subjects from access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						Set<String> subjectsToRemove = new HashSet<String>(acModel.getSubjects());
@@ -382,14 +381,14 @@ public class ACModelForSWATDialog extends JDialog {
 							try {
 								acModel.removeSubjects(subjectsToRemove);
 							} catch (ParameterException e1) {
-								JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot remove subjects from access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(SWATACModelDialog.this, "Cannot remove subjects from access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 								return;
 							}
 						}
 						try {
 							acModel.setSubjects(editedSubjects);
 						} catch (ParameterException e1) {
-							JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot set subjects of access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(SWATACModelDialog.this, "Cannot set subjects of access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						updateTextArea();
@@ -536,10 +535,10 @@ public class ACModelForSWATDialog extends JDialog {
 //	
 	private void addNewACLModel(String name) throws ParameterException, IOException, PropertyException {
 //		ACLModel newACLModel = new ACLModel(name);
-		ACLModel newACLModel = new ACLModel(name, ACModelForSWATDialog.this.context.getSubjects());
-		if(ACModelForSWATDialog.this.context.hasAttributes())
-			newACLModel.setObjects(ACModelForSWATDialog.this.context.getAttributes());
-		newACLModel.setTransactions(ACModelForSWATDialog.this.context.getActivities());
+		ACLModel newACLModel = new ACLModel(name, SWATACModelDialog.this.context.getSubjects());
+		if(SWATACModelDialog.this.context.hasAttributes())
+			newACLModel.setObjects(SWATACModelDialog.this.context.getAttributes());
+		newACLModel.setTransactions(SWATACModelDialog.this.context.getActivities());
 		
 		//Abklären mit Schreiben
 		SwatComponents.getInstance().addACModel(newACLModel,false);
@@ -551,17 +550,17 @@ public class ACModelForSWATDialog extends JDialog {
 	private void addNewRBACModel(String name) throws ParameterException, IOException, PropertyException {
 		RoleLattice roleLattice = null;
 		try {
-			roleLattice = RoleLatticeDialog.showDialog(ACModelForSWATDialog.this);
+			roleLattice = RoleLatticeDialog.showDialog(SWATACModelDialog.this);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "<html>Cannot launch role lattice dialog:<br>Reason: "+e.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(SWATACModelDialog.this, "<html>Cannot launch role lattice dialog:<br>Reason: "+e.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 		}
 		if(roleLattice != null){
-			RBACModel newRBACModel = new RBACModel(name, roleLattice, ACModelForSWATDialog.this.context.getSubjects());
+			RBACModel newRBACModel = new RBACModel(name, roleLattice, SWATACModelDialog.this.context.getSubjects());
 //			if(ACModelForSWATDialog.this.context.hasAttributes()){
 //				newRBACModel.setObjects(ACModelForSWATDialog.this.context.getAttributes());
 //			}
-			if(ACModelForSWATDialog.this.context.hasActivities()){
-				newRBACModel.setTransactions(ACModelForSWATDialog.this.context.getActivities());
+			if(SWATACModelDialog.this.context.hasActivities()){
+				newRBACModel.setTransactions(SWATACModelDialog.this.context.getActivities());
 			}
 			SwatComponents.getInstance().addACModel(newRBACModel, false);
 			updateACModelComboBox(newRBACModel.getName());
@@ -580,7 +579,7 @@ public class ACModelForSWATDialog extends JDialog {
 			try {
 				acModel = SwatComponents.getInstance().getACModel((String) comboACModel.getSelectedItem());
 			} catch (ParameterException e) {
-				JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot extract ac model from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(SWATACModelDialog.this, "Cannot extract ac model from simulation components.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			updateVisibility();
@@ -633,8 +632,8 @@ public class ACModelForSWATDialog extends JDialog {
 	}
 	
 	
-	public static ACModel showDialog(Window owner, Context context) throws ParameterException{
-		ACModelForSWATDialog activityDialog = new ACModelForSWATDialog(owner, context);
+	public static ACModel showDialog(Window owner, SWATContextForAC context) throws ParameterException{
+		SWATACModelDialog activityDialog = new SWATACModelDialog(owner, context);
 		return activityDialog.getACModel();
 	}
 }

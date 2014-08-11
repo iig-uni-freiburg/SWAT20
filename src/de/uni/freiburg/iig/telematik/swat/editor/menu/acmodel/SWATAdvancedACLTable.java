@@ -19,28 +19,25 @@ import de.invation.code.toval.graphic.renderer.VerticalTableHeaderCellRenderer;
 import de.invation.code.toval.types.DataUsage;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ActivityPermissionTableModel;
-import de.uni.freiburg.iig.telematik.secsy.gui.dialog.acl.ObjectPermissionTableModel;
-import de.uni.freiburg.iig.telematik.secsy.logic.generator.Context;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
 
 
 
-public class AdvancedACLTable extends JTable implements ObjectPermissionItemListener, ItemListener{
+public class SWATAdvancedACLTable extends JTable implements ObjectPermissionItemListener, ItemListener{
 
 	private static final long serialVersionUID = 223793804425867377L;
 
 	private ACLModel aclModel = new ACLModel();
 	
-	private ActivityPermissionTableModel transactionModel = null;
-	private ObjectPermissionTableModel objectModel = null;
+	private SWATActivityPermissionTableModel transactionModel = null;
+	private SWATObjectPermissionTableModel objectModel = null;
 	private VIEW currentView = VIEW.TRANSACTION;
 	private boolean deriveAttributePermissions = false;
-	private Context context;
+	private SWATContextForAC context;
 	
-	private AdvancedACLTable(Context context) throws ParameterException{
+	private SWATAdvancedACLTable(SWATContextForAC context) throws ParameterException{
 		Validate.notNull(context);
 		this.context = context;
 		this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -48,7 +45,7 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		this.setBackground(new Color(243, 244, 244));
 	}
 	
-	public AdvancedACLTable(ACLModel aclModel, Context context) throws ParameterException{
+	public SWATAdvancedACLTable(ACLModel aclModel, SWATContextForAC context) throws ParameterException{
 		this(context);
 		Validate.notNull(aclModel);
 		
@@ -58,7 +55,7 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		update();
 	}
 	
-	public AdvancedACLTable(Set<String> subjects, Context context) throws ParameterException{
+	public SWATAdvancedACLTable(Set<String> subjects, SWATContextForAC context) throws ParameterException{
 		this(context);
 		Validate.notNull(subjects);
 		Validate.noNullElements(subjects);
@@ -78,10 +75,10 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		Validate.notNull(objects);
 		Validate.notNull(transactions);
 		
-		objectModel = new ObjectPermissionTableModel(aclModel);
+		objectModel = new SWATObjectPermissionTableModel(aclModel);
 		objectModel.addTableModelListener(this);
 		objectModel.addPermissionItemListener(this);
-		transactionModel = new ActivityPermissionTableModel(aclModel);
+		transactionModel = new SWATActivityPermissionTableModel(aclModel);
 		transactionModel.addTableModelListener(this);
 		transactionModel.addItemListener(this);
 		update();
@@ -121,12 +118,12 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
 		
 		int preferredCellWidth = 0;
-		if(getModel() instanceof ObjectPermissionTableModel){
-			setRowHeight(((ObjectPermissionTableModel) getModel()).preferredCellSize().height);
-			preferredCellWidth = ((ObjectPermissionTableModel) getModel()).preferredCellSize().width;
+		if(getModel() instanceof SWATObjectPermissionTableModel){
+			setRowHeight(((SWATObjectPermissionTableModel) getModel()).preferredCellSize().height);
+			preferredCellWidth = ((SWATObjectPermissionTableModel) getModel()).preferredCellSize().width;
 		} else {
-			setRowHeight(((ActivityPermissionTableModel) getModel()).preferredCellSize().height);
-			preferredCellWidth = ((ActivityPermissionTableModel) getModel()).preferredCellSize().width;
+			setRowHeight(((SWATActivityPermissionTableModel) getModel()).preferredCellSize().height);
+			preferredCellWidth = ((SWATActivityPermissionTableModel) getModel()).preferredCellSize().width;
 		}
 		
 		for(int i=0; i<numCols; i++){
@@ -157,7 +154,7 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		if(getSelectedRow() >= 0 && getSelectedColumn() >=0){
 		JCheckBox checkBox = (JCheckBox) e.getSource();
 		boolean permissionActivated = checkBox.isSelected();
-		String subject = ((ObjectPermissionTableModel) getModel()).getRowName(getSelectedRow());
+		String subject = ((SWATObjectPermissionTableModel) getModel()).getRowName(getSelectedRow());
 		String object = getModel().getColumnName(getSelectedColumn());
 				
 //		System.out.println(((ACLTableModel) getModel()).getRowName(getSelectedRow()) + " " + getModel().getColumnName(getSelectedColumn()) + ": " + e.getDataUsageMode());
@@ -180,7 +177,7 @@ public class AdvancedACLTable extends JTable implements ObjectPermissionItemList
 		if(getSelectedRow() >= 0 && getSelectedColumn() >=0){
 		JCheckBox checkBox = (JCheckBox) e.getSource();
 		boolean permissionActivated = checkBox.isSelected();
-		String subject = ((ActivityPermissionTableModel) getModel()).getRowName(getSelectedRow());
+		String subject = ((SWATActivityPermissionTableModel) getModel()).getRowName(getSelectedRow());
 		String transaction = getModel().getColumnName(getSelectedColumn());
 		try{
 			if(permissionActivated){
