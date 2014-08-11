@@ -1,11 +1,18 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.output.XMLOutputter;
 import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
+import org.processmining.analysis.sciffchecker.logic.xml.XMLRuleSerializer;
+import de.invation.code.toval.parser.ParserException;
+
 
 public abstract class ResourcePattern extends CompliancePattern {
 	
@@ -51,6 +58,20 @@ public abstract class ResourcePattern extends CompliancePattern {
 	
 	protected void setRules(List<CompositeRule> rules) {
 		mRules = rules;
+	}
+	
+	public void printOut() {
+		
+		for (CompositeRule rule : mRules) {
+			Element elem = XMLRuleSerializer.serialize(rule, "Root");
+			XMLOutputter outputter = new XMLOutputter();
+			try {
+			  outputter.output(elem, System.out);       
+			}
+			catch (IOException e) {
+			  System.err.println(e);
+			}
+		}
 	}
 
 }

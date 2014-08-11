@@ -17,6 +17,9 @@ import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
 public class MBounded extends ResourcePattern {
 	
+	public static final String NAME = "A1,...,An M-Bounded U";
+	public static final String DESC = "The activities A1,...,An are performed by the same user U.";
+	
 	public MBounded(List<Transition> transitions, User user) {
 		
 		List<CompositeRule> rules = new ArrayList<CompositeRule>();
@@ -34,37 +37,35 @@ public class MBounded extends ResourcePattern {
 		Rule r = new Rule(cr);
 		
 		// define head
-		Disjunction d = new Disjunction(r);
-		Conjunction c = new Conjunction(d);
-		SimpleActivityExecution sae = new SimpleActivityExecution(c, "A", EventType.performed, false);
-		ActivityTypeVariable atv = new ActivityTypeVariable(sae); 
-		OriginatorVariable av = new OriginatorVariable(sae);
-		StringConstantAttribute sca1 = new StringConstantAttribute(trans.getName());
-		StringConstantAttribute sca2 = new StringConstantAttribute(user.toString());
-		new SimpleStringConstraint(atv, StringOP.EQUAL, sca1);
-		new SimpleStringConstraint(av, StringOP.EQUAL, sca2);
-		r.setHead(d);
+		Disjunction head = new Disjunction(r);
+		Conjunction c = new Conjunction(head);
+		SimpleActivityExecution activityExec = new SimpleActivityExecution(c, "A", 
+				EventType.performed, false);
+		OriginatorVariable originator = new OriginatorVariable(activityExec);
+		StringConstantAttribute userNameConst = new StringConstantAttribute(user.toString());
+		new SimpleStringConstraint(originator, StringOP.EQUAL, userNameConst);
+		r.setHead(head);
 		
 		// define body
-		Conjunction con1 = new Conjunction(r);
-		SimpleActivityExecution sae1 = new SimpleActivityExecution(con1, "A", EventType.performed, false);
-		ActivityTypeVariable atv1 = new ActivityTypeVariable(sae1);
-		new SimpleStringConstraint(atv1, StringOP.EQUAL, sca1);
+		Conjunction body = new Conjunction(r);
+		SimpleActivityExecution activityExec2 = new SimpleActivityExecution(body, "A",
+				EventType.performed, false);
+		ActivityTypeVariable activityVar = new ActivityTypeVariable(activityExec2);
+		StringConstantAttribute actNameConst = new StringConstantAttribute(trans.getName());
+		new SimpleStringConstraint(activityVar, StringOP.EQUAL, actNameConst);
+		r.setBody(body);
 		
-		r.setBody(con1);
 		return cr;	
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return NAME;
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return DESC;
 	}
 
 }
