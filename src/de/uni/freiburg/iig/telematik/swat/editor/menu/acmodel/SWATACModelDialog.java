@@ -541,7 +541,7 @@ public class SWATACModelDialog extends JDialog {
 		newACLModel.setTransactions(SWATACModelDialog.this.context.getActivities());
 		
 		//Abklären mit Schreiben
-		SwatComponents.getInstance().addACModel(newACLModel,false);
+		SwatComponents.getInstance().addACModel(newACLModel, true);
 		updateACModelComboBox(newACLModel.getName());
 		updateVisibility();
 		updateTextArea();
@@ -562,7 +562,7 @@ public class SWATACModelDialog extends JDialog {
 			if(SWATACModelDialog.this.context.hasActivities()){
 				newRBACModel.setTransactions(SWATACModelDialog.this.context.getActivities());
 			}
-			SwatComponents.getInstance().addACModel(newRBACModel, false);
+			SwatComponents.getInstance().addACModel(newRBACModel, true);
 			updateACModelComboBox(newRBACModel.getName());
 			updateVisibility();
 			updateTextArea();
@@ -624,6 +624,19 @@ public class SWATACModelDialog extends JDialog {
 		textArea.setText("");
 		if(acModel != null){
 			textArea.setText(acModel.toString());
+		}
+		try {
+			if(acModel!= null)
+			SwatComponents.getInstance().addACModel(acModel);
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

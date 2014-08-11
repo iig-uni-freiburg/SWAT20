@@ -37,7 +37,7 @@ public class AddAccessControlAction extends AbstractPNEditorAction {
 						Set<String> transitions =	PNUtils.getNameSetFromTransitions(ifNet.getTransitions(), true);
 						SWATContextForAC context = new SWATContextForAC(name , transitions);
 						Set<String> initialSubjects =  new HashSet<String>();
-						initialSubjects.add("initial Subject");
+						initialSubjects.add("initialSubject");
 						context.setSubjects(initialSubjects);
 //						ACModel aclModel = new ACLModel("newACLModel", transitions);
 //						aclModel.setTransactions(transitions);

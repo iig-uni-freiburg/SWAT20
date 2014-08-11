@@ -710,6 +710,11 @@ public class SwatComponents {
 		return acModels.get(selectedACModel);
 	}
 	
+	public boolean containsACModelSelection() throws ParameterException{
+	
+		return selectedACModel != null;
+	}
+	
 	/**
 	 * Returns the names of all access control models.
 	 * @return

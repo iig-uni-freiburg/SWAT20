@@ -77,6 +77,7 @@ public class TransitionPopupMenu extends JPopupMenu {
 	private void updateSubjectDescriptorMenu() {
 		submenu3.removeAll();
 		if(SwatComponents.getInstance().containsACModels()){
+			if(SwatComponents.getInstance().containsACModelSelection()){
 		ACModel acModel = SwatComponents.getInstance().getSelectedACModel();
 		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
 		AbstractIFNetTransition<IFNetFlowRelation> t = graph.getNetContainer().getPetriNet().getTransition(selectedCell.getId());
@@ -95,7 +96,7 @@ public class TransitionPopupMenu extends JPopupMenu {
 			});
 			submenu3.add(item);
 		}
-		}
+		}}
 		else {
 			JMenuItem noSubjects = new JMenuItem("No Subjects Defined");
 			submenu3.add(noSubjects );
