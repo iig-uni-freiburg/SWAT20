@@ -61,12 +61,12 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 public class AbstractCPNTokenConfigurer extends JDialog {
 	private static final double TOKEN_ROW_WIDTH = 250;
 	private static final double TOKEN_ROW_HEIGHT = 40;
-//	private static JDialog dialog;
-//	JPanel tokenPanel = new JPanel();
+	// private static JDialog dialog;
+	// JPanel tokenPanel = new JPanel();
 	private JButton addButton;
 	private PNGraph graph;
 	private AbstractCPNPlace place;
-//	private JPanel topPanel;
+	// private JPanel topPanel;
 	private JToggleButton boundButton;
 	private JToggleButton infiniteButton;
 	private Multiset<String> multisetPA;
@@ -86,11 +86,8 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 		paName = place2.getName();
 		graph = cpnGraph;
 		updateView();
-		
 
 	}
-
-
 
 	public AbstractCPNTokenConfigurer(Window window, AbstractCPNFlowRelation flowRelation, PNGraph cpnGraph) {
 		super(window, flowRelation.getName());
@@ -103,12 +100,6 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 		updateView();
 	}
 
-
-
-
-
-
-
 	public AbstractCPNTokenConfigurer(Window window, AbstractIFNetTransition<IFNetFlowRelation> transition, IFNetGraph cpnGraph) {
 		super(window, transition.getName());
 		isPlace = false;
@@ -119,77 +110,69 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 		paName = transition.getName();
 		graph = cpnGraph;
 
-//			for
-		
+		// for
+
 		updateView();
 	}
 
-
-
 	private void addRow(String tokenLabel) {
-		Dimension dim = new Dimension();
-		double width = TOKEN_ROW_WIDTH;
-		double height = TOKEN_ROW_HEIGHT;
-		dim.setSize(width, height);
 
 		Color tokenColor = colors.get(tokenLabel);
 		CirclePanel circle = new CirclePanel(tokenColor);
 		panel.add(circle);
-		
+
 		final String tokenName = tokenLabel;
-		if(!isTransition){
-		int size = multisetPA.multiplicity(tokenLabel);
-		int cap = 99;
-		if(isPlace && !(place.getColorCapacity(tokenName) <0))
-		cap = place.getColorCapacity(tokenName);
-		SpinnerModel model = new SpinnerNumberModel(size, -1, cap, 1);
-		JSpinner spinner = new JSpinner(model);
-		spinner.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSpinner spinner = (JSpinner) e.getSource();
-				Integer currentValue = (Integer)spinner.getValue();
-				
-				Multiset<String> newMarking = getMultiSet();
-				if(newMarking == null)
-					newMarking = new Multiset<String>();
-				newMarking.setMultiplicity(tokenName, currentValue);
-				if(isPlace)
-				((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,paName,newMarking));
-				else 
-					((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph)graph,paName,newMarking));
-//				graph.updateTokenConfigurer(placeName);
-			}
-		});
-		panel.add(spinner);
+		if (!isTransition) {
+			int size = multisetPA.multiplicity(tokenLabel);
+			int cap = 99;
+			if (isPlace && !(place.getColorCapacity(tokenName) < 0))
+				cap = place.getColorCapacity(tokenName);
+			SpinnerModel model = new SpinnerNumberModel(size, -1, cap, 1);
+			JSpinner spinner = new JSpinner(model);
+			spinner.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					JSpinner spinner = (JSpinner) e.getSource();
+					Integer currentValue = (Integer) spinner.getValue();
+
+					Multiset<String> newMarking = getMultiSet();
+					if (newMarking == null)
+						newMarking = new Multiset<String>();
+					newMarking.setMultiplicity(tokenName, currentValue);
+					if (isPlace)
+						((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph) graph, paName, newMarking));
+					else
+						((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph) graph, paName, newMarking));
+					// graph.updateTokenConfigurer(placeName);
+				}
+			});
+			panel.add(spinner);
 		}
-		if(isTransition){
-//			panel.add(Box.createGlue());
-//			AccessModePanel aMPanel = new AccessModePanel(accessMode.get(tokenName));
-			 JPanel amPanel = new JPanel();
-			amPanel.add(createAccessModeCheckBox(tokenName,  AccessMode.READ, "r"));
-			amPanel.add(createAccessModeCheckBox(tokenName,  AccessMode.WRITE, "w"));
-			amPanel.add(createAccessModeCheckBox(tokenName,  AccessMode.DELETE, "d"));
-			amPanel.add(createAccessModeCheckBox(tokenName,  AccessMode.CREATE, "c"));
-//			  JCheckBox write = new JCheckBox("w");
-//			  write.setSelected(am.contains(AccessMode.WRITE));
-//			  JCheckBox delete = new JCheckBox("d");
-//			  delete.setSelected(am.contains(AccessMode.DELETE));
-//			  JCheckBox create = new JCheckBox("c");
-//			  create.setSelected(am.contains(AccessMode.CREATE));
-//			
-//			 amPanel.add(read); amPanel.add(write); amPanel.add(delete);amPanel.add(create);
-			 panel.add(amPanel);
-			 
-			  
+		if (isTransition) {
+			// panel.add(Box.createGlue());
+			// AccessModePanel aMPanel = new
+			// AccessModePanel(accessMode.get(tokenName));
+			JPanel amPanel = new JPanel();
+			amPanel.add(createAccessModeCheckBox(tokenName, AccessMode.READ, "r"));
+			amPanel.add(createAccessModeCheckBox(tokenName, AccessMode.WRITE, "w"));
+			amPanel.add(createAccessModeCheckBox(tokenName, AccessMode.DELETE, "d"));
+			amPanel.add(createAccessModeCheckBox(tokenName, AccessMode.CREATE, "c"));
+			// JCheckBox write = new JCheckBox("w");
+			// write.setSelected(am.contains(AccessMode.WRITE));
+			// JCheckBox delete = new JCheckBox("d");
+			// delete.setSelected(am.contains(AccessMode.DELETE));
+			// JCheckBox create = new JCheckBox("c");
+			// create.setSelected(am.contains(AccessMode.CREATE));
+			//
+			// amPanel.add(read); amPanel.add(write);
+			// amPanel.add(delete);amPanel.add(create);
+			panel.add(amPanel);
+
 		}
-			
-	
-		
-		
+
 		panel.add(new JLabel(tokenName));
-//		panel.add(firstElement);
+		// panel.add(firstElement);
 		JButton remove = null;
 		try {
 			remove = new JButton(IconFactory.getIcon("minimize"));
@@ -201,122 +184,108 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(!isTransition){
-				Multiset<String> newMarking = getMultiSet();
-				((mxGraphModel) graph.getModel()).beginUpdate();
-				if(isPlace){
-				if(newMarking != null){
-				newMarking.setMultiplicity(tokenName, 0);
-				((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,paName,newMarking));}
-				((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,paName,tokenName,0));}
-				else{
-					newMarking.setMultiplicity(tokenName, 0);
-					((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph)graph,paName,newMarking));
+				if (!isTransition) {
+					Multiset<String> newMarking = getMultiSet();
+					((mxGraphModel) graph.getModel()).beginUpdate();
+					if (isPlace) {
+						if (newMarking != null) {
+							newMarking.setMultiplicity(tokenName, 0);
+							((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph) graph, paName, newMarking));
+						}
+						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph) graph, paName, tokenName, 0));
+					} else {
+						newMarking.setMultiplicity(tokenName, 0);
+						((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph) graph, paName, newMarking));
 					}
 
-				((mxGraphModel) graph.getModel()).endUpdate();}
-				else {
+					((mxGraphModel) graph.getModel()).endUpdate();
+				} else {
 					((mxGraphModel) graph.getModel()).execute(new AccessModeChange(graph, paName, tokenName, new HashSet<AccessMode>()));
-					 Object transition = graph.getNetContainer().getPetriNet().getTransition(paName);
-					 if(transition instanceof AbstractRegularIFNetTransition)
-						 ((AbstractRegularIFNetTransition) transition).removeAccessModes(tokenName);
+					Object transition = graph.getNetContainer().getPetriNet().getTransition(paName);
+					if (transition instanceof AbstractRegularIFNetTransition)
+						((AbstractRegularIFNetTransition) transition).removeAccessModes(tokenName);
 				}
-
 
 				addButton.setEnabled(true);
 				pack();
 				updateView();
 			}
 		});
-		
-		if(isPlace && place != null){
 
-			panel.add(Box.createGlue());		
+		if (isPlace && place != null) {
+
+			panel.add(Box.createGlue());
 			JSpinner capacitySpinner;
 			if (!place.isBounded()) {
 				String[] string = { "\u221e" };
 				SpinnerModel capacityModel = new SpinnerListModel(string);
 				capacitySpinner = new JSpinner(capacityModel);
-			} 
-			else {
+			} else {
 				int capacitiy = place.getColorCapacity(tokenName);
 				SpinnerModel capacityModel = new SpinnerNumberModel(capacitiy, multisetPA.multiplicity(tokenName), 99, 1);
 				capacitySpinner = new JSpinner(capacityModel);
 			}
-		
-		capacitySpinner.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-			JSpinner capacitySpinner = (JSpinner)e.getSource();
-				Integer currentValue = (Integer)capacitySpinner.getValue();
 
-				((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,place.getName(),tokenName,currentValue ));
-				updateView();
-			}
-		});
-		panel.add(capacitySpinner);
-		}
-		else {
-		panel.add(Box.createGlue());
-		panel.add(Box.createGlue());
+			capacitySpinner.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					JSpinner capacitySpinner = (JSpinner) e.getSource();
+					Integer currentValue = (Integer) capacitySpinner.getValue();
+
+					((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph) graph, place.getName(), tokenName, currentValue));
+					updateView();
+				}
+			});
+			panel.add(capacitySpinner);
+		} else {
+			panel.add(Box.createGlue());
+			panel.add(Box.createGlue());
 		}
 		panel.add(remove);
 
 	}
 
-
-
 	private JCheckBox createAccessModeCheckBox(final String tokenName, final AccessMode accessModi, String accessModeName) {
 		JCheckBox read = new JCheckBox(accessModeName);
-		  read.setSelected(accessMode.get(tokenName).contains(accessModi));
-		  read.addActionListener(new ActionListener() {
-			
+		read.setSelected(accessMode.get(tokenName).contains(accessModi));
+		read.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			JCheckBox cb = (JCheckBox) e.getSource();
-			Set am = accessMode.get(tokenName);
-			Set amChange = ((Set) ((HashSet) am).clone());
-			if(cb.isSelected()){
-				amChange.add(accessModi);
-			}
-			else {
-				amChange.remove(accessModi);
-			}
-			((mxGraphModel) graph.getModel()).execute(new AccessModeChange(graph, paName, tokenName, amChange));
+				JCheckBox cb = (JCheckBox) e.getSource();
+				Set am = accessMode.get(tokenName);
+				Set amChange = ((Set) ((HashSet) am).clone());
+				if (cb.isSelected()) {
+					amChange.add(accessModi);
+				} else {
+					amChange.remove(accessModi);
+				}
+				((mxGraphModel) graph.getModel()).execute(new AccessModeChange(graph, paName, tokenName, amChange));
 			}
 		});
-		  read.setToolTipText(accessModi.toString());
+		read.setToolTipText(accessModi.toString());
 		return read;
 	}
-	
-
-
-
-	
 
 	protected Multiset<String> getMultiSet() {
-		if(isPlace)
-		return (Multiset<String>) graph.getNetContainer().getPetriNet().getInitialMarking().get(paName);
+		if (isPlace)
+			return (Multiset<String>) graph.getNetContainer().getPetriNet().getInitialMarking().get(paName);
 		else
-		return (Multiset<String>) graph.getNetContainer().getPetriNet().getFlowRelation(paName).getConstraint();
+			return (Multiset<String>) graph.getNetContainer().getPetriNet().getFlowRelation(paName).getConstraint();
 	}
 
-
-
-	protected void setNewMarking(Multiset<String> newPlaceMarking) {	
+	protected void setNewMarking(Multiset<String> newPlaceMarking) {
 	}
 
-
-
-//	public static void setDialog(JDialog dialog2) {
-//		dialog = dialog2;
-//
-//	}
-//
-//	public static JDialog getDialog() {
-//		return dialog;
-//	}
+	// public static void setDialog(JDialog dialog2) {
+	// dialog = dialog2;
+	//
+	// }
+	//
+	// public static JDialog getDialog() {
+	// return dialog;
+	// }
 
 	public void updateView() {
 		panel.removeAll();
@@ -329,27 +298,28 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 				public void mouseClicked(MouseEvent e) {
 					super.mouseClicked(e);
 					JPopupMenu popup = new JPopupMenu();
-					if(multisetPA == null)
+					if (multisetPA == null)
 						multisetPA = new Multiset<String>();
 					for (Entry<String, Color> c : colors.entrySet()) {
 						final String color = c.getKey();
 						if (!isTransition && !multisetPA.contains(color)) {
 							JMenuItem item = new JMenuItem(color);
 							item.setName(color);
-							
+
 							item.addActionListener(new ActionListener() {
 
 								@Override
 								public void actionPerformed(ActionEvent arg0) {
 									((mxGraphModel) graph.getModel()).beginUpdate();
-									if(isPlace){
-									if(place.getColorCapacity(color) ==0)
-										((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,paName,color,1 ));
-									multisetPA.setMultiplicity(color, 1);	
-									((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph)graph,paName,multisetPA));}
-									else {
-										multisetPA.setMultiplicity(color, 1);	
-										((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph)graph,paName,multisetPA));}
+									if (isPlace) {
+										if (place.getColorCapacity(color) == 0)
+											((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph) graph, paName, color, 1));
+										multisetPA.setMultiplicity(color, 1);
+										((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph) graph, paName, multisetPA));
+									} else {
+										multisetPA.setMultiplicity(color, 1);
+										((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph) graph, paName, multisetPA));
+									}
 									((mxGraphModel) graph.getModel()).endUpdate();
 									if (!isTransition && multisetPA.contains(colors.keySet())) {
 										addButton.setEnabled(false);
@@ -360,31 +330,32 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 							});
 							popup.add(item);
 						}
-						
-						if (isTransition && !accessMode.keySet().contains(color) &&!color.contains("black")) {
+
+						if (isTransition && !accessMode.keySet().contains(color) && !color.contains("black")) {
 							JMenuItem item = new JMenuItem(color);
 							item.setName(color);
-							
+
 							item.addActionListener(new ActionListener() {
 
 								@Override
 								public void actionPerformed(ActionEvent arg0) {
 									((mxGraphModel) graph.getModel()).beginUpdate();
 									if (isTransition) {
-										
-//										accessMode.put(color, new HashSet<AccessMode>());
-//										Set am = accessMode.get(color);
-//										Set amChange = ((Set) ((HashSet) am).clone());
-									Set amChange = new HashSet<AccessMode>();
-//											amChange.add(AccessMode.READ);
-										
-									
+
+										// accessMode.put(color, new
+										// HashSet<AccessMode>());
+										// Set am = accessMode.get(color);
+										// Set amChange = ((Set) ((HashSet)
+										// am).clone());
+										Set amChange = new HashSet<AccessMode>();
+										// amChange.add(AccessMode.READ);
+
 										((mxGraphModel) graph.getModel()).execute(new AccessModeChange(graph, paName, color, amChange));
-										
+
 										if (!isTransition && accessMode.keySet().contains(colors.keySet())) {
 											addButton.setEnabled(false);
 										}
-									} 
+									}
 									((mxGraphModel) graph.getModel()).endUpdate();
 									updateView();
 									pack();
@@ -392,187 +363,170 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 							});
 							popup.add(item);
 						}
-						
 
 					}
 
 					popup.show(addButton, addButton.getWidth() * 4 / 5, addButton.getHeight() * 4 / 5);
 				}
 			});
-			if(isPlace){
-			infiniteButton = new JToggleButton(IconFactory.getIcon("infinite"));
-			infiniteButton.setBorder(BorderFactory.createEmptyBorder());
-			boundButton = new JToggleButton(IconFactory.getIcon("bounded"));
-			boundButton.setBorder(BorderFactory.createEmptyBorder());
-			Dimension dim2 = new Dimension();
-			double width2 = 35;
-			double height2 = 35;
-			dim2.setSize(width2, height2);
-			infiniteButton.setPreferredSize(dim2);
-			infiniteButton.setMinimumSize(dim2);
-			infiniteButton.setMaximumSize(dim2);
-			infiniteButton.setSize(dim2);
-			infiniteButton.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					
-					Set<String> tokencolors = getTokenColors();
-					int newCapacity = -1;
-					((mxGraphModel) graph.getModel()).beginUpdate();
-					for(String color:tokencolors)
-						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,paName,color,newCapacity ));
-					((mxGraphModel) graph.getModel()).endUpdate();	
-					updateView();
-				}
-				
-			});
+			if (isPlace) {
+				infiniteButton = new JToggleButton(IconFactory.getIcon("infinite"));
+				infiniteButton.setBorder(BorderFactory.createEmptyBorder());
+				boundButton = new JToggleButton(IconFactory.getIcon("bounded"));
+				boundButton.setBorder(BorderFactory.createEmptyBorder());
+				Dimension dim2 = new Dimension();
+				double width2 = 35;
+				double height2 = 35;
+				dim2.setSize(width2, height2);
+				infiniteButton.setPreferredSize(dim2);
+				infiniteButton.setMinimumSize(dim2);
+				infiniteButton.setMaximumSize(dim2);
+				infiniteButton.setSize(dim2);
+				infiniteButton.addActionListener(new ActionListener() {
 
-			boundButton.setPreferredSize(dim2);
-			boundButton.setMinimumSize(dim2);
-			boundButton.setMaximumSize(dim2);
-			boundButton.setSize(dim2);
-			boundButton.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					multisetPA = getMultiSet();
-					if(multisetPA == null) multisetPA = new Multiset<String>();
-					Set<String> tokencolors = getTokenColors();
-					((mxGraphModel) graph.getModel()).beginUpdate();
-					for(String color:tokencolors){
-					int newCapacity = multisetPA.multiplicity(color);
-						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph)graph,paName,color,newCapacity ));
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+
+						Set<String> tokencolors = getTokenColors();
+						int newCapacity = -1;
+						((mxGraphModel) graph.getModel()).beginUpdate();
+						for (String color : tokencolors)
+							((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph) graph, paName, color, newCapacity));
+						((mxGraphModel) graph.getModel()).endUpdate();
+						updateView();
 					}
-					((mxGraphModel) graph.getModel()).endUpdate();
-					updateView();
-				
-				}
-			});
+
+				});
+
+				boundButton.setPreferredSize(dim2);
+				boundButton.setMinimumSize(dim2);
+				boundButton.setMaximumSize(dim2);
+				boundButton.setSize(dim2);
+				boundButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						multisetPA = getMultiSet();
+						if (multisetPA == null)
+							multisetPA = new Multiset<String>();
+						Set<String> tokencolors = getTokenColors();
+						((mxGraphModel) graph.getModel()).beginUpdate();
+						for (String color : tokencolors) {
+							int newCapacity = multisetPA.multiplicity(color);
+							((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph) graph, paName, color, newCapacity));
+						}
+						((mxGraphModel) graph.getModel()).endUpdate();
+						updateView();
+
+					}
+				});
 			}
 		} catch (ParameterException e) {
 		} catch (PropertyException e) {
 		} catch (IOException e) {
 		}
-		
+
 		panel.add(addButton);
-		
-//		JPanel capacityPanel = new JPanel();
-		
-		
-		if(isPlace)
-		panel.add(new JLabel("Tokens"));
-		else if(isTransition)
+
+		// JPanel capacityPanel = new JPanel();
+
+		if (isPlace)
+			panel.add(new JLabel("Tokens"));
+		else if (isTransition)
 			panel.add(new JLabel("Data Usage"));
 		else
 			panel.add(new JLabel("Constraints"));
 		panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
-		if(isPlace)
-		panel.add(new JLabel("Capacity"));
+		if (isPlace)
+			panel.add(new JLabel("Capacity"));
 		else
 			panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
 		int size = 0;
-		
+
 		AbstractCPNGraphics cpnGraphics = (AbstractCPNGraphics) getNetContainer().getPetriNetGraphics();
 		colors = cpnGraphics.getColors();
-		if(getTokenColors().contains("black"))
-		colors.put("black", Color.BLACK);
+		if (getTokenColors().contains("black"))
+			colors.put("black", Color.BLACK);
 
-	
-		if(!isTransition)
-		multisetPA = getMultiSet();
-		else{
-	
-				Object transition = graph.getNetContainer().getPetriNet().getTransition(paName);
-				if(transition instanceof AbstractRegularIFNetTransition)
-					accessMode = ((AbstractRegularIFNetTransition) transition).getAccessModes();		
+		if (!isTransition)
+			multisetPA = getMultiSet();
+		else {
+
+			Object transition = graph.getNetContainer().getPetriNet().getTransition(paName);
+			if (transition instanceof AbstractRegularIFNetTransition)
+				accessMode = ((AbstractRegularIFNetTransition) transition).getAccessModes();
 		}
 		place = (AbstractCPNPlace) getNetContainer().getPetriNet().getPlace(paName);
 		colors = cpnGraphics.getColors();
 		for (String color : colors.keySet()) {
-			if (multisetPA == null && !isTransition){
+			if (multisetPA == null && !isTransition) {
 				multisetPA = new Multiset<String>();
 			}
-			if (isPlace && (place.getColorCapacity(color) > 0 || multisetPA.contains(color))){
-					addRow(color);			
-			size++;		
-			}
-			if(!isPlace && !isTransition && multisetPA.contains(color)){
+			if (isPlace && (place.getColorCapacity(color) > 0 || multisetPA.contains(color))) {
 				addRow(color);
-			size++;	
+				size++;
 			}
-			if(!isPlace && isTransition && accessMode.containsKey(color)){
-			
+			if (!isPlace && !isTransition && multisetPA.contains(color)) {
 				addRow(color);
-			size++;	
+				size++;
 			}
-			
+			if (!isPlace && isTransition && accessMode.containsKey(color)) {
+
+				addRow(color);
+				size++;
+			}
+
 		}
 
-
-		
-		
-		
-//		final JPanel lastRow = new JPanel();
-//		lastRow.setLayout(new BorderLayout());
+		// final JPanel lastRow = new JPanel();
+		// lastRow.setLayout(new BorderLayout());
 		Dimension dim = new Dimension();
 		double width = TOKEN_ROW_WIDTH;
 		double height = TOKEN_ROW_HEIGHT;
 		dim.setSize(width, height);
 		panel.add(Box.createGlue());
-		
-	
+
 		panel.add(Box.createGlue());
-//		C capPanel = new JPanel();
+		// C capPanel = new JPanel();
 		panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
 		JPanel boundOrInfinite = new JPanel();
-		if(isPlace){
-		boundOrInfinite.add(infiniteButton);
-		boundOrInfinite.add(boundButton);
-		if(place.isBounded()){
-			boundButton.setEnabled(false);
-			infiniteButton.setEnabled(true);	
-		}
-		if(!place.isBounded()){
-			boundButton.setEnabled(true);
-			infiniteButton.setEnabled(false);
-		}
-		}
-		else{
+		if (isPlace) {
+			boundOrInfinite.add(infiniteButton);
+			boundOrInfinite.add(boundButton);
+			if (place.isBounded()) {
+				boundButton.setEnabled(false);
+				infiniteButton.setEnabled(true);
+			}
+			if (!place.isBounded()) {
+				boundButton.setEnabled(true);
+				infiniteButton.setEnabled(false);
+			}
+		} else {
 			panel.add(Box.createGlue());
 			panel.add(Box.createGlue());
 		}
-			
-		
-		SpringUtilities.makeCompactGrid(boundOrInfinite, 1, 2,1,1,1,1); 
-		panel.add(boundOrInfinite);
-		
-		panel.add(Box.createGlue());
-	
-		
-		SpringUtilities.makeCompactGrid(panel, size+2, 6, 6, 6, 6, 6); 
-		pack();
 
+		SpringUtilities.makeCompactGrid(boundOrInfinite, 1, 2, 1, 1, 1, 1);
+		panel.add(boundOrInfinite);
+
+		panel.add(Box.createGlue());
+
+		SpringUtilities.makeCompactGrid(panel, size + 2, 6, 6, 6, 6, 6);
+		pack();
 
 	}
 
-
-
-private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNetContainer() {
-	AbstractGraphicalCPN graphicalNet = (AbstractGraphicalCPN) graph.getNetContainer();
+	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNetContainer() {
+		AbstractGraphicalCPN graphicalNet = (AbstractGraphicalCPN) graph.getNetContainer();
 		return graphicalNet;
 	}
 
-
-
-protected Set<String> getTokenColors() {
-	AbstractCPN net = (AbstractCPN) graph.getNetContainer().getPetriNet();
-	return net.getTokenColors();
-}
-
-
+	protected Set<String> getTokenColors() {
+		AbstractCPN net = (AbstractCPN) graph.getNetContainer().getPetriNet();
+		return net.getTokenColors();
+	}
 
 }

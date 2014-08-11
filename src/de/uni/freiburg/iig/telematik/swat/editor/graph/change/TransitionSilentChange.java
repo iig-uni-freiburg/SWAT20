@@ -1,36 +1,27 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
-import java.awt.Color;
-
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxICell;
-import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
-public class TokenColorChange extends mxAtomicGraphModelChange {
+public class TransitionSilentChange extends mxAtomicGraphModelChange {
 
 	/**
 	 *
 	 */
 	protected String name;
-	Color value;
-	protected Color previous;
+	boolean value;
+	protected boolean previous;
 	private PNGraph graph;
-	private PNEditor editor;
 
 	/**
 	 * 
 	 */
-	public TokenColorChange()
+	public TransitionSilentChange()
 	{
-		this(null, null, null);
+		this(null, null, false);
 	}
 
 	/**
@@ -44,11 +35,10 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 //		this.previous = this.value;
 //	}
 
-	public TokenColorChange(PNEditor editor, String name, Color color) {
-		this.editor = editor;
-		this.graph = editor.getGraphComponent().getGraph();
+	public TransitionSilentChange(PNGraph graph, String name, boolean setSilent) {
+		this.graph = graph;
 		this.name = name;
-		this.value = color;
+		this.value = setSilent;
 		this.previous = this.value;	
 		}
 
@@ -71,7 +61,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setValue(Color value)
+	public void setValue(boolean value)
 	{
 		this.value = value;
 	}
@@ -87,7 +77,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setPrevious(Color value)
+	public void setPrevious(boolean value)
 	{
 		previous = value;
 	}
@@ -108,19 +98,14 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 		value = previous;
 		previous = valueForCellChanged(name,
 				previous);
-		System.out.println(value + "-----" + previous);
-		editor.getEditorToolbar().updateGlobalTokenConfigurer();
-		editor.getGraphComponent().getGraph().updateViews();
 	}
 	
-	protected Color valueForCellChanged(String name, Color value)
+	protected boolean valueForCellChanged(String name, boolean value)
 	{
-		Color oldValue = graph.getTokenColorForName(name);
+		boolean oldValue = graph.getTransitionSilentState(name);
 		try {
-			graph.updateTokenColor(name, value);
-			
+			graph.updateTransitionSilent(name, value);
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 

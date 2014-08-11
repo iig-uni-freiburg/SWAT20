@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,10 +22,12 @@ import javax.swing.SwingUtilities;
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStore;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogAnalysisModel;
@@ -44,11 +47,14 @@ public class SwatComponents {
 	private Set<SwatComponentsListener> listener = new HashSet<SwatComponentsListener>();
 
 	@SuppressWarnings("rawtypes")
+	private Map<String, ACModel> acModels = new HashMap<String, ACModel>();
 	private Map<AbstractGraphicalPN, File> nets = new HashMap<AbstractGraphicalPN, File>();
 	private Map<LogModel, File> logs = new HashMap<LogModel, File>();
 	private Map<LogModel, File> xml = new LinkedHashMap<LogModel, File>();
 	private Map<LogModel, List<LogAnalysisModel>> logAnalysis = new HashMap<LogModel, List<LogAnalysisModel>>();
 	private List<String> needsLayout = new LinkedList<String>();
+
+	private String selectedACModel;
 	
 
 	private SwatComponents() {
@@ -559,6 +565,114 @@ public class SwatComponents {
 
 	public List<LogAnalysisModel> getAnalysisForLog(LogModel model) {
 		return logAnalysis.get(model);
+	}
+	
+	/**
+	 * Adds a new access control model.<br>
+	 * The context is also stores as property-file in the simulation directory.
+	 * @param acModel The model to add.
+	 * @throws ParameterException if the given model is <code>null</code>.
+	 * @throws PropertyException if the procedure of property extraction fails.
+	 * @throws IOException if the property-representation of the new model cannot be stored.
+	 */
+	public void addACModel(ACModel acModel) throws ParameterException, IOException, PropertyException{
+		addACModel(acModel, true);
+	}
+	
+	/**
+	 * Adds a new access control model.<br>
+	 * Depending on the value of the store-parameter, the model is also stores as property-file in the simulation directory.
+	 * @param acModel The new model to add.
+	 * @param storeToFile Indicates if the model should be stored on disk.
+	 * @throws ParameterException if any parameter is invalid.
+	 * @throws PropertyException if the model cannot be stored due to an error during property extraction.
+	 * @throws IOException if the model cannot be stored due to an I/O Error.
+	 */
+	public void addACModel(ACModel acModel, boolean storeToFile) throws ParameterException, IOException, PropertyException{
+		Validate.notNull(acModel);
+		Validate.notNull(storeToFile);
+		acModels.put(acModel.getName(), acModel);
+		if(storeToFile){
+			storeACModel(acModel);
+		}
+	}
+	
+	/**
+	 * Stores the given access control model in form of a property-file in the simulation directory.<br>
+	 * The context name will be used as file name.
+	 * @param acModel The model to store.
+	 * @throws ParameterException if the given model is <code>null</code> or invalid.
+	 * @throws IOException if the model cannot be stored due to an I/O Error.
+	 * @throws PropertyException if the model cannot be stored due to an error during property extraction.
+	 */
+	public void storeACModel(ACModel acModel) throws ParameterException, IOException, PropertyException{
+		Validate.notNull(acModel);
+//		acModel.getProperties().store(GeneralProperties.getInstance().getPathForACModels()+acModel.getName());
+	}
+	
+	/**
+	 * Checks, if there are access control model-components.
+	 * @return <code>true</code> if there is at least one access control model;<br>
+	 * <code>false</code> otherwise.
+	 */
+	public boolean containsACModels(){
+		return !acModels.isEmpty();
+	}
+	
+	/**
+	 * Checks, if there is an access control model with the given name.
+	 * @return <code>true</code> if there is such a model;<br>
+	 * <code>false</code> otherwise.
+	 */
+	public boolean containsACModel(String name){
+		return acModels.get(name) != null;
+	}
+	
+	/**
+	 * Returns all access control models, i.e. models stored in the simulation directory.
+	 * @return A set containing all contexts.
+	 */
+	public Collection<ACModel> getACModels(){
+		return Collections.unmodifiableCollection(acModels.values());
+	}
+	
+	/**
+	 * Returns the access control model with the given name, if there is one.
+	 * @param name The name of the desired access control model.
+	 * @return The model with the given name, or <code>null</code> if there is no such model.
+	 * @throws ParameterException if the given name is <code>null</code>.
+	 */
+	public ACModel getACModel(String name) throws ParameterException{
+		Validate.notNull(name);
+		selectedACModel = name;
+		return acModels.get(name);
+	}
+	
+	public ACModel getSelectedACModel() throws ParameterException{
+		Validate.notNull(selectedACModel);
+		return acModels.get(selectedACModel);
+	}
+	
+	/**
+	 * Returns the names of all access control models.
+	 * @return
+	 */
+	public Set<String> getACModelNames(){
+		return Collections.unmodifiableSet(acModels.keySet());
+	}
+	
+	/**
+	 * Removes the access control model with the given name from the simulation components<br>
+	 * and also deletes the corresponding property-file in the simulation directory.
+	 * @param name The name of the model to remove.
+	 * @throws PropertyException if the path for the simulation directory cannot be extracted from the general properties file.
+	 * @throws ParameterException if there is an internal parameter misconfiguration.
+	 * @throws IOException if the corresponding property file for the model cannot be deleted.
+	 */
+	public void removeACModel(String name) throws PropertyException, IOException, ParameterException{
+		if(acModels.remove(name) != null){
+//			FileUtils.deleteFile(GeneralProperties.getInstance().getPathForACModels()+name);
+		}
 	}
 }
 

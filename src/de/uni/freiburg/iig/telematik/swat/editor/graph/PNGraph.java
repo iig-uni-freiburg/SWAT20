@@ -68,6 +68,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.StyleChange;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
@@ -761,6 +762,10 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 						e.printStackTrace();
 					}
 				}
+				if (customcell.getType() == PNComponent.TRANSITION) {
+						drawAdditionalTransitionGrahpics(canvas, state);
+				
+				}
 			}
 
 			g.dispose();
@@ -769,6 +774,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 		return shape;
 	}
+
+	protected abstract void drawAdditionalTransitionGrahpics(mxGraphics2DCanvas canvas, mxCellState state);
 
 	protected void drawAdditionalPlaceGrahpics(mxGraphics2DCanvas canvas, mxCellState state) throws ParameterException {
 		Rectangle temp = state.getRectangle();
@@ -1678,8 +1685,9 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	public void removePoint(PNGraphCell cell, int index) {
 		if(cell.getType().equals(PNComponent.ARC)){
 			List<mxPoint> points = cell.getGeometry().getPoints();
-			if(points != null)
-				cell.getGeometry().getPoints().remove(index-1);		
+			if(points != null && points.size() >0){
+				cell.getGeometry().getPoints().remove(index-1);
+				}	
 		}	
 	
 			updatePointsInArcGraphics(cell, cell.getGeometry().getPoints());
@@ -1719,9 +1727,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		refresh();
 
 }
-	public void setTransitionSilent(String id, boolean setSilent) {
+	public void updateTransitionSilent(String id, boolean setSilent) {
 		getNetContainer().getPetriNet().getTransition(id).setSilent(setSilent);	
 	
+	}
+	public boolean getTransitionSilentState(String name) {
+		return getNetContainer().getPetriNet().getTransition(name).isSilent();
 	}
 
 	public void removeAllArcPoints() {
@@ -1743,8 +1754,14 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		
 	}
 
-	public abstract Set getAccessModeforTransition(String name, String color);
+//	public abstract Set getAccessModeforTransition(String name, String color);
+//
+//	public abstract void updateAccessModeTransition(String name, String color, Set newAM);
+//
+//	public abstract SecurityLevel getCurrentTransitionLabeling(String name);
+//
+//	public abstract void updateTransitionLabeling(String name, SecurityLevel level);
 
-	public abstract void updateAccessModeTransition(String name, String color, Set newAM);
+
 
 }

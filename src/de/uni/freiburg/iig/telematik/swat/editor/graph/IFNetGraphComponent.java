@@ -1,7 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+
+import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
 
@@ -74,6 +77,13 @@ public class IFNetGraphComponent extends PNGraphComponent {
 	protected boolean mouseWheelOnPlace(PNGraphCell cell, MouseWheelEvent e) {
 		// TODO decrementing or incrementing tokennumber of selected color with
 		// mousewheel
+		return false;
+	}
+	
+	@Override
+	protected boolean rightClickOnTransition(PNGraphCell cell, MouseEvent e) {
+		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), this);
+		getTransitionPopupMenu().show(IFNetGraphComponent.this, pt.x, pt.y);
 		return false;
 	}
 

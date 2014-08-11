@@ -1,7 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.editor;
 
 import java.io.File;
+import java.io.IOException;
 
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
@@ -80,7 +82,19 @@ public class IFNetEditor extends AbstractIFNetEditor {
 
 	@Override
 	public TransitionPopupMenu getTransitionPopupMenu() {
-		// TODO Auto-generated method stub
+		try {
+			try {
+				return new TransitionPopupMenu(this);
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (ParameterException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 

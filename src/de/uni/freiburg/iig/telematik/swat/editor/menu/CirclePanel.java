@@ -1,11 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
-/**
- * methods/CirclePanel.java - Component to draw circles.
- * This class functions as a GUI component, and can be added to a layout.
- * @version 22 June 1998, revised July 1999,  2002-02-07 JPanel
- * @author Fred Swartz
- */
+
 
 import java.awt.*;
 import java.io.IOException;

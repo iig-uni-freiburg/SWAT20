@@ -1,36 +1,31 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
-import java.awt.Color;
-
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxICell;
-import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
-public class TokenColorChange extends mxAtomicGraphModelChange {
+public class AnalysisContextChange extends mxAtomicGraphModelChange {
 
 	/**
 	 *
 	 */
 	protected String name;
-	Color value;
-	protected Color previous;
-	private PNGraph graph;
+	AnalysisContext value;
+	protected AnalysisContext previous;
+	private IFNetGraph graph;
 	private PNEditor editor;
 
 	/**
 	 * 
 	 */
-	public TokenColorChange()
+	public AnalysisContextChange()
 	{
-		this(null, null, null);
+		this(null, null);
 	}
 
 	/**
@@ -44,11 +39,11 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 //		this.previous = this.value;
 //	}
 
-	public TokenColorChange(PNEditor editor, String name, Color color) {
+	public AnalysisContextChange(PNEditor editor, AnalysisContext ac) {
 		this.editor = editor;
-		this.graph = editor.getGraphComponent().getGraph();
+		this.graph = (IFNetGraph) editor.getGraphComponent().getGraph();
 		this.name = name;
-		this.value = color;
+		this.value = ac;
 		this.previous = this.value;	
 		}
 
@@ -71,7 +66,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setValue(Color value)
+	public void setValue(AnalysisContext value)
 	{
 		this.value = value;
 	}
@@ -87,7 +82,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setPrevious(Color value)
+	public void setPrevious(AnalysisContext value)
 	{
 		previous = value;
 	}
@@ -106,21 +101,22 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	public void execute()
 	{
 		value = previous;
-		previous = valueForCellChanged(name,
+		previous = valueForCellChanged(
 				previous);
-		System.out.println(value + "-----" + previous);
-		editor.getEditorToolbar().updateGlobalTokenConfigurer();
-		editor.getGraphComponent().getGraph().updateViews();
+		editor.getEditorToolbar().updateTokenlabelConfigurer();
+		editor.getEditorToolbar().updateSubjectClearanceConfigurer();
+if(value != null && previous != null)
+System.out.println(value.getAttributes() +"-------"+previous.getAttributes());
+
+
 	}
 	
-	protected Color valueForCellChanged(String name, Color value)
+	protected AnalysisContext valueForCellChanged(AnalysisContext value)
 	{
-		Color oldValue = graph.getTokenColorForName(name);
+		AnalysisContext oldValue = graph.getCurrentAnalysisContext();
 		try {
-			graph.updateTokenColor(name, value);
-			
+			graph.updateAnalysisContext(value);
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 

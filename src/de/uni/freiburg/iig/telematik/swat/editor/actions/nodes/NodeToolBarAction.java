@@ -56,7 +56,6 @@ public class NodeToolBarAction extends PopUpToolBarAction {
 	}
 
 	public static Image createIconImage() {
-		String fillColorString = EditorProperties.getInstance().getDefaultNodeColor();
 		Color defaultFillColor = Utils.parseColor(nodeColor );
 		IconSize iconsize = null;
 		try {
@@ -70,10 +69,7 @@ public class NodeToolBarAction extends PopUpToolBarAction {
 		}
 		int size = iconsize.getSize();
 
-		double width;
-		Style defaultLinestyle;
-		boolean curve;
-        Image image = new BufferedImage (size, size, BufferedImage.TYPE_INT_ARGB_PRE);
+		Image image = new BufferedImage (size, size, BufferedImage.TYPE_INT_ARGB_PRE);
         Graphics g = image.getGraphics();
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -104,8 +100,6 @@ public class NodeToolBarAction extends PopUpToolBarAction {
         g2.setColor (new Color(0,0,0));
 		g2.setStroke(new BasicStroke(1));
         g2.drawOval(0, 0, 	placeSize+placeSize/2, placeSize + placeSize/2);
-        
-
 
         g2.dispose ();
         return image;

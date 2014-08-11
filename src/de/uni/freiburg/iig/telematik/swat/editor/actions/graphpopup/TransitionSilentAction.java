@@ -18,6 +18,7 @@ import com.mxgraph.layout.mxParallelEdgeLayout;
 import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.layout.mxStackLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
@@ -37,6 +38,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TransitionSilentChange;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 
 public class TransitionSilentAction extends AbstractPNEditorAction {
@@ -57,7 +60,8 @@ public class TransitionSilentAction extends AbstractPNEditorAction {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
 		PNGraphCell selectedCell =  (PNGraphCell) graph.getSelectionCell();
 		if(selectedCell != null){
-			graph.setTransitionSilent(selectedCell.getId(), silent);
+			((mxGraphModel) graph.getModel()).beginUpdate();
+			((mxGraphModel) graph.getModel()).execute(new TransitionSilentChange((PNGraph)graph,selectedCell.getId(),silent));
 			if(silent){
 			graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#00000");
 			graph.setCellStyles(mxConstants.STYLE_NOLABEL, "1");
@@ -66,6 +70,7 @@ public class TransitionSilentAction extends AbstractPNEditorAction {
 				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, EditorProperties.getInstance().getDefaultNodeColor());
 				graph.setCellStyles(mxConstants.STYLE_NOLABEL, "0");
 			}
+			((mxGraphModel) graph.getModel()).endUpdate();
 		}
 
 	}

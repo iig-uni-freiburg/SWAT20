@@ -26,10 +26,14 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PopUpToolBarAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.acmodel.AddAccessControlAction;
 //import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAction;
 //import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.UndoAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.AddAnalysisContextAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.EditSubjectClearanceAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.EditTokenlabelAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterEditingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterExecutionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.ReloadExecutionAction;
@@ -100,24 +104,11 @@ public class ToolBar extends JToolBar {
 	private String undoTooltip = "undo";
 	private String redoTooltip = "redo";
 
-
-	
-
-
 	private PopUpToolBarAction tokenAction;
-
-
 	private JToggleButton tokenButton;
-
-
 	private ChecKSoundnessAction checkSoundnessAction;
-
-
 	private JToggleButton checkSoundnessButton;
-
-
 	private CheckValidityAction checkValidityAction;
-
 	private JToggleButton checkValidityButton;
 
 
@@ -125,6 +116,36 @@ public class ToolBar extends JToolBar {
 
 
 	private JToggleButton transformButton;
+
+
+	private AddAnalysisContextAction addAnalysisContextAction;
+
+
+	private JToggleButton addAnalysisContextbutton;
+
+
+	private AddAccessControlAction addAccessControlAction;
+
+
+	private JToggleButton addAccessControlbutton;
+
+
+	private PopUpToolBarAction editSubjectClearanceAction;
+
+
+	private JToggleButton editSubjectClearanceButton;
+
+
+	private PopUpToolBarAction editTokenlabelAction;
+
+
+	private JToggleButton editTokenlabelButton;
+
+
+	private TokenlabelToolBar tokenlabelToolbar;
+
+
+	private SubjectClearanceToolBar editSubjectClearanceToolbar;
 	
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
@@ -157,17 +178,29 @@ public class ToolBar extends JToolBar {
 
 			zoomToolbar = new ZoomToolBar(pnEditor, JToolBar.HORIZONTAL);
 			zoomAction = new PopUpToolBarAction(pnEditor, "Zoom", "zoom_in", zoomToolbar);
-			if(pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() != NetType.PTNet){
-			tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
-			tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
-			
-			
-			checkValidityAction = new CheckValidityAction(pnEditor);
-			checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
-			transformAction = new TransformCPNtoCWNAction(pnEditor);
-			
+			if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN
+					|| pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
+				tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
+				tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
+				if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN) {
+				checkValidityAction = new CheckValidityAction(pnEditor);
+				checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
+				transformAction = new TransformCPNtoCWNAction(pnEditor);}
+
 			}
 
+			if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
+
+				addAccessControlAction = new AddAccessControlAction(pnEditor);
+				addAnalysisContextAction = new AddAnalysisContextAction(pnEditor);
+//				editTokenlabelAction = new EditTokenlabelAction(pnEditor);
+				tokenlabelToolbar = new TokenlabelToolBar(pnEditor, JToolBar.HORIZONTAL);
+				editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", "tokenlabel", tokenlabelToolbar);
+				editSubjectClearanceToolbar = new SubjectClearanceToolBar(pnEditor, JToolBar.HORIZONTAL);
+				editSubjectClearanceAction = new PopUpToolBarAction(pnEditor, "Edit Clearance", "user_shield", editSubjectClearanceToolbar);
+//				editSubjectClearanceAction = new EditSubjectClearanceAction(pnEditor);
+
+			}
 			setFloatable(false);
 
 		} catch (PropertyException e) {
@@ -228,6 +261,18 @@ public class ToolBar extends JToolBar {
 		
 		
 	}
+	
+	if(addAnalysisContextAction != null){
+		addSeparator();
+		addAccessControlbutton = (JToggleButton) add(addAccessControlAction, true);
+		addAnalysisContextbutton = (JToggleButton) add(addAnalysisContextAction, true);
+		editTokenlabelButton = (JToggleButton) add(editTokenlabelAction, true);
+		editTokenlabelAction.setButton(editTokenlabelButton);
+		editSubjectClearanceButton = (JToggleButton) add(editSubjectClearanceAction, true);
+		editSubjectClearanceAction.setButton(editSubjectClearanceButton);
+	}
+	
+	
 		doLayout();
 
 //		saveButton.setToolTipText(saveButtonTooltip);
@@ -387,7 +432,16 @@ public class ToolBar extends JToolBar {
 
 	public void updateGlobalTokenConfigurer() {
 		tokenToolbar.updateView();
+		tokenlabelToolbar.updateView();
+	
 		
+	}
+
+	public void updateTokenlabelConfigurer() {
+		tokenlabelToolbar.updateView();
+	}
+	public void updateSubjectClearanceConfigurer() {
+		editSubjectClearanceToolbar.updateView();
 	}
 
 }

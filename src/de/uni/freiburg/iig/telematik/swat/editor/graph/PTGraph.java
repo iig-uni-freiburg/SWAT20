@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 
+import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxGraphModel.mxValueChange;
+import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
 import de.invation.code.toval.graphic.misc.PColor;
@@ -173,14 +175,9 @@ public class PTGraph extends PNGraph {
 		
 	}
 
-	@Override
-	public Set getAccessModeforTransition(String name, String color) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public void updateAccessModeTransition(String name, String color, Set newAM) {
+	protected void drawAdditionalTransitionGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
 		// TODO Auto-generated method stub
 		
 	}

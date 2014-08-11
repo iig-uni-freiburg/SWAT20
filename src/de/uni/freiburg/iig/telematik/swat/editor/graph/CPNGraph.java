@@ -9,6 +9,9 @@ import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
+import com.mxgraph.canvas.mxGraphics2DCanvas;
+import com.mxgraph.view.mxCellState;
+
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
@@ -235,13 +238,7 @@ default:
 		}
 
 	@Override
-	public Set getAccessModeforTransition(String name, String color) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateAccessModeTransition(String name, String color, Set newAM) {
+	protected void drawAdditionalTransitionGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
 		// TODO Auto-generated method stub
 		
 	}

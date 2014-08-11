@@ -11,24 +11,27 @@ import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
+import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
-public class TokenColorChange extends mxAtomicGraphModelChange {
+public class TokenSecurityLevelChange extends mxAtomicGraphModelChange {
 
 	/**
 	 *
 	 */
 	protected String name;
-	Color value;
-	protected Color previous;
-	private PNGraph graph;
-	private PNEditor editor;
+	SecurityLevel value;
+	protected SecurityLevel previous;
+	private IFNetGraph graph;
+	private IFNetEditor editor;
 
 	/**
 	 * 
 	 */
-	public TokenColorChange()
+	public TokenSecurityLevelChange()
 	{
 		this(null, null, null);
 	}
@@ -44,11 +47,11 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 //		this.previous = this.value;
 //	}
 
-	public TokenColorChange(PNEditor editor, String name, Color color) {
-		this.editor = editor;
-		this.graph = editor.getGraphComponent().getGraph();
+	public TokenSecurityLevelChange(PNEditor editor2, String name, SecurityLevel sl) {
+		this.editor = (IFNetEditor) editor2;
+		this.graph = (IFNetGraph) editor2.getGraphComponent().getGraph();
 		this.name = name;
-		this.value = color;
+		this.value = sl;
 		this.previous = this.value;	
 		}
 
@@ -71,7 +74,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setValue(Color value)
+	public void setValue(SecurityLevel value)
 	{
 		this.value = value;
 	}
@@ -87,7 +90,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setPrevious(Color value)
+	public void setPrevious(SecurityLevel value)
 	{
 		previous = value;
 	}
@@ -108,16 +111,16 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 		value = previous;
 		previous = valueForCellChanged(name,
 				previous);
-		System.out.println(value + "-----" + previous);
-		editor.getEditorToolbar().updateGlobalTokenConfigurer();
-		editor.getGraphComponent().getGraph().updateViews();
+		editor.getEditorToolbar().updateTokenlabelConfigurer();
+//		editor.getGraphComponent().getGraph().updateViews();
+
 	}
 	
-	protected Color valueForCellChanged(String name, Color value)
+	protected SecurityLevel valueForCellChanged(String label, SecurityLevel value)
 	{
-		Color oldValue = graph.getTokenColorForName(name);
+		SecurityLevel oldValue = graph.getSecurityLabelForTokenlabel(label);
 		try {
-			graph.updateTokenColor(name, value);
+			graph.updateSecurityLabelForTokenlabel(label, value);
 			
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block

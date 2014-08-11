@@ -11,6 +11,7 @@ import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
 public class AccessModeChange extends mxAtomicGraphModelChange {
@@ -21,7 +22,7 @@ public class AccessModeChange extends mxAtomicGraphModelChange {
 	protected String name;
 	Set value;
 	protected Set previous;
-	private PNGraph graph;
+	private IFNetGraph graph;
 	private String color;
 
 	/**
@@ -44,7 +45,7 @@ public class AccessModeChange extends mxAtomicGraphModelChange {
 //	}
 
 	public AccessModeChange(PNGraph graph, String name, String color, Set am) {
-		this.graph = graph;
+		this.graph = (IFNetGraph) graph;
 		this.name = name;
 		this.color = color;
 		this.value = am;
