@@ -627,7 +627,7 @@ public class SWATACModelDialog extends JDialog {
 		}
 		try {
 			if(acModel!= null)
-			SwatComponents.getInstance().addACModel(acModel);
+			SwatComponents.getInstance().storeACModel(acModel);
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
