@@ -28,6 +28,13 @@ import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACLModelProperties;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelProperties;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelType;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.RBACModelProperties;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStore;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogAnalysisModel;
@@ -191,16 +198,65 @@ public class SwatComponents {
 		MessageDialog.getInstance().addMessage("Done.");
 		MessageDialog.getInstance().newLine();
 
-
-
-
-
-
-
-
+		//3. Load ACModels
+		MessageDialog.getInstance().addMessage("3. Loading AC Models");
+		loadAcModels();
+		MessageDialog.getInstance().addMessage("Done.");
 	}
 	
 	
+	private void loadAcModels() throws ParameterException, PropertyException, IOException {
+		File path = new File(SwatProperties.getInstance().getAcModelWorkingDirectory());
+		if (!path.exists())
+			path.mkdir();
+
+		List<String> acFiles = null;
+		try {
+			acFiles = FileUtils.getFileNamesInDirectory(SwatProperties.getInstance().getAcModelWorkingDirectory(), true);
+		} catch (IOException e1) {
+			throw new IOException("Cannot access access control model directory.");
+		}
+		for (String acFile : acFiles) {
+			MessageDialog.getInstance().addMessage(
+					"Loading access control model: " + acFile.substring(acFile.lastIndexOf('/') + 1) + "...   ");
+			try {
+				addACModel(loadACModel(acFile), false);
+				MessageDialog.getInstance().addMessage("Done.");
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Error: " + e.getMessage());
+			}
+		}
+		//MessageDialog.getInstance().newLine();
+
+	}
+
+	private ACModel loadACModel(String acFile) throws PropertyException, ParameterException, IOException {
+		ACModelProperties testProperties = new ACModelProperties();
+		try {
+			testProperties.load(acFile);
+
+			// Check ACModel type
+			ACModel newModel = null;
+			if (testProperties.getType().equals(ACModelType.ACL)) {
+				ACLModelProperties aclProperties = new ACLModelProperties();
+				aclProperties.load(acFile);
+				newModel = new ACLModel(aclProperties);
+			} else {
+				RBACModelProperties rbacProperties = new RBACModelProperties();
+				rbacProperties.load(acFile);
+				newModel = new RBACModel(rbacProperties);
+			}
+			try {
+				newModel.checkValidity();
+			} catch (ACMValidationException e) {
+				throw new ParameterException(e.getMessage());
+			}
+			return newModel;
+		} catch (IOException e) {
+			throw new IOException("Cannot load properties file: " + acFile + ".");
+		}
+	}
+
 	private void loadLogFiles() throws ParameterException, PropertyException, IOException {
 		
 		SwatProperties prop = SwatProperties.getInstance();
@@ -607,7 +663,8 @@ public class SwatComponents {
 	 */
 	public void storeACModel(ACModel acModel) throws ParameterException, IOException, PropertyException{
 		Validate.notNull(acModel);
-//		acModel.getProperties().store(GeneralProperties.getInstance().getPathForACModels()+acModel.getName());
+		File pathToStore = new File(SwatProperties.getInstance().getAcModelWorkingDirectory(), acModel.getName());
+		acModel.getProperties().store(pathToStore.getAbsolutePath());
 	}
 	
 	/**

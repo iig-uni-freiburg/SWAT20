@@ -86,7 +86,7 @@ public class Startup {
 			//add needed folders
 			new File(prop.getLogWorkingDirectory()).mkdir();
 			new File(prop.getNetWorkingDirectory()).mkdir();
-			new File(prop.getAnalysisContextWorkingDirectory()).mkdir();
+			new File(prop.getAcModelWorkingDirectory()).mkdir();
 
 			return true;
 		} catch (ParameterException e1) {

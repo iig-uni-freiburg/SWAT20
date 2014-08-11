@@ -125,15 +125,15 @@ public class SwatProperties extends AbstractProperties{
 		setProperty(SwatProperty.ANALYSIS_CONTEXT_NAME, analysisContextFolderName);
 	}
 
-	public String getAnalysisContextName() {
+	public String getAcModelName() {
 		String result = getProperty(SwatProperty.ANALYSIS_CONTEXT_NAME);
 		if (result == null || result.isEmpty())
-			result = "analysis-context";
+			result = "acModel";
 		return result;
 	}
 
-	public String getAnalysisContextWorkingDirectory() throws ParameterException, PropertyException {
-		return new File(getWorkingDirectory(), getAnalysisContextName()).getAbsolutePath();
+	public String getAcModelWorkingDirectory() throws ParameterException, PropertyException {
+		return new File(getWorkingDirectory(), getAcModelName()).getAbsolutePath();
 	}
 
 	public String getLogWorkingDirectory() throws ParameterException, PropertyException {
