@@ -88,6 +88,7 @@ public class AnalyzeToolBar extends JToolBar {
 
 	public void setCounterExample(List<String> path) {
 		counterExample = new CounterExampleVisualization(path);
+		reset();
 		activate();
 	}
 

@@ -172,7 +172,7 @@ public class PatternWindow extends JFrame {
 	protected void clickedOK() {
 		// TODO Auto-generated method stub
 		setVisible(false);
-		analyzePanel.update();
+		analyzePanel.getPatternSettingsFromPatternWindow();
 	}
 
 	public PatternWindow(AnalyzePanel p, PatternFactory pf)

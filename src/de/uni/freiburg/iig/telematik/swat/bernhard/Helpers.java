@@ -2,11 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.awt.FlowLayout;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -72,7 +69,14 @@ public class Helpers {
 		}
 		return result;
 	}
-	
+	/**
+	 * create a list of JLabels that will later be added to an
+	 * AnalyzePanel. Some parameters might be to long so they will
+	 * be breaken off. a JLabel does not accept a newline character
+	 * @param ps
+	 * @param transitionsReverse
+	 * @return
+	 */
 	public static List<JLabel> getLabelListForPatternSetting(PatternSetting ps, HashMap<String,String> transitionsReverse) {
 		ArrayList<JLabel> labels=new ArrayList<JLabel>();
 		for(Parameter para: ps.getParameters()) {
@@ -133,5 +137,41 @@ public class Helpers {
 		}
 		return labels;
 	}
+	/**
+	 * copy a list of pattern settings by value
+	 * @param list
+	 * @return
+	 */
+	public static List<PatternSetting> copyPatternSettings(List<PatternSetting> list) {
+		ArrayList<PatternSetting> newList=new ArrayList<PatternSetting>();
+		for(PatternSetting ps: list) {
+			PatternSetting p2=ps.clone();
+			newList.add(p2);
+		}
 
+		return newList;
+	}
+	/**
+	 * copy a list of parameters by value
+	 * @param parameters
+	 * @return
+	 */
+	
+	public static List<Parameter> cloneParameterList(List<Parameter> parameters) {
+		ArrayList<Parameter> newList=new ArrayList<Parameter>();
+		for(Parameter p:parameters) {
+			Parameter newP=new Parameter(p.getTypes(),p.getMultiplicity(),p.getName());
+			newP.setValue((ArrayList<ParamValue>) copyParamValueList(p.getValue()));
+			newList.add(newP);
+		}
+		return newList;
+	}
+
+	public static List<ParamValue> copyParamValueList(List<ParamValue> values) {
+		ArrayList<ParamValue> newList=new ArrayList<ParamValue>();
+		for(ParamValue pv:values) {
+			newList.add(new ParamValue(pv.getOperandName(),pv.getOperandType()));
+		}
+		return newList;
+	}
 }

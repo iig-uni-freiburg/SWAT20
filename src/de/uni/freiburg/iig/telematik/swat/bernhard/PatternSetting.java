@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.util.List;
 
+import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
 /**
@@ -24,6 +25,7 @@ public class PatternSetting {
 		super();
 		this.name = name;
 		this.parameters = parameters;
+		//updateParameterAppliedString();
 		result=null;
 	}
 	private String name;
@@ -44,6 +46,45 @@ public class PatternSetting {
 		return parameters;
 	}
 
+	public PatternSetting clone() {
+		PatternSetting ps=new PatternSetting(name,parameters);
+		ps.setParameters(Helpers.cloneParameterList(parameters));
+		ps.setResult(result);
+		return ps;
+	}
+
+	public void setParameters(List<Parameter> parameters) {
+		this.parameters = parameters;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof PatternSetting)) {
+			return false;
+		}
+		PatternSetting ps=(PatternSetting) o;
+		if(false==name.equals(ps.getName())) {
+			return false;
+		}
+		if(parameters.size() != ps.getParameters().size()) {
+			return false;
+		}
+		for(int i=0; i < parameters.size(); i++) {
+			List<ParamValue> myValues=parameters.get(i).getValue();
+			List<ParamValue> otherValues=ps.getParameters().get(i).getValue();
+			if(myValues.size() != otherValues.size()) {
+				return false;
+			}
+			for(int j=0; j < myValues.size(); j++) {
+				if(false==(myValues.get(j).equals(otherValues.get(j)))) {
+					return false;
+				}
+			}
+		}
+		System.out.println("same");
+		return true;
+	}
+
 
 	/**
 	 * returns the String representation of the pattern e.g:
@@ -54,6 +95,9 @@ public class PatternSetting {
 	 */
 	@Override
 	public String toString() {
+		if(parameterAppliedString == null) {
+			return "PS "+name;
+		}
 		return parameterAppliedString;
 		/*String s= name+" ";
 		for(Parameter p:parameters) {

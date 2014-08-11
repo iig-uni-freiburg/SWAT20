@@ -22,4 +22,14 @@ public class ParamValue {
 		return mOperandType;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof ParamValue)) {
+			return false;
+		}
+		ParamValue v=(ParamValue) o;
+		System.out.println("me: "+mOperandName);
+		System.out.println("he: "+v.getOperandName());
+		return mOperandName.equals(v.getOperandName()) && mOperandType == v.getOperandType();
+	}
 }
