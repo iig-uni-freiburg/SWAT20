@@ -27,5 +27,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/SWAT20/lib/commons-exec-1.2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="/SERAM"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
