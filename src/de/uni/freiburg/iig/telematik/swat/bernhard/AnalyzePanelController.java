@@ -6,6 +6,7 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
 public class AnalyzePanelController {
 
@@ -28,9 +29,15 @@ public class AnalyzePanelController {
 	 * @param pneditor the pneditor that controls the net
 	 * @return a JPanel that you can add on the right side
 	 */
-	public AnalyzePanel getPanel(String name, PNEditor pneditor) {
+	public AnalyzePanel getAnalyzePanel(String name, SwatComponent component) {
 		if(panelDic.get(name) == null) {
-			AnalyzePanel a=new AnalyzePanel(pneditor, name);
+			AnalyzePanel a=null;
+			if(component instanceof PNEditor) {
+				a=new AnalyzePanelPTNet(component, name);
+			
+			} else {
+				a=new AnalyzePanelLogfile(component, name);
+			}
 			panelDic.put(name, a);
 		}
 		//System.out.println(panelDic);
@@ -42,14 +49,14 @@ public class AnalyzePanelController {
 			panelDic.get(name).load(f);
 		}
 	}
-	public void netChanged(String name) {
+	public void objectChanged(String name) {
 		if(panelDic.get(name) != null) {
-			panelDic.get(name).netChanged();
+			panelDic.get(name).objectChanged();
 		}
 	}
-	public void allNetsChanged() {
+	public void allObjectsChanged() {
 		for(String name:panelDic.keySet()) {
-			panelDic.get(name).netChanged();
+			panelDic.get(name).objectChanged();
 		}
 	}
 }

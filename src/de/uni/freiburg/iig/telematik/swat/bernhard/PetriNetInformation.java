@@ -46,6 +46,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		transitionLabelDic = new HashMap<String, String>();
 		transitionLabelDicReverse = new HashMap<String, String>();
 		dataTypeList = new ArrayList<String>();
+		dataTypeList.add("black");
 		placesList = new ArrayList<String>();
 		netChanged();
 	}
@@ -93,6 +94,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		AbstractPetriNet apn = pn.getPetriNet();
 		dataTypeList.clear();
 		Set<String> dataTypes = new HashSet<String>();
+		dataTypes.add("black");
 		if (apn.getNetType() == NetType.IFNet) {
 			IFNet net = (IFNet) apn;
 			Iterator it = net.getTransitions().iterator();
@@ -159,6 +161,18 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		// TODO Auto-generated method stub
 		List<String> activities = getActivities();
 		return activities.toArray(new String[activities.size()]);
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String[] getRoleArray() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

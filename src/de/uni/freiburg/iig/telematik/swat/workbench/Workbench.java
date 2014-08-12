@@ -25,6 +25,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.LayoutAction;
@@ -293,13 +294,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 				getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 			} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+				String name=node.getDisplayName();
 				if(swatComponent instanceof PNEditor) {
-					 String name=node.getDisplayName();
 					 if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
 						 name=((SwatTreeNode) node.getParent()).getFileReference().getName();
 					 }
-					getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(name,(PNEditor) swatComponent).getContent());
 				}
+				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name,swatComponent).getContent());
 			}
 			getPropertiesPanel().validate();
 			getPropertiesPanel().repaint();
@@ -358,8 +359,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 			getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
 		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-			if(component instanceof PNEditor)
-				getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(component.getName(), (PNEditor) component).getContent());
+			getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(component.getName(), component).getContent());
+				
 		}
 		getPropertiesPanel().repaint();
 		getPropertiesPanel().updateUI();
@@ -376,9 +377,10 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
 			if(swatComponent instanceof PNEditor)
-				getPropertiesPanel().add(AnalyzePanelController.getInstance().getPanel(swatComponent.getName(), (PNEditor) swatComponent).getContent());
+				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(swatComponent.getName(), swatComponent).getContent());
 			if (swatComponent instanceof LogFileViewer)
-				getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
+				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(swatComponent.getName(), swatComponent).getContent());
+				//getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
 		}
 		
 			//pack();
@@ -400,7 +402,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 				getSwatToolbar().clear();
 			
 				if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-					getSwatToolbar().add(AnalyzePanelController.getInstance().getPanel(getTabView().getSelectedComponent().getName(), editor).getToolBar());
+					getSwatToolbar().add(((AnalyzePanelPTNet)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), editor)).getToolBar());
 				} else {
 					getSwatToolbar().add(editor.getEditorToolbar());
 				}

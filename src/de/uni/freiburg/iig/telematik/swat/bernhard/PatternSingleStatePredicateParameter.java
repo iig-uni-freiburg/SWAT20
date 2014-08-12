@@ -20,11 +20,13 @@ public class PatternSingleStatePredicateParameter extends PatternParameterPanel 
 	private JSpinner numberSpinner;
 	private JComboBox relationsBox;
 	private JComboBox placesBox;
-	public PatternSingleStatePredicateParameter(String name, String places[]) {
+	private JComboBox colorsBox;
+	public PatternSingleStatePredicateParameter(String name, String places[], String colors[]) {
 		super(name);
 		// TODO Auto-generated constructor stub
 		placesBox=new JComboBox(places);
 		relationsBox=new JComboBox(predicates);
+		colorsBox = new JComboBox(colors);
 		SpinnerModel model =
 		        new SpinnerNumberModel(0, //initial value
 		                               0, //min
@@ -32,6 +34,7 @@ public class PatternSingleStatePredicateParameter extends PatternParameterPanel 
 		                               1);
 		numberSpinner=new JSpinner(model);
 		content=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		content.add(colorsBox);
 		content.add(placesBox);
 		content.add(relationsBox);
 		content.add(numberSpinner);
@@ -41,7 +44,8 @@ public class PatternSingleStatePredicateParameter extends PatternParameterPanel 
 	public List<ParamValue> getValue() {
 		// TODO Auto-generated method stub
 		ArrayList<ParamValue> list=new ArrayList<ParamValue>();
-		String result=(String) ((JComboBox)placesBox).getSelectedItem();
+		String result=(String) placesBox.getSelectedItem();
+		result+="_"+colorsBox.getSelectedItem();
 		result+=" "+(String) ((JComboBox)relationsBox).getSelectedItem();
 		result+=" "+(Integer) numberSpinner.getValue();
 		list.add(new ParamValue(result, OperandType.STATEPREDICATE));
@@ -55,7 +59,10 @@ public class PatternSingleStatePredicateParameter extends PatternParameterPanel 
 	@Override
 	public void setValue(List<ParamValue> val) {
 		String arr[]=val.get(0).getOperandName().split(" ");
-		placesBox.setSelectedItem(arr[0]);
+		String place=arr[0].split("_")[0];
+		String color=arr[0].split("_")[1];
+		placesBox.setSelectedItem(place);
+		colorsBox.setSelectedItem(color);
 		relationsBox.setSelectedItem(arr[1]);
 		numberSpinner.setValue(Integer.parseInt(arr[2]));
 	}

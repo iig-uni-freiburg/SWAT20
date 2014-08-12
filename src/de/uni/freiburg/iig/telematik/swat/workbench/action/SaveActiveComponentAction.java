@@ -32,7 +32,7 @@ public class SaveActiveComponentAction extends AbstractAction {
 			SwatComponent component = (SwatComponent) tabView.getSelectedComponent();
 			if (component.getMainComponent() instanceof PNEditor) {
 				savePN((PNEditor) component.getMainComponent());
-				AnalyzePanelController.getInstance().netChanged(component.getFile().getName());
+				AnalyzePanelController.getInstance().objectChanged(component.getFile().getName());
 			}
 		} else {
 			Workbench.errorMessage("Could not save: Active pane is not of type PNEditor");

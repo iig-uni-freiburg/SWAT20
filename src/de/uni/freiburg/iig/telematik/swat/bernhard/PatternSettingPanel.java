@@ -117,13 +117,11 @@ public class PatternSettingPanel {
 			e.printStackTrace();
 		}
 
-		PatternParameterPanelFactory factory = new PatternParameterPanelFactory(
-				patternWindow.getNetInformations());
+		PatternParameterPanelFactory factory = new PatternParameterPanelFactory(patternWindow.getNetInformations());
 		for (Parameter pp : parameters) {
 			PatternParameterPanel patternPara = factory.createPanel(pp);
-			JPanel paraPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			JPanel paraPanel = new JPanel(new GridLayout(1,2,10,10));
 			paraPanel.add(new JLabel("Choose " + pp.getName()));
-			paraPanel.add(Box.createHorizontalStrut(300));
 			paraPanel.add(patternPara.getContent());
 			panel.add(paraPanel);
 			parameterPanelList.add(patternPara);
@@ -157,8 +155,8 @@ public class PatternSettingPanel {
 		// ps.updateParameterAppliedString();
 		assert (ps.getParameters().size() == parameterPanelList.size());
 		List<Parameter> paraList = ps.getParameters();
-		HashMap<String, String> transitionDicReverse = patternWindow
-				.getNetInformations().getTransitionDictionaryReverse();
+		HashMap<String, String> transitionDicReverse = ((PetriNetInformationReader) patternWindow
+				.getNetInformations()).getTransitionDictionaryReverse();
 		for (int i = 0; i < paraList.size(); i++) {
 			ArrayList<ParamValue> list = new ArrayList<ParamValue>();
 			for (ParamValue value : paraList.get(i).getValue()) {
@@ -200,8 +198,8 @@ public class PatternSettingPanel {
 		}
 		// update the pattern representation
 		patternSetting.updateParameterAppliedString();
-		HashMap<String, String> transitionDic = patternWindow
-				.getNetInformations().getTransitionDictionary();
+		HashMap<String, String> transitionDic = ((PetriNetInformationReader) patternWindow
+				.getNetInformations()).getTransitionDictionary();
 
 		for (PatternParameterPanel paraPanel : parameterPanelList) {
 			for (Parameter patternPara : patternSetting.getParameters()) {

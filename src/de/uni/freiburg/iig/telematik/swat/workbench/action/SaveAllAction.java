@@ -18,7 +18,7 @@ public class SaveAllAction extends AbstractAction {
 		MessageDialog.getInstance().addMessage("Saving all Petri nets");
 		try {
 			SwatComponents.getInstance().storeAllPetriNets();
-			AnalyzePanelController.getInstance().allNetsChanged();
+			AnalyzePanelController.getInstance().allObjectsChanged();
 			MessageDialog.getInstance().addMessage("Done.");
 		} catch (ParameterException e1) {
 			MessageDialog.getInstance().addMessage(e1.getMessage());

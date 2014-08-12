@@ -44,6 +44,7 @@ public class PatternFactory {
 				mSupportedPatterns.putAll(DataflowPattern.getPatternDescription());
 			}
 		} else if (component instanceof LogFileViewer) {
+			mSupportedPatterns = new HashMap<String, String>();
 			mSupportedPatterns.putAll(ResourcePattern.getPatternDescription());
 		}
 	}

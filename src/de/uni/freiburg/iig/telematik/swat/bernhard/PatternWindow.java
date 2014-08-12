@@ -155,7 +155,7 @@ public class PatternWindow extends JFrame {
 		c.add(jsp, BorderLayout.CENTER);
 		c.add(south, BorderLayout.SOUTH);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(800, 600);
+		setSize(900, 600);
 	}
 
 	protected void removeAllPatterns() {
@@ -211,8 +211,8 @@ public class PatternWindow extends JFrame {
 		setPatternSettings(psList);
 	}
 	
-	public PetriNetInformationReader getNetInformations() {
-		return analyzePanel.getNetInformation();
+	public InformationReader getNetInformations() {
+		return analyzePanel.getInformationReader();
 	}
 
 	/**

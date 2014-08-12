@@ -59,6 +59,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismExecutor;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismResult;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
@@ -66,51 +67,45 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
-
+import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 /**
  * this class represents a panel to be added on the right side
  * 
  * @author bernhard
  * 
  */
-public class AnalyzePanel implements LoadSave {
+public abstract class AnalyzePanel implements LoadSave {
 	private JPanel content;
 	private JPanel propertyPanel;
 	private JLabel analysisName;
 	private JButton editButton, runButton, saveButton;
-	private String netName;
-	private PatternWindow patternWindow;
-	private PNEditor pnEditor;
-	private PetriNetInformation netInfo;
-	private PatternFactory patternFactory;
-	private List<PatternSetting> patternSettings;
-	private AnalyzeToolBar toolBar;
+	private String fileName;
+	protected PatternWindow patternWindow;
+	protected InformationReader objectInformationReader;
+	protected PatternFactory patternFactory;
+	protected List<PatternSetting> patternSettings;
 
-	public void netChanged() {
-		netInfo.netChanged();
+
+	protected abstract String getCorrectValue(ParamValue val);
+	protected abstract void addCounterExampleButton(PatternResult result, JPanel newPanel);
+	protected abstract void analyze();
+	
+	public void objectChanged() {
+		objectInformationReader.update();
 		// update the parameter boxes
 		patternWindow.netChanged();
 	}
 
-	public PetriNetInformationReader getNetInformation() {
-		return netInfo;
+	public InformationReader getInformationReader() {
+		return objectInformationReader;
 	}
 
-	public AnalyzeToolBar getToolBar() {
-		return toolBar;
-	}
-
-	public AnalyzePanel(PNEditor pneditor, String net) {
-		this.pnEditor = pneditor;
-		toolBar = new AnalyzeToolBar(pneditor);
-		netName = net.split("[.]")[0];
-		netInfo = new PetriNetInformation(pneditor);
-		patternFactory = new PatternFactory(pneditor.getNetContainer()
-				.getPetriNet());
+	public AnalyzePanel(SwatComponent component, String file) {
+		fileName = file.split("[.]")[0];
+		patternFactory = new PatternFactory(component);
 		patternSettings = new ArrayList<PatternSetting>();
 		initGui();
-		netChanged();
-		update();
+
 	}
 
 	private void initGui() {
@@ -153,7 +148,7 @@ public class AnalyzePanel implements LoadSave {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				analyze();
+				analyzedClicked();
 			}
 		});
 		saveButton.addActionListener(new ActionListener() {
@@ -163,6 +158,17 @@ public class AnalyzePanel implements LoadSave {
 				save();
 			}
 		});
+	}
+	
+	protected void analyzedClicked() {
+		if (patternWindow.isVisible()) {
+			JOptionPane.showMessageDialog(null,
+					"Close PatternWindow first, before analyzing", "Warning",
+					JOptionPane.WARNING_MESSAGE);
+			patternWindow.requestFocus();
+			return;
+		}
+		analyze();
 	}
 
 	protected void showPatternWindow() {
@@ -182,42 +188,7 @@ public class AnalyzePanel implements LoadSave {
 	/**
 	 * the function invoked when Analyze is pressed
 	 */
-	private void analyze() {
-		if (patternWindow.isVisible()) {
-			JOptionPane.showMessageDialog(null,
-					"Close PatternWindow first, before analyzing", "Warning",
-					JOptionPane.WARNING_MESSAGE);
-			patternWindow.requestFocus();
-			return;
-		}
-		toolBar.deActivate();
-		toolBar.resetHighLightedCounterExample();
-		PrismExecutor prismExecuter = new PrismExecutor(pnEditor
-				.getNetContainer().getPetriNet());
-		// build list of patterns
-		HashMap<PatternSetting, CompliancePattern> resultMap = new HashMap<PatternSetting, CompliancePattern>();
-
-		MessageDialog.getInstance().addMessage(
-				"Giving " + patternSettings.size() + " Patterns to PRISM");
-		ArrayList<CompliancePattern> compliancePatterns = new ArrayList<CompliancePattern>();
-		for (PatternSetting setting : patternSettings) {
-			CompliancePattern compliancePattern = patternFactory
-					.createPattern(setting.getName(),
-							(ArrayList<Parameter>) setting.getParameters());
-			compliancePatterns.add(compliancePattern);
-			// store the setting and the pattern in dictionary
-			resultMap.put(setting, compliancePattern);
-		}
-		// analyze and set the results
-		PrismResult prismResult = prismExecuter.analyze(compliancePatterns);
-		for (PatternSetting setting : patternSettings) {
-			PatternResult patternResult = prismResult
-					.getPatternResult(resultMap.get(setting));
-			setting.setResult(patternResult);
-		}
-		update();
-	}
-
+	
 	public void getPatternSettingsFromPatternWindow() {
 		List<PatternSetting> oldSettings = Helpers
 				.copyPatternSettings(patternSettings);
@@ -239,19 +210,17 @@ public class AnalyzePanel implements LoadSave {
 		update();
 	}
 
+
+	
 	public void update() {
 		propertyPanel.removeAll();
-
-		HashMap<String, String> transitionsReverse = netInfo
-				.getTransitionDictionaryReverse();
 		for (PatternSetting p : patternSettings) {
 			System.out.println(p);
 			// check if the setting was changed
 
 			JPanel newPanel = new JPanel();
 			newPanel.setLayout(new BoxLayout(newPanel, BoxLayout.Y_AXIS));
-			List<JLabel> labels = Helpers.getLabelListForPatternSetting(p,
-					transitionsReverse);
+			List<JLabel> labels = getLabelListForPatternSetting(p);
 			for (JLabel label : labels) {
 				newPanel.add(Helpers.jPanelLeft(label));
 			}
@@ -282,20 +251,8 @@ public class AnalyzePanel implements LoadSave {
 				DecimalFormat decimalFormat = new DecimalFormat("#.###");
 				newPanel.add(Helpers.jPanelLeft(new JLabel("\tProbability: "
 						+ decimalFormat.format(result.getProbability()))));
-				JButton counterButton = new JButton("Counterexample");
-				final List<String> path = result.getViolatingPath();
-				if (path != null) {
-					counterButton.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							showCounterExample(path);
-						}
-					});
-					// counterButton.setPreferredSize(counterButton.getMaximumSize());
-					// if (result.isFulfilled() == false) {
-					newPanel.add(Helpers.jPanelLeft(counterButton));
-				}
+				addCounterExampleButton(result, newPanel);
+				
 			} else {
 				try {
 					resultPanel.add(new JLabel(IconFactory
@@ -322,6 +279,8 @@ public class AnalyzePanel implements LoadSave {
 		content.updateUI();
 	}
 
+	
+
 	public void setAnalyseName(String text) {
 		analysisName.setText(text);
 	}
@@ -335,11 +294,11 @@ public class AnalyzePanel implements LoadSave {
 	}
 
 	public String getNetName() {
-		return netName;
+		return fileName;
 	}
 
 	public void setNetName(String netName) {
-		this.netName = netName.split("[.]")[0];
+		this.fileName = netName.split("[.]")[0];
 	}
 
 	public boolean load(File f) {
@@ -356,16 +315,80 @@ public class AnalyzePanel implements LoadSave {
 
 	@Override
 	public boolean save() {
-		AnalysisStore.store(patternWindow.getPatternSettings(), netName);
+		AnalysisStore.store(patternWindow.getPatternSettings(), fileName);
 		// update the tree
 		SwatTreeView.getInstance().updateAnalysis();
 		SwatTreeView.getInstance().expandAll();
 		SwatTreeView.getInstance().updateUI();
 		return true;
 	}
+	/**
+	 * create a list of JLabels that will later be added to an
+	 * AnalyzePanel. Some parameters might be to long so they will
+	 * be breaken off. a JLabel does not accept a newline character
+	 * @param ps
+	 * @param transitionsReverse
+	 * @return
+	 */
+	public List<JLabel> getLabelListForPatternSetting(PatternSetting ps) {
+		ArrayList<JLabel> labels=new ArrayList<JLabel>();
+		for(Parameter para: ps.getParameters()) {
+			String paraString=para.getName()+": ";
+			int count=0;
+			boolean labelsLeft=false;
+			// display the values
 
-	private void showCounterExample(List<String> path) {
-		toolBar.setCounterExample(path);
+			for(int i=0; i < para.getValue().size(); i++) {
+				ParamValue val=para.getValue().get(i);
+				labelsLeft=true;
+				if(count > 0) {
+					labels.add(new JLabel(paraString));
+					// move it to the right
+					paraString="    ";
+					count=0;
+					labelsLeft=false;
+				}
+				if(val.getOperandType()==OperandType.STATEPREDICATE) {
+					
+					String conjunctions[]=val.getOperandName().split(" & ");
+					int conjunction_count=0;
+					for(int j=0; j < conjunctions.length; j++) {
+						conjunction_count++;
+						labelsLeft=true;
+						paraString+=conjunctions[j];
+						if(j < conjunctions.length -1) {
+							paraString+=" & ";
+						}
+						if(conjunction_count==2) {
+							labels.add(new JLabel(paraString));
+							// move it to the right
+							paraString="    ";
+							conjunction_count=0;
+							labelsLeft=false;
+						}
+					}
+					
+				} else {
+					paraString+=getCorrectValue(val);
+					count++;
+				}
+				if(i < para.getValue().size() -1) {
+					paraString+=", ";
+				}
+				// maximum 2 values in a row
+				if(count==2) {
+					labels.add(new JLabel(paraString));
+					// move it to the right
+					paraString="    ";
+					count=0;
+					labelsLeft=false;
+				}
+			}
+			if(labelsLeft) {
+				labels.add(new JLabel(paraString));
+			}
+		}
+		return labels;
 	}
 
 }

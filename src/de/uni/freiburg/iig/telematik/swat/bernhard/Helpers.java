@@ -69,74 +69,7 @@ public class Helpers {
 		}
 		return result;
 	}
-	/**
-	 * create a list of JLabels that will later be added to an
-	 * AnalyzePanel. Some parameters might be to long so they will
-	 * be breaken off. a JLabel does not accept a newline character
-	 * @param ps
-	 * @param transitionsReverse
-	 * @return
-	 */
-	public static List<JLabel> getLabelListForPatternSetting(PatternSetting ps, HashMap<String,String> transitionsReverse) {
-		ArrayList<JLabel> labels=new ArrayList<JLabel>();
-		for(Parameter para: ps.getParameters()) {
-			String paraString=para.getName()+": ";
-			int count=0;
-			boolean labelsLeft=false;
-			// display the values
-
-			for(int i=0; i < para.getValue().size(); i++) {
-				ParamValue val=para.getValue().get(i);
-				labelsLeft=true;
-				if(count > 0) {
-					labels.add(new JLabel(paraString));
-					// move it to the right
-					paraString="    ";
-					count=0;
-					labelsLeft=false;
-				}
-				if(val.getOperandType()==OperandType.STATEPREDICATE) {
-					
-					String conjunctions[]=val.getOperandName().split(" & ");
-					int conjunction_count=0;
-					for(int j=0; j < conjunctions.length; j++) {
-						conjunction_count++;
-						labelsLeft=true;
-						paraString+=conjunctions[j];
-						if(j < conjunctions.length -1) {
-							paraString+=" & ";
-						}
-						if(conjunction_count==3) {
-							labels.add(new JLabel(paraString));
-							// move it to the right
-							paraString="    ";
-							conjunction_count=0;
-							labelsLeft=false;
-						}
-					}
-					
-				} else {
-					paraString+=transitionsReverse.get(val.getOperandName());
-					count++;
-				}
-				if(i < para.getValue().size() -1) {
-					paraString+=", ";
-				}
-				// maximum 2 values in a row
-				if(count==2) {
-					labels.add(new JLabel(paraString));
-					// move it to the right
-					paraString="    ";
-					count=0;
-					labelsLeft=false;
-				}
-			}
-			if(labelsLeft) {
-				labels.add(new JLabel(paraString));
-			}
-		}
-		return labels;
-	}
+	
 	/**
 	 * copy a list of pattern settings by value
 	 * @param list

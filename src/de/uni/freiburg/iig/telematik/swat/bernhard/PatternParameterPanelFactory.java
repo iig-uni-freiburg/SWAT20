@@ -9,42 +9,49 @@ import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 
 public class PatternParameterPanelFactory {
 
-	private PetriNetInformationReader netInformation;
-	private LogInformationReader logInformation;
-	private boolean isNet;
+	private InformationReader objectInformation;
+
 	public PatternParameterPanel createPanel(Parameter p) {
-		PatternParameterPanel patternPara=null;
-		String name=p.getName();
-		Set<OperandType> operandSet=p.getTypes();
-		String transitionsArray[]=netInformation.getActivitiesArray();
-		String dataTypeArray[]=netInformation.getDataTypesArray();
-		if(operandSet.contains(OperandType.TOKEN)) {
-			patternPara = new PatternDropDownParameter(name, OperandType.TOKEN, dataTypeArray);
-		} else if (operandSet.contains(OperandType.TRANSITION) && operandSet.contains(OperandType.STATEPREDICATE)) {
-			if(p.getMultiplicity() == -1) {
-				patternPara=new MultipleTransitionOrStatePredicateParameterPanel(name, "Transition or State Predicate", netInformation);
+		PatternParameterPanel patternPara = null;
+		String name = p.getName();
+		Set<OperandType> operandSet = p.getTypes();
+		String activitiesArray[] = objectInformation.getActivitiesArray();
+		if (operandSet.contains(OperandType.TOKEN)) {
+			patternPara = new PatternDropDownParameter(name,
+					OperandType.TOKEN, ((PetriNetInformationReader) objectInformation)
+					.getDataTypesArray());
+		} else if (operandSet.contains(OperandType.TRANSITION)
+				&& operandSet.contains(OperandType.STATEPREDICATE)) {
+			if (p.getMultiplicity() == -1) {
+				patternPara = new MultipleTransitionOrStatePredicateParameterPanel(
+						name, "Transition or State Predicate",
+						(PetriNetInformationReader) objectInformation);
 			} else {
-				patternPara=new PatternActivityOrStatePredicateParameter(name, netInformation);
+				patternPara = new PatternActivityOrStatePredicateParameter(
+						name, (PetriNetInformationReader) objectInformation);
 			}
 		} else if (operandSet.contains(OperandType.TRANSITION)) {
-			if(p.getMultiplicity() == 1) {
-				patternPara=new PatternDropDownParameter(name, OperandType.TRANSITION, transitionsArray);
-			} else if(p.getMultiplicity() != -1) {
-				patternPara=new MultipleTransitionParameterPanel(name, "Transition", netInformation);
+			if (p.getMultiplicity() == 1) {
+				patternPara = new PatternDropDownParameter(name,
+						OperandType.TRANSITION, activitiesArray);
+			} else if (p.getMultiplicity() != -1) {
+				patternPara = new MultipleTransitionParameterPanel(name,
+						"Transition", objectInformation);
 			} else {
-				patternPara=new MultipleTransitionParameterPanel(name, "Transition", netInformation, p.getMultiplicity());
+				patternPara = new MultipleTransitionParameterPanel(name,
+						"Transition", objectInformation, p.getMultiplicity());
 			}
+		} else if (operandSet.contains(OperandType.STATEPREDICATE)) {
+			patternPara = new PatternStatePredicateParameter(name,
+					((PetriNetInformationReader) objectInformation));
 		} else if (operandSet.contains(OperandType.ROLE)) {
-			
+			patternPara = new PatternDropDownParameter(name,
+					OperandType.TRANSITION, objectInformation.getRoleArray());
 		}
 		return patternPara;
 	}
-	public PatternParameterPanelFactory(PetriNetInformationReader netInformation) {
-		this.netInformation = netInformation;
-		isNet=true;
-	}
-	public PatternParameterPanelFactory(LogInformationReader logInformation) {
-		this.logInformation = logInformation;
-		isNet=false;
+
+	public PatternParameterPanelFactory(InformationReader logInformation) {
+		this.objectInformation = logInformation;
 	}
 }
