@@ -20,12 +20,17 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.file.FileUtils;
+import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.PNMLIFNetAnalysisContextParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.sepia.serialize.ACSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
+import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
@@ -60,6 +65,7 @@ public class SwatComponents {
 	private Map<LogModel, File> xml = new LinkedHashMap<LogModel, File>();
 	private Map<LogModel, List<LogAnalysisModel>> logAnalysis = new HashMap<LogModel, List<LogAnalysisModel>>();
 	private List<String> needsLayout = new LinkedList<String>();
+	private Map<String, LinkedList<AnalysisContext>> analyseContext = new HashMap<String, LinkedList<AnalysisContext>>(0);
 
 	private String selectedACModel;
 	
@@ -92,6 +98,52 @@ public class SwatComponents {
 		return instance;
 	}
 	
+	public List<AnalysisContext> getIFAnalysisContextForNet(String name) {
+		return analyseContext.get(name);
+	}
+
+	public void addAnalysisContextForNet(AbstractGraphicalPN net, AnalysisContext aContext) {
+		String name = net.getPetriNet().getName();
+		if (analyseContext.get(name) == null)
+			analyseContext.put(name, new LinkedList<AnalysisContext>());
+		analyseContext.get(name).add(aContext);
+	}
+
+	public List<AnalysisContext> getIFAnalysisContextForNet(AbstractGraphicalPN net) {
+		return analyseContext.get(net.getPetriNet().getName());
+	}
+
+	public void addAnalysisContextForNet(String name, AnalysisContext aContext) {
+		if (analyseContext.get(name) == null)
+			analyseContext.put(name, new LinkedList<AnalysisContext>());
+		analyseContext.get(name).add(aContext);
+	}
+
+	public void storeAnalysisContextForNet(AbstractGraphicalPN net){
+		List<AnalysisContext> contexts = analyseContext.get(net);
+		if(contexts!=null && !contexts.isEmpty()){
+			for (AnalysisContext context : contexts) {
+				try {
+					ACSerialization.serialize(context, getFileName(net));
+				} catch (SerializationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+
+	public void storeAnalysisContextForNet(String netName) {
+		for (AbstractGraphicalPN net : nets.keySet()) {
+			if (net.getPetriNet().getName().equals(netName))
+				storeAnalysisContextForNet(net);
+		}
+	}
+
 	public void setLayoutNeed(AbstractGraphicalPN net) {
 		needsLayout.add(net.getPetriNet().getName());
 	}
@@ -359,12 +411,39 @@ public class SwatComponents {
 		for (File folder : getAllFoldersFrom(netFolder)) {
 			try {
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet = loadPetriNetFromFolder(folder);
-			if (loadedNet != null)
+				if (loadedNet != null) {
 				getAnalysisFor(loadedNet, folder);
+					getAnalysisContextFor(loadedNet, folder);
+				}
 			} catch (NullPointerException e) {
 				//folder does not exists. create
 				new File(SwatProperties.getInstance().getNetWorkingDirectory()).mkdir();
 			}
+		}
+
+	}
+
+	private void getAnalysisContextFor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet, File folder) {
+		List<File> analysisContext;
+		try {
+			analysisContext = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "xml");
+
+			for (File context : analysisContext) {
+				try {
+					AnalysisContext ac = PNMLIFNetAnalysisContextParser.parse(context);
+					addAnalysisContextForNet(loadedNet, ac);
+
+				} catch (ParserException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		catch (ParameterException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 
 	}
