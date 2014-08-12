@@ -18,7 +18,7 @@ import org.processmining.analysis.sciffchecker.logic.util.EventType;
 public class BoundedWith extends ResourcePattern {
 	
 	public static final String NAME = "A1 Bounded-With A2";
-	private static final String DESC = "Activity A1 and Activity A2 is performed by the same user.";
+	public static final String DESC = "Activity A1 and Activity A2 is performed by the same user.";
 	
 	
 	

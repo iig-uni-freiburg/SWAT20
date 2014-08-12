@@ -36,12 +36,12 @@ public abstract class ResourcePattern extends CompliancePattern {
 			
 			if (mPatternDescription == null) {
 				mPatternDescription = new HashMap<String, String>(); 
-				mPatternDescription.put(MissingData.NAME, MissingData.DESC);
-				mPatternDescription.put(WeaklyRedData.NAME, WeaklyRedData.DESC);
-				mPatternDescription.put(WeaklyLostData.NAME, WeaklyLostData.DESC);
-				mPatternDescription.put(InconsistentData.NAME, InconsistentData.DESC);
-				mPatternDescription.put(TwiceDestroyed.NAME, TwiceDestroyed.DESC);
-				mPatternDescription.put(NotDeletedOnTime.NAME, NotDeletedOnTime.DESC); 
+				mPatternDescription.put(PerformedBy.NAME, PerformedBy.DESC);
+				mPatternDescription.put(SegregatedFrom.NAME, SegregatedFrom.DESC);
+				mPatternDescription.put(USegregatedFrom.NAME, USegregatedFrom.DESC);
+				mPatternDescription.put(BoundedWith.NAME, BoundedWith.DESC);
+				mPatternDescription.put(MSegregated.NAME, MSegregated.DESC);
+				mPatternDescription.put(RBoundedWith.NAME, RBoundedWith.DESC); 
 			}
 			
 			return mPatternDescription;

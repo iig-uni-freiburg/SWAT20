@@ -12,6 +12,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 
 public class PatternFactory {
 	
@@ -20,23 +23,27 @@ public class PatternFactory {
 	
 	private HashMap<String, String> mSupportedPatterns;
 
-	public PatternFactory(AbstractPetriNet<?,?,?,?,?,?,?> net) {
-		mNet = net;
-		mOutputPlace = mNet.getDrainPlaces().iterator().next();
-		mSupportedPatterns = new HashMap<String, String>();
+	public PatternFactory(SwatComponent component) {
 		
-		if (mNet instanceof PTNet || mNet instanceof CWN) {
-		
-			mSupportedPatterns.putAll(AtomicPattern.getPatternDescription());
-			mSupportedPatterns.putAll(CompositePattern.getPatternDescription());
+		if (component instanceof PNEditor) {
+			mNet = ((PNEditor) component).netContainer.getPetriNet();
+			mOutputPlace = mNet.getDrainPlaces().iterator().next();
+			mSupportedPatterns = new HashMap<String, String>();
 			
-		} 
-		
-		if (mNet instanceof IFNet) {
+			if (mNet instanceof PTNet || mNet instanceof CWN) {
 			
-			mSupportedPatterns.putAll(AtomicPattern.getPatternDescription());
-			mSupportedPatterns.putAll(CompositePattern.getPatternDescription());
-			mSupportedPatterns.putAll(DataflowPattern.getPatternDescription());
+				mSupportedPatterns.putAll(AtomicPattern.getPatternDescription());
+				mSupportedPatterns.putAll(CompositePattern.getPatternDescription());
+				
+			} 
+			
+			if (mNet instanceof IFNet) {
+				
+				mSupportedPatterns.putAll(AtomicPattern.getPatternDescription());
+				mSupportedPatterns.putAll(CompositePattern.getPatternDescription());
+				mSupportedPatterns.putAll(DataflowPattern.getPatternDescription());
+			}
+		} else if (component instanceof LogFileViewer) {
 			mSupportedPatterns.putAll(ResourcePattern.getPatternDescription());
 		}
 	}
