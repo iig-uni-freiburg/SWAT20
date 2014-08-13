@@ -124,7 +124,7 @@ public class SwatComponents {
 		if(contexts!=null && !contexts.isEmpty()){
 			for (AnalysisContext context : contexts) {
 				try {
-					File path = new File(getFileName(net), SwatProperties.getInstance().getAnalysisFolderName());
+					File path = new File(getFile(net).getParent(), SwatProperties.getInstance().getAnalysisFolderName());
 					if (!path.exists())
 						path.mkdir(); //make the directory if it does not exist
 
