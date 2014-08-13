@@ -333,6 +333,7 @@ public class AristaFlowToPnmlConverter {
 		switch (element.type) {
 		case PLACE:
 			net.addPlace(element.internalName);
+			net.getPlace(element.internalName).setCapacity(1);
 			break;
 		case TRANSITION:
 			net.addTransition(element.internalName);

@@ -227,7 +227,12 @@ public class SwatComponents {
 
 	private File generateNetPath(String name) throws ParameterException, PropertyException, IOException {
 		//Make Directory
-		File folder = new File(SwatProperties.getInstance().getNetWorkingDirectory(), name);
+		String workingName;
+		if (name.endsWith(".pnml"))
+			workingName = name.substring(0, name.indexOf(".pnml"));
+		else
+			workingName = name;
+		File folder = new File(SwatProperties.getInstance().getNetWorkingDirectory(), workingName);
 		folder.mkdir();
 		return new File(folder, name + ".pnml");
 	}
