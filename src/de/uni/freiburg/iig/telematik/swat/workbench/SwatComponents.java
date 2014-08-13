@@ -124,12 +124,15 @@ public class SwatComponents {
 		if(contexts!=null && !contexts.isEmpty()){
 			for (AnalysisContext context : contexts) {
 				try {
-					ACSerialization.serialize(context, getFileName(net));
+					File path = new File(getFileName(net), SwatProperties.getInstance().getAnalysisFolderName());
+					if (!path.exists())
+						path.mkdir(); //make the directory if it does not exist
+
+					ACSerialization.serialize(context, path.getAbsolutePath());
+
 				} catch (SerializationException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -413,7 +416,7 @@ public class SwatComponents {
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet = loadPetriNetFromFolder(folder);
 				if (loadedNet != null) {
 				getAnalysisFor(loadedNet, folder);
-					getAnalysisContextFor(loadedNet, folder);
+					loadAnalysisContextFor(loadedNet, folder);
 				}
 			} catch (NullPointerException e) {
 				//folder does not exists. create
@@ -423,15 +426,21 @@ public class SwatComponents {
 
 	}
 
-	private void getAnalysisContextFor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet, File folder) {
+	private void loadAnalysisContextFor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet, File folder) {
 		List<File> analysisContext;
 		try {
-			analysisContext = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "xml");
+			SwatProperties prop = SwatProperties.getInstance();
+			File pathToAnalysisContext = new File(getFile(loadedNet).getParent(), prop.getAnalysisFolderName());
+			String pathToAnalysisContextString = pathToAnalysisContext.getAbsolutePath();
+			if (!pathToAnalysisContext.exists())
+				return;
+			analysisContext = FileUtils.getFilesInDirectory(pathToAnalysisContextString, true, true, "xml");
 
 			for (File context : analysisContext) {
 				try {
 					AnalysisContext ac = PNMLIFNetAnalysisContextParser.parse(context);
 					addAnalysisContextForNet(loadedNet, ac);
+					MessageDialog.getInstance().addMessage("Loaded Analysis-Context for " + loadedNet.getPetriNet().getName());
 
 				} catch (ParserException e) {
 					e.printStackTrace();

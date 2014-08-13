@@ -122,11 +122,11 @@ public class SwatProperties extends AbstractProperties{
 
 	public void setAnalysisContextFolderName(String analysisContextFolderName) {
 		Validate.notNull(analysisContextFolderName);
-		setProperty(SwatProperty.ANALYSIS_CONTEXT_NAME, analysisContextFolderName);
+		setProperty(SwatProperty.AC_MODEL_NAME, analysisContextFolderName);
 	}
 
 	public String getAcModelName() {
-		String result = getProperty(SwatProperty.ANALYSIS_CONTEXT_NAME);
+		String result = getProperty(SwatProperty.AC_MODEL_NAME);
 		if (result == null || result.isEmpty())
 			result = "acModel";
 		return result;
@@ -135,6 +135,23 @@ public class SwatProperties extends AbstractProperties{
 	public String getAcModelWorkingDirectory() throws ParameterException, PropertyException {
 		return new File(getWorkingDirectory(), getAcModelName()).getAbsolutePath();
 	}
+
+	public String getAnalysisFolderName() {
+		String result = getProperty(SwatProperty.ANALYSIS_CONTEXT_NAME);
+		if (result == null || result.isEmpty())
+			result = "analysis-context";
+		return result;
+	}
+
+	public void setAnalysisFolderName(String folderName) throws IOException {
+		setProperty(SwatProperty.ANALYSIS_CONTEXT_NAME, folderName);
+		store();
+
+	}
+
+	//	public String getAnalysisDirForNet(AbstractGraphicalPN net) {
+	//		return new File(SwatComponents.getInstance().getFile(net), getAnalysisFolderName()).getAbsolutePath();
+	//	}
 
 	public String getLogWorkingDirectory() throws ParameterException, PropertyException {
 		return new File(getWorkingDirectory(), getLogFolderName()).getAbsolutePath();
