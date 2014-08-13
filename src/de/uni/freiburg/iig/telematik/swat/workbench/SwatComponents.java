@@ -107,6 +107,7 @@ public class SwatComponents {
 		if (analyseContext.get(name) == null)
 			analyseContext.put(name, new LinkedList<AnalysisContext>());
 		analyseContext.get(name).add(aContext);
+		storeAnalysisContextForNet(name);
 	}
 
 	public List<AnalysisContext> getIFAnalysisContextForNet(AbstractGraphicalPN net) {
@@ -117,9 +118,11 @@ public class SwatComponents {
 		if (analyseContext.get(name) == null)
 			analyseContext.put(name, new LinkedList<AnalysisContext>());
 		analyseContext.get(name).add(aContext);
+		storeAnalysisContextForNet(name);
 	}
 
-	public void storeAnalysisContextForNet(AbstractGraphicalPN net){
+
+	public void storeAnalysisContextsForNet(AbstractGraphicalPN net){
 		List<AnalysisContext> contexts = analyseContext.get(net);
 		if(contexts!=null && !contexts.isEmpty()){
 			for (AnalysisContext context : contexts) {
@@ -143,7 +146,7 @@ public class SwatComponents {
 	public void storeAnalysisContextForNet(String netName) {
 		for (AbstractGraphicalPN net : nets.keySet()) {
 			if (net.getPetriNet().getName().equals(netName))
-				storeAnalysisContextForNet(net);
+				storeAnalysisContextsForNet(net);
 		}
 	}
 
