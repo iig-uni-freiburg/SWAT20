@@ -79,7 +79,7 @@ public class ExportPDFAction extends AbstractPNEditorAction {
 				float llx = (float) size.getX();
 				float lly = 0;
 				float urx = x;
-				float ury = (float) ((float) size.getRectangle().getHeight() + space);
+				float ury = (float) ((float) size.getRectangle().getHeight() + space*4);
 				com.itextpdf.text.Rectangle crop = new com.itextpdf.text.Rectangle(llx, lly, urx, ury);
 				writer.setCropBoxSize(crop);
 
