@@ -42,8 +42,7 @@ public class AnalyzePanelPTNet extends AnalyzePanel {
 	}
 
 	protected void analyze() {
-		toolBar.deActivate();
-		toolBar.resetHighLightedCounterExample();
+		toolBar.reset();
 		PrismExecutor prismExecuter = new PrismExecutor(pnEditor
 				.getNetContainer().getPetriNet());
 		// build list of patterns

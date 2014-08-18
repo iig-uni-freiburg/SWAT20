@@ -37,14 +37,19 @@ public class AnalyzeToolBar extends JToolBar {
 	private Map<String, mxCellMarker> markerReference = new HashMap<String, mxCellMarker>();
 	private PNEditor pnEditor;
 	private CounterExampleVisualization counterExample;
-	private JButton resetButton, stepButton, highlightButton;
+	private JButton resetButton, stepButton, highlightButton, playButton,
+			stopButton;
+	private List<JButton> buttonList;
 	private boolean highlightedPath = false;
+
+	private Thread thread;
 
 	public AnalyzeToolBar(final PNEditor pnEditor) throws ParameterException {
 		super(JToolBar.HORIZONTAL);
 		Validate.notNull(pnEditor);
 		// setLayout(new WrapLayout(FlowLayout.LEFT));
 		this.pnEditor = pnEditor;
+		buttonList = new ArrayList<JButton>();
 		try {
 			resetButton = new JButton(IconFactory.getIcon("restart"));
 			resetButton.setToolTipText("Move to the beginning");
@@ -52,10 +57,10 @@ public class AnalyzeToolBar extends JToolBar {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					reset();
+					resetCounterExample();
 				}
 			});
-			stepButton = new JButton(IconFactory.getIcon("play"));
+			stepButton = new JButton(IconFactory.getIcon("end"));
 			stepButton.setToolTipText("Fire next Transition");
 			stepButton.addActionListener(new ActionListener() {
 
@@ -73,6 +78,30 @@ public class AnalyzeToolBar extends JToolBar {
 					toggleHightLight();
 				}
 			});
+			playButton = new JButton(IconFactory.getIcon("play"));
+			playButton.setToolTipText("Play/Continue Counterexample");
+			playButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					playCounterExample();
+				}
+			});
+			stopButton = new JButton(IconFactory.getIcon("sleep"));
+			stopButton.setToolTipText("Pause playing Counterexample");
+			stopButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					stopCounterExample();
+				}
+			});
+			buttonList.add(resetButton);
+			buttonList.add(resetButton);
+			buttonList.add(stepButton);
+			buttonList.add(playButton);
+			buttonList.add(stopButton);
+			buttonList.add(highlightButton);
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,27 +110,65 @@ public class AnalyzeToolBar extends JToolBar {
 			e.printStackTrace();
 		}
 		deActivate();
-		add(resetButton);
-		add(stepButton);
-		add(highlightButton);
+		for (JButton button : buttonList) {
+			add(button);
+		}
+	}
+
+	protected void stopCounterExample() {
+		// TODO Auto-generated method stub
+		thread.interrupt();
+		stopButton.setEnabled(false);
+		playButton.setEnabled(true);
+		stepButton.setEnabled(true);
+		resetButton.setEnabled(true);
+	}
+
+	protected void playCounterExample() {
+		// TODO Auto-generated method stub
+		stopButton.setEnabled(true);
+		playButton.setEnabled(false);
+		stepButton.setEnabled(false);
+		resetButton.setEnabled(false);
+		thread = new Thread() {
+			@Override
+			public void run() {
+				while (counterExample.pathEnded() == false) {
+					doStep();
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						return;
+					}
+
+				}
+				resetButton.setEnabled(true);
+				stopButton.setEnabled(false);
+				playButton.setEnabled(false);
+			}
+		};
+
+		thread.start();
 	}
 
 	public void setCounterExample(List<String> path) {
 		counterExample = new CounterExampleVisualization(path);
-		reset();
+		resetCounterExample();
 		activate();
+		stopButton.setEnabled(false);
 	}
 
 	public void deActivate() {
-		resetButton.setEnabled(false);
-		stepButton.setEnabled(false);
-		highlightButton.setEnabled(false);
+		for (JButton button : buttonList) {
+			button.setEnabled(false);
+		}
 	}
 
 	public void activate() {
-		resetButton.setEnabled(true);
-		stepButton.setEnabled(true);
-		highlightButton.setEnabled(true);
+		for (JButton button : buttonList) {
+			button.setEnabled(true);
+		}
 	}
 
 	private void doStep() {
@@ -116,13 +183,15 @@ public class AnalyzeToolBar extends JToolBar {
 		}
 		if (counterExample.pathEnded()) {
 			stepButton.setEnabled(false);
+			playButton.setEnabled(false);
 		}
 		pnEditor.updateUI();
 	}
 
-	private void reset() {
+	private void resetCounterExample() {
 		counterExample.setCurrentPosition(0);
 		stepButton.setEnabled(true);
+		playButton.setEnabled(true);
 		pnEditor.getGraphComponent().getGraph().getNetContainer()
 				.getPetriNet().reset();
 		pnEditor.updateUI();
@@ -133,8 +202,15 @@ public class AnalyzeToolBar extends JToolBar {
 		if (highlightedPath) {
 			highLightCounterExample();
 		} else {
-			resetHighLightedCounterExample();
+			resetHighlightning();
 		}
+	}
+
+	public void reset() {
+		deActivate();
+		highlightedPath = false;
+		resetHighlightning();
+		counterExample = null;
 	}
 
 	public void highLightCounterExample() {
@@ -208,16 +284,17 @@ public class AnalyzeToolBar extends JToolBar {
 
 	}
 
-	public void resetHighLightedCounterExample() {
-		for(String cell:markerReference.keySet()) {
+	public void resetHighlightning() {
+		for (String cell : markerReference.keySet()) {
 			markerReference.get(cell).reset();
-		}	
+		}
 	}
 
 	// store the markers so that they can be reset later
 	private mxCellMarker getCellMarker(PNGraphCell cell) {
 		if (!markerReference.containsKey(cell.getId()))
-			markerReference.put(cell.getId(), new mxCellMarker(pnEditor.getGraphComponent()));
+			markerReference.put(cell.getId(),
+					new mxCellMarker(pnEditor.getGraphComponent()));
 		return markerReference.get(cell.getId());
 	}
 
