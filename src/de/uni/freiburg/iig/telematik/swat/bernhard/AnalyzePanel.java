@@ -215,7 +215,7 @@ public abstract class AnalyzePanel implements LoadSave {
 	public void update() {
 		propertyPanel.removeAll();
 		for (PatternSetting p : patternSettings) {
-			System.out.println(p);
+			//System.out.println(p);
 			// check if the setting was changed
 
 			JPanel newPanel = new JPanel();

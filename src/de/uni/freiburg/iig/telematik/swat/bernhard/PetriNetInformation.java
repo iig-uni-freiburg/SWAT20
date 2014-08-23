@@ -38,6 +38,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	private HashMap<String, String> transitionLabelDic;
 	private HashMap<String, String> transitionLabelDicReverse;
 	private List<String> dataTypeList;
+	private List<String> dataTypeListWithBlack;
 	private List<String> placesList;
 
 	public PetriNetInformation(PNEditor pneditor) {
@@ -46,7 +47,8 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		transitionLabelDic = new HashMap<String, String>();
 		transitionLabelDicReverse = new HashMap<String, String>();
 		dataTypeList = new ArrayList<String>();
-		dataTypeList.add("black");
+		dataTypeListWithBlack = new ArrayList<String>();
+		dataTypeListWithBlack.add("black");
 		placesList = new ArrayList<String>();
 		netChanged();
 	}
@@ -93,8 +95,9 @@ public class PetriNetInformation implements PetriNetInformationReader {
 				.getNetContainer();
 		AbstractPetriNet apn = pn.getPetriNet();
 		dataTypeList.clear();
+		dataTypeListWithBlack.clear();
 		Set<String> dataTypes = new HashSet<String>();
-		dataTypes.add("black");
+		
 		if (apn.getNetType() == NetType.IFNet) {
 			IFNet net = (IFNet) apn;
 			Iterator it = net.getTransitions().iterator();
@@ -107,7 +110,10 @@ public class PetriNetInformation implements PetriNetInformationReader {
 				dataTypes.addAll(t.getProducedColors());
 			}
 			dataTypeList.addAll(dataTypes);
+			dataTypeListWithBlack.addAll(dataTypes);
 		}
+		Collections.sort(dataTypeList);
+		Collections.sort(dataTypeListWithBlack);
 	}
 
 	@Override
@@ -166,13 +172,19 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
+		netChanged();
 	}
 
 	@Override
 	public String[] getRoleArray() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String[] getDataTypesWithBlackArray() {
+		// TODO Auto-generated method stub
+		return dataTypeListWithBlack.toArray(new String[dataTypeListWithBlack.size()]);
 	}
 	
 }

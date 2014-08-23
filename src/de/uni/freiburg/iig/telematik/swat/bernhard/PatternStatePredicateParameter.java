@@ -18,7 +18,7 @@ public class PatternStatePredicateParameter extends PatternMultipleParameterPane
 	@Override
 	protected PatternParameterPanel getNewPanel() {
 		PetriNetInformationReader pnInformation = (PetriNetInformationReader) informationReader;
-		return new PatternSingleStatePredicateParameter(name,pnInformation.getPlacesArray(), pnInformation.getDataTypesArray());
+		return new PatternSingleStatePredicateParameter(name,pnInformation.getPlacesArray(), pnInformation.getDataTypesWithBlackArray());
 	}
 	
 	/**

@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.lukas.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
@@ -43,6 +44,13 @@ public class AnalyzePanelPTNet extends AnalyzePanel {
 
 	protected void analyze() {
 		toolBar.reset();
+		if(!pnEditor.getNetContainer().getPetriNet().isCapacityBounded()) {
+			JOptionPane.showMessageDialog(null,
+					"Petri Net is not bounded!", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		PrismExecutor prismExecuter = new PrismExecutor(pnEditor
 				.getNetContainer().getPetriNet());
 		// build list of patterns

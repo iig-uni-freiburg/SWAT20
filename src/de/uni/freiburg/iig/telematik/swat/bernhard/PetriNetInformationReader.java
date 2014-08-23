@@ -13,6 +13,7 @@ public interface PetriNetInformationReader extends InformationReader {
 	public List<String> getPlacesList();
 	public String[] getPlacesArray();
 	public String[] getDataTypesArray();
+	public String[] getDataTypesWithBlackArray();
 	public HashMap<String, String> getTransitionDictionary();
 	public HashMap<String, String> getTransitionDictionaryReverse();
 }

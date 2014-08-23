@@ -19,12 +19,20 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-
+/**
+ * This class represents a Toolbar used to play a counterexample
+ * it consists of some buttons to play pause forward or rewind a counterexample
+ * It starts a thread to play the CE with a pause of 3sec between each firing
+ * 
+ * @author bernhard
+ *
+ */
 public class AnalyzeToolBar extends JToolBar {
 	/**
 	 * 
@@ -37,11 +45,9 @@ public class AnalyzeToolBar extends JToolBar {
 	private Map<String, mxCellMarker> markerReference = new HashMap<String, mxCellMarker>();
 	private PNEditor pnEditor;
 	private CounterExampleVisualization counterExample;
-	private JButton resetButton, stepButton, highlightButton, playButton,
-			stopButton;
+	private JButton resetButton, stepButton, backButton, highlightButton, playPauseButton;
 	private List<JButton> buttonList;
 	private boolean highlightedPath = false;
-
 	private Thread thread;
 
 	public AnalyzeToolBar(final PNEditor pnEditor) throws ParameterException {
@@ -61,7 +67,7 @@ public class AnalyzeToolBar extends JToolBar {
 				}
 			});
 			stepButton = new JButton(IconFactory.getIcon("end"));
-			stepButton.setToolTipText("Fire next Transition");
+			stepButton.setToolTipText("Step forward");
 			stepButton.addActionListener(new ActionListener() {
 
 				@Override
@@ -69,8 +75,17 @@ public class AnalyzeToolBar extends JToolBar {
 					doStep();
 				}
 			});
+			backButton = new JButton(IconFactory.getIcon("first"));
+			backButton.setToolTipText("Step back");
+			backButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					doStepBack();
+				}
+			});
 			highlightButton = new JButton(IconFactory.getIcon("solutions"));
-			highlightButton.setToolTipText("Highlight Path");
+			highlightButton.setToolTipText("Toggle Path Highlighting");
 			highlightButton.addActionListener(new ActionListener() {
 
 				@Override
@@ -78,16 +93,16 @@ public class AnalyzeToolBar extends JToolBar {
 					toggleHightLight();
 				}
 			});
-			playButton = new JButton(IconFactory.getIcon("play"));
-			playButton.setToolTipText("Play/Continue Counterexample");
-			playButton.addActionListener(new ActionListener() {
+			playPauseButton = new JButton(IconFactory.getIcon("play"));
+			playPauseButton.setToolTipText("Play/Pause Counterexample");
+			playPauseButton.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					playCounterExample();
 				}
 			});
-			stopButton = new JButton(IconFactory.getIcon("sleep"));
+			/*stopButton = new JButton(IconFactory.getIcon("sleep"));
 			stopButton.setToolTipText("Pause playing Counterexample");
 			stopButton.addActionListener(new ActionListener() {
 
@@ -95,12 +110,11 @@ public class AnalyzeToolBar extends JToolBar {
 				public void actionPerformed(ActionEvent arg0) {
 					stopCounterExample();
 				}
-			});
+			});*/
 			buttonList.add(resetButton);
-			buttonList.add(resetButton);
+			buttonList.add(backButton);
+			buttonList.add(playPauseButton);
 			buttonList.add(stepButton);
-			buttonList.add(playButton);
-			buttonList.add(stopButton);
 			buttonList.add(highlightButton);
 		} catch (PropertyException e) {
 			// TODO Auto-generated catch block
@@ -115,21 +129,87 @@ public class AnalyzeToolBar extends JToolBar {
 		}
 	}
 
+	protected void doStepBack() {
+		// TODO Auto-generated method stub
+		int position=counterExample.getCurrentPosition();
+		resetCounterExample();
+		for(int i=0; i < position-1; i++) {
+			doStep();
+		}
+		if(counterExample.getCurrentPosition()==0) {
+			backButton.setEnabled(false);
+		}
+	}
+
+	protected void playPauseButtonRemoveListeners() {
+		ActionListener listeners[]=playPauseButton.getActionListeners();
+		if(listeners==null) {
+			return;
+		}
+		for(ActionListener l:listeners) {
+			playPauseButton.removeActionListener(l);
+		}
+	}
+	protected void playPauseButtonSetActionPlay() {
+		playPauseButtonRemoveListeners();
+		playPauseButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				playCounterExample();
+			}
+		});
+		try {
+			playPauseButton.setIcon(IconFactory.getIcon("play"));
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	protected void playPauseButtonSetActionPause() {
+		playPauseButtonRemoveListeners();
+		playPauseButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				stopCounterExample();
+			}
+		});
+		try {
+			playPauseButton.setIcon(IconFactory.getIcon("sleep"));
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	protected void stopCounterExample() {
 		// TODO Auto-generated method stub
 		thread.interrupt();
-		stopButton.setEnabled(false);
-		playButton.setEnabled(true);
+		playPauseButtonSetActionPlay();
 		stepButton.setEnabled(true);
+		backButton.setEnabled(true);
 		resetButton.setEnabled(true);
 	}
 
 	protected void playCounterExample() {
 		// TODO Auto-generated method stub
-		stopButton.setEnabled(true);
-		playButton.setEnabled(false);
+
 		stepButton.setEnabled(false);
+		backButton.setEnabled(false);
 		resetButton.setEnabled(false);
+		playPauseButtonSetActionPause();
 		thread = new Thread() {
 			@Override
 			public void run() {
@@ -144,19 +224,22 @@ public class AnalyzeToolBar extends JToolBar {
 
 				}
 				resetButton.setEnabled(true);
-				stopButton.setEnabled(false);
-				playButton.setEnabled(false);
+				backButton.setEnabled(true);
+				playPauseButton.setEnabled(false);
 			}
 		};
 
 		thread.start();
 	}
-
+/**
+ * this method is invoked by the analyePanel
+ * it loads the given path and resets and activates the toolbar
+ * @param path the counterexample, List of Transitions
+ */
 	public void setCounterExample(List<String> path) {
 		counterExample = new CounterExampleVisualization(path);
 		resetCounterExample();
 		activate();
-		stopButton.setEnabled(false);
 	}
 
 	public void deActivate() {
@@ -172,7 +255,6 @@ public class AnalyzeToolBar extends JToolBar {
 	}
 
 	private void doStep() {
-
 		String transition = counterExample.getNextTransition();
 		try {
 			pnEditor.getNetContainer().getPetriNet().getTransition(transition)
@@ -183,15 +265,19 @@ public class AnalyzeToolBar extends JToolBar {
 		}
 		if (counterExample.pathEnded()) {
 			stepButton.setEnabled(false);
-			playButton.setEnabled(false);
+			playPauseButton.setEnabled(false);
 		}
+		if(!thread.isAlive())
+			backButton.setEnabled(true);
 		pnEditor.updateUI();
 	}
 
 	private void resetCounterExample() {
 		counterExample.setCurrentPosition(0);
 		stepButton.setEnabled(true);
-		playButton.setEnabled(true);
+		backButton.setEnabled(false);
+		playPauseButton.setEnabled(true);
+		playPauseButtonSetActionPlay();
 		pnEditor.getGraphComponent().getGraph().getNetContainer()
 				.getPetriNet().reset();
 		pnEditor.updateUI();
