@@ -21,17 +21,26 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+
 /**
- * This class represents a Toolbar used to play a counterexample
- * it consists of some buttons to play pause forward or rewind a counterexample
- * It starts a thread to play the CE with a pause of 3sec between each firing
+ * This class represents a Toolbar used to play a counterexample it consists of
+ * some buttons to play pause forward or rewind a counterexample It starts a
+ * thread to play the CE with a pause of 3sec between each firing
  * 
  * @author bernhard
- *
+ * 
  */
 public class AnalyzeToolBar extends JToolBar {
 	/**
@@ -45,10 +54,12 @@ public class AnalyzeToolBar extends JToolBar {
 	private Map<String, mxCellMarker> markerReference = new HashMap<String, mxCellMarker>();
 	private PNEditor pnEditor;
 	private CounterExampleVisualization counterExample;
-	private JButton resetButton, stepButton, backButton, highlightButton, playPauseButton;
+	private JButton resetButton, stepButton, backButton, highlightButton,
+			playPauseButton;
 	private List<JButton> buttonList;
 	private boolean highlightedPath = false;
 	private Thread thread;
+	private boolean threadRunning = false;
 
 	public AnalyzeToolBar(final PNEditor pnEditor) throws ParameterException {
 		super(JToolBar.HORIZONTAL);
@@ -99,18 +110,17 @@ public class AnalyzeToolBar extends JToolBar {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					playCounterExample();
+					playPause();
 				}
 			});
-			/*stopButton = new JButton(IconFactory.getIcon("sleep"));
-			stopButton.setToolTipText("Pause playing Counterexample");
-			stopButton.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					stopCounterExample();
-				}
-			});*/
+			/*
+			 * stopButton = new JButton(IconFactory.getIcon("sleep"));
+			 * stopButton.setToolTipText("Pause playing Counterexample");
+			 * stopButton.addActionListener(new ActionListener() {
+			 * 
+			 * @Override public void actionPerformed(ActionEvent arg0) {
+			 * stopCounterExample(); } });
+			 */
 			buttonList.add(resetButton);
 			buttonList.add(backButton);
 			buttonList.add(playPauseButton);
@@ -129,36 +139,31 @@ public class AnalyzeToolBar extends JToolBar {
 		}
 	}
 
+	protected void playPause() {
+		// TODO Auto-generated method stub
+		if (threadRunning) {
+			stopCounterExample();
+		} else {
+			playCounterExample();
+		}
+	}
+
 	protected void doStepBack() {
 		// TODO Auto-generated method stub
-		int position=counterExample.getCurrentPosition();
+		int position = counterExample.getCurrentPosition();
 		resetCounterExample();
-		for(int i=0; i < position-1; i++) {
+		for (int i = 0; i < position - 1; i++) {
 			doStep();
 		}
-		if(counterExample.getCurrentPosition()==0) {
+		if (counterExample.getCurrentPosition() == 0) {
 			backButton.setEnabled(false);
 		}
 	}
 
-	protected void playPauseButtonRemoveListeners() {
-		ActionListener listeners[]=playPauseButton.getActionListeners();
-		if(listeners==null) {
-			return;
-		}
-		for(ActionListener l:listeners) {
-			playPauseButton.removeActionListener(l);
-		}
-	}
-	protected void playPauseButtonSetActionPlay() {
-		playPauseButtonRemoveListeners();
-		playPauseButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				playCounterExample();
-			}
-		});
+	protected void stopCounterExample() {
+		// TODO Auto-generated method stub
+		thread.interrupt();
+		threadRunning = false;
 		try {
 			playPauseButton.setIcon(IconFactory.getIcon("play"));
 		} catch (ParameterException e) {
@@ -171,33 +176,6 @@ public class AnalyzeToolBar extends JToolBar {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	protected void playPauseButtonSetActionPause() {
-		playPauseButtonRemoveListeners();
-		playPauseButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				stopCounterExample();
-			}
-		});
-		try {
-			playPauseButton.setIcon(IconFactory.getIcon("sleep"));
-		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	protected void stopCounterExample() {
-		// TODO Auto-generated method stub
-		thread.interrupt();
-		playPauseButtonSetActionPlay();
 		stepButton.setEnabled(true);
 		backButton.setEnabled(true);
 		resetButton.setEnabled(true);
@@ -209,7 +187,6 @@ public class AnalyzeToolBar extends JToolBar {
 		stepButton.setEnabled(false);
 		backButton.setEnabled(false);
 		resetButton.setEnabled(false);
-		playPauseButtonSetActionPause();
 		thread = new Thread() {
 			@Override
 			public void run() {
@@ -228,14 +205,29 @@ public class AnalyzeToolBar extends JToolBar {
 				playPauseButton.setEnabled(false);
 			}
 		};
-
 		thread.start();
+		threadRunning = true;
+		try {
+			playPauseButton.setIcon(IconFactory.getIcon("sleep"));
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-/**
- * this method is invoked by the analyePanel
- * it loads the given path and resets and activates the toolbar
- * @param path the counterexample, List of Transitions
- */
+
+	/**
+	 * this method is invoked by the analyePanel it loads the given path and
+	 * resets and activates the toolbar
+	 * 
+	 * @param path
+	 *            the counterexample, List of Transitions
+	 */
 	public void setCounterExample(List<String> path) {
 		counterExample = new CounterExampleVisualization(path);
 		resetCounterExample();
@@ -267,7 +259,7 @@ public class AnalyzeToolBar extends JToolBar {
 			stepButton.setEnabled(false);
 			playPauseButton.setEnabled(false);
 		}
-		if(!thread.isAlive())
+		if (threadRunning == false)
 			backButton.setEnabled(true);
 		pnEditor.updateUI();
 	}
@@ -277,7 +269,19 @@ public class AnalyzeToolBar extends JToolBar {
 		stepButton.setEnabled(true);
 		backButton.setEnabled(false);
 		playPauseButton.setEnabled(true);
-		playPauseButtonSetActionPlay();
+		try {
+			playPauseButton.setIcon(IconFactory.getIcon("play"));
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		threadRunning = false;
 		pnEditor.getGraphComponent().getGraph().getNetContainer()
 				.getPetriNet().reset();
 		pnEditor.updateUI();
@@ -294,64 +298,41 @@ public class AnalyzeToolBar extends JToolBar {
 
 	public void reset() {
 		deActivate();
+		if (threadRunning) {
+			thread.interrupt();
+		}
+		threadRunning = false;
 		highlightedPath = false;
 		resetHighlightning();
 		counterExample = null;
 	}
-
+	
 	public void highLightCounterExample() {
 		Map<String, PNGraphCell> nodemap = pnEditor.getGraphComponent()
 				.getGraph().nodeReferences;
 		Map<String, PNGraphCell> arcmap = pnEditor.getGraphComponent()
 				.getGraph().arcReferences;
-
-		// System.out.println(nodemap);
-		// get places to mark
-		java.util.List<String> transitions = counterExample.getPath();
-		;
-		AbstractPetriNet pn = pnEditor.getNetContainer().getPetriNet();
-		java.util.List<String> nodeList = new ArrayList<String>();
-		java.util.List<String> arcList = new ArrayList<String>();
-		nodeList.addAll(transitions);
-
-		// we have to find the places and arcs in the path
-
-		for (int i = 0; i < transitions.size() - 1; i++) {
-			// first incoming places with no incoming edges
-			java.util.List<PTFlowRelation> placesBeforeThis = pn
-					.getTransition(transitions.get(i)).getIncomingRelations();
-			for (PTFlowRelation relation : placesBeforeThis) {
-				if (relation.getPlace().getIncomingRelations().size() == 0) {
-					// add the place name
-					String placeName = relation.getPlace().getName();
-					nodeList.add(placeName);
-					// add the arc
-					arcList.add("arcPT_" + placeName + transitions.get(i));
-				}
-			}
-			// then places between this transition and the next
-			java.util.List<PTFlowRelation> placesAfterRel = pn.getTransition(
-					transitions.get(i)).getOutgoingRelations();
-			java.util.List<String> placesAfter = new ArrayList<String>();
-			for (PTFlowRelation relation : placesAfterRel) {
-				placesAfter.add(relation.getPlace().getName());
-			}
-			java.util.List<PTFlowRelation> placesBeforeRel = pn.getTransition(
-					transitions.get(i + 1)).getIncomingRelations();
-			java.util.List<String> placesBefore = new ArrayList<String>();
-			for (PTFlowRelation relation : placesBeforeRel) {
-				placesBefore.add(relation.getPlace().getName());
-			}
-			// add the intersection of both lists
-			java.util.List<String> temp_list = Helpers.Intersection(
-					placesAfter, placesBefore);
-			for (String place : temp_list) {
-				nodeList.add(place);
-				// both edges
-				arcList.add("arcTP_" + transitions.get(i) + place);
-				arcList.add("arcPT_" + place + transitions.get(i + 1));
-			}
+		
+		AbstractPetriNet pn =(AbstractPetriNet) pnEditor.getNetContainer().getPetriNet();
+		PlacesArcsAlgorithm algo = null;
+		List<String> nodeList=new ArrayList<String>();
+		List<String> arcList=new ArrayList<String>();
+		
+		// determine the type of the ptnet
+		// depending on the type the FlowRelation type must be chosen
+		if(pn instanceof PTNet) {
+			algo=new PlacesArcsAlgorithm<PTFlowRelation>();
 		}
+		else if(pn instanceof CWN) {
+			algo=new PlacesArcsAlgorithm<CWNFlowRelation>();
+		} else if(pn instanceof IFNet) {
+			algo=new PlacesArcsAlgorithm<IFNetFlowRelation>();
+		} else if(pn instanceof CPN) {
+			algo=new PlacesArcsAlgorithm<CPNFlowRelation>();
+		}
+		
+		algo.addPlacesArcs(pnEditor, counterExample.getPath(), nodeList,arcList);
+
 		// mark all places or transitions
 		for (String place : nodeList) {
 			PNGraphCell cell = nodemap.get(place);
@@ -366,8 +347,6 @@ public class AnalyzeToolBar extends JToolBar {
 			marker.highlight(pnEditor.getGraphComponent().getGraph().getView()
 					.getState(cell), Color.RED);
 		}
-		// System.out.println(arcmap);
-
 	}
 
 	public void resetHighlightning() {
