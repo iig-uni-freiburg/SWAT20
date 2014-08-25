@@ -1,6 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.editor.graph;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Window;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +14,7 @@ import java.util.Set;
 import javax.swing.SwingUtilities;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxCellState;
 
 import de.invation.code.toval.graphic.misc.CircularPointGroup;
@@ -22,7 +27,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNFlowRelation;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractCPNTokenConfigurer;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.CPNProperties;
 
 /**
@@ -58,7 +65,7 @@ public class CPNGraph extends PNGraph {
 			if (colorNumber > 0)
 				arcString += color.getKey() + ": " + String.valueOf(((CPNFlowRelation) relation).getConstraint(color.getKey())) + "\n";
 		}
-		return arcString;
+		return null;
 	}
 
 	@Override
@@ -243,6 +250,54 @@ default:
 		
 	}
 
+	@Override
+	protected void drawAdditionalArcGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
+		PNGraphCell cell = (PNGraphCell) state.getCell();
+		String cellId = cell.getId();
+		String hexColor = (String) state.getStyle().get(mxConstants.STYLE_STROKECOLOR);
+		Color lineColor = Color.BLACK;;
+		if(hexColor != null)
+		lineColor  = Utils.parseColor(hexColor);
+		AbstractCPNFlowRelation flowRelation = getNetContainer().getPetriNet().getFlowRelation(cellId);
+		int pointDiameter = (int) (EditorProperties.getInstance().getDefaultTokenSize() * getView().getScale());
+		 int posX = (int) state.getCenterX();
+			int posY = (int) state.getCenterY();
+		if (flowRelation.hasConstraints()) {
+			Graphics g = canvas.getGraphics();
+			int j = 0;
+			int size = flowRelation.getConstraint().support().size();
+			int startY = posY - (size/2*10)- (pointDiameter/2);
+			int spacingY = pointDiameter+2;
+			int spacingX = pointDiameter+2;
+			for (String c : getNetContainer().getPetriNet().getTokenColors()) {
+				int constraint = flowRelation.getConstraint(c);
+				if(constraint<5){
+				for (int i = 0; i < constraint; i++) {
+					if (getNetContainer().getPetriNetGraphics().getColors().get(c) != null)
+						g.setColor(getNetContainer().getPetriNetGraphics().getColors().get(c));
+					g.fillOval(posX + (i * spacingX), startY + (j * spacingY), pointDiameter, pointDiameter);
+					g.setColor(lineColor);
+					g.drawOval(posX + (i * spacingX), startY + (j * spacingY), pointDiameter, pointDiameter);
+				}
+				}
+				else {
+					g.setColor(getNetContainer().getPetriNetGraphics().getColors().get(c));
+					g.setFont(new Font("TimesRoman", Font.BOLD, 10)); 
+					g.fillOval(posX , startY + (j * spacingY), pointDiameter, pointDiameter);
+					g.setColor(lineColor);
+					g.drawOval(posX, startY + (j * spacingY), pointDiameter, pointDiameter);
+					g.setColor(Color.BLACK);
+					 g.drawString(" : " +constraint +"\n", posX + pointDiameter , (startY+8) + (j * (spacingY)) );
+				}
+				if(constraint>0)
+				j++;
+			}
+	        Graphics2D g2 = (Graphics2D) g;
+	        g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		 
+		 }
+		
+	}
 
 
 }

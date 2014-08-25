@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
@@ -68,6 +69,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.StyleChange;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
@@ -766,6 +768,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 						drawAdditionalTransitionGrahpics(canvas, state);
 				
 				}
+				if (customcell.getType() == PNComponent.ARC) {
+					drawAdditionalArcGrahpics(canvas, state);
+			
+			}
+				
 			}
 
 			g.dispose();
@@ -774,6 +781,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 		return shape;
 	}
+
+	protected abstract void drawAdditionalArcGrahpics(mxGraphics2DCanvas canvas, mxCellState state);
 
 	protected abstract void drawAdditionalTransitionGrahpics(mxGraphics2DCanvas canvas, mxCellState state);
 
