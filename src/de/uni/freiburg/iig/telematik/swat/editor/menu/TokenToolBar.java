@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,10 +47,15 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNMarking
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractRegularIFNetTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillColorSelectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.TokenColorSelectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AccessModeChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.CapacityChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenColorChange;
@@ -267,8 +273,7 @@ public class TokenToolBar extends JToolBar {
 				AbstractCPNMarking im = (AbstractCPNMarking) editor.getNetContainer().getPetriNet().getInitialMarking();
 
 				//UpdateBlock
-				model.beginUpdate();
-					((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, null));
+				model.beginUpdate();			
 					if(editor.getNetContainer().getPetriNet() instanceof CPN){
 					for (CPNFlowRelation flowrelation : cpn.getFlowRelations()) {
 
@@ -285,11 +290,15 @@ public class TokenToolBar extends JToolBar {
 						Multiset<String> multiSet = (Multiset<String>) im.get(place.getName());
 						if (multiSet != null) {
 							if (multiSet.contains(tokenLabel)) {
-								multiSet.remove(tokenLabel);
-								model.execute(new TokenChange((PNGraph) graph, place.getName(), multiSet));
+								multiSet.setMultiplicity(tokenLabel, 0);
+								((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph) graph, place.getName(), multiSet));
 							}
 						}
+						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph) graph, place.getName(), tokenLabel, 0));
+
 					}}
+					
+					
 					if(editor.getNetContainer().getPetriNet() instanceof IFNet){
 					for (IFNetFlowRelation flowrelation : ifnet.getFlowRelations()) {
 
@@ -301,20 +310,26 @@ public class TokenToolBar extends JToolBar {
 							}
 						}
 					}
-
 					for (IFNetPlace place : ifnet.getPlaces()) {
 						Multiset<String> multiSet = (Multiset<String>) im.get(place.getName());
 						if (multiSet != null) {
 							if (multiSet.contains(tokenLabel)) {
-								multiSet.remove(tokenLabel);
-								model.execute(new TokenChange((PNGraph) graph, place.getName(), multiSet));
+								multiSet.setMultiplicity(tokenLabel, 0);
+									((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph) graph, place.getName(), multiSet));
 							}
 						}
-					}}
+						((mxGraphModel) graph.getModel()).execute(new CapacityChange((PNGraph) graph, place.getName(), tokenLabel, 0));
 
+					}
+					
+					for (AbstractIFNetTransition<IFNetFlowRelation> transition : ifnet.getTransitions()) {
+						((mxGraphModel) graph.getModel()).execute(new AccessModeChange(graph, transition.getName(), tokenLabel, new HashSet<AccessMode>()));
+						if (transition instanceof AbstractRegularIFNetTransition)
+							((AbstractRegularIFNetTransition) transition).removeAccessModes(tokenLabel);
+						}
+					}
 					((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, null));
 					
-
 				model.endUpdate();
 				
 				updateView();
