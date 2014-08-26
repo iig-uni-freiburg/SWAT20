@@ -17,6 +17,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
@@ -24,11 +25,13 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+
 /**
- * this class reads all necessary information for the GUI from a petri net
- * given by the PNEditor
+ * this class reads all necessary information for the GUI from a petri net given
+ * by the PNEditor
+ * 
  * @author bernhard
- *
+ * 
  */
 public class PetriNetInformation implements PetriNetInformationReader {
 
@@ -56,15 +59,17 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	public void netChanged() {
 		updateTransitionLabelDic();
 		updatePlacesList();
-		if (pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
+		if (pneditor.getNetContainer().getPetriNet().getNetType() == NetType.CWN
+				|| pneditor.getNetContainer().getPetriNet().getNetType() == NetType.CPN
+				|| pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
 			updateDataTypeList();
 		}
 	}
 
 	private void updatePlacesList() {
 		placesList.clear();
-		for (AbstractPlace p : pneditor.getNetContainer()
-				.getPetriNet().getPlaces()) {
+		for (AbstractPlace p : pneditor.getNetContainer().getPetriNet()
+				.getPlaces()) {
 			placesList.add(p.getName());
 		}
 		Collections.sort(placesList);
@@ -80,10 +85,11 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		transitionLabelDic.clear();
 		for (AbstractTransition transition : pneditor.getNetContainer()
 				.getPetriNet().getTransitions()) {
-			transitionLabelDic
-					.put(transition.getLabel()+" ("+transition.getName()+")", transition.getName());
-			transitionLabelDicReverse
-			.put(transition.getName(), transition.getLabel()+" ("+transition.getName()+")");
+			transitionLabelDic.put(
+					transition.getLabel() + " (" + transition.getName() + ")",
+					transition.getName());
+			transitionLabelDicReverse.put(transition.getName(),
+					transition.getLabel() + " (" + transition.getName() + ")");
 		}
 	}
 
@@ -97,10 +103,9 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		dataTypeList.clear();
 		dataTypeListWithBlack.clear();
 		Set<String> dataTypes = new HashSet<String>();
-		
-		if (apn.getNetType() == NetType.IFNet) {
-			IFNet net = (IFNet) apn;
-			Iterator it = net.getTransitions().iterator();
+
+
+			Iterator it = apn.getTransitions().iterator();
 			// Set<String> colors=Arrays.;
 			// colors.addAll(arg0)
 			while (it.hasNext()) {
@@ -109,9 +114,10 @@ public class PetriNetInformation implements PetriNetInformationReader {
 				dataTypes.addAll(t.getProcessedColors());
 				dataTypes.addAll(t.getProducedColors());
 			}
-			dataTypeList.addAll(dataTypes);
 			dataTypeListWithBlack.addAll(dataTypes);
-		}
+			dataTypes.remove("black");
+			dataTypeList.addAll(dataTypes);
+
 		Collections.sort(dataTypeList);
 		Collections.sort(dataTypeListWithBlack);
 	}
@@ -143,8 +149,8 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	@Override
 	public List<String> getActivities() {
 		// TODO Auto-generated method stub
-		ArrayList<String> activities=new ArrayList<String>();
-		activities.addAll( transitionLabelDic.keySet());
+		ArrayList<String> activities = new ArrayList<String>();
+		activities.addAll(transitionLabelDic.keySet());
 		Collections.sort(activities);
 		return activities;
 	}
@@ -184,7 +190,8 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	@Override
 	public String[] getDataTypesWithBlackArray() {
 		// TODO Auto-generated method stub
-		return dataTypeListWithBlack.toArray(new String[dataTypeListWithBlack.size()]);
+		return dataTypeListWithBlack.toArray(new String[dataTypeListWithBlack
+				.size()]);
 	}
-	
+
 }

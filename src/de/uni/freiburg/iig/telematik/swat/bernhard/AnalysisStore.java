@@ -13,6 +13,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.IOUtils;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 /**
  * a static class helping to store and load analysis
+ * it uses XStream to serialize Lists of PatternSettings
  * @author bernhard
  *
  */
@@ -43,15 +44,26 @@ public class AnalysisStore {
 		}
 		AnalysisNameChooser ac = new AnalysisNameChooser(null,"Choose Name", path);
 		String name = ac.requestInput();
-		IOUtils.writeToFile(path, PREFIX+name+SUFFIX, xml);
+		if(name != null) {
+			IOUtils.writeToFile(path, PREFIX+name+SUFFIX, xml);
+		}
 		return true;
 	}
-	
+	/**
+	 * load a List of PatternSettings from a File f
+	 * @param f the saved file
+	 * @return a List of PatternSettings
+	 */
 	public static List<PatternSetting> loadFromFile(File f) {
 		XStream xstream=new XStream();
 		ArrayList<PatternSetting> list=(ArrayList<PatternSetting>) xstream.fromXML(f);
 		return list;
 	}
+	/**
+	 * remove PREFIX and SUFFIX from the filename
+	 * @param
+	 * @return
+	 */
 	public static String getDisplayNameforFilename(String filename) {
 		String s=filename.replace(PREFIX, "");
 		return s.replace(SUFFIX, "");

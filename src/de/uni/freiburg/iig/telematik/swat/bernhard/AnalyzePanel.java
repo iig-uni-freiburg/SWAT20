@@ -80,20 +80,24 @@ public abstract class AnalyzePanel implements LoadSave {
 	private JLabel analysisName;
 	private JButton editButton, runButton, saveButton;
 	private String fileName;
-	protected PatternWindow patternWindow;
+	protected PatternWizard patternWizard;
 	protected InformationReader objectInformationReader;
 	protected PatternFactory patternFactory;
 	protected List<PatternSetting> patternSettings;
 
-
-	protected abstract String getCorrectValue(ParamValue val);
+	// this method adjusts values to be displayed
+	// most important usecase is to display the label of
+	// a transition and not its name
+	protected abstract String adjustValue(ParamValue val);
+	// used to add a CounterExample Button
+	// the functionality of such a button differs
 	protected abstract void addCounterExampleButton(PatternResult result, JPanel newPanel);
 	protected abstract void analyze();
 	
 	public void objectChanged() {
 		objectInformationReader.update();
 		// update the parameter boxes
-		patternWindow.netChanged();
+		patternWizard.netChanged();
 	}
 
 	public InformationReader getInformationReader() {
@@ -136,7 +140,7 @@ public abstract class AnalyzePanel implements LoadSave {
 		content.setLayout(new BorderLayout());
 		content.add(box, BorderLayout.NORTH);
 		content.add(jsp, BorderLayout.CENTER);
-		patternWindow = new PatternWindow(this, patternFactory);
+		patternWizard = new PatternWizard(this, patternFactory);
 		editButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -159,21 +163,26 @@ public abstract class AnalyzePanel implements LoadSave {
 			}
 		});
 	}
-	
+	/**
+	 * invoked when the user presses the Run Button
+	 */
 	protected void analyzedClicked() {
-		if (patternWindow.isVisible()) {
+		if (patternWizard.isVisible()) {
 			JOptionPane.showMessageDialog(null,
 					"Close PatternWindow first, before analyzing", "Warning",
 					JOptionPane.WARNING_MESSAGE);
-			patternWindow.requestFocus();
+			patternWizard.requestFocus();
 			return;
 		}
+		// run the abstract method which has to be implemented by subclasses
 		analyze();
 	}
-
+/**
+ * display the Pattern Wizard
+ */
 	protected void showPatternWindow() {
-		patternWindow.setPatternSettings(patternSettings);
-		patternWindow.setVisible(true);
+		patternWizard.setPatternSettings(patternSettings);
+		patternWizard.setVisible(true);
 	}
 
 	private String getDateShort() {
@@ -186,32 +195,42 @@ public abstract class AnalyzePanel implements LoadSave {
 	}
 
 	/**
-	 * the function invoked when Analyze is pressed
+	 * load the Pattern Settings from the Pattern Wizard
+	 * pay attention to settings that did not change values
+	 * their results have to be kept, the others are set to null
 	 */
 	
 	public void getPatternSettingsFromPatternWindow() {
 		List<PatternSetting> oldSettings = Helpers
 				.copyPatternSettings(patternSettings);
-		patternSettings = patternWindow.getPatternSettings();
+		patternSettings = patternWizard.getPatternSettings();
 		for (PatternSetting p : patternSettings) {
+			boolean patternInOld=false;
 			// when there is a result, check whether this
 			// setting had the same values before
 			// because otherwise, the result is unclear
 			if (p.getResult() != null) {
 				for (PatternSetting po : oldSettings) {
 					if (p.getName().equals(po.getName())) {
-						if (p.equals(po) == false) {
-							p.setResult(null);
+						if (p.equals(po) == true) {
+							patternInOld=true;
 						}
 					}
 				}
+			}
+			// if setting is not in the old settings than delete result
+			if(patternInOld==false) {
+				p.setResult(null);
 			}
 		}
 		update();
 	}
 
 
-	
+	/**
+	 * update the UI of the analyzePanel
+	 * that means draw selected patternsettings and their results
+	 */
 	public void update() {
 		propertyPanel.removeAll();
 		for (PatternSetting p : patternSettings) {
@@ -284,13 +303,12 @@ public abstract class AnalyzePanel implements LoadSave {
 	public void setAnalyseName(String text) {
 		analysisName.setText(text);
 	}
-
+	/**
+	 * return the Content of the Panel
+	 * @return a JPanel that can be added to another component
+	 */
 	public JPanel getContent() {
 		return content;
-	}
-
-	public void setContent(JPanel panel) {
-		this.content = panel;
 	}
 
 	public String getNetName() {
@@ -300,35 +318,37 @@ public abstract class AnalyzePanel implements LoadSave {
 	public void setNetName(String netName) {
 		this.fileName = netName.split("[.]")[0];
 	}
-
+	/**
+	 * load the analysis of File f
+	 */
 	public boolean load(File f) {
 		MessageDialog.getInstance().addMessage(
 				"Loading Analysis Settings from " + f);
 		patternSettings = AnalysisStore.loadFromFile(f);
 		// System.out.println(newList);
-		patternWindow.setPatternSettings(patternSettings);
+		patternWizard.setPatternSettings(patternSettings);
 		analysisName.setText("Analysis: "
 				+ AnalysisStore.getDisplayNameforFilename(f.getName()));
 		update();
 		return true;
 	}
-
+	/**
+	 * open a save dialog and save the analysis
+	 */
 	@Override
-	public boolean save() {
-		AnalysisStore.store(patternWindow.getPatternSettings(), fileName);
+	public void save() {
+		AnalysisStore.store(patternWizard.getPatternSettings(), fileName);
 		// update the tree
 		SwatTreeView.getInstance().updateAnalysis();
 		SwatTreeView.getInstance().expandAll();
 		SwatTreeView.getInstance().updateUI();
-		return true;
 	}
 	/**
 	 * create a list of JLabels that will later be added to an
 	 * AnalyzePanel. Some parameters might be to long so they will
 	 * be breaken off. a JLabel does not accept a newline character
-	 * @param ps
-	 * @param transitionsReverse
-	 * @return
+	 * @param ps the PatternSetting object
+	 * @return a list of JLabels that can be added to the AnalyzePanel
 	 */
 	public List<JLabel> getLabelListForPatternSetting(PatternSetting ps) {
 		ArrayList<JLabel> labels=new ArrayList<JLabel>();
@@ -369,7 +389,7 @@ public abstract class AnalyzePanel implements LoadSave {
 					}
 					
 				} else {
-					paraString+=getCorrectValue(val);
+					paraString+=adjustValue(val);
 					count++;
 				}
 				if(i < para.getValue().size() -1) {

@@ -7,7 +7,13 @@ import javax.swing.JPanel;
 
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
-
+/**
+ * this class is used to select the AnalyzePanel for a given
+ * SwatComponent which has a file open that is being analyzed
+ * The class is implemented as a singleton.
+ * @author bernhard
+ *
+ */
 public class AnalyzePanelController {
 
 	private HashMap<String, AnalyzePanel> panelDic;

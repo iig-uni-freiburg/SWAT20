@@ -25,7 +25,7 @@ public class CounterExampleVisualization {
 		for(String t:counterExamplepath) {
 			path.add(t.replaceAll("[_]last", ""));
 		}
-		System.out.println("CounterExamplePath: "+path);
+		//System.out.println("CounterExamplePath: "+path);
 		currentPosition=0;
 	}
 	public CounterExampleVisualization() {

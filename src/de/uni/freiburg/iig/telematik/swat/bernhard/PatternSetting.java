@@ -81,7 +81,7 @@ public class PatternSetting {
 				}
 			}
 		}
-		System.out.println("same");
+
 		return true;
 	}
 

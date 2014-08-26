@@ -56,20 +56,20 @@ public class PatternSettingPanel {
 	private JButton removeButton;
 	private PatternSetting patternSetting;
 	private List<PatternParameterPanel> parameterPanelList;
-	private PatternWindow patternWindow;
+	private PatternWizard patternWindow;
 
-	public PatternSettingPanel(PatternSetting ps, PatternWindow patternWindow,
+	public PatternSettingPanel(PatternSetting ps, PatternWizard patternWindow,
 			PatternFactory patternFactory) {
 		init(ps.getName(), patternWindow, patternFactory);
 		setPatternSetting(ps);
 	}
 
 	public PatternSettingPanel(String patternName,
-			PatternWindow patternWindow, PatternFactory patternFactory) {
+			PatternWizard patternWindow, PatternFactory patternFactory) {
 		init(patternName, patternWindow, patternFactory);
 	}
 
-	private void init(String patternName, PatternWindow patternWindow,
+	private void init(String patternName, PatternWizard patternWindow,
 			PatternFactory patternFactory) {
 		// pattern = PatternDatabase.getInstance()
 		// .getPattern(patternName);

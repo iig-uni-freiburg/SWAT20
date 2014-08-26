@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface LoadSave {
 	public boolean load(File f);
-	public boolean save();
+	public void save();
 }

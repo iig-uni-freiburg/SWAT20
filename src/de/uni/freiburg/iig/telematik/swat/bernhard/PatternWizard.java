@@ -61,7 +61,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
  * @author bernhard
  * 
  */
-public class PatternWindow extends JFrame {
+public class PatternWizard extends JFrame {
 
 	/**
 	 * 
@@ -175,7 +175,7 @@ public class PatternWindow extends JFrame {
 		analyzePanel.getPatternSettingsFromPatternWindow();
 	}
 
-	public PatternWindow(AnalyzePanel p, PatternFactory pf)
+	public PatternWizard(AnalyzePanel p, PatternFactory pf)
 			throws HeadlessException {
 		super();
 		analyzePanel = p;

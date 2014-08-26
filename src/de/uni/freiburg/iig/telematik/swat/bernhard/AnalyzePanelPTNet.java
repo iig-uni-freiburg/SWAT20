@@ -96,7 +96,7 @@ public class AnalyzePanelPTNet extends AnalyzePanel {
 		}
 	}
 	@Override
-	protected String getCorrectValue(ParamValue val) {
+	protected String adjustValue(ParamValue val) {
 		// TODO Auto-generated method stub
 		if(val.getOperandType() == OperandType.TRANSITION) {
 			HashMap<String, String> transitionDicReverse=((PetriNetInformation) this.objectInformationReader).getTransitionDictionaryReverse();

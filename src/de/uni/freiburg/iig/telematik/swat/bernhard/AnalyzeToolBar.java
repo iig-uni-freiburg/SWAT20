@@ -86,7 +86,7 @@ public class AnalyzeToolBar extends JToolBar {
 					doStep();
 				}
 			});
-			backButton = new JButton(IconFactory.getIcon("first"));
+			backButton = new JButton(IconFactory.getIcon("back"));
 			backButton.setToolTipText("Step back");
 			backButton.addActionListener(new ActionListener() {
 
