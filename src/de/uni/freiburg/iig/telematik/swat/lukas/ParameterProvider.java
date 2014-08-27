@@ -81,7 +81,7 @@ public class ParameterProvider {
 			parameters.add(new Parameter(new HashSet<OperandType>(
 					Arrays.asList(OperandType.TRANSITION, OperandType.STATEPREDICATE)), 1, "P"));
 			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION, OperandType.STATEPREDICATE)), -1, "Q, R, S, ..."));
+					Arrays.asList(OperandType.TRANSITION, OperandType.STATEPREDICATE)), -1, "Q, R"));
 		} else if (patternName.equals(Universal.NAME)) {
 			parameters.add(new Parameter(new HashSet<OperandType>(
 					Arrays.asList(OperandType.STATEPREDICATE)), 1, "P"));
