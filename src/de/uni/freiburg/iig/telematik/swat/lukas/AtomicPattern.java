@@ -30,6 +30,7 @@ public abstract class AtomicPattern extends CompliancePattern {
 			mPatternDescription.put(ChainLeadsTo.NAME, ChainLeadsTo.DESC);
 			mPatternDescription.put(LeadsToChain.NAME, LeadsToChain.DESC);
 			mPatternDescription.put(XLeadsTo.NAME, XLeadsTo.DESC);
+			mPatternDescription.put(LeadsTo.NAME, LeadsTo.DESC);
 			mPatternDescription.put(Else.NAME, Else.DESC);
 			mPatternDescription.put(Exists.NAME, Exists.DESC);
 			mPatternDescription.put(Universal.NAME, Universal.DESC);
