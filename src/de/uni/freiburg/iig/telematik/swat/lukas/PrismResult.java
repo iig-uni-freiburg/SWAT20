@@ -156,6 +156,10 @@ public class PrismResult implements Iterable<Map.Entry<CompliancePattern, Patter
 		return mResults.entrySet().iterator();
 	}
 	
+	public void addPatternResult(ResourcePattern p, PatternResult res) {
+		mResults.put(p, res);
+	}
+	
 	/*public static void main(String [ ] args) {
 		
 		CompliancePattern leadsTo = new LeadsTo(new Transition("t1"), new Transition("t2"));
