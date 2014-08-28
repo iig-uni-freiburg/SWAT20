@@ -95,7 +95,7 @@ public class IFNetGraph extends PNGraph {
 			if (colorNumber > 0)
 				arcString += color.getKey() + ": " + String.valueOf(((IFNetFlowRelation) relation).getConstraint(color.getKey())) + "\n";
 		}
-		return null;
+		return arcString;
 	}
 
 	@Override

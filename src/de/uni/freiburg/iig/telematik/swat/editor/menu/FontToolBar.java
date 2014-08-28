@@ -47,6 +47,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontLineThroughSty
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontRotationAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.FontUnderlineStyleAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.text.ShowHideLabelsAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.text.ShowHideTokensOnArcsAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
@@ -61,6 +62,7 @@ public class FontToolBar extends JToolBar {
 
 	// Actions
 	private ShowHideLabelsAction showHideLabelsAction;
+	private ShowHideTokensOnArcsAction showHideTokensOnArcsAction;
 
 	private FontBoldStyleAction boldFontAction;
 	private FontItalicStyleAction italicFontAction;
@@ -73,6 +75,7 @@ public class FontToolBar extends JToolBar {
 	private FillBackgroundColorAction backgroundColorAction;
 
 	// Buttons
+	private JButton showHideTokensOnArcsButton;
 	private JButton showHideLabelsButton;
 	private JButton textRotationButton;
 	private JToggleButton boldFontButton = null;
@@ -89,6 +92,7 @@ public class FontToolBar extends JToolBar {
 
 
 	// Tooltips
+	private String showHideTokensOnArcsTooltip = "show/ hide constraints as tokens on arcs";
 	private String showHideLabelsTooltip = "show/ hide labels";
 	private String boldFontTooltip = "bold";
 	private String italicFontTooltip = "italic";
@@ -117,6 +121,8 @@ public class FontToolBar extends JToolBar {
 		this.pnEditor = pnEditor;
 
 		try {
+			showHideTokensOnArcsAction = new ShowHideTokensOnArcsAction(pnEditor);
+			showHideTokensOnArcsAction.setFontToolbar(this);
 			showHideLabelsAction = new ShowHideLabelsAction(pnEditor);
 			showHideLabelsAction.setFontToolbar(this);
 			boldFontAction = new FontBoldStyleAction(pnEditor);
@@ -134,6 +140,8 @@ public class FontToolBar extends JToolBar {
 			e.printStackTrace();
 		}
 		setFloatable(false);
+		showHideTokensOnArcsButton = (JButton) add(showHideTokensOnArcsAction, false);
+		setButtonSettings(showHideTokensOnArcsButton);
 		showHideLabelsButton = (JButton) add(showHideLabelsAction, false);
 		setButtonSettings(showHideLabelsButton);
 		fontLabel = new JLabel(fontLabelText);
@@ -411,6 +419,25 @@ public class FontToolBar extends JToolBar {
 			}
 
 		});
+	}
+	public void setTokenOnArcEnabled(boolean b) {
+//		fontLabel.setEnabled(b);
+//		getFontBox().setEnabled(b);
+//		getFontSizeBox().setEnabled(b);
+//		boldFontAction.setEnabled(b);
+//		italicFontAction.setEnabled(b);
+//		underlineFontAction.setEnabled(b);
+//		lineThroughFontaction.setEnabled(b);
+//		alignLeftAction.setEnabled(b);
+//		alignCenterAction.setEnabled(b);
+//		alignRightAction.setEnabled(b);
+//		textRotationAction.setEnabled(b);
+		
+		if(b)
+			showHideTokensOnArcsAction.setShowIconImage();
+		else
+			showHideTokensOnArcsAction.setHideIconImage();
+		
 	}
 
 }

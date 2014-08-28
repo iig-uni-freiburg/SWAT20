@@ -57,6 +57,7 @@ public class CPNGraph extends PNGraph {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public String getArcConstraint(AbstractFlowRelation relation) throws ParameterException {
+//		if(showContraintsAsText){
 		Map<String, Color> colors = getNetContainer().getPetriNetGraphics().getColors();
 		colors.put("black", Color.BLACK);
 		String arcString = "";
@@ -65,7 +66,10 @@ public class CPNGraph extends PNGraph {
 			if (colorNumber > 0)
 				arcString += color.getKey() + ": " + String.valueOf(((CPNFlowRelation) relation).getConstraint(color.getKey())) + "\n";
 		}
-		return null;
+		return arcString;
+//		}
+//		else 
+//			return null;
 	}
 
 	@Override

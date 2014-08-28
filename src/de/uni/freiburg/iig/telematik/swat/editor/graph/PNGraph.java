@@ -91,6 +91,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 
 	private boolean labelSelected = false;
 	private boolean isExecution = false;
+	protected boolean hideContraintsAsTokens = true;
 	private Set<String> nameSetFromTransitions;
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
@@ -769,7 +770,8 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 				
 				}
 				if (customcell.getType() == PNComponent.ARC) {
-					drawAdditionalArcGrahpics(canvas, state);
+					if(!hideContraintsAsTokens)
+						drawAdditionalArcGrahpics(canvas, state);
 			
 			}
 				
@@ -1760,6 +1762,12 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		
 		
 		}
+		
+	}
+
+	public void setTokenOnArcVisibility(boolean b) {
+		this.hideContraintsAsTokens = b;
+		refresh();
 		
 	}
 
