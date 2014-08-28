@@ -75,7 +75,7 @@ public class USegregatedFrom extends ResourcePattern {
 		String subj1 = ac.getSubjectDescriptor(t1Name);
 		String subj2 = ac.getSubjectDescriptor(t1Name);
 		
-		if (subj1.equals(subj2)) {
+		if (subj1 != null && subj2 != null && subj1.equals(subj2)) {
 			mSatisfied = true;
 		} else {
 			mSatisfied = false;
