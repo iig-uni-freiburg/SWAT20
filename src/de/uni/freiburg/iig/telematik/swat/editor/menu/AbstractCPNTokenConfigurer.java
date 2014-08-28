@@ -21,6 +21,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
@@ -255,14 +256,22 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				JCheckBox cb = (JCheckBox) e.getSource();
 				Set am = accessMode.get(tokenName);
-				Set amChange = ((Set) ((HashSet) am).clone());
-				if (cb.isSelected()) {
-					amChange.add(accessModi);
-				} else {
-					amChange.remove(accessModi);
+				System.out.println(!(am.contains(AccessMode.CREATE) && accessModi.equals(AccessMode.DELETE)));
+				if (!(am.contains(AccessMode.CREATE) && accessModi.equals(AccessMode.DELETE)) && !(am.contains(AccessMode.DELETE) && accessModi.equals(AccessMode.CREATE))) {
+					Set amChange = ((Set) ((HashSet) am).clone());
+					if (cb.isSelected()) {
+						amChange.add(accessModi);
+					} else {
+						amChange.remove(accessModi);
+					}
+					((mxGraphModel) graph.getModel()).execute(new AccessModeChange(graph, paName, tokenName, amChange));
 				}
-				((mxGraphModel) graph.getModel()).execute(new AccessModeChange(graph, paName, tokenName, amChange));
+				else {
+					cb.setSelected(false);
+					JOptionPane.showMessageDialog(null,"First deselect Create/Delete to select this access mode" ,"Create/Delete exclude each other", JOptionPane.ERROR_MESSAGE);
+				}
 			}
+
 		});
 		read.setToolTipText(accessModi.toString());
 		return read;

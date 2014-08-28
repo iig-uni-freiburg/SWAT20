@@ -7,7 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Window;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +31,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.TokenGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNFlowRelation;
@@ -326,51 +329,147 @@ default:
 
 	@Override
 	protected void drawAdditionalTransitionGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
-		if(isContainsAnalysisContext()){
-		
-			Graphics g = canvas.getGraphics();
-		
-		 int posX = (int) state.getX();
-		int posY = (int) state.getY();
 		PNGraphCell cell = (PNGraphCell) state.getCell();
-		if(currentAnalysisContext!= null){
-		SecurityLevel l = currentAnalysisContext.getLabeling().getActivityClassification(cell.getId());
-		int fontSize = 10;
-		g.setFont(new Font("TimesRoman", Font.PLAIN, fontSize)); 
-		 g.drawString(l.toString(), posX, posY );
-		 
-		 ImageIcon img = null;
-		try {
-			img = IconFactory.getIcon("user");
-			
-		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		 
-//		ImageObserver observer;
-		int x = (int)state.getCenterX()+(int)(state.getWidth()/6);
-		int y = (int)state.getCenterY();
-		g.drawImage(img.getImage(), x,y, null);
-		String subjectDescriptor = currentAnalysisContext.getSubjectDescriptor(cell.getId());
-		String subjectString = "no subject descriptor";
-		if(subjectDescriptor != null)
-			subjectString = subjectDescriptor.toString();
+		AbstractRegularIFNetTransition transistion = (AbstractRegularIFNetTransition) getNetContainer().getPetriNet().getTransition(cell.getId());
 
-		 g.drawString(subjectString, x+img.getIconWidth(), y +img.getIconWidth());
-	        Graphics2D g2 = (Graphics2D) g;
-	        g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		 }
-		 
-		 }
+		Graphics g = canvas.getGraphics();
+		Graphics2D g2 = (Graphics2D) g;
+		int posX = (int) state.getX();
+		int posY = (int) state.getY();
+		int j = 0;
+		int k = 0;
+		int spacingY = 5;
+		int spacingX = 3;
 		
-		
+		for (String c : getNetContainer().getPetriNet().getTokenColors()) {
+			Set<AccessMode> am = (Set<AccessMode>) transistion.getAccessModes(c);
+			
+			//Build String to get right PNG File
+			if (!am.isEmpty()) {
+				String imageString = "";
+				if (am.contains(AccessMode.READ))
+					imageString = "r";
+				if (am.contains(AccessMode.WRITE))
+					imageString = imageString + "w";
+				if (am.contains(AccessMode.CREATE))
+					imageString = imageString + "c";
+				if (am.contains(AccessMode.DELETE))
+					imageString = imageString + "d";
+				Color color = getNetContainer().getPetriNetGraphics().getColors().get(c);
+				ImageIcon imageIcon = null;
+
+				try {
+					imageIcon = IconFactory.getIcon(imageString);
+
+				} catch (ParameterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (PropertyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				BufferedImage image = colorPNG(color, imageIcon);
+
+				
+				//Position and Draw PNG
+				int a = (int) state.getX() + spacingX;
+				int b = (int) state.getY() + spacingY;
+				if (state.getWidth() >= spacingX + image.getWidth() * (1 + j) + (k * spacingX))
+					a = a + (j * (image.getWidth() + spacingX));
+				else {
+					j = 0;
+					k++;
+				}
+
+				if (state.getHeight() >= spacingY + image.getHeight() * (1 + k) + (k * spacingY)) {
+					b = (int) b + (k * (image.getHeight() + spacingY));
+					g2.drawImage(image, a, b, null);
+					j++;
+				} else {
+					g2.setFont(new Font("TimesRoman", Font.PLAIN, 8));
+					g2.drawString("...more", (int) state.getX() + 2, (int) (state.getY() + state.getHeight()) - 2);
+				}
+			}
+		}
+
+		if (isContainsAnalysisContext()) {
+
+			if (currentAnalysisContext != null) {
+				SecurityLevel l = currentAnalysisContext.getLabeling().getActivityClassification(cell.getId());
+				int fontSize = 10;
+				g.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+				g.drawString(l.toString(), posX, posY);
+
+				ImageIcon img = null;
+				try {
+					img = IconFactory.getIcon("user");
+
+				} catch (ParameterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (PropertyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// ImageObserver observer;
+				int x = (int) state.getCenterX() + (int) (state.getWidth() / 6);
+				int y = (int) state.getCenterY();
+				g.drawImage(img.getImage(), x, y, null);
+				String subjectDescriptor = currentAnalysisContext.getSubjectDescriptor(cell.getId());
+				String subjectString = "no subject descriptor";
+				if (subjectDescriptor != null)
+					subjectString = subjectDescriptor.toString();
+
+				g.drawString(subjectString, x + img.getIconWidth(), y + img.getIconWidth());
+
+			}
+
+		}
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+	}
+
+	private BufferedImage colorPNG(Color color, ImageIcon imageIcon) {
+		BufferedImage image = toBufferedImage(imageIcon.getImage());
+		int width = image.getWidth();
+		int height = image.getHeight();
+		WritableRaster raster = image.getRaster();
+
+		for (int xx = 0; xx < width; xx++) {
+			for (int yy = 0; yy < height; yy++) {
+				int[] pixels = raster.getPixel(xx, yy, (int[]) null);
+				pixels[0] = color.getRed();
+				pixels[1] = color.getGreen();
+				pixels[2] = color.getBlue();
+				raster.setPixel(xx, yy, pixels);
+			}
+		}
+		return image;
+	}
+
+	public static BufferedImage toBufferedImage(Image img) {
+		if (img instanceof BufferedImage) {
+			return (BufferedImage) img;
+		}
+
+		// Create a buffered image with transparency
+		BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		// Draw the image on to the buffered image
+		Graphics2D bGr = bimage.createGraphics();
+		bGr.drawImage(img, 0, 0, null);
+		bGr.dispose();
+
+		// Return the buffered image
+		return bimage;
 	}
 
 	public boolean isContainsAnalysisContext() {
