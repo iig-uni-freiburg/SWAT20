@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
 import java.util.ArrayList;
+
 import org.processmining.analysis.sciffchecker.logic.model.StringOP;
 import org.processmining.analysis.sciffchecker.logic.model.attribute.StringConstantAttribute;
 import org.processmining.analysis.sciffchecker.logic.model.constraint.SimpleStringConstraint;
@@ -14,11 +15,17 @@ import org.processmining.analysis.sciffchecker.logic.model.variable.OriginatorVa
 import org.processmining.analysis.sciffchecker.logic.model.variable.StringVariableAttribute;
 import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+
 
 public class USegregatedFrom extends ResourcePattern {
 	
 	public static final String NAME = "A1 U-Segregated-From A2";
 	public static final String DESC = "Activity A1 and Activity A2 are performed by different Users.";
+	private boolean mSatisfied;
 	
 	public USegregatedFrom(Transition t1, Transition t2) {
 		
@@ -58,8 +65,23 @@ public class USegregatedFrom extends ResourcePattern {
 		rules.add(cr);
 		setRules(rules);
 
-		
+	}
 	
+	public USegregatedFrom(Transition t1, Transition t2, IFNet net) {
+		
+		String t1Name = t1.getName();
+		String t2Name = t2.getName();
+		AnalysisContext ac = net.getAnalysisContext();
+		String subj1 = ac.getSubjectDescriptor(t1Name);
+		String subj2 = ac.getSubjectDescriptor(t1Name);
+		
+		if (subj1.equals(subj2)) {
+			mSatisfied = true;
+		} else {
+			mSatisfied = false;
+		}
+		
+		
 	}
 
 	@Override
@@ -71,5 +93,10 @@ public class USegregatedFrom extends ResourcePattern {
 	public String getDescription() {
 		return DESC;
 	}
+	
+	public boolean isSatisfied() {
+		return mSatisfied;
+	}
+
 
 }

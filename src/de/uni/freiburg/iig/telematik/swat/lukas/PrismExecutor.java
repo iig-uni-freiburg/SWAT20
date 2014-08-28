@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -50,7 +48,6 @@ public class PrismExecutor {
 			}
 		}
 		
-		
 		try {
 			mPrismPath = SwatProperties.getInstance().getPrismPath();
 			if (!mPrismPath.endsWith(File.separator)) {
@@ -68,15 +65,30 @@ public class PrismExecutor {
 	
 	public PrismResult analyze(ArrayList<CompliancePattern> patterns) {
 		
+		File modelFile = IOUtils.writeToFile(mFilesPath, mModelFileName, mConverter.convert().toString());
+		
+		ArrayList<USegregatedFrom> resPatterns = new ArrayList<USegregatedFrom>();
+		ArrayList<CompliancePattern> noResPatterns = new ArrayList<CompliancePattern>();
+		
+		for (CompliancePattern pattern : patterns) {
+			if (pattern instanceof USegregatedFrom) {
+				resPatterns.add((USegregatedFrom) pattern);
+			} else {
+				noResPatterns.add(pattern);
+			}
+		}
+		
+		patterns = noResPatterns;
+		
 		String properties = "";
 		for (CompliancePattern pattern : patterns) {
+			
 			properties += pattern.getPrismProp(false) + "\n\n";
 			if (mConverter.isBoundedNet() && pattern.getPrismCTLProperty() != null) {
 				properties += pattern.getPrismCTLProperty() + "\n\n";
 			}
 		}
 		
-		File modelFile = IOUtils.writeToFile(mFilesPath, mModelFileName, mConverter.convert().toString());
 		File propertiesFile = IOUtils.writeToFile(mFilesPath, mPropertiesFileName, properties);
 		
 		try {
@@ -94,10 +106,9 @@ public class PrismExecutor {
 				pRes = new PrismResult(patterns, resultStr);
 			}
 			
-			Iterator<Entry<CompliancePattern, PatternResult>> it = pRes.iterator();
-			while (it.hasNext()) {
-				PatternResult pr = it.next().getValue();
-				System.out.println(pr.getViolatingPath());
+			for (USegregatedFrom p : resPatterns) {
+				boolean sat = p.isSatisfied();
+				pRes.addPatternResult(p, new PatternResult((sat == true)? 1.0 : 0.0 , sat));
 			}
 			
 			return pRes;
@@ -132,7 +143,7 @@ public class PrismExecutor {
 	    try {
 			exec.execute(commandline);
 		} catch (ExecuteException e) {
-			System.out.println("SUBPROCESS OUTPUT: " + errorStream.toString());
+			System.out.println(errorStream.toString());
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
