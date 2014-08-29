@@ -45,6 +45,10 @@ public class CWNConverter extends PrismConverter {
 						new LinkedList<AbstractCWNFlowRelation<?,?>>(p.getIncomingRelations());
 				Set<String> possibleColors = new HashSet<String>();
 				
+				if(mNet.getInitialMarking().get(p.getName()) != null) {
+					possibleColors.addAll(mNet.getInitialMarking().get(p.getName()).support());
+                }
+				
 				for (AbstractCWNFlowRelation<?,?> inRel : inRelations) {
 					possibleColors.addAll(inRel.getConstraint().support());
 				}
@@ -65,10 +69,18 @@ public class CWNConverter extends PrismConverter {
 						placeBuilder.append("init 0;" + "\n");
 					}
 				}
-			} else {
+				} else {
+					
 				placeBuilder.append("//SourcePlace" + "\n");
-				placeBuilder.append(p.getName() + "_" + mNet.CONTROL_FLOW_TOKEN_COLOR + 
-						" : [0..1] init 1;" + "\n");
+				Set<String> possibleColors = new HashSet<String>();
+				Multiset<String> possibleColorMultiSet = mNet.getInitialMarking().get(p.getName()); 
+				possibleColors.addAll(possibleColorMultiSet.support());
+							
+				for (String color : possibleColors) {
+					placeBuilder.append(p.getName() + "_" + color + 
+							" : [0.." + p.getColorCapacity(color) + "] init " + 
+							possibleColorMultiSet.multiplicity(color) + ";" + "\n");
+				}
 			}
 			
 			allPlacesBuilder.append(placeBuilder.append("\n"));
@@ -125,11 +137,15 @@ public class CWNConverter extends PrismConverter {
 						} else {
 							enablednessBuilder.append(prismVariableName + "<" + neededSpace);
 						}
-					}
+					} 
 					
 					firingEffectBuilder.append("(" + prismVariableName + "'=" + prismVariableName + 
 							"+" + outConstraint.multiplicity(color) + ")" + " & ");				
 				}						
+			}
+			
+			if (enablednessBuilder.toString().endsWith("& ")) {
+				enablednessBuilder.delete(enablednessBuilder.length() - 2, enablednessBuilder.length());
 			}
 			
 			firingEffectBuilder.append("(" + t.getName()+"'=1"+ ") & " );
