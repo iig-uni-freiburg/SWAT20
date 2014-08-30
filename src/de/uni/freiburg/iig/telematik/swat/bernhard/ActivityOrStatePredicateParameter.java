@@ -82,9 +82,7 @@ public class ActivityOrStatePredicateParameter extends
 		ParamValue val=value.get(0);
 		if(val.getOperandType() == OperandType.TRANSITION) {
 			chooseTypeBox.setSelectedItem("Activity");
-			System.out.println("hallo");
 			setTypeActivity();
-			System.out.println(value.get(0).getOperandName());
 			activityPanel.setValue(value);
 		} else if (val.getOperandType() == OperandType.STATEPREDICATE) {
 			chooseTypeBox.setSelectedItem("State Predicate");
