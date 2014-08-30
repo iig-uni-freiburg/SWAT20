@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStore;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStorage;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -108,7 +108,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 					netChild.removeAllChildren();
 					netChild.setAllowsChildren(true);
 					for(File f : SwatComponents.getInstance().getAnalysisForNet(SwatComponents.getInstance().getFile((AbstractGraphicalPN) netChild.getUserObject()).getParentFile().getAbsolutePath())) {
-						netChild.add(new SwatTreeNode(AnalysisStore.getDisplayNameforFilename(f.getName()), SwatComponentType.PETRI_NET_ANALYSIS,f));
+						netChild.add(new SwatTreeNode(AnalysisStorage.getDisplayNameforFilename(f.getName()), SwatComponentType.PETRI_NET_ANALYSIS,f));
 					}
 				}
 				break;

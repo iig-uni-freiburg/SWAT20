@@ -149,9 +149,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(getImportButon());
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.AF_TEMPLATE));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
-		standardItems.add(getLolaButton());
+		//standardItems.add(getLolaButton());
 		standardItems.add(getAristaFlowButton());
-		standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));
+		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));
 		
 //		ButtonGroup group = new ButtonGroup();
 //		group.add(getAnalysisRadioButton());
@@ -435,6 +435,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				switch (selectedNode.getObjectType()) {
 				case PETRI_NET:
 					file=SwatComponents.getInstance().getFile((AbstractGraphicalPN) selectedNode.getUserObject());
+					break;
+				case PETRI_NET_ANALYSIS:
+					file=selectedNode.getFileReference();
+					SwatTreeView.getInstance().updateAnalysis();
 					break;
 				default:
 					//file=((SwatComponent)selectedNode.getUserObject()).getFile();

@@ -40,7 +40,7 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelPrope
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelType;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.RBACModelProperties;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStore;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStorage;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogAnalysisModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
@@ -525,7 +525,7 @@ public class SwatComponents {
 		List<File> sort = new ArrayList<File>();
 		File dir=new File(basePath);
 		for (File file : dir.listFiles()) {
-			if (file.getName().startsWith(AnalysisStore.PREFIX))
+			if (file.getName().startsWith(AnalysisStorage.PREFIX))
 				sort.add(file);
 		}
 		return sort;

@@ -25,7 +25,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelPTNet;
+import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelPN;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.LayoutAction;
@@ -404,7 +404,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 				getSwatToolbar().clear();
 			
 				if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-					getSwatToolbar().add(((AnalyzePanelPTNet)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), editor)).getToolBar());
+					getSwatToolbar().add(((AnalyzePanelPN)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), editor)).getToolBar());
 				} else {
 					getSwatToolbar().add(editor.getEditorToolbar());
 				}
