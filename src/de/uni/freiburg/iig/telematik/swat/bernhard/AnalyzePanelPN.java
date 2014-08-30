@@ -22,11 +22,11 @@ import de.uni.freiburg.iig.telematik.swat.lukas.PrismResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
-public class AnalyzePanelPTNet extends AnalyzePanel {
+public class AnalyzePanelPN extends AnalyzePanel {
 
 	private PNEditor pnEditor;
 	protected AnalyzeToolBar toolBar;
-	public AnalyzePanelPTNet(SwatComponent component, String net) {
+	public AnalyzePanelPN(SwatComponent component, String net) {
 		super(component, net);
 		pnEditor=(PNEditor) component;
 		objectInformationReader=new PetriNetInformation(pnEditor);
@@ -99,7 +99,7 @@ public class AnalyzePanelPTNet extends AnalyzePanel {
 	protected String adjustValue(ParamValue val) {
 		// TODO Auto-generated method stub
 		if(val.getOperandType() == OperandType.TRANSITION) {
-			HashMap<String, String> transitionDicReverse=((PetriNetInformation) this.objectInformationReader).getTransitionDictionaryReverse();
+			HashMap<String, String> transitionDicReverse=((PetriNetInformation) this.objectInformationReader).getTransitionToLabelDictionary();
 			return transitionDicReverse.get(val.getOperandName());
 		}
 		return val.getOperandName();

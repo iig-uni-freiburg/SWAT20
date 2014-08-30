@@ -17,7 +17,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  * @author bernhard
  *
  */
-public class AnalysisStore {
+public class AnalysisStorage {
 	// PREFIX and SUFFIX of a file
 	public static final String PREFIX="analysis_";
 	public static final String SUFFIX=".xml";

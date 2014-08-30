@@ -11,11 +11,11 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
  * @author bernhard
  *
  */
-public abstract class PatternParameterPanel {
+public abstract class ParameterPanel {
 
 	protected String name;
 	protected JComponent content;
-	public PatternParameterPanel(String name) {
+	public ParameterPanel(String name) {
 		this.name = name;
 	}
 	public String getName() {

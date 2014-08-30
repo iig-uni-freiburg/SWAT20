@@ -24,7 +24,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 /**
  * this class reads all necessary information for the GUI from a petri net given
@@ -38,21 +42,30 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	private PNEditor pneditor;
 	// dictionary that maps the labels of the transitions
 	// to the real name in the net
-	private HashMap<String, String> transitionLabelDic;
-	private HashMap<String, String> transitionLabelDicReverse;
+	
+	// TransitionName -> Label
+	private HashMap<String, String> transitionToLabelDic;
+	// Label->TransitionName
+	private HashMap<String, String> labelToTransitionDic;
+	// Place -> Label
+	private HashMap<String, String> placesLabelDic;
+	// Label->Place
+	private HashMap<String, String> placesLabelDicReverse;
 	private List<String> dataTypeList;
 	private List<String> dataTypeListWithBlack;
-	private List<String> placesList;
+	private List<String> subjectList;
 
 	public PetriNetInformation(PNEditor pneditor) {
 		super();
 		this.pneditor = pneditor;
-		transitionLabelDic = new HashMap<String, String>();
-		transitionLabelDicReverse = new HashMap<String, String>();
+		transitionToLabelDic = new HashMap<String, String>();
+		labelToTransitionDic = new HashMap<String, String>();
+		placesLabelDic = new HashMap<String, String>();
+		placesLabelDicReverse = new HashMap<String, String>();
 		dataTypeList = new ArrayList<String>();
 		dataTypeListWithBlack = new ArrayList<String>();
 		dataTypeListWithBlack.add("black");
-		placesList = new ArrayList<String>();
+		subjectList=new ArrayList<String>();
 		netChanged();
 	}
 
@@ -64,15 +77,46 @@ public class PetriNetInformation implements PetriNetInformationReader {
 				|| pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
 			updateDataTypeList();
 		}
+		if(pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
+			updateSubjectList();
+		}
+	}
+
+	private void updateSubjectList() {
+		// TODO Auto-generated method stub
+		subjectList.clear();
+		try {
+		if (SwatComponents.getInstance().containsACModels()) {
+			ACModel acModel = SwatComponents.getInstance().getSelectedACModel();
+			if (acModel != null) {
+				System.out.println(acModel.getClass());
+
+				Set<String> ifSubjects = new HashSet<String>();
+				if (acModel instanceof ACLModel) {
+					ifSubjects = acModel.getSubjects();
+				}
+				if (acModel instanceof RBACModel) {
+					ifSubjects = ((RBACModel) acModel).getRoles();
+				}
+				subjectList.addAll(ifSubjects);
+			}
+				
+		}
+		}catch(Exception e) {
+			
+		}
 	}
 
 	private void updatePlacesList() {
-		placesList.clear();
+		this.placesLabelDic.clear();
+		this.placesLabelDicReverse.clear();
 		for (AbstractPlace p : pneditor.getNetContainer().getPetriNet()
 				.getPlaces()) {
-			placesList.add(p.getName());
+
+			this.placesLabelDic.put(p.getName(), p.getLabel());
+			this.placesLabelDicReverse.put(p.getLabel(), p.getName());
 		}
-		Collections.sort(placesList);
+
 	}
 
 	/**
@@ -82,13 +126,14 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	 * @return
 	 */
 	public void updateTransitionLabelDic() {
-		transitionLabelDic.clear();
+		transitionToLabelDic.clear();
+		labelToTransitionDic.clear();
 		for (AbstractTransition transition : pneditor.getNetContainer()
 				.getPetriNet().getTransitions()) {
-			transitionLabelDic.put(
+			labelToTransitionDic.put(
 					transition.getLabel() + " (" + transition.getName() + ")",
 					transition.getName());
-			transitionLabelDicReverse.put(transition.getName(),
+			transitionToLabelDic.put(transition.getName(),
 					transition.getLabel() + " (" + transition.getName() + ")");
 		}
 	}
@@ -123,34 +168,22 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	}
 
 	@Override
-	public List<String> getDataTypesList() {
+	public HashMap<String, String> getTransitionToLabelDictionary() {
 		// TODO Auto-generated method stub
-		return dataTypeList;
+		return transitionToLabelDic;
 	}
 
 	@Override
-	public List<String> getPlacesList() {
+	public HashMap<String, String> getLabelToTransitionDictionary() {
 		// TODO Auto-generated method stub
-		return placesList;
-	}
-
-	@Override
-	public HashMap<String, String> getTransitionDictionary() {
-		// TODO Auto-generated method stub
-		return transitionLabelDic;
-	}
-
-	@Override
-	public HashMap<String, String> getTransitionDictionaryReverse() {
-		// TODO Auto-generated method stub
-		return transitionLabelDicReverse;
+		return labelToTransitionDic;
 	}
 
 	@Override
 	public List<String> getActivities() {
 		// TODO Auto-generated method stub
 		ArrayList<String> activities = new ArrayList<String>();
-		activities.addAll(transitionLabelDic.keySet());
+		activities.addAll(labelToTransitionDic.keySet());
 		Collections.sort(activities);
 		return activities;
 	}
@@ -158,7 +191,8 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	@Override
 	public String[] getPlacesArray() {
 		// TODO Auto-generated method stub
-		List<String> places = placesList;
+		List<String> places = new ArrayList<String>(this.placesLabelDicReverse.keySet());
+		Collections.sort(places);
 		return places.toArray(new String[places.size()]);
 	}
 
@@ -192,6 +226,18 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		// TODO Auto-generated method stub
 		return dataTypeListWithBlack.toArray(new String[dataTypeListWithBlack
 				.size()]);
+	}
+
+	@Override
+	public HashMap<String, String> getPlacesToLabelDictionary() {
+		// TODO Auto-generated method stub
+		return this.placesLabelDic;
+	}
+
+	@Override
+	public HashMap<String, String> getLabelToPlaceDictionary() {
+		// TODO Auto-generated method stub
+		return this.placesLabelDicReverse;
 	}
 
 }

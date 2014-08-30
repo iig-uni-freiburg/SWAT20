@@ -39,7 +39,7 @@ public class AnalyzePanelController {
 		if(panelDic.get(name) == null) {
 			AnalyzePanel a=null;
 			if(component instanceof PNEditor) {
-				a=new AnalyzePanelPTNet(component, name);
+				a=new AnalyzePanelPN(component, name);
 			
 			} else {
 				a=new AnalyzePanelLogfile(component, name);

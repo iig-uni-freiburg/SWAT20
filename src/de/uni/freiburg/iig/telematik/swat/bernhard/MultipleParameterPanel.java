@@ -24,19 +24,19 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
  * @author bernhard
  *
  */
-public abstract class PatternMultipleParameterPanel extends PatternParameterPanel {
+public abstract class MultipleParameterPanel extends ParameterPanel {
 
-	protected List<PatternParameterPanel> panelList;
+	protected List<ParameterPanel> panelList;
 	protected JButton addButton;
 	protected String description;
 	protected InformationReader informationReader;
 	protected int limit;
-	public PatternMultipleParameterPanel(String name, String description, InformationReader informationReader) {
+	public MultipleParameterPanel(String name, String description, InformationReader informationReader) {
 		super(name);
 		limit=Integer.MAX_VALUE;
 		init(description, informationReader);
 	}
-	public PatternMultipleParameterPanel(String name, String description, InformationReader informationReader, int limit) {
+	public MultipleParameterPanel(String name, String description, InformationReader informationReader, int limit) {
 		super(name);
 		this.limit=limit;
 		init(description, informationReader);
@@ -44,7 +44,7 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 	private void init(String description, InformationReader informationReader2) {
 		this.description=description;
 		informationReader=informationReader2;
-		panelList=new ArrayList<PatternParameterPanel>();
+		panelList=new ArrayList<ParameterPanel>();
 		try {
 			addButton=new JButton(IconFactory.getIcon("maximize"));
 			addButton.setToolTipText("Add another "+description);
@@ -69,9 +69,9 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 		// TODO Auto-generated constructor stub
 	}
 
-	protected PatternParameterPanel addParameter() {
+	protected ParameterPanel addParameter() {
 		// TODO Auto-generated method stub
-		PatternParameterPanel p= getNewPanel();
+		ParameterPanel p= getNewPanel();
 		panelList.add(p);
 		updateContent();
 		return p;
@@ -80,7 +80,7 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 	 * this method implements the creation of a new parameterpanel
 	 * @return
 	 */
-	protected abstract PatternParameterPanel getNewPanel();
+	protected abstract ParameterPanel getNewPanel();
 	
 	protected void updateContent() {
 		content.removeAll();
@@ -124,7 +124,7 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 		content.updateUI();
 	}
 
-	protected void removeParameter(PatternParameterPanel patternParameterPanel) {
+	protected void removeParameter(ParameterPanel patternParameterPanel) {
 		// TODO Auto-generated method stub
 		content.remove(patternParameterPanel.getContent());
 		panelList.remove(patternParameterPanel);
@@ -135,7 +135,7 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 	public List<ParamValue> getValue() {
 		// TODO Auto-generated method stub
 		ArrayList<ParamValue> values=new ArrayList<ParamValue>();
-		for(PatternParameterPanel panel: panelList) {
+		for(ParameterPanel panel: panelList) {
 			values.addAll(panel.getValue());
 		}
 		return values;
@@ -147,7 +147,7 @@ public abstract class PatternMultipleParameterPanel extends PatternParameterPane
 		panelList.clear();
 		content.removeAll();
 		for(ParamValue val:value) {
-			PatternParameterPanel p=addParameter();
+			ParameterPanel p=addParameter();
 			ArrayList<ParamValue> list=new ArrayList<ParamValue>();
 			list.add(val);
 			p.setValue(list);

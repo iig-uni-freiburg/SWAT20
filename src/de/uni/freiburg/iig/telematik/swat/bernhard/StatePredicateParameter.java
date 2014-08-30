@@ -6,19 +6,19 @@ import java.util.List;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 
-public class PatternStatePredicateParameter extends PatternMultipleParameterPanel {
+public class StatePredicateParameter extends MultipleParameterPanel {
 
-	public PatternStatePredicateParameter(String name,
-			InformationReader informationReader) {
+	public StatePredicateParameter(String name,
+			PetriNetInformationReader informationReader) {
 		super(name, "Condition", informationReader);
 		
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected PatternParameterPanel getNewPanel() {
+	protected ParameterPanel getNewPanel() {
 		PetriNetInformationReader pnInformation = (PetriNetInformationReader) informationReader;
-		return new PatternSingleStatePredicateParameter(name,pnInformation.getPlacesArray(), pnInformation.getDataTypesWithBlackArray());
+		return new StatePredicateConjunction(name,pnInformation);
 	}
 	
 	/**
@@ -45,7 +45,7 @@ public class PatternStatePredicateParameter extends PatternMultipleParameterPane
 		content.removeAll();
 		String conjunctions[]=value.get(0).getOperandName().split(" & ");
 		for(String conjunction: conjunctions) {
-			PatternParameterPanel p=addParameter();
+			ParameterPanel p=addParameter();
 			ParamValue newValue=new ParamValue(conjunction,OperandType.STATEPREDICATE);
 			ArrayList<ParamValue> list=new ArrayList<ParamValue>();
 			list.add(newValue);

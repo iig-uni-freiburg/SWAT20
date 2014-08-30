@@ -302,6 +302,8 @@ public class AnalyzeToolBar extends JToolBar {
 			thread.interrupt();
 		}
 		threadRunning = false;
+		pnEditor.getGraphComponent().getGraph().getNetContainer()
+		.getPetriNet().reset();
 		highlightedPath = false;
 		resetHighlightning();
 		counterExample = null;

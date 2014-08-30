@@ -74,7 +74,7 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
  * @author bernhard
  * 
  */
-public abstract class AnalyzePanel implements LoadSave {
+public abstract class AnalyzePanel {
 	private JPanel content;
 	private JPanel propertyPanel;
 	private JLabel analysisName;
@@ -324,20 +324,20 @@ public abstract class AnalyzePanel implements LoadSave {
 	public boolean load(File f) {
 		MessageDialog.getInstance().addMessage(
 				"Loading Analysis Settings from " + f);
-		patternSettings = AnalysisStore.loadFromFile(f);
+		patternSettings = AnalysisStorage.loadFromFile(f);
 		// System.out.println(newList);
 		patternWizard.setPatternSettings(patternSettings);
 		analysisName.setText("Analysis: "
-				+ AnalysisStore.getDisplayNameforFilename(f.getName()));
+				+ AnalysisStorage.getDisplayNameforFilename(f.getName()));
 		update();
 		return true;
 	}
 	/**
 	 * open a save dialog and save the analysis
 	 */
-	@Override
+
 	public void save() {
-		AnalysisStore.store(patternWizard.getPatternSettings(), fileName);
+		AnalysisStorage.store(patternWizard.getPatternSettings(), fileName);
 		// update the tree
 		SwatTreeView.getInstance().updateAnalysis();
 		SwatTreeView.getInstance().expandAll();

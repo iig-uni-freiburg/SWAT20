@@ -49,25 +49,30 @@ public class PlacesArcsAlgorithm<T extends AbstractFlowRelation> {
 				java.util.List<T> placesAfterRel = pn
 						.getTransition(transitions.get(i))
 						.getOutgoingRelations();
-				java.util.List<String> placesAfter = new ArrayList<String>();
+				java.util.List<String> placesAfterThis = new ArrayList<String>();
 				for (T relation : placesAfterRel) {
-					placesAfter.add(relation.getPlace().getName());
+					placesAfterThis.add(relation.getPlace().getName());
 				}
+				for(int j=i+1; j < transitions.size(); j++) {
+					
+				
 				java.util.List<T> placesBeforeRel = pn
-						.getTransition(transitions.get(i + 1))
+						.getTransition(transitions.get(j))
 						.getIncomingRelations();
 				java.util.List<String> placesBefore = new ArrayList<String>();
 				for (T relation : placesBeforeRel) {
 					placesBefore.add(relation.getPlace().getName());
 				}
+				
 				// add the intersection of both lists
 				java.util.List<String> temp_list = Helpers.Intersection(
-						placesAfter, placesBefore);
+						placesAfterThis, placesBefore);
 				for (String place : temp_list) {
 					nodeList.add(place);
 					// both edges
 					arcList.add("arcTP_" + transitions.get(i) + place);
-					arcList.add("arcPT_" + place + transitions.get(i + 1));
+					arcList.add("arcPT_" + place + transitions.get(j));
+				}
 				}
 			} 
 		}

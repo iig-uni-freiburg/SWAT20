@@ -55,7 +55,7 @@ public class PatternSettingPanel {
 	private JPanel rightPanel;
 	private JButton removeButton;
 	private PatternSetting patternSetting;
-	private List<PatternParameterPanel> parameterPanelList;
+	private List<ParameterPanel> parameterPanelList;
 	private PatternWizard patternWindow;
 
 	public PatternSettingPanel(PatternSetting ps, PatternWizard patternWindow,
@@ -84,7 +84,7 @@ public class PatternSettingPanel {
 		// System.out.println(paraList);
 
 		// System.out.println(paraList.size());
-		parameterPanelList = new ArrayList<PatternParameterPanel>();
+		parameterPanelList = new ArrayList<ParameterPanel>();
 
 		JLabel label = new JLabel(patternName);
 		Font font = label.getFont();
@@ -117,9 +117,9 @@ public class PatternSettingPanel {
 			e.printStackTrace();
 		}
 
-		PatternParameterPanelFactory factory = new PatternParameterPanelFactory(patternWindow.getNetInformations());
+		ParameterPanelFactory factory = new ParameterPanelFactory(patternWindow.getNetInformations());
 		for (Parameter pp : parameters) {
-			PatternParameterPanel patternPara = factory.createPanel(pp);
+			ParameterPanel patternPara = factory.createPanel(pp);
 			JPanel paraPanel = new JPanel(new GridLayout(1,2,10,10));
 			paraPanel.add(new JLabel("Choose " + pp.getName()));
 			paraPanel.add(patternPara.getContent());
@@ -140,7 +140,7 @@ public class PatternSettingPanel {
 	 */
 	public String getValues() {
 		String paraString = "";
-		for (PatternParameterPanel para : parameterPanelList) {
+		for (ParameterPanel para : parameterPanelList) {
 			paraString += para.getValue() + ":";
 		}
 		return paraString;
@@ -155,24 +155,10 @@ public class PatternSettingPanel {
 		// ps.updateParameterAppliedString();
 		assert (ps.getParameters().size() == parameterPanelList.size());
 		List<Parameter> paraList = ps.getParameters();
-		HashMap<String, String> transitionDicReverse = ((PetriNetInformationReader) patternWindow
-				.getNetInformations()).getTransitionDictionaryReverse();
+		
 		for (int i = 0; i < paraList.size(); i++) {
-			ArrayList<ParamValue> list = new ArrayList<ParamValue>();
-			for (ParamValue value : paraList.get(i).getValue()) {
-				if (value.getOperandType() == OperandType.TRANSITION) {
-					String valueLookup = transitionDicReverse.get(value
-							.getOperandName());
-					// set value from reverse dictionary search
-					list.add(new ParamValue(valueLookup,
-							OperandType.TRANSITION));
-				} else {
-					list.add(value);
-				}
-
-			}
 			// set value
-			parameterPanelList.get(i).setValue(list);
+			parameterPanelList.get(i).setValue(paraList.get(i).getValue());
 
 		}
 	}
@@ -184,12 +170,11 @@ public class PatternSettingPanel {
 	public void updatePatternSettingValues() {
 		// first store the values taken from the jcomponents
 
-		for (PatternParameterPanel paraPanel : parameterPanelList) {
+		for (ParameterPanel paraPanel : parameterPanelList) {
 			for (Parameter patternPara : patternSetting.getParameters()) {
 				if (paraPanel.getName().equals(patternPara.getName())) {
 					// if its an activity, take the name and not the label
 					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
-
 					patternPara.setValue((ArrayList<ParamValue>) (paraPanel
 							.getValue()));
 				}
@@ -197,17 +182,18 @@ public class PatternSettingPanel {
 
 		}
 		// update the pattern representation
-		patternSetting.updateParameterAppliedString();
-		HashMap<String, String> transitionDic = ((PetriNetInformationReader) patternWindow
-				.getNetInformations()).getTransitionDictionary();
+		//patternSetting.updateParameterAppliedString();
+		
 
-		for (PatternParameterPanel paraPanel : parameterPanelList) {
+		/*for (ParameterPanel paraPanel : parameterPanelList) {
 			for (Parameter patternPara : patternSetting.getParameters()) {
 				if (paraPanel.getName().equals(patternPara.getName())) {
 					// if its an activity, take the name and not the label
 					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
 					for (ParamValue val : patternPara.getValue()) {
 						if (val.getOperandType() == OperandType.TRANSITION) {
+							HashMap<String, String> transitionDic = ((PetriNetInformationReader) patternWindow
+									.getNetInformations()).getTransitionDictionaryReverse();
 							val.setOperandName(transitionDic.get(val
 									.getOperandName()));
 						}
@@ -216,7 +202,7 @@ public class PatternSettingPanel {
 				}
 			}
 
-		}
+		}*/
 
 	}
 

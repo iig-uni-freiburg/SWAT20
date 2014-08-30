@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 
-public class MultipleTransitionParameterPanel extends PatternMultipleParameterPanel {
+public class MultipleTransitionParameterPanel extends MultipleParameterPanel {
 
 	public MultipleTransitionParameterPanel(String name, String description, InformationReader ir) {
 		super(name, description, ir);
@@ -17,10 +17,10 @@ public class MultipleTransitionParameterPanel extends PatternMultipleParameterPa
 	}
 
 	@Override
-	protected PatternParameterPanel getNewPanel() {
+	protected ParameterPanel getNewPanel() {
 		// TODO Auto-generated method stub
 		List<String> transitionList=informationReader.getActivities();
-		return new PatternDropDownParameter(name, OperandType.TRANSITION, transitionList.toArray(new String[transitionList.size()]));
+		return new DropDownParameter(name, OperandType.TRANSITION, transitionList.toArray(new String[transitionList.size()]));
 	}
 
 }

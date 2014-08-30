@@ -11,19 +11,19 @@ import javax.swing.JPanel;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 
-public class PatternActivityOrStatePredicateParameter extends
-		PatternParameterPanel {
+public class ActivityOrStatePredicateParameter extends
+		ParameterPanel {
 
 	private PetriNetInformationReader informationReader;
-	private PatternDropDownParameter activityPanel;
-	private PatternMultipleParameterPanel statePredicatePanel;
+	private TransitionParameter activityPanel;
+	private StatePredicateParameter statePredicatePanel;
 	boolean activityActive;
 	private JComboBox chooseTypeBox;
-	public PatternActivityOrStatePredicateParameter(String name, PetriNetInformationReader pr) {
+	public ActivityOrStatePredicateParameter(String name, PetriNetInformationReader pr) {
 		super(name);
 		informationReader=pr;
-		activityPanel=new PatternDropDownParameter(name, OperandType.TRANSITION, informationReader.getActivitiesArray());
-		statePredicatePanel=new PatternStatePredicateParameter(name, informationReader);
+		activityPanel=new TransitionParameter(name,pr);
+		statePredicatePanel=new StatePredicateParameter(name, informationReader);
 		activityActive=true;
 		String arr[]={"Activity","State Predicate"};
 		chooseTypeBox=new JComboBox(arr);
@@ -82,7 +82,9 @@ public class PatternActivityOrStatePredicateParameter extends
 		ParamValue val=value.get(0);
 		if(val.getOperandType() == OperandType.TRANSITION) {
 			chooseTypeBox.setSelectedItem("Activity");
+			System.out.println("hallo");
 			setTypeActivity();
+			System.out.println(value.get(0).getOperandName());
 			activityPanel.setValue(value);
 		} else if (val.getOperandType() == OperandType.STATEPREDICATE) {
 			chooseTypeBox.setSelectedItem("State Predicate");

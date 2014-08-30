@@ -22,7 +22,7 @@ public class AnalysisNameChooser extends FileNameDialog {
 	@Override
 	protected boolean isValid(String input) {
 		if (super.isValid(input)) {
-			String filePath = netPath + AnalysisStore.PREFIX + input + AnalysisStore.SUFFIX;
+			String filePath = netPath + AnalysisStorage.PREFIX + input + AnalysisStorage.SUFFIX;
 			//System.out.println(filePath);
 			if (new File(filePath).exists()) {
 				errorMessage = ANALYSIS_NAME_ALREADY_IN_USE;

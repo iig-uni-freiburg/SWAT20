@@ -14,19 +14,21 @@ import javax.swing.SpinnerNumberModel;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 
-public class PatternSingleStatePredicateParameter extends PatternParameterPanel {
+public class StatePredicateConjunction extends ParameterPanel {
 
 	private final String predicates[] = {"<", ">", "=", "!=", "<=", ">=" };
 	private JSpinner numberSpinner;
 	private JComboBox relationsBox;
 	private JComboBox placesBox;
 	private JComboBox colorsBox;
-	public PatternSingleStatePredicateParameter(String name, String places[], String colors[]) {
+	private PetriNetInformationReader pnReader;
+	public StatePredicateConjunction(String name, PetriNetInformationReader pnReader) {
 		super(name);
+		this.pnReader=pnReader;
 		// TODO Auto-generated constructor stub
-		placesBox=new JComboBox(places);
+		placesBox=new JComboBox(pnReader.getPlacesArray());
 		relationsBox=new JComboBox(predicates);
-		colorsBox = new JComboBox(colors);
+		colorsBox = new JComboBox(pnReader.getDataTypesWithBlackArray());
 		SpinnerModel model =
 		        new SpinnerNumberModel(0, //initial value
 		                               0, //min
@@ -44,7 +46,8 @@ public class PatternSingleStatePredicateParameter extends PatternParameterPanel 
 	public List<ParamValue> getValue() {
 		// TODO Auto-generated method stub
 		ArrayList<ParamValue> list=new ArrayList<ParamValue>();
-		String result=(String) placesBox.getSelectedItem();
+		String placeName=pnReader.getLabelToPlaceDictionary().get((String) placesBox.getSelectedItem());
+		String result=placeName;
 		result+="_"+colorsBox.getSelectedItem();
 		result+=" "+(String) ((JComboBox)relationsBox).getSelectedItem();
 		result+=" "+(Integer) numberSpinner.getValue();
@@ -60,6 +63,7 @@ public class PatternSingleStatePredicateParameter extends PatternParameterPanel 
 	public void setValue(List<ParamValue> val) {
 		String arr[]=val.get(0).getOperandName().split(" ");
 		String place=arr[0].split("_")[0];
+		place=pnReader.getPlacesToLabelDictionary().get(place);
 		String color=arr[0].split("_")[1];
 		placesBox.setSelectedItem(place);
 		colorsBox.setSelectedItem(color);
