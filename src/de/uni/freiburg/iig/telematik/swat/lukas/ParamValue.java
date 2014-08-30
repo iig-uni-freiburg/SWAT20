@@ -28,8 +28,8 @@ public class ParamValue {
 			return false;
 		}
 		ParamValue v=(ParamValue) o;
-		System.out.println("me: "+mOperandName);
-		System.out.println("he: "+v.getOperandName());
+		//System.out.println("me: "+mOperandName);
+		//System.out.println("he: "+v.getOperandName());
 		return mOperandName.equals(v.getOperandName()) && mOperandType == v.getOperandType();
 	}
 }
