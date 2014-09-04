@@ -132,7 +132,7 @@ public class LogSerializer {
 
 	private ISciffLogReader createMxmlParser() throws ParserException, ParameterException, IOException {
 		LogParserInterface parser = LogParser.getParser(new File(logFile), LogParsingFormat.XES);
-		parser.parse(new File(logFile), ParsingMode.DISTINCT_TRACES);
+		parser.parse(new File(logFile), ParsingMode.COMPLETE);
 		return new LogParserAdapter(parser);
 	}
 

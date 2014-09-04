@@ -141,7 +141,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	private ISciffLogReader createMxmlParser() throws ParserException, ParameterException, IOException {
 		LogParserInterface parser = LogParser.getParser(file, LogParsingFormat.XES);
-		parser.parse(file, ParsingMode.DISTINCT_TRACES);
+		parser.parse(file, ParsingMode.COMPLETE);
 		return new LogParserAdapter(parser);
 
 	}
