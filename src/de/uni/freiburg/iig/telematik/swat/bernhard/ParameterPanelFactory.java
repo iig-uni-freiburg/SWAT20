@@ -6,16 +6,26 @@ import java.util.Set;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
-
+/**
+ * This class is used to create the parameterpanel for a given
+ * Parameter.
+ * @author bernhard
+ *
+ */
 public class ParameterPanelFactory {
 
-	private InformationReader objectInformation;
-
+	private LogFileReader objectInformation;
+	/**
+	 * Create a ParameterPanel for a given Parameter.
+	 * @param p the parameter for which the parameter panel should be 
+	 * created
+	 * @return a ParameterPanel which allows the user to select a value
+	 * for the given Parameter
+	 */
 	public ParameterPanel createPanel(Parameter p) {
 		ParameterPanel patternPara = null;
 		String name = p.getName();
 		Set<OperandType> operandSet = p.getTypes();
-		String activitiesArray[] = objectInformation.getActivitiesArray();
 		if (operandSet.contains(OperandType.TOKEN)) {
 			patternPara = new DropDownParameter(name,
 					OperandType.TOKEN, ((PetriNetInformationReader) objectInformation)
@@ -45,12 +55,12 @@ public class ParameterPanelFactory {
 					((PetriNetInformationReader) objectInformation));
 		} else if (operandSet.contains(OperandType.ROLE)) {
 			patternPara = new DropDownParameter(name,
-					OperandType.TRANSITION, objectInformation.getRoleArray());
+					OperandType.TRANSITION, objectInformation.getRoles());
 		}
 		return patternPara;
 	}
 
-	public ParameterPanelFactory(InformationReader logInformation) {
+	public ParameterPanelFactory(LogFileReader logInformation) {
 		this.objectInformation = logInformation;
 	}
 }

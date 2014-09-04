@@ -8,7 +8,7 @@ import java.util.List;
  * @author bernhard
  *
  */
-public interface PetriNetInformationReader extends InformationReader {
+public interface PetriNetInformationReader extends LogFileReader {
 	public String[] getPlacesArray();
 	public String[] getDataTypesArray();
 	public String[] getDataTypesWithBlackArray();

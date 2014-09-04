@@ -69,7 +69,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 /**
- * this class represents a panel to be added on the right side
+ * This class represents the Pattern-Overview. It its an
+ * abstract class. The functionality between the analysis of Petri nets
+ * and logfiles differs in some ways. Therefore the abstract functions
+ * must be implemented.
  * 
  * @author bernhard
  * 
@@ -81,26 +84,44 @@ public abstract class AnalyzePanel {
 	private JButton editButton, runButton, saveButton;
 	private String fileName;
 	protected PatternWizard patternWizard;
-	protected InformationReader objectInformationReader;
+	protected LogFileReader objectInformationReader;
 	protected PatternFactory patternFactory;
 	protected List<PatternSetting> patternSettings;
 
-	// this method adjusts values to be displayed
-	// most important usecase is to display the label of
-	// a transition and not its name
+	/**
+	 * this method adjusts values to be displayed. E.g. display
+	 * the label of a transition and not its name
+	 * @param val the ParamValue to be adjusted
+	 * @return a String with the adjusted value
+	 */
+	// 
 	protected abstract String adjustValue(ParamValue val);
-	// used to add a CounterExample Button
-	// the functionality of such a button differs
+	/**
+	 * add a Button to the newPanel Panel to visualize a Counterexample
+	 * the functionality of such a button differs depending
+	 * on the object beeing analyzed
+	 * @param result the PatternResult containing the information like violating
+	 * path or traces
+	 * @param newPanel the panel to which the button should be added
+	 */
 	protected abstract void addCounterExampleButton(PatternResult result, JPanel newPanel);
+	/**
+	 * is called when the user presses the Run Button
+	 * The funcionality differs depending on the object beeing
+	 * analyzed. PRISMExecutor or SCIFFExecutor is used for analysis.
+	 */
 	protected abstract void analyze();
 	
+	/**
+	 * should be invoked when the analyzed object was changed
+	 */
 	public void objectChanged() {
 		objectInformationReader.update();
 		// update the parameter boxes
 		patternWizard.netChanged();
 	}
 
-	public InformationReader getInformationReader() {
+	public LogFileReader getInformationReader() {
 		return objectInformationReader;
 	}
 
@@ -145,7 +166,7 @@ public abstract class AnalyzePanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				showPatternWindow();
+				showPatternWizard();
 			}
 		});
 		runButton.addActionListener(new ActionListener() {
@@ -169,7 +190,7 @@ public abstract class AnalyzePanel {
 	protected void analyzedClicked() {
 		if (patternWizard.isVisible()) {
 			JOptionPane.showMessageDialog(null,
-					"Close PatternWindow first, before analyzing", "Warning",
+					"Close Pattern Wizard first, before analyzing", "Warning",
 					JOptionPane.WARNING_MESSAGE);
 			patternWizard.requestFocus();
 			return;
@@ -180,8 +201,9 @@ public abstract class AnalyzePanel {
 /**
  * display the Pattern Wizard
  */
-	protected void showPatternWindow() {
+	protected void showPatternWizard() {
 		patternWizard.setPatternSettings(patternSettings);
+		Helpers.centerWindow(patternWizard);
 		patternWizard.setVisible(true);
 	}
 
@@ -228,8 +250,7 @@ public abstract class AnalyzePanel {
 
 
 	/**
-	 * update the UI of the analyzePanel
-	 * that means draw selected patternsettings and their results
+	 * update the GUI of the AnalyzePanel
 	 */
 	public void update() {
 		propertyPanel.removeAll();
@@ -299,9 +320,12 @@ public abstract class AnalyzePanel {
 	}
 
 	
-
+	/**
+	 * changed the name of the current analysis
+	 * @param text the new name to be displayed
+	 */
 	public void setAnalyseName(String text) {
-		analysisName.setText(text);
+		analysisName.setText("Analysis: "+text);
 	}
 	/**
 	 * return the Content of the Panel
@@ -332,12 +356,15 @@ public abstract class AnalyzePanel {
 		update();
 		return true;
 	}
+	
 	/**
 	 * open a save dialog and save the analysis
 	 */
 
 	public void save() {
-		AnalysisStorage.store(patternWizard.getPatternSettings(), fileName);
+		String n =AnalysisStorage.store(patternWizard.getPatternSettings(), fileName);
+		if(n != null)
+			setAnalyseName(n);
 		// update the tree
 		SwatTreeView.getInstance().updateAnalysis();
 		SwatTreeView.getInstance().expandAll();

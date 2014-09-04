@@ -6,8 +6,8 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
 /**
- * the pattern class represents are pattern with its name,
- * parameters and the result from the analysis
+ * This class represents a parameterized pattern with its name,
+ * parameters and the result from the analysis.
  * @author bernhard
  *
  */
@@ -95,30 +95,11 @@ public class PatternSetting {
 	 */
 	@Override
 	public String toString() {
-		if(parameterAppliedString == null) {
-			return "PS "+name;
-		}
-		return parameterAppliedString;
-		/*String s= name+" ";
+		String s=name+"\n";
 		for(Parameter p:parameters) {
-			s+=p.getValueS();
+			s+=p.toString()+", ";
 		}
-		return s;*/
-	}
-	/*
-	 * replace the Parameter Name with its value eg
-	 * Q precedes P
-	 * Q=OpenDocument
-	 * P=PrintDocument
-	 * Result: OpenDocument precedes PrintDocument
-	 */
-	public void updateParameterAppliedString() {
-		parameterAppliedString=new String(name);
-		for(Parameter p: parameters) {
-			// take this random name to help for replace
-			String random="__#12345#__";
-			parameterAppliedString=parameterAppliedString.replaceFirst(p.getName(), random);
-			parameterAppliedString=parameterAppliedString.replaceFirst(random, p.getValue().get(0).getOperandName());
-		}
+		s=s.substring(0, s.length()-3);
+		return s;
 	}
 }

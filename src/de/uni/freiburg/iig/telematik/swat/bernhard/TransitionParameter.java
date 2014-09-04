@@ -13,7 +13,7 @@ public class TransitionParameter extends DropDownParameter {
 
 	private PetriNetInformationReader pnReader;
 	public TransitionParameter(String name,PetriNetInformationReader pnReader) {
-		super(name, OperandType.TRANSITION, pnReader.getActivitiesArray());
+		super(name, OperandType.TRANSITION, pnReader.getActivities());
 		this.pnReader=pnReader;
 	}
 
@@ -21,7 +21,7 @@ public class TransitionParameter extends DropDownParameter {
 	public List<ParamValue> getValue() {
 		// TODO Auto-generated method stub
 		HashMap<String,String> transitionLabelDic=pnReader.getLabelToTransitionDictionary();
-		String val=(String) ((JComboBox)content).getSelectedItem();
+		String val=(String) valueBox.getSelectedItem();
 		val=transitionLabelDic.get(val);
 		ParamValue newVal=new ParamValue(val,type);
 		ArrayList<ParamValue> list=new ArrayList<ParamValue>();
@@ -33,7 +33,7 @@ public class TransitionParameter extends DropDownParameter {
 	public void setValue(List<ParamValue> value) {
 		HashMap<String,String> transitionLabelDic=pnReader.getTransitionToLabelDictionary();
 		String val=transitionLabelDic.get(value.get(0).getOperandName());
-		((JComboBox)content).setSelectedItem(val);
+		valueBox.setSelectedItem(val);
 	}
 
 }

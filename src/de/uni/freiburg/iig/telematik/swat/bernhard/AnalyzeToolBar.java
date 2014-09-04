@@ -35,9 +35,10 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 /**
- * This class represents a Toolbar used to play a counterexample it consists of
- * some buttons to play pause forward or rewind a counterexample It starts a
- * thread to play the CE with a pause of 3sec between each firing
+ * This class represents a Toolbar used to play a counterexample (CE) it consists of
+ * some buttons to play pause forward or rewind a CE.
+ * It starts a thread to play the CE with a pause of 3sec 
+ * between each firing
  * 
  * @author bernhard
  * 
@@ -60,7 +61,11 @@ public class AnalyzeToolBar extends JToolBar {
 	private boolean highlightedPath = false;
 	private Thread thread;
 	private boolean threadRunning = false;
-
+	/**
+	 * create an AnalyzeToolBar for a given PNEditor
+	 * @param pnEditor the PNEditor containing the PTNET
+	 * @throws ParameterException
+	 */
 	public AnalyzeToolBar(final PNEditor pnEditor) throws ParameterException {
 		super(JToolBar.HORIZONTAL);
 		Validate.notNull(pnEditor);
@@ -138,7 +143,9 @@ public class AnalyzeToolBar extends JToolBar {
 			add(button);
 		}
 	}
-
+	/**
+	 * switch between play and pause
+	 */
 	protected void playPause() {
 		// TODO Auto-generated method stub
 		if (threadRunning) {
@@ -147,7 +154,9 @@ public class AnalyzeToolBar extends JToolBar {
 			playCounterExample();
 		}
 	}
-
+	/**
+	 * go one step back in the counterexample
+	 */
 	protected void doStepBack() {
 		// TODO Auto-generated method stub
 		int position = counterExample.getCurrentPosition();
@@ -159,7 +168,9 @@ public class AnalyzeToolBar extends JToolBar {
 			backButton.setEnabled(false);
 		}
 	}
-
+	/**
+	 * stop playing the counterexample
+	 */
 	protected void stopCounterExample() {
 		// TODO Auto-generated method stub
 		thread.interrupt();
@@ -180,7 +191,9 @@ public class AnalyzeToolBar extends JToolBar {
 		backButton.setEnabled(true);
 		resetButton.setEnabled(true);
 	}
-
+	/**
+	 * start/continue playing the counterexample
+	 */
 	protected void playCounterExample() {
 		// TODO Auto-generated method stub
 
@@ -222,30 +235,36 @@ public class AnalyzeToolBar extends JToolBar {
 	}
 
 	/**
-	 * this method is invoked by the analyePanel it loads the given path and
-	 * resets and activates the toolbar
+	 * this method is invoked by the AnalyePanel it loads the
+	 * given path and resets and activates the toolbar
 	 * 
-	 * @param path
-	 *            the counterexample, List of Transitions
+	 * @param path the counterexample, List of Transitions
 	 */
 	public void setCounterExample(List<String> path) {
 		counterExample = new CounterExampleVisualization(path);
 		resetCounterExample();
 		activate();
 	}
-
+	/**
+	 * deactivate all buttons
+	 */
 	public void deActivate() {
 		for (JButton button : buttonList) {
 			button.setEnabled(false);
 		}
 	}
-
+	/**
+	 * activate all buttons
+	 */
 	public void activate() {
 		for (JButton button : buttonList) {
 			button.setEnabled(true);
 		}
 	}
-
+	/**
+	 * go one step forward in the counterexample. That means
+	 * fire a transition in the PN
+	 */
 	private void doStep() {
 		String transition = counterExample.getNextTransition();
 		try {
@@ -263,7 +282,9 @@ public class AnalyzeToolBar extends JToolBar {
 			backButton.setEnabled(true);
 		pnEditor.updateUI();
 	}
-
+	/**
+	 * go to the initial state of the PN and reset the buttons
+	 */
 	private void resetCounterExample() {
 		counterExample.setCurrentPosition(0);
 		stepButton.setEnabled(true);
@@ -287,6 +308,9 @@ public class AnalyzeToolBar extends JToolBar {
 		pnEditor.updateUI();
 	}
 
+	/**
+	 * toggle highlightning of the path
+	 */
 	public void toggleHightLight() {
 		highlightedPath = !highlightedPath;
 		if (highlightedPath) {
@@ -295,7 +319,9 @@ public class AnalyzeToolBar extends JToolBar {
 			resetHighlightning();
 		}
 	}
-
+	/**
+	 * deactivate the toolbar and reset the PTNet
+	 */
 	public void reset() {
 		deActivate();
 		if (threadRunning) {
@@ -308,7 +334,11 @@ public class AnalyzeToolBar extends JToolBar {
 		resetHighlightning();
 		counterExample = null;
 	}
-	
+	/**
+	 * highlight the counterexample
+	 * therefore mark all transitions places and arcs that
+	 * are withing the path
+	 */
 	public void highLightCounterExample() {
 		Map<String, PNGraphCell> nodemap = pnEditor.getGraphComponent()
 				.getGraph().nodeReferences;
@@ -350,13 +380,20 @@ public class AnalyzeToolBar extends JToolBar {
 					.getState(cell), Color.RED);
 		}
 	}
-
+	/**
+	 * reset the Highlightning
+	 */
 	public void resetHighlightning() {
 		for (String cell : markerReference.keySet()) {
 			markerReference.get(cell).reset();
 		}
 	}
-
+	/**
+	 * Store the Marker of a PNGraphCell. This is necessary to be able to
+	 * reset the Highlightning.
+	 * @param cell the cell whose marker should be stored
+	 * @return the marker associated with the cell
+	 */
 	// store the markers so that they can be reset later
 	private mxCellMarker getCellMarker(PNGraphCell cell) {
 		if (!markerReference.containsKey(cell.getId()))

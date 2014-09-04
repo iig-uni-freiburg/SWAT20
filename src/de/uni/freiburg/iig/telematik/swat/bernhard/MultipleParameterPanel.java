@@ -19,8 +19,8 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 /**
- * this class represents a parameterpanel where several
- * dropdownparameter panels can be added
+ * This class represents a parameterpanel where several other Parameters
+ * can be added
  * @author bernhard
  *
  */
@@ -29,19 +29,19 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 	protected List<ParameterPanel> panelList;
 	protected JButton addButton;
 	protected String description;
-	protected InformationReader informationReader;
+	protected LogFileReader informationReader;
 	protected int limit;
-	public MultipleParameterPanel(String name, String description, InformationReader informationReader) {
+	public MultipleParameterPanel(String name, String description, LogFileReader informationReader) {
 		super(name);
 		limit=Integer.MAX_VALUE;
 		init(description, informationReader);
 	}
-	public MultipleParameterPanel(String name, String description, InformationReader informationReader, int limit) {
+	public MultipleParameterPanel(String name, String description, LogFileReader informationReader, int limit) {
 		super(name);
 		this.limit=limit;
 		init(description, informationReader);
 	}
-	private void init(String description, InformationReader informationReader2) {
+	private void init(String description, LogFileReader informationReader2) {
 		this.description=description;
 		informationReader=informationReader2;
 		panelList=new ArrayList<ParameterPanel>();

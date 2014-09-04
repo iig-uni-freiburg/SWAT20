@@ -177,7 +177,7 @@ public class PatternWizard extends JFrame {
 
 	public PatternWizard(AnalyzePanel p, PatternFactory pf)
 			throws HeadlessException {
-		super();
+		super("Pattern Wizard");
 		analyzePanel = p;
 		patternFactory = pf;
 		initGui();
@@ -211,7 +211,7 @@ public class PatternWizard extends JFrame {
 		setPatternSettings(psList);
 	}
 	
-	public InformationReader getNetInformations() {
+	public LogFileReader getNetInformations() {
 		return analyzePanel.getInformationReader();
 	}
 

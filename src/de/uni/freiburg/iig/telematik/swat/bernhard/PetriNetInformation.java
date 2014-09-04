@@ -18,6 +18,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPN;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
@@ -54,6 +56,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	private List<String> dataTypeList;
 	private List<String> dataTypeListWithBlack;
 	private List<String> subjectList;
+	private ArrayList<String> activityList;
 
 	public PetriNetInformation(PNEditor pneditor) {
 		super();
@@ -66,6 +69,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		dataTypeListWithBlack = new ArrayList<String>();
 		dataTypeListWithBlack.add("black");
 		subjectList=new ArrayList<String>();
+		activityList=new ArrayList<String>();
 		netChanged();
 	}
 
@@ -136,6 +140,8 @@ public class PetriNetInformation implements PetriNetInformationReader {
 			transitionToLabelDic.put(transition.getName(),
 					transition.getLabel() + " (" + transition.getName() + ")");
 		}
+		activityList.addAll(labelToTransitionDic.keySet());
+		Collections.sort(activityList);
 	}
 
 	/**
@@ -144,24 +150,12 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	public void updateDataTypeList() {
 		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pn = pneditor
 				.getNetContainer();
-		AbstractPetriNet apn = pn.getPetriNet();
+		AbstractCPN apn = (AbstractCPN) pn.getPetriNet();
 		dataTypeList.clear();
 		dataTypeListWithBlack.clear();
-		Set<String> dataTypes = new HashSet<String>();
-
-
-			Iterator it = apn.getTransitions().iterator();
-			// Set<String> colors=Arrays.;
-			// colors.addAll(arg0)
-			while (it.hasNext()) {
-				AbstractCPNTransition t = (AbstractCPNTransition) it.next();
-				dataTypes.addAll(t.getConsumedColors());
-				dataTypes.addAll(t.getProcessedColors());
-				dataTypes.addAll(t.getProducedColors());
-			}
-			dataTypeListWithBlack.addAll(dataTypes);
-			dataTypes.remove("black");
-			dataTypeList.addAll(dataTypes);
+		dataTypeListWithBlack.addAll(apn.getTokenColors());
+		dataTypeList.addAll(apn.getTokenColors());
+		dataTypeList.remove("black");
 
 		Collections.sort(dataTypeList);
 		Collections.sort(dataTypeListWithBlack);
@@ -180,15 +174,6 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	}
 
 	@Override
-	public List<String> getActivities() {
-		// TODO Auto-generated method stub
-		ArrayList<String> activities = new ArrayList<String>();
-		activities.addAll(labelToTransitionDic.keySet());
-		Collections.sort(activities);
-		return activities;
-	}
-
-	@Override
 	public String[] getPlacesArray() {
 		// TODO Auto-generated method stub
 		List<String> places = new ArrayList<String>(this.placesLabelDicReverse.keySet());
@@ -203,10 +188,9 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	}
 
 	@Override
-	public String[] getActivitiesArray() {
+	public String[] getActivities() {
 		// TODO Auto-generated method stub
-		List<String> activities = getActivities();
-		return activities.toArray(new String[activities.size()]);
+		return activityList.toArray(new String[activityList.size()]);
 	}
 
 	@Override
@@ -216,7 +200,7 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	}
 
 	@Override
-	public String[] getRoleArray() {
+	public String[] getRoles() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -238,6 +222,12 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	public HashMap<String, String> getLabelToPlaceDictionary() {
 		// TODO Auto-generated method stub
 		return this.placesLabelDicReverse;
+	}
+
+	@Override
+	public String[] getSubjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

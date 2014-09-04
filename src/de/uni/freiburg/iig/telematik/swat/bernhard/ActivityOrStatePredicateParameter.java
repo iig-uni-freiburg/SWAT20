@@ -10,7 +10,14 @@ import javax.swing.JPanel;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
-
+/**
+ * This class represents a Parameter which can either be an activity or
+ * a state predicate. The user can choose the type of the parameter
+ * and then the value of the parameter. Therefore a TransitionParameter
+ * and a StatePredicateParameter are combined.
+ * @author bernhard
+ *
+ */
 public class ActivityOrStatePredicateParameter extends
 		ParameterPanel {
 
@@ -19,6 +26,13 @@ public class ActivityOrStatePredicateParameter extends
 	private StatePredicateParameter statePredicatePanel;
 	boolean activityActive;
 	private JComboBox chooseTypeBox;
+	/**
+	 * Create a Parameter that can either be an Activity or a state
+	 * predicate.
+	 * @param name The name of the Parameter e.g. "Q" or "P"
+	 * @param pr An instance of a class implementing an PNReader that
+	 * can extract the necessary information from the PN.
+	 */
 	public ActivityOrStatePredicateParameter(String name, PetriNetInformationReader pr) {
 		super(name);
 		informationReader=pr;
@@ -46,7 +60,9 @@ public class ActivityOrStatePredicateParameter extends
 		content.add(activityPanel.getContent());
 		// TODO Auto-generated constructor stub
 	}
-
+	/**
+	 * Invoked when the user selects State Predicate for the type
+	 */
 	protected void setTypeStatePredicate() {
 		// TODO Auto-generated method stub
 		content.remove(activityPanel.getContent());
@@ -56,7 +72,9 @@ public class ActivityOrStatePredicateParameter extends
 		content.repaint();
 		content.updateUI();
 	}
-
+	/**
+	 * Invoked when the user selectes Activity for the type
+	 */
 	protected void setTypeActivity() {
 		// TODO Auto-generated method stub
 		content.remove(statePredicatePanel.getContent());

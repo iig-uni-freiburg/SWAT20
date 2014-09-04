@@ -1,7 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-
 public class MultipleTransitionOrStatePredicateParameterPanel extends MultipleParameterPanel {
 
 

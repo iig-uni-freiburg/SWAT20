@@ -32,4 +32,7 @@ public class ParamValue {
 		//System.out.println("he: "+v.getOperandName());
 		return mOperandName.equals(v.getOperandName()) && mOperandType == v.getOperandType();
 	}
+	public String toString() {
+		return mOperandName;
+	}
 }

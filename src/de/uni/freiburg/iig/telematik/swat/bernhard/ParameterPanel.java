@@ -7,7 +7,9 @@ import javax.swing.JComponent;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 /**
- * an abstract class representing a Parameter used by the choosepatternwindow
+ * An abstract class representing a Parameter used by the
+ * pattern wizard. There are two abstract functions getValue() and
+ * setValue() which have to be implemented by all parameters.
  * @author bernhard
  *
  */

@@ -37,4 +37,11 @@ public class Parameter {
 		return mName;
 	}
 
+	public String toString() {
+		String s="";
+		for(ParamValue v:mValues) {
+			s+=v.toString();
+		}
+		return s;
+	}
 }

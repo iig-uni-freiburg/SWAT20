@@ -1,11 +1,14 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -34,7 +37,7 @@ public class Helpers {
  * calculate the intersection of both lists
  * @param list1
  * @param list2
- * @return
+ * @return the intersection of the two lists
  */
 	public static <T> List<T> Intersection(
 			List<T> list1, List<T> list2) {
@@ -48,9 +51,12 @@ public class Helpers {
 
         return list;
 	}
-	public static ParamValue getFirst(ArrayList<ParamValue> arrayList) {
-		return arrayList.iterator().next();
-	}
+	/**
+	 * format a string so that after maximum n charaters there is a newline
+	 * @param s the string to format
+	 * @param n maximum number of characters in a row
+	 * @return the formated string
+	 */
 	public static String formatString(String s, int n) {
 		String result="";
 		char arr[]=s.toCharArray();
@@ -86,7 +92,7 @@ public class Helpers {
 	}
 	/**
 	 * copy a list of parameters by value
-	 * @param parameters
+	 * @param parameters the List of parameters to be copied
 	 * @return
 	 */
 	
@@ -106,5 +112,20 @@ public class Helpers {
 			newList.add(new ParamValue(pv.getOperandName(),pv.getOperandType()));
 		}
 		return newList;
+	}
+	/**
+	 * center a window
+	 * @param window the window to be centered
+	 */
+	public static void centerWindow(JFrame window) {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frameSize = window.getSize();
+		if (frameSize.height > screenSize.height) {
+			frameSize.height = screenSize.height;
+		}
+		if (frameSize.width > screenSize.width) {
+			frameSize.width = screenSize.width;
+		}
+		window.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 	}
 }

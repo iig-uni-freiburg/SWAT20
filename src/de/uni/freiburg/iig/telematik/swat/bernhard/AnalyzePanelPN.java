@@ -21,7 +21,11 @@ import de.uni.freiburg.iig.telematik.swat.lukas.PrismExecutor;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
-
+/**
+ * This class implements the functionality for analyzing a PTNet.
+ * @author bernhard
+ *
+ */
 public class AnalyzePanelPN extends AnalyzePanel {
 
 	private PNEditor pnEditor;
@@ -35,13 +39,24 @@ public class AnalyzePanelPN extends AnalyzePanel {
 		update();
 		// TODO Auto-generated constructor stub
 	}
+	/**
+	 * return the AnalyzeToolBar
+	 * @return the ToolBar
+	 */
 	public AnalyzeToolBar getToolBar() {
 		return toolBar;
 	}
+	/**
+	 * load the given Path in the AnalyzeToolBar
+	 * @param path the Counterexample to be visualized
+	 */
 	private void showCounterExample(List<String> path) {
 		toolBar.setCounterExample(path);
 	}
-
+	/**
+	 * Start the analysis. Reset the toolbar, do some checks
+	 * and then make the analysis logic start PRISM.
+	 */
 	protected void analyze() {
 		toolBar.reset();
 		if(!pnEditor.getNetContainer().getPetriNet().isCapacityBounded()) {
