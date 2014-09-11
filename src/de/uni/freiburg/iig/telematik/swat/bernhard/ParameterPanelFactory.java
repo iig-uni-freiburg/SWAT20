@@ -28,21 +28,21 @@ public class ParameterPanelFactory {
 		Set<OperandType> operandSet = p.getTypes();
 		if (operandSet.contains(OperandType.TOKEN)) {
 			patternPara = new DropDownParameter(name,
-					OperandType.TOKEN, ((PetriNetInformationReader) objectInformation)
+					OperandType.TOKEN, ((PNReader) objectInformation)
 					.getDataTypesArray());
 		} else if (operandSet.contains(OperandType.TRANSITION)
 				&& operandSet.contains(OperandType.STATEPREDICATE)) {
 			if (p.getMultiplicity() == -1) {
 				patternPara = new MultipleTransitionOrStatePredicateParameterPanel(
 						name, "Transition or State Predicate",
-						(PetriNetInformationReader) objectInformation);
+						(PNReader) objectInformation);
 			} else {
 				patternPara = new ActivityOrStatePredicateParameter(
-						name, (PetriNetInformationReader) objectInformation);
+						name, (PNReader) objectInformation);
 			}
 		} else if (operandSet.contains(OperandType.TRANSITION)) {
 			if (p.getMultiplicity() == 1) {
-				patternPara = new TransitionParameter(name,(PetriNetInformationReader) objectInformation);
+				patternPara = new TransitionParameter(name,(PNReader) objectInformation);
 			} else if (p.getMultiplicity() != -1) {
 				patternPara = new MultipleTransitionParameterPanel(name,
 						"Transition", objectInformation);
@@ -52,14 +52,18 @@ public class ParameterPanelFactory {
 			}
 		} else if (operandSet.contains(OperandType.STATEPREDICATE)) {
 			patternPara = new StatePredicateParameter(name,
-					((PetriNetInformationReader) objectInformation));
+					((PNReader) objectInformation));
 		} else if (operandSet.contains(OperandType.ROLE)) {
 			patternPara = new DropDownParameter(name,
 					OperandType.TRANSITION, objectInformation.getRoles());
 		}
 		return patternPara;
 	}
-
+	/**
+	 * Create a ParameterPanelFactory for an Object implementing
+	 * the interface LogFileReader
+	 * @param logInformation
+	 */
 	public ParameterPanelFactory(LogFileReader logInformation) {
 		this.objectInformation = logInformation;
 	}

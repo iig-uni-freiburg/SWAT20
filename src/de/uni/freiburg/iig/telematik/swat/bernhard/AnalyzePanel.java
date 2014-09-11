@@ -124,7 +124,12 @@ public abstract class AnalyzePanel {
 	public LogFileReader getInformationReader() {
 		return objectInformationReader;
 	}
-
+	/**
+	 * Create an AnalyzePanel for a given SwatComponent and a given
+	 * filename
+	 * @param component the SwatComponent to which this AnalyzePanel should belong to
+	 * @param file the filename of the file being analyzed
+	 */
 	public AnalyzePanel(SwatComponent component, String file) {
 		fileName = file.split("[.]")[0];
 		patternFactory = new PatternFactory(component);
@@ -132,7 +137,9 @@ public abstract class AnalyzePanel {
 		initGui();
 
 	}
-
+	/**
+	 * initialize the GUI
+	 */
 	private void initGui() {
 		content = new JPanel(new GridBagLayout());
 		analysisName = new JLabel("Analysis from " + getDateShort());

@@ -19,7 +19,7 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 /**
- * This class represents a parameterpanel where several other Parameters
+ * This class represents a Parameterpanel, where several other Parameters
  * can be added
  * @author bernhard
  *
@@ -31,19 +31,37 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 	protected String description;
 	protected LogFileReader informationReader;
 	protected int limit;
+	/**
+	 * Create a MultipleParameter that allows 2^32 values
+	 * @param name the name of the parameter
+	 * @param description description of the parameter e.g. State Predicate
+	 * @param informationReader an object implementing the interface InformationReader
+	 */
 	public MultipleParameterPanel(String name, String description, LogFileReader informationReader) {
 		super(name);
 		limit=Integer.MAX_VALUE;
 		init(description, informationReader);
 	}
+	/**
+	 * Create a MultipleParameter for a limited amount of values
+	 * @param name the name of the parameter
+	 * @param description description of the parameter e.g. State Predicate
+	 * @param informationReader an object implementing the interface InformationReader
+	 * @param limit the maximum amount of values
+	 */
 	public MultipleParameterPanel(String name, String description, LogFileReader informationReader, int limit) {
 		super(name);
 		this.limit=limit;
 		init(description, informationReader);
 	}
-	private void init(String description, LogFileReader informationReader2) {
+	/**
+	 * Initialize the UI
+	 * @param description the description of the parameter 
+	 * @param informationReader Object that implements InformationReader
+	 */
+	private void init(String description, LogFileReader informationReader) {
 		this.description=description;
-		informationReader=informationReader2;
+		this.informationReader=informationReader;
 		panelList=new ArrayList<ParameterPanel>();
 		try {
 			addButton=new JButton(IconFactory.getIcon("maximize"));
@@ -68,7 +86,10 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 		addParameter();
 		// TODO Auto-generated constructor stub
 	}
-
+	/**
+	 * add graphical components so that one more value can be selected
+	 * @return the new ParameterPanel
+	 */
 	protected ParameterPanel addParameter() {
 		// TODO Auto-generated method stub
 		ParameterPanel p= getNewPanel();
@@ -77,11 +98,13 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 		return p;
 	}
 	/**
-	 * this method implements the creation of a new parameterpanel
-	 * @return
+	 * This method creates a new ParameterPanel that will be added to the UI
+	 * @return the new ParameterPanel
 	 */
 	protected abstract ParameterPanel getNewPanel();
-	
+	/**
+	 * update the UI
+	 */
 	protected void updateContent() {
 		content.removeAll();
 		for(int i=0; i < panelList.size(); i++) {
@@ -123,7 +146,10 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 		content.repaint();
 		content.updateUI();
 	}
-
+	/**
+	 * remove the components to choose a value for the parameter
+	 * @param patternParameterPanel the ParameterPanel to remove
+	 */
 	protected void removeParameter(ParameterPanel patternParameterPanel) {
 		// TODO Auto-generated method stub
 		content.remove(patternParameterPanel.getContent());

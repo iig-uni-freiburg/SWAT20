@@ -16,9 +16,25 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTFlowRelat
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 
+/**
+ * This Class is used to retrieve places and arcs which are between the
+ * transitions of an counterexample. It is used when an path should be highlighted.
+ * 
+ * @author bernhard
+ * 
+ * @param <T>
+ *            the FlowRelation which depends on the petri net type
+ */
 public class PlacesArcsAlgorithm<T extends AbstractFlowRelation> {
-
-	public void addPlacesArcs(PNEditor pnEditor, List<String> path, List<String> nodeList, List<String> arcList) {
+	/**
+	 * Add nodes to the nodeList and the arcs to the arcList
+	 * @param pnEditor the PNEditor containing the PN
+	 * @param path the counterexample
+	 * @param nodeList an empty list to which the places should be added
+	 * @param arcList an empty list to which the arcs should be added
+	 */
+	public void addPlacesArcs(PNEditor pnEditor, List<String> path,
+			List<String> nodeList, List<String> arcList) {
 		Map<String, PNGraphCell> nodemap = pnEditor.getGraphComponent()
 				.getGraph().nodeReferences;
 		Map<String, PNGraphCell> arcmap = pnEditor.getGraphComponent()
@@ -33,37 +49,33 @@ public class PlacesArcsAlgorithm<T extends AbstractFlowRelation> {
 		// we have to find the places and arcs in the path
 		for (int i = 0; i < transitions.size() - 1; i++) {
 			// first incoming places with no incoming edges
-				java.util.List<T> placesBeforeThis = pn
-						.getTransition(transitions.get(i))
-						.getIncomingRelations();
-				for (T relation : placesBeforeThis) {
-					if (relation.getPlace().getIncomingRelations().size() == 0) {
-						// add the place name
-						String placeName = relation.getPlace().getName();
-						nodeList.add(placeName);
-						// add the arc
-						arcList.add("arcPT_" + placeName + transitions.get(i));
-					}
+			java.util.List<T> placesBeforeThis = pn.getTransition(
+					transitions.get(i)).getIncomingRelations();
+			for (T relation : placesBeforeThis) {
+				if (relation.getPlace().getIncomingRelations().size() == 0) {
+					// add the place name
+					String placeName = relation.getPlace().getName();
+					nodeList.add(placeName);
+					// add the arc
+					arcList.add("arcPT_" + placeName + transitions.get(i));
 				}
-				// then places between this transition and the next
-				java.util.List<T> placesAfterRel = pn
-						.getTransition(transitions.get(i))
-						.getOutgoingRelations();
-				java.util.List<String> placesAfterThis = new ArrayList<String>();
-				for (T relation : placesAfterRel) {
-					placesAfterThis.add(relation.getPlace().getName());
-				}
-				for(int j=i+1; j < transitions.size(); j++) {
-					
-				
-				java.util.List<T> placesBeforeRel = pn
-						.getTransition(transitions.get(j))
-						.getIncomingRelations();
+			}
+			// then places between this transition and the next
+			java.util.List<T> placesAfterRel = pn.getTransition(
+					transitions.get(i)).getOutgoingRelations();
+			java.util.List<String> placesAfterThis = new ArrayList<String>();
+			for (T relation : placesAfterRel) {
+				placesAfterThis.add(relation.getPlace().getName());
+			}
+			for (int j = i + 1; j < transitions.size(); j++) {
+
+				java.util.List<T> placesBeforeRel = pn.getTransition(
+						transitions.get(j)).getIncomingRelations();
 				java.util.List<String> placesBefore = new ArrayList<String>();
 				for (T relation : placesBeforeRel) {
 					placesBefore.add(relation.getPlace().getName());
 				}
-				
+
 				// add the intersection of both lists
 				java.util.List<String> temp_list = Helpers.Intersection(
 						placesAfterThis, placesBefore);
@@ -73,8 +85,8 @@ public class PlacesArcsAlgorithm<T extends AbstractFlowRelation> {
 					arcList.add("arcTP_" + transitions.get(i) + place);
 					arcList.add("arcPT_" + place + transitions.get(j));
 				}
-				}
-			} 
+			}
 		}
-	
+	}
+
 }

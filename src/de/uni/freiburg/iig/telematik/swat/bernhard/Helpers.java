@@ -91,7 +91,7 @@ public class Helpers {
 		return newList;
 	}
 	/**
-	 * copy a list of parameters by value
+	 * copy a list of Parameters by value
 	 * @param parameters the List of parameters to be copied
 	 * @return
 	 */

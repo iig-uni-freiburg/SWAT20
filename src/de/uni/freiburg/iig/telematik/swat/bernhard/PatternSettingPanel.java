@@ -56,26 +56,43 @@ public class PatternSettingPanel {
 	private JButton removeButton;
 	private PatternSetting patternSetting;
 	private List<ParameterPanel> parameterPanelList;
-	private PatternWizard patternWindow;
-
-	public PatternSettingPanel(PatternSetting ps, PatternWizard patternWindow,
+	private PatternWizard patternWizard;
+	/**
+	 * Create a PatternSettingPanel for a given PatternSetting, which has
+	 * already exact values for the parameters
+	 * @param patternSetting the PatternSetting that should be loaded
+	 * @param patternWizard the PatternWizard to which this PatternSettingPanel should belong to
+	 * @param patternFactory the PatternFactory
+	 */
+	public PatternSettingPanel(PatternSetting patternSetting, PatternWizard patternWizard,
 			PatternFactory patternFactory) {
-		init(ps.getName(), patternWindow, patternFactory);
-		setPatternSetting(ps);
+		init(patternSetting.getName(), patternWizard, patternFactory);
+		setPatternSetting(patternSetting);
 	}
-
+	/**
+	 * Create a PatternSettingPanel for a given Pattern name
+	 * @param patternName name of the Pattern for which this panel should be
+	 * created.
+	 * @param patternWizard the PatternWizard to which this PatternSettingPanel should belong to
+	 * @param patternFactory the PatternFactory
+	 */
 	public PatternSettingPanel(String patternName,
 			PatternWizard patternWindow, PatternFactory patternFactory) {
 		init(patternName, patternWindow, patternFactory);
 	}
-
-	private void init(String patternName, PatternWizard patternWindow,
+	/**
+	 * initialize the GUI based on the given parameters
+	 * @param patternName
+	 * @param patternWizard
+	 * @param patternFactory
+	 */
+	private void init(String patternName, PatternWizard patternWizard,
 			PatternFactory patternFactory) {
 		// pattern = PatternDatabase.getInstance()
 		// .getPattern(patternName);
 		List<Parameter> parameters = patternFactory
 				.getParametersOfPattern(patternName);
-		this.patternWindow = patternWindow;
+		this.patternWizard = patternWizard;
 		patternSetting = new PatternSetting(patternName, parameters);
 		// panel = new JPanel(new
 		// GridLayout(patternSetting.getParameters().size() + 1, 2));
@@ -117,7 +134,7 @@ public class PatternSettingPanel {
 			e.printStackTrace();
 		}
 
-		ParameterPanelFactory factory = new ParameterPanelFactory(patternWindow.getNetInformations());
+		ParameterPanelFactory factory = new ParameterPanelFactory(patternWizard.getNetInformations());
 		for (Parameter pp : parameters) {
 			ParameterPanel patternPara = factory.createPanel(pp);
 			JPanel paraPanel = new JPanel(new GridLayout(1,2,10,10));
@@ -127,10 +144,12 @@ public class PatternSettingPanel {
 			parameterPanelList.add(patternPara);
 		}
 	}
-
+	/**
+	 * remove this panel from the pattern wizard
+	 */
 	protected void removeFromPatternWindow() {
 		// TODO Auto-generated method stub
-		patternWindow.removePatternPanel(this);
+		patternWizard.removePatternPanel(this);
 	}
 
 	/**
@@ -149,7 +168,10 @@ public class PatternSettingPanel {
 	public PatternSetting getPatternSetting() {
 		return patternSetting;
 	}
-
+	/**
+	 * Load a new PatternSetting adjust the values in the boxes
+	 * @param ps the new PatternSetting to be loaded
+	 */
 	public void setPatternSetting(PatternSetting ps) {
 		patternSetting = ps;
 		// ps.updateParameterAppliedString();
@@ -162,13 +184,18 @@ public class PatternSettingPanel {
 
 		}
 	}
-
+	/**
+	 * return the Content of this Panel
+	 * @return
+	 */
 	public JPanel getJPanel() {
 		return panel;
 	}
-
+	/**
+	 * Load the values from the boxes
+	 */
 	public void updatePatternSettingValues() {
-		// first store the values taken from the jcomponents
+		// store the values taken from the jcomponents
 
 		for (ParameterPanel paraPanel : parameterPanelList) {
 			for (Parameter patternPara : patternSetting.getParameters()) {
@@ -181,29 +208,6 @@ public class PatternSettingPanel {
 			}
 
 		}
-		// update the pattern representation
-		//patternSetting.updateParameterAppliedString();
-		
-
-		/*for (ParameterPanel paraPanel : parameterPanelList) {
-			for (Parameter patternPara : patternSetting.getParameters()) {
-				if (paraPanel.getName().equals(patternPara.getName())) {
-					// if its an activity, take the name and not the label
-					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
-					for (ParamValue val : patternPara.getValue()) {
-						if (val.getOperandType() == OperandType.TRANSITION) {
-							HashMap<String, String> transitionDic = ((PetriNetInformationReader) patternWindow
-									.getNetInformations()).getTransitionDictionaryReverse();
-							val.setOperandName(transitionDic.get(val
-									.getOperandName()));
-						}
-					}
-
-				}
-			}
-
-		}*/
-
 	}
 
 }

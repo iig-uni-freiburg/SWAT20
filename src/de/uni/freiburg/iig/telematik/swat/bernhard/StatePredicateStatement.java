@@ -13,16 +13,28 @@ import javax.swing.SpinnerNumberModel;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
-
-public class StatePredicateConjunction extends ParameterPanel {
+/**
+ * This Class represents a single statement of an state predicate.
+ * A state predicate consinsts of at least one StatePredicateStatement
+ * @author bernhard
+ *
+ */
+public class StatePredicateStatement extends ParameterPanel {
 
 	private final String predicates[] = {"<", ">", "=", "!=", "<=", ">=" };
 	private JSpinner numberSpinner;
 	private JComboBox relationsBox;
 	private JComboBox placesBox;
 	private JComboBox colorsBox;
-	private PetriNetInformationReader pnReader;
-	public StatePredicateConjunction(String name, PetriNetInformationReader pnReader) {
+	private PNReader pnReader;
+	/**
+	 * Create A StatePredicateStatement parameter with a given name
+	 * for a given PNReader
+	 * @param name the name of the parameter
+	 * @param pnReader an object implementing the interface PNReader, which is
+	 * used to retrieve the list of places and colors
+	 */
+	public StatePredicateStatement(String name, PNReader pnReader) {
 		super(name);
 		this.pnReader=pnReader;
 		// TODO Auto-generated constructor stub
@@ -53,10 +65,6 @@ public class StatePredicateConjunction extends ParameterPanel {
 		result+=" "+(Integer) numberSpinner.getValue();
 		list.add(new ParamValue(result, OperandType.STATEPREDICATE));
 		return list;
-	}
-
-	public String[] getPredicates() {
-		return predicates;
 	}
 
 	@Override

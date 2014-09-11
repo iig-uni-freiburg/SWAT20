@@ -5,11 +5,21 @@ import java.util.List;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
-
+/**
+ * This Class represents the Parameter for a state predicate which consists
+ * of several StatePredicateStatements
+ * @author bernhard
+ *
+ */
 public class StatePredicateParameter extends MultipleParameterPanel {
-
+	/**
+	 * Create a StatePredicateParameter with a given name and a given
+	 * PNReader
+	 * @param name the name of the Parameter
+	 * @param informationReader an object implementing the interface PNReader
+	 */
 	public StatePredicateParameter(String name,
-			PetriNetInformationReader informationReader) {
+			PNReader informationReader) {
 		super(name, "Condition", informationReader);
 		
 		// TODO Auto-generated constructor stub
@@ -17,8 +27,8 @@ public class StatePredicateParameter extends MultipleParameterPanel {
 
 	@Override
 	protected ParameterPanel getNewPanel() {
-		PetriNetInformationReader pnInformation = (PetriNetInformationReader) informationReader;
-		return new StatePredicateConjunction(name,pnInformation);
+		PNReader pnInformation = (PNReader) informationReader;
+		return new StatePredicateStatement(name,pnInformation);
 	}
 	
 	/**

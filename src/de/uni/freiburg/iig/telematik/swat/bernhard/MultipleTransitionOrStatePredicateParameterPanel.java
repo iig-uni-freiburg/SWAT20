@@ -1,9 +1,19 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
-
+/**
+ * This class represents a Parameter with infinite values
+ * A value can have the type state predicate or transition
+ * @author bernhard
+ *
+ */
 public class MultipleTransitionOrStatePredicateParameterPanel extends MultipleParameterPanel {
-
-
-	public MultipleTransitionOrStatePredicateParameterPanel(String name, String description,PetriNetInformationReader pr) {
+	/**
+	 * 
+	 * @param name the name of the parameter
+	 * @param description description of the type of the parameter
+	 * @param pr An object implementing the interface PNReader to retrieve
+	 * the needed information
+	 */
+	public MultipleTransitionOrStatePredicateParameterPanel(String name, String description,PNReader pr) {
 		super(name, description, pr);
 		// TODO Auto-generated constructor stub
 	}
@@ -11,7 +21,7 @@ public class MultipleTransitionOrStatePredicateParameterPanel extends MultiplePa
 	@Override
 	protected ParameterPanel getNewPanel() {
 		// TODO Auto-generated method stub
-		PetriNetInformationReader pnInformation=(PetriNetInformationReader) informationReader;
+		PNReader pnInformation=(PNReader) informationReader;
 		return new ActivityOrStatePredicateParameter(name, pnInformation);
 	}
 }

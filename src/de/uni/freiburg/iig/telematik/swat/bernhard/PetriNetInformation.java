@@ -33,13 +33,13 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 /**
- * this class reads all necessary information for the GUI from a petri net given
+ * this class reads all necessary information from a petri net given
  * by the PNEditor
  * 
  * @author bernhard
  * 
  */
-public class PetriNetInformation implements PetriNetInformationReader {
+public class PetriNetInformation implements PNReader {
 
 	private PNEditor pneditor;
 	// dictionary that maps the labels of the transitions
@@ -57,7 +57,10 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	private List<String> dataTypeListWithBlack;
 	private List<String> subjectList;
 	private ArrayList<String> activityList;
-
+	/**
+	 * Create an PetriNetInformation object for a given PNEditor
+	 * @param pneditor
+	 */
 	public PetriNetInformation(PNEditor pneditor) {
 		super();
 		this.pneditor = pneditor;
@@ -72,7 +75,9 @@ public class PetriNetInformation implements PetriNetInformationReader {
 		activityList=new ArrayList<String>();
 		netChanged();
 	}
-
+	/**
+	 * the net has been changed so update the lists
+	 */
 	public void netChanged() {
 		updateTransitionLabelDic();
 		updatePlacesList();
@@ -85,7 +90,9 @@ public class PetriNetInformation implements PetriNetInformationReader {
 			updateSubjectList();
 		}
 	}
-
+	/**
+	 * update the list of subjects
+	 */
 	private void updateSubjectList() {
 		// TODO Auto-generated method stub
 		subjectList.clear();
@@ -110,7 +117,9 @@ public class PetriNetInformation implements PetriNetInformationReader {
 			
 		}
 	}
-
+	/**
+	 * update the Label dictionary for places
+	 */
 	private void updatePlacesList() {
 		this.placesLabelDic.clear();
 		this.placesLabelDicReverse.clear();
@@ -124,12 +133,9 @@ public class PetriNetInformation implements PetriNetInformationReader {
 	}
 
 	/**
-	 * Helpfunction to get the List of all Labels of the current PN of editor
-	 * 
-	 * @param editor
-	 * @return
+	 * update the Label dictionary for transitions 
 	 */
-	public void updateTransitionLabelDic() {
+	private void updateTransitionLabelDic() {
 		transitionToLabelDic.clear();
 		labelToTransitionDic.clear();
 		for (AbstractTransition transition : pneditor.getNetContainer()

@@ -17,6 +17,10 @@ public abstract class ParameterPanel {
 
 	protected String name;
 	protected JComponent content;
+	/**
+	 * Create a ParameterPanel with the given name 
+	 * @param name the name of the Parameter
+	 */
 	public ParameterPanel(String name) {
 		this.name = name;
 	}
@@ -33,6 +37,14 @@ public abstract class ParameterPanel {
 	public void setContent(JComponent jComponent) {
 		this.content = jComponent;
 	}
+	/**
+	 * Return a list of the selected ParamValues
+	 * @return
+	 */
 	public abstract List<ParamValue> getValue();
+	/**
+	 * Load the given values and adjust the graphical components
+	 * @param value the new values to be set
+	 */
 	public abstract void setValue(List<ParamValue> value);
 }

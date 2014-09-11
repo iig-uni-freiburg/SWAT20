@@ -20,7 +20,11 @@ public class PatternSetting {
 	public void setResult(PatternResult result) {
 		this.result = result;
 	}
-
+	/**
+	 * Create a PatternSetting for a given name and parameters
+	 * @param name the name of the pattern
+	 * @param parameters the parameters that will be set later by the user
+	 */
 	public PatternSetting(String name, List<Parameter> parameters) {
 		super();
 		this.name = name;
@@ -29,7 +33,6 @@ public class PatternSetting {
 		result=null;
 	}
 	private String name;
-	private String parameterAppliedString;
 	private List<Parameter> parameters;
 	private PatternResult result;
 	
@@ -45,7 +48,10 @@ public class PatternSetting {
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
-
+	/**
+	 * Create an exact copy of the PatternSetting, that means that the values of the
+	 * parameters will be copied by value.
+	 */
 	public PatternSetting clone() {
 		PatternSetting ps=new PatternSetting(name,parameters);
 		ps.setParameters(Helpers.cloneParameterList(parameters));

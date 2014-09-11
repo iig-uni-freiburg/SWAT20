@@ -8,8 +8,23 @@ import java.util.List;
  *
  */
 public interface LogFileReader {
+	/**
+	 * this method returns an array of all activities
+	 * @return an array containing all activities
+	 */
 	public String[] getActivities();
+	/**
+	 * this method returns an array of all subjects
+	 * @return an array containing all subjects
+	 */
 	public String[] getSubjects();
+	/**
+	 * this method returns an array of all roles
+	 * @return an array containing all roles
+	 */
 	public String[] getRoles();
+	/**
+	 * update the lists
+	 */
 	public void update();
 }

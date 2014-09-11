@@ -56,7 +56,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
 /**
  * This class represents the pattern wizard with a button to add a pattern and
- * the possibility to choose the parameters
+ * the possibility to choose the parameters for the patterns.
  * 
  * @author bernhard
  * 
@@ -167,19 +167,27 @@ public class PatternWizard extends JFrame {
 	}
 
 	/**
-	 * make the window invisible and update the analyze panel
+	 * make the window invisible and update the analyze panel. This method is
+	 * automatically invoked when the user presses the OK Button
 	 */
 	protected void clickedOK() {
 		// TODO Auto-generated method stub
 		setVisible(false);
 		analyzePanel.getPatternSettingsFromPatternWindow();
 	}
-
-	public PatternWizard(AnalyzePanel p, PatternFactory pf)
+	/**
+	 * Create a Pattern-Wizard for a given AnalyzePanel and a given
+	 * PatternFactory
+	 * @param panel the AnalyzePanel to which this PatternWizard should belong to
+	 * @param patternFactory the PatternFactory which gives the information about the
+	 * supported patterns
+	 * @throws HeadlessException
+	 */
+	public PatternWizard(AnalyzePanel panel, PatternFactory patternFactory)
 			throws HeadlessException {
 		super("Pattern Wizard");
-		analyzePanel = p;
-		patternFactory = pf;
+		analyzePanel = panel;
+		this.patternFactory = patternFactory;
 		initGui();
 	}
 
@@ -242,7 +250,10 @@ public class PatternWizard extends JFrame {
 		patternPanelList.add(pSPanel);
 		patternPanel.updateUI();
 	}
-
+	/**
+	 * Return the actual list of PatternSettings
+	 * @return the PatternSettings selected by the user
+	 */
 	public List<PatternSetting> getPatternSettings() {
 		List<PatternSetting> patternList = new ArrayList<PatternSetting>();
 		for (PatternSettingPanel panel : patternPanelList) {
@@ -267,7 +278,7 @@ public class PatternWizard extends JFrame {
 	}
 
 	/**
-	 * remove a pattern panel from the window
+	 * Remove a PatternSettingPanel from the window
 	 * @param panel
 	 */
 	public void removePatternPanel(PatternSettingPanel panel) {

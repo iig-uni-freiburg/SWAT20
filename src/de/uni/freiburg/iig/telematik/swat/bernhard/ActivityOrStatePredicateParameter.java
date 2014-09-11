@@ -21,7 +21,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 public class ActivityOrStatePredicateParameter extends
 		ParameterPanel {
 
-	private PetriNetInformationReader informationReader;
+	private PNReader informationReader;
 	private TransitionParameter activityPanel;
 	private StatePredicateParameter statePredicatePanel;
 	boolean activityActive;
@@ -33,7 +33,7 @@ public class ActivityOrStatePredicateParameter extends
 	 * @param pr An instance of a class implementing an PNReader that
 	 * can extract the necessary information from the PN.
 	 */
-	public ActivityOrStatePredicateParameter(String name, PetriNetInformationReader pr) {
+	public ActivityOrStatePredicateParameter(String name, PNReader pr) {
 		super(name);
 		informationReader=pr;
 		activityPanel=new TransitionParameter(name,pr);
