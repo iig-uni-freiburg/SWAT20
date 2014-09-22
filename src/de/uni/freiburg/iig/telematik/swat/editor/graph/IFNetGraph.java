@@ -322,6 +322,7 @@ default:
 
 	public void setCurrentAnalysisContext(AnalysisContext ac) {
 		setContainsAnalysisContext(true);
+		getNetContainer().getPetriNet().setAnalysisContext(ac);
 		currentAnalysisContext = ac;
 		refresh();
 		
