@@ -56,7 +56,7 @@ public class PetriNetInformation implements PNReader {
 	private List<String> dataTypeList;
 	private List<String> dataTypeListWithBlack;
 	private List<String> subjectList;
-	private ArrayList<String> activityList;
+
 	/**
 	 * Create an PetriNetInformation object for a given PNEditor
 	 * @param pneditor
@@ -72,7 +72,6 @@ public class PetriNetInformation implements PNReader {
 		dataTypeListWithBlack = new ArrayList<String>();
 		dataTypeListWithBlack.add("black");
 		subjectList=new ArrayList<String>();
-		activityList=new ArrayList<String>();
 		netChanged();
 	}
 	/**
@@ -146,8 +145,6 @@ public class PetriNetInformation implements PNReader {
 			transitionToLabelDic.put(transition.getName(),
 					transition.getLabel() + " (" + transition.getName() + ")");
 		}
-		activityList.addAll(labelToTransitionDic.keySet());
-		Collections.sort(activityList);
 	}
 
 	/**
@@ -195,8 +192,9 @@ public class PetriNetInformation implements PNReader {
 
 	@Override
 	public String[] getActivities() {
-		// TODO Auto-generated method stub
-		return activityList.toArray(new String[activityList.size()]);
+		List<String> activities = new ArrayList<String>(this.labelToTransitionDic.keySet());
+		Collections.sort(activities);
+		return activities .toArray(new String[activities.size()]);
 	}
 
 	@Override
