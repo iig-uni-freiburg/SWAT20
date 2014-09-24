@@ -63,9 +63,6 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
  */
 public class PatternWizard extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7132881901662491907L;
 	public final static int maxPatterns = 10;
 	private JButton plusButton, okButton, removeAllButton;
@@ -232,7 +229,7 @@ public class PatternWizard extends JFrame {
 	private void addPanelforPattern(String p) {
 		PatternSettingPanel pSPanel = new PatternSettingPanel(p, this,
 				patternFactory);
-		// pSPanel.addCounterExample(new CounterExample(), this);
+		
 		patternPanel.add(pSPanel.getJPanel());
 		patternPanelList.add(pSPanel);
 		patternPanel.updateUI();

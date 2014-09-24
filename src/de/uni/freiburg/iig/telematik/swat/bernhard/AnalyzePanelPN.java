@@ -4,14 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import de.invation.code.toval.graphic.dialog.ValueEditingDialog;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.acmodel.SWATACModelDialog;
 import de.uni.freiburg.iig.telematik.swat.lukas.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
@@ -58,6 +63,7 @@ public class AnalyzePanelPN extends AnalyzePanel {
 	 * and then make the analysis logic start PRISM.
 	 */
 	protected void analyze() {
+		
 		toolBar.reset();
 		if(!pnEditor.getNetContainer().getPetriNet().isCapacityBounded()) {
 			JOptionPane.showMessageDialog(null,
@@ -69,28 +75,39 @@ public class AnalyzePanelPN extends AnalyzePanel {
 		PrismExecutor prismExecuter = new PrismExecutor(pnEditor
 				.getNetContainer().getPetriNet());
 		// build list of patterns
-		HashMap<PatternSetting, CompliancePattern> resultMap = new HashMap<PatternSetting, CompliancePattern>();
+		HashMap<PatternSetting, ArrayList<CompliancePattern>> resultMap = 
+				new HashMap<PatternSetting, ArrayList<CompliancePattern>>();
 
 		MessageDialog.getInstance().addMessage(
 				"Giving " + patternSettings.size() + " Patterns to PRISM");
 		ArrayList<CompliancePattern> compliancePatterns = new ArrayList<CompliancePattern>();
+		
 		for (PatternSetting setting : patternSettings) {
-			CompliancePattern compliancePattern = patternFactory
+			setting.reset();
+			ArrayList<CompliancePattern> cPs = patternFactory
 					.createPattern(setting.getName(),
 							(ArrayList<Parameter>) setting.getParameters());
-			compliancePatterns.add(compliancePattern);
+			compliancePatterns.addAll(cPs);
 			// store the setting and the pattern in dictionary
-			resultMap.put(setting, compliancePattern);
+			resultMap.put(setting, cPs);
 		}
+		
 		// analyze and set the results
 		PrismResult prismResult = prismExecuter.analyze(compliancePatterns);
 		for (PatternSetting setting : patternSettings) {
-			PatternResult patternResult = prismResult
-					.getPatternResult(resultMap.get(setting));
-			setting.setResult(patternResult);
+			
+			ArrayList<CompliancePattern> patterns = resultMap.get(setting);
+			
+			for (CompliancePattern pattern : patterns) {
+				PatternResult patternResult = prismResult.getPatternResult(pattern);
+				setting.setResult(patternResult);
+			}
+			
 		}
 		update();
+		
 	}
+	
 	@Override
 	protected void addCounterExampleButton(PatternResult result, JPanel newPanel) {
 		// TODO Auto-generated method stub
@@ -110,6 +127,7 @@ public class AnalyzePanelPN extends AnalyzePanel {
 			newPanel.add(Helpers.jPanelLeft(counterButton));
 		}
 	}
+		
 	@Override
 	protected String adjustValue(ParamValue val) {
 		// TODO Auto-generated method stub

@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -9,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -20,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -31,13 +35,17 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.processmining.analysis.sciffchecker.gui.util.SpringUtilities;
 
+import com.mxgraph.swing.handler.mxCellMarker;
 import com.thoughtworks.xstream.XStream;
 
 import de.invation.code.toval.properties.PropertyException;
@@ -49,14 +57,17 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.lukas.IOUtils;
+import de.uni.freiburg.iig.telematik.swat.lukas.Operand;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
+import de.uni.freiburg.iig.telematik.swat.lukas.PlacePredicate;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismExecutor;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
@@ -78,6 +89,7 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
  * 
  */
 public abstract class AnalyzePanel {
+	
 	private JPanel content;
 	private JPanel propertyPanel;
 	private JLabel analysisName;
@@ -87,6 +99,7 @@ public abstract class AnalyzePanel {
 	protected LogFileReader objectInformationReader;
 	protected PatternFactory patternFactory;
 	protected List<PatternSetting> patternSettings;
+	private PNEditor mPNEditor;
 
 	/**
 	 * this method adjusts values to be displayed. E.g. display
@@ -134,6 +147,7 @@ public abstract class AnalyzePanel {
 		fileName = file.split("[.]")[0];
 		patternFactory = new PatternFactory(component);
 		patternSettings = new ArrayList<PatternSetting>();
+		mPNEditor = (PNEditor) component;
 		initGui();
 
 	}
@@ -230,6 +244,7 @@ public abstract class AnalyzePanel {
 	 */
 	
 	public void getPatternSettingsFromPatternWindow() {
+		
 		List<PatternSetting> oldSettings = Helpers
 				.copyPatternSettings(patternSettings);
 		patternSettings = patternWizard.getPatternSettings();
@@ -253,14 +268,93 @@ public abstract class AnalyzePanel {
 			}
 		}
 		update();
+		
 	}
+	
+	protected void showDetailsButton(InformationFlowPatternSetting p, JPanel newPanel) {
+		
+		final ArrayList<PatternResult> resutls = p.getResults();
+		final InformationFlowPatternSetting patternSetting = p;
+		JButton detailsButton = new JButton("Details");
+		detailsButton.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				 
+		        showDetailsDialog(resutls, patternSetting);
+			}
 
-	/**
-	 * update the GUI of the AnalyzePanel
-	 */
+			private void showDetailsDialog(ArrayList<PatternResult> resutls, 
+					InformationFlowPatternSetting patternSetting) {
+				
+				JDialog dialog = new JDialog();
+				JPanel content = new JPanel();
+				content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+				content.setBorder(BorderFactory.createTitledBorder(patternSetting.getName()));
+				dialog.setTitle("Analysis Details");
+				dialog.setContentPane(content);
+				dialog.setModal(true);
+				
+				for (final PatternResult res : resutls) {
+					
+					if (res.equals(patternSetting.getResult())) {
+						continue;
+					}
+					
+					final JPanel panel = new JPanel();
+					panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+					final ArrayList<Operand> operands = res.getPatternOperands();
+					double prob = res.getProbability();
+					String patternDesc = "Pattern:";
+					for (int i=0; i<operands.size(); i++) {
+						Operand op = operands.get(i);
+						if (i == 0) {
+							patternDesc += " " + op.getName();
+						} else {
+							patternDesc += ", " + op.getName();
+						}
+					}
+					panel.add(new JLabel(patternDesc));
+					panel.add(new JLabel("Prob: " + prob));
+					panel.setBorder(BorderFactory.createEtchedBorder());
+					panel.addMouseListener(new MouseAdapter() {
+						
+						GraphHighlighter mHighlighter = 
+								new GraphHighlighter(mPNEditor, operands);
+						
+						@Override
+				        public void mouseEntered(MouseEvent e) {
+							panel.setBackground(Color.RED);
+							mHighlighter.highlightOn();
+
+				        }
+
+						@Override
+				        public void mouseExited(MouseEvent e) {
+				        	panel.setBackground(UIManager.getColor ("Panel.background"));
+				        	mHighlighter.highlightOff();
+				        }
+					});
+					
+					content.add(panel, BorderLayout.SOUTH);
+					
+				}
+				
+				dialog.pack();
+				dialog.setVisible(true);
+				
+			}
+		});
+		
+		newPanel.add(Helpers.jPanelLeft(detailsButton));
+		
+	}	
+
+	// add pattern info to the analyze panel
 	public void update() {
+		
 		propertyPanel.removeAll();
+		
 		for (PatternSetting p : patternSettings) {
 			//System.out.println(p);
 			// check if the setting was changed
@@ -296,9 +390,14 @@ public abstract class AnalyzePanel {
 				}
 				newPanel.add(resultPanel);
 				DecimalFormat decimalFormat = new DecimalFormat("#.###");
+				double prob = result.getProbability();
 				newPanel.add(Helpers.jPanelLeft(new JLabel("\tProbability: "
-						+ decimalFormat.format(result.getProbability()))));
+						+ decimalFormat.format(prob))));
 				addCounterExampleButton(result, newPanel);
+				if (p instanceof InformationFlowPatternSetting && p.getResult().getProbability() != 0) {
+					showDetailsButton((InformationFlowPatternSetting) p,
+							newPanel);
+				}
 				
 			} else {
 				try {

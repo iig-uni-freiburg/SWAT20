@@ -45,5 +45,6 @@ public class AnalyzePanelLogfile extends AnalyzePanel {
 		
 		return val.getOperandName();
 	}
+	  
 
 }

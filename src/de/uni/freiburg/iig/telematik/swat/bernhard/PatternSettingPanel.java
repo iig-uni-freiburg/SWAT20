@@ -36,6 +36,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.lukas.InformationFlowPattern;
 import de.uni.freiburg.iig.telematik.swat.lukas.Operand;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
@@ -93,7 +94,12 @@ public class PatternSettingPanel {
 		List<Parameter> parameters = patternFactory
 				.getParametersOfPattern(patternName);
 		this.patternWizard = patternWizard;
-		patternSetting = new PatternSetting(patternName, parameters);
+		
+		if (InformationFlowPattern.getPatternDescription().containsKey(patternName)) {
+			patternSetting = new InformationFlowPatternSetting(patternName, parameters);
+		} else {
+			patternSetting = new PatternSetting(patternName, parameters);
+		}
 		// panel = new JPanel(new
 		// GridLayout(patternSetting.getParameters().size() + 1, 2));
 		panel = new JPanel();

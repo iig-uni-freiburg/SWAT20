@@ -20,6 +20,11 @@ public class PatternSetting {
 	public void setResult(PatternResult result) {
 		this.result = result;
 	}
+	
+	public void reset() {
+		this.result = null;
+	}
+	
 	/**
 	 * Create a PatternSetting for a given name and parameters
 	 * @param name the name of the pattern
@@ -32,9 +37,15 @@ public class PatternSetting {
 		//updateParameterAppliedString();
 		result=null;
 	}
+	
+	public PatternSetting(String name) {
+		this.name = name;
+		result=null;
+	}
+
 	private String name;
 	private List<Parameter> parameters;
-	private PatternResult result;
+	protected PatternResult result;
 	
 
 	public String getName() {

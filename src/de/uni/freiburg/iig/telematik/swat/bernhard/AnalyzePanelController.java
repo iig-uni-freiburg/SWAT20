@@ -3,8 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.io.File;
 import java.util.HashMap;
 
-import javax.swing.JPanel;
-
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
 /**
