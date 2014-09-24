@@ -19,12 +19,12 @@ public class TestAtomicPatterns {
 	
 	@Test
 	public void testPrecedesStatePredOps() {
-		Statepredicate sp1 = new AtomicProposition("p1", Relation.EQUALS, 1);
-		Statepredicate sp2 = new AtomicProposition("p2", Relation.GREATER, 3);
+		StateExpression sp1 = new PlacePredicate("p1", Relation.EQUALS, 1);
+		StateExpression sp2 = new PlacePredicate("p2", Relation.GREATER, 3);
 		Precedes p = new Precedes(sp1, sp2);
 		assertEquals("P>=1 [((G (p1=1)) | (!(p2>3) U (p1=1)))]", p.getPrismProperty(false));
 		Clause c = new Clause(sp1, sp2);
-		Statepredicate sp3 = new AtomicProposition("p3", Relation.SMALLER, 4);
+		StateExpression sp3 = new PlacePredicate("p3", Relation.SMALLER, 4);
 		Precedes p1 = new Precedes(sp3, c);
 		assertEquals("P>=1 [((G (p3<4)) | (!((p1=1) & (p2>3)) U (p3<4)))]", p1.getPrismProperty(false));
 		assertEquals(2, p.getOperatorCount());

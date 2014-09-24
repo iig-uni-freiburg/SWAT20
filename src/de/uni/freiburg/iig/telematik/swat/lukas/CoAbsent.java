@@ -8,7 +8,7 @@ public class CoAbsent extends CompositePattern {
 	
 	public static final String DESC = "If P is absent, then Q must be absent.";
 	
-	public CoAbsent(Statepredicate op1, Statepredicate op2) {
+	public CoAbsent(StateExpression op1, StateExpression op2) {
 		super("!(G(!" + op1.toString() + ")) | " + "(G(!" + op2.toString() + "))");
 		mOperands.add(op1);
 		mOperands.add(op2);

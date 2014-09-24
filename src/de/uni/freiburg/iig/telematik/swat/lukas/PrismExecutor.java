@@ -67,19 +67,6 @@ public class PrismExecutor {
 		
 		File modelFile = IOUtils.writeToFile(mFilesPath, mModelFileName, mConverter.convert().toString());
 		
-		ArrayList<USegregatedFrom> resPatterns = new ArrayList<USegregatedFrom>();
-		ArrayList<CompliancePattern> noResPatterns = new ArrayList<CompliancePattern>();
-		
-		for (CompliancePattern pattern : patterns) {
-			if (pattern instanceof USegregatedFrom) {
-				resPatterns.add((USegregatedFrom) pattern);
-			} else {
-				noResPatterns.add(pattern);
-			}
-		}
-		
-		patterns = noResPatterns;
-		
 		String properties = "";
 		for (CompliancePattern pattern : patterns) {
 			
@@ -104,11 +91,6 @@ public class PrismExecutor {
 			} else {
 				
 				pRes = new PrismResult(patterns, resultStr);
-			}
-			
-			for (USegregatedFrom p : resPatterns) {
-				boolean sat = p.isSatisfied();
-				pRes.addPatternResult(p, new PatternResult((sat == true)? 1.0 : 0.0 , sat));
 			}
 			
 			return pRes;

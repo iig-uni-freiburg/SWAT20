@@ -30,8 +30,8 @@ public class BoundedWith extends ResourcePattern {
 		// define body
 		Conjunction body = new Conjunction(r);
 		
-		SimpleActivityExecution activityExec1 = new SimpleActivityExecution(body, "A", EventType.performed, false);
-		SimpleActivityExecution avtivityExec2 = new SimpleActivityExecution(body, "B", EventType.performed, false);
+		SimpleActivityExecution activityExec1 = new SimpleActivityExecution(body, "A", EventType.complete, false);
+		SimpleActivityExecution avtivityExec2 = new SimpleActivityExecution(body, "B", EventType.complete, false);
 		
 		ActivityTypeVariable atv1 = new ActivityTypeVariable(activityExec1);
 		StringConstantAttribute activity1Name = new StringConstantAttribute(t1.getName());
@@ -47,9 +47,9 @@ public class BoundedWith extends ResourcePattern {
 		Disjunction head = new Disjunction(r);
 		Conjunction conjuncts = new Conjunction(head);
 		SimpleActivityExecution activityExec11 = 
-				new SimpleActivityExecution(conjuncts, "A", EventType.performed, false);
+				new SimpleActivityExecution(conjuncts, "A", EventType.complete, false);
 		SimpleActivityExecution avtivityExec22 = 
-				new SimpleActivityExecution(conjuncts, "B", EventType.performed, false);
+				new SimpleActivityExecution(conjuncts, "B", EventType.complete, false);
 		OriginatorVariable originatorOfakt1 = new OriginatorVariable(activityExec11);
 		OriginatorVariable originatorOfakt2 = new OriginatorVariable(avtivityExec22);
 		StringVariableAttribute sva2 = new StringVariableAttribute(originatorOfakt1);
@@ -71,5 +71,9 @@ public class BoundedWith extends ResourcePattern {
 	public String getDescription() {
 		return DESC;
 	}
+	
+	// --> Darstellung im side-panel: Maß für Information Flow in % (aggregation), 
+	// öffnen und betrachten der Einzelmaße möglich
+	
 
 }

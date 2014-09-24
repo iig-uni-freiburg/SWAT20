@@ -13,8 +13,8 @@ public class UniversalTest {
 	@Test
 	public void test0() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("pIn_black", Relation.SMALLER_EQUAL, 1);
-		AtomicProposition ap2 = new AtomicProposition("pOut_black", Relation.SMALLER_EQUAL, 1);
+		PlacePredicate ap1 = new PlacePredicate("pIn_black", Relation.SMALLER_EQUAL, 1);
+		PlacePredicate ap2 = new PlacePredicate("pOut_black", Relation.SMALLER_EQUAL, 1);
 		Clause c = new Clause(ap1, ap2);
 		Universal p1 = new Universal(c, ifnet.getInputPlace());
 		TestUtils tu = new TestUtils(ifnet, p1);
@@ -28,7 +28,7 @@ public class UniversalTest {
 	@Test
 	public void test1() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("pOut_black", Relation.GREATER_EQUAL, 1);
+		PlacePredicate ap1 = new PlacePredicate("pOut_black", Relation.GREATER_EQUAL, 1);
 		Universal p1 = new Universal(ap1, ifnet.getInputPlace());
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {

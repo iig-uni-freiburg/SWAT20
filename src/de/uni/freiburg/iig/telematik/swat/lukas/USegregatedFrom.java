@@ -15,17 +15,11 @@ import org.processmining.analysis.sciffchecker.logic.model.variable.OriginatorVa
 import org.processmining.analysis.sciffchecker.logic.model.variable.StringVariableAttribute;
 import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-
 
 public class USegregatedFrom extends ResourcePattern {
 	
 	public static final String NAME = "A1 U-Segregated-From A2";
 	public static final String DESC = "Activity A1 and Activity A2 are performed by different Users.";
-	private boolean mSatisfied;
 	
 	public USegregatedFrom(Transition t1, Transition t2) {
 		
@@ -35,8 +29,8 @@ public class USegregatedFrom extends ResourcePattern {
 		// define body
 		Conjunction body = new Conjunction(r);
 		
-		SimpleActivityExecution activityExec1 = new SimpleActivityExecution(body, "A", EventType.performed, false);
-		SimpleActivityExecution avtivityExec2 = new SimpleActivityExecution(body, "B", EventType.performed, false);
+		SimpleActivityExecution activityExec1 = new SimpleActivityExecution(body, "A", EventType.complete, false);
+		SimpleActivityExecution avtivityExec2 = new SimpleActivityExecution(body, "B", EventType.complete, false);
 		
 		ActivityTypeVariable atv1 = new ActivityTypeVariable(activityExec1);
 		StringConstantAttribute activity1Name = new StringConstantAttribute(t1.getName());
@@ -52,9 +46,9 @@ public class USegregatedFrom extends ResourcePattern {
 		Disjunction head = new Disjunction(r);
 		Conjunction conjuncts = new Conjunction(head);
 		SimpleActivityExecution activityExec11 = 
-				new SimpleActivityExecution(conjuncts, "A", EventType.performed, false);
+				new SimpleActivityExecution(conjuncts, "A", EventType.complete, false);
 		SimpleActivityExecution avtivityExec22 = 
-				new SimpleActivityExecution(conjuncts, "B", EventType.performed, false);
+				new SimpleActivityExecution(conjuncts, "B", EventType.complete, false);
 		OriginatorVariable originatorOfakt1 = new OriginatorVariable(activityExec11);
 		OriginatorVariable originatorOfakt2 = new OriginatorVariable(avtivityExec22);
 		StringVariableAttribute sva2 = new StringVariableAttribute(originatorOfakt1);
@@ -67,23 +61,6 @@ public class USegregatedFrom extends ResourcePattern {
 
 	}
 	
-	public USegregatedFrom(Transition t1, Transition t2, IFNet net) {
-		
-		String t1Name = t1.getName();
-		String t2Name = t2.getName();
-		AnalysisContext ac = net.getAnalysisContext();
-		String subj1 = ac.getSubjectDescriptor(t1Name);
-		String subj2 = ac.getSubjectDescriptor(t1Name);
-		
-		if (subj1 != null && subj2 != null && subj1.equals(subj2)) {
-			mSatisfied = true;
-		} else {
-			mSatisfied = false;
-		}
-		
-		
-	}
-
 	@Override
 	public String getName() {
 		return NAME;
@@ -92,10 +69,6 @@ public class USegregatedFrom extends ResourcePattern {
 	@Override
 	public String getDescription() {
 		return DESC;
-	}
-	
-	public boolean isSatisfied() {
-		return mSatisfied;
 	}
 
 

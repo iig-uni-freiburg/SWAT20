@@ -7,7 +7,7 @@ public class Absent extends AtomicPattern {
 	
 	public static final String DESC = "The process must be free of P";
 	
-	public Absent(Statepredicate op) {
+	public Absent(StateExpression op) {
 		super("G(!" + op.toString() + ")");
 		mOperands.add(op);
 	}

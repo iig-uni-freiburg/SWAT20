@@ -1,5 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import de.invation.code.toval.constraint.NumberConstraint;
 import de.invation.code.toval.constraint.NumberOperator;
 import de.invation.code.toval.types.Multiset;
@@ -10,6 +13,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.TestGuardDataContainer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractRegularIFNetTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
 
 public class IFNetTestUtils {
 	
@@ -249,7 +255,7 @@ public class IFNetTestUtils {
 		f11.addConstraint("red", 1);
 		f12.addConstraint("yellow", 1);
 		f13.addConstraint("yellow", 1);
-		
+			
 		return net;
 	}
 	
@@ -279,6 +285,26 @@ public class IFNetTestUtils {
 		tOut.addAccessMode("blue", AccessMode.DELETE);
 		tOut.addAccessMode("green", AccessMode.READ);
 		tOut.addAccessMode("green", AccessMode.WRITE);
+		
+        Labeling labels = new Labeling(net, new ArrayList<String>(Arrays.asList("Karl", "Peter", "Hans")));
+		
+		labels.setSubjectClearance("Peter", SecurityLevel.HIGH);
+		labels.setSubjectClearance("Hans", SecurityLevel.LOW);
+		labels.setSubjectClearance("Karl", SecurityLevel.LOW);
+		
+		labels.setAttributeClassification("red", SecurityLevel.HIGH);
+		labels.setAttributeClassification("green", SecurityLevel.LOW);
+		labels.setAttributeClassification("blue", SecurityLevel.LOW);
+		labels.setAttributeClassification("yellow", SecurityLevel.LOW);
+		
+		labels.setActivityClassification("tIn", SecurityLevel.LOW);
+		labels.setActivityClassification("td", SecurityLevel.HIGH);
+		labels.setActivityClassification("t1", SecurityLevel.LOW);
+		labels.setActivityClassification("t0", SecurityLevel.LOW);
+		labels.setActivityClassification("tOut", SecurityLevel.HIGH);
+		
+		net.setAnalysisContext(new AnalysisContext(labels));
+		
 		
 		return net;
 	}
@@ -410,6 +436,25 @@ public class IFNetTestUtils {
 		
 		RegularIFNetTransition tOut = (RegularIFNetTransition) net.getTransition("tOut");
 		tOut.addAccessMode("green", AccessMode.DELETE);
+		
+		Labeling labels = new Labeling(net, new ArrayList<String>(Arrays.asList("Karl", "Peter", "Hans")));
+		
+		labels.setSubjectClearance("Peter", SecurityLevel.HIGH);
+		labels.setSubjectClearance("Hans", SecurityLevel.LOW);
+		labels.setSubjectClearance("Karl", SecurityLevel.LOW);
+		
+		labels.setAttributeClassification("red", SecurityLevel.LOW);
+		labels.setAttributeClassification("green", SecurityLevel.LOW);
+		labels.setAttributeClassification("yellow", SecurityLevel.LOW);
+		
+		labels.setActivityClassification("tIn", SecurityLevel.LOW);
+		labels.setActivityClassification("t1", SecurityLevel.LOW);
+		labels.setActivityClassification("t2", SecurityLevel.LOW);
+		labels.setActivityClassification("t3", SecurityLevel.LOW);
+		labels.setActivityClassification("t4", SecurityLevel.LOW);
+		labels.setActivityClassification("tOut", SecurityLevel.LOW);
+		
+		net.setAnalysisContext(new AnalysisContext(labels));
 		
 		return net;
 	}

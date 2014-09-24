@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
@@ -42,7 +41,8 @@ public class PatternFactory {
 				mSupportedPatterns.putAll(AtomicPattern.getPatternDescription());
 				mSupportedPatterns.putAll(CompositePattern.getPatternDescription());
 				mSupportedPatterns.putAll(DataflowPattern.getPatternDescription());
-				mSupportedPatterns.put(USegregatedFrom.NAME, USegregatedFrom.DESC);
+				mSupportedPatterns.putAll(InformationFlowPattern.getPatternDescription());
+				
 			}
 		} else if (component instanceof LogFileViewer) {
 			mSupportedPatterns = new HashMap<String, String>();
@@ -67,9 +67,10 @@ public class PatternFactory {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public CompliancePattern createPattern(String patternName, ArrayList<Parameter> params) {
+	public ArrayList<CompliancePattern> createPattern(String patternName, ArrayList<Parameter> params) {
 	 
-		CompliancePattern p = null;
+		ArrayList<CompliancePattern> patterns = new ArrayList<CompliancePattern>(); 
+		IFFlowPatternCreator ifflowPatternCreator = new IFFlowPatternCreator((IFNet) mNet);
 		
 		if (patternName.equals(Precedes.NAME)) {
 			
@@ -78,9 +79,9 @@ public class PatternFactory {
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			if (o1 instanceof Transition && o2 instanceof Transition) {
-				p = new Precedes((Transition) o1, (Transition) o2);
+				patterns.add(new Precedes((Transition) o1, (Transition) o2));
 			} else {
-				p = new Precedes((Statepredicate) o1, (Statepredicate) o2);
+				patterns.add(new Precedes((StateExpression) o1, (StateExpression) o2));
 			}
 			
 		} else if (patternName.equals(ChainPrecedes.NAME)) {
@@ -91,7 +92,8 @@ public class PatternFactory {
 			Operand o2 = createOperand(value2);
 			ParamValue value3 = params.get(2).getValue().get(0);
 			Operand o3 = createOperand(value3);
-			p = new ChainPrecedes((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
+			patterns.add(new ChainPrecedes((NetElementExpression) o1,
+					(NetElementExpression) o2, (NetElementExpression) o3));
 			
 		} else if (patternName.equals(PrecedesChain.NAME)) {
 			
@@ -101,7 +103,8 @@ public class PatternFactory {
 			Operand o2 = createOperand(value2);
 			ParamValue value3 = params.get(2).getValue().get(0);
 			Operand o3 = createOperand(value3);
-			p = new PrecedesChain((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
+			patterns.add(new PrecedesChain((NetElementExpression) o1, (NetElementExpression) o2,
+					(NetElementExpression) o3));
 			
 		} else if (patternName.equals(LeadsTo.NAME)) {
 			
@@ -109,7 +112,7 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			p = new LeadsTo((NetElementExpression) o1, (NetElementExpression) o2);
+			patterns.add(new LeadsTo((NetElementExpression) o1, (NetElementExpression) o2));
 			
 			
 		} else if (patternName.equals(ChainLeadsTo.NAME)) {
@@ -120,7 +123,8 @@ public class PatternFactory {
 			Operand o2 = createOperand(value2);
 			ParamValue value3 = params.get(2).getValue().get(0);
 			Operand o3 = createOperand(value3);
-			p = new ChainLeadsTo((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
+			patterns.add(new ChainLeadsTo((NetElementExpression) o1, (NetElementExpression) o2,
+					(NetElementExpression) o3));
 			
 		} else if (patternName.equals(LeadsToChain.NAME)) {
 			
@@ -130,7 +134,8 @@ public class PatternFactory {
 			Operand o2 = createOperand(value2);
 			ParamValue value3 = params.get(2).getValue().get(0);
 			Operand o3 = createOperand(value3);
-			p = new LeadsToChain((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
+			patterns.add(new LeadsToChain((NetElementExpression) o1, 
+					(NetElementExpression) o2, (NetElementExpression) o3));
 			
 		} else if (patternName.equals(XLeadsTo.NAME)) {
 			
@@ -138,7 +143,7 @@ public class PatternFactory {
 			Operand o1 = createOperand(value1);
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
-			p = new XLeadsTo((NetElementExpression) o1, (NetElementExpression) o2);
+			patterns.add(new XLeadsTo((NetElementExpression) o1, (NetElementExpression) o2));
 			
 		} else if (patternName.equals(Else.NAME)) {
 			
@@ -148,16 +153,17 @@ public class PatternFactory {
 			Operand o2 = createOperand(value2);
 			ParamValue value3 = params.get(3).getValue().get(0);
 			Operand o3 = createOperand(value3);
-			p = new Else((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
+			patterns.add(new Else((NetElementExpression) o1, (NetElementExpression) o2,
+					(NetElementExpression) o3));
 			
 		} else if (patternName.equals(Absent.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
 			if (o1 instanceof Transition) {
-				p = new Absent((Transition) o1);
+				patterns.add(new Absent((Transition) o1));
 			} else {
-				p = new Absent((Statepredicate) o1);
+				patterns.add(new Absent((StateExpression) o1));
 			}
 			
 		} else if (patternName.equals(Universal.NAME)) {
@@ -165,9 +171,11 @@ public class PatternFactory {
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
 			if (o1 instanceof Transition) {
-				p = new Universal((Transition) o1, mNet.getSourcePlaces().iterator().next());
+				patterns.add(new Universal((Transition) o1, 
+						mNet.getSourcePlaces().iterator().next()));
 			} else {
-				p = new Universal((Statepredicate) o1, mNet.getSourcePlaces().iterator().next());
+				patterns.add(new Universal((StateExpression) o1, 
+						mNet.getSourcePlaces().iterator().next()));
 			}
 			
 		} else if (patternName.equals(Exists.NAME)) {
@@ -175,9 +183,9 @@ public class PatternFactory {
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
 			if (o1 instanceof Transition) {
-				p = new Exists((Transition) o1, mNet.getDrainPlaces().iterator().next());
+				patterns.add(new Exists((Transition) o1, mNet.getDrainPlaces().iterator().next()));
 			} else {
-				p = new Exists((Statepredicate) o1);
+				patterns.add(new Exists((StateExpression) o1));
 			}
 			
 			
@@ -188,9 +196,9 @@ public class PatternFactory {
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new CoExists((Transition) o1, (Transition) o2, mOutputPlace);
+				patterns.add(new CoExists((Transition) o1, (Transition) o2, mOutputPlace));
 			} else {
-				p = new CoExists((Statepredicate) o1, (Statepredicate) o2);
+				patterns.add(new CoExists((StateExpression) o1, (StateExpression) o2));
 			}
 			
 		} else if (patternName.equals(CoAbsent.NAME)) {
@@ -200,9 +208,9 @@ public class PatternFactory {
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new CoAbsent((Transition) o1, (Transition) o2, mOutputPlace);
+				patterns.add(new CoAbsent((Transition) o1, (Transition) o2, mOutputPlace));
 			} else {
-				p = new CoAbsent((Statepredicate) o1, (Statepredicate) o2);
+				patterns.add(new CoAbsent((StateExpression) o1, (StateExpression) o2));
 			}
 			
 		} else if (patternName.equals(Exclusive.NAME)) {
@@ -212,9 +220,9 @@ public class PatternFactory {
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new Exclusive((Transition) o1, (Transition) o2, mOutputPlace);
+				patterns.add(new Exclusive((Transition) o1, (Transition) o2, mOutputPlace));
 			} else {
-				p = new Exclusive((Statepredicate) o1, (Statepredicate) o2);
+				patterns.add(new Exclusive((StateExpression) o1, (StateExpression) o2));
 			}
 			
 			
@@ -225,9 +233,9 @@ public class PatternFactory {
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new Corequisite((Transition) o1, (Transition) o2, mOutputPlace);
+				patterns.add(new Corequisite((Transition) o1, (Transition) o2, mOutputPlace));
 			} else {
-				p = new Corequisite((Statepredicate) o1, (Statepredicate) o2);
+				patterns.add(new Corequisite((StateExpression) o1, (StateExpression) o2));
 			}
 			
 			
@@ -238,9 +246,9 @@ public class PatternFactory {
 			ParamValue value2 = params.get(1).getValue().get(0);
 			Operand o2 = createOperand(value2);
 			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new MutexChoice((Transition) o1, (Transition) o2, mOutputPlace);
+				patterns.add(new MutexChoice((Transition) o1, (Transition) o2, mOutputPlace));
 			} else {
-				p = new MutexChoice((Statepredicate) o1, (Statepredicate) o2);
+				patterns.add(new MutexChoice((StateExpression) o1, (StateExpression) o2));
 			}
 			
 		} else if (patternName.equals(PerformedBy.NAME)) {
@@ -252,7 +260,7 @@ public class PatternFactory {
 				ParamValue value2 = params.get(1).getValue().get(0);
 				Operand o2 = createOperand(value2);
 				if (o1 instanceof Transition & o2 instanceof Role) {
-					p = new PerformedBy((Transition) o1, (Role) o2);
+					patterns.add(new PerformedBy((Transition) o1, (Role) o2));
 				} 
 			}
 			
@@ -263,260 +271,6 @@ public class PatternFactory {
 			
 		} else if (patternName.equals(USegregatedFrom.NAME)) {
 			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			p = new USegregatedFrom((Transition) o1, (Transition) o2, (IFNet) mNet);
-			
-		} else if (patternName.equals(BoundedWith.NAME)) {
-			
-			
-			
-		} else if (patternName.equals(MSegregated.NAME)) {
-			
-			
-			
-		} else if (patternName.equals(RBoundedWith.NAME)) {
-			
-		} else if (patternName.equals(MissingData.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			p = new MissingData((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions());
-			
-		} else if (patternName.equals(WeaklyRedData.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			p = new WeaklyRedData((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions(),
-					(Collection<IFNetPlace>) mNet.getDrainPlaces());
-			
-		} else if (patternName.equals(WeaklyLostData.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			p = new WeaklyLostData((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions());
-			
-		} else if (patternName.equals(InconsistentData.NAME)) {
-			
-		} else if (patternName.equals(NeverDestroyed.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			p = new NeverDestroyed((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions(), 
-					(Collection<IFNetPlace>) mNet.getDrainPlaces());
-			
-		} else if (patternName.equals(TwiceDestroyed.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			p = new TwiceDestroyed((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions());
-			
-		} else if (patternName.equals(NotDeletedOnTime.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			p = new NotDeletedOnTime((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions());
-			
-		} else {
-			try {
-				throw new UnsupportedPattern("The provided pattern is not supported! Extend the "
-						+ "implementation of the PatternFactory");
-			} catch (UnsupportedPattern e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return p;
-		
-	}
-	
-	
-	@SuppressWarnings("unchecked")
-	/*public ArrayList<CompliancePattern> createPattern(String patternName, ArrayList<Parameter> params) {
-	
-		
-		ArrayList<CompliancePattern> patterns = new ArrayList<CompliancePattern>(); 
-		CompliancePattern p = null;
-		
-		if (patternName.equals(Precedes.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			if (o1 instanceof Transition && o2 instanceof Transition) {
-				p = new Precedes((Transition) o1, (Transition) o2);
-			} else {
-				p = new Precedes((Statepredicate) o1, (Statepredicate) o2);
-			}
-			
-		} else if (patternName.equals(ChainPrecedes.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			ParamValue value3 = params.get(2).getValue().get(0);
-			Operand o3 = createOperand(value3);
-			p = new ChainPrecedes((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
-			
-		} else if (patternName.equals(PrecedesChain.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			ParamValue value3 = params.get(2).getValue().get(0);
-			Operand o3 = createOperand(value3);
-			p = new PrecedesChain((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
-			
-		} else if (patternName.equals(LeadsTo.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			p = new LeadsTo((NetElementExpression) o1, (NetElementExpression) o2);
-			
-			
-		} else if (patternName.equals(ChainLeadsTo.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			ParamValue value3 = params.get(2).getValue().get(0);
-			Operand o3 = createOperand(value3);
-			p = new ChainLeadsTo((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
-			
-		} else if (patternName.equals(LeadsToChain.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			ParamValue value3 = params.get(2).getValue().get(0);
-			Operand o3 = createOperand(value3);
-			p = new LeadsToChain((NetElementExpression) o1, (NetElementExpression) o2, (NetElementExpression) o3);
-			
-		} else if (patternName.equals(XLeadsTo.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			p = new XLeadsTo((NetElementExpression) o1, (NetElementExpression) o2);
-			
-		} else if (patternName.equals(Else.NAME)) {
-			
-			
-			
-		} else if (patternName.equals(Absent.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			if (o1 instanceof Transition) {
-				p = new Absent((Transition) o1);
-			} else {
-				p = new Absent((Statepredicate) o1);
-			}
-			
-		} else if (patternName.equals(Universal.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			if (o1 instanceof Transition) {
-				p = new Universal((Transition) o1, mNet.getSourcePlaces().iterator().next());
-			} else {
-				p = new Universal((Statepredicate) o1, mNet.getSourcePlaces().iterator().next());
-			}
-			
-		} else if (patternName.equals(Exists.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			if (o1 instanceof Transition) {
-				p = new Exists((Transition) o1, mNet.getDrainPlaces().iterator().next());
-			} else {
-				p = new Exists((Statepredicate) o1);
-			}
-			
-			
-		} else if (patternName.equals(CoExists.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new CoExists((Transition) o1, (Transition) o2, mOutputPlace);
-			} else {
-				p = new CoExists((Statepredicate) o1, (Statepredicate) o2);
-			}
-			
-		} else if (patternName.equals(CoAbsent.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new CoAbsent((Transition) o1, (Transition) o2, mOutputPlace);
-			} else {
-				p = new CoAbsent((Statepredicate) o1, (Statepredicate) o2);
-			}
-			
-		} else if (patternName.equals(Exclusive.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new Exclusive((Transition) o1, (Transition) o2, mOutputPlace);
-			} else {
-				p = new Exclusive((Statepredicate) o1, (Statepredicate) o2);
-			}
-			
-			
-		} else if (patternName.equals(Corequisite.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new Corequisite((Transition) o1, (Transition) o2, mOutputPlace);
-			} else {
-				p = new Corequisite((Statepredicate) o1, (Statepredicate) o2);
-			}
-			
-			
-		} else if (patternName.equals(MutexChoice.NAME)) {
-			
-			ParamValue value1 = params.get(0).getValue().get(0);
-			Operand o1 = createOperand(value1);
-			ParamValue value2 = params.get(1).getValue().get(0);
-			Operand o2 = createOperand(value2);
-			if (o1 instanceof Transition & o2 instanceof Transition) {
-				p = new MutexChoice((Transition) o1, (Transition) o2, mOutputPlace);
-			} else {
-				p = new MutexChoice((Statepredicate) o1, (Statepredicate) o2);
-			}
-			
-		} else if (patternName.equals(PerformedBy.NAME)) {
-			
-			
-			
-		} else if (patternName.equals(SegregatedFrom.NAME)) {
-			
-			
-			
-		} else if (patternName.equals(USegregatedFrom.NAME)) {
-			
 			
 			
 		} else if (patternName.equals(BoundedWith.NAME)) {
@@ -533,20 +287,22 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new MissingData((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions());
+			patterns.add(new MissingData((Token) o1, 
+					(Collection<RegularIFNetTransition>) mNet.getTransitions()));
 			
 		} else if (patternName.equals(WeaklyRedData.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new WeaklyRedData((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions(),
-					(Collection<IFNetPlace>) mNet.getDrainPlaces());
+			patterns.add(new WeaklyRedData((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions(),
+					(Collection<IFNetPlace>) mNet.getDrainPlaces()));
 			
 		} else if (patternName.equals(WeaklyLostData.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new WeaklyLostData((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions());
+			patterns.add(new WeaklyLostData((Token) o1, 
+					(Collection<RegularIFNetTransition>) mNet.getTransitions()));
 			
 		} else if (patternName.equals(InconsistentData.NAME)) {
 			
@@ -554,26 +310,28 @@ public class PatternFactory {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new NeverDestroyed((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions(), 
-					(Collection<IFNetPlace>) mNet.getDrainPlaces());
+			patterns.add(new NeverDestroyed((Token) o1, 
+					(Collection<RegularIFNetTransition>) mNet.getTransitions(), 
+					(Collection<IFNetPlace>) mNet.getDrainPlaces()));
 			
 		} else if (patternName.equals(TwiceDestroyed.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new TwiceDestroyed((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions());
+			patterns.add(new TwiceDestroyed((Token) o1, 
+					(Collection<RegularIFNetTransition>) mNet.getTransitions()));
 			
 		} else if (patternName.equals(NotDeletedOnTime.NAME)) {
 			
 			ParamValue value1 = params.get(0).getValue().get(0);
 			Operand o1 = createOperand(value1);
-			p = new NotDeletedOnTime((Token) o1, (Collection<RegularIFNetTransition>) mNet.getTransitions());
+			patterns.add(new NotDeletedOnTime((Token) o1, 
+					(Collection<RegularIFNetTransition>) mNet.getTransitions()));
 			
 		} else if (patternName.equals(ReadUp.NAME) || patternName.equals(WriteDown.NAME) || 
-				patternName.equals(Causal.NAME) || patternName.equals(UsageConflict.NAME)) {
+				patternName.equals(PBNI.NAME)) {
 			
-			GesineStructureAnalyser gFactory = new GesineStructureAnalyser((IFNet) mNet); 
-			patterns = gFactory.createPatterns(patternName);
+			patterns.addAll(ifflowPatternCreator.createPatterns(patternName));
 			
 		} else {
 			try {
@@ -584,11 +342,11 @@ public class PatternFactory {
 				e.printStackTrace();
 			}
 		}
-		if (p != null) patterns.add(p);
 		
 		return patterns;
 		
-	}*/
+	}
+	
 
 	private Operand createOperand(ParamValue value) {
 		
@@ -612,7 +370,7 @@ public class PatternFactory {
 	private Operand createStatePredicate(String oValue) {
 		
 		String[] atomicPropositions = oValue.split("&");
-		ArrayList<AtomicProposition> atomicPropObjects = new ArrayList<AtomicProposition>();
+		ArrayList<PlacePredicate> atomicPropObjects = new ArrayList<PlacePredicate>();
 		
 		for (int i = 0; i < atomicPropositions.length; i++) {
 			String atomicProp = atomicPropositions[i];
@@ -620,7 +378,7 @@ public class PatternFactory {
 				Relation rel = getRelation(atomicProp);
 				String[] ops = getOperands(atomicProp);
 				atomicPropObjects.add(
-						new AtomicProposition(ops[0], rel, Integer.parseInt(ops[1])));
+						new PlacePredicate(ops[0], rel, Integer.parseInt(ops[1])));
 			} catch (UnsupportedRelation e) {
 				e.printStackTrace();
 			}
@@ -632,7 +390,7 @@ public class PatternFactory {
 			
 		} else {
 			
-			Statepredicate sp = atomicPropObjects.get(0);
+			StateExpression sp = atomicPropObjects.get(0);
 			for (int i = 1; i < atomicPropObjects.size(); i++) {
 				sp = new Clause(sp, atomicPropObjects.get(i));
 			}

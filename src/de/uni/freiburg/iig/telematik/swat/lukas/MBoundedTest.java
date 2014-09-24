@@ -22,7 +22,7 @@ public class MBoundedTest {
 		try {
 			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
-			fail();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -37,7 +37,7 @@ public class MBoundedTest {
 		try {
 			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
-			fail();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -54,7 +54,7 @@ public class MBoundedTest {
 		try {
 			assertTrue(tu.isPropertySatisfied());
 		} catch (Exception e) {
-			fail();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -70,7 +70,7 @@ public class MBoundedTest {
 		try {
 			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
-			fail();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -81,12 +81,13 @@ public class MBoundedTest {
 		activities.add(new Transition("register request"));
 		activities.add(new Transition("examine thoroughly"));
 		MBounded p = new MBounded(activities, new User("Pete"));
+		//p.printOut();
 		String fileName = "twoOccsOfSameActivity.mxml";
 		TestUtils tu = new TestUtils(fileName, p);
 		try {
 			assertFalse(tu.isPropertySatisfied());
 		} catch (Exception e) {
-			fail();
+			fail(e.getMessage());
 		}
 	}
 

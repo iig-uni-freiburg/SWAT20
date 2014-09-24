@@ -35,8 +35,8 @@ public class AbsentTest {
 	@Test
 	public void test2() {
 		IFNet ifnet = IFNetTestUtils.createDeadTransitionNet();
-		AtomicProposition ap1 = new AtomicProposition("pIn_black", Relation.GREATER_EQUAL, 1);
-		AtomicProposition ap2 = new AtomicProposition("pOut_black", Relation.GREATER_EQUAL, 1);
+		PlacePredicate ap1 = new PlacePredicate("pIn_black", Relation.GREATER_EQUAL, 1);
+		PlacePredicate ap2 = new PlacePredicate("pOut_black", Relation.GREATER_EQUAL, 1);
 		Clause c = new Clause(ap1, ap2);
 		Absent p1 = new Absent(c);
 		TestUtils tu = new TestUtils(ifnet, p1);
@@ -50,7 +50,7 @@ public class AbsentTest {
 	@Test
 	public void test3() {
 		IFNet ifnet = IFNetTestUtils.createDeadTransitionNet();
-		AtomicProposition ap1 = new AtomicProposition("pOut_black", Relation.GREATER_EQUAL, 1);
+		PlacePredicate ap1 = new PlacePredicate("pOut_black", Relation.GREATER_EQUAL, 1);
 		Absent p1 = new Absent(ap1);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {

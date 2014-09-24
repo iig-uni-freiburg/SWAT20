@@ -61,8 +61,8 @@ public class PLeadsToTest {
 	@Test
 	public void test4() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("pIn_black", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("pOut_black", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("pIn_black", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("pOut_black", Relation.EQUALS, 1);
 		PLeadsTo p1 = new PLeadsTo(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
@@ -75,8 +75,8 @@ public class PLeadsToTest {
 	@Test
 	public void test5() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("p0_green", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("p2_green", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("p0_green", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("p2_green", Relation.EQUALS, 1);
 		PLeadsTo p1 = new PLeadsTo(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {

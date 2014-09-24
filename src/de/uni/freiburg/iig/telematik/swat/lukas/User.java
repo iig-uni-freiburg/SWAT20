@@ -13,4 +13,9 @@ public class User extends Operand {
 		return mUserName;
 	}
 
+	@Override
+	public String getName() {
+		return mUserName;
+	}
+
 }

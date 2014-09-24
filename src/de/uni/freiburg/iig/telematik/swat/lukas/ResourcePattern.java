@@ -73,5 +73,6 @@ public abstract class ResourcePattern extends CompliancePattern {
 			}
 		}
 	}
+	
 
 }

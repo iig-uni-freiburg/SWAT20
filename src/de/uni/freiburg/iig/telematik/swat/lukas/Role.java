@@ -12,5 +12,9 @@ public class Role extends Operand {
 		return mRolename;
 	}
 	
+	public String getName() {
+		return mRolename;
+	}
+	
 
 }

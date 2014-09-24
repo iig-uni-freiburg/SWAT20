@@ -11,4 +11,9 @@ public class Token extends Operand {
 	public String toString() {
 		return mColor;
 	}
+
+	@Override
+	public String getName() {
+		return mColor;
+	}
 }

@@ -60,8 +60,8 @@ public class ExclusiveTest {
 	@Test
 	public void test3() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("p4_yellow", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("p1_red", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("p4_yellow", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("p1_red", Relation.EQUALS, 1);
 		Exclusive p1 = new Exclusive(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
@@ -74,8 +74,8 @@ public class ExclusiveTest {
 	@Test
 	public void test4() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("p1_red", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("p4_yellow", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("p1_red", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("p4_yellow", Relation.EQUALS, 1);
 		Exclusive p1 = new Exclusive(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {

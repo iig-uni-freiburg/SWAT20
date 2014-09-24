@@ -84,7 +84,11 @@ public abstract class PrismConverter {
 		// append transitions
 		prismModelBuilder.append(transitions);
 		
-		prismModelBuilder.append(createTerminationLoops());
+		if (mAbstractNet.getDrainPlaces().size() == 1) {
+			prismModelBuilder.append(createTerminationLoops());
+		} else {
+			System.out.println("Warning! The current net isn't sound. Computations can be inaccurate.");
+		}
 							
 		prismModelBuilder.append("endmodule");
 		prismModelBuilder.append("\n");	

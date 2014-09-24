@@ -8,7 +8,7 @@ public class CoExists extends CompositePattern {
 	
 	public static final String DESC = "If P is present, then Q must also be present.";
 	
-	public CoExists(Statepredicate op1, Statepredicate op2) {
+	public CoExists(StateExpression op1, StateExpression op2) {
 		super("(!(F" + op1.toString() + ")) | (F" + op2.toString()+")");
 		mOperands.add(op1);
 		mOperands.add(op2);

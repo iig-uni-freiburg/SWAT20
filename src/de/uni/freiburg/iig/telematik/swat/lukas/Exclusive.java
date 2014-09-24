@@ -8,7 +8,7 @@ public class Exclusive extends CompositePattern {
 	
 	public static final String DESC = "If P is present then Q must be absent and vice versa.";
 
-	public Exclusive(Statepredicate op1, Statepredicate op2) {
+	public Exclusive(StateExpression op1, StateExpression op2) {
 		super("(!(F" + op1.toString() + ") | (G(!" + op2.toString() 
 				+ "))) & (!(F"  + op2.toString() + ") | (G(!" 
 				+ op1.toString() + ")))");

@@ -40,7 +40,7 @@ public class MBounded extends ResourcePattern {
 		Disjunction head = new Disjunction(r);
 		Conjunction c = new Conjunction(head);
 		SimpleActivityExecution activityExec = new SimpleActivityExecution(c, "A", 
-				EventType.performed, false);
+				EventType.complete, false);
 		OriginatorVariable originator = new OriginatorVariable(activityExec);
 		StringConstantAttribute userNameConst = new StringConstantAttribute(user.toString());
 		new SimpleStringConstraint(originator, StringOP.EQUAL, userNameConst);
@@ -49,7 +49,7 @@ public class MBounded extends ResourcePattern {
 		// define body
 		Conjunction body = new Conjunction(r);
 		SimpleActivityExecution activityExec2 = new SimpleActivityExecution(body, "A",
-				EventType.performed, false);
+				EventType.complete, false);
 		ActivityTypeVariable activityVar = new ActivityTypeVariable(activityExec2);
 		StringConstantAttribute actNameConst = new StringConstantAttribute(trans.getName());
 		new SimpleStringConstraint(activityVar, StringOP.EQUAL, actNameConst);

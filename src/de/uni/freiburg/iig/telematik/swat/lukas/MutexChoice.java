@@ -8,7 +8,7 @@ public class MutexChoice extends CompositePattern {
 	
 	public static final String DESC = "Either P or Q must be present.";
 
-	public MutexChoice(Statepredicate op1, Statepredicate op2) {
+	public MutexChoice(StateExpression op1, StateExpression op2) {
 		super("((F" + op1.toString() + ") & (G(!" + op2.toString() + "))) | "
 				+ "((F" + op2.toString() + ") & (G(!" + op1.toString() + ")))");
 		mOperands.add(op1);

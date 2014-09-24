@@ -73,8 +73,8 @@ public class CorequisiteTest {
 	@Test
 	public void test5() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("pIn_black", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("pOut_black", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("pIn_black", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("pOut_black", Relation.EQUALS, 1);
 		Corequisite p1 = new Corequisite(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
@@ -87,8 +87,8 @@ public class CorequisiteTest {
 	@Test
 	public void test6() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("p0_green", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("p2_green", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("p0_green", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("p2_green", Relation.EQUALS, 1);
 		Corequisite p1 = new Corequisite(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
@@ -101,8 +101,8 @@ public class CorequisiteTest {
 	@Test
 	public void test7() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("p4_yellow", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("p1_red", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("p4_yellow", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("p1_red", Relation.EQUALS, 1);
 		Corequisite p1 = new Corequisite(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {

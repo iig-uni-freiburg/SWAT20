@@ -13,7 +13,7 @@ public class Exists extends AtomicPattern {
 		mOperands.add(t);
 	}
 	
-	public Exists(Statepredicate sp) {
+	public Exists(StateExpression sp) {
 		super("F" + sp.toString());
 		mOperands.add(sp);
 	}

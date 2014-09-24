@@ -8,11 +8,11 @@ public class TestOperand {
 
 	@Test
 	public void testAtomicProposition() {
-		Statepredicate sp1 = new AtomicProposition("p1", Relation.EQUALS, 1);
-		Statepredicate sp2 = new AtomicProposition("p2", Relation.GREATER, 3);
-		Statepredicate sp3 = new AtomicProposition("p3", Relation.SMALLER, 3);
-		Statepredicate sp4 = new AtomicProposition("p3", Relation.SMALLER_EQUAL, 3);
-		Statepredicate sp5 = new AtomicProposition("p4", Relation.GREATER_EQUAL, 3);
+		StateExpression sp1 = new PlacePredicate("p1", Relation.EQUALS, 1);
+		StateExpression sp2 = new PlacePredicate("p2", Relation.GREATER, 3);
+		StateExpression sp3 = new PlacePredicate("p3", Relation.SMALLER, 3);
+		StateExpression sp4 = new PlacePredicate("p3", Relation.SMALLER_EQUAL, 3);
+		StateExpression sp5 = new PlacePredicate("p4", Relation.GREATER_EQUAL, 3);
 		assertEquals("(p1=1)", sp1.toString());
 		assertEquals("(p2>3)", sp2.toString());
 		assertEquals("(p3<3)", sp3.toString());
@@ -22,11 +22,11 @@ public class TestOperand {
 	
 	@Test
 	public void testClause() {
-		Statepredicate sp1 = new AtomicProposition("p1", Relation.EQUALS, 1);
-		Statepredicate sp2 = new AtomicProposition("p2", Relation.GREATER, 3);
-		Statepredicate sp3 = new AtomicProposition("p3", Relation.SMALLER, 3);
-		Statepredicate clause1 = new Clause(sp1, sp2);
-		Statepredicate clause2 = new Clause(clause1, sp3);
+		StateExpression sp1 = new PlacePredicate("p1", Relation.EQUALS, 1);
+		StateExpression sp2 = new PlacePredicate("p2", Relation.GREATER, 3);
+		StateExpression sp3 = new PlacePredicate("p3", Relation.SMALLER, 3);
+		StateExpression clause1 = new Clause(sp1, sp2);
+		StateExpression clause2 = new Clause(clause1, sp3);
 		
 		assertEquals("(p1=1)", sp1.toString());
 		assertEquals("(p2>3)", sp2.toString());

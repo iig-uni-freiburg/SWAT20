@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
-public class AtomicProposition extends Statepredicate {
+public class PlacePredicate extends StateExpression {
 
 	
 	private String mRelation;
@@ -8,7 +8,7 @@ public class AtomicProposition extends Statepredicate {
 	private String mPlaceName;
 	private int mNumber;
 
-	public AtomicProposition(String placeName, Relation r, int number) {
+	public PlacePredicate(String placeName, Relation r, int number) {
 		try {
 			setRelationSymbol(r);
 		} catch (UnsupportedRelation e) {
@@ -17,6 +17,7 @@ public class AtomicProposition extends Statepredicate {
 		}
 		mPlaceId = placeName;
 		mNumber = number;
+		mPlaceName = placeName;
 	}
 
 	private void setRelationSymbol(Relation r) throws UnsupportedRelation {

@@ -73,8 +73,8 @@ public class MutexChoiceTest {
 	@Test
 	public void test5() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("pIn_black", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("pOut_black", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("pIn_black", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("pOut_black", Relation.EQUALS, 1);
 		MutexChoice p1 = new MutexChoice(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
@@ -88,8 +88,8 @@ public class MutexChoiceTest {
 	@Test
 	public void test7() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("p4_yellow", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("p1_red", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("p4_yellow", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("p1_red", Relation.EQUALS, 1);
 		MutexChoice p1 = new MutexChoice(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
@@ -102,8 +102,8 @@ public class MutexChoiceTest {
 	@Test
 	public void test8() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("p4_yellow", Relation.EQUALS, 1);
-		AtomicProposition ap2 = new AtomicProposition("p2_green", Relation.EQUALS, 1);
+		PlacePredicate ap1 = new PlacePredicate("p4_yellow", Relation.EQUALS, 1);
+		PlacePredicate ap2 = new PlacePredicate("p2_green", Relation.EQUALS, 1);
 		MutexChoice p1 = new MutexChoice(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
@@ -116,8 +116,8 @@ public class MutexChoiceTest {
 	@Test
 	public void test9() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("p4_yellow", Relation.EQUALS, 3);
-		AtomicProposition ap2 = new AtomicProposition("p2_green", Relation.EQUALS, 2);
+		PlacePredicate ap1 = new PlacePredicate("p4_yellow", Relation.EQUALS, 3);
+		PlacePredicate ap2 = new PlacePredicate("p2_green", Relation.EQUALS, 2);
 		MutexChoice p1 = new MutexChoice(ap1, ap2);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {

@@ -8,7 +8,7 @@ public class Corequisite extends CompositePattern {
 	
 	public static final String DESC = "Both P and Q must be present or absent.";
 
-	public Corequisite(Statepredicate t1, Statepredicate t2) {
+	public Corequisite(StateExpression t1, StateExpression t2) {
 		super("((F" + t1.toString() + ") & (F" + t2.toString() + ")) | "
 				+ "(!(F(" + t1.toString() + ")) & (!(F(" + t2.toString() + "))))");
 		mOperands.add(t1);

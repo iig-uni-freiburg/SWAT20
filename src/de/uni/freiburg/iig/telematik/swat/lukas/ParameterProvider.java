@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 public class ParameterProvider {
 	
-	
+	HashSet<String> mNoParameterIFPatterns;
 	HashSet<String> mOneParameterCFPatterns;
 	HashSet<String> mTwoParameterCFPatterns;
 	HashSet<String> mThreeParameterCFPatterns;
@@ -15,6 +15,8 @@ public class ParameterProvider {
 	
 	public ParameterProvider() {
 		
+		mNoParameterIFPatterns = new HashSet<String>(Arrays.asList(ReadUp.NAME, WriteDown.NAME, 
+				PBNI.NAME)); 
 		mOneParameterCFPatterns = new HashSet<String>(Arrays.asList(Exists.NAME, Absent.NAME));
 		mTwoParameterCFPatterns = new HashSet<String>(Arrays.asList(Precedes.NAME, LeadsTo.NAME, XLeadsTo.NAME, 
 				CoExists.NAME, CoAbsent.NAME, Exclusive.NAME, Corequisite.NAME, MutexChoice.NAME, PLeadsTo.NAME));
@@ -85,7 +87,7 @@ public class ParameterProvider {
 		} else if (patternName.equals(Universal.NAME)) {
 			parameters.add(new Parameter(new HashSet<OperandType>(
 					Arrays.asList(OperandType.STATEPREDICATE)), 1, "P"));
-		} else {
+		} else if (!mNoParameterIFPatterns.contains(patternName)) {
 			try {
 				throw new UnsupportedPattern("The given pattern is not supported! "
 						+ "Extend the Implementation of the ParameterProvider class.");

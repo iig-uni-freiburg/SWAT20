@@ -1,12 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.lukas;
 
-public class Clause extends Statepredicate {
+public class Clause extends StateExpression {
 	
-	private Statepredicate mSp1;
+	private StateExpression mSp1;
 	
-	private Statepredicate mSp2;
+	private StateExpression mSp2;
 	
-	public Clause(Statepredicate sp1, Statepredicate sp2) {
+	public Clause(StateExpression sp1, StateExpression sp2) {
 		mSp1 = sp1;
 		mSp2 = sp2;
 	}

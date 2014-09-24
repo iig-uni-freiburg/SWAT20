@@ -22,7 +22,7 @@ public class PrismResult implements Iterable<Map.Entry<CompliancePattern, Patter
 			String resString = resultStrs.get(i);
 			double probability = getProb(resString);
 			boolean isFulfilled = isFulfilled(resString, isAntiPattern);
-			PatternResult pr = new PatternResult(probability, isFulfilled);
+			PatternResult pr = new PatternResult(probability, isFulfilled, cp.getOperands());
 			mResults.put(cp, pr);	
 		}
 		
@@ -45,7 +45,7 @@ public class PrismResult implements Iterable<Map.Entry<CompliancePattern, Patter
 			if (pr == null) {
 				double probability = getProb(res);
 				boolean isFulfilled = isFulfilled(res, cp.isAntiPattern());
-				pr = new PatternResult(probability, isFulfilled);
+				pr = new PatternResult(probability, isFulfilled, cp.getOperands());
 				mResults.put(cp, pr);
 			} else {
 				ArrayList<String> path = getViolatingPath(res, states);

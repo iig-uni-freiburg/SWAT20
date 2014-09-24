@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 /**
  * This abstract class is a superclass of all implemented compliance patterns.
- * 
  * */
 public abstract class CompliancePattern {
 	
@@ -38,6 +37,10 @@ public abstract class CompliancePattern {
 	
 	public String getPrismLTLProperty() {
 		return mPrismLTLProperty;
+	}
+	
+	public ArrayList<Operand> getOperands() {
+		return mOperands;
 	}
 	
 	public String getPrismProp(boolean isBoundedNet) {

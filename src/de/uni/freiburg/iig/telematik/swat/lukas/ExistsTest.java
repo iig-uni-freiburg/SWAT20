@@ -16,8 +16,8 @@ public class ExistsTest {
 	@Test
 	public void test0() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("pIn_black", Relation.GREATER_EQUAL, 1);
-		AtomicProposition ap2 = new AtomicProposition("pOut_black", Relation.GREATER_EQUAL, 1);
+		PlacePredicate ap1 = new PlacePredicate("pIn_black", Relation.GREATER_EQUAL, 1);
+		PlacePredicate ap2 = new PlacePredicate("pOut_black", Relation.GREATER_EQUAL, 1);
 		Clause c = new Clause(ap1, ap2);
 		Exists p1 = new Exists(c);
 		TestUtils tu = new TestUtils(ifnet, p1);
@@ -31,7 +31,7 @@ public class ExistsTest {
 	@Test
 	public void test1() {
 		IFNet ifnet = IFNetTestUtils.create6PlaceIFNet();
-		AtomicProposition ap1 = new AtomicProposition("pOut_black", Relation.GREATER_EQUAL, 1);
+		PlacePredicate ap1 = new PlacePredicate("pOut_black", Relation.GREATER_EQUAL, 1);
 		Exists p1 = new Exists(ap1);
 		TestUtils tu = new TestUtils(ifnet, p1);
 		try {
