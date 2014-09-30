@@ -47,6 +47,7 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
@@ -66,6 +67,7 @@ public class SwatComponents {
 	private Map<LogModel, List<LogAnalysisModel>> logAnalysis = new HashMap<LogModel, List<LogAnalysisModel>>();
 	private List<String> needsLayout = new LinkedList<String>();
 	private Map<String, LinkedList<AnalysisContext>> analyseContext = new HashMap<String, LinkedList<AnalysisContext>>(0);
+	private Map<String, TimeContext> timeContext = new HashMap<String, TimeContext>();
 
 	private String selectedACModel;
 	
@@ -423,12 +425,24 @@ public class SwatComponents {
 			try {
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet = loadPetriNetFromFolder(folder);
 				if (loadedNet != null) {
-				getAnalysisFor(loadedNet, folder);
+					getAnalysisFor(loadedNet, folder);
 					loadAnalysisContextFor(loadedNet, folder);
+					loadTimeAnalysisContextFor(loadedNet, folder);
 				}
 			} catch (NullPointerException e) {
 				//folder does not exists. create
 				new File(SwatProperties.getInstance().getNetWorkingDirectory()).mkdir();
+			}
+		}
+
+	}
+
+	private void loadTimeAnalysisContextFor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet, File folder) throws IOException {
+		File timeFolder = new File(folder, SwatProperties.getInstance().getTimeAnalysisFolderName());
+		for (File file : timeFolder.listFiles()) {
+			if (file.getAbsolutePath().endsWith("xml")) {
+				TimeContext context = TimeContext.parse(file);
+				timeContext.put(loadedNet.getPetriNet().getName(), context);
 			}
 		}
 
@@ -710,6 +724,14 @@ public class SwatComponents {
 		storeLogAnalysis(model, correspondingLog);
 	}
 
+	public void putTimeAnalysisIntoSwatComponent(String name, TimeContext context) {
+		timeContext.put(name, context);
+	}
+
+	public void putTimeAnalysisIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, TimeContext context) {
+		timeContext.put(net.getPetriNet().getName(), context);
+	}
+
 	private void storeLogAnalysis(LogAnalysisModel model, LogModel correspondingLog) {
 		// copy correspondingLog
 
@@ -831,6 +853,12 @@ public class SwatComponents {
 		if(acModels.remove(name) != null){
 //			FileUtils.deleteFile(GeneralProperties.getInstance().getPathForACModels()+name);
 		}
+	}
+
+	public TimeContext getTimeAnalysisForNet(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> cur_net) {
+		String name = cur_net.getPetriNet().getName();
+		TimeContext context = timeContext.get(name);
+		return context;
 	}
 }
 

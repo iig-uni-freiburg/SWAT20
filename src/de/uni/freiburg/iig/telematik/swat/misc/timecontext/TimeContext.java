@@ -21,6 +21,7 @@ public class TimeContext implements PNTimeContext {
 	//TODO: timing for Places. How to get it from the log?
 
 	Map<String, TimeBehavior> transitionTime = new HashMap<String, TimeBehavior>();
+	File file;
 
 	public static void main(String args[]) {
 		//TimeMachine<?, ?, ?, ?, ?, ?, ?> timeMachine = new TimeMachine<AbstractPlace<F,S>, AbstractTransition<F,S>, AbstractFlowRelation<P,T,S>, AbstractMarking<S>, Object, AbstractMarkingGraphState<M,S>, AbstractMarkingGraphRelation<M,X,S>>(petriNet, timeContext)
@@ -41,6 +42,11 @@ public class TimeContext implements PNTimeContext {
 
 	public TimeContext() {
 
+	}
+
+
+	public TimeContext(File fileToSave) {
+		this.file = fileToSave;
 	}
 
 	public void addTimeBehavior(String transitionName, TimeBehavior behavior) {
@@ -64,6 +70,7 @@ public class TimeContext implements PNTimeContext {
 	}
 
 	public void storeTimeContext(File file) throws FileNotFoundException {
+		setFile(file);
 		String serialString = new XStream().toXML(this);
 		PrintWriter writer = new PrintWriter(file);
 		writer.write(serialString);
@@ -71,8 +78,18 @@ public class TimeContext implements PNTimeContext {
 		writer.close();
 	}
 
-	public TimeContext getFromFile(File file) {
-		return (TimeContext) new XStream().fromXML(file);
+	public static TimeContext parse(File file) {
+		TimeContext context = (TimeContext) new XStream().fromXML(file);
+		context.setFile(file);
+		return context;
+	}
+
+	protected File getFile() {
+		return file;
+	}
+
+	protected void setFile(File file) {
+		this.file = file;
 	}
 
 	@Override
@@ -84,6 +101,11 @@ public class TimeContext implements PNTimeContext {
 	@Override
 	public long getDelayTP(String transitionName, String placeName) {
 		return (long) transitionTime.get(transitionName).getNeededTime();
+	}
+
+	public void storeTimeContext() throws FileNotFoundException {
+		storeTimeContext(file);
+
 	}
 
 }

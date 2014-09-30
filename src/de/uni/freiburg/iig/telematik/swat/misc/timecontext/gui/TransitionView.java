@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -50,7 +51,7 @@ public class TransitionView extends JDialog {
 		setUpComponents();
 		initialize();
 		pack();
-		setVisible(true);
+		//setVisible(true);
 	}
 
 	private void setDistributionTypeText() {
@@ -117,7 +118,8 @@ public class TransitionView extends JDialog {
 
 	private void setUpComponents() {
 		setDistributionTypeText();
-		okBtn = new JButton("OK");
+		okBtn = getOKButton();
+
 		cancelBtn = new JButton("Cancel");
 		setDistribution = new JButton("Set time behavior");
 		setDistribution.addActionListener(new ActionListener() {
@@ -133,5 +135,26 @@ public class TransitionView extends JDialog {
 			}
 		});
 		getDistributionFromLog = new JButton("load from log");
+	}
+
+	private JButton getOKButton() {
+		if (okBtn == null) {
+			okBtn = new JButton("OK");
+			okBtn.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						timeContext.storeTimeContext();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} finally {
+						dispose();
+					}
+
+				}
+			});
+		}
+		return okBtn;
 	}
 }

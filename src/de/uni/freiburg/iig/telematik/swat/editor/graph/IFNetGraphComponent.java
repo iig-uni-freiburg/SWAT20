@@ -3,10 +3,19 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.TransitionView;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class IFNetGraphComponent extends PNGraphComponent {
 
@@ -84,6 +93,32 @@ public class IFNetGraphComponent extends PNGraphComponent {
 	protected boolean rightClickOnTransition(PNGraphCell cell, MouseEvent e) {
 		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), this);
 		getTransitionPopupMenu().show(IFNetGraphComponent.this, pt.x, pt.y);
+		return false;
+	}
+
+	@Override
+	protected boolean rightClickOnArc(PNGraphCell cell, MouseEvent e) {
+		// Show TimeContext, set Filepath if none available
+		//return super.rightClickOnArc(cell, e);
+		try {
+			SwatComponents comp = SwatComponents.getInstance();
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> cur_net = ((PNEditor) Workbench.getInstance().getTabView()
+					.getSelectedComponent()).getNetContainer();
+			TimeContext context = comp.getTimeAnalysisForNet(cur_net);
+			if (context == null){
+				File contextPath = new File(comp.getFile(cur_net).getParentFile(), SwatProperties.getInstance().getTimeAnalysisFolderName());
+				File fileToSave=new File(contextPath,"time-context.xml");
+				fileToSave.getParentFile().mkdirs();
+				context = new TimeContext(fileToSave);
+			}
+			TransitionView view = new TransitionView(cell.getId(), context);
+			view.setVisible(true);
+				
+		} catch (ClassCastException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		return false;
 	}
 

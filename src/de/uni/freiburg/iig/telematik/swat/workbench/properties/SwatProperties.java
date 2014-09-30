@@ -146,7 +146,19 @@ public class SwatProperties extends AbstractProperties{
 	public void setAnalysisFolderName(String folderName) throws IOException {
 		setProperty(SwatProperty.ANALYSIS_CONTEXT_NAME, folderName);
 		store();
+	}
 
+	public String getTimeAnalysisFolderName() {
+		String result = getProperty(SwatProperty.TIME_CONTEXT_NAME);
+		if (result == null || result.isEmpty()) {
+			result = "time-context";
+		}
+		return result;
+	}
+
+	public void setTimeAnalysisFolderName(String name) throws IOException {
+		setProperty(SwatProperty.TIME_CONTEXT_NAME, name);
+		store();
 	}
 
 	//	public String getAnalysisDirForNet(AbstractGraphicalPN net) {
@@ -160,6 +172,7 @@ public class SwatProperties extends AbstractProperties{
 	public String getNetWorkingDirectory() throws ParameterException, PropertyException {
 		return new File(getWorkingDirectory(), getNetFolderName()).getAbsolutePath();
 	}
+
 
 	//------- Known Working Directories ----------------------------------------------------
 	
