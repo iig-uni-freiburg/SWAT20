@@ -16,12 +16,18 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogEntry;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogSummary;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
+
+import de.uni.freiburg.iig.telematik.jawl.log.DataAttribute;
+import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
+import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
+import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
 
 public class AristaFlowParser implements ISciffLogReader, Serializable {
 	private File log;
@@ -191,6 +197,51 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 
 	public enum whichTimestamp {
 		START, END, BOTH;
+	}
+
+	public List<List<LogTrace<LogEntry>>> getLogEntries() {
+		ArrayList<List<LogTrace<LogEntry>>> parsedLogFiles = new ArrayList<List<LogTrace<LogEntry>>>();
+		List<LogTrace<LogEntry>> traceList = new ArrayList<LogTrace<LogEntry>>();
+		parsedLogFiles.add(traceList);
+
+		int i = 0;
+		for (Entry<String, ISciffLogTrace> entry : traces.entrySet()) {
+			LogTrace<LogEntry> logTrace = new LogTrace<LogEntry>(i);
+			for (int j = 0; j < entry.getValue().size(); j++) {
+				String name;
+				try {
+					ISciffLogEntry iSciffLogEntry=entry.getValue().get(j);
+					name = entry.getValue().get(j).getElement();
+					LogEntry logEntry = new LogEntry(name);
+					addAttributes(logEntry, entry.getValue().get(j));
+					//logEntry.addTime(iSciffLogEntry.getTimestamp().getTime());
+					logEntry.setTimestamp(iSciffLogEntry.getTimestamp());
+					logEntry.setOriginator(iSciffLogEntry.getOriginator());
+					logTrace.addEntry(logEntry);
+				} catch (IndexOutOfBoundsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (LockingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+			traceList.add(logTrace);
+		}
+
+		return parsedLogFiles;
+	}
+
+	private void addAttributes(LogEntry logEntry, ISciffLogEntry iSciffLogEntry) {
+		for (Entry<String, String> entry : iSciffLogEntry.getAttributes().entrySet()) {
+			logEntry.addMetaAttribute(new DataAttribute(entry.getKey(), entry.getValue()));
+		}
+
 	}
 
 }
