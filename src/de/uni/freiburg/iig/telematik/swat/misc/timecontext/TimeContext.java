@@ -70,6 +70,8 @@ public class TimeContext implements PNTimeContext {
 	}
 
 	public void storeTimeContext(File file) throws FileNotFoundException {
+		if (file == null)
+			return;
 		setFile(file);
 		String serialString = new XStream().toXML(this);
 		PrintWriter writer = new PrintWriter(file);
@@ -100,6 +102,8 @@ public class TimeContext implements PNTimeContext {
 
 	@Override
 	public long getDelayTP(String transitionName, String placeName) {
+		if (!transitionTime.containsKey(transitionName))
+			System.err.println("TimeContext does not contain information for " + transitionName);
 		return (long) transitionTime.get(transitionName).getNeededTime();
 	}
 

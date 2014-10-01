@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -26,6 +25,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.TransitionSi
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.SubjectDescriptorChange;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.TransitionView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 public class TransitionPopupMenu extends JPopupMenu {
@@ -70,6 +70,8 @@ public class TransitionPopupMenu extends JPopupMenu {
 			high.setEnabled(hascontext);
 			low.setEnabled(hascontext);
 
+			add(getTimingMenu(pnEditor));
+
 		}
 
 	}
@@ -103,4 +105,30 @@ public class TransitionPopupMenu extends JPopupMenu {
 			noSubjects.setEnabled(false);
 		}
 	}
+
+	private JMenu getTimingMenu(PNEditor pnEditor) {
+		JMenu submenu4 = new JMenu("Timing");
+		JMenuItem item = new JMenuItem("set timing...");
+		item.addActionListener(new TransitionTimeAction(pnEditor));
+		submenu4.add(item);
+		return submenu4;
+	}
+}
+
+class TransitionTimeAction implements ActionListener {
+
+	private PNEditor editor;
+
+	public TransitionTimeAction(PNEditor editor) {
+		this.editor = editor;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		IFNetGraph graph = (IFNetGraph) editor.getGraphComponent().getGraph();
+		PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
+		TransitionView view = new TransitionView(cell.getId(), SwatComponents.getInstance().getTimeAnalysisForNet(editor.getNetContainer()));
+		view.setVisible(true);
+	}
+
 }

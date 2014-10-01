@@ -32,10 +32,16 @@ import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.TimeMachine;
+import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
+import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowToPnmlConverter;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
@@ -151,6 +157,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		//standardItems.add(getLolaButton());
 		standardItems.add(getAristaFlowButton());
+		standardItems.add(new SwatToolbarButton(ToolbarButtonType.TIME));
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));
 		
 //		ButtonGroup group = new ButtonGroup();
@@ -374,6 +381,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case AF_TEMPLATE:
 				setToolTipText("Import AristaFlow Workflow template");
 				addActionListener(new AFtemplateImport());
+			case TIME:
+				setToolTipText("Simulate Timing");
+				addActionListener(new TimeActionListener());
 			}
 		}
 		
@@ -391,9 +401,32 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE, TIME;
 	}
 	
+	class TimeActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = ((PNEditor) Workbench.getInstance().getTabView().getSelectedComponent())
+					.getNetContainer();
+			TimeMachine timeMachine = new TimeMachine(net.getPetriNet(), SwatComponents.getInstance().getTimeAnalysisForNet(net));
+			PNTraverser<AbstractTransition<?, Object>> traverser = new RandomPNTraverser(
+					(AbstractPetriNet<?, ?, ?, ?, ?, ?, ?>) net.getPetriNet());
+			while (net.getPetriNet().hasEnabledTransitions()) {
+			AbstractTransition<?, Object> transition = traverser.chooseNextTransition((List<AbstractTransition<?, Object>>) net
+					.getPetriNet().getEnabledTransitions());
+			try {
+				timeMachine.fire(transition.getName());
+			} catch (PNException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			}
+			System.out.println("Simulated time: " + timeMachine.getTime());
+		}
+
+	}
 
 	class AristaFlowAction implements ActionListener {
 

@@ -28,5 +28,15 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="/SERAM"/>
+	<classpathentry kind="lib" path="lib/commons-math3-3.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SWAT20/lib/commons-math3-3.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/PanelMatic.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SWAT20/lib/javadocPanelMatic.zip!/javadoc"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

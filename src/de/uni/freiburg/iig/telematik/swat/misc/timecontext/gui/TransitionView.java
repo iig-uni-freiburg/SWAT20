@@ -120,7 +120,7 @@ public class TransitionView extends JDialog {
 		setDistributionTypeText();
 		okBtn = getOKButton();
 
-		cancelBtn = new JButton("Cancel");
+		cancelBtn = getCancelButton();
 		setDistribution = new JButton("Set time behavior");
 		setDistribution.addActionListener(new ActionListener() {
 
@@ -156,5 +156,19 @@ public class TransitionView extends JDialog {
 			});
 		}
 		return okBtn;
+	}
+
+	private JButton getCancelButton() {
+		if (cancelBtn == null) {
+			cancelBtn = new JButton("Cancel");
+			cancelBtn.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+		}
+		return cancelBtn;
 	}
 }
