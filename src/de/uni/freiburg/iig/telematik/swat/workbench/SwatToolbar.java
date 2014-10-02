@@ -413,17 +413,21 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			TimeMachine timeMachine = new TimeMachine(net.getPetriNet(), SwatComponents.getInstance().getTimeAnalysisForNet(net));
 			PNTraverser<AbstractTransition<?, Object>> traverser = new RandomPNTraverser(
 					(AbstractPetriNet<?, ?, ?, ?, ?, ?, ?>) net.getPetriNet());
-			while (net.getPetriNet().hasEnabledTransitions()) {
+			//while (net.getPetriNet().hasEnabledTransitions()) {
+			boolean firstRun = true;
+			while (firstRun || (timeMachine.incTime() && net.getPetriNet().hasEnabledTransitions())) {
+				firstRun = false;
 			AbstractTransition<?, Object> transition = traverser.chooseNextTransition((List<AbstractTransition<?, Object>>) net
 					.getPetriNet().getEnabledTransitions());
 			try {
 				timeMachine.fire(transition.getName());
+					System.out.println("Simulated time: " + timeMachine.getTime());
 			} catch (PNException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			}
-			System.out.println("Simulated time: " + timeMachine.getTime());
+			timeMachine.reset();
+
 		}
 
 	}

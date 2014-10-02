@@ -35,7 +35,8 @@ public class DistributionChooser extends JDialog implements ActionListener {
 	}
 
 	public void choose() {
-		setModal(true);
+		//setModal(true);
+		setModalityType(ModalityType.APPLICATION_MODAL);
 		setVisible(true);
 	}
 

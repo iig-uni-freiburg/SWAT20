@@ -8,6 +8,14 @@ public class DistributionViewFactory {
 			return new NormalDistributionView();
 		case LOG_NORMAL:
 			return new LogNormalDistributionView();
+		case GAMMA:
+			return new GammaDistributionView();
+		case EXPONENTIAL:
+			return new ExponentialDistributionView();
+		case BETA:
+			return new BetaDistibutionView();
+		case UNIFORM:
+			return new UniformDistributionView();
 		default:
 			return null;
 		}

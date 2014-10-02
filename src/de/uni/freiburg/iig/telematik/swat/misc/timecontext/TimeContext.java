@@ -104,6 +104,7 @@ public class TimeContext implements PNTimeContext {
 	public long getDelayTP(String transitionName, String placeName) {
 		if (!transitionTime.containsKey(transitionName))
 			System.err.println("TimeContext does not contain information for " + transitionName);
+		//System.out.println("Delay for " + transitionName + ": " + (long) transitionTime.get(transitionName).getNeededTime());
 		return (long) transitionTime.get(transitionName).getNeededTime();
 	}
 

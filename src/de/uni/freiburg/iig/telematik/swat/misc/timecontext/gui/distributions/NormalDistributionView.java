@@ -1,21 +1,17 @@
 package de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions;
 
-import java.awt.Dimension;
-
 import javax.swing.Icon;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
-public class NormalDistributionView implements IDistributionView {
+public class NormalDistributionView extends AbstractDistributionView {
 
-	JTextField mean = new JTextField();
-	JTextField sd = new JTextField();
+	//JTextField mean = new JTextField();
+	//JTextField sd = new JTextField();
 
 	public static void main(String[] args) {
 		JDialog dialog = new JDialog();
@@ -24,28 +20,34 @@ public class NormalDistributionView implements IDistributionView {
 		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
+	public NormalDistributionView() {
+		setParamNames("mean", "sd");
+		setType(DistributionType.NORMAL);
+	}
+
 	@Override
 	public AbstractRealDistribution getDistribution() {
-		return new NormalDistribution(getMean(), getSd());
+		return new NormalDistribution(params[0], params[1]);
 	}
 
 	@Override
 	public JPanel getConfigView() {
-		mean.setPreferredSize(new Dimension(50, 20));
-		sd.setPreferredSize(new Dimension(50, 20));
-		JPanel panel = new JPanel();
-		panel.add(new JLabel("Mean: "));
-		panel.add(mean);
-		panel.add(new JLabel("Derivation: "));
-		panel.add(sd);
-		panel.setVisible(true);
-		return panel;
+		//		mean.setPreferredSize(new Dimension(50, 20));
+		//		sd.setPreferredSize(new Dimension(50, 20));
+		//		JPanel panel = new JPanel();
+		//		panel.add(new JLabel("Mean: "));
+		//		panel.add(mean);
+		//		panel.add(new JLabel("Derivation: "));
+		//		panel.add(sd);
+		//		panel.setVisible(true);
+		//		return panel;
+		return super.getConfigView();
 	}
 
-	@Override
-	public String toString() {
-		return "Normal distributed";
-	}
+	//	@Override
+	//	public String toString() {
+	//		return "Normal distributed";
+	//	}
 
 	@Override
 	public Icon getDistributionIcon() {
@@ -58,12 +60,12 @@ public class NormalDistributionView implements IDistributionView {
 		return DistributionType.NORMAL;
 	}
 
-	private double getMean() {
-		return Double.parseDouble(mean.getText());
-	}
-
-	private double getSd() {
-		return Double.parseDouble(sd.getText());
-	}
+	//	protected double getMean() {
+	//		return Double.parseDouble(mean.getText());
+	//	}
+	//
+	//	protected double getSd() {
+	//		return Double.parseDouble(sd.getText());
+	//	}
 
 }
