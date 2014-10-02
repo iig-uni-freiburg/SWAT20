@@ -19,6 +19,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.TransitionLabelingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.TransitionSilentAction;
@@ -84,7 +86,12 @@ public class TransitionPopupMenu extends JPopupMenu {
 		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
 		AbstractIFNetTransition<IFNetFlowRelation> t = graph.getNetContainer().getPetriNet().getTransition(selectedCell.getId());
 //		graph.getNetContainer().getPetriNet().addDeclassificationTransition(transitionName)
-		List<String> authorizedSubjects = acModel.getAuthorizedSubjectsForTransaction(selectedCell.getId());
+		List<String> authorizedSubjects = null;
+		//		graph.getNetContainer().getPetriNet().addDeclassificationTransition(transitionName)
+		if (acModel instanceof ACLModel)
+		authorizedSubjects = acModel.getAuthorizedSubjectsForTransaction(selectedCell.getId());
+		if(acModel instanceof RBACModel)
+		authorizedSubjects = ((RBACModel)acModel).getRolePermissions().getAuthorizedSubjectsForTransaction(selectedCell.getId());
 		for(final String s:authorizedSubjects){
 			JMenuItem item = new JMenuItem(s);
 			item.addActionListener(new ActionListener() {

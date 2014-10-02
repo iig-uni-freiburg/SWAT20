@@ -1,20 +1,29 @@
 package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
 import java.awt.Dimension;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.Box.Filler;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
@@ -24,6 +33,10 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.acmodel.AddAccessControlAction;
@@ -42,7 +55,13 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.nodes.NodeToolBarAction
 import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.ChecKSoundnessAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.CheckValidityAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.TransformCPNtoCWNAction;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenColorChange;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.acmodel.SWATACModelDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 public class ToolBar extends JToolBar {
 
@@ -50,6 +69,10 @@ public class ToolBar extends JToolBar {
 
 
 	private static final int DEFAULT_TB_HEIGHT = 50;
+
+	protected static final String NO_SELECTION = "no selection...";
+	
+	private JComboBox comboAnalysisContextModel = null;
 
 	
 	// further variables
@@ -146,7 +169,12 @@ public class ToolBar extends JToolBar {
 
 
 	private SubjectClearanceToolBar editSubjectClearanceToolbar;
-	
+
+
+	private JComboBox acSelectionBox;
+
+
+	private ItemListener il;	
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
 		super(orientation);
@@ -265,7 +293,11 @@ public class ToolBar extends JToolBar {
 	if(addAnalysisContextAction != null){
 		addSeparator();
 		addAccessControlbutton = (JToggleButton) add(addAccessControlAction, true);
+
 		addAnalysisContextbutton = (JToggleButton) add(addAnalysisContextAction, true);
+		acSelectionBox = getComboAnalysisContextModel();
+		add(acSelectionBox);
+
 		editTokenlabelButton = (JToggleButton) add(editTokenlabelAction, true);
 		editTokenlabelAction.setButton(editTokenlabelButton);
 		editSubjectClearanceButton = (JToggleButton) add(editSubjectClearanceAction, true);
@@ -275,7 +307,7 @@ public class ToolBar extends JToolBar {
 	
 		doLayout();
 
-//		saveButton.setToolTipText(saveButtonTooltip);
+
 		exportButton.setToolTipText(exportButtonTooltip);
 		enterExecutionButton.setToolTipText(executionButtonTooltip);
 		enterEditingButton.setToolTipText(editingButtonTooltip);
@@ -285,6 +317,71 @@ public class ToolBar extends JToolBar {
 		fontButton.setToolTipText(fontTooltip );
 
 	}
+
+	private JComboBox getComboAnalysisContextModel() {
+		if (comboAnalysisContextModel == null) {
+			comboAnalysisContextModel = new JComboBox();
+			comboAnalysisContextModel.setBounds(102, 78, 190, 27);
+
+			updateAnalysisContextModelComboBox(null);
+
+			comboAnalysisContextModel.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					System.out.println("Source: " + e.getSource());
+					System.out.println(!e.getItem().toString().contentEquals(NO_SELECTION));
+					try {
+						String analysisContextModelName = null;
+						if (comboAnalysisContextModel.getSelectedItem() != null)
+							analysisContextModelName = comboAnalysisContextModel.getSelectedItem().toString();
+						AnalysisContext anyalysisContextModel;
+						if (analysisContextModelName != null && !analysisContextModelName.contentEquals(NO_SELECTION)) {
+							PNGraph graph = pnEditor.getGraphComponent().getGraph();
+							if (graph instanceof IFNetGraph) {
+								anyalysisContextModel = SwatComponents.getInstance().getIFAnalysisContextForNetWithName(pnEditor.getNetContainer().getPetriNet().getName(), analysisContextModelName);
+
+								((mxGraphModel) pnEditor.getGraphComponent().getGraph().getModel()).execute(new AnalysisContextChange(pnEditor, anyalysisContextModel));
+
+							}
+
+						} else {
+							anyalysisContextModel = null;
+							((mxGraphModel) pnEditor.getGraphComponent().getGraph().getModel()).execute(new AnalysisContextChange(pnEditor, null));
+
+						}
+					} catch (ParameterException e1) {
+						JOptionPane.showMessageDialog(pnEditor.getGraphComponent(), "Cannot update view.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+			});
+		}
+		comboAnalysisContextModel.setMinimumSize(new Dimension(200, 24));
+		comboAnalysisContextModel.setPreferredSize(new Dimension(200, 24));
+		comboAnalysisContextModel.setMaximumSize(new Dimension(200, 24));
+		return comboAnalysisContextModel;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void updateAnalysisContextModelComboBox(String modelName){
+		DefaultComboBoxModel theModel = (DefaultComboBoxModel) comboAnalysisContextModel.getModel();
+		theModel.removeAllElements();
+		List<AnalysisContext> acModels = SwatComponents.getInstance().getIFAnalysisContextForNet(pnEditor.getNetContainer().getPetriNet().getName());
+		theModel.addElement(NO_SELECTION);
+		if(acModels != null){
+		for(AnalysisContext acModel: acModels){
+			System.out.println(acModel);
+			if(acModel != null)
+				theModel.addElement(acModel.getName());
+		}
+		}
+		if(modelName != null){
+			comboAnalysisContextModel.setSelectedItem(modelName);
+		}
+
+	}
+
 
 	private void zoomButtonSettings() {
 		final mxGraphView view = pnEditor.getGraphComponent().getGraph().getView();
@@ -443,5 +540,11 @@ public class ToolBar extends JToolBar {
 	public void updateSubjectClearanceConfigurer() {
 		editSubjectClearanceToolbar.updateView();
 	}
+	
+	public void addAnalysisContextToComboBox(String name) {
+		comboAnalysisContextModel.addItem(name);
+		comboAnalysisContextModel.setSelectedItem(name);
+	}
+
 
 }

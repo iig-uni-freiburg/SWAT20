@@ -55,6 +55,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.Transition;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /**
@@ -320,12 +321,15 @@ default:
 		
 	}
 
-	public void setCurrentAnalysisContext(AnalysisContext ac) {
+	public void updateAnalysisContext(AnalysisContext ac) {
 		setContainsAnalysisContext(true);
-		getNetContainer().getPetriNet().setAnalysisContext(ac);
+		if (ac != null)
+			getNetContainer().getPetriNet().setAnalysisContext(ac);
+		else
+			getNetContainer().getPetriNet().removeAnalysisContext();
 		currentAnalysisContext = ac;
 		refresh();
-		
+
 	}
 
 	@Override
@@ -505,15 +509,10 @@ default:
 				if(!a.contentEquals(activity) && getCurrentAnalysisContext().getSubjectDescriptor(a) != null)
 				newAC.setSubjectDescriptor(activity, getCurrentAnalysisContext().getSubjectDescriptor(a));
 			}
-			setCurrentAnalysisContext(newAC);
+			updateAnalysisContext(newAC);
 			
 			
 		}
-	}
-
-	public void updateAnalysisContext(AnalysisContext ac) {
-		setCurrentAnalysisContext(ac);
-		
 	}
 
 	public SecurityLevel getSecurityLabelForTokenlabel(String label) {

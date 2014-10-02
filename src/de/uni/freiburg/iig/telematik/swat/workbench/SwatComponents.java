@@ -19,6 +19,8 @@ import java.util.TreeMap;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
@@ -27,6 +29,7 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.PNMLIFNetAnalysisContextParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.serialize.ACSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
@@ -103,53 +106,20 @@ public class SwatComponents {
 	public List<AnalysisContext> getIFAnalysisContextForNet(String name) {
 		return analyseContext.get(name);
 	}
-
-	public void addAnalysisContextForNet(AbstractGraphicalPN net, AnalysisContext aContext) {
-		String name = net.getPetriNet().getName();
-		if (analyseContext.get(name) == null)
-			analyseContext.put(name, new LinkedList<AnalysisContext>());
-		analyseContext.get(name).add(aContext);
-		storeAnalysisContextForNet(name);
-	}
-
-	public List<AnalysisContext> getIFAnalysisContextForNet(AbstractGraphicalPN net) {
-		return analyseContext.get(net.getPetriNet().getName());
+	
+	public AnalysisContext getIFAnalysisContextForNetWithName(String name, String analysisContextModelName) {
+		List<AnalysisContext> list = getIFAnalysisContextForNet(name);
+		for(AnalysisContext a:list){
+			if(a.getName().equals(analysisContextModelName))
+				return a;
+		}
+		return null;
 	}
 
 	public void addAnalysisContextForNet(String name, AnalysisContext aContext) {
 		if (analyseContext.get(name) == null)
 			analyseContext.put(name, new LinkedList<AnalysisContext>());
 		analyseContext.get(name).add(aContext);
-		storeAnalysisContextForNet(name);
-	}
-
-
-	public void storeAnalysisContextsForNet(AbstractGraphicalPN net){
-		List<AnalysisContext> contexts = analyseContext.get(net);
-		if(contexts!=null && !contexts.isEmpty()){
-			for (AnalysisContext context : contexts) {
-				try {
-					File path = new File(getFile(net).getParent(), SwatProperties.getInstance().getAnalysisFolderName());
-					if (!path.exists())
-						path.mkdir(); //make the directory if it does not exist
-
-					ACSerialization.serialize(context, path.getAbsolutePath());
-
-				} catch (SerializationException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-		}
-	}
-
-	public void storeAnalysisContextForNet(String netName) {
-		for (AbstractGraphicalPN net : nets.keySet()) {
-			if (net.getPetriNet().getName().equals(netName))
-				storeAnalysisContextsForNet(net);
-		}
 	}
 
 	public void setLayoutNeed(AbstractGraphicalPN net) {
@@ -174,8 +144,6 @@ public class SwatComponents {
 			remove(entry.getKey());
 		}
 	}
-
-	//public void add
 
 	private void remove(Object key) {
 		boolean found=false;
@@ -206,6 +174,7 @@ public class SwatComponents {
 	public File putNetIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, String name) throws ParameterException,
 			PropertyException, IOException {
 		File file = generateNetPath(name);
+		net.getPetriNet().setName(name);
 		nets.put(net, file);
 		storePetriNet(net);
 		informNodeAdded(SwatTreeView.getInstance().new SwatTreeNode(net, SwatComponentType.PETRI_NET, file));
@@ -426,7 +395,7 @@ public class SwatComponents {
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet = loadPetriNetFromFolder(folder);
 				if (loadedNet != null) {
 					getAnalysisFor(loadedNet, folder);
-					loadAnalysisContextFor(loadedNet, folder);
+				loadAnalysisContextFor(loadedNet, folder);
 					loadTimeAnalysisContextFor(loadedNet, folder);
 				}
 			} catch (NullPointerException e) {
@@ -460,8 +429,8 @@ public class SwatComponents {
 
 			for (File context : analysisContext) {
 				try {
-					AnalysisContext ac = PNMLIFNetAnalysisContextParser.parse(context);
-					addAnalysisContextForNet(loadedNet, ac);
+					AnalysisContext ac = PNMLIFNetAnalysisContextParser.parse(context, false);
+					addAnalysisContextForNet(loadedNet.getPetriNet().getName(), ac);
 					MessageDialog.getInstance().addMessage("Loaded Analysis-Context for " + loadedNet.getPetriNet().getName());
 
 				} catch (ParserException e) {
@@ -568,6 +537,11 @@ public class SwatComponents {
 			Workbench.errorMessage("Cannot store petri net: " + net.getPetriNet().getName());
 			throw new ParameterException("Cannot store Petri net.<br>Reason: "+e.getMessage());
 		}
+		if(net.getPetriNet() instanceof IFNet){
+			IFNet ifnet = (IFNet) net.getPetriNet();
+			if(ifnet.getAnalysisContext() != null)
+				storeAnalysisContextOfIFNet(ifnet);
+		}
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -609,9 +583,11 @@ public class SwatComponents {
 		return nets.containsValue(new File(name));
 	}
 
-	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNetFromFileName(String name) {
-		// TODO: unimplemented
-		System.out.println("UNIMPLEMENTED: getNetFromFileName");
+	public AbstractGraphicalPN getNetFromFileName(String name) {
+		for (AbstractGraphicalPN net : nets.keySet()) {
+		if (net.getPetriNet().getName().equals(name))
+			return net;
+	}
 		return null;
 	}
 
@@ -632,6 +608,28 @@ public class SwatComponents {
 			}
 		}
 
+	}
+
+	private void storeAnalysisContextOfIFNet(IFNet ifnet) {
+		AnalysisContext context = ifnet.getAnalysisContext();
+		if(context!=null){
+			//Currently only the selected net with its corresponding analysis contexts is stored
+//			for (AnalysisContext context : contexts) {
+				try {
+					File path = new File(getFile(getNetFromFileName(ifnet.getName())).getParent(), SwatProperties.getInstance().getAnalysisFolderName());
+					if (!path.exists())
+						path.mkdir(); //make the directory if it does not exist
+					ACSerialization.serialize(context,path.getAbsolutePath()+ System.getProperty("file.separator"),context.getName());
+
+				} catch (SerializationException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+//			}
+		}
+		
 	}
 
 	/**

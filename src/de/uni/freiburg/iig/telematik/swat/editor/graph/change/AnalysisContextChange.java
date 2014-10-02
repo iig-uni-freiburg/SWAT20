@@ -103,11 +103,21 @@ public class AnalysisContextChange extends mxAtomicGraphModelChange {
 		value = previous;
 		previous = valueForCellChanged(
 				previous);
+//		if(editor.getEditorToolbar() != null){
 		editor.getEditorToolbar().updateTokenlabelConfigurer();
 		editor.getEditorToolbar().updateSubjectClearanceConfigurer();
-if(value != null && previous != null)
+		
+//		}
+//		System.out.println(value.getName() + "###" + previous);
+//		
+//		if(value != null && previous == null){
+//			editor.getEditorToolbar().updateAnalysisContextComboBox(value.getName());
+//		}
+if(value != null && previous != null){
 System.out.println(value.getAttributes() +"-------"+previous.getAttributes());
-
+}
+else {
+}
 
 	}
 	

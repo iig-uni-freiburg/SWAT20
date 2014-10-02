@@ -6,9 +6,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.mxgraph.model.mxGraphModel;
 
+import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
@@ -25,6 +27,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextCha
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TransitionSilentChange;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
 
 public class AddAnalysisContextAction extends AbstractPNEditorAction {
 
@@ -50,16 +53,32 @@ public class AddAnalysisContextAction extends AbstractPNEditorAction {
 						ifSubjects = ((RBACModel) acModel).getRoles();
 					}
 					;
-					AnalysisContext ac = new AnalysisContext(ifNet, ifSubjects, SecurityLevel.LOW);
-					// Labelings sichtbar machen
-					((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new AnalysisContextChange(editor, ac));
+					String name = requestFileName("Pleache choose the name for new Analysis Context for " + getEditor().getNetContainer().getPetriNet().getName() + " :", "New Analysis Context");
+					if (name != null) {
+						AnalysisContext ac = new AnalysisContext(ifNet, ifSubjects, SecurityLevel.LOW);
+						ac.setName(name);
+						for (String a : ac.getActivities()) {
+							ac.setSubjectDescriptor(a, ifSubjects.iterator().next());
+						}
 
+						// Labelings sichtbar machen
+						((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new AnalysisContextChange(editor, ac));
+
+						SwatComponents.getInstance().addAnalysisContextForNet(editor.getNetContainer().getPetriNet().getName(), ac);
+						editor.getEditorToolbar().addAnalysisContextToComboBox(name);
+
+					}
 				}
 			} else
 				JOptionPane.showMessageDialog(editor.getGraphComponent(), "You first need to define your Access Controll Model and its Subjects to build an appropriate Analysis Context",
 						"Subjects missing", JOptionPane.ERROR_MESSAGE);
 
 		}
+
+	}
+
+	private String requestFileName(String message, String title) {
+		return new FileNameDialog(SwingUtilities.getWindowAncestor(editor.getGraphComponent()), message, title, false).requestInput();
 
 	}
 }
