@@ -11,11 +11,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.apache.commons.math3.distribution.AbstractRealDistribution;
-import org.apache.commons.math3.distribution.GammaDistribution;
-import org.apache.commons.math3.distribution.LogNormalDistribution;
-import org.apache.commons.math3.distribution.NormalDistribution;
-import org.apache.commons.math3.distribution.WeibullDistribution;
 import org.panelmatic.PanelBuilder;
 import org.panelmatic.PanelBuilder.HeaderLevel;
 import org.panelmatic.PanelMatic;
@@ -23,6 +18,9 @@ import org.panelmatic.PanelMatic;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.StochasticTimeBehavior;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.AbstractDistributionView;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.ExponentialDistributionView;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.IDistributionView;
 
 public class TransitionView extends JDialog {
 
@@ -38,7 +36,9 @@ public class TransitionView extends JDialog {
 	public static void main(String args[]) {
 		
 		TimeContext timeContext = new TimeContext();
-		timeContext.addTimeBehavior("test", new StochasticTimeBehavior(new NormalDistribution(3, 0.2)));
+		AbstractDistributionView tview = new ExponentialDistributionView();
+		tview.setParams(0.3, 1);
+		timeContext.addTimeBehavior("test", tview);
 
 		TransitionView view = new TransitionView("test", timeContext);
 		view.setVisible(true);
@@ -66,22 +66,23 @@ public class TransitionView extends JDialog {
 			distributionType.revalidate();
 			return;
 		}
-		if (behavior instanceof StochasticTimeBehavior) {
-			//savely castable
-			AbstractRealDistribution currentDistribution = ((StochasticTimeBehavior) behavior).getDistribution();
-			if (currentDistribution instanceof NormalDistribution) {
-				distributionType.setText("Normal distributed");
-			}
-			else if (currentDistribution instanceof LogNormalDistribution) {
-				distributionType.setText("Log-Normal distributed");
-			} else if (currentDistribution instanceof GammaDistribution) {
-				distributionType.setText("Gamme distributed");
-			} else if (currentDistribution instanceof WeibullDistribution) {
-				distributionType.setText("Weibull distributed");
-			}
-			else {
-				distributionType.setText("unknown");
-			}
+		if (behavior instanceof StochasticTimeBehavior || behavior instanceof IDistributionView) {
+			distributionType.setText(behavior.toString());
+			//			//savely castable
+			//			AbstractRealDistribution currentDistribution = ((StochasticTimeBehavior) behavior).getDistribution();
+			//			if (currentDistribution instanceof NormalDistribution) {
+			//				distributionType.setText("Normal distributed");
+			//			}
+			//			else if (currentDistribution instanceof LogNormalDistribution) {
+			//				distributionType.setText("Log-Normal distributed");
+			//			} else if (currentDistribution instanceof GammaDistribution) {
+			//				distributionType.setText("Gamme distributed");
+			//			} else if (currentDistribution instanceof WeibullDistribution) {
+			//				distributionType.setText("Weibull distributed");
+			//			}
+			//			else {
+			//				distributionType.setText("unknown");
+			//			}
 		}
 		distributionType.revalidate();
 
@@ -129,11 +130,12 @@ public class TransitionView extends JDialog {
 				DistributionChooser chooser = new DistributionChooser();
 				chooser.choose();
 				if (!chooser.userAbort()) {
-					timeContext.addTimeBehavior(transitionName, new StochasticTimeBehavior(chooser.getDistribution()));
+					timeContext.addTimeBehavior(transitionName, chooser.getDistribution());
 					setDistributionTypeText();
 				}
 			}
 		});
+
 		getDistributionFromLog = new JButton("load from log");
 	}
 

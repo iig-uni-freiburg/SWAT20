@@ -5,7 +5,9 @@ import javax.swing.JComponent;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 
-public interface IDistributionView {
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
+
+public interface IDistributionView extends TimeBehavior {
 
 	public AbstractRealDistribution getDistribution();
 

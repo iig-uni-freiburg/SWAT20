@@ -11,7 +11,21 @@ import javax.swing.JTextField;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 
-public abstract class AbstractDistributionView implements IDistributionView {
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
+
+public abstract class AbstractDistributionView implements IDistributionView, TimeBehavior {
+
+	@XStreamOmitField
+	protected AbstractRealDistribution distribution;
+
+	@Override
+	public double getNeededTime() {
+		if (distribution == null)
+			distribution = getDistribution();
+		return distribution.sample();
+	}
 
 	protected double params[];
 	protected String paramNames[];
@@ -19,7 +33,7 @@ public abstract class AbstractDistributionView implements IDistributionView {
 
 	@Override
 	public AbstractRealDistribution getDistribution() {
-		// TODO Auto-generated method stub
+		// must be implemented by overriding classes
 		return null;
 	}
 
@@ -36,6 +50,7 @@ public abstract class AbstractDistributionView implements IDistributionView {
 			panel.add(labels[i]);
 			textFields[i] = new JTextField();
 			textFields[i].setPreferredSize(new Dimension(40, 20));
+			textFields[i].setText(Double.toString(params[i]));
 			textFields[i].addPropertyChangeListener(new TextAction(i));
 			panel.add(textFields[i]);
 		}
@@ -91,9 +106,31 @@ public abstract class AbstractDistributionView implements IDistributionView {
 		this.type = type;
 	}
 
-	public String toString() {
+	public void setParams(double... parameters) {
+		params = parameters;
+	}
 
-		return type.toString() + " distributed";
+	public double[] getParams() {
+		return params;
+	}
+
+	public String toString() {
+		StringBuilder paramString = new StringBuilder();
+		if (params != null && params.length != 0) {
+			paramString.append("(");
+			try {
+				for (int i = 0; i < params.length; i++) {
+					paramString.append(params[i]);
+					paramString.append(", ");
+				}
+				paramString.delete(paramString.length() - 2, paramString.length() - 1);
+			} catch (NullPointerException e) {
+			}
+			paramString.append(")");
+		}
+
+
+		return type.toString() + paramString.toString() + " distributed";
 		//		switch (type) {
 		//		case NORMAL:
 		//			return "Normal distributed";

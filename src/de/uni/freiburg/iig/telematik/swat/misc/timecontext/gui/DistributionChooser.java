@@ -10,8 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import org.apache.commons.math3.distribution.AbstractRealDistribution;
-
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.DistributionViewFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.IDistributionView;
@@ -30,8 +29,9 @@ public class DistributionChooser extends JDialog implements ActionListener {
 			System.out.println("Distribution is: " + chooser.getDistribution());
 	}
 
-	public AbstractRealDistribution getDistribution() {
-		return ((IDistributionView) selector.getSelectedItem()).getDistribution();
+	public TimeBehavior getDistribution() {
+		System.out.println(selector.getSelectedItem());
+		return ((IDistributionView) selector.getSelectedItem());
 	}
 
 	public void choose() {
