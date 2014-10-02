@@ -43,7 +43,6 @@ public class AddAnalysisContextAction extends AbstractPNEditorAction {
 			if (SwatComponents.getInstance().containsACModels()) {
 				ACModel acModel = SwatComponents.getInstance().getSelectedACModel();
 				if (acModel != null) {
-					System.out.println(acModel.getClass());
 
 					Set<String> ifSubjects = new HashSet<String>();
 					if (acModel instanceof ACLModel) {

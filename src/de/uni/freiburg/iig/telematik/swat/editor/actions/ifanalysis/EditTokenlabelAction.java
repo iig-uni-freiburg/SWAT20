@@ -30,7 +30,6 @@ public class EditTokenlabelAction extends AbstractPNEditorAction {
 		if (editor != null) {
 			IFNet ifNet = (IFNet) getEditor().getNetContainer().getPetriNet();
 			ACModel acModel = SwatComponents.getInstance().getSelectedACModel();
-			System.out.println(acModel.getClass());
 			
 			Set<String>  ifSubjects = new HashSet<String>();
 			if(acModel instanceof ACLModel){
@@ -40,7 +39,6 @@ public class EditTokenlabelAction extends AbstractPNEditorAction {
 				ifSubjects = ((RBACModel) acModel).getRoles();
 			};
 			AnalysisContext ac = new AnalysisContext(ifNet, ifSubjects, SecurityLevel.LOW);
-			System.out.println(ac);
 		}
 	}
 }

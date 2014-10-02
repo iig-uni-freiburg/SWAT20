@@ -157,7 +157,6 @@ public class SWATAdvancedACLTable extends JTable implements ObjectPermissionItem
 		String subject = ((SWATObjectPermissionTableModel) getModel()).getRowName(getSelectedRow());
 		String object = getModel().getColumnName(getSelectedColumn());
 				
-//		System.out.println(((ACLTableModel) getModel()).getRowName(getSelectedRow()) + " " + getModel().getColumnName(getSelectedColumn()) + ": " + e.getDataUsageMode());
 		try{
         	if(permissionActivated){
         		aclModel.addObjectPermission(subject, object, e.getDataUsageMode());

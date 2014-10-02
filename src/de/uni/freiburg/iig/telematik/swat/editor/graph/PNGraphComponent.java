@@ -177,45 +177,18 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 				e.printStackTrace();
 			}
 			addCellOverlay(cell, overlay);
-//			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;
 			
 		}
-//		highlightPlaces();
-//		highlightTransitions();
-//		hideHighlightesArcs();
-		
-
-//		getGraph().setCellsSelectable(false);
-//		Set<String> nameSet = null;
-//		try {
-//			nameSet = PNUtils.getNameSetFromTransitions(getGraph().getNetContainer().getPetriNet().getEnabledTransitions(), true);
-//		} catch (ParameterException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		for(String n:nameSet){
-//			PNGraphCell cell =getGraph().nodeReferences.get(n);
-//			
-//			Rectangle geo = cell.getGeometry().getRectangle();
-////			enabledTransitionsPanel =
-//			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;	
-//		}		
+	
 	}
 
 	
 	protected void unhighlightArcs() {
-		System.out.println("un");
 		Collection<AbstractFlowRelation> flowrelations = (Collection<AbstractFlowRelation>) getGraph().getNetContainer().getPetriNet().getFlowRelations();
 		for(AbstractFlowRelation fr:flowrelations){
 			PNGraphCell cell = getGraph().arcReferences.get(fr.getName());
-//			getGraphComponent().get
 			mxCellMarker marker = getCellMarker(cell);
-//			getGraphComponent().getGraphHandler().getMarker().highlight(graph.getView().getState(cell), Color.MAGENTA);
 			marker.highlight(graph.getView().getState(cell), Color.ORANGE);
-		
-		
-//			marker.setVisible(false);
 		}
 		
 	}
@@ -238,17 +211,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 		markerReference.put(cell.getId(), new mxCellMarker(this));
 		return markerReference.get(cell.getId());
 	}
-	
-//	private void hideHighlightesArcs() {
-//		Collection<AbstractFlowRelation> flowrelations = (Collection<AbstractFlowRelation>) getGraph().getNetContainer().getPetriNet().getFlowRelations();
-//		for(AbstractFlowRelation fr:flowrelations){
-//			PNGraphCell cell = getGraph().arcReferences.get(fr.getName());
-//			mxCellMarker marker = new mxCellMarker(getGraphComponent());
-//			marker.highlight(graph.getView().getState(cell), Color.RED);
-//			System.out.println(getGraphComponent().getGraphHandler().getMarker().getClass());
-//		}
-//	}
-//	
+
 
 	public void highlightPath() {
 		Set<?> nodes = getGraph().getNetContainer().getPetriNet().getNodes();
@@ -257,83 +220,7 @@ public abstract class PNGraphComponent extends mxGraphComponent {
 			String s = n.toString();
 		System.out.println(s);
 		}
-//		Set<String> nameSet = null;
-//		try {
-//			nameSet = PNUtils.getNameSetFromTransitions(getGraph().getNetContainer().getPetriNet().getEnabledTransitions(), true);
-//		} catch (ParameterException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		removeCellOverlays();
-//		getGraph().setCellsSelectable(false);
-//		for(final String n:nameSet){
-//			final PNGraphCell cell =getGraph().nodeReferences.get(n);
-//			Rectangle geo = cell.getGeometry().getRectangle();
-////			enabledTransitionsPanel =
-//			mxCellOverlay overlay = null;
-//			try {
-//				overlay = new mxCellOverlay(IconFactory.getIcon("playred"), null);
-//				overlay.setAlign(mxConstants.ALIGN_CENTER);
-//				overlay.setVerticalAlign(mxConstants.ALIGN_MIDDLE);
-//				final mxCellMarker marker = new mxCellMarker(getGraphComponent());
-//			
-//				
-//				overlay.addMouseListener(new MouseListener() {
-//					
-//					@Override
-//					public void mouseReleased(MouseEvent arg0) {
-//					
-//						
-//					}
-//					
-//					@Override
-//					public void mousePressed(MouseEvent arg0) {
-//					
-//						
-//					}
-//					
-//					@Override
-//					public void mouseExited(MouseEvent arg0) {
-//						marker.setVisible(false);
-//						
-//					}
-//					
-//					@Override
-//					public void mouseEntered(MouseEvent arg0) {
-//						marker.setVisible(true);
-//						marker.highlight(graph.getView().getState(cell), Color.BLUE);
-//						
-//					}
-//					
-//					@Override
-//					public void mouseClicked(MouseEvent arg0) {
-//						try {
-//							getGraph().fireTransition(cell);
-//							marker.setVisible(false);
-//							//							getGraph().refresh();
-//						} catch (ParameterException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						} catch (PNException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//						
-//					}
-//				});
-//			} catch (ParameterException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (PropertyException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			addCellOverlay(cell, overlay);
-//			
-//		}
+
 	
 	}
 

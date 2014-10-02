@@ -108,7 +108,6 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 		value = previous;
 		previous = valueForCellChanged(name,
 				previous);
-		System.out.println(value + "-----" + previous);
 		editor.getEditorToolbar().updateGlobalTokenConfigurer();
 		editor.getGraphComponent().getGraph().updateViews();
 	}

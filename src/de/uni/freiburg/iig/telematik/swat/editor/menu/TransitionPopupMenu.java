@@ -60,7 +60,6 @@ public class TransitionPopupMenu extends JPopupMenu {
 			TransitionLabelingAction low = new TransitionLabelingAction(pnEditor, SecurityLevel.LOW);
 			submenu2.add(high);
 			submenu2.add(low);
-			System.out.println(graph.getCurrentAnalysisContext() + "\n" + graph.isContainsAnalysisContext());
 			if (graph.getCurrentAnalysisContext() != null)
 				hascontext = true;
 			high.setEnabled(hascontext);

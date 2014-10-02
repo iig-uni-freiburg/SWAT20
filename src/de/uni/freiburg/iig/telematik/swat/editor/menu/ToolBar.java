@@ -329,8 +329,6 @@ public class ToolBar extends JToolBar {
 
 				@Override
 				public void itemStateChanged(ItemEvent e) {
-					System.out.println("Source: " + e.getSource());
-					System.out.println(!e.getItem().toString().contentEquals(NO_SELECTION));
 					try {
 						String analysisContextModelName = null;
 						if (comboAnalysisContextModel.getSelectedItem() != null)
@@ -371,7 +369,6 @@ public class ToolBar extends JToolBar {
 		theModel.addElement(NO_SELECTION);
 		if(acModels != null){
 		for(AnalysisContext acModel: acModels){
-			System.out.println(acModel);
 			if(acModel != null)
 				theModel.addElement(acModel.getName());
 		}

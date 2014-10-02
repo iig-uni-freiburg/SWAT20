@@ -256,7 +256,6 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				JCheckBox cb = (JCheckBox) e.getSource();
 				Set am = accessMode.get(tokenName);
-				System.out.println(!(am.contains(AccessMode.CREATE) && accessModi.equals(AccessMode.DELETE)));
 				if (!(am.contains(AccessMode.CREATE) && accessModi.equals(AccessMode.DELETE)) && !(am.contains(AccessMode.DELETE) && accessModi.equals(AccessMode.CREATE))) {
 					Set amChange = ((Set) ((HashSet) am).clone());
 					if (cb.isSelected()) {
