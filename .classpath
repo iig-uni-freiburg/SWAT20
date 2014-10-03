@@ -38,5 +38,8 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/SWAT20/lib/javadocPanelMatic.zip!/javadoc"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jfreechart/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart/jfreechart-1.0.19-swt.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
