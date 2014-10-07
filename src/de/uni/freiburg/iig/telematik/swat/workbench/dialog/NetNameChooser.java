@@ -16,7 +16,7 @@ public class NetNameChooser extends FileNameDialog {
 	@Override
 	protected boolean isValid(String input) {
 		if(super.isValid(input)){
-			if(SwatComponents.getInstance().containsNetWithFileName(input)){
+			if(SwatComponents.getInstance().containsPetriNetWithID(input)){
 				errorMessage = NET_NAME_ALREADY_IN_USE;
 				return false;
 			}

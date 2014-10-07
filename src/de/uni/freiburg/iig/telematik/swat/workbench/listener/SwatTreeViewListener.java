@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.listener;
 
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
 
 
 public interface SwatTreeViewListener {

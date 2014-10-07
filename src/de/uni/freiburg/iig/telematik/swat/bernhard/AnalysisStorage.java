@@ -34,7 +34,7 @@ public class AnalysisStorage {
 		String xml=xstream.toXML(patternSettings);
 		String path=null;
 		try {
-			path=SwatProperties.getInstance().getNetWorkingDirectory();
+			path=SwatProperties.getInstance().getPathForNets();
 			path+=System.getProperty("file.separator");
 			path+=objectName+System.getProperty("file.separator");
 		} catch (ParameterException e) {

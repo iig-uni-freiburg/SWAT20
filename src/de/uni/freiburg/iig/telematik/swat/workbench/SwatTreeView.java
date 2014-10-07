@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JTree;
@@ -14,6 +17,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPNNameComparator;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStorage;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
@@ -70,8 +74,9 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		// Petri Nets
 
 		DefaultMutableTreeNode petriNets = new DefaultMutableTreeNode("Petri Nets");
-		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNets()){
-			SwatTreeNode node =new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET, SwatComponents.getInstance().getFile(petriNet));
+		
+		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNetsSorted()){
+			SwatTreeNode node = new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET, SwatComponents.getInstance().getFile(petriNet));
 			petriNets.add(node);
 		}
 		root.add(petriNets);
@@ -129,68 +134,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	@Override
 	public void operatingModeChanged() {}
 	
-	public class SwatTreeNode extends DefaultMutableTreeNode {
-
-		private static final long serialVersionUID = 8746333990209477776L;
-		private SwatComponentType objectType = null;
-		private String displayName = null;
-		private File fileReference;
-
-		public SwatTreeNode(Object userObject, SwatComponentType objectType, File fileReference) {
-			super(userObject, false);
-			this.objectType = objectType;
-			this.fileReference = fileReference;
-			setDisplayName();
-
-		}
-
-		public File getFileReference() {
-			return fileReference;
-		}
-
-		@SuppressWarnings("rawtypes")
-		private void setDisplayName() {
-			switch (objectType) {
-			case LABELING:
-				//TODO:
-				break;
-			case PETRI_NET:
-				displayName = SwatComponents.getInstance().getFileName((AbstractGraphicalPN) getUserObject());
-				break;
-			case PETRI_NET_ANALYSIS:
-				displayName = (String) this.getUserObject();
-				break;
-			case LOG_FILE:
-				// userObject is of instance LogFileViewer
-				displayName = ((LogModel) this.getUserObject()).getName();
-				break;
-			case XML_FILE:
-				displayName = ((LogModel) this.getUserObject()).getName();
-
-			}
-		}
-
-		public String getDisplayName() {
-			setDisplayName();
-			return displayName;
-		}
-
-		/** Update the displayName for JTree if Filename changed **/
-		public void updateDisplayName() {
-			setDisplayName();
-		}
-
-		public SwatComponentType getObjectType() {
-			return objectType;
-		}
-
-		@Override
-		public String toString() {
-			return getDisplayName();
-		}
-
-	}
-
+	
 	public void addTreeViewListener(SwatTreeViewListener listener){
 		listeners.add(listener);
 	}

@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -10,6 +9,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class Startup {
@@ -82,21 +82,13 @@ public class Startup {
 			return false;
 		try {
 			SwatProperties prop = SwatProperties.getInstance();
-			prop.setWorkingDirectory(workingDirectory);
-			//add needed folders
-			new File(prop.getLogWorkingDirectory()).mkdir();
-			new File(prop.getNetWorkingDirectory()).mkdir();
-			new File(prop.getAcModelWorkingDirectory()).mkdir();
-
+			prop.setWorkingDirectory(workingDirectory, false);
 			return true;
-		} catch (ParameterException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-			return false;
 		} catch (IOException e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage(), "I/O Exception", JOptionPane.ERROR_MESSAGE);
 			return false;
-		} catch (PropertyException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
+		} catch (SwatComponentException e2) {
+			JOptionPane.showMessageDialog(null, e2.getMessage(), "Component Exception", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 	}

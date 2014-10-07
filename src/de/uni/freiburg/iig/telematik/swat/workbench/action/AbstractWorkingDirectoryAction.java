@@ -25,9 +25,9 @@ public abstract class AbstractWorkingDirectoryAction extends AbstractAction {
 		this.parent = parentWindow;
 	}
 	
-	protected void addKnownWorkingDirectory(String workingDirectory) throws PropertyException{
+	protected void addKnownWorkingDirectory(String workingDirectory) {
 		try {
-			SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory);
+			SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory, false);
 			SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
 			SwatProperties.getInstance().store();
 		} catch (ParameterException e1) {

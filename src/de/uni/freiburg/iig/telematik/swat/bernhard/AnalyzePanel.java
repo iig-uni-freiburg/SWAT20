@@ -2,12 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -18,67 +14,33 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.SpringLayout;
 import javax.swing.UIManager;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import org.processmining.analysis.sciffchecker.gui.util.SpringUtilities;
-
-import com.mxgraph.swing.handler.mxCellMarker;
-import com.thoughtworks.xstream.XStream;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.IOUtils;
 import de.uni.freiburg.iig.telematik.swat.lukas.Operand;
 import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.PlacePredicate;
-import de.uni.freiburg.iig.telematik.swat.lukas.PrismExecutor;
-import de.uni.freiburg.iig.telematik.swat.lukas.PrismResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
-import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
-import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
-import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 /**
  * This class represents the Pattern-Overview. It its an
  * abstract class. The functionality between the analysis of Petri nets

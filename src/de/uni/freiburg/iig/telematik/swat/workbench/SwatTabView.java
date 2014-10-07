@@ -46,7 +46,6 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 
 @SuppressWarnings("serial")
@@ -149,7 +148,6 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 				break;
 			case XML_FILE:
 				addXmlFile(node);
-
 			}
 			
 			return (SwatComponent) getComponentAt(getTabCount() - 1);

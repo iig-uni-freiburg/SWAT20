@@ -12,9 +12,12 @@ import de.invation.code.toval.misc.StringUtils;
 import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcher;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatPropertyChangeListener;
 
 
@@ -22,6 +25,12 @@ public class SwatProperties extends AbstractProperties{
 	
 	protected static final String defaultWorkingDirectory = ".";
 	public static final String defaultWorkingDirectoryName = "SwatWorkingDirectory";
+	
+	protected static final String pathNets = "nets/";
+	protected static final String pathLogs = "logs/";
+	protected static final String pathACModels = "acModel/";
+	protected static final String pathNameAnalysisContext = "analysis-context";
+	protected static final String pathNameTimeContext = "time-context";
 	
 	protected static final String propertyFileName = "SwatProperties";
 	
@@ -75,13 +84,17 @@ public class SwatProperties extends AbstractProperties{
 	
 	//------- Working Directory ------------------------------------------------------------
 	
-	public void setWorkingDirectory(String directory) throws ParameterException, IOException, PropertyException {
-		validateWorkingDirectory(directory);
+	public void setWorkingDirectory(String directory, boolean reloadComponents) throws SwatComponentException {
+		validateWorkingDirectory(directory, false);
 		setProperty(SwatProperty.WORKING_DIRECTORY, directory);
+		
 		File directoryFile = new File(directory);
 		if(!directoryFile.exists()){
 			directoryFile.mkdir();
 		}
+
+		if(reloadComponents)
+			SwatComponents.getInstance().reload();
 	}
 	
 	public String getWorkingDirectory() throws PropertyException, ParameterException {
@@ -95,101 +108,23 @@ public class SwatProperties extends AbstractProperties{
 	public void removeWorkingDirectory(){
 		removeProperty(SwatProperty.WORKING_DIRECTORY);
 	}
-	
-	public void setNetFolderName(String netFolderName) {
-		Validate.notNull(netFolderName);
-		setProperty(SwatProperty.NET_FOLDER_NAME, netFolderName);
-	}
-
-	public String getNetFolderName() {
-		String result = getProperty(SwatProperty.NET_FOLDER_NAME);
-		if (result == null || result.isEmpty())
-			result = "nets";
-		return result;
-	}
-
-	public void setLogFolderName(String logFolderName) {
-		Validate.notNull(logFolderName);
-		setProperty(SwatProperty.LOG_FOLDER_NAME, logFolderName);
-	}
-
-	public String getLogFolderName() {
-		String result = getProperty(SwatProperty.LOG_FOLDER_NAME);
-		if (result == null || result.isEmpty())
-			result = "logs";
-		return result;
-	}
-
-	public void setAnalysisContextFolderName(String analysisContextFolderName) {
-		Validate.notNull(analysisContextFolderName);
-		setProperty(SwatProperty.AC_MODEL_NAME, analysisContextFolderName);
-	}
-
-	public String getAcModelName() {
-		String result = getProperty(SwatProperty.AC_MODEL_NAME);
-		if (result == null || result.isEmpty())
-			result = "acModel";
-		return result;
-	}
-
-	public String getAcModelWorkingDirectory() throws ParameterException, PropertyException {
-		return new File(getWorkingDirectory(), getAcModelName()).getAbsolutePath();
-	}
-
-	public String getAnalysisFolderName() {
-		String result = getProperty(SwatProperty.ANALYSIS_CONTEXT_NAME);
-		if (result == null || result.isEmpty())
-			result = "analysis-context";
-		return result;
-	}
-
-	public void setAnalysisFolderName(String folderName) throws IOException {
-		setProperty(SwatProperty.ANALYSIS_CONTEXT_NAME, folderName);
-		store();
-	}
-
-	public String getTimeAnalysisFolderName() {
-		String result = getProperty(SwatProperty.TIME_CONTEXT_NAME);
-		if (result == null || result.isEmpty()) {
-			result = "time-context";
-		}
-		return result;
-	}
-
-	public void setTimeAnalysisFolderName(String name) throws IOException {
-		setProperty(SwatProperty.TIME_CONTEXT_NAME, name);
-		store();
-	}
-
-	//	public String getAnalysisDirForNet(AbstractGraphicalPN net) {
-	//		return new File(SwatComponents.getInstance().getFile(net), getAnalysisFolderName()).getAbsolutePath();
-	//	}
-
-	public String getLogWorkingDirectory() throws ParameterException, PropertyException {
-		return new File(getWorkingDirectory(), getLogFolderName()).getAbsolutePath();
-	}
-
-	public String getNetWorkingDirectory() throws ParameterException, PropertyException {
-		return new File(getWorkingDirectory(), getNetFolderName()).getAbsolutePath();
-	}
-
 
 	//------- Known Working Directories ----------------------------------------------------
 	
-	public void addKnownWorkingDirectory(String workingDirectory) throws ParameterException{
-		validateWorkingDirectory(workingDirectory);
+	public void addKnownWorkingDirectory(String workingDirectory, boolean createSubdirectories){
+		validateWorkingDirectory(workingDirectory, createSubdirectories);
 		Set<String> currentDirectories = getKnownWorkingDirectories();
 		currentDirectories.add(workingDirectory);
 		setProperty(SwatProperty.KNOWN_WORKING_DIRECTORIES, ArrayUtils.toString(prepareWorkingDirectories(currentDirectories)));
 	}
 	
-	public void removeKnownWorkingDirectory(String simulationDirectory) throws ParameterException{
+	public void removeKnownWorkingDirectory(String simulationDirectory){
 		validateStringValue(simulationDirectory);
 		Set<String> currentDirectories = getKnownWorkingDirectories();
 		currentDirectories.remove(simulationDirectory);
 		setProperty(SwatProperty.KNOWN_WORKING_DIRECTORIES, ArrayUtils.toString(prepareWorkingDirectories(currentDirectories)));
 	}
-	
+
 	private String[] prepareWorkingDirectories(Set<String> directories){
 		String[] result = new String[directories.size()];
 		int count = 0;
@@ -209,6 +144,28 @@ public class SwatProperties extends AbstractProperties{
 			result.add(nextToken.substring(1, nextToken.length()-1));
 		}
 		return result;
+	}
+
+	//-- Simulation component paths (not stored in property file)
+	
+	public String getPathForNets() throws PropertyException{
+		return getWorkingDirectory().concat(pathNets);
+	}
+	
+	public String getPathForLogs() throws PropertyException{
+		return getWorkingDirectory().concat(pathLogs);
+	}
+	
+	public String getPathForACModels() throws PropertyException{
+		return getWorkingDirectory().concat(pathACModels);
+	}
+	
+	public String getAnalysisContextDirectoryName(){
+		return pathNameAnalysisContext;
+	}
+	
+	public String getTimeContextDirectoryName(){
+		return pathNameTimeContext;
 	}
 	
 	//------- PNML Parser properties -------------------------------------------------------
@@ -296,8 +253,20 @@ public class SwatProperties extends AbstractProperties{
 
 	//------- Validation -------------------------------------------------------------------
 	
-	private void validateWorkingDirectory(String path) throws ParameterException{
-		Validate.directory(path);
+	public static void validateWorkingDirectory(String directory, boolean createSubdirectories) throws ParameterException{
+		validatePath(directory);
+		checkSubDirectory(directory, pathNets, createSubdirectories);
+		checkSubDirectory(directory, pathLogs, createSubdirectories);
+		checkSubDirectory(directory, pathACModels, createSubdirectories);
+	}
+	
+	private static void checkSubDirectory(String workingDirectory, String subDirectoryName, boolean ensureSubdirectory){
+		File dir = new File(workingDirectory + subDirectoryName);
+		if(!dir.exists()){
+			if(!ensureSubdirectory)
+				throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Corrupt structure of simulation directory:\n"+dir.getAbsolutePath());
+			dir.mkdir();
+		}
 	}
 	
 	// ------- Icon Size--------------------------------------------------------------------

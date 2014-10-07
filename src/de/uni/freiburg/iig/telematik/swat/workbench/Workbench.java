@@ -31,7 +31,6 @@ import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.LayoutAction;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
@@ -244,26 +243,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			messagePanel.setSelectedIndex(0);
 		} catch (ArrayIndexOutOfBoundsException e) {
 		}
-	}
-
-	public static void main(String[] args) {
-		if (args.length == 1) {
-			try {
-				SwatProperties.getInstance().setWorkingDirectory(args[0]);
-				//SwatProperties.getInstance().store();
-			} catch (ParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (PropertyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		new Workbench();
 	}
 
 	@Override

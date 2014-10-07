@@ -518,8 +518,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				try {
 					converter.parse();
 					String newFileName = requestFileName("Please enter a name for the imported net", "Please enter a new name");
-					File folder = new File(SwatProperties.getInstance().getNetWorkingDirectory(), newFileName);
-					folder.mkdir();
+					File folder = new File(SwatProperties.getInstance().getPathForNets(), newFileName);
+					folder.mkdirs();
 					PTNetEditor editor = converter.getEditor(new File(folder, newFileName));
 					SaveAction sa = new SaveAction(editor);
 					sa.actionPerformed(new ActionEvent(this, 0, "save imported net"));
