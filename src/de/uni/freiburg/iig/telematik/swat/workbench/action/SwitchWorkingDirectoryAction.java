@@ -13,6 +13,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class SwitchWorkingDirectoryAction extends AbstractAction {
@@ -34,8 +35,8 @@ public class SwitchWorkingDirectoryAction extends AbstractAction {
 		
 		try {
 			// Update Properties and reload SwatComponents.
-			SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
-			SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory);
+			SwatProperties.getInstance().setWorkingDirectory(workingDirectory, true);
+			SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory, true);
 			SwatProperties.getInstance().store();
 			SwatComponents.getInstance().reload();
 			// Inform TabView, etc...
@@ -47,8 +48,9 @@ public class SwitchWorkingDirectoryAction extends AbstractAction {
 		} catch (IOException e3) {
 			JOptionPane.showMessageDialog(null, e3.getMessage(), "IO Exception", JOptionPane.ERROR_MESSAGE);
 			e3.printStackTrace();
-		} catch (PropertyException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
+		} catch (SwatComponentException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(), "SWAT Component Exception", JOptionPane.ERROR_MESSAGE);
+
 			e1.printStackTrace();
 		}
 

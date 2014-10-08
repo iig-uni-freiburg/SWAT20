@@ -46,6 +46,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
@@ -74,6 +75,7 @@ public class IFNetGraph extends PNGraph {
 
 	private boolean containsAnalysisContext = false;
 	private AnalysisContext currentAC;
+	private ACModel selectedACModel;
 	public IFNetGraph(GraphicalIFNet GraphicalIFNet, IFNetProperties IFNetProperties) throws ParameterException {
 		super(GraphicalIFNet, IFNetProperties);
 	}
@@ -596,6 +598,15 @@ default:
 		 
 		 }
 		
+	}
+	
+	public ACModel getSelectedACModel() {
+		// TODO Auto-generated method stub
+		return selectedACModel;
+	}
+
+	public void setSelectedACModel(ACModel selectedACModel) {
+		this.selectedACModel = selectedACModel;
 	}
 
 

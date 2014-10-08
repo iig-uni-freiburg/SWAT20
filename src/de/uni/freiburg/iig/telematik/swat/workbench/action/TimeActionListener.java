@@ -7,16 +7,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYBarRenderer;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.data.statistics.HistogramType;
-import org.jfree.ui.ApplicationFrame;
+//import org.jfree.chart.ChartFactory;
+//import org.jfree.chart.ChartPanel;
+//import org.jfree.chart.JFreeChart;
+//import org.jfree.chart.plot.PlotOrientation;
+//import org.jfree.chart.plot.XYPlot;
+//import org.jfree.chart.renderer.xy.XYBarRenderer;
+//import org.jfree.chart.title.LegendTitle;
+//import org.jfree.data.statistics.HistogramDataset;
+//import org.jfree.data.statistics.HistogramType;
+//import org.jfree.ui.ApplicationFrame;
 
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -51,7 +51,7 @@ public class TimeActionListener implements ActionListener {
 		System.out.println("Needed times:");
 		for (long l : results)
 			System.out.print(" " + l);
-		generateDiagram(results, 25);
+//		generateDiagram(results, 25);
 	}
 
 	public long[] getSimulationResults() {
@@ -99,50 +99,50 @@ public class TimeActionListener implements ActionListener {
 
 	}
 
-	private static void generateDiagram(long[] results2, int bins) {
-		double[] buffer = new double[results2.length];
-		for (int i = 0; i < results2.length; i++)
-			buffer[i] = results2[i];
-		// The histogram takes an array
-		HistogramDataset histo = new HistogramDataset();
-		histo.addSeries("Relative Occurence of Duration", buffer, bins);
-		//histo.setType(HistogramType.RELATIVE_FREQUENCY);
-		histo.setType(HistogramType.SCALE_AREA_TO_1);
-
-		ApplicationFrame aFrame = new ApplicationFrame("Time analysis");
-		//ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
-		JFreeChart chart = ChartFactory.createHistogram("Distribution of simulated workflow duration",
-				"Duration of Workflow execution in ms", "Relative occurence", histo, PlotOrientation.VERTICAL, true, true, false);
-
-		// to save as JPG
-		XYPlot plot = (XYPlot) chart.getPlot();
-		XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
-
-		renderer.setDrawBarOutline(false);
-
-
-		renderer.setSeriesOutlinePaint(0, Color.red);
-
-		//plot.getRangeAxis().setRange(0, 0.2);
-		//plot.getDomainAxis().setRange(0, 30);
-		plot.getRangeAxis().setTickLabelFont(new Font("Arial", 0, 30));
-		plot.getDomainAxis().setTickLabelFont(new Font("Arial", 0, 30));
-		plot.getRangeAxis().setLabelFont(new Font("Arial", 1, 28));
-		plot.getDomainAxis().setLabelFont(new Font("Arial", 1, 28));
-		//plot.getLegendItems().get(0).set(new Font("Arial", 1, 26));
-		//plot.getLegendItems().get(1).setLabelFont(new Font("Arial", 1, 24));
-		LegendTitle legend = chart.getLegend();
-		Font nwfont = new Font("Arial", 0, 26);
-		legend.setItemFont(nwfont);
-		//chart.setLegend(legend);
-
-
-		ChartPanel panel = new ChartPanel(chart);
-		panel.setPreferredSize(new java.awt.Dimension(800, 600));
-		aFrame.setContentPane(panel);
-		aFrame.setPreferredSize(new java.awt.Dimension(800, 600));
-		aFrame.setSize(new Dimension(800, 600));
-		aFrame.setVisible(true);
-	}
+//	private static void generateDiagram(long[] results2, int bins) {
+//		double[] buffer = new double[results2.length];
+//		for (int i = 0; i < results2.length; i++)
+//			buffer[i] = results2[i];
+//		// The histogram takes an array
+//		HistogramDataset histo = new HistogramDataset();
+//		histo.addSeries("Relative Occurence of Duration", buffer, bins);
+//		//histo.setType(HistogramType.RELATIVE_FREQUENCY);
+//		histo.setType(HistogramType.SCALE_AREA_TO_1);
+//
+//		ApplicationFrame aFrame = new ApplicationFrame("Time analysis");
+//		//ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+//		JFreeChart chart = ChartFactory.createHistogram("Distribution of simulated workflow duration",
+//				"Duration of Workflow execution in ms", "Relative occurence", histo, PlotOrientation.VERTICAL, true, true, false);
+//
+//		// to save as JPG
+//		XYPlot plot = (XYPlot) chart.getPlot();
+//		XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
+//
+//		renderer.setDrawBarOutline(false);
+//
+//
+//		renderer.setSeriesOutlinePaint(0, Color.red);
+//
+//		//plot.getRangeAxis().setRange(0, 0.2);
+//		//plot.getDomainAxis().setRange(0, 30);
+//		plot.getRangeAxis().setTickLabelFont(new Font("Arial", 0, 30));
+//		plot.getDomainAxis().setTickLabelFont(new Font("Arial", 0, 30));
+//		plot.getRangeAxis().setLabelFont(new Font("Arial", 1, 28));
+//		plot.getDomainAxis().setLabelFont(new Font("Arial", 1, 28));
+//		//plot.getLegendItems().get(0).set(new Font("Arial", 1, 26));
+//		//plot.getLegendItems().get(1).setLabelFont(new Font("Arial", 1, 24));
+//		LegendTitle legend = chart.getLegend();
+//		Font nwfont = new Font("Arial", 0, 26);
+//		legend.setItemFont(nwfont);
+//		//chart.setLegend(legend);
+//
+//
+//		ChartPanel panel = new ChartPanel(chart);
+//		panel.setPreferredSize(new java.awt.Dimension(800, 600));
+//		aFrame.setContentPane(panel);
+//		aFrame.setPreferredSize(new java.awt.Dimension(800, 600));
+//		aFrame.setSize(new Dimension(800, 600));
+//		aFrame.setVisible(true);
+//	}
 
 }

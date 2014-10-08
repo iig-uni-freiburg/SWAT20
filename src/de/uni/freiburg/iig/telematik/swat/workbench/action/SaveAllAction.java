@@ -8,6 +8,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 public class SaveAllAction extends AbstractAction {
 
@@ -20,8 +21,8 @@ public class SaveAllAction extends AbstractAction {
 			SwatComponents.getInstance().storeAllPetriNets();
 			AnalyzePanelController.getInstance().allObjectsChanged();
 			MessageDialog.getInstance().addMessage("Done.");
-		} catch (ParameterException e1) {
-			MessageDialog.getInstance().addMessage(e1.getMessage());
+		} catch (SwatComponentException e1) {
+			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}

@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
@@ -29,7 +30,7 @@ public class EditTokenlabelAction extends AbstractPNEditorAction {
 	public void actionPerformed(ActionEvent e) {
 		if (editor != null) {
 			IFNet ifNet = (IFNet) getEditor().getNetContainer().getPetriNet();
-			ACModel acModel = SwatComponents.getInstance().getSelectedACModel();
+			ACModel acModel = ((IFNetGraph) editor.getGraphComponent().getGraph()).getSelectedACModel();
 			
 			Set<String>  ifSubjects = new HashSet<String>();
 			if(acModel instanceof ACLModel){

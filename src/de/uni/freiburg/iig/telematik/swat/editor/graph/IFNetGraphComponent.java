@@ -105,19 +105,19 @@ public class IFNetGraphComponent extends PNGraphComponent {
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> cur_net = ((PNEditor) Workbench.getInstance().getTabView()
 					.getSelectedComponent()).getNetContainer();
 			TimeContext context = comp.getTimeAnalysisForNet(cur_net);
-			if (context == null){
-				File contextPath = new File(comp.getFile(cur_net).getParentFile(), SwatProperties.getInstance().getTimeAnalysisFolderName());
-				File fileToSave=new File(contextPath,"time-context.xml");
-				fileToSave.getParentFile().mkdirs();
-				context = new TimeContext(fileToSave);
-			}
+//			if (context == null){
+//				File contextPath = new File(comp.getFile(cur_net).getParentFile(), SwatProperties.getInstance().getTimeAnalysisFolderName());
+//				File fileToSave=new File(contextPath,"time-context.xml");
+//				fileToSave.getParentFile().mkdirs();
+//				context = new TimeContext(fileToSave);
+//			}
 			TransitionView view = new TransitionView(cell.getId(), context);
 			view.setVisible(true);
 				
 		} catch (ClassCastException e1) {
 			e1.printStackTrace();
-		} catch (IOException e2) {
-			e2.printStackTrace();
+//		} catch (IOException e2) {
+//			e2.printStackTrace();
 		}
 		return false;
 	}

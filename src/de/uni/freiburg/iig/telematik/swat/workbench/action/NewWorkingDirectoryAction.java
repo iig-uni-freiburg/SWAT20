@@ -40,11 +40,9 @@ public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
             dir.mkdir();
             String workingDirectory = dir.getAbsolutePath() + System.getProperty("file.separator");
  
-            try {
-				addKnownWorkingDirectory(workingDirectory);
-			} catch (PropertyException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "Property Exception", JOptionPane.ERROR_MESSAGE);
-			}
+ 
+			addKnownWorkingDirectory(workingDirectory);
+
         }
 	}
 

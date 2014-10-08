@@ -13,6 +13,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 public class SaveActiveComponentAction extends AbstractAction {
 
@@ -43,13 +44,12 @@ public class SaveActiveComponentAction extends AbstractAction {
 
 	private void savePN(PNEditor mainComponent) {
 		try {
-			SwatComponents.getInstance().storePetriNet(mainComponent.getNetContainer());
+			SwatComponents.getInstance().storePetriNet(mainComponent.getNetContainer().getPetriNet().getName());
 			MessageDialog.getInstance().addMessage("Successfully saved Petri Net");
 			Workbench.consoleMessage("Successfully saved Petri Net");
-		} catch (ParameterException e1) {
+		} catch (SwatComponentException e) {
 			MessageDialog.getInstance().addMessage("ERROR: Could not save Petri Net");
 			Workbench.errorMessage("Could not save Petri Net");
-			e1.printStackTrace();
 		}
 		
 	}

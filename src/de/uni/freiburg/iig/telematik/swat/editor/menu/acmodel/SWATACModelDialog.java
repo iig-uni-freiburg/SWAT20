@@ -41,6 +41,7 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.RoleLattic
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.graphic.RoleLatticeDialog;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.graphic.RoleMembershipDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 
 
@@ -541,7 +542,12 @@ public class SWATACModelDialog extends JDialog {
 		newACLModel.setTransactions(SWATACModelDialog.this.context.getActivities());
 		
 		//Abklären mit Schreiben
-		SwatComponents.getInstance().addACModel(newACLModel, true);
+		try {
+			SwatComponents.getInstance().addACModel(newACLModel, true);
+		} catch (SwatComponentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		updateACModelComboBox(newACLModel.getName());
 		updateVisibility();
 		updateTextArea();
@@ -562,7 +568,12 @@ public class SWATACModelDialog extends JDialog {
 			if(SWATACModelDialog.this.context.hasActivities()){
 				newRBACModel.setTransactions(SWATACModelDialog.this.context.getActivities());
 			}
-			SwatComponents.getInstance().addACModel(newRBACModel, true);
+			try {
+				SwatComponents.getInstance().addACModel(newRBACModel, true);
+			} catch (SwatComponentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			updateACModelComboBox(newRBACModel.getName());
 			updateVisibility();
 			updateTextArea();
@@ -625,19 +636,15 @@ public class SWATACModelDialog extends JDialog {
 		if(acModel != null){
 			textArea.setText(acModel.toString());
 		}
-		try {
+
 			if(acModel!= null)
-			SwatComponents.getInstance().storeACModel(acModel);
-		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+				try {
+					SwatComponents.getInstance().storeACModel(acModel);
+				} catch (SwatComponentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 	}
 	
 	public ACModel getACModel(){

@@ -44,8 +44,16 @@ public class RenameAction extends AbstractAction {
 		case LOG_FILE:
 			break;
 		case PETRI_NET:
-			File newFile = getAbsolutePathToWorkingDir(requestFileName("New name for net?", "New name") + extension);
-			SwatComponents.getInstance().getP
+			String extension = ".pnml";
+			try {
+				File newFile = getAbsolutePathToWorkingDir(requestFileName("New name for net?", "New name") + extension );
+			} catch (PropertyException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			break;
 		case PETRI_NET_ANALYSIS:
 			break;

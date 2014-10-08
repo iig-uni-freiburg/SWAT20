@@ -8,6 +8,7 @@ import javax.swing.AbstractAction;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 
@@ -26,17 +27,21 @@ public abstract class AbstractWorkingDirectoryAction extends AbstractAction {
 	}
 	
 	protected void addKnownWorkingDirectory(String workingDirectory) {
-		try {
-			SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory, false);
-			SwatProperties.getInstance().setWorkingDirectory(workingDirectory);
-			SwatProperties.getInstance().store();
-		} catch (ParameterException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+
+
+			try {
+				SwatProperties.getInstance().addKnownWorkingDirectory(workingDirectory, false);
+				SwatProperties.getInstance().setWorkingDirectory(workingDirectory, false);
+				SwatProperties.getInstance().store();
+			} catch (SwatComponentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+
         putValue(PROPERTY_NAME_WORKING_DIRECTORY, workingDirectory);
         putValue(PROPERTY_NAME_SUCCESS, true);
 	}

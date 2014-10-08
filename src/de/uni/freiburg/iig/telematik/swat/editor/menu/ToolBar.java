@@ -337,7 +337,7 @@ public class ToolBar extends JToolBar {
 						if (analysisContextModelName != null && !analysisContextModelName.contentEquals(NO_SELECTION)) {
 							PNGraph graph = pnEditor.getGraphComponent().getGraph();
 							if (graph instanceof IFNetGraph) {
-								anyalysisContextModel = SwatComponents.getInstance().getIFAnalysisContextForNetWithName(pnEditor.getNetContainer().getPetriNet().getName(), analysisContextModelName);
+								anyalysisContextModel = SwatComponents.getInstance().getAnalysisContext(pnEditor.getNetContainer().getPetriNet().getName(), analysisContextModelName);
 
 								((mxGraphModel) pnEditor.getGraphComponent().getGraph().getModel()).execute(new AnalysisContextChange(pnEditor, anyalysisContextModel));
 
@@ -365,7 +365,7 @@ public class ToolBar extends JToolBar {
 	private void updateAnalysisContextModelComboBox(String modelName){
 		DefaultComboBoxModel theModel = (DefaultComboBoxModel) comboAnalysisContextModel.getModel();
 		theModel.removeAllElements();
-		List<AnalysisContext> acModels = SwatComponents.getInstance().getIFAnalysisContextForNet(pnEditor.getNetContainer().getPetriNet().getName());
+		List<AnalysisContext> acModels = SwatComponents.getInstance().getAnalysisContexts(pnEditor.getNetContainer().getPetriNet().getName());
 		theModel.addElement(NO_SELECTION);
 		if(acModels != null){
 		for(AnalysisContext acModel: acModels){

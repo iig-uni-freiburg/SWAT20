@@ -504,7 +504,7 @@ public class SwatComponents {
 		return null;
 	}
 
-	private void addAnalysisContext(AnalysisContext aContext, String netID, boolean storeToFile) throws SwatComponentException {
+	public void addAnalysisContext(AnalysisContext aContext, String netID, boolean storeToFile) throws SwatComponentException {
 		if(analysisContexts.get(netID) == null)
 			analysisContexts.put(netID, new ArrayList<AnalysisContext>());
 		analysisContexts.get(netID).add(aContext);

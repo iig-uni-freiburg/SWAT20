@@ -19,6 +19,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
@@ -28,6 +29,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TransitionSilentCh
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 public class AddAnalysisContextAction extends AbstractPNEditorAction {
 
@@ -41,7 +43,8 @@ public class AddAnalysisContextAction extends AbstractPNEditorAction {
 		if (editor != null) {
 			IFNet ifNet = (IFNet) getEditor().getNetContainer().getPetriNet();
 			if (SwatComponents.getInstance().containsACModels()) {
-				ACModel acModel = SwatComponents.getInstance().getSelectedACModel();
+				ACModel acModel = ((IFNetGraph) editor.getGraphComponent().getGraph()).getSelectedACModel();
+
 				if (acModel != null) {
 
 					Set<String> ifSubjects = new HashSet<String>();
@@ -63,7 +66,13 @@ public class AddAnalysisContextAction extends AbstractPNEditorAction {
 						// Labelings sichtbar machen
 						((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new AnalysisContextChange(editor, ac));
 
-						SwatComponents.getInstance().addAnalysisContextForNet(editor.getNetContainer().getPetriNet().getName(), ac);
+						try {
+							SwatComponents.getInstance().addAnalysisContext(ac, editor.getNetContainer().getPetriNet().getName(), false);
+						} catch (SwatComponentException e1) {
+							JOptionPane.showMessageDialog(editor.getGraphComponent(), "Analysis Context could not be Added",
+									"Analysis Context not added", JOptionPane.ERROR_MESSAGE);
+							e1.printStackTrace();
+						}
 						editor.getEditorToolbar().addAnalysisContextToComboBox(name);
 
 					}
