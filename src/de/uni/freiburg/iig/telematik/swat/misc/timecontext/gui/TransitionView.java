@@ -18,9 +18,9 @@ import org.panelmatic.PanelMatic;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.StochasticTimeBehavior;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.AbstractDistributionView;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.ExponentialDistributionView;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.IDistributionView;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.AbstractDistributionView;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.ExponentialDistributionView;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.IDistributionView;
 
 public class TransitionView extends JDialog {
 

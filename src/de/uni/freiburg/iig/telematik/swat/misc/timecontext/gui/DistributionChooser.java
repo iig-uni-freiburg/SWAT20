@@ -11,9 +11,9 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.DistributionType;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.DistributionViewFactory;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.IDistributionView;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionViewFactory;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.IDistributionView;
 
 public class DistributionChooser extends JDialog implements ActionListener {
 	JComboBox selector;

@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions;
+package de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions;
 
 public class DistributionViewFactory {
 

@@ -1,29 +1,31 @@
-package de.uni.freiburg.iig.telematik.swat.misc.timecontext;
+package de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions;
 
 import java.util.Arrays;
 import java.util.Random;
 
-public class MeasuredTimedActivity implements TimeBehavior {
+public class MeasuredDistributionView extends AbstractDistributionView {
 
 	double[] bins;
 	double[] frequency;
 	double[] cummulated;
-	//double step;
+	double step;
+	private Random r;
 
-	Random r;
-
-	public static void main(String[] args){
-		double[] occurence = { 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4 };
-		MeasuredTimedActivity activity = new MeasuredTimedActivity(occurence, 4);
+	public static void main(String[] args) {
+		double[] occurence = { 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4.1 };
+		MeasuredDistributionView view = new MeasuredDistributionView(occurence, 4);
 		for (int i = 0; i < 10; i++)
-			System.out.println(activity.getNeededTime() + ",");
+			System.out.print(view.getNeededTime() + ", ");
+
 	}
 
-	/** give array of all occurences and create a histogram **/
-	public MeasuredTimedActivity(double[] occurences, int numberOfBins) {
+	public MeasuredDistributionView(double[] occurences, int numberOfBins) {
 		Arrays.sort(occurences);
 		initializeBins(occurences, numberOfBins);
 		frequency = fillBins(occurences, bins);
+
+
+		printDetails();
 
 		//normalize
 		normalize(frequency);
@@ -32,6 +34,18 @@ public class MeasuredTimedActivity implements TimeBehavior {
 		cummulated = cummulate(frequency);
 
 		r = new Random();
+		type = DistributionType.MEASURED;
+
+	}
+
+	public void printDetails() {
+		System.out.println("Step: " + step);
+		System.out.println("Occurences: ");
+		for (int i = 0; i < bins.length; i++) {
+			System.out.println(bins[i] + "->" + (bins[i] + step) + ": " + frequency[i]);
+		}
+		System.out.println("-----");
+
 	}
 
 	/** make cummulative histogram. last entry will be one **/
@@ -70,8 +84,7 @@ public class MeasuredTimedActivity implements TimeBehavior {
 				if (occurences[startFrom] <= bins[i]) {
 					count++; //add occurence into current bin
 					startFrom++; //go on with next occurence
-				}
-				else
+				} else
 					break; //bin full. Go to next bin
 			}
 			frequency[i] = count; //put into bin: number of matching occurences
@@ -102,8 +115,8 @@ public class MeasuredTimedActivity implements TimeBehavior {
 	public void initializeBins(double[] occurences, int numberOfBins) {
 		bins = new double[numberOfBins];
 		double min = occurences[0]; //value for first bin
-		double max = occurences[occurences.length - 1]; //value for last bin
-		double step = (max - min) / (((double) numberOfBins - 1)); //width of each bin
+		double max = Math.ceil(occurences[occurences.length - 1]); //value for last bin
+		step = (max - min) / (((double) numberOfBins - 1)); //width of each bin
 		bins[0] = min;
 		for (int i = 1; i < numberOfBins; i++) {
 			bins[i] = bins[i - 1] + step; //value for each bin

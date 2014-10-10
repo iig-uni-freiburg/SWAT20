@@ -9,7 +9,7 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.apache.commons.math3.distribution.WeibullDistribution;
 
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.DistributionType;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 
 public abstract class TimeBehaviorFactory {
 

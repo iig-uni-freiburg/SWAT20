@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions;
+package de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.apache.commons.math3.distribution.GammaDistribution;

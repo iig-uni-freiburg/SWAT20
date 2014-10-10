@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.misc.timecontext;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.distributions.DistributionType;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 
 public class StochasticTimeBehavior implements TimeBehavior {
 
