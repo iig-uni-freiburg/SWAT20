@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,9 +24,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPNNameComparator;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.PNMLIFNetAnalysisContextParser;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.serialize.ACSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
@@ -48,6 +44,7 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
+import de.uni.freiburg.iig.telematik.swat.misc.SwatComperator;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
@@ -245,9 +242,10 @@ public class SwatComponents {
 
 				short numFiles = (short) (mxmlFiles.size() + xmlFiles.size() + csvFiles.size());
 				if (numFiles == 0)
-					throw new SwatComponentException("No compatible log file in folder \"" + FileUtils.getDirName(folder.getAbsolutePath()) + "\"");
+					throw new SwatComponentException("No compatible log file in folder \"" + FileUtils.getPath(folder.getAbsolutePath())
+							+ "\"");
 				if (numFiles > 1)
-					throw new SwatComponentException("More than one file in folder \"" + FileUtils.getDirName(folder.getAbsolutePath()) + "\"");
+					throw new SwatComponentException("More than one file in folder \"" + FileUtils.getPath(folder.getAbsolutePath()) + "\"");
 
 				if (!mxmlFiles.isEmpty()) {
 
@@ -461,7 +459,7 @@ public class SwatComponents {
 		netFiles.remove(netID);
 		nets.remove(netID);
 		if(removeFileFromDisk){
-			FileUtils.deleteFile(netFile);
+			FileUtils.deleteFile(netFile.getAbsolutePath());
 		}
 		//TODO: Verbindung zu AC?
 	}
@@ -716,13 +714,13 @@ public class SwatComponents {
 
 	private File generateCsvLogPath(String name) throws PropertyException, IOException {
 		//Make Directory
-		File folder = new File(SwatProperties.getInstance().getLogWorkingDirectory(), name);
+		File folder = new File(SwatProperties.getInstance().getPathForLogs(), name);
 		folder.mkdir();
 		return new File(folder, name + ".csv");
 	}
 
 	private void loadTimeAnalysisContextFor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet, File folder) throws IOException {
-		File timeFolder = new File(folder, SwatProperties.getInstance().getTimeAnalysisFolderName());
+		File timeFolder = new File(folder, SwatProperties.getInstance().getTimeContextDirectoryName());
 		for (File file : timeFolder.listFiles()) {
 			if (file.getAbsolutePath().endsWith("xml")) {
 				TimeContext context = TimeContext.parse(file);
@@ -742,12 +740,14 @@ public class SwatComponents {
 		return sort;
 	}
 	
+	/** return sorted set of LogFiles **/
 	public Set<LogModel> getLogFiles() {
 		TreeMap<LogModel, File> sort = new TreeMap<LogModel, File>(new SwatComperator());
 		sort.putAll(logs);
 		return sort.keySet();
 	}
 
+	/** return sorted set of XMLLogFiles **/
 	public Set<LogModel> getXMLFiles() {
 		TreeMap<LogModel, File> sort = new TreeMap<LogModel, File>(new SwatComperator());
 		sort.putAll(xml);
@@ -791,9 +791,9 @@ public class SwatComponents {
 		File file;
 		//nets
 		if (currentComponent instanceof PNEditor) {
-		for (AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> pnet : nets.keySet()) {
-			if (pnet == ((PNEditor) currentComponent).getNetContainer())
-				return nets.get(pnet);
+			for (String pnet : nets.keySet()) {
+				if (pnet == ((PNEditor) currentComponent).getNetContainer().getPetriNet().getName())
+					return netFiles.get(pnet);
 			}
 		}
 
@@ -894,40 +894,3 @@ public class SwatComponents {
 		return context;
 	}
 }
-
-///** For use with TreeMap **/
-//class SwatComparator implements Comparator<Object> {
-//	// Note: this comparator imposes orderings that are inconsistent with equals. Only compares File Names   
-//	Map<String, File> base;
-//
-//	/** because AbstractGraphicalPN does not carry its name:need mapping **/
-//	public SwatComparator(Map<String, File> base) {
-//		this.base = base;
-//	}
-//
-//	public SwatComparator() {
-//		this.base = null;
-//	}
-//
-//	public int compare(AbstractGraphicalPN a, AbstractGraphicalPN b) {
-//		return base.get(a).getName().compareTo(base.get(b).getName());
-//		} // returning 0 would merge keys
-//
-//	public int compare(SwatComponent comp1, SwatComponent comp2) {
-//		return comp1.getName().compareTo(comp2.getName());
-//	}
-//
-//	public int compare(LogModel comp1, LogModel comp2) {
-//		return comp1.getName().compareTo(comp2.getName());
-//	}
-//
-//	@Override
-//	public int compare(Object o1, Object o2) {
-//		if (o1 instanceof SwatComponent)
-//			return compare((SwatComponent) o1, (SwatComponent) o2);
-//		if (o1 instanceof LogModel)
-//			return compare((LogModel) o1, (LogModel) o2);
-//		else
-//			return compare((AbstractGraphicalPN) o1, (AbstractGraphicalPN) o2);
-//	}
-//}
