@@ -712,12 +712,14 @@ public class SwatComponents {
 //
 //	}
 
-	private File generateCsvLogPath(String name) throws PropertyException, IOException {
-		//Make Directory
-		File folder = new File(SwatProperties.getInstance().getPathForLogs(), name);
-		folder.mkdir();
-		return new File(folder, name + ".csv");
-	}
+
+//	private File generateCsvLogPath(String name) throws PropertyException, IOException {
+//		//Make Directory
+//		File folder = new File(SwatProperties.getInstance().getPathForLogs(), name);
+//		folder.mkdir();
+//		return new File(folder, name + ".csv");
+//	}
+
 
 	private void loadTimeAnalysisContextFor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet, File folder) throws IOException {
 		File timeFolder = new File(folder, SwatProperties.getInstance().getTimeContextDirectoryName());
