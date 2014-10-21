@@ -49,7 +49,6 @@ import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.sciff.DatabaseChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
@@ -142,7 +141,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	 * @throws PropertyException 
 	 * @throws ParameterException **/
 	private void createButtons() throws ParameterException, PropertyException, IOException {
-		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE));
+		standardItems.add(new JButton(new ImportAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.DELETE));
 		standardItems.add(getSwitchworkingDirectoryButton());
@@ -439,7 +438,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				SwatTreeNode selectedNode = (SwatTreeNode) treeView.getSelectionPath().getLastPathComponent();
 				switch (selectedNode.getObjectType()) {
 				case PETRI_NET:
-					file=SwatComponents.getInstance().getFile((AbstractGraphicalPN) selectedNode.getUserObject());
+					file = SwatComponents.getInstance().getFile((AbstractGraphicalPN) selectedNode.getUserObject());
 					break;
 				case PETRI_NET_ANALYSIS:
 					file=selectedNode.getFileReference();

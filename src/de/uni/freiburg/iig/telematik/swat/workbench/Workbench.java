@@ -18,7 +18,6 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
@@ -35,7 +34,6 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
-import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener, SwatStateListener {
 
@@ -266,7 +264,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 				LayoutAction a = new LayoutAction((PNEditor) swatComponent, "horizontalHierarchical", false);
 				System.out.println("Doing Layout...");
 				a.actionPerformed(new ActionEvent(this, 0, "Layout required"));
-				SwatComponents.getInstance().removeLayoutNeed(((PNEditor) swatComponent).getNetContainer());
+				//SwatComponents.getInstance().removeLayoutNeed(((PNEditor) swatComponent).getNetContainer());
 			}
 
 			getPropertiesPanel().removeAll();

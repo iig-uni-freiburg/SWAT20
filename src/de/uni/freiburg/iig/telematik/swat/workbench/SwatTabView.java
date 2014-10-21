@@ -51,12 +51,18 @@ import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener
 @SuppressWarnings("serial")
 public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	
+	private static SwatTabView tabView = new SwatTabView();
+	
 	private Map<Object, Component> openedSwatComponents = new HashMap<Object, Component>();
 
 	private Set<SwatTabViewListener> listeners = new HashSet<SwatTabViewListener>();
 
-	public SwatTabView() {
+	private SwatTabView() {
 		addChangeListener(new SwatTabViewAdapter());
+	}
+
+	public static SwatTabView getInstance() {
+		return tabView;
 	}
 
 	public void componentSelected(SwatTreeNode node) {
