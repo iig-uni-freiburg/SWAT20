@@ -1,47 +1,31 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.AbstractAction;
-
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaRunner;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaRunner.LOLA_TEST;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
-import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
-public class LolaAnalyzeAction<K> extends AbstractAction {
+public class LolaAnalyzeAction<K> extends AbstractWorkbenchAction {
 
 	private static final long serialVersionUID = 9111775745565090191L;
-	private SwatTabView tabView;
 	String lolaDir;
 
-
-	public LolaAnalyzeAction(SwatTabView tabView) {
-		this.tabView = tabView;
-
+	public LolaAnalyzeAction() throws ParameterException, PropertyException, IOException {
+		super("Lola", IconFactory.getIcon("detective"));
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		try {
-			LolaRunner lola = new LolaRunner((PNEditor) tabView.getSelectedComponent());
-			HashMap<LOLA_TEST, String> result = lola.analyse();
-			if (result == null)
-				return;
-			LolaPresenter presenter = new LolaPresenter(hashMapToString(result));
-			presenter.show();
 
-		} catch (ClassCastException e) {
-			MessageDialog.getInstance().addMessage("This is not a Petri Net");
-		}
-
-		catch (NullPointerException e) {
-			MessageDialog.getInstance().addMessage("Could not analyse with LoLA Reason: " + e.getMessage() + " " + e.getCause());
-		}
 	}
 	
 
@@ -57,5 +41,14 @@ public class LolaAnalyzeAction<K> extends AbstractAction {
 
 	}
 
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		LolaRunner lola = new LolaRunner((PNEditor) SwatTabView.getInstance().getSelectedComponent());
+		HashMap<LOLA_TEST, String> result = lola.analyse();
+		if (result == null)
+			return;
+		LolaPresenter presenter = new LolaPresenter(hashMapToString(result));
+		presenter.show();
 
+	}
 }

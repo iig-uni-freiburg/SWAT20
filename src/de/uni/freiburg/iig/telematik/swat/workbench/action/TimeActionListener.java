@@ -66,7 +66,7 @@ public class TimeActionListener implements ActionListener {
 	}
 
 	private TimeMachine<?, ?, ?, ?, ?, ?, ?> getTimeMachine(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net) {
-		return new TimeMachine(net.getPetriNet(), SwatComponents.getInstance().getTimeAnalysisForNet(net));
+		return new TimeMachine(net.getPetriNet(), SwatComponents.getInstance().getTimeContexts(net.getPetriNet().getName()).get(0));
 	}
 
 	private PNTraverser<AbstractTransition<?, Object>> getTraverser(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net){

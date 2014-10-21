@@ -21,6 +21,14 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 
 	private ImageIcon icon;
 	
+	public AbstractWorkbenchAction(String name) {
+		super(name);
+	}
+
+	public AbstractWorkbenchAction(String name, Icon icon) {
+		super(name, icon);
+	}
+
 	//	public AbstractWorkbenchAction(SwatTreeView treeView, SwatTabView tabView) {
 	//		super();
 	//		this.treeView = treeView;
