@@ -38,13 +38,10 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowToPnmlConverter;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
-import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.sciff.DatabaseChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
@@ -57,6 +54,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAc
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.TimeActionListener;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -238,7 +236,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 	public static void main(String[] args) {
 		JPanel panel = new JPanel();
-		panel.add(new SwatToolbar(new SwatTabView(), SwatTreeView.getInstance()));
+		panel.add(new SwatToolbar(SwatTabView.getInstance(), SwatTreeView.getInstance()));
 		new DisplayFrame(panel, true);
 	}
 
@@ -312,7 +310,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			switch(type){
 			case IMPORT:
 				setToolTipText("Import PT-Net from filesystem");
-				addActionListener(new ImportAction(treeView));
+				addActionListener(new ImportAction());
 				break;
 			case NEW:
 				SwatNewNetToolbar newNetTB = new SwatNewNetToolbar(tabView, treeView);
@@ -345,7 +343,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				break;
 			case RENAME:
 				setToolTipText("Rename current net");
-				addActionListener(new RenameAction(tabView, treeView));
+				addActionListener(new RenameAction());
 				break;
 			case DETECTIVE:
 				setToolTipText("Convert to Lola");
@@ -354,7 +352,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				setIconTextGap(0);
 				setText("LOLA");
 				//addActionListener(new LolaTransformAction());
-				addActionListener(new LolaAnalyzeAction(tabView));
+				addActionListener(new LolaAnalyzeAction());
 				break;
 			case ARISTAFLOW:
 				setToolTipText("Analyze active AristaFlow instance");
@@ -405,7 +403,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			try {
 				AristaFlowSQLConnector connector = DatabaseChooser.DatabaseChooser();
 				//LogFileViewer viewer = con.dumpIntoWorkbench();
-				SwatComponents.getInstance().putCsvIntoSwatComponent(connector.getModel());
+				SwatComponents.getInstance().addLogModel(connector.getModel());
 				//SwatComponents.getInstance().reload();
 				//connector.parse();
 				//SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(connector.getTempFile());
@@ -433,40 +431,44 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			File file = null;
-			try {
 				SwatTreeNode selectedNode = (SwatTreeNode) treeView.getSelectionPath().getLastPathComponent();
+			try {
 				switch (selectedNode.getObjectType()) {
 				case PETRI_NET:
+					PNEditor editor = (PNEditor) selectedNode.getUserObject();
+					SwatComponents.getInstance().removePetriNet(editor.getNetContainer().getPetriNet().getName(), true);
 					file=SwatComponents.getInstance().getPetriNetFile(((AbstractGraphicalPN) selectedNode.getUserObject()).getPetriNet().getName());
 					break;
 				case PETRI_NET_ANALYSIS:
-					file=selectedNode.getFileReference();
-					SwatTreeView.getInstance().updateAnalysis();
 					break;
 				default:
 					//file=((SwatComponent)selectedNode.getUserObject()).getFile();
-					file = SwatComponents.getInstance().getFile((XESLogModel) selectedNode.getUserObject());
+					//file = SwatComponents.getInstance().getFile((XESLogModel) selectedNode.getUserObject());
 					break;
 				}
-
-				boolean deleted = FileHelper.removeLinkOnly(file);
-				if (deleted) {
-					try {
-						//tabView.remove(tabView.getSelectedIndex());
-						tabView.remove(selectedNode);
-//						for (int i = 0; i < tabView.getTabCount(); i++) {
-//							if (tabView.getTabComponentAt(i) == selectedNode.getUserObject()) {
-//								tabView.remove(i);
-//							}
-						//						}
-					} catch (java.lang.IndexOutOfBoundsException e) {
-						//Tab wasn't open
-					}
-					SwatComponents.getInstance().remove(file);
-				}
-			} catch (ArrayIndexOutOfBoundsException e) {
+			} catch (SwatComponentException e) {
+				Workbench.getInstance().errorMessage("Could not delete " + selectedNode.getDisplayName() + ". \nReason: " + e.getMessage());
 
 			}
+
+//				boolean deleted = FileHelper.removeLinkOnly(file);
+//				if (deleted) {
+//					try {
+//						//tabView.remove(tabView.getSelectedIndex());
+//						tabView.remove(selectedNode);
+////						for (int i = 0; i < tabView.getTabCount(); i++) {
+////							if (tabView.getTabComponentAt(i) == selectedNode.getUserObject()) {
+////								tabView.remove(i);
+////							}
+//						//						}
+//					} catch (java.lang.IndexOutOfBoundsException e) {
+//						//Tab wasn't open
+//					}
+//					SwatComponents.getInstance().remove(file);
+//				}
+//			} catch (ArrayIndexOutOfBoundsException e) {
+//
+//			}
 
 
 		}
@@ -496,12 +498,13 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	class AFtemplateImport implements ActionListener {
 
-		private String requestFileName(String message, String title) {
+		private String requestNetName(String message, String title) {
 			String name = new FileNameDialog(SwingUtilities.getWindowAncestor(treeView.getParent()), message, title, false).requestInput();
-			if (name.endsWith(".pnml"))
-				return name;
-			else
-				return name + ".pnml";
+			return name;
+			//			if (name.endsWith(".pnml"))
+			//				return name;
+			//			else
+			//				return name + ".pnml";
 		}
 
 		@Override
@@ -515,31 +518,19 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				AristaFlowToPnmlConverter converter = new AristaFlowToPnmlConverter(file);
 				try {
 					converter.parse();
-					String newFileName = requestFileName("Please enter a name for the imported net", "Please enter a new name");
-					File folder = new File(SwatProperties.getInstance().getPathForNets(), newFileName);
-					folder.mkdirs();
-					PTNetEditor editor = converter.getEditor(new File(folder, newFileName));
-					SaveAction sa = new SaveAction(editor);
-					sa.actionPerformed(new ActionEvent(this, 0, "save imported net"));
-					SwatComponents.getInstance().putNetIntoSwatComponent(editor.getNetContainer(), newFileName.split("\\.pnml")[0]);
-					SwatComponents.getInstance().setLayoutNeed(editor.getNetContainer());
+					AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = converter.getGraphicalPN();
+					net.getPetriNet().setName(requestNetName("Please enter a name for the imported net", "Please enter a new name"));
+					SwatComponents.getInstance().addPetriNet(net);
+
 				} catch (ParserConfigurationException e1) {
-					Workbench.errorMessage("Opening: " + file.getName() + " FAILED");
-					e1.printStackTrace();
-				} catch (SAXException e1) {
-					Workbench.errorMessage("Opening: " + file.getName() + " FAILED");
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					Workbench.errorMessage("Opening: " + file.getName() + " FAILED");
-					e1.printStackTrace();
-				} catch (ParameterException e2) {
-					Workbench.errorMessage("Saving: " + file.getName() + " FAILED");
-					e2.printStackTrace();
-				} catch (PropertyException e3) {
-					Workbench.errorMessage("Saving: " + file.getName() + " FAILED");
-					e3.printStackTrace();
+					Workbench.errorMessage("Could not parse AristaFlow log");
+				} catch (SAXException e2) {
+					Workbench.errorMessage("AristaFlow log has wrong format");
+				} catch (SwatComponentException e3) {
+					Workbench.errorMessage("Could not parse AristaFlow log");
+				} catch (IOException e4) {
+					Workbench.errorMessage("Could not parse or access AristaFlow log");
 				}
-			} else {
 
 			}
 
