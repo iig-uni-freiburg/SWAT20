@@ -159,7 +159,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	
 	public SwatTabView getTabView() {
 		if(tabView == null){
-			tabView = new SwatTabView();
+			tabView = SwatTabView.getInstance();
 			tabView.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
 			tabView.setPreferredSize(MINIMUM_SIZE_TAB_PANEL);
 			tabView.addTabViewListener(this);

@@ -94,7 +94,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 	private JMenuItem getImportEntry() {
 		JMenuItem importEntry = new JMenuItem("Import");
-		importEntry.addActionListener(new ImportAction(treeView));
+		importEntry.addActionListener(new ImportAction());
 		return importEntry;
 	}
 
