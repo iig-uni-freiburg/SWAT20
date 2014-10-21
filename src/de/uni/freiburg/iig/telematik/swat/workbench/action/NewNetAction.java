@@ -28,7 +28,7 @@ public class NewNetAction extends AbstractWorkbenchAction {
 
 	@Override
 	public void doFancyStuff(ActionEvent e) throws Exception{
-		String netName = requestFileName("Please choose a name for the new net:", "New Petri-Net");
+		String netName = requestNetName("Please choose a name for the new net:", "New Petri-Net");
 		popupFontToolBar.disposeAllWindows();
 		if (netName != null) {
 			// Test new file name
@@ -55,7 +55,7 @@ public class NewNetAction extends AbstractWorkbenchAction {
 		}
 	}
 
-	private String requestFileName(String message, String title) {
+	private String requestNetName(String message, String title) {
 		return new PNNameDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false).requestInput();
 
 	}
