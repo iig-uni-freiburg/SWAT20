@@ -80,8 +80,7 @@ public class PetriNetInformation implements PNReader {
 	public void netChanged() {
 		updateTransitionLabelDic();
 		updatePlacesList();
-		if (pneditor.getNetContainer().getPetriNet().getNetType() == NetType.CWN
-				|| pneditor.getNetContainer().getPetriNet().getNetType() == NetType.CPN
+		if (pneditor.getNetContainer().getPetriNet().getNetType() == NetType.CPN
 				|| pneditor.getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
 			updateDataTypeList();
 		}
