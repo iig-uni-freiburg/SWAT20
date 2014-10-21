@@ -42,7 +42,6 @@ import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
@@ -438,7 +437,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				SwatTreeNode selectedNode = (SwatTreeNode) treeView.getSelectionPath().getLastPathComponent();
 				switch (selectedNode.getObjectType()) {
 				case PETRI_NET:
-					file = SwatComponents.getInstance().getFile((AbstractGraphicalPN) selectedNode.getUserObject());
+					file=SwatComponents.getInstance().getPetriNetFile(((AbstractGraphicalPN) selectedNode.getUserObject()).getPetriNet().getName());
 					break;
 				case PETRI_NET_ANALYSIS:
 					file=selectedNode.getFileReference();
@@ -446,7 +445,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 					break;
 				default:
 					//file=((SwatComponent)selectedNode.getUserObject()).getFile();
-					file = SwatComponents.getInstance().getFile((LogModel) selectedNode.getUserObject());
+					file = SwatComponents.getInstance().getFile((XESLogModel) selectedNode.getUserObject());
 					break;
 				}
 

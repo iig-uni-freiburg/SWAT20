@@ -1,16 +1,19 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.Window;
+import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public abstract class AbstractWorkbenchAction extends AbstractAction {
 
@@ -75,9 +78,22 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 	protected Window getTreeViewParent() {
 		return SwingUtilities.getWindowAncestor(SwatTreeView.getInstance().getParent());
 	}
-	protected Window getTabViewParent() {
-		return SwingUtilities.getWindowAncestor(SwatTabView.getInstance().getParent());
+//	protected Window getTabViewParent() {
+//		return SwingUtilities.getWindowAncestor(SwatTabView.getInstance().getParent());
+//	}
+	
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+			doFancyStuff(e);
+		} catch(Exception ex){
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
+	
+	protected abstract void doFancyStuff(ActionEvent e) throws Exception;
+	
 	
 	
 }

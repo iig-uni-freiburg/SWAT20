@@ -8,7 +8,7 @@ import javax.swing.AbstractAction;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -29,8 +29,8 @@ public class SaveActiveComponentAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Component selectedComponent = tabView.getSelectedComponent();
-		if(selectedComponent instanceof SwatComponent){
-			SwatComponent component = (SwatComponent) tabView.getSelectedComponent();
+		if(selectedComponent instanceof WorkbenchComponent){
+			WorkbenchComponent component = (WorkbenchComponent) tabView.getSelectedComponent();
 			if (component.getMainComponent() instanceof PNEditor) {
 				savePN((PNEditor) component.getMainComponent());
 				AnalyzePanelController.getInstance().objectChanged(component.getFile().getName());

@@ -13,7 +13,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 
 public class PatternFactory {
 	
@@ -22,7 +22,7 @@ public class PatternFactory {
 	
 	private HashMap<String, String> mSupportedPatterns;
 
-	public PatternFactory(SwatComponent component) {
+	public PatternFactory(WorkbenchComponent component) {
 		
 		if (component instanceof PNEditor) {
 			mNet = ((PNEditor) component).netContainer.getPetriNet();

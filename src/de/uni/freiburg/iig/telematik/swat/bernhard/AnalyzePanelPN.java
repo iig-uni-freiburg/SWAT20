@@ -24,7 +24,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismExecutor;
 import de.uni.freiburg.iig.telematik.swat.lukas.PrismResult;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 /**
  * This class implements the functionality for analyzing a PTNet.
@@ -35,7 +35,7 @@ public class AnalyzePanelPN extends AnalyzePanel {
 
 	private PNEditor pnEditor;
 	protected AnalyzeToolBar toolBar;
-	public AnalyzePanelPN(SwatComponent component, String net) {
+	public AnalyzePanelPN(WorkbenchComponent component, String net) {
 		super(component, net);
 		pnEditor=(PNEditor) component;
 		objectInformationReader=new PetriNetInformation(pnEditor);

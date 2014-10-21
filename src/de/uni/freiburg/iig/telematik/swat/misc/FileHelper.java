@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.file.FileReader;
+import de.invation.code.toval.file.FileUtils;
 import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem.OperatingSystems;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 
@@ -30,18 +31,20 @@ public class FileHelper {
 		System.out.println(i);
 	}
 
-	public static void copyFile(File source, File destination) throws IOException {
-		FileReader fr = new FileReader(source.getAbsolutePath());
-		//BufferedWriter bw = new BufferedWriter(new FileOutputStream(destination));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destination)));
-
-		String buffer;
-		while ((buffer = fr.readLine()) != null) {
-			bw.write(buffer);
-			bw.write("\r\n");
-		}
-		fr.closeFile();
-	}
+//	public static void copyFile(File source, File destination) throws IOException {
+//		FileReader fr = new FileReader(source.getAbsolutePath());
+//		//BufferedWriter bw = new BufferedWriter(new FileOutputStream(destination));
+//		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destination)));
+//
+//		String buffer;
+//		while ((buffer = fr.readLine()) != null) {
+//			bw.write(buffer);
+//			bw.write("\r\n");
+//		}
+//		fr.closeFile();
+//		
+//		FileUtils.copy(source, dest)
+//	}
 
 	/** efficiently get number of lines in a file **/
 	public static long getLinesCount(String fileName, String encodingName) {

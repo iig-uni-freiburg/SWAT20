@@ -81,11 +81,11 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNode;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 
-public abstract class PNEditor extends JPanel implements SwatComponent, TreeSelectionListener, PNGraphListener {
+public abstract class PNEditor extends JPanel implements WorkbenchComponent, TreeSelectionListener, PNGraphListener {
 
 	private static final long serialVersionUID = 1023415244830760771L;
 	private static final String scaleMessageFormat = "Scale: %s %%";

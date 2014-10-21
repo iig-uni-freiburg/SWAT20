@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 /**
  * this is the specific subclass of AnalyzePanel which implements
  * the functionality used to analyze logfiles
@@ -19,7 +19,7 @@ public class AnalyzePanelLogfile extends AnalyzePanel {
 	 * @param component the LogFileViewer
 	 * @param log the filename of the logfile
 	 */
-	public AnalyzePanelLogfile(SwatComponent component, String log) {
+	public AnalyzePanelLogfile(WorkbenchComponent component, String log) {
 		super(component, log);
 		objectInformationReader=new LogFileInformation( (LogFileViewer) component);
 		objectChanged();

@@ -2,6 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 public enum SwatComponentType {
 	
-	PETRI_NET, LABELING, LOG_FILE, XML_FILE, PETRI_NET_ANALYSIS;
+	PETRI_NET, LABELING, AC_MODEL, ANALYSIS_CONTEXT, TIME_CONTEXT, XES_LOG, MXML_LOG, ARISTAFLOW_LOG, PETRI_NET_ANALYSIS;
 
 }

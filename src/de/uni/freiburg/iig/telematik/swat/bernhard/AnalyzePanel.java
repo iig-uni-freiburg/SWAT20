@@ -38,7 +38,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 /**
@@ -105,7 +105,7 @@ public abstract class AnalyzePanel {
 	 * @param component the SwatComponent to which this AnalyzePanel should belong to
 	 * @param file the filename of the file being analyzed
 	 */
-	public AnalyzePanel(SwatComponent component, String file) {
+	public AnalyzePanel(WorkbenchComponent component, String file) {
 		fileName = file.split("[.]")[0];
 		patternFactory = new PatternFactory(component);
 		patternSettings = new ArrayList<PatternSetting>();

@@ -22,6 +22,17 @@ public class TimeContext implements PNTimeContext {
 
 	Map<String, TimeBehavior> transitionTime = new HashMap<String, TimeBehavior>();
 	File file;
+	String name;
+	
+	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public static void main(String args[]) {
 		//TimeMachine<?, ?, ?, ?, ?, ?, ?> timeMachine = new TimeMachine<AbstractPlace<F,S>, AbstractTransition<F,S>, AbstractFlowRelation<P,T,S>, AbstractMarking<S>, Object, AbstractMarkingGraphState<M,S>, AbstractMarkingGraphRelation<M,X,S>>(petriNet, timeContext)
@@ -69,17 +80,6 @@ public class TimeContext implements PNTimeContext {
 		return transitionTime.containsKey(transition);
 	}
 
-	public void storeTimeContext(File file) throws FileNotFoundException {
-		if (file == null)
-			return;
-		setFile(file);
-		String serialString = new XStream().toXML(this);
-		PrintWriter writer = new PrintWriter(file);
-		writer.write(serialString);
-		writer.checkError();
-		writer.close();
-	}
-
 	public static TimeContext parse(File file) {
 		TimeContext context = (TimeContext) new XStream().fromXML(file);
 		context.setFile(file);
@@ -106,11 +106,6 @@ public class TimeContext implements PNTimeContext {
 			System.err.println("TimeContext does not contain information for " + transitionName);
 		//System.out.println("Delay for " + transitionName + ": " + (long) transitionTime.get(transitionName).getNeededTime());
 		return (long) transitionTime.get(transitionName).getNeededTime();
-	}
-
-	public void storeTimeContext() throws FileNotFoundException {
-		storeTimeContext(file);
-
 	}
 
 }

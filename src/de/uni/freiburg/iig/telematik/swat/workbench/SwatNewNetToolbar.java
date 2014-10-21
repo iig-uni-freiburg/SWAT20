@@ -9,21 +9,16 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.graphic.component.DisplayFrame;
-import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.NewNetAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -164,75 +159,23 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 			switch (type) {
 			case NEW_CPN:
 				setToolTipText("Create new CPnet");
-				addActionListener(new createNewAction(type));
+				addActionListener(new NewNetAction(type, popupFontToolBar));
 				break;
 			case NEW_PT:
 				setToolTipText("Create new PTnet");
-				addActionListener(new createNewAction(type));
+				addActionListener(new NewNetAction(type, popupFontToolBar));
 				break;
 			case NEW_IF:
 				setToolTipText("Create new IFnet");
-				addActionListener(new createNewAction(type));
+				addActionListener(new NewNetAction(type, popupFontToolBar));
 				break;
 			}
 		}
 
 	}
 
-	private enum ToolbarNewNetButtonType {
+	public enum ToolbarNewNetButtonType {
 		NEW_PT, NEW_CPN, NEW_IF
-	}
-
-	class createNewAction implements ActionListener {
-
-		private ToolbarNewNetButtonType type;
-
-		public createNewAction(SwatNewNetToolbar.ToolbarNewNetButtonType type) {
-			this.type = type;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-
-			String netName = requestFileName("Please choose a name for the new net:", "New Petri-Net");
-			popupFontToolBar.disposeAllWindows();
-			if (netName != null) {
-				try {
-					// Test new file name
-					switch (type) {
-					case NEW_CPN:
-						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalCPN(), netName);
-						break;
-					case NEW_PT:
-						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalPTNet(), netName);
-						break;
-					case NEW_IF:
-						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalIFNet(), netName);
-						break;
-
-					default:
-						break;
-					}
-
-					// Inform Tree View of changed components
-					treeView.removeAndUpdateSwatComponents();
-				} catch (PropertyException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ParameterException e1) {
-					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(SwatNewNetToolbar.this), e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-
-		private String requestFileName(String message, String title) {
-			return new FileNameDialog(SwingUtilities.getWindowAncestor(SwatNewNetToolbar.this.getParent()), message, title, false).requestInput();
-
-		}
-
 	}
 
 	public void setToolbar(WorkbenchPopupToolBar popupFontToolBar) {

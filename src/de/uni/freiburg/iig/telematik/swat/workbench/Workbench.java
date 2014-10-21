@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -18,16 +17,10 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelPN;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.LayoutAction;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
@@ -254,19 +247,10 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	@Override
 	public void componentActivated(SwatTreeNode node) {
-		SwatComponent swatComponent = null;
+		WorkbenchComponent swatComponent = null;
 		if (!getTabView().containsComponent(node)) {
 			// add SwatTreeNode to tab and get its swatComponent to make its propertyView
 			swatComponent = getTabView().addNewTab(node);
-			//test for layout need
-			if (swatComponent instanceof PNEditor
-					&& SwatComponents.getInstance().getLayoutNeed(((PNEditor) swatComponent).getNetContainer())) {
-				LayoutAction a = new LayoutAction((PNEditor) swatComponent, "horizontalHierarchical", false);
-				System.out.println("Doing Layout...");
-				a.actionPerformed(new ActionEvent(this, 0, "Layout required"));
-				//SwatComponents.getInstance().removeLayoutNeed(((PNEditor) swatComponent).getNetContainer());
-			}
-
 			getPropertiesPanel().removeAll();
 			if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 				getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
@@ -274,10 +258,10 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 				String name=node.getDisplayName();
 				if(swatComponent instanceof PNEditor) {
 					 if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
-						 name=((SwatTreeNode) node.getParent()).getFileReference().getName();
+						 name=((SwatTreeNode) node.getParent()).getDisplayName();
 					 }
 				}
-				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name,swatComponent).getContent());
+				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
 			}
 			getPropertiesPanel().validate();
 			getPropertiesPanel().repaint();
@@ -288,31 +272,31 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		updateToolbar();
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private SwatComponent getSwatComponent(SwatTreeNode node) throws ParameterException{
-		switch (node.getObjectType()) {
-		case LABELING:
-			// TODO:
-			break;
-		case PETRI_NET:
-			AbstractGraphicalPN petriNet = (AbstractGraphicalPN) node.getUserObject();
-			if(petriNet instanceof GraphicalPTNet){
-				return new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
-			} else if(petriNet instanceof GraphicalCPN){
-//				return new CPNEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
-			} else if(petriNet instanceof GraphicalIFNet){
-//				return new IFNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
-			}
-			break;
-		case LOG_FILE:
-			// User Object is of type LogFileViewer
-			return (LogFileViewer) node.getUserObject();
-		}
-		return null;
-	}
+//	@SuppressWarnings("rawtypes")
+//	private WorkbenchComponent getWorkbenchComponent(SwatTreeNode node) {
+//		switch (node.getObjectType()) {
+//		case LABELING:
+//			// TODO:
+//			break;
+//		case PETRI_NET:
+//			AbstractGraphicalPN petriNet = (AbstractGraphicalPN) node.getUserObject();
+//			if(petriNet instanceof GraphicalPTNet){
+//				return new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getPetriNetFile(petriNet.getPetriNet().getName()));
+//			} else if(petriNet instanceof GraphicalCPN){
+////				return new CPNEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
+//			} else if(petriNet instanceof GraphicalIFNet){
+////				return new IFNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet));
+//			}
+//			break;
+////		case LOG_FILE:
+////			// User Object is of type LogFileViewer
+////			return (LogFileViewer) node.getUserObject();
+//		}
+//		return null;
+//	}
 
 	@SuppressWarnings("rawtypes")
-	private String getPathForSwatComponent(SwatComponent component) {
+	private String getPathForSwatComponent(WorkbenchComponent component) {
 		if (component instanceof PTNetEditor) {
 			try {
 				return ((PTNetEditor) component).getFileReference().getCanonicalPath();
@@ -326,7 +310,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	}
 
 	@Override
-	public void activeTabChanged(int index, SwatComponent component) {
+	public void activeTabChanged(int index, WorkbenchComponent component) {
 		if (index < 0)
 			return; //no tabs inside
 		// Update Properties Panel & Toolbar according to active tab
@@ -348,7 +332,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	public void operatingModeChanged() {
 		try {
 			//Update Properties View & Toolbar
-		SwatComponent swatComponent = (SwatComponent) getTabView().getSelectedComponent();
+		WorkbenchComponent swatComponent = (WorkbenchComponent) getTabView().getSelectedComponent();
 		getPropertiesPanel().removeAll();
 		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));

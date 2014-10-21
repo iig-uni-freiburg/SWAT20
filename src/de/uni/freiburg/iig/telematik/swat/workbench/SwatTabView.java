@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -44,8 +43,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 
 @SuppressWarnings("serial")
@@ -96,13 +95,13 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void addPNEditor(AbstractGraphicalPN petriNet, String tabName) throws ParameterException{
+	private void addPNEditor(AbstractGraphicalPN petriNet, String tabName) throws SwatComponentException {
 		if(petriNet instanceof GraphicalPTNet){
-			addTab(tabName, new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getFile(petriNet)));
+			addTab(tabName, new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getPetriNetFile(petriNet.getPetriNet().getName())));
 		} else if(petriNet instanceof GraphicalCPN){
-			addTab(tabName, new CPNEditor((GraphicalCPN) petriNet, SwatComponents.getInstance().getFile(petriNet)));
+			addTab(tabName, new CPNEditor((GraphicalCPN) petriNet, SwatComponents.getInstance().getPetriNetFile(petriNet.getPetriNet().getName())));
 		} else if(petriNet instanceof GraphicalIFNet){
-			addTab(tabName, new IFNetEditor((GraphicalIFNet) petriNet, SwatComponents.getInstance().getFile(petriNet)));
+			addTab(tabName, new IFNetEditor((GraphicalIFNet) petriNet, SwatComponents.getInstance().getPetriNetFile(petriNet.getPetriNet().getName())));
 		}
 		//openedSwatComponents.put(petriNet, getComponentAt(getComponentCount()-1));
 		openedSwatComponents.put(petriNet, getComponentAt(getTabCount() - 1));
@@ -125,7 +124,7 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	 *         out of the node
 	 */
 	@SuppressWarnings("rawtypes")
-	public SwatComponent addNewTab(SwatTreeNode node) {
+	public WorkbenchComponent addNewTab(SwatTreeNode node) {
 		if (alreadyOpen(node.getDisplayName()))
 			return null;
 		try {
@@ -149,14 +148,19 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 				SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
 				AnalyzePanelController.getInstance().loadSetting(parent.getFileReference().getName(), node.getFileReference());
 				break;
-			case LOG_FILE:
+			case AC_MODEL:
+				break;
+			case ANALYSIS_CONTEXT:
+				break;
+			case TIME_CONTEXT:
+				break;
+			case ARISTAFLOW_LOG:
+			case MXML_LOG:
+			case XES_LOG:
 				addLogFile(node);
 				break;
-			case XML_FILE:
-				addXmlFile(node);
 			}
-			
-			return (SwatComponent) getComponentAt(getTabCount() - 1);
+			return (WorkbenchComponent) getComponentAt(getTabCount() - 1);
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
 			return null;
@@ -175,15 +179,15 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		return false;
 	}
 
-	private void addXmlFile(SwatTreeNode node) throws IOException {
-		// node holds XMLFileView
-		// Change it all to only use SwatComponent?
-		XMLFileViewer viewer = new XMLFileViewer((LogModel) node.getUserObject());
-		addTab(node.getDisplayName(), viewer.getMainComponent());
-		setSelectedIndex(getTabCount() - 1);
-		//openedSwatComponents.put((XMLFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
-		openedSwatComponents.put((XMLFileViewer) node.getUserObject(), ((XMLFileViewer) node.getUserObject()));
-	}
+//	private void addXmlFile(SwatTreeNode node) throws IOException {
+//		// node holds XMLFileView
+//		// Change it all to only use SwatComponent?
+//		XMLFileViewer viewer = new XMLFileViewer((XESLogModel) node.getUserObject());
+//		addTab(node.getDisplayName(), viewer.getMainComponent());
+//		setSelectedIndex(getTabCount() - 1);
+//		//openedSwatComponents.put((XMLFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
+//		openedSwatComponents.put((XMLFileViewer) node.getUserObject(), ((XMLFileViewer) node.getUserObject()));
+//	}
 
 	//	private void addNewTab(SwatComponent swatComponent) {
 	//		if (swatComponent instanceof PNEditor) {
@@ -236,18 +240,18 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 			remove((AbstractGraphicalPN) node.getUserObject());
 			break;
 		case LOG_FILE:
-			remove((LogModel) node.getUserObject());
+			remove((XESLogModel) node.getUserObject());
 			openedSwatComponents.remove(node.getUserObject());
 			break;
 		case XML_FILE:
-			remove((LogModel) node.getUserObject());
+			remove((XESLogModel) node.getUserObject());
 			openedSwatComponents.remove(node.getUserObject());
 			break;
 
 		}
 	}
 
-	private void remove(LogModel userObject) {
+	private void remove(XESLogModel userObject) {
 		Component component = openedSwatComponents.get(userObject);
 		for (int i = 0; i < getTabCount(); i++) {
 			System.out.println("Component: " + component + " TabComponent: " + getTabComponentAt(i));
@@ -274,7 +278,7 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		public void stateChanged(ChangeEvent arg0) {
 			for (SwatTabViewListener listener : listeners) {
 				listener.activeTabChanged(((SwatTabView) arg0.getSource()).getSelectedIndex(),
-						(SwatComponent) ((SwatTabView) arg0.getSource()).getSelectedComponent());
+						(WorkbenchComponent) ((SwatTabView) arg0.getSource()).getSelectedComponent());
 			}
 
 		}

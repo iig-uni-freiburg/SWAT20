@@ -2,21 +2,20 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.swing.JOptionPane;
 
+import com.thoughtworks.xstream.XStream;
+
 import de.invation.code.toval.file.FileUtils;
-import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -25,7 +24,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPNNameComparator;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.PNMLIFNetAnalysisContextParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.sepia.serialize.ACSerialization;
+import de.uni.freiburg.iig.telematik.sepia.serialize.AnalysisContextSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
@@ -37,38 +36,37 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelPrope
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelType;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.RBACModelProperties;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalysisStorage;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.logs.LogAnalysisModel;
-import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.logs.XMLFileViewer;
-import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
-import de.uni.freiburg.iig.telematik.swat.misc.SwatComperator;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModelComparator;
+import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentListenerSupport;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class SwatComponents {
 	
-	private static SwatComponents instance = null;
+	private static final String CSVLogNameFormat = "%s%s.csv";
+	private static final String AnalysisNameFormat = "%s%s.xml";
 	
-	private Set<SwatComponentsListener> listener = new HashSet<SwatComponentsListener>();
+	private static SwatComponents instance = null;
 	
 	private Map<String, AbstractGraphicalPN> nets = new HashMap<String, AbstractGraphicalPN>();
 	private Map<String, File> netFiles = new HashMap<String, File>();
 	private Map<String, List<AnalysisContext>> analysisContexts = new HashMap<String, List<AnalysisContext>>();
-
-	
+	private Map<String, List<TimeContext>> timeContexts = new HashMap<String, List<TimeContext>>();
+	private Map<String, List<String>> netAnalysesNames = new HashMap<String, List<String>>();
+	private Map<String, Analysis> analyses = new HashMap<String, Analysis>();
 	
 	private Map<String, ACModel> acModels = new HashMap<String, ACModel>();
-	private Map<LogModel, File> logs = new HashMap<LogModel, File>();
-	private Map<LogModel, File> xml = new LinkedHashMap<LogModel, File>();
-	private Map<LogModel, List<LogAnalysisModel>> logAnalysis = new HashMap<LogModel, List<LogAnalysisModel>>();
+	private List<LogModel> aristaLogs = new ArrayList<LogModel>();
+	private List<LogModel> mxmlLogs = new ArrayList<LogModel>();
+	private List<LogModel> xesLogs = new ArrayList<LogModel>();
 	
-	private Map<String, TimeContext> timeContext = new HashMap<String, TimeContext>();
+	private SwatComponentListenerSupport listenerSupport = new SwatComponentListenerSupport();
+	
 
 	private SwatComponents() {
 		try {
@@ -83,6 +81,14 @@ public class SwatComponents {
 			instance = new SwatComponents();
 		}
 		return instance;
+	}
+	
+	public void addSwatComponentListener(SwatComponentsListener listener) {
+		listenerSupport.addListener(listener);
+	}
+
+	public void removeSwatComponentListener(SwatComponentsListener listener) {
+		listenerSupport.removeListener(listener);
 	}
 	
 	//------- Load simulation components ------------------------------------------------------------------------------------
@@ -104,41 +110,70 @@ public class SwatComponents {
 		loadLogFiles();
 		MessageDialog.getInstance().addMessage("Done.");
 		MessageDialog.getInstance().newLine();
+		
+		//4. Load ACModel-Analysis context relations
+		
 	}
 	
 	public void reload() throws SwatComponentException {
 		nets.clear();
 		netFiles.clear();
-		logs.clear();
-		xml.clear();
+		aristaLogs.clear();
+		mxmlLogs.clear();
+		xesLogs.clear();
+		analysisContexts.clear();
+		timeContexts.clear();
+		acModels.clear();
 		loadSwatComponents();
 //		informListenerOfModelChange();
 	}
 	
-	private void loadACModels() throws SwatComponentException{
+	private void loadACModels(){
+		MessageDialog.getInstance().addMessage("Loading AC models...");
+		String modelDirectory = null;
 		try{
-			String modelDirectory = SwatProperties.getInstance().getPathForACModels();
-			for(String acFile: FileUtils.getFileNamesInDirectory(modelDirectory, true)){
-				ACModel acModel = loadACModel(acFile);
-				if(acModel == null)
-					throw new SwatComponentException("null-reference for loaded access control model.");
-				addACModel(acModel, false);
-			}
+			modelDirectory = SwatProperties.getInstance().getPathForACModels();
 		} catch (PropertyException e) {
-			throw new SwatComponentException("Cannot extract Swat-property.<br>Reason:" + e.getMessage());
-		} catch (IOException e) {
-			throw new SwatComponentException("Cannot access Petri net directory.<br>Reason:" + e.getMessage());
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract path for access control models.\nReason:" + e.getMessage());
+			return;
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot access access control model directory.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		// Extract AC model files
+		Collection<String> acFiles = null;
+		try {
+			acFiles = FileUtils.getFileNamesInDirectory(modelDirectory, true);
+		} catch(Exception e){
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract access control model files.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		for(String acFile: acFiles){
+			ACModel acModel = loadACModel(acFile);
+			try{
+				if(acModel != null)
+					addACModel(acModel, false);
+			} catch(SwatComponentException e){
+				MessageDialog.getInstance().addMessage("Exception: Cannot add access control model.\nReason:" + e.getMessage());
+			}
 		}
 	}
 	
-	private ACModel loadACModel(String acFile) throws SwatComponentException {
+	private ACModel loadACModel(String acFile) {
 		MessageDialog.getInstance().addMessage("Loading AC model: " + FileUtils.getName(acFile) + "...   ");
 		ACModelProperties testProperties = new ACModelProperties();
 		try {
 			testProperties.load(acFile);
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Cannot load access control model.\nReason:" + e.getMessage());
+			return null;
+		}
 
+		ACModel newModel = null;
+		try {
 			// Check ACModel type
-			ACModel newModel = null;
 			if (testProperties.getType().equals(ACModelType.ACL)) {
 				ACLModelProperties aclProperties = new ACLModelProperties();
 				aclProperties.load(acFile);
@@ -148,188 +183,328 @@ public class SwatComponents {
 				rbacProperties.load(acFile);
 				newModel = new RBACModel(rbacProperties);
 			}
-			try {
-				newModel.checkValidity();
-			} catch (ACMValidationException e) {
-				throw new ParameterException(e.getMessage());
-			}
-			return newModel;
-		} catch (IOException e) {
-			throw new SwatComponentException("Cannot access access control model file.<br>Reason:" + e.getMessage());
-		} catch (PropertyException e) {
-			throw new SwatComponentException("Cannot extract Swat-property.<br>Reason:" + e.getMessage());
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Cannot load access control model.\nReason:" + e.getMessage());
+			return null;
 		}
+		
+		try {
+			newModel.checkValidity();
+		} catch (ACMValidationException e) {
+			MessageDialog.getInstance().addMessage("Cannot load invalid access control model.\nReason:" + e.getMessage());
+			return null;
+		}
+		return newModel;
 	}
 	
 	
 	private void loadPetriNets() throws SwatComponentException {
-		try {
-			String netDirectory = SwatProperties.getInstance().getPathForNets();
-			for (File folder : FileUtils.getSubdirectories(netDirectory)) {
-				String loadedNetID = loadPetriNet(folder);
-				loadAnalysisContextsFor(loadedNetID);
-			}
+		MessageDialog.getInstance().addMessage("Loading Petri nets...");
+		String netDirectory = null;
+		try{
+			netDirectory = SwatProperties.getInstance().getPathForNets();
 		} catch (PropertyException e) {
-			throw new SwatComponentException("Cannot extract Swat-property.<br>Reason:" + e.getMessage());
-		} catch (IOException e) {
-			throw new SwatComponentException("Cannot access Petri net directory.<br>Reason:" + e.getMessage());
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract path for Petri nets.\nReason:" + e.getMessage());
+			return;
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot access Petri net directory.\nReason:" + e.getMessage());
+			return;
 		}
-
+		
+		// Extract Petri net files
+		Collection<File> netFiles = null;
+		try {
+			netFiles = FileUtils.getSubdirectories(netDirectory);
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract Petri net files.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		for (File netFile : netFiles) {
+			String loadedNetID = loadPetriNet(netFile);
+			if(loadedNetID != null){
+				loadAnalysisContextsFor(loadedNetID);
+				loadTimeContextsFor(loadedNetID);
+			}
+		}
 	}
 	
-	/** 
-	 * Loads the first found pnml net from folder 
-	 * @throws SwatComponentException 
-	 **/
-	private String loadPetriNet(File netDirectory) throws SwatComponentException {
-		Validate.notNull(netDirectory);
+	private String loadPetriNet(File netDirectory) {
+		MessageDialog.getInstance().addMessage("Loading Petri net in folder \"" + FileUtils.getDirName(netDirectory) + "\"...");
+		
+		// Extract PNML files
 		List<File> pnmlFiles = null;
 		try {
 			pnmlFiles = FileUtils.getFilesInDirectory(netDirectory.getAbsolutePath(), true, true, "pnml");
-		} catch (IOException e) {
-			throw new SwatComponentException("Cannot access files in net directory.<br>Reason: " + e.getMessage());
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract PNML files.\nReason:" + e.getMessage());
+			return null;
 		}
-		if (pnmlFiles.size() > 1)
-			throw new SwatComponentException("Found more than on pnml-File in " + netDirectory.toString());
+				
+		if (pnmlFiles.isEmpty()){
+			MessageDialog.getInstance().addMessage("No PNML-file in directory " + FileUtils.getDirName(netDirectory));
+			return null;
+		}
+		if (pnmlFiles.size() > 1){
+			MessageDialog.getInstance().addMessage("More than one PNML-file in directory " + FileUtils.getDirName(netDirectory));
+			return null;
+		}
 
 		File netFile = pnmlFiles.get(0);
 		MessageDialog.getInstance().addMessage("Loading Petri net: " + FileUtils.getName(netFile) + "...   ");
 
+		AbstractGraphicalPN loadedNet = null;
 		try {
-			MessageDialog.getInstance().addMessage(netFile.getCanonicalPath());
-			AbstractGraphicalPN loadedNet = new PNMLParser().parse(netFile, SwatProperties.getInstance().getRequestNetType(), SwatProperties.getInstance().getPNValidation());
-			if(loadedNet == null)
-				throw new SwatComponentException("null-reference for parsed net.");
+			loadedNet = new PNMLParser().parse(netFile, SwatProperties.getInstance().getRequestNetType(), SwatProperties.getInstance().getPNValidation());
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Cannot parse PNML-file.\nReason: " + e.getMessage());
+			return null;
+		}
+		
+		if(loadedNet == null){
+			MessageDialog.getInstance().addMessage("Exception: Null-reference for parsed net.");
+			return null;
+		}
+		
+		try {
 			addPetriNet(loadedNet, netFile, false);
-			return loadedNet.getPetriNet().getName();
-		} catch (IOException e) {
-			throw new SwatComponentException("Cannot access Petri net file.<br>Reason: " + e.getMessage());
-		} catch (ParserException e) {
-			throw new SwatComponentException("Cannot parse Petri net.<br>Reason: " + e.getMessage());
-		} catch (PropertyException e) {
-			throw new SwatComponentException("Cannot extract Swat-property.<br>Reason: " + e.getMessage());
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Cannot add parsed Petri net.\nReason: " + e.getMessage());
+			return null;
 		}
+		
+		return loadedNet.getPetriNet().getName();
 	}
 	
-	private void loadAnalysisContextsFor(String netID) throws SwatComponentException {
+	private void loadAnalysisContextsFor(String netID) {
+		MessageDialog.getInstance().addMessage("Loading analysis contexts for net \"" +netID+ "\"...");
+		File pathToAnalysisContexts = null;
+		try{
+			pathToAnalysisContexts = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName());
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot access analysis context directory.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		if (!pathToAnalysisContexts.exists()){
+			MessageDialog.getInstance().addMessage("No analysis contexts for net.");
+			return;
+		}
+		
+		List<File> contextFiles = null;
 		try {
-			File pathToAnalysisContexts = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName());
-			if (!pathToAnalysisContexts.exists())
-				return;
+			contextFiles = FileUtils.getFilesInDirectory(pathToAnalysisContexts.getAbsolutePath(), true, true, "xml");
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract analysis context files.\nReason:" + e.getMessage());
+			return;
+		}
 			
-			for (File context : FileUtils.getFilesInDirectory(pathToAnalysisContexts.getAbsolutePath(), true, true, "xml")) {
-				try {
-					AnalysisContext aContext = PNMLIFNetAnalysisContextParser.parse(context, false);
-					addAnalysisContext(aContext, netID, false);
-					MessageDialog.getInstance().addMessage("Loaded Analysis-Context for net " + netID);
-				} catch (ParserException e) {
-					throw new SwatComponentException("Cannot parse analysis context for net \""+netID+"\"");
-				} catch (IOException e) {
-					throw new SwatComponentException("Cannot access analysis context file for net \""+netID+"\"");
-				}
+		for (File contextFile : contextFiles) {
+			AnalysisContext aContext = null;
+			try {
+				aContext = PNMLIFNetAnalysisContextParser.parse(contextFile, false);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot parse analysis context for net \""+netID+"\"");
+				continue;
 			}
-		} catch (IOException e1) {
-			throw new SwatComponentException("Cannot access analysis context directory for net \""+netID+"\"");
+			
+			try {
+				addAnalysisContext(aContext, netID, false);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot add analysis context for net \""+netID+"\"");
+			}
+			MessageDialog.getInstance().addMessage("Added analysis context \""+aContext.getName()+"\"");
 		}
+		
+		loadAnalysisContextRelations(pathToAnalysisContexts);
 	}
 	
-	private void loadLogFiles() throws SwatComponentException {
-		try {
-			for (File folder : FileUtils.getSubdirectories(SwatProperties.getInstance().getPathForLogs())) {
-				List<File> mxmlFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "mxml");
-				List<File> xmlFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "xml");
-				List<File> csvFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "csv");
-
-				short numFiles = (short) (mxmlFiles.size() + xmlFiles.size() + csvFiles.size());
-				if (numFiles == 0)
-					throw new SwatComponentException("No compatible log file in folder \"" + FileUtils.getPath(folder.getAbsolutePath())
-							+ "\"");
-				if (numFiles > 1)
-					throw new SwatComponentException("More than one file in folder \"" + FileUtils.getPath(folder.getAbsolutePath()) + "\"");
-
-				if (!mxmlFiles.isEmpty()) {
-
-				} else if (!xmlFiles.isEmpty()) {
-
-				} else if (!csvFiles.isEmpty()) {
-
-				}
-			}
-		} catch (IOException e) {
-			throw new SwatComponentException("Cannot acces log directory.<br>Reason: " + e.getMessage());
+	private void loadLogFiles() {
+		MessageDialog.getInstance().addMessage("Loading log files...");
+		String pathToLogFiles = null;
+		try{
+			pathToLogFiles = SwatProperties.getInstance().getPathForLogs();
 		} catch (PropertyException e) {
-			throw new SwatComponentException("Cannot extract log path from Swat-properties.<br>Reason: " + e.getMessage());
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract path for log files.\nReason:" + e.getMessage());
+			return;
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot access log file directory.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		// Extract Petri net files
+		Collection<File> logFolders = null;
+		try {
+			logFolders = FileUtils.getSubdirectories(pathToLogFiles);
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract log directories.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		for(File logFolder: logFolders){
+			MessageDialog.getInstance().addMessage("Loading log files in folder \"" +FileUtils.getDirName(logFolder)+ "\"...");
+			// Extract PNML files
+			List<File> csvFiles = null;
+			List<File> mxmlFiles = null;
+			List<File> xesFiles = null;
+			try {
+				csvFiles = FileUtils.getFilesInDirectory(logFolder.getAbsolutePath(), true, true, "csv");
+				mxmlFiles = FileUtils.getFilesInDirectory(logFolder.getAbsolutePath(), true, true, "mxml");
+				xesFiles = FileUtils.getFilesInDirectory(logFolder.getAbsolutePath(), true, true, "xes");
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Exception: Cannot extract log files in folder \""+FileUtils.getDirName(logFolder)+"\"\nReason:" + e.getMessage());
+				return;
+			}
+			
+			short numFiles = (short) (mxmlFiles.size() + xesFiles.size() + csvFiles.size());
+			if (numFiles == 0){
+				MessageDialog.getInstance().addMessage("Abort: No compatible log file");
+				continue;
+			}
+			if (numFiles > 1){
+				MessageDialog.getInstance().addMessage("Abort: More than one file");
+				continue;
+			}
+			
+			try {
+				if (!mxmlFiles.isEmpty()) {
+					MessageDialog.getInstance().addMessage("Loading MXML log...");
+					addLogModel(new LogModel(mxmlFiles.get(0), SwatLog.MXML), false);
+				} else if (!xesFiles.isEmpty()) {
+					MessageDialog.getInstance().addMessage("Loading XES log...");
+					addLogModel(new LogModel(xesFiles.get(0), SwatLog.XES), false);
+				} else if (!csvFiles.isEmpty()) {
+					MessageDialog.getInstance().addMessage("Loading AristaFlow log...");
+					addLogModel(new LogModel(csvFiles.get(0), SwatLog.Aristaflow), false);
+				}
+				MessageDialog.getInstance().addMessage("Done.");
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Exception: Cannot add log\nReason: " + e.getMessage());
+				continue;
+			}
+		}
+		sortLogModelLists();
+	}
+	
+	private void loadTimeContextsFor(String netID) {
+		MessageDialog.getInstance().addMessage("Loading time contexts for net \"" +netID+ "\"...");
+		File pathToAnalysisContexts = null;
+		try{
+			pathToAnalysisContexts = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getTimeContextDirectoryName());
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot access time context directory.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		if (!pathToAnalysisContexts.exists()){
+			MessageDialog.getInstance().addMessage("No time contexts for net.");
+			return;
+		}
+		
+		List<File> contextFiles = null;
+		try {
+			contextFiles = FileUtils.getFilesInDirectory(pathToAnalysisContexts.getAbsolutePath(), true, true, "xml");
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract time context files.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		for (File contextFile : contextFiles) {
+			TimeContext context = null;
+			try {
+				context = TimeContext.parse(contextFile);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot parse time context for net \""+netID+"\"");
+				continue;
+			}
+			
+			try {
+				addTimeContext(context, netID, false);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot add time context for net \""+netID+"\"");
+			}
+			MessageDialog.getInstance().addMessage("Added time context \"" + context.getName() + "\"");
 		}
 	}
 	
-	private void loadMxmlLogFromFolder(File folder) {
-		//First mxml
-		List<File> mxmlFiles = null;
-		try {
-			mxmlFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "mxml");
+	private void loadNetAnalysisFor(String netID) {
+		MessageDialog.getInstance().addMessage("Loading analyses for net \"" +netID+ "\"...");
+		File pathToAnalyses = null;
+		try{
+			pathToAnalyses = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getNetAnalysesDirectoryName());
 		} catch (Exception e) {
-			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
+			MessageDialog.getInstance().addMessage("Exception: Cannot access analyses directory.\nReason:" + e.getMessage());
+			return;
 		}
-		for (File logFile : mxmlFiles) {
+		
+		if (!pathToAnalyses.exists()){
+			MessageDialog.getInstance().addMessage("No analyses for net.");
+			return;
+		}
+		
+		List<File> analysisFiles = null;
+		try {
+			analysisFiles = FileUtils.getFilesInDirectory(pathToAnalyses.getAbsolutePath(), true, true, "xml");
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract analysis files.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		for (File analysisFile : analysisFiles) {
+			XStream xstream = new XStream();
+			Analysis analysis = null;
 			try {
-				MessageDialog.getInstance().addMessage("Loading log file: " + FileUtils.getName(logFile) + "...   ");
-				logs.put(new LogModel(logFile), logFile);
-				MessageDialog.getInstance().addMessage("Done.");
+				analysis = (Analysis) xstream.fromXML(analysisFile);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				MessageDialog.getInstance().addMessage("Cannot parse analysis for net \""+netID+"\"");
+				continue;
 			}
+			
+			try {
+				addAnalysis(analysis, netID, false);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot add analysis for net \""+netID+"\"");
+			}
+			MessageDialog.getInstance().addMessage("Added analysis \"" + analysis.getName() + "\"");
 		}
-
-
 	}
 	
-	private void loadXmlLogFromFolder(File folder) {
-
-		// 3. Load xml files for Lola
-		//MessageDialog.getInstance().addMessage("2. Searching for xml files:");
-		List<File> xmlFiles = null;
+	private void loadAnalysisContextRelations(File directory) {
+		MessageDialog.getInstance().addMessage("Loading analysis context relations for net...");
+		
+		List<File> propertiesFiles = null;
 		try {
-			xmlFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "xml");
+			propertiesFiles = FileUtils.getFilesInDirectory(directory.getAbsolutePath(), true, true, "properties");
 		} catch (Exception e) {
-			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract analysis context relation.\nReason:" + e.getMessage());
+			return;
 		}
-		for (File xmlFile : xmlFiles) {
-			MessageDialog.getInstance().addMessage("Loading xml file: " + FileUtils.getName(xmlFile) + "...   ");
-			xml.put(new LogModel(xmlFile), xmlFile);
-			MessageDialog.getInstance().addMessage("Done.");
-		}
-
-	}
-
-	private void loadCsvLogFromFolder(File folder) {
-		//Second csv-Files
-		List<File> csvFiles = null;
-		List<File> analysisFile = null;
-		try {
-			csvFiles = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "csv");
-			analysisFile = FileUtils.getFilesInDirectory(folder.getAbsolutePath(), true, true, "analysis");
-		} catch (Exception e) {
-			throw new ParameterException("Cannot access working directory.<br>Reason: " + e.getMessage());
-		}
-		for (File logFile : csvFiles) {
+		for (File propertiesFile : propertiesFiles) {
+			AnalysisContextRelationProperties relationProperties = new AnalysisContextRelationProperties();
 			try {
-				MessageDialog.getInstance().addMessage("Loading log file: " + FileUtils.getName(logFile) + "...   ");
-				logs.put(new LogModel(logFile), logFile);
-				MessageDialog.getInstance().addMessage("Done.");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				relationProperties.load(propertiesFile.getAbsolutePath());
+			} catch(Exception e){
+				MessageDialog.getInstance().addMessage("Exception: Cannot load analysis context relation.\nReason:" + e.getMessage());
+				continue;
 			}
+			
+			String acModelName = null;
+			String contextName = null;
+			try {
+				acModelName = relationProperties.getACModelName();
+				contextName = relationProperties.getAnalysisContextName();
+			} catch(Exception e){
+				MessageDialog.getInstance().addMessage("Exception: Cannot extraxct analysis context relation properties.\nReason:" + e.getMessage());
+			}
+			
+			
 		}
-
 	}
-
 	
 	
 	//---- Adding and removing Petri nets -----------------------------------------------------------------------------------
 	
-	private void addPetriNet(AbstractGraphicalPN net) throws SwatComponentException {
+	public void addPetriNet(AbstractGraphicalPN net) throws SwatComponentException {
 		File netFile = generateNetFile(net.getPetriNet().getName());
 		netFile.mkdirs();
 		addPetriNet(net, netFile, true);
@@ -357,7 +532,7 @@ public class SwatComponents {
 		if(storeToFile){
 			storePetriNet(netID);
 		}
-		
+		listenerSupport.notifyPetriNetAdded(net);
 		return netID;
 		
 		//TODO: Listener informieren!
@@ -453,15 +628,24 @@ public class SwatComponents {
 	 * @throws ParameterException if there is an internal parameter misconfiguration.
 	 * @throws IOException if the corresponding property file for the Petri net cannot be deleted.
 	 */
-	public void removePetriNet(String netID, boolean removeFileFromDisk) throws SwatComponentException{
+	public void removePetriNet(String netID, boolean removeFilesFromDisk) throws SwatComponentException{
 		validatePetriNet(netID);
+		AbstractGraphicalPN netToRemove = nets.get(netID);
 		File netFile = getPetriNetFile(netID);
 		netFiles.remove(netID);
 		nets.remove(netID);
-		if(removeFileFromDisk){
-			FileUtils.deleteFile(netFile.getAbsolutePath());
+		if(removeFilesFromDisk){
+			FileUtils.deleteDirectory(FileUtils.getPath(netFile), true);
 		}
-		//TODO: Verbindung zu AC?
+		listenerSupport.notifyPetriNetRemoved(netToRemove);
+		for(AnalysisContext context: getAnalysisContexts(netID)){
+			listenerSupport.notifyAnalysisContextRemoved(netID, context);
+		}
+		analysisContexts.remove(netID);
+		for(TimeContext context: getTimeContexts(netID)){
+			listenerSupport.notifyTimeContextRemoved(netID, context);
+		}
+		timeContexts.remove(netID);
 	}
 	
 	public void renamePetriNet(String oldID, String newID) throws SwatComponentException{
@@ -471,7 +655,7 @@ public class SwatComponents {
 		netFiles.put(newID, getPetriNetFile(oldID));
 		netFiles.remove(oldID);
 		getPetriNet(newID).getPetriNet().setName(newID);
-		//TODO: Verbindung zu AC?
+		listenerSupport.notifyPetriNetRenamed(nets.get(newID));
 	}
 
 	private void validatePetriNet(String netID) throws SwatComponentException{
@@ -481,9 +665,108 @@ public class SwatComponents {
 			throw new SwatComponentException("SwatComponents does not contain a file reference for net \"" + netID + "\"");
 	}
 	
-	public static void main(String args[]) {
-		SwatComponents.getInstance();
+	
+	//---- Adding and removing Logs -----------------------------------------------------------------------------------------
+	
+//	TODO: informNodeAdded(SwatTreeView.getInstance().new SwatTreeNode(newModel, SwatComponentType.LOG_FILE, file));
+//  TODO: informListenerOfModelChange();
+	
+	public void addAristaFlowLog(File file, String name) throws SwatComponentException{
+		try {
+			File destFile = new File(String.format(CSVLogNameFormat, SwatProperties.getInstance().getPathForLogs(), name));
+			FileUtils.copy(file, destFile);
+			addLogModel(new LogModel(destFile, SwatLog.Aristaflow), true);
+		} catch (PropertyException e) {
+			throw new SwatComponentException("Cannot extract log directory.\nReason: " + e.getMessage());
+		} catch (IOException e) {
+			throw new SwatComponentException("Cannot access log directory.\nReason: " + e.getMessage());
+		}
 	}
+	
+	public void addLogModel(LogModel model){
+		addLogModel(model, true);
+	}
+	
+	private void addLogModel(LogModel model, boolean sort) {
+		switch (model.getType()) {
+		case Aristaflow:
+			aristaLogs.add(model);
+			if (sort)
+				Collections.sort(aristaLogs, new LogModelComparator());
+			break;
+		case MXML:
+			mxmlLogs.add(model);
+			if (sort)
+				Collections.sort(mxmlLogs, new LogModelComparator());
+			break;
+		case XES:
+			xesLogs.add(model);
+			if (sort)
+				Collections.sort(xesLogs, new LogModelComparator());
+			break;
+		}
+	listenerSupport.notifyLogAdded(model);
+	}
+
+	private void sortLogModelLists() {
+		for (SwatLog logType : SwatLog.values())
+			sortLogModelList(logType);
+	}
+
+	private void sortLogModelList(SwatLog type) {
+		switch (type) {
+		case Aristaflow:
+			Collections.sort(aristaLogs, new LogModelComparator());
+			break;
+		case MXML:
+			Collections.sort(mxmlLogs, new LogModelComparator());
+			break;
+		case XES:
+			Collections.sort(xesLogs, new LogModelComparator());
+			break;
+		}
+	}
+	
+	public List<LogModel> getLogs(SwatLog type) {
+		switch(type){
+		case Aristaflow:
+			return Collections.unmodifiableList(aristaLogs);
+		case MXML:
+			return Collections.unmodifiableList(mxmlLogs);
+		case XES:
+			return Collections.unmodifiableList(xesLogs);
+		}
+		return null;
+	}
+	
+
+	//---- Adding and removing analyses -------------------------------------------------------------------------------------
+	
+	public void addAnalysis(Analysis analysis, String netID, boolean storeToFile) throws SwatComponentException {
+		if(netAnalysesNames.get(netID) == null)
+			netAnalysesNames.put(netID, new ArrayList<String>());
+		netAnalysesNames.get(netID).add(analysis.getName());
+		if(storeToFile){
+			storeAnalysis(analysis, netID);
+		}
+		listenerSupport.notifyAnalysisAdded(netID, analysis);
+	}
+	
+	public void storeAnalysis(Analysis analysis, String netID) throws SwatComponentException {
+		try {
+			File storagePath = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getNetAnalysesDirectoryName());
+			storagePath.mkdirs();
+			XStream xstream=new XStream();
+			String serialString = xstream.toXML(analysis);
+			PrintWriter writer = new PrintWriter(String.format(AnalysisNameFormat, storagePath, analysis.getName()));
+			writer.write(serialString);
+			writer.checkError();
+			writer.close();
+		} catch (Exception e) {
+			throw new SwatComponentException("Cannot store analysis \"" + analysis.getName() + "\".\nReason: "+e.getMessage());
+		}
+	}
+	
 	
 	
 	//---- Adding and removing analysis contexts ----------------------------------------------------------------------------
@@ -509,17 +792,58 @@ public class SwatComponents {
 		if(storeToFile){
 			storeAnalysisContext(aContext, netID);
 		}
+		listenerSupport.notifyAnalysisContextAdded(netID, aContext);
 	}
 
 	public void storeAnalysisContext(AnalysisContext aContext, String netID) throws SwatComponentException {
 		try {
 			File pathToAnalysisContexts = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName());
 			pathToAnalysisContexts.mkdirs();
-			ACSerialization.serialize(aContext, pathToAnalysisContexts.getAbsolutePath() + aContext.getName());
+			AnalysisContextSerialization.serialize(aContext, pathToAnalysisContexts.getAbsolutePath() + aContext.getName());
 		} catch (SerializationException e) {
 			throw new SwatComponentException("Cannot serialize analysis context \"" + aContext.getName() + "\".<br>Reason: "+e.getMessage());
 		} catch (IOException e) {
 			throw new SwatComponentException("Cannot store analysis context \"" + aContext.getName() + "\".<br>Reason: "+e.getMessage());
+		}
+	}
+	
+	
+	//---- Adding and removing time contexts --------------------------------------------------------------------------------
+	
+	public List<TimeContext> getTimeContexts(String netID) {
+		if(!timeContexts.containsKey(netID))
+			return new ArrayList<TimeContext>();
+		return timeContexts.get(netID);
+	}
+	
+	public TimeContext getTimeContext(String netID, String aContextName) {
+		for(TimeContext aContext: getTimeContexts(netID)){
+			if(aContext.getName().equals(aContextName))
+				return aContext;
+		}
+		return null;
+	}
+
+	public void addTimeContext(TimeContext aContext, String netID, boolean storeToFile) throws SwatComponentException {
+		if(timeContexts.get(netID) == null)
+		timeContexts.put(netID, new ArrayList<TimeContext>());
+		timeContexts.get(netID).add(aContext);
+		if(storeToFile){
+			storeTimeContext(aContext, netID);
+		}
+	}
+
+	public void storeTimeContext(TimeContext aContext, String netID) throws SwatComponentException {
+		try {
+			File pathToTimeContexts = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getTimeContextDirectoryName());
+			pathToTimeContexts.mkdirs();
+			String serialString = new XStream().toXML(aContext);
+			PrintWriter writer = new PrintWriter(pathToTimeContexts.getAbsolutePath() + aContext.getName());
+			writer.write(serialString);
+			writer.checkError();
+			writer.close();
+		} catch (Exception e) {
+			throw new SwatComponentException("Cannot store time context \"" + aContext.getName() + "\".\nReason: "+e.getMessage());
 		}
 	}
 	
@@ -550,6 +874,7 @@ public class SwatComponents {
 		if(storeToFile){
 			storeACModel(acModel);
 		}
+		listenerSupport.notifyACModelAdded(acModel);
 	}
 	
 	/**
@@ -621,6 +946,7 @@ public class SwatComponents {
 	 */
 	public void removeACModel(String name, boolean removeFileFromDisk) throws SwatComponentException {
 		validateACModel(name);
+		ACModel modelToRemove = acModels.get(name);
 		acModels.remove(name);
 		
 		if(removeFileFromDisk){
@@ -632,16 +958,13 @@ public class SwatComponents {
 				throw new SwatComponentException("Cannot delete AC model file from disk.<br>Reason: " + e.getMessage());
 			}
 		}
+		listenerSupport.notifyACModelRemoved(modelToRemove);
 	}
 
 	private void validateACModel(String name) throws SwatComponentException{
 		if(!acModels.containsKey(name))
 			throw new SwatComponentException("SwatComponents does not contain an access control model with name \"" + name + "\"");
 	}
-	
-	
-	//---- Adding and removing Log files ------------------------------------------------------------------------------------
-	
 	
 	
 	//-----------------------------------------------------------------------------------------------------------------------
@@ -690,20 +1013,8 @@ public class SwatComponents {
 //		if(found) informElementRemoved(key);
 //	}
 	
-	
 
 
-
-	public File putCsvIntoSwatComponent(LogModel model, String name) throws PropertyException, IOException {
-		File file = generateCsvLogPath(name);
-		//Copy file
-		FileHelper.copyFile(model.getFileReference(), file);
-		LogModel newModel = new LogModel(file);
-		logs.put(newModel, file);
-		//informListenerOfModelChange();
-//		informNodeAdded(SwatTreeView.getInstance().new SwatTreeNode(newModel, SwatComponentType.LOG_FILE, file));
-		return file;
-	}
 
 //	private void informNodeAdded(SwatTreeNode swatTreeNode) {
 //		for (SwatComponentsListener listener : this.listener) {
@@ -720,40 +1031,20 @@ public class SwatComponents {
 //		return new File(folder, name + ".csv");
 //	}
 
-
-	private void loadTimeAnalysisContextFor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet, File folder) throws IOException {
-		File timeFolder = new File(folder, SwatProperties.getInstance().getTimeContextDirectoryName());
-		for (File file : timeFolder.listFiles()) {
-			if (file.getAbsolutePath().endsWith("xml")) {
-				TimeContext context = TimeContext.parse(file);
-				timeContext.put(loadedNet.getPetriNet().getName(), context);
-			}
-		}
-
-	}
-
-	public List<File> getAnalysisForNet(String basePath){
-		List<File> sort = new ArrayList<File>();
-		File dir=new File(basePath);
-		for (File file : dir.listFiles()) {
-			if (file.getName().startsWith(AnalysisStorage.PREFIX))
-				sort.add(file);
-		}
-		return sort;
-	}
 	
-	/** return sorted set of LogFiles **/
-	public Set<LogModel> getLogFiles() {
-		TreeMap<LogModel, File> sort = new TreeMap<LogModel, File>(new SwatComperator());
-		sort.putAll(logs);
-		return sort.keySet();
-	}
 
-	/** return sorted set of XMLLogFiles **/
-	public Set<LogModel> getXMLFiles() {
-		TreeMap<LogModel, File> sort = new TreeMap<LogModel, File>(new SwatComperator());
-		sort.putAll(xml);
-		return sort.keySet();
+
+	
+	
+	//---- Adding and removing analysis contexts ----------------------------------------------------------------------------
+
+	public List<Analysis> getAnalyses(String netID){
+		if(!netAnalysesNames.containsKey(netID))
+			return new ArrayList<Analysis>();
+		List<Analysis> netAnalyses = new ArrayList<Analysis>(); 
+		for(String analysisName: netAnalysesNames.get(netID))
+			netAnalyses.add(analyses.get(analysisName));
+		return netAnalyses;
 	}
 
 //	public File getFile(LogModel model) {
@@ -781,59 +1072,43 @@ public class SwatComponents {
 //	}
 
 
-
-	/**
-	 * get File that belongs to currentComponent
-	 * 
-	 * @throws ParameterException
-	 *             if not found
-	 **/
-	public File getFile(SwatComponent currentComponent) throws ParameterException {
-		// Traverse all lists
-		File file;
-		//nets
-		if (currentComponent instanceof PNEditor) {
-			for (String pnet : nets.keySet()) {
-				if (pnet == ((PNEditor) currentComponent).getNetContainer().getPetriNet().getName())
-					return netFiles.get(pnet);
-			}
-		}
-
-		//csv file
-		if (currentComponent instanceof LogFileViewer) {
-			for (LogModel model : logs.keySet()) {
-				if (model == ((LogFileViewer) currentComponent).getModel())
-						return logs.get(model);
-			}
-
-		}
-		//xml file
-		if (currentComponent instanceof XMLFileViewer) {
-			for (LogModel model : xml.keySet()) {
-				if (model == ((XMLFileViewer) currentComponent).getModel())
-					return logs.get(model);
-			}
-
-		}
-		throw new ParameterException("not a valid SwatComponent");
-	}
-
-	public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
-		List<T> list = new ArrayList<T>(c);
-		java.util.Collections.sort(list);
-		return list;
-	}
-
-	public void addSwatComponentListener(SwatComponentsListener listener) {
-		try {
-			this.listener.add(listener);
-		} catch (Exception e) {//listener may be null
-		}
-	}
-
-	public void removeSwatComponentListener(SwatComponentsListener listener) {
-		this.listener.remove(listener);
-	}
+//
+//	/**
+//	 * get File that belongs to currentComponent
+//	 * 
+//	 * @throws ParameterException
+//	 *             if not found
+//	 **/
+//	public File getFile(SwatComponent currentComponent) throws ParameterException {
+//		// Traverse all lists
+//		File file;
+//		//nets
+//		if (currentComponent instanceof PNEditor) {
+//			for (String pnet : nets.keySet()) {
+//				if (pnet == ((PNEditor) currentComponent).getNetContainer().getPetriNet().getName())
+//					return netFiles.get(pnet);
+//			}
+//		}
+//
+//		//csv file
+//		if (currentComponent instanceof LogFileViewer) {
+//			for (XESLogModel model : aristaLogs.keySet()) {
+//				if (model == ((LogFileViewer) currentComponent).getModel())
+//						return aristaLogs.get(model);
+//			}
+//
+//		}
+//		//xml file
+//		if (currentComponent instanceof XMLFileViewer) {
+//			for (XESLogModel model : xmlLogs.keySet()) {
+//				if (model == ((XMLFileViewer) currentComponent).getModel())
+//					return aristaLogs.get(model);
+//			}
+//
+//		}
+//		throw new ParameterException("not a valid SwatComponent");
+//	}
+	
 
 //	private void informListenerOfModelChange() {
 //		for (SwatComponentsListener listener : this.listener) {
@@ -859,40 +1134,25 @@ public class SwatComponents {
 //		}
 //	}
 
-	public void putCsvIntoSwatComponent(LogModel model) throws ParameterException, PropertyException, IOException {
-		putCsvIntoSwatComponent(model, model.getName());
-	}
 	
-	public void putLogAnalysisIntoSwatComponent(LogAnalysisModel model, LogModel correspondingLog){
-		if(logAnalysis.containsKey(correspondingLog))
-			logAnalysis.get(correspondingLog).add(model);//put into list
-		ArrayList<LogAnalysisModel> list = new ArrayList<LogAnalysisModel>();
-		list.add(model);
-		logAnalysis.put(correspondingLog, list);
-		storeLogAnalysis(model, correspondingLog);
-	}
+//	public void putLogAnalysisIntoSwatComponent(LogAnalysisModel model, XESLogModel correspondingLog){
+//		if(logAnalysis.containsKey(correspondingLog))
+//			logAnalysis.get(correspondingLog).add(model);//put into list
+//		ArrayList<LogAnalysisModel> list = new ArrayList<LogAnalysisModel>();
+//		list.add(model);
+//		logAnalysis.put(correspondingLog, list);
+//		storeLogAnalysis(model, correspondingLog);
+//	}
 
-	public void putTimeAnalysisIntoSwatComponent(String name, TimeContext context) {
-		timeContext.put(name, context);
-	}
 
-	public void putTimeAnalysisIntoSwatComponent(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net, TimeContext context) {
-		timeContext.put(net.getPetriNet().getName(), context);
-	}
-
-	private void storeLogAnalysis(LogAnalysisModel model, LogModel correspondingLog) {
-		// copy correspondingLog
-
-	}
-
-	public List<LogAnalysisModel> getAnalysisForLog(LogModel model) {
-		return logAnalysis.get(model);
-	}
-	
-
-	public TimeContext getTimeAnalysisForNet(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> cur_net) {
-		String name = cur_net.getPetriNet().getName();
-		TimeContext context = timeContext.get(name);
-		return context;
-	}
+//	public List<LogAnalysisModel> getAnalysisForLog(XESLogModel model) {
+//		return logAnalysis.get(model);
+//	}
+//	
+//
+//	public TimeContext getTimeAnalysisForNet(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> cur_net) {
+//		String name = cur_net.getPetriNet().getName();
+//		TimeContext context = timeContext.get(name);
+//		return context;
+//	}
 }

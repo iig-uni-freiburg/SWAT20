@@ -19,55 +19,31 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
-import de.uni.freiburg.iig.telematik.swat.sciff.presenter.LogSerializer;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 
 /**
  * presents view on mxml files. extends {@link JEditorPane}, implements
- * {@link SwatComponent}
+ * {@link WorkbenchComponent}
  **/
-public class LogFileViewer extends JScrollPane implements SwatComponent {
+public class LogFileViewer extends JScrollPane implements WorkbenchComponent {
 	private static final long serialVersionUID = 7051631037013916120L;
-	JComponent properties = null;
+	private JComponent properties = null;
 	private JButton analyzeButton = null;
-	private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
-	private static int ICON_SIZE = 32;
+
 	private LogModel model;
 
-	//private JEditorPane editor;
-
+	public LogFileViewer(LogModel model) throws Exception {
+		setModel(model);
+	}
+	
 	public LogModel getModel() {
 		return model;
 	}
 
 	public void setModel(LogModel model) {
 		this.model = model;
-	}
-
-	private LogFileViewer(File file) throws Exception {
-		super();
-		model = new LogModel(file);
-		if (file.getName().endsWith("analysis")) {
-			openAnalysisFile(file);
-		} else {
-			try {
-				ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
-			} catch (PropertyException e) {
-				// Stay with default value
-			}
-		}
-	}
-
-	public LogFileViewer(LogModel model) throws Exception {
-		this(model.getFileReference());
-		this.model = model;
-	}
-
-	private void openAnalysisFile(File file) throws Exception {
-		LogFileViewer viewer = new LogFileViewer(LogSerializer.read(file).getLogFile());
 	}
 
 	@Override
@@ -102,7 +78,6 @@ public class LogFileViewer extends JScrollPane implements SwatComponent {
 		}
 		return analyzeButton;
 	}
-
 
 	@Override
 	public JComponent getPropertiesView() {
