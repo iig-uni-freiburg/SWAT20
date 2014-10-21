@@ -6,13 +6,6 @@ import java.util.Map;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTFlowRelation;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 
