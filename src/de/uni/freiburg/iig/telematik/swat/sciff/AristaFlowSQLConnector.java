@@ -12,8 +12,10 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.uni.freiburg.iig.telematik.swat.logs.XESLogModel;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /** Reads AristaFlow database and converts to csv file **/
@@ -25,7 +27,7 @@ public class AristaFlowSQLConnector {
 	private final String[] HEADER = { "START", "END", "NODEID", "ITERATION", "FIRSTNAME", "LASTNAME", "NAME", "NODENAME", "INSTANCENAME",
 			"INSTANCELOGID", "TEMPLATENAME" };
 	private final File tempFile = new File(System.getProperty("java.io.tmpdir") + "/aristaFlowExport.csv");
-	private XESLogModel model;
+	private LogModel model;
 
 	public static void main(String[] args) throws IOException {
 
@@ -139,7 +141,7 @@ public class AristaFlowSQLConnector {
 		return tempFile;
 	}
 
-	public XESLogModel getModel() throws Exception {
+	public LogModel getModel() throws Exception {
 		if (model == null) {
 			//File file = new File(SwatProperties.getInstance().getLogWorkingDirectory(), "AristaFlowImport " + getCurrentTime() + ".csv");
 			File file = File.createTempFile("AristaFlowImport", "csv");
@@ -150,7 +152,7 @@ public class AristaFlowSQLConnector {
 				writeLine(rs, fileWriter);
 			}
 			//LogFileViewer logFile = new LogFileViewer(file);
-			model = new XESLogModel(file, "AristaFlowImport " + getCurrentTime());
+			model = new LogModel(file, SwatLog.Aristaflow);
 			//SwatComponents.getInstance().putCsvIntoSwatComponent(log, log.getName());
 		}
 

@@ -293,6 +293,12 @@ class AristaFlowLogSummary implements ISciffLogSummary, Serializable {
 		return result;
 	}
 
+	@Override
+	public String[] getRoles() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
 
@@ -414,6 +420,13 @@ class AristaFlowLogEntry implements ISciffLogEntry, Serializable {
 
 	public String toString() {
 		return timestamp + ": " + getElement() + " " + getEventType() + " from " + getOriginator();
+	}
+
+
+	@Override
+	public String getRole() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
