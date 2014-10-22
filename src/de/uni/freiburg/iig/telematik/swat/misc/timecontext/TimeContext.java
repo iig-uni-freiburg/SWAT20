@@ -1,8 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.misc.timecontext;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +47,7 @@ public class TimeContext implements PNTimeContext {
 				}
 			}
 		}
+		setName(net.getName());
 	}
 
 	public TimeContext() {

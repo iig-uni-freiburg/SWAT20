@@ -557,37 +557,32 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				//AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> newNet = null;
 				try {
 					// Test new file name
-					File file = getAbsolutePathToWorkingDir(netName);
+					//File file = getAbsolutePathToWorkingDir(netName);
+					AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = null;
 					switch (type) {
 					case NEW_CPN:
-						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalCPN(), netName);
-						//newNet = new GraphicalCPN();
+						net = new GraphicalCPN();
 						break;
 					case NEW_PT:
-						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalPTNet(), netName);
-						//newNet = new GraphicalPTNet();
+						net = new GraphicalPTNet();
 						break;
 					case NEW_IF:
-						SwatComponents.getInstance().putNetIntoSwatComponent(new GraphicalIFNet(), netName);
+						net = new GraphicalIFNet();
 						//newNet = new GraphicalIFNet();
 						break;
-
 					default:
 						break;
 					}
-					//GraphicalPTNet 
-					//SwatComponents.getInstance().putIntoSwatComponent(newNet, file);
-				//Inform Tree View of changed components
-					//treeView.removeAndUpdateSwatComponents();
-			} catch (PropertyException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ParameterException e1) {
+
+					net.getPetriNet().setName(netName);
+					SwatComponents.getInstance().addPetriNet(net);
+
+				} catch (ParameterException e1) {
 					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this), e1.getMessage(), "Error",
 							JOptionPane.ERROR_MESSAGE);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				} catch (SwatComponentException e2) {
+					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this),
+							"Could not add net.\nReason: " + e2.getMessage());
 			}
 		}
 	}

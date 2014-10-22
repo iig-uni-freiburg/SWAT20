@@ -18,6 +18,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
@@ -73,13 +74,19 @@ public class AristaFlowToPnmlConverter {
 
 	}
 
-	public PTNetEditor getEditor(File file) {
-		GraphicalPTNet ifnet = new GraphicalPTNet();
-		ifnet.setPetriNet(getNet());
-		PTNetEditor editor = new PTNetEditor(ifnet, file);
-		LayoutAction la = new LayoutAction(editor, "horizontalHierarchical", false);
-		la.actionPerformed(new ActionEvent(this, 0, "command"));
-		return editor;
+	//	public PTNetEditor getEditor(File file) {
+	//		GraphicalPTNet ifnet = new GraphicalPTNet();
+	//		ifnet.setPetriNet(getNet());
+	//		PTNetEditor editor = new PTNetEditor(ifnet, file);
+	//		LayoutAction la = new LayoutAction(editor, "horizontalHierarchical", false);
+	//		la.actionPerformed(new ActionEvent(this, 0, "command"));
+	//		return editor;
+	//	}
+
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getGraphicalPN() {
+		GraphicalPTNet net = new GraphicalPTNet();
+		net.setPetriNet(getNet());
+		return net;
 	}
 
 	/** get all Names from AristaFlow Template **/

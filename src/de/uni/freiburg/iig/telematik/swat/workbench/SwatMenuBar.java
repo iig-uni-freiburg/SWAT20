@@ -230,7 +230,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frame.setJMenuBar(new SwatMenuBar(new SwatTabView(), SwatTreeView.getInstance()));
+		frame.setJMenuBar(new SwatMenuBar(SwatTabView.getInstance(), SwatTreeView.getInstance()));
 		frame.pack();
 		frame.setVisible(true);
 	}

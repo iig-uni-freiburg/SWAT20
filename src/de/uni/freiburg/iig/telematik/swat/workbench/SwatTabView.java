@@ -147,6 +147,7 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 				// switch operation mode and load analysis
 				SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
 				AnalyzePanelController.getInstance().loadSetting(parent.getFileReference().getName(), node.getFileReference());
+				//AnalyzePanelController.getInstance().loadSetting(parent.getDisplayName(), ...);
 				break;
 			case AC_MODEL:
 				break;
@@ -239,19 +240,16 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		case PETRI_NET:
 			remove((AbstractGraphicalPN) node.getUserObject());
 			break;
-		case LOG_FILE:
-			remove((XESLogModel) node.getUserObject());
-			openedSwatComponents.remove(node.getUserObject());
-			break;
-		case XML_FILE:
-			remove((XESLogModel) node.getUserObject());
+		case MXML_LOG:
+		case ARISTAFLOW_LOG:
+			remove((LogModel) node.getUserObject());
 			openedSwatComponents.remove(node.getUserObject());
 			break;
 
 		}
 	}
 
-	private void remove(XESLogModel userObject) {
+	private void remove(LogModel userObject) {
 		Component component = openedSwatComponents.get(userObject);
 		for (int i = 0; i < getTabCount(); i++) {
 			System.out.println("Component: " + component + " TabComponent: " + getTabComponentAt(i));

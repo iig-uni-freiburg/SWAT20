@@ -11,6 +11,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class RenameAction extends AbstractWorkbenchAction {
 
+	public RenameAction() {
+		super("Rename");
+	}
+
 	private static final long serialVersionUID = 365967570541436082L;
 
 	@Override

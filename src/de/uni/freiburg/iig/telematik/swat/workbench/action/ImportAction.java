@@ -16,6 +16,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class ImportAction extends AbstractWorkbenchAction {
 
+	public ImportAction() {
+		this("Import PT-net");
+	}
+
 	public ImportAction(String name) {
 		super(name);
 		try {

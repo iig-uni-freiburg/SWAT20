@@ -3,12 +3,12 @@ package de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.panelmatic.PanelBuilder;
@@ -21,6 +21,8 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.AbstractDistributionView;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.ExponentialDistributionView;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.IDistributionView;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 public class TransitionView extends JDialog {
 
@@ -147,12 +149,18 @@ public class TransitionView extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						timeContext.storeTimeContext();
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} finally {
-						dispose();
+						SwatComponents.getInstance().storeTimeContext(timeContext, timeContext.getName());
+					} catch (SwatComponentException e) {
+						JOptionPane.showMessageDialog(null, "Could not save time context:\nReason: " + e.getMessage());
 					}
+					//					try {
+					//						timeContext.storeTimeContext();
+					//					} catch (FileNotFoundException e) {
+					//						e.printStackTrace();
+					//					} finally {
+					//						dispose();
+					//					}
+					dispose();
 
 				}
 			});

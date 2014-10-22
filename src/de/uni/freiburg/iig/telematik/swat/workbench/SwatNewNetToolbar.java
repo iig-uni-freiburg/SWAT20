@@ -185,7 +185,7 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 
 	public static void main(String[] args) {
 		JPanel panel = new JPanel();
-		panel.add(new SwatNewNetToolbar(new SwatTabView(), SwatTreeView.getInstance()));
+		panel.add(new SwatNewNetToolbar(SwatTabView.getInstance(), SwatTreeView.getInstance()));
 		new DisplayFrame(panel, true);
 	}
 

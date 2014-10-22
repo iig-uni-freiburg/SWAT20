@@ -38,8 +38,8 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 /**
  * This class represents the Pattern-Overview. It its an
@@ -434,7 +434,7 @@ public abstract class AnalyzePanel {
 		if(n != null)
 			setAnalyseName(n);
 		// update the tree
-		SwatTreeView.getInstance().updateAnalysis();
+		SwatTreeView.getInstance().componentsChanged();
 		SwatTreeView.getInstance().expandAll();
 		SwatTreeView.getInstance().updateUI();
 	}

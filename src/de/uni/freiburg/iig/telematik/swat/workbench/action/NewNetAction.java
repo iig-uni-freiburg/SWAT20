@@ -22,6 +22,7 @@ public class NewNetAction extends AbstractWorkbenchAction {
 	private WorkbenchPopupToolBar popupFontToolBar;
 
 	public NewNetAction(SwatNewNetToolbar.ToolbarNewNetButtonType type, WorkbenchPopupToolBar popupFontToolBar) {
+		super("Create new net");
 		this.type = type;
 		this.popupFontToolBar = popupFontToolBar;
 	}
