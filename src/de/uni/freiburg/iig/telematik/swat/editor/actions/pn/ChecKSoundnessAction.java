@@ -18,9 +18,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cwn.CWNMarking;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
@@ -39,42 +36,8 @@ public class ChecKSoundnessAction extends AbstractPNEditorAction {
 			AbstractPetriNet pn = editor.getNetContainer().getPetriNet();
 			if (pn instanceof CPN) {
 				CPN cpn = (CPN) pn;
-				CWN cwn = new CWN();
-
-				CWNMarking marking = new CWNMarking();
-				CPNMarking cpnMarking = cpn.getInitialMarking();
-
-				Set<String> places = new HashSet<String>();
-				for (CPNPlace p : cpn.getPlaces()) {
-					places.add(p.getName());
-					if (cpnMarking.get(p.getName()) != null)
-						marking.set(p.getName(), cpnMarking.get(p.getName()));
-				}
-
-				Set<String> transitions = new HashSet<String>();
-				for (CPNTransition t : cpn.getTransitions())
-					transitions.add(t.getName());
-
-				cwn = new CWN(places, transitions, marking);
-
-				for (CPNPlace p : cpn.getPlaces()){
-					for(String c:p.getColorsWithCapacityRestriction())
-					cwn.getPlace(p.getName()).setColorCapacity(c, p.getColorCapacity(c));
-				}
-				for (CPNFlowRelation fr : cpn.getFlowRelations()) {
-					Multiset<String> constraint = fr.getConstraint();
-					CWNFlowRelation newFR = null;
-					if (fr.getSource() instanceof CPNPlace)
-						newFR = cwn.addFlowRelationPT(fr.getSource().getName(), fr.getTarget().getName(), false);
-					if (fr.getSource() instanceof CPNTransition)
-						newFR = cwn.addFlowRelationTP(fr.getSource().getName(), fr.getTarget().getName(), false);
-					newFR.setConstraint(constraint);
-				}
-				
-			
-
 				try {
-					cwn.checkSoundness(true);
+					cpn.checkSoundness(true);
 					JOptionPane.showMessageDialog(editor.getGraphComponent(), "Awesome! You have a SOUND Coloured Workflow Net.", "CWN is Sound - Awesome Job!", JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (PNValidationException e1) {

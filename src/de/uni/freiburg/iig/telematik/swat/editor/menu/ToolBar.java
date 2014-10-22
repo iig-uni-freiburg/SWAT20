@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.Box.Filler;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,7 +22,6 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
 import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
@@ -34,9 +32,6 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.acmodel.AddAccessControlAction;
@@ -45,8 +40,6 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.acmodel.AddAccessContro
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.AddAnalysisContextAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.EditSubjectClearanceAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.EditTokenlabelAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterEditingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.EnterExecutionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.ReloadExecutionAction;
@@ -54,13 +47,10 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.ToggleModeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.nodes.NodeToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.ChecKSoundnessAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.CheckValidityAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.TransformCPNtoCWNAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenColorChange;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.acmodel.SWATACModelDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 public class ToolBar extends JToolBar {
@@ -133,10 +123,6 @@ public class ToolBar extends JToolBar {
 	private JToggleButton checkSoundnessButton;
 	private CheckValidityAction checkValidityAction;
 	private JToggleButton checkValidityButton;
-
-
-	private TransformCPNtoCWNAction transformAction;
-
 
 	private JToggleButton transformButton;
 
@@ -213,7 +199,7 @@ public class ToolBar extends JToolBar {
 				if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN) {
 				checkValidityAction = new CheckValidityAction(pnEditor);
 				checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
-				transformAction = new TransformCPNtoCWNAction(pnEditor);}
+				}
 
 			}
 
@@ -285,7 +271,6 @@ public class ToolBar extends JToolBar {
 		
 		checkValidityButton = (JToggleButton) add(checkValidityAction, true);
 		checkSoundnessButton = (JToggleButton) add(checkSoundnessAction, true);
-		transformButton = (JToggleButton) add(transformAction, true);
 		
 		
 	}
