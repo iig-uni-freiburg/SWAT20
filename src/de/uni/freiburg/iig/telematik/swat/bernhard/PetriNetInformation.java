@@ -10,6 +10,7 @@ import java.util.Set;
 
 import de.invation.code.toval.types.Multiset;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Offset;
 import de.uni.freiburg.iig.telematik.sepia.mg.ifnet.IFNetMarkingGraphRelation;
 import de.uni.freiburg.iig.telematik.sepia.mg.ifnet.IFNetMarkingGraphState;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPNNode;
@@ -29,7 +30,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTra
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 /**
@@ -96,7 +99,9 @@ public class PetriNetInformation implements PNReader {
 		subjectList.clear();
 		try {
 		if (SwatComponents.getInstance().containsACModels()) {
-			ACModel acModel = SwatComponents.getInstance().getSelectedACModel();
+			if(pneditor instanceof IFNetEditor){
+				IFNetEditor ifneditor = (IFNetEditor) pneditor;
+			ACModel acModel = ((IFNetGraph)ifneditor.getGraphComponent().getGraph()).getSelectedACModel();
 			if (acModel != null) {
 				System.out.println(acModel.getClass());
 
@@ -108,6 +113,7 @@ public class PetriNetInformation implements PNReader {
 					ifSubjects = ((RBACModel) acModel).getRoles();
 				}
 				subjectList.addAll(ifSubjects);
+			}
 			}
 				
 		}
