@@ -42,7 +42,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
  * @author bernhard
  * 
  */
-public class PetriNetInformation implements PNReader {
+public class PetriNetInformation implements AnalysisComponentInfoProvider {
 
 	private PNEditor pneditor;
 	// dictionary that maps the labels of the transitions
@@ -169,19 +169,17 @@ public class PetriNetInformation implements PNReader {
 		Collections.sort(dataTypeListWithBlack);
 	}
 
-	@Override
 	public HashMap<String, String> getTransitionToLabelDictionary() {
 		// TODO Auto-generated method stub
 		return transitionToLabelDic;
 	}
 
-	@Override
 	public HashMap<String, String> getLabelToTransitionDictionary() {
 		// TODO Auto-generated method stub
 		return labelToTransitionDic;
 	}
 
-	@Override
+
 	public String[] getPlacesArray() {
 		// TODO Auto-generated method stub
 		List<String> places = new ArrayList<String>(this.placesLabelDicReverse.keySet());
@@ -189,13 +187,12 @@ public class PetriNetInformation implements PNReader {
 		return places.toArray(new String[places.size()]);
 	}
 
-	@Override
+
 	public String[] getDataTypesArray() {
 		// TODO Auto-generated method stub
 		return dataTypeList.toArray(new String[dataTypeList.size()]);
 	}
 
-	@Override
 	public String[] getActivities() {
 		List<String> activities = new ArrayList<String>(this.labelToTransitionDic.keySet());
 		Collections.sort(activities);
@@ -214,20 +211,17 @@ public class PetriNetInformation implements PNReader {
 		return null;
 	}
 
-	@Override
 	public String[] getDataTypesWithBlackArray() {
 		// TODO Auto-generated method stub
 		return dataTypeListWithBlack.toArray(new String[dataTypeListWithBlack
 				.size()]);
 	}
 
-	@Override
 	public HashMap<String, String> getPlacesToLabelDictionary() {
 		// TODO Auto-generated method stub
 		return this.placesLabelDic;
 	}
 
-	@Override
 	public HashMap<String, String> getLabelToPlaceDictionary() {
 		// TODO Auto-generated method stub
 		return this.placesLabelDicReverse;

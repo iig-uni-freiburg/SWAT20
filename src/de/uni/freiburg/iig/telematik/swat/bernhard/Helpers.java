@@ -12,9 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
 
 /**
  * a class containing some help functions

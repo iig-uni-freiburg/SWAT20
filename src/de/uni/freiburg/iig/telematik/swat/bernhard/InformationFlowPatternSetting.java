@@ -3,8 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
-import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
 
 
 public class InformationFlowPatternSetting extends PatternSetting {

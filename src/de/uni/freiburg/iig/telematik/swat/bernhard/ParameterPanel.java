@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 /**
  * An abstract class representing a Parameter used by the
  * pattern wizard. There are two abstract functions getValue() and

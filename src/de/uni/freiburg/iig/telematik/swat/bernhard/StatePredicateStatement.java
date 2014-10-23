@@ -11,8 +11,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 /**
  * This Class represents a single statement of an state predicate.
  * A state predicate consinsts of at least one StatePredicateStatement
@@ -26,7 +26,7 @@ public class StatePredicateStatement extends ParameterPanel {
 	private JComboBox relationsBox;
 	private JComboBox placesBox;
 	private JComboBox colorsBox;
-	private PNReader pnReader;
+	private PetriNetInformation pnReader;
 	/**
 	 * Create A StatePredicateStatement parameter with a given name
 	 * for a given PNReader
@@ -34,7 +34,7 @@ public class StatePredicateStatement extends ParameterPanel {
 	 * @param pnReader an object implementing the interface PNReader, which is
 	 * used to retrieve the list of places and colors
 	 */
-	public StatePredicateStatement(String name, PNReader pnReader) {
+	public StatePredicateStatement(String name, PetriNetInformation pnReader) {
 		super(name);
 		this.pnReader=pnReader;
 		// TODO Auto-generated constructor stub

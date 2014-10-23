@@ -3,8 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 /**
  * This Class represents the Parameter for a state predicate which consists
  * of several StatePredicateStatements
@@ -19,7 +19,7 @@ public class StatePredicateParameter extends MultipleParameterPanel {
 	 * @param informationReader an object implementing the interface PNReader
 	 */
 	public StatePredicateParameter(String name,
-			PNReader informationReader) {
+			PetriNetInformation informationReader) {
 		super(name, "Condition", informationReader);
 		
 		// TODO Auto-generated constructor stub
@@ -27,7 +27,7 @@ public class StatePredicateParameter extends MultipleParameterPanel {
 
 	@Override
 	protected ParameterPanel getNewPanel() {
-		PNReader pnInformation = (PNReader) informationReader;
+		PetriNetInformation pnInformation = (PetriNetInformation) informationReader;
 		return new StatePredicateStatement(name,pnInformation);
 	}
 	

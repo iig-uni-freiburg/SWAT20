@@ -7,7 +7,7 @@ import java.util.List;
  * @author bernhard
  *
  */
-public interface LogFileReader {
+public interface AnalysisComponentInfoProvider {
 	/**
 	 * this method returns an array of all activities
 	 * @return an array containing all activities

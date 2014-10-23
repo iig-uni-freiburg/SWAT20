@@ -37,6 +37,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.BoxLayout;
+
 import com.itextpdf.text.log.SysoCounter;
 import com.mxgraph.swing.handler.mxCellMarker;
 
@@ -51,7 +52,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
 /**
@@ -95,6 +96,9 @@ public class PatternWizard extends JFrame {
 				removeAllPatterns();
 			}
 		});
+		
+		String comboBoxItems[] = {"Design-Time Analysis", "Audit-Time Analysis"};
+		
 		JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		south.add(okButton);
 		patternPanelList = new ArrayList<PatternSettingPanel>();
@@ -216,7 +220,7 @@ public class PatternWizard extends JFrame {
 		setPatternSettings(psList);
 	}
 	
-	public LogFileReader getNetInformations() {
+	public AnalysisComponentInfoProvider getNetInformations() {
 		return analyzePanel.getInformationReader();
 	}
 

@@ -11,9 +11,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
-import de.uni.freiburg.iig.telematik.swat.lukas.Operand;
-import de.uni.freiburg.iig.telematik.swat.lukas.PlacePredicate;
-import de.uni.freiburg.iig.telematik.swat.lukas.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.PlacePredicate;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
 
 
 public class GraphHighlighter {

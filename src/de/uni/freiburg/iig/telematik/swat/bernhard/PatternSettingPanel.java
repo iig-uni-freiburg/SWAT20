@@ -36,12 +36,12 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.InformationFlowPattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.Operand;
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
-import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.InformationFlowPattern;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
 /**

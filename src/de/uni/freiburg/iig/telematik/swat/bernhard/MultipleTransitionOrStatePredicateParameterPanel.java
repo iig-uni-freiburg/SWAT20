@@ -13,7 +13,7 @@ public class MultipleTransitionOrStatePredicateParameterPanel extends MultiplePa
 	 * @param pr An object implementing the interface PNReader to retrieve
 	 * the needed information
 	 */
-	public MultipleTransitionOrStatePredicateParameterPanel(String name, String description,PNReader pr) {
+	public MultipleTransitionOrStatePredicateParameterPanel(String name, String description,PetriNetInformation pr) {
 		super(name, description, pr);
 		// TODO Auto-generated constructor stub
 	}
@@ -21,7 +21,7 @@ public class MultipleTransitionOrStatePredicateParameterPanel extends MultiplePa
 	@Override
 	protected ParameterPanel getNewPanel() {
 		// TODO Auto-generated method stub
-		PNReader pnInformation=(PNReader) informationReader;
+		PetriNetInformation pnInformation=(PetriNetInformation) informationReader;
 		return new ActivityOrStatePredicateParameter(name, pnInformation);
 	}
 }

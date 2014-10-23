@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 /**
  * This class represents a Parameterpanel, where several other Parameters
  * can be added
@@ -29,7 +29,7 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 	protected List<ParameterPanel> panelList;
 	protected JButton addButton;
 	protected String description;
-	protected LogFileReader informationReader;
+	protected AnalysisComponentInfoProvider informationReader;
 	protected int limit;
 	/**
 	 * Create a MultipleParameter that allows 2^32 values
@@ -37,7 +37,7 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 	 * @param description description of the parameter e.g. State Predicate
 	 * @param informationReader an object implementing the interface InformationReader
 	 */
-	public MultipleParameterPanel(String name, String description, LogFileReader informationReader) {
+	public MultipleParameterPanel(String name, String description, AnalysisComponentInfoProvider informationReader) {
 		super(name);
 		limit=Integer.MAX_VALUE;
 		init(description, informationReader);
@@ -49,7 +49,7 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 	 * @param informationReader an object implementing the interface InformationReader
 	 * @param limit the maximum amount of values
 	 */
-	public MultipleParameterPanel(String name, String description, LogFileReader informationReader, int limit) {
+	public MultipleParameterPanel(String name, String description, AnalysisComponentInfoProvider informationReader, int limit) {
 		super(name);
 		this.limit=limit;
 		init(description, informationReader);
@@ -59,7 +59,7 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 	 * @param description the description of the parameter 
 	 * @param informationReader Object that implements InformationReader
 	 */
-	private void init(String description, LogFileReader informationReader) {
+	private void init(String description, AnalysisComponentInfoProvider informationReader) {
 		this.description=description;
 		this.informationReader=informationReader;
 		panelList=new ArrayList<ParameterPanel>();

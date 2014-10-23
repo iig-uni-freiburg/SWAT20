@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,12 +33,12 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.Operand;
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
-import de.uni.freiburg.iig.telematik.swat.lukas.PatternFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
@@ -58,7 +59,7 @@ public abstract class AnalyzePanel {
 	private JButton editButton, runButton, saveButton;
 	private String fileName;
 	protected PatternWizard patternWizard;
-	protected LogFileReader objectInformationReader;
+	protected AnalysisComponentInfoProvider objectInformationReader;
 	protected PatternFactory patternFactory;
 	protected List<PatternSetting> patternSettings;
 	private PNEditor mPNEditor;
@@ -96,7 +97,7 @@ public abstract class AnalyzePanel {
 		patternWizard.netChanged();
 	}
 
-	public LogFileReader getInformationReader() {
+	public AnalysisComponentInfoProvider getInformationReader() {
 		return objectInformationReader;
 	}
 	/**
@@ -109,7 +110,9 @@ public abstract class AnalyzePanel {
 		fileName = file.split("[.]")[0];
 		patternFactory = new PatternFactory(component);
 		patternSettings = new ArrayList<PatternSetting>();
-		mPNEditor = (PNEditor) component;
+		if (component instanceof PNEditor) {
+			mPNEditor = (PNEditor) component;
+		}
 		initGui();
 
 	}
@@ -268,12 +271,17 @@ public abstract class AnalyzePanel {
 					final ArrayList<Operand> operands = res.getPatternOperands();
 					double prob = res.getProbability();
 					String patternDesc = "Pattern:";
-					for (int i=0; i<operands.size(); i++) {
-						Operand op = operands.get(i);
+					ArrayList<String> operandNames = new ArrayList<String>();
+					for (Operand op : operands) {
+						operandNames.add(op.getName());
+					}
+					Collections.sort(operandNames);
+					for (int i=0; i<operandNames.size(); i++) {
+						String op = operandNames.get(i);
 						if (i == 0) {
-							patternDesc += " " + op.getName();
+							patternDesc += " " + op;
 						} else {
-							patternDesc += ", " + op.getName();
+							patternDesc += ", " + op;
 						}
 					}
 					panel.add(new JLabel(patternDesc));

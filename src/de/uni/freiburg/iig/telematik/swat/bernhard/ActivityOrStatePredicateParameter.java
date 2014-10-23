@@ -8,8 +8,8 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 /**
  * This class represents a Parameter which can either be an activity or
  * a state predicate. The user can choose the type of the parameter
@@ -21,7 +21,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
 public class ActivityOrStatePredicateParameter extends
 		ParameterPanel {
 
-	private PNReader informationReader;
+	private PetriNetInformation informationReader;
 	private TransitionParameter activityPanel;
 	private StatePredicateParameter statePredicatePanel;
 	boolean activityActive;
@@ -33,10 +33,10 @@ public class ActivityOrStatePredicateParameter extends
 	 * @param pr An instance of a class implementing an PNReader that
 	 * can extract the necessary information from the PN.
 	 */
-	public ActivityOrStatePredicateParameter(String name, PNReader pr) {
+	public ActivityOrStatePredicateParameter(String name, PetriNetInformation pr) {
 		super(name);
 		informationReader=pr;
-		activityPanel=new TransitionParameter(name,pr);
+		activityPanel=new TransitionParaPNet(name,pr);
 		statePredicatePanel=new StatePredicateParameter(name, informationReader);
 		activityActive=true;
 		String arr[]={"Activity","State Predicate"};

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
 /**
  * This class is used to create the parameterpanel for a given
  * Parameter.
@@ -14,7 +14,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.Parameter;
  */
 public class ParameterPanelFactory {
 
-	private LogFileReader objectInformation;
+	private AnalysisComponentInfoProvider componentInfo;
 	/**
 	 * Create a ParameterPanel for a given Parameter.
 	 * @param p the parameter for which the parameter panel should be 
@@ -26,36 +26,44 @@ public class ParameterPanelFactory {
 		ParameterPanel patternPara = null;
 		String name = p.getName();
 		Set<OperandType> operandSet = p.getTypes();
+		
 		if (operandSet.contains(OperandType.TOKEN)) {
 			patternPara = new DropDownParameter(name,
-					OperandType.TOKEN, ((PNReader) objectInformation)
+					OperandType.TOKEN, ((PetriNetInformation) componentInfo)
 					.getDataTypesArray());
 		} else if (operandSet.contains(OperandType.TRANSITION)
 				&& operandSet.contains(OperandType.STATEPREDICATE)) {
 			if (p.getMultiplicity() == -1) {
 				patternPara = new MultipleTransitionOrStatePredicateParameterPanel(
 						name, "Transition or State Predicate",
-						(PNReader) objectInformation);
+						(PetriNetInformation) componentInfo);
 			} else {
 				patternPara = new ActivityOrStatePredicateParameter(
-						name, (PNReader) objectInformation);
+						name, (PetriNetInformation) componentInfo);
 			}
 		} else if (operandSet.contains(OperandType.TRANSITION)) {
 			if (p.getMultiplicity() == 1) {
-				patternPara = new TransitionParameter(name,(PNReader) objectInformation);
+				
+				if (componentInfo instanceof PetriNetInformation) {
+					patternPara = new TransitionParaPNet(name, (PetriNetInformation) componentInfo);
+				} else {
+					patternPara = new TransitionParaLogFile(name, (LogFileInformation) componentInfo);
+				}
+		
+				
 			} else if (p.getMultiplicity() != -1) {
 				patternPara = new MultipleTransitionParameterPanel(name,
-						"Transition", objectInformation);
+						"Transition", componentInfo);
 			} else {
 				patternPara = new MultipleTransitionParameterPanel(name,
-						"Transition", objectInformation, p.getMultiplicity());
+						"Transition", componentInfo, p.getMultiplicity());
 			}
 		} else if (operandSet.contains(OperandType.STATEPREDICATE)) {
 			patternPara = new StatePredicateParameter(name,
-					((PNReader) objectInformation));
+					((PetriNetInformation) componentInfo));
 		} else if (operandSet.contains(OperandType.ROLE)) {
 			patternPara = new DropDownParameter(name,
-					OperandType.TRANSITION, objectInformation.getRoles());
+					OperandType.ROLE, componentInfo.getRoles());
 		}
 		return patternPara;
 	}
@@ -64,7 +72,7 @@ public class ParameterPanelFactory {
 	 * the interface LogFileReader
 	 * @param logInformation
 	 */
-	public ParameterPanelFactory(LogFileReader logInformation) {
-		this.objectInformation = logInformation;
+	public ParameterPanelFactory(AnalysisComponentInfoProvider logInformation) {
+		this.componentInfo = logInformation;
 	}
 }

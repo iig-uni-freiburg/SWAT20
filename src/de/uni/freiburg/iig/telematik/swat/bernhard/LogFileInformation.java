@@ -20,7 +20,7 @@ import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
  * @author bernhard
  *
  */
-public class LogFileInformation implements LogFileReader {
+public class LogFileInformation implements AnalysisComponentInfoProvider {
 
 	private LogFileViewer logViewer;
 	private List<String> activities, subjects, roles;
@@ -34,13 +34,11 @@ public class LogFileInformation implements LogFileReader {
 
 	@Override
 	public String[] getActivities() {
-		// TODO Auto-generated method stub
 		return activities.toArray(new String[activities.size()]);
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		activities.clear();
 		subjects.clear();
 		File logFile=logViewer.getFile();

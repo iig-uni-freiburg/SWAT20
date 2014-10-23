@@ -3,8 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import javax.swing.JPanel;
 
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
-import de.uni.freiburg.iig.telematik.swat.lukas.ParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.PatternResult;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 /**
  * this is the specific subclass of AnalyzePanel which implements
