@@ -62,7 +62,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.patterns.WeaklyLostData;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.WeaklyRedData;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.WriteDown;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.XLeadsTo;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponent;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 
 public class PatternFactory {
 	
@@ -71,7 +71,7 @@ public class PatternFactory {
 	
 	private HashMap<String, String> mSupportedPatterns;
 
-	public PatternFactory(SwatComponent component) {
+	public PatternFactory(WorkbenchComponent component) {
 		
 		mSupportedPatterns = new HashMap<String, String>();
 		
