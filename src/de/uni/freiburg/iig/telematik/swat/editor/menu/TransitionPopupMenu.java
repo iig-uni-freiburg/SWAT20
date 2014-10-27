@@ -24,10 +24,10 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.TransitionLabelingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.TransitionSilentAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.TransitionTimeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.SubjectDescriptorChange;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.TransitionView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 public class TransitionPopupMenu extends JPopupMenu {
@@ -121,25 +121,4 @@ public class TransitionPopupMenu extends JPopupMenu {
 		submenu4.add(item);
 		return submenu4;
 	}
-}
-
-class TransitionTimeAction implements ActionListener {
-
-	private PNEditor editor;
-
-	public TransitionTimeAction(PNEditor editor) {
-		this.editor = editor;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		IFNetGraph graph = (IFNetGraph) editor.getGraphComponent().getGraph();
-		PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
-		//TransitionView view = new TransitionView(cell.getId(), SwatComponents.getInstance().getTimeAnalysisForNet(editor.getNetContainer()));
-		TransitionView view = new TransitionView(cell.getId(), SwatComponents.getInstance().getTimeContext(
-				graph.getNetContainer().getPetriNet().getName(),
-				"hardcodedTimeContext"));
-		view.setVisible(true);
-	}
-
 }
