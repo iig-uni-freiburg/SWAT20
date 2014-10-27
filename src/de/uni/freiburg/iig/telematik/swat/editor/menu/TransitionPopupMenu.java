@@ -135,7 +135,10 @@ class TransitionTimeAction implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		IFNetGraph graph = (IFNetGraph) editor.getGraphComponent().getGraph();
 		PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
-		TransitionView view = new TransitionView(cell.getId(), SwatComponents.getInstance().getTimeAnalysisForNet(editor.getNetContainer()));
+		//TransitionView view = new TransitionView(cell.getId(), SwatComponents.getInstance().getTimeAnalysisForNet(editor.getNetContainer()));
+		TransitionView view = new TransitionView(cell.getId(), SwatComponents.getInstance().getTimeContext(
+				graph.getNetContainer().getPetriNet().getName(),
+				"hardcodedTimeContext"));
 		view.setVisible(true);
 	}
 
