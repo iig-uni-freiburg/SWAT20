@@ -132,6 +132,44 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 		initialize(netContainer, fileReference);
 		setUpGUI();
 		propertiesView.setUpGUI();
+
+		if(!graphComponent.getGraph().containedGraphics()){
+		showLayoutDialog();
+		}
+	}
+
+	private void showLayoutDialog() {
+		String[] layouts = { "verticalHierarchical", "horizontalHierarchical", "organicLayout", "circleLayout" };
+		String selectedLayout = (String) JOptionPane.showInputDialog(getGraphComponent(), "Selected Layout:", "Do you wish to layout your net?", JOptionPane.QUESTION_MESSAGE, null, layouts, layouts[0]);
+		if(selectedLayout != null){ 
+		mxIGraphLayout layout = createLayout(selectedLayout, true);
+			mxGraph graph = graphComponent.getGraph();
+			Object cell = graph.getSelectionCell();
+
+			if (cell == null || graph.getModel().getChildCount(cell) == 0) {
+				cell = graph.getDefaultParent();
+			}
+
+			graph.getModel().beginUpdate();
+			try {
+				long t0 = System.currentTimeMillis();
+				layout.execute(cell);
+				status("Layout: " + (System.currentTimeMillis() - t0) + " ms");
+			} finally {
+				mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
+
+				morph.addListener(mxEvent.DONE, new mxIEventListener() {
+
+					public void invoke(Object sender, mxEventObject evt) {
+						getGraph().getModel().endUpdate();
+//						getGraph().updatePositionPropertiesFromCells();
+					}
+
+				});
+
+				morph.startAnimation();
+			}
+		}
 	}
 
 	public String getName() {
@@ -443,62 +481,6 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 		}
 	}
 
-	/**
-	 * Creates an action that executes the specified layout.
-	 * 
-	 * @param key
-	 *            Key to be used for getting the label from mxResources and also
-	 *            to create the layout instance for the commercial graph editor
-	 *            example.
-	 * @return an action that executes the specified layout
-	 */
-	@SuppressWarnings("serial")
-	public Action graphLayout(String key, boolean animate) {
-		final mxIGraphLayout layout = createLayout(key, animate);
-
-		if (layout != null) {
-			return new AbstractAction(mxResources.get(key)) {
-				public void actionPerformed(ActionEvent e) {
-					mxGraph graph = graphComponent.getGraph();
-					Object cell = graph.getSelectionCell();
-
-					if (cell == null || graph.getModel().getChildCount(cell) == 0) {
-						cell = graph.getDefaultParent();
-					}
-
-					graph.getModel().beginUpdate();
-					try {
-						long t0 = System.currentTimeMillis();
-						layout.execute(cell);
-						status("Layout: " + (System.currentTimeMillis() - t0) + " ms");
-					} finally {
-						mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
-
-						morph.addListener(mxEvent.DONE, new mxIEventListener() {
-
-							public void invoke(Object sender, mxEventObject evt) {
-								getGraph().getModel().endUpdate();
-//								getGraph().updatePositionPropertiesFromCells();
-							}
-
-						});
-
-						morph.startAnimation();
-					}
-
-				}
-
-			};
-		} else {
-			return new AbstractAction(mxResources.get(key)) {
-
-				public void actionPerformed(ActionEvent e) {
-					JOptionPane.showMessageDialog(graphComponent, mxResources.get("noLayout"));
-				}
-
-			};
-		}
-	}
 
 	/**
 	 * Creates a layout instance for the given identifier.

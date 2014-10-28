@@ -21,6 +21,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxImageCanvas;
@@ -93,6 +95,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	private boolean isExecution = false;
 	protected boolean hideContraintsAsTokens = true;
 	private Set<String> nameSetFromTransitions;
+	private boolean containedGraphics = false;
 
 	public PNGraph(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, PNProperties properties) throws ParameterException {
 		super();
@@ -132,6 +135,11 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	private void initialize() throws ParameterException {
 		// Check if net container is empty.
 		// If not, add all PN components to the graph.
+		
+		//Check if net contains Graphical Info and keep that information
+		if(netContainer.getPetriNetGraphics().getPlaceGraphics().size() > 0){
+			containedGraphics = true;
+		}
 		if (!netContainer.getPetriNet().isEmpty()) {
 			getModel().beginUpdate();
 
@@ -163,6 +171,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 			}
 			getModel().endUpdate();
 		}
+
 	}
 
 	public void setLabelSelected(boolean selected) {
@@ -1769,6 +1778,10 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		this.hideContraintsAsTokens = b;
 		refresh();
 		
+	}
+
+	public boolean containedGraphics() {
+		return containedGraphics;
 	}
 
 //	public abstract Set getAccessModeforTransition(String name, String color);

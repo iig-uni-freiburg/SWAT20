@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.acmodel.SWATACModelDialog;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.acmodel.SWATContextForAC;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
@@ -30,7 +31,6 @@ public class AddAccessControlAction extends AbstractPNEditorAction {
 	public void actionPerformed(ActionEvent e) {
 		if (editor != null) {
 			IFNet ifNet = (IFNet) getEditor().getNetContainer().getPetriNet();
-
 			String name = ifNet.getName() + "_Context";
 			Set<String> transitions = PNUtils.getNameSetFromTransitions(ifNet.getTransitions(), true);
 			SWATContextForAC context = new SWATContextForAC(name, transitions);
@@ -42,6 +42,7 @@ public class AddAccessControlAction extends AbstractPNEditorAction {
 			ACModel acModel = SWATACModelDialog.showDialog(window, context);
 			if (acModel != null) {
 				context.setACModel(acModel);
+				((IFNetGraph)getEditor().getGraphComponent().getGraph()).setSelectedACModel(acModel);
 			}
 
 		}
