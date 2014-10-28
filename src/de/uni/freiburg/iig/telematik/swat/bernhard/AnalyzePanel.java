@@ -39,6 +39,8 @@ import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
+import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
@@ -512,6 +514,15 @@ public abstract class AnalyzePanel {
 			}
 		}
 		return labels;
+	}
+
+	public boolean load(String name) {
+		Analysis analysis = SwatComponents.getInstance().getAnalysisByName(name);
+		patternSettings = analysis.getPatternSetting();
+		patternWizard.setPatternSettings(patternSettings);
+		analysisName.setText("Analysis: " + name);
+		update();
+		return true;
 	}
 
 }

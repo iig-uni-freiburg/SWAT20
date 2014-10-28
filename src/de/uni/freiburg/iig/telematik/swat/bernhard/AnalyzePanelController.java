@@ -78,4 +78,19 @@ public class AnalyzePanelController {
 			panelDic.get(name).objectChanged();
 		}
 	}
+
+	/**
+	 * invoked when the user wants to load an analysis for a given object
+	 * 
+	 * @param name
+	 *            the analysis name
+	 * @param analysis
+	 *            Analysis object
+	 */
+	public void loadSetting(String name) {
+		if (panelDic.get(name) != null) {
+			panelDic.get(name).load(name);
+		}
+	}
+
 }

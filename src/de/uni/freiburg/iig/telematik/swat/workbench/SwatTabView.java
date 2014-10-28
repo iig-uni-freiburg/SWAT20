@@ -146,8 +146,8 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 				}
 				// switch operation mode and load analysis
 				SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
-				AnalyzePanelController.getInstance().loadSetting(parent.getFileReference().getName(), node.getFileReference());
-				//AnalyzePanelController.getInstance().loadSetting(parent.getDisplayName(), ...);
+				//AnalyzePanelController.getInstance().loadSetting(parent.getFileReference().getName(), node.getFileReference());
+				AnalyzePanelController.getInstance().loadSetting(node.getDisplayName());
 				break;
 			case AC_MODEL:
 				break;

@@ -1047,6 +1047,19 @@ public class SwatComponents {
 		return netAnalyses;
 	}
 
+	public Analysis getAnalysisByName(String analysisName) {
+		if (!analyses.containsKey(analysisName))
+			return null;
+		return analyses.get(analysisName);
+	}
+
+	/** get analyses associated with net netID **/
+	public List<String> getAnalysesNames(String netID) {
+		if (!netAnalysesNames.containsKey(netID))
+			return new ArrayList<String>();
+		return netAnalysesNames.get(netID);
+	}
+
 //	public File getFile(LogModel model) {
 //		File file = logs.get(model);
 //		if (file == null)
