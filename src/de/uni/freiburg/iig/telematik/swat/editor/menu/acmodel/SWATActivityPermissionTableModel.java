@@ -27,7 +27,7 @@ public class SWATActivityPermissionTableModel extends AbstractTableModel impleme
 	public SWATActivityPermissionTableModel(ACLModel aclModel){
 		rowNames = new ArrayList<String>(aclModel.getSubjects());
 		Collections.sort(rowNames);
-		colNames = new ArrayList<String>(aclModel.getTransactions());
+		colNames = new ArrayList<String>(aclModel.getActivities());
 		Collections.sort(colNames);
 		this.aclModel = aclModel;
 

@@ -51,7 +51,7 @@ public class SWATAdvancedACLTable extends JTable implements ObjectPermissionItem
 		
 		this.aclModel = aclModel;
 		this.setEnabled(deriveAttributePermissions);
-		initialize(aclModel.getSubjects(), aclModel.getObjects(), aclModel.getTransactions());
+		initialize(aclModel.getSubjects(), aclModel.getObjects(), aclModel.getActivities());
 		update();
 	}
 	
@@ -60,8 +60,9 @@ public class SWATAdvancedACLTable extends JTable implements ObjectPermissionItem
 		Validate.notNull(subjects);
 		Validate.noNullElements(subjects);
 		
-		aclModel = new ACLModel(subjects);
-		aclModel.setTransactions(context.getActivities());
+		aclModel = new ACLModel();
+		aclModel.setSubjects(subjects);
+		aclModel.setActivities(context.getActivities());
 		if(context.hasAttributes())
 			aclModel.setObjects(context.getAttributes());
 		initialize(subjects, context.getActivities(), context.getAttributes());
@@ -180,7 +181,7 @@ public class SWATAdvancedACLTable extends JTable implements ObjectPermissionItem
 		String transaction = getModel().getColumnName(getSelectedColumn());
 		try{
 			if(permissionActivated){
-				aclModel.addTransactionPermission(subject, transaction);
+				aclModel.addActivityPermission(subject, transaction);
 				if(deriveAttributePermissions){
 					Map<String, Set<DataUsage>> transactionDataUsage = context.getDataUsageFor(transaction);
 					for(String object: transactionDataUsage.keySet()){
@@ -188,7 +189,7 @@ public class SWATAdvancedACLTable extends JTable implements ObjectPermissionItem
 					}
 				}
 			} else {
-				aclModel.removeTransactionPermission(subject, transaction);
+				aclModel.removeActivityPermission(subject, transaction);
 				if(deriveAttributePermissions){
 					deriveObjectPermission(subject);
 				}

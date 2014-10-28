@@ -222,7 +222,7 @@ public class SWATACModelDialog extends JDialog {
 		if(btnEditPermissions == null){
 			btnEditPermissions = new JButton("Edit Permissions");
 			if(acModel!=null){
-				btnEditPermissions.setEnabled(acModel.hasTransactions() && acModel.hasSubjects());
+				btnEditPermissions.setEnabled(acModel.hasActivities() && acModel.hasSubjects());
 			}
 			btnEditPermissions.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -536,11 +536,12 @@ public class SWATACModelDialog extends JDialog {
 //	
 	private void addNewACLModel(String name) throws ParameterException, IOException, PropertyException {
 //		ACLModel newACLModel = new ACLModel(name);
-		ACLModel newACLModel = new ACLModel(name, SWATACModelDialog.this.context.getSubjects());
+		ACLModel newACLModel = new ACLModel(name);
+		newACLModel.setSubjects(SWATACModelDialog.this.context.getSubjects());
 		if(SWATACModelDialog.this.context.hasAttributes())
 			newACLModel.setObjects(SWATACModelDialog.this.context.getAttributes());
-		newACLModel.setTransactions(SWATACModelDialog.this.context.getActivities());
-		
+		newACLModel.setActivities(SWATACModelDialog.this.context.getActivities());
+
 		//Abklären mit Schreiben
 		try {
 			SwatComponents.getInstance().addACModel(newACLModel, true);
@@ -561,12 +562,13 @@ public class SWATACModelDialog extends JDialog {
 			JOptionPane.showMessageDialog(SWATACModelDialog.this, "<html>Cannot launch role lattice dialog:<br>Reason: "+e.getMessage()+"</html>", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 		}
 		if(roleLattice != null){
-			RBACModel newRBACModel = new RBACModel(name, roleLattice, SWATACModelDialog.this.context.getSubjects());
+			RBACModel newRBACModel = new RBACModel(name, roleLattice);
+			newRBACModel.setSubjects(SWATACModelDialog.this.context.getSubjects());
 //			if(ACModelForSWATDialog.this.context.hasAttributes()){
 //				newRBACModel.setObjects(ACModelForSWATDialog.this.context.getAttributes());
 //			}
 			if(SWATACModelDialog.this.context.hasActivities()){
-				newRBACModel.setTransactions(SWATACModelDialog.this.context.getActivities());
+				newRBACModel.setActivities(SWATACModelDialog.this.context.getActivities());
 			}
 			try {
 				SwatComponents.getInstance().addACModel(newRBACModel, true);

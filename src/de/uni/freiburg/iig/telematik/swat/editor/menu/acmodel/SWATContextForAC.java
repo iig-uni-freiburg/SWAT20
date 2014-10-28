@@ -152,7 +152,7 @@ public class SWATContextForAC {
 				newActivities.addAll(activities);
 				validateACModel(acModel, subjects, newActivities, attributes, validUsageModes);
 			} else {
-				acModel.addTransactions(activities);
+				acModel.addActivities(activities);
 			}
 		}
 		this.activities.addAll(activities);
@@ -167,7 +167,7 @@ public class SWATContextForAC {
 		Validate.noNullElements(activities);
 		
 		if(acModel != null && removeFromACModel){
-			acModel.removeTransactions(activities);
+			acModel.removeActivities(activities);
 		}
 		this.activities.removeAll(activities);
 		this.activityDataUsage.keySet().removeAll(activities);
@@ -802,7 +802,7 @@ public class SWATContextForAC {
 		Validate.notNull(acModel);
 		if(!acModel.getSubjects().containsAll(subjects))
 			throw new InconsistencyException("Incompatible access control model: Missing subjects.");
-		if(!acModel.getTransactions().containsAll(activities))
+		if(!acModel.getActivities().containsAll(activities))
 			throw new InconsistencyException("Incompatible access control model: Missing activities.");
 		if(!acModel.getObjects().containsAll(attributes))
 			throw new InconsistencyException("Incompatible access control model: Missing attributes.");
@@ -1153,11 +1153,12 @@ public class SWATContextForAC {
 		c.setDataUsageFor("act2", usage2);
 		c.addRoutingConstraint("act1", NumberConstraint.parse("attribute1 < 200"));
 		
-		ACLModel acModel = new ACLModel(subjects);
+		ACLModel acModel = new ACLModel();
+		acModel.setSubjects(subjects);
 		acModel.setName("acmodel1");
-		acModel.addTransactions(activities);
+		acModel.addActivities(activities);
 		acModel.addObjects(attributes);
-		acModel.setTransactionPermission("s1", activities);
+		acModel.setActivityPermission("s1", activities);
 		c.setACModel(acModel);
 		
 		c.getProperties().store("GERD");
