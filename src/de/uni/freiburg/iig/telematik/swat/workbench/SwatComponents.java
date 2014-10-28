@@ -505,14 +505,25 @@ public class SwatComponents {
 	//---- Adding and removing Petri nets -----------------------------------------------------------------------------------
 	
 	public void addPetriNet(AbstractGraphicalPN net) throws SwatComponentException {
-		File netFile = generateNetFile(net.getPetriNet().getName());
-		netFile.mkdirs();
+		File pathFile = generateNetPath(net.getPetriNet().getName());
+		pathFile.mkdir();
+		File netFile = generateNetFile(pathFile, net.getPetriNet().getName());
+//		netFile.mkdirs();
+		
 		addPetriNet(net, netFile, true);
 	}
 	
-	private File generateNetFile(String netID) throws SwatComponentException {
+	private File generateNetFile(File pathFile, String netID) throws SwatComponentException {
 		try {
-			return new File(SwatProperties.getInstance().getPathForNets(), netID + "/" + netID + ".pnml");
+			return new File(pathFile.getCanonicalPath(), netID + ".pnml");
+		} catch (IOException e) {
+			throw new SwatComponentException("Cannot load properties file.<br>Reason: "+e.getMessage());
+		}
+	}
+	
+	private File generateNetPath(String netID) throws SwatComponentException {
+		try {
+			return new File(SwatProperties.getInstance().getPathForNets(), netID + "/");
 		} catch (PropertyException e) {
 			throw new SwatComponentException("Cannot extract net directory.<br>Reason: "+e.getMessage());
 		} catch (IOException e) {
@@ -523,6 +534,12 @@ public class SwatComponents {
 	private String addPetriNet(AbstractGraphicalPN net, File file, boolean storeToFile) throws SwatComponentException {
 		Validate.notNull(net);
 		Validate.notNull(file);
+		try {
+			System.out.println("file: "+ file.getCanonicalPath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String netID = net.getPetriNet().getName();
 		if(nets.containsKey(netID))
 			throw new SwatComponentException("SwatComponents already contains net with ID \"" + netID + "\"");
@@ -548,7 +565,11 @@ public class SwatComponents {
 	
 	public void storePetriNet(String netID) throws SwatComponentException {
 		try {
-			PNSerialization.serialize(getPetriNet(netID), PNSerializationFormat.PNML, getPetriNetFile(netID).getCanonicalPath());
+		AbstractGraphicalPN net = getPetriNet(netID);
+			String path = getPetriNetFile(netID).getCanonicalPath();
+			System.out.println("net: "+net );
+			System.out.println("path: "+path );
+			PNSerialization.serialize(net, PNSerializationFormat.PNML, path);
 		} catch (SerializationException e) {
 			throw new SwatComponentException("Cannot serialize Petri net.<br>Reason: "+e.getMessage());
 		} catch (IOException e) {

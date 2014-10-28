@@ -103,17 +103,17 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 	}
 
 	private JButton getNewPTNetButton() throws ParameterException, PropertyException, IOException {
-		JButton newButton = new SwatToolbarButton(ToolbarNewNetButtonType.NEW_PT);
+		JButton newButton = new SwatToolbarButton(ToolbarNewNetButtonType.NEW_PT, this);
 		return newButton;
 	}
 
 	private JButton getNewCPNButton() throws ParameterException, PropertyException, IOException {
-		JButton newButton = new SwatToolbarButton(ToolbarNewNetButtonType.NEW_CPN);
+		JButton newButton = new SwatToolbarButton(ToolbarNewNetButtonType.NEW_CPN, this);
 		return newButton;
 	}
 
 	private JButton getNewIFNetButton() throws ParameterException, PropertyException, IOException {
-		JButton newButton = new SwatToolbarButton(ToolbarNewNetButtonType.NEW_IF);
+		JButton newButton = new SwatToolbarButton(ToolbarNewNetButtonType.NEW_IF, this);
 		return newButton;
 	}
 
@@ -152,22 +152,22 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 
 		private static final long serialVersionUID = 9184814296174960480L;
 
-		public SwatToolbarButton(ToolbarNewNetButtonType type) throws ParameterException, PropertyException, IOException {
+		public SwatToolbarButton(ToolbarNewNetButtonType type, SwatNewNetToolbar swatNewNetToolbar) throws ParameterException, PropertyException, IOException {
 			super(IconFactory.getIcon(type.toString().toLowerCase()));
 			setBorder(BorderFactory.createEmptyBorder(0, ICON_SPACING, 0, ICON_SPACING));
 			setBorderPainted(false);
 			switch (type) {
 			case NEW_CPN:
 				setToolTipText("Create new CPnet");
-				addActionListener(new NewNetAction(type, popupFontToolBar));
+				addActionListener(new NewNetAction(type, swatNewNetToolbar));
 				break;
 			case NEW_PT:
 				setToolTipText("Create new PTnet");
-				addActionListener(new NewNetAction(type, popupFontToolBar));
+				addActionListener(new NewNetAction(type, swatNewNetToolbar));
 				break;
 			case NEW_IF:
 				setToolTipText("Create new IFnet");
-				addActionListener(new NewNetAction(type, popupFontToolBar));
+				addActionListener(new NewNetAction(type, swatNewNetToolbar));
 				break;
 			}
 		}
@@ -182,11 +182,17 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 		this.popupFontToolBar = popupFontToolBar;
 
 	}
+	
+	public WorkbenchPopupToolBar getToolBar() {
+		return this.popupFontToolBar;		
+	}
 
 	public static void main(String[] args) {
 		JPanel panel = new JPanel();
 		panel.add(new SwatNewNetToolbar(SwatTabView.getInstance(), SwatTreeView.getInstance()));
 		new DisplayFrame(panel, true);
 	}
+
+
 
 }
