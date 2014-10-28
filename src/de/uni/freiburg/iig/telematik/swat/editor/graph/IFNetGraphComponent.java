@@ -3,8 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
@@ -15,7 +13,6 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.TransitionView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class IFNetGraphComponent extends PNGraphComponent {
 
@@ -104,7 +101,10 @@ public class IFNetGraphComponent extends PNGraphComponent {
 			SwatComponents comp = SwatComponents.getInstance();
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> cur_net = ((PNEditor) Workbench.getInstance().getTabView()
 					.getSelectedComponent()).getNetContainer();
-			TimeContext context = comp.getTimeAnalysisForNet(cur_net);
+
+			System.out.println("FIXME: " + this.getClass().getName() + ":" + Thread.currentThread().getStackTrace()[2].getLineNumber());
+			TimeContext context = comp.getTimeContexts(cur_net.getPetriNet().getName()).get(0);
+
 //			if (context == null){
 //				File contextPath = new File(comp.getFile(cur_net).getParentFile(), SwatProperties.getInstance().getTimeAnalysisFolderName());
 //				File fileToSave=new File(contextPath,"time-context.xml");
