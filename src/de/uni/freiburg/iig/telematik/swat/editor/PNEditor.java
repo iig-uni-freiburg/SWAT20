@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -51,6 +53,7 @@ import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -67,6 +70,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.PrintAction
 import de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands.SelectAction;
 import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
 import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListenerSupport;
+import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -97,7 +101,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 	protected mxRubberband rubberband;
 	protected mxKeyboardHandler keyboardHandler;
 	protected mxUndoManager undoManager;
-	
+
 	protected mxIEventListener undoHandler = new mxIEventListener() {
 		public void invoke(Object source, mxEventObject evt) {
 			undoManager.undoableEditHappened((mxUndoableEdit) evt.getProperty("edit"));
@@ -115,34 +119,36 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 	protected PNProperties properties = null;
 	protected PropertiesView propertiesView = null;
 	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = null;
-	
+
 	private PNEditorListenerSupport editorListenerSupport = new PNEditorListenerSupport();
 
-	// ------- Constructors --------------------------------------------------------------------
+	// ------- Constructors
+	// --------------------------------------------------------------------
 
-	public PNEditor(File fileReference) throws ParameterException {
+	public PNEditor(File fileReference) {
 		super();
 		initialize(null, fileReference);
 		setUpGUI();
 	}
 
-	public PNEditor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) throws ParameterException {
+	public PNEditor(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) {
 		super();
 		Validate.notNull(netContainer);
 		initialize(netContainer, fileReference);
 		setUpGUI();
 		propertiesView.setUpGUI();
 
-		if(!graphComponent.getGraph().containedGraphics()){
-		showLayoutDialog();
+		if (!graphComponent.getGraph().containedGraphics()) {
+			showLayoutDialog();
 		}
 	}
 
 	private void showLayoutDialog() {
 		String[] layouts = { "verticalHierarchical", "horizontalHierarchical", "organicLayout", "circleLayout" };
-		String selectedLayout = (String) JOptionPane.showInputDialog(getGraphComponent(), "Selected Layout:", "Do you wish to layout your net?", JOptionPane.QUESTION_MESSAGE, null, layouts, layouts[0]);
-		if(selectedLayout != null){ 
-		mxIGraphLayout layout = createLayout(selectedLayout, true);
+		String selectedLayout = (String) JOptionPane.showInputDialog(getGraphComponent(), "Selected Layout:", "Do you wish to layout your net?", JOptionPane.QUESTION_MESSAGE, null, layouts,
+				layouts[0]);
+		if (selectedLayout != null) {
+			mxIGraphLayout layout = createLayout(selectedLayout, true);
 			mxGraph graph = graphComponent.getGraph();
 			Object cell = graph.getSelectionCell();
 
@@ -162,7 +168,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 
 					public void invoke(Object sender, mxEventObject evt) {
 						getGraph().getModel().endUpdate();
-//						getGraph().updatePositionPropertiesFromCells();
+						// getGraph().updatePositionPropertiesFromCells();
 					}
 
 				});
@@ -173,13 +179,14 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 	}
 
 	public String getName() {
-		//Nimbus LookAndFeel ruft getName des geerbte JPanels auf, bevor FileReferenceInitialisiert ist
+		// Nimbus LookAndFeel ruft getName des geerbte JPanels auf, bevor
+		// FileReferenceInitialisiert ist
 		if (fileReference == null)
 			return "null";
 		return fileReference.getName();
 	}
 
-	private void initialize(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) throws ParameterException {
+	private void initialize(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer, File fileReference) {
 		if (netContainer == null) {
 			this.netContainer = createNetContainer();
 		} else {
@@ -187,7 +194,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 		}
 		setFileReference(fileReference);
 		properties = createPNProperties();
-//		 UIManager.put("Tree.rendererFillBackground", false);
+		// UIManager.put("Tree.rendererFillBackground", false);
 		propertiesView = new PropertiesView(properties, fileReference);
 		propertiesView.addTreeSelectionListener(this);
 		properties.addPNPropertiesListener(propertiesView);
@@ -197,16 +204,22 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 	protected abstract AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> createNetContainer();
 
 	protected abstract PNProperties createPNProperties();
-	
-	public void addEditorListener(PNEditorListener listener){
+
+	public void addEditorListener(PNEditorListener listener) {
 		editorListenerSupport.addEditorListener(listener);
 	}
 
-	// ------- Set Up GUI -----------------------------------------------------------------------
+	// ------- Set Up GUI
+	// -----------------------------------------------------------------------
 
-	private void setUpGUI() throws ParameterException {
+	private void setUpGUI() {
 		setLayout(new BorderLayout());
-		toolbar = new ToolBar(this, JToolBar.HORIZONTAL);
+		try {
+			toolbar = new ToolBar(this, JToolBar.HORIZONTAL);
+		} catch (EditorToolbarException e) {
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot create Toolbar.\nReason: " + e.getMessage(), "Editor Toolbar Exception",
+					JOptionPane.ERROR_MESSAGE);
+		}
 		add(getGraphComponent(), BorderLayout.CENTER);
 		// add(getStatusPanel(), BorderLayout.SOUTH);
 
@@ -224,7 +237,6 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 			graphComponent = createGraphComponent();
 			graphComponent.setPopupMenu(getPopupMenu());
 			graphComponent.setTransitionPopupMenu(getTransitionPopupMenu());
-			
 
 			Map<String, Object> style = getGraph().getStylesheet().getDefaultEdgeStyle();
 			style.put("strokeWidth", 2.0);
@@ -249,13 +261,12 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 				displayStatusMessage(e.getX() + ", " + e.getY());
 			}
 		});
-		
+
 		graphComponent.getGraph().addPNGraphListener(this);
 	}
 
 	private void setUpUndo() {
 
-		
 		undoManager = new mxUndoManager();
 
 		// Do not change the scale and translation after files have been loaded
@@ -268,32 +279,30 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 		getGraph().getModel().addListener(mxEvent.UNDO, undoHandler);
 		getGraph().getView().addListener(mxEvent.UNDO, undoHandler);
 
-//		// Keeps the selection in sync with the command history
-//		mxIEventListener undoHandler = new mxIEventListener()
-//		{
-//			public void invoke(Object source, mxEventObject evt)
-//			{
-//				List<mxUndoableChange> changes = ((mxUndoableEdit) evt
-//						.getProperty("edit")).getChanges();
-//				getGraph().setSelectionCells(getGraph()
-//						.getSelectionCellsForChanges(changes));
-//			}
-//		};
+		// // Keeps the selection in sync with the command history
+		// mxIEventListener undoHandler = new mxIEventListener()
+		// {
+		// public void invoke(Object source, mxEventObject evt)
+		// {
+		// List<mxUndoableChange> changes = ((mxUndoableEdit) evt
+		// .getProperty("edit")).getChanges();
+		// getGraph().setSelectionCells(getGraph()
+		// .getSelectionCellsForChanges(changes));
+		// }
+		// };
 	}
-
-
 
 	@Override
 	public JComponent getMainComponent() {
 		return this;
 	}
 
-//	private JPanel getPalettePanel() throws ParameterException {
-//		if (palettePanel == null) {
-//			palettePanel = new PalettePanel();
-//		}
-//		return palettePanel;
-//	}
+	// private JPanel getPalettePanel() throws ParameterException {
+	// if (palettePanel == null) {
+	// palettePanel = new PalettePanel();
+	// }
+	// return palettePanel;
+	// }
 
 	private JPanel getStatusPanel() {
 		if (statusPanel == null) {
@@ -313,11 +322,10 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 	}
 
 	public PropertiesView getPropertiesView() {
-		if (SwatState.getInstance().getOperatingMode()==OperatingMode.EDIT_MODE){
+		if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 			return propertiesView;
-		}
-		else{
-			//TODO: Hier bitte den Lola Knopf einbauen... :-)
+		} else {
+			// TODO: Hier bitte den Lola Knopf einbauen... :-)
 			return propertiesView;
 		}
 	}
@@ -342,7 +350,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 	}
 
 	public abstract EditorPopupMenu getPopupMenu();
-	
+
 	public abstract TransitionPopupMenu getTransitionPopupMenu();
 
 	public void setFileReference(File fileReference) throws ParameterException {
@@ -369,7 +377,6 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 		return undoManager;
 	}
 
-
 	public void displayStatusMessage(String msg) {
 		// TODO: Do something
 	}
@@ -388,12 +395,12 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 				int commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 				int commandAndShift = commandKey | InputEvent.SHIFT_DOWN_MASK;
 
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S,commandKey), "save");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S,commandAndShift), "saveAs");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, commandKey), "save");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, commandAndShift), "saveAs");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, commandKey), "new");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_O, commandKey), "open");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,commandKey), "undo");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,commandKey), "redo");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, commandKey), "undo");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, commandKey), "redo");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, commandAndShift), "selectVertices");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, commandAndShift), "selectEdges");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, commandKey), "selectPlaces");
@@ -405,27 +412,24 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, commandKey), "cut");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, commandKey), "copy");
 				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, commandKey), "paste");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P,commandAndShift), "printNet");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, commandAndShift), "printNet");
 				map.put(KeyStroke.getKeyStroke("DELETE"), "delete");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_L,commandKey), "export");
-				
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,commandKey), "newNodeLeft");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,commandKey), "newNodeRight");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,commandKey), "newNodeDown");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,commandKey), "newNodeUp");
-				
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0), "moveLeft");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0), "moveRight");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0), "moveDown");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0), "moveUp");
-				
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,InputEvent.SHIFT_DOWN_MASK), "bigMoveLeft");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,InputEvent.SHIFT_DOWN_MASK), "bigMoveRight");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,InputEvent.SHIFT_DOWN_MASK), "bigMoveDown");
-				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,InputEvent.SHIFT_DOWN_MASK), "bigMoveUp");
-				
-				
-				
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_L, commandKey), "export");
+
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, commandKey), "newNodeLeft");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, commandKey), "newNodeRight");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, commandKey), "newNodeDown");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, commandKey), "newNodeUp");
+
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveDown");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveUp");
+
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK), "bigMoveLeft");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK), "bigMoveRight");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.SHIFT_DOWN_MASK), "bigMoveDown");
+				map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.SHIFT_DOWN_MASK), "bigMoveUp");
 
 			}
 			return map;
@@ -439,29 +443,29 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 				map.put("undo", new UndoAction(PNEditor.this));
 				map.put("redo", new RedoAction(PNEditor.this));
 				map.put("printNet", new PrintAction(PNEditor.this));
-				
+
 				map.put("export", new ExportPDFAction(PNEditor.this));
-				
-				int offset = EditorProperties.getInstance().getDefaultPlaceSize()*4;
-				map.put("newNodeLeft", new NewNodeAction(PNEditor.this,-offset ,0));
-				map.put("newNodeRight", new NewNodeAction(PNEditor.this,offset,0));
-				map.put("newNodeDown", new NewNodeAction(PNEditor.this,0,offset));
-				map.put("newNodeUp", new NewNodeAction(PNEditor.this,0,-offset));
 
-				map.put("moveLeft", new MoveAction(PNEditor.this,-1,0));
-				map.put("moveRight", new MoveAction(PNEditor.this,1,0));
-				map.put("moveDown", new MoveAction(PNEditor.this,0,1));
-				map.put("moveUp", new MoveAction(PNEditor.this,0,-1));
+				int offset = EditorProperties.getInstance().getDefaultPlaceSize() * 4;
+				map.put("newNodeLeft", new NewNodeAction(PNEditor.this, -offset, 0));
+				map.put("newNodeRight", new NewNodeAction(PNEditor.this, offset, 0));
+				map.put("newNodeDown", new NewNodeAction(PNEditor.this, 0, offset));
+				map.put("newNodeUp", new NewNodeAction(PNEditor.this, 0, -offset));
 
-				int movingGap = 5 ;
-				map.put("bigMoveLeft", new MoveAction(PNEditor.this,-movingGap,0));
-				map.put("bigMoveRight", new MoveAction(PNEditor.this,movingGap,0));
-				map.put("bigMoveDown", new MoveAction(PNEditor.this,0,movingGap));
-				map.put("bigMoveUp", new MoveAction(PNEditor.this,0,-movingGap));
-				
-				map.put("selectPlaces", new SelectAction(PNEditor.this,PNComponent.PLACE));
-				map.put("selectTransitions", new SelectAction(PNEditor.this,PNComponent.TRANSITION));
-				map.put("selectArcs", new SelectAction(PNEditor.this,PNComponent.ARC));
+				map.put("moveLeft", new MoveAction(PNEditor.this, -1, 0));
+				map.put("moveRight", new MoveAction(PNEditor.this, 1, 0));
+				map.put("moveDown", new MoveAction(PNEditor.this, 0, 1));
+				map.put("moveUp", new MoveAction(PNEditor.this, 0, -1));
+
+				int movingGap = 5;
+				map.put("bigMoveLeft", new MoveAction(PNEditor.this, -movingGap, 0));
+				map.put("bigMoveRight", new MoveAction(PNEditor.this, movingGap, 0));
+				map.put("bigMoveDown", new MoveAction(PNEditor.this, 0, movingGap));
+				map.put("bigMoveUp", new MoveAction(PNEditor.this, 0, -movingGap));
+
+				map.put("selectPlaces", new SelectAction(PNEditor.this, PNComponent.PLACE));
+				map.put("selectTransitions", new SelectAction(PNEditor.this, PNComponent.TRANSITION));
+				map.put("selectArcs", new SelectAction(PNEditor.this, PNComponent.ARC));
 
 			} catch (Exception e) {
 				// Cannot happen, since this is not null
@@ -470,9 +474,9 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 
 			map.put("selectVertices", mxGraphActions.getSelectVerticesAction());
 			map.put("selectEdges", mxGraphActions.getSelectEdgesAction());
-			map.put("selectAll",mxGraphActions.getSelectAllAction());
-			map.put("selectAllEdges",mxGraphActions.getSelectEdgesAction());
-			
+			map.put("selectAll", mxGraphActions.getSelectAllAction());
+			map.put("selectAllEdges", mxGraphActions.getSelectEdgesAction());
+
 			map.put(("cut"), TransferHandler.getCutAction());
 			map.put(("copy"), TransferHandler.getCopyAction());
 			map.put(("paste"), TransferHandler.getPasteAction());
@@ -480,7 +484,6 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 			return map;
 		}
 	}
-
 
 	/**
 	 * Creates a layout instance for the given identifier.
@@ -553,33 +556,31 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 
 		return layout;
 	}
-	
-	
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-//		if(e.getSource() == null || e.getSource() == this)
-//			return;
-//		JTree sourceTree = null;
-//		try{
-//			sourceTree = (JTree) e.getSource();
-//		} catch(Exception ex){
-//			return;
-//		}
-//		PNTreeNode node = null;
-//		try{
-//			node = (PNTreeNode) sourceTree.getLastSelectedPathComponent();
-//		}catch(Exception ex){
-//			return;
-//		}
-//		treeNodeSelected(node);
+		// if(e.getSource() == null || e.getSource() == this)
+		// return;
+		// JTree sourceTree = null;
+		// try{
+		// sourceTree = (JTree) e.getSource();
+		// } catch(Exception ex){
+		// return;
+		// }
+		// PNTreeNode node = null;
+		// try{
+		// node = (PNTreeNode) sourceTree.getLastSelectedPathComponent();
+		// }catch(Exception ex){
+		// return;
+		// }
+		// treeNodeSelected(node);
 	}
-	
-	private void treeNodeSelected(PNTreeNode node){
-		if(node == null){
+
+	private void treeNodeSelected(PNTreeNode node) {
+		if (node == null) {
 			return;
 		}
-		switch(node.getFieldType()){
+		switch (node.getFieldType()) {
 		case ARC:
 			getGraph().selectArc(node.toString());
 			break;
@@ -591,9 +592,9 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 			break;
 		case LEAF:
 			PNTreeNode parentNode = null;
-			try{
+			try {
 				parentNode = (PNTreeNode) node.getParent();
-			}catch(Exception ex){
+			} catch (Exception ex) {
 				return;
 			}
 			treeNodeSelected(parentNode);
@@ -602,8 +603,6 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 			getGraph().clearSelection();
 		}
 	}
-	
-	
 
 	@Override
 	public void placeAdded(AbstractPlace place) {
@@ -637,7 +636,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 
 	@Override
 	public void componentsSelected(Set<PNGraphCell> selectedComponents) {
-		if(selectedComponents == null || selectedComponents.isEmpty() || selectedComponents.size() > 1){
+		if (selectedComponents == null || selectedComponents.isEmpty() || selectedComponents.size() > 1) {
 			propertiesView.deselect();
 		} else {
 			PNGraphCell selectedCell = selectedComponents.iterator().next();

@@ -27,6 +27,10 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class FillColorSelectionAction extends AbstractPNEditorGraphicsAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7823581979779506827L;
 	public static Color DEFAULT_FILL_COLOR = new Color(255, 255, 255);
 	public static Color DEFAULT_GRADIENT_COLOR = new Color(0, 0, 0);
 
@@ -36,18 +40,10 @@ public class FillColorSelectionAction extends AbstractPNEditorGraphicsAction {
 
 	}
 
-	public void setFillColor(Color fillColor, Color gradientColor, GradientRotation gradientRotation) {
-		Image image;
-		try {
-			image = Utils.createIconImage(fillColor, gradientColor, gradientRotation, SwatProperties.getInstance().getIconSize().getSize());
+	public void setFillColor(Color fillColor, Color gradientColor, GradientRotation gradientRotation) throws PropertyException, IOException {
+		Image image = Utils.createIconImage(fillColor, gradientColor, gradientRotation, SwatProperties.getInstance().getIconSize().getSize());
 			setIconImage(image);
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 
 	}
 

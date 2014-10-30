@@ -47,34 +47,35 @@ import de.uni.freiburg.iig.telematik.swat.editor.actions.mode.ToggleModeAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.nodes.NodeToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.ChecKSoundnessAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.pn.CheckValidityAction;
+import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 public class ToolBar extends JToolBar {
 
 	private static final long serialVersionUID = -6491749112943066366L;
 
-
 	private static final int DEFAULT_TB_HEIGHT = 50;
 
 	protected static final String NO_SELECTION = "no selection...";
-	
+
 	private JComboBox comboAnalysisContextModel = null;
 
-	
 	// further variables
 	private PNEditor pnEditor = null;
 	private boolean ignoreZoomChange = false;
 	private Mode mode = Mode.EDIT;
+
 	private enum Mode {
 		EDIT, PLAY
 	}
 
 	// Actions
-//	private SaveAction saveAction = null;
+	// private SaveAction saveAction = null;
 	private UndoAction undoAction = null;
 	private RedoAction redoAction = null;
 	private EnterExecutionAction enterExecutionAction;
@@ -87,7 +88,7 @@ public class ToolBar extends JToolBar {
 	private ToggleModeAction toggleModeAction;
 	private ReloadExecutionAction reloadExecutionAction;
 	// Buttons
-//	private JButton saveButton;
+	// private JButton saveButton;
 	private JToggleButton undoButton;
 	private JToggleButton redoButton;
 	private JToggleButton fontButton = null;
@@ -95,12 +96,12 @@ public class ToolBar extends JToolBar {
 	private JButton enterExecutionButton;
 	private JButton reloadExecutionButton;
 	private JButton enterEditingButton;
-	private JToggleButton zoomButton;	
+	private JToggleButton zoomButton;
 	private JToggleButton nodeButton;
 	private JToggleButton exportButton;
 	private JButton toggleModeButton;
-	
-	//Sub-Toolbars
+
+	// Sub-Toolbars
 	private FontToolBar fontToolbar;
 	private GraphicsToolBar graphicsToolbar;
 	private ExportToolBar exportToolbar;
@@ -126,106 +127,48 @@ public class ToolBar extends JToolBar {
 
 	private JToggleButton transformButton;
 
-
 	private AddAnalysisContextAction addAnalysisContextAction;
-
 
 	private JToggleButton addAnalysisContextbutton;
 
-
 	private AddAccessControlAction addAccessControlAction;
-
 
 	private JToggleButton addAccessControlbutton;
 
-
 	private PopUpToolBarAction editSubjectClearanceAction;
-
 
 	private JToggleButton editSubjectClearanceButton;
 
-
 	private PopUpToolBarAction editTokenlabelAction;
-
 
 	private JToggleButton editTokenlabelButton;
 
-
 	private TokenlabelToolBar tokenlabelToolbar;
-
 
 	private SubjectClearanceToolBar editSubjectClearanceToolbar;
 
-
 	private JComboBox acSelectionBox;
 
+	private ItemListener il;
 
-	private ItemListener il;	
-
-	public ToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
+	public ToolBar(final PNEditor pnEditor, int orientation) throws EditorToolbarException {
 		super(orientation);
 		Validate.notNull(pnEditor);
-		// setLayout(new WrapLayout(FlowLayout.LEFT));
 		this.pnEditor = pnEditor;
-
 		try {
-//			saveAction = new SaveAction(pnEditor);
-			exportToolbar = new ExportToolBar(pnEditor, JToolBar.HORIZONTAL);
-			exportAction = new PopUpToolBarAction(pnEditor, "Export", "export", exportToolbar);
-
-			toggleModeAction = new ToggleModeAction(pnEditor);
-			enterExecutionAction = new EnterExecutionAction(pnEditor);
-			reloadExecutionAction = new ReloadExecutionAction(pnEditor);
-			enterEditingAction = new EnterEditingAction(pnEditor);
-
-			undoAction = new UndoAction(pnEditor);
-			redoAction = new RedoAction(pnEditor);
-
-			nodeToolbar = new NodeToolBar(pnEditor, JToolBar.HORIZONTAL);
-			nodeAction = new NodeToolBarAction(pnEditor, "Node", nodeToolbar);
-
-			fontToolbar = new FontToolBar(pnEditor, JToolBar.HORIZONTAL);
-			fontAction = new PopUpToolBarAction(pnEditor, "Font", "text", fontToolbar);
-
-			graphicsToolbar = new GraphicsToolBar(pnEditor, JToolBar.HORIZONTAL);
-			graphicsAction = new PopUpToolBarAction(pnEditor, "Graphics", "bg_color", graphicsToolbar);
-
-			zoomToolbar = new ZoomToolBar(pnEditor, JToolBar.HORIZONTAL);
-			zoomAction = new PopUpToolBarAction(pnEditor, "Zoom", "zoom_in", zoomToolbar);
-			if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN
-					|| pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
-				tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
-				tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
-				if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN) {
-				checkValidityAction = new CheckValidityAction(pnEditor);
-				checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
-				}
-
-			}
-
-			if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
-
-				addAccessControlAction = new AddAccessControlAction(pnEditor);
-				addAnalysisContextAction = new AddAnalysisContextAction(pnEditor);
-//				editTokenlabelAction = new EditTokenlabelAction(pnEditor);
-				tokenlabelToolbar = new TokenlabelToolBar(pnEditor, JToolBar.HORIZONTAL);
-				editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", "tokenlabel", tokenlabelToolbar);
-				editSubjectClearanceToolbar = new SubjectClearanceToolBar(pnEditor, JToolBar.HORIZONTAL);
-				editSubjectClearanceAction = new PopUpToolBarAction(pnEditor, "Edit Clearance", "user_shield", editSubjectClearanceToolbar);
-//				editSubjectClearanceAction = new EditSubjectClearanceAction(pnEditor);
-
-			}
-			setFloatable(false);
-
+			createToolbarActions(pnEditor);
+		} catch (ParameterException e) {
+			throw new EditorToolbarException("Invalid Parameter.\nReason: " + e.getMessage());
 		} catch (PropertyException e) {
-			e.printStackTrace();
+			throw new EditorToolbarException("Invalid Property.\nReason: " + e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new EditorToolbarException("Invalid File Path.\nReason: " + e.getMessage());
 		}
+		setFloatable(false);
 
-//		saveButton = add(saveAction);
-//		setButtonSettings(saveButton);
-		
+		// saveButton = add(saveAction);
+		// setButtonSettings(saveButton);
+
 		exportButton = (JToggleButton) add(exportAction, true);
 		exportAction.setButton(exportButton);
 
@@ -263,35 +206,32 @@ public class ToolBar extends JToolBar {
 		zoomButtonSettings();
 
 		zoomAction.setButton(zoomButton);
-		
-	if(tokenAction != null){
-		tokenButton = (JToggleButton) add(tokenAction, true);
-	
-		tokenAction.setButton(tokenButton);
-		
-		checkValidityButton = (JToggleButton) add(checkValidityAction, true);
-		checkSoundnessButton = (JToggleButton) add(checkSoundnessAction, true);
-		
-		
-	}
-	
-	if(addAnalysisContextAction != null){
-		addSeparator();
-		addAccessControlbutton = (JToggleButton) add(addAccessControlAction, true);
 
-		addAnalysisContextbutton = (JToggleButton) add(addAnalysisContextAction, true);
-		acSelectionBox = getComboAnalysisContextModel();
-		add(acSelectionBox);
+		if (tokenAction != null) {
+			tokenButton = (JToggleButton) add(tokenAction, true);
 
-		editTokenlabelButton = (JToggleButton) add(editTokenlabelAction, true);
-		editTokenlabelAction.setButton(editTokenlabelButton);
-		editSubjectClearanceButton = (JToggleButton) add(editSubjectClearanceAction, true);
-		editSubjectClearanceAction.setButton(editSubjectClearanceButton);
-	}
-	
-	
+			tokenAction.setButton(tokenButton);
+
+			checkValidityButton = (JToggleButton) add(checkValidityAction, true);
+			checkSoundnessButton = (JToggleButton) add(checkSoundnessAction, true);
+
+		}
+
+		if (addAnalysisContextAction != null) {
+			addSeparator();
+			addAccessControlbutton = (JToggleButton) add(addAccessControlAction, true);
+
+			addAnalysisContextbutton = (JToggleButton) add(addAnalysisContextAction, true);
+			acSelectionBox = getComboAnalysisContextModel();
+			add(acSelectionBox);
+
+			editTokenlabelButton = (JToggleButton) add(editTokenlabelAction, true);
+			editTokenlabelAction.setButton(editTokenlabelButton);
+			editSubjectClearanceButton = (JToggleButton) add(editSubjectClearanceAction, true);
+			editSubjectClearanceAction.setButton(editSubjectClearanceButton);
+		}
+
 		doLayout();
-
 
 		exportButton.setToolTipText(exportButtonTooltip);
 		enterExecutionButton.setToolTipText(executionButtonTooltip);
@@ -299,8 +239,51 @@ public class ToolBar extends JToolBar {
 
 		undoButton.setToolTipText(undoTooltip);
 		redoButton.setToolTipText(redoTooltip);
-		fontButton.setToolTipText(fontTooltip );
+		fontButton.setToolTipText(fontTooltip);
 
+	}
+
+	private void createToolbarActions(final PNEditor pnEditor) throws PropertyException, IOException {
+		exportToolbar = new ExportToolBar(pnEditor, JToolBar.HORIZONTAL);
+		exportAction = new PopUpToolBarAction(pnEditor, "Export", "export", exportToolbar);
+
+		toggleModeAction = new ToggleModeAction(pnEditor);
+		enterExecutionAction = new EnterExecutionAction(pnEditor);
+		reloadExecutionAction = new ReloadExecutionAction(pnEditor);
+		enterEditingAction = new EnterEditingAction(pnEditor);
+
+		undoAction = new UndoAction(pnEditor);
+		redoAction = new RedoAction(pnEditor);
+
+		nodeToolbar = new NodeToolBar(pnEditor, JToolBar.HORIZONTAL);
+		nodeAction = new NodeToolBarAction(pnEditor, "Node", nodeToolbar);
+
+		fontToolbar = new FontToolBar(pnEditor, JToolBar.HORIZONTAL);
+		fontAction = new PopUpToolBarAction(pnEditor, "Font", "text", fontToolbar);
+
+		graphicsToolbar = new GraphicsToolBar(pnEditor, JToolBar.HORIZONTAL);
+		graphicsAction = new PopUpToolBarAction(pnEditor, "Graphics", "bg_color", graphicsToolbar);
+
+		zoomToolbar = new ZoomToolBar(pnEditor, JToolBar.HORIZONTAL);
+		zoomAction = new PopUpToolBarAction(pnEditor, "Zoom", "zoom_in", zoomToolbar);
+		if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN
+				|| pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
+			tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
+			tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
+			if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN) {
+				checkValidityAction = new CheckValidityAction(pnEditor);
+				checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
+			}
+		}
+
+		if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
+			addAccessControlAction = new AddAccessControlAction(pnEditor);
+			addAnalysisContextAction = new AddAnalysisContextAction(pnEditor);
+			tokenlabelToolbar = new TokenlabelToolBar(pnEditor, JToolBar.HORIZONTAL);
+			editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", "tokenlabel", tokenlabelToolbar);
+			editSubjectClearanceToolbar = new SubjectClearanceToolBar(pnEditor, JToolBar.HORIZONTAL);
+			editSubjectClearanceAction = new PopUpToolBarAction(pnEditor, "Edit Clearance", "user_shield", editSubjectClearanceToolbar);
+		}
 	}
 
 	private JComboBox getComboAnalysisContextModel() {
@@ -347,23 +330,22 @@ public class ToolBar extends JToolBar {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void updateAnalysisContextModelComboBox(String modelName){
+	private void updateAnalysisContextModelComboBox(String modelName) {
 		DefaultComboBoxModel theModel = (DefaultComboBoxModel) comboAnalysisContextModel.getModel();
 		theModel.removeAllElements();
 		List<AnalysisContext> acModels = SwatComponents.getInstance().getAnalysisContexts(pnEditor.getNetContainer().getPetriNet().getName());
 		theModel.addElement(NO_SELECTION);
-		if(acModels != null){
-		for(AnalysisContext acModel: acModels){
-			if(acModel != null)
-				theModel.addElement(acModel.getName());
+		if (acModels != null) {
+			for (AnalysisContext acModel : acModels) {
+				if (acModel != null)
+					theModel.addElement(acModel.getName());
+			}
 		}
-		}
-		if(modelName != null){
+		if (modelName != null) {
 			comboAnalysisContextModel.setSelectedItem(modelName);
 		}
 
 	}
-
 
 	private void zoomButtonSettings() {
 		final mxGraphView view = pnEditor.getGraphComponent().getGraph().getView();
@@ -475,12 +457,12 @@ public class ToolBar extends JToolBar {
 		nodeButton.setVisible(b);
 		fontButton.setVisible(b);
 		graphicsButton.setVisible(b);
-		if(nodeAction.getDialog()!=null && nodeButton.isSelected())
-		nodeAction.getDialog().setVisible(b);
-		if(fontAction.getDialog()!=null && fontButton.isSelected())
-		fontAction.getDialog().setVisible(b);
-		if(graphicsAction.getDialog()!=null && graphicsButton.isSelected())
-		graphicsAction.getDialog().setVisible(b);
+		if (nodeAction.getDialog() != null && nodeButton.isSelected())
+			nodeAction.getDialog().setVisible(b);
+		if (fontAction.getDialog() != null && fontButton.isSelected())
+			fontAction.getDialog().setVisible(b);
+		if (graphicsAction.getDialog() != null && graphicsButton.isSelected())
+			graphicsAction.getDialog().setVisible(b);
 	}
 
 	private void setExecutionButtonsVisible(boolean b) {
@@ -497,8 +479,6 @@ public class ToolBar extends JToolBar {
 		setExecutionButtonsVisible(false);
 	}
 
-
-
 	public JButton getExecutionButton() {
 		return enterExecutionButton;
 
@@ -512,21 +492,20 @@ public class ToolBar extends JToolBar {
 	public void updateGlobalTokenConfigurer() {
 		tokenToolbar.updateView();
 		tokenlabelToolbar.updateView();
-	
-		
+
 	}
 
 	public void updateTokenlabelConfigurer() {
 		tokenlabelToolbar.updateView();
 	}
+
 	public void updateSubjectClearanceConfigurer() {
 		editSubjectClearanceToolbar.updateView();
 	}
-	
+
 	public void addAnalysisContextToComboBox(String name) {
 		comboAnalysisContextModel.addItem(name);
 		comboAnalysisContextModel.setSelectedItem(name);
 	}
-
 
 }

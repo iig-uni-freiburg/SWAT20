@@ -69,7 +69,7 @@ public class GraphicsToolBar extends JToolBar {
 	private static final long serialVersionUID = -6491749112943066366L;
 
 	// Actions
-	
+
 	private Action strokeColorAction;
 	private Action gradientVerticalAction;
 	private Action gradientHorizontalAction;
@@ -77,7 +77,6 @@ public class GraphicsToolBar extends JToolBar {
 	private FillGradientColorAction gradientColorAction;
 	private FillNoFillAction noFillAction;
 	private LineNoFillAction noLineAction;
-
 
 	private LineStyleAction lineStyleAction;
 	private FillColorSelectionAction colorSelectionAction;
@@ -97,7 +96,7 @@ public class GraphicsToolBar extends JToolBar {
 	private JComboBox strokeWeightBox;
 
 	// Tooltips
-	
+
 	private String backgroundColorTooltip = "fill color";
 	private String gradientColorTooltip = "gradient color";
 	private String noFillTooltip = "no fill";
@@ -133,7 +132,7 @@ public class GraphicsToolBar extends JToolBar {
 	private JLabel lineLabel;
 
 	private JLabel fontLabel;
-private JToggleButton lineSolidButton;
+	private JToggleButton lineSolidButton;
 	private JToggleButton lineDashButton;
 	private JToggleButton lineDotButton;
 	private JToggleButton lineButton;
@@ -151,47 +150,32 @@ private JToggleButton lineSolidButton;
 	private JToggleButton lineColorSelectionButton;
 	private int strokeWeight = (int) Line.DEFAULT_WIDTH;
 
-
-
-
-	public GraphicsToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
+	public GraphicsToolBar(final PNEditor pnEditor, int orientation) throws ParameterException, PropertyException, IOException {
 		super(orientation);
 		Validate.notNull(pnEditor);
-//		setLayout(new WrapLayout(FlowLayout.LEFT));
 		this.pnEditor = pnEditor;
 
-		try {
-			strokeColorAction = new LineStrokeColorAction(pnEditor);
-			backgroundColorAction = new FillBackgroundColorAction(pnEditor);
-			gradientColorAction = new FillGradientColorAction(pnEditor);
-			lineStyleAction = new LineStyleAction(pnEditor);
-			
-			lineShapeAction = new LineShapeAction(pnEditor);
+		strokeColorAction = new LineStrokeColorAction(pnEditor);
+		backgroundColorAction = new FillBackgroundColorAction(pnEditor);
+		gradientColorAction = new FillGradientColorAction(pnEditor);
+		lineStyleAction = new LineStyleAction(pnEditor);
 
-			// addImageAction = new FillImageAction(pnEditor); //could be
-			// activated, working
-			gradientHorizontalAction = new FillGradientRotationHorizontal(pnEditor);
-			gradientVerticalAction = new FillGradientRotationVertical(pnEditor);
-			gradientDiagonalAction = new FillGradientRotationDiagonal(pnEditor);
-			colorSelectionAction = new FillColorSelectionAction(pnEditor);
-			
-			lineAction = new LineLineAction(pnEditor);
-			curveAction = new LineCurveAction(pnEditor);
-			noLineAction = new LineNoFillAction(pnEditor);
-			lineDashAction = new LineDashAction(pnEditor);
-			lineSolidAction = new LineSolidAction(pnEditor);
-			lineDotAction = new LineDotAction(pnEditor);
-			lineColorSelectionAction = new LineColorSelectionAction(pnEditor);
+		lineShapeAction = new LineShapeAction(pnEditor);
 
-			noFillAction = new FillNoFillAction(pnEditor);
-			
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		gradientHorizontalAction = new FillGradientRotationHorizontal(pnEditor);
+		gradientVerticalAction = new FillGradientRotationVertical(pnEditor);
+		gradientDiagonalAction = new FillGradientRotationDiagonal(pnEditor);
+		colorSelectionAction = new FillColorSelectionAction(pnEditor);
+
+		lineAction = new LineLineAction(pnEditor);
+		curveAction = new LineCurveAction(pnEditor);
+		noLineAction = new LineNoFillAction(pnEditor);
+		lineDashAction = new LineDashAction(pnEditor);
+		lineSolidAction = new LineSolidAction(pnEditor);
+		lineDotAction = new LineDotAction(pnEditor);
+		lineColorSelectionAction = new LineColorSelectionAction(pnEditor);
+
+		noFillAction = new FillNoFillAction(pnEditor);
 
 		setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3), getBorder()));
 		setFloatable(false);
@@ -220,8 +204,7 @@ private JToggleButton lineSolidButton;
 
 		setUpFillPanel();
 		addSeparator();
-		
-		
+
 		lineLabel = new JLabel(lineLabelText);
 		add(lineLabel);
 		lineButton = (JToggleButton) nestedAdd(lineAction);
@@ -244,16 +227,13 @@ private JToggleButton lineSolidButton;
 		lineColorSelectionButton = (JToggleButton) nestedAdd(lineColorSelectionAction);
 
 		setUpLinePanel();
-	
+
 		strokeWeightBox = getStrokeWeightBox();
 		add(strokeWeightBox);
 
 		addSeparator();
 
-
 		deactivate();
-
-	
 
 		backgroundColorButton.setToolTipText(backgroundColorTooltip);
 		gradientColorButton.setToolTipText(gradientColorTooltip);
@@ -351,7 +331,7 @@ private JToggleButton lineSolidButton;
 
 		add(pane);
 	}
-	
+
 	private void setUpLinePanel() {
 		int iconSize = 0;
 		try {
@@ -491,13 +471,10 @@ private JToggleButton lineSolidButton;
 		return strokeWeightBox;
 	}
 
-	
 	public void deactivate() {
 		setLineEnabled(false);
 		setFillEnabled(false);
 	}
-
-
 
 	private void setLineEnabled(boolean b) {
 		lineLabel.setEnabled(b);
@@ -542,9 +519,7 @@ private JToggleButton lineSolidButton;
 				return;
 			}
 			if (!selectedComponents.isEmpty()) {
-			
-			
-				
+
 				// addImageAction.setEnabled(true);
 
 				if (selectedComponents.size() >= 1) {
@@ -554,8 +529,8 @@ private JToggleButton lineSolidButton;
 					boolean isTransitionCell = selectedCell.getType() == PNComponent.TRANSITION;
 					boolean isTransitionSilent = false;
 					if (isTransitionCell) {
-						if(pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().containsTransition(selectedCell.getId()))
-						 isTransitionSilent = pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getTransition(selectedCell.getId()).isSilent();
+						if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().containsTransition(selectedCell.getId()))
+							isTransitionSilent = pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getTransition(selectedCell.getId()).isSilent();
 					}
 					boolean isArcCell = selectedCell.getType() == PNComponent.ARC;
 					boolean labelSelected = pnEditor.getGraphComponent().getGraph().isLabelSelected();
@@ -629,9 +604,6 @@ private JToggleButton lineSolidButton;
 							else if (fontAlign.equals(Font.Align.RIGHT))
 								isAlignRight = true;
 
-
-						
-
 							Fill fill = annotationGraphics.getFill();
 							setFillToolbar(fill, true);
 							gradientColorAction.setEnabled(false);
@@ -652,7 +624,6 @@ private JToggleButton lineSolidButton;
 							curveAction.setEnabled(false);
 						}
 
-		
 					}
 
 				} else {
@@ -686,16 +657,15 @@ private JToggleButton lineSolidButton;
 					fillColor = FillBackgroundColorAction.DEFAULT_FILL_COLOR;
 				}
 			}
-			
-			if(fillColor == null)
+
+			if (fillColor == null)
 				containsFillColor = false;
-			
+
 			Color gradientColor = FillGradientColorAction.DEFAULT_GRADIENT_COLOR;
 			if (gradientString != null) {
 				gradientColor = Utils.parseColor(gradientString);
 				containsGradientColor = true;
 			}
-			
 
 			if (gradientRotation != null) {
 				containsGradientRotation = true;
@@ -711,7 +681,7 @@ private JToggleButton lineSolidButton;
 					try {
 						setFillStyle(FillStyle.NOFILL, null, null, null);
 						isFillEmpty = true;
-						
+
 					} catch (PropertyException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -719,7 +689,7 @@ private JToggleButton lineSolidButton;
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				} else if (containsFillColor && containsGradientColor && containsGradientRotation &&!isLabel) {
+				} else if (containsFillColor && containsGradientColor && containsGradientRotation && !isLabel) {
 					setFillStyle(FillStyle.GRADIENT, fillColor, gradientColor, gradientRotation);
 					isFillGradient = true;
 				} else {
@@ -772,9 +742,8 @@ private JToggleButton lineSolidButton;
 			// 255));
 			backgroundColorButton.repaint();
 		}
-		
-	}
 
+	}
 
 	private void setLineStyle(LineStyle nofill, Color fillColor, Style linestyle, boolean isLineCurve) {
 		switch (nofill) {
@@ -782,7 +751,7 @@ private JToggleButton lineSolidButton;
 			lineColorSelectionAction.setNoFill();
 			break;
 		case NORMAL:
-			if(fillColor != null)
+			if (fillColor != null)
 				try {
 					lineColorSelectionAction.setFillColor(fillColor, 1.0, linestyle, isLineCurve);
 				} catch (PropertyException e1) {
@@ -796,7 +765,7 @@ private JToggleButton lineSolidButton;
 		default:
 			break;
 		}
-			if (fillColor != null){
+		if (fillColor != null) {
 			try {
 				lineAction.setFillColor(fillColor, 1.0);
 				curveAction.setLineColor(fillColor);
@@ -807,12 +776,12 @@ private JToggleButton lineSolidButton;
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			}
-
-			colorSelectionButton.repaint();
 		}
-	
-	private void setLineToolbar(Line line){
+
+		colorSelectionButton.repaint();
+	}
+
+	private void setLineToolbar(Line line) {
 		boolean isLineEmpty = false;
 		boolean isLineLine = false;
 		boolean isLineCurve = false;
@@ -824,13 +793,11 @@ private JToggleButton lineSolidButton;
 			String lineColorString = line.getColor();
 			Style lineStyle = line.getStyle();
 			Shape lineShape = line.getShape();
-			
 
 			boolean containsLineColor = false;
 			boolean containsStyle = false;
 			Color lineColor = LineColorSelectionAction.DEFAULT_FILL_COLOR;
-			
-			
+
 			switch (lineShape) {
 			case CURVE:
 				isLineCurve = true;
@@ -847,69 +814,59 @@ private JToggleButton lineSolidButton;
 					containsLineColor = false;
 				}
 			}
-			if(fillColor == null)
+			if (fillColor == null)
 				containsLineColor = false;
-		
 
 			if (lineStyle != null) {
 				containsStyle = true;
 			} else
 				lineStyle = Style.SOLID;
 
-		
+			if (!containsLineColor) {
 
-				if (!containsLineColor) {
-				
-						setLineStyle(LineStyle.NOFILL, null, lineStyle, isLineCurve);
-						isLineEmpty = true;
-				
-				}  else {
-					setLineStyle(LineStyle.NORMAL, fillColor, lineStyle, isLineCurve);
+				setLineStyle(LineStyle.NOFILL, null, lineStyle, isLineCurve);
+				isLineEmpty = true;
+
+			} else {
+				setLineStyle(LineStyle.NORMAL, fillColor, lineStyle, isLineCurve);
+
+			}
+			currentFillColor = fillColor;
+			if (containsStyle) {
+				switch (lineStyle) {
+				case DASH:
+					isLineDashed = true;
+					break;
+				case DOT:
+					isLineDotted = true;
+					break;
+				case SOLID:
+					isLineSolid = true;
+					break;
 
 				}
-				currentFillColor = fillColor;
-				if (containsStyle) {
-					switch (lineStyle) {
-					case DASH:
-						isLineDashed = true;
-						break;
-					case DOT:
-						isLineDotted = true;
-						break;
-					case SOLID:
-						isLineSolid = true;
-						break;
-
-
-					}
-				}
-
-			
+			}
 
 			curveButton.repaint();
 			lineButton.repaint();
 			lineColorSelectionButton.repaint();
 
-		
 			lineGroup.clearSelection();
 			lineButton.setSelected(isLineLine);
 			curveButton.setSelected(isLineCurve);
 			noLineButton.setSelected(isLineEmpty);
-			
+
 			lineStyleGroup.clearSelection();
 			lineDotButton.setSelected(isLineDotted);
 			lineDashButton.setSelected(isLineDashed);
 			lineSolidButton.setSelected(isLineSolid);
 			lineButton.repaint();
-			
-		strokeWeight = (int) line.getWidth();
-		getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
 
+			strokeWeight = (int) line.getWidth();
+			getStrokeWeightBox().setSelectedItem(strokeWeight + "px");
 
 		}
 	}
-	
-
 
 	public FillStyle getFillStyle() {
 		return fillStyle;
@@ -962,7 +919,7 @@ private JToggleButton lineSolidButton;
 		this.fillStyle = style;
 
 	}
-	
+
 	public enum LineStyle {
 		NORMAL, NOFILL
 	}
@@ -971,7 +928,5 @@ private JToggleButton lineSolidButton;
 		this.lineStyle = nofill;
 
 	}
-
-	
 
 }
