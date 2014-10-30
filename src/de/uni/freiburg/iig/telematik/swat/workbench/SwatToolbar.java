@@ -24,6 +24,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
@@ -83,7 +84,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private SwatTabView tabView = null;
 	private SwatTreeView treeView = null;
 
-	private List<Component> standardItems = new LinkedList<Component>();
+	private List<JButton> standardItems = new LinkedList<JButton>();
 
 	public SwatToolbar(SwatTabView tabView, SwatTreeView treeView) {
 		this.tabView = tabView;
@@ -133,16 +134,19 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		addSeparator();
 	}
 
-	/** Put Buttons into linkedList {@link #standardItems} for later use 
-	 * @throws IOException 
-	 * @throws PropertyException 
-	 * @throws ParameterException **/
+	/**
+	 * Putstart Buttons into linkedList {@link #standardItems} for later use
+	 * 
+	 * @throws IOException
+	 * @throws PropertyException
+	 * @throws ParameterException
+	 **/
 	private void createButtons() throws ParameterException, PropertyException, IOException {
-		standardItems.add(new JButton(new ImportAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.DELETE));
 		standardItems.add(getSwitchworkingDirectoryButton());
 		standardItems.add(getNewNetButton());
+		//standardItems.add(new JButton(new ImportAction()));
 		standardItems.add(getImportButon());
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.AF_TEMPLATE));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
@@ -155,16 +159,26 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 //		group.add(getAnalysisRadioButton());
 //		group.add(getEditRadioButton());
 //		getEditRadioButton().setSelected(true);
+		removeBorder();
 	}
 	
+	private void removeBorder() {
+		Border emptyBorder = BorderFactory.createEmptyBorder();
+		for (JButton button : standardItems) {
+			button.setBorder(emptyBorder);
+		}
+	}
+
 	private JButton getLolaButton() throws ParameterException, PropertyException, IOException {
 		JButton lola = new SwatToolbarButton(ToolbarButtonType.DETECTIVE);
 		return lola;
 	}
 
-	private Component getImportButon() throws ParameterException, PropertyException, IOException {
-		JButton newButton = new SwatToolbarButton(ToolbarButtonType.IMPORT);
-		return newButton;
+	private JButton getImportButon() throws ParameterException, PropertyException, IOException {
+		//JButton newButton = new SwatToolbarButton(ToolbarButtonType.IMPORT);
+		JButton importButton = new JButton(new ImportAction());
+		importButton.setFocusable(false);
+		return importButton;
 	}
 
 	private JButton getAristaFlowButton() throws ParameterException, PropertyException, IOException {
@@ -372,6 +386,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			case AF_TEMPLATE:
 				setToolTipText("Import AristaFlow Workflow template");
 				addActionListener(new AFtemplateImport());
+				break;
 			case TIME:
 				setToolTipText("Simulate Timing");
 				//addActionListener(new TimeActionListener());

@@ -17,7 +17,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 public class ImportAction extends AbstractWorkbenchAction {
 
 	public ImportAction() {
-		this("Import PT-net");
+		this("");
 	}
 
 	public ImportAction(String name) {
@@ -31,6 +31,7 @@ public class ImportAction extends AbstractWorkbenchAction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		setTooltip("Import PT-Net");
 	}
 
 	private static final long serialVersionUID = -8945460474139815880L;

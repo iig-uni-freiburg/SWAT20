@@ -11,7 +11,6 @@ import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
@@ -62,9 +61,20 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 	protected void setIcon(Icon icon) throws ParameterException {
 		Validate.notNull(icon);
 		this.icon = (ImageIcon) icon;
+		putValue(SMALL_ICON, icon);
+		putValue(LARGE_ICON_KEY, icon);
 	}
 	protected ImageIcon getIcon() {
 		return icon;
+	}
+
+	protected void setTooltip(String toolTip) {
+		Validate.notNull(toolTip);
+		putValue(SHORT_DESCRIPTION, toolTip);
+	}
+
+	protected String getTooltip() {
+		return (String) getValue(SHORT_DESCRIPTION);
 	}
 
 	//	protected SwatTreeView getTreeView() {
