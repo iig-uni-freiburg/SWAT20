@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -25,9 +23,6 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
 
 import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
@@ -37,15 +32,16 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowToPnmlConverter;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.sciff.DatabaseChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.AFtemplateImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
@@ -128,8 +124,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 
 	private void addStandardButtons() {
-		for (Component component : standardItems) {
-			add(component);
+		for (JButton button : standardItems) {
+			add(button);
+			button.setFocusable(false);
 		}
 		addSeparator();
 	}
@@ -148,7 +145,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(getNewNetButton());
 		//standardItems.add(new JButton(new ImportAction()));
 		standardItems.add(getImportButon());
-		standardItems.add(new SwatToolbarButton(ToolbarButtonType.AF_TEMPLATE));
+		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.AF_TEMPLATE));
+		standardItems.add(new JButton(new AFtemplateImportAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		//standardItems.add(getLolaButton());
 		standardItems.add(getAristaFlowButton());
@@ -177,7 +175,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private JButton getImportButon() throws ParameterException, PropertyException, IOException {
 		//JButton newButton = new SwatToolbarButton(ToolbarButtonType.IMPORT);
 		JButton importButton = new JButton(new ImportAction());
-		importButton.setFocusable(false);
 		return importButton;
 	}
 
@@ -383,10 +380,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				setMnemonic(KeyEvent.VK_DELETE);
 				//set
 				break;
-			case AF_TEMPLATE:
-				setToolTipText("Import AristaFlow Workflow template");
-				addActionListener(new AFtemplateImport());
-				break;
 			case TIME:
 				setToolTipText("Simulate Timing");
 				//addActionListener(new TimeActionListener());
@@ -418,24 +411,23 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			try {
 				AristaFlowSQLConnector connector = DatabaseChooser.DatabaseChooser();
 				//LogFileViewer viewer = con.dumpIntoWorkbench();
-				SwatComponents.getInstance().addLogModel(connector.getModel());
+				LogModel model = connector.getModel();
+				model = SwatComponents.getInstance().storeLogModelTo(model, model.getName());
+				SwatComponents.getInstance().addLogModel(model);
 				//SwatComponents.getInstance().reload();
 				//connector.parse();
 				//SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(connector.getTempFile());
 				//sciffAction.actionPerformed(e);
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (ClassNotFoundException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (IOException e3) {
-				// TODO Auto-generated catch block
 				e3.printStackTrace();
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
 
 		}
 
@@ -511,47 +503,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	}
 
-	class AFtemplateImport implements ActionListener {
 
-		private String requestNetName(String message, String title) {
-			String name = new FileNameDialog(SwingUtilities.getWindowAncestor(treeView.getParent()), message, title, false).requestInput();
-			return name;
-			//			if (name.endsWith(".pnml"))
-			//				return name;
-			//			else
-			//				return name + ".pnml";
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JFileChooser fc = new JFileChooser();
-			int returnVal = fc.showOpenDialog(Workbench.getInstance());
-
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File file = fc.getSelectedFile();
-				Workbench.consoleMessage("Opening: " + file.getName());
-				AristaFlowToPnmlConverter converter = new AristaFlowToPnmlConverter(file);
-				try {
-					converter.parse();
-					AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = converter.getGraphicalPN();
-					net.getPetriNet().setName(requestNetName("Please enter a name for the imported net", "Please enter a new name"));
-					SwatComponents.getInstance().addPetriNet(net);
-
-				} catch (ParserConfigurationException e1) {
-					Workbench.errorMessage("Could not parse AristaFlow log");
-				} catch (SAXException e2) {
-					Workbench.errorMessage("AristaFlow log has wrong format");
-				} catch (SwatComponentException e3) {
-					Workbench.errorMessage("Could not parse AristaFlow log");
-				} catch (IOException e4) {
-					Workbench.errorMessage("Could not parse or access AristaFlow log");
-				}
-
-			}
-
-		}
-
-	}
 
 
 

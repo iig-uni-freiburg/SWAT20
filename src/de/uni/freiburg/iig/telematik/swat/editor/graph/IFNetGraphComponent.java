@@ -102,7 +102,8 @@ public class IFNetGraphComponent extends PNGraphComponent {
 			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> cur_net = ((PNEditor) Workbench.getInstance().getTabView()
 					.getSelectedComponent()).getNetContainer();
 
-			System.out.println("FIXME: " + this.getClass().getName() + ":" + Thread.currentThread().getStackTrace()[2].getLineNumber());
+			System.out.print("FIXME: " + this.getClass().getName() + ":" + Thread.currentThread().getStackTrace()[0].getLineNumber());
+			System.out.println(" only first Time Index used...");
 			TimeContext context = comp.getTimeContexts(cur_net.getPetriNet().getName()).get(0);
 
 //			if (context == null){

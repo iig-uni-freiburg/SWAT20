@@ -152,6 +152,9 @@ public class TransitionView extends JDialog {
 						SwatComponents.getInstance().storeTimeContext(timeContext, timeContext.getName());
 					} catch (SwatComponentException e) {
 						JOptionPane.showMessageDialog(null, "Could not save time context:\nReason: " + e.getMessage());
+					} catch (NullPointerException e1) {
+						JOptionPane.showMessageDialog(null, "Could not save time context:\nReason: " + e1.getMessage());
+						e1.printStackTrace();
 					}
 					//					try {
 					//						timeContext.storeTimeContext();

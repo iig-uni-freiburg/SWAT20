@@ -704,6 +704,24 @@ public class SwatComponents {
 		}
 	}
 	
+
+	public LogModel storeLogModelTo(LogModel model, String LogModelName) {
+		try {
+			File pathForLogModel = new File(SwatProperties.getInstance().getPathForLogs(), LogModelName);
+			pathForLogModel.mkdirs();
+			String fileSuffix = FileUtils.getExtension(model.getFileReference());
+			File newLog = new File(pathForLogModel, LogModelName +"." +fileSuffix);
+			FileUtils.copy(model.getFileReference(), newLog);
+			LogModel newModel = new LogModel(newLog, model.getType());
+			return newModel;
+		} catch (PropertyException e) {
+			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not retrieve path for log.\nReason: " + e.getMessage());
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not store log.\nReason: " + e.getMessage());
+		}
+		return null;
+	}
+	
 	public void addLogModel(LogModel model){
 		addLogModel(model, true);
 	}

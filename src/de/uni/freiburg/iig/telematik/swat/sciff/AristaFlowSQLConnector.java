@@ -15,7 +15,6 @@ import java.util.List;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /** Reads AristaFlow database and converts to csv file **/
@@ -144,7 +143,7 @@ public class AristaFlowSQLConnector {
 	public LogModel getModel() throws Exception {
 		if (model == null) {
 			//File file = new File(SwatProperties.getInstance().getLogWorkingDirectory(), "AristaFlowImport " + getCurrentTime() + ".csv");
-			File file = File.createTempFile("AristaFlowImport", "csv");
+			File file = File.createTempFile("AristaFlowImport", ".csv");
 			FileWriter fileWriter = new FileWriter(file);
 			createFirstLine(fileWriter);
 			ResultSet rs = st.executeQuery(QUERY);
@@ -153,6 +152,7 @@ public class AristaFlowSQLConnector {
 			}
 			//LogFileViewer logFile = new LogFileViewer(file);
 			model = new LogModel(file, SwatLog.Aristaflow);
+			model.setName(getAFLogName());
 			//SwatComponents.getInstance().putCsvIntoSwatComponent(log, log.getName());
 		}
 
@@ -160,8 +160,13 @@ public class AristaFlowSQLConnector {
 	}
 
 
-	public String getCurrentTime() {
-		return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + "-" + Calendar.getInstance().get(Calendar.MINUTE);
+	private String getAFLogName() {
+		StringBuilder sb = new StringBuilder();
+		Calendar cal = Calendar.getInstance();
+		sb.append("AF-Log (");
+		sb.append(cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH) + "--");
+		sb.append(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND) + ")");
+		return sb.toString();
 	}
 
 

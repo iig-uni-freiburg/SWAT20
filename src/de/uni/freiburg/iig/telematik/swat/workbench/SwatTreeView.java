@@ -89,6 +89,10 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	private void createChildren() {
 		// Petri Nets
 		petriNetNode.removeAllChildren();
+		xesLogNode.removeAllChildren();
+		mxmlLogNode.removeAllChildren();
+		aristaLogNode.removeAllChildren();
+
 		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNetsSorted()){
 			SwatTreeNode node = new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET);
 			for(Analysis analysis: SwatComponents.getInstance().getAnalyses(node.getDisplayName())){
@@ -111,6 +115,9 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.Aristaflow)) {
 			aristaLogNode.add(new SwatTreeNode(logFile, SwatComponentType.ARISTAFLOW_LOG));
 		}
+
+		expandAll();
+
 	}
 	
 	public void expandAll() {
@@ -246,6 +253,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	public void componentsChanged() {
 		createChildren();
 		treeModel.reload();
+		expandAll();
 		repaint();
 	}
 
