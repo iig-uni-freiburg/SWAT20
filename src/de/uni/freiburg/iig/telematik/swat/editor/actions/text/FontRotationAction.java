@@ -23,14 +23,15 @@ public class FontRotationAction extends AbstractPNEditorAction {
 		super(editor, "Rotation", IconFactory.getIcon("rotate"));		
 	}
 
-	public void actionPerformed(ActionEvent e) {
-	
-				getEditor().getGraphComponent().getGraph().setCellStyles(MXConstants.FONT_ROTATION_DEGREE, degree);
-				if(degree.equals("0") || degree.equals("180") || degree.equals("360"))
-				getEditor().getGraphComponent().getGraph().setCellStyles(mxConstants.STYLE_HORIZONTAL, "true");
-				else
-					getEditor().getGraphComponent().getGraph().setCellStyles(mxConstants.STYLE_HORIZONTAL, "false");
-				degree = 	new Integer(degree)%360 + 90 + "";
-		}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		getEditor().getGraphComponent().getGraph().setCellStyles(MXConstants.FONT_ROTATION_DEGREE, degree);
+		if(degree.equals("0") || degree.equals("180") || degree.equals("360"))
+		getEditor().getGraphComponent().getGraph().setCellStyles(mxConstants.STYLE_HORIZONTAL, "true");
+		else
+			getEditor().getGraphComponent().getGraph().setCellStyles(mxConstants.STYLE_HORIZONTAL, "false");
+		degree = 	new Integer(degree)%360 + 90 + "";		
+	}
 
 }

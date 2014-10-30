@@ -34,16 +34,17 @@ public class FontLineThroughStyleAction extends AbstractPNEditorAction {
 		
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
 
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if(!linethrough){
-		graph.setCellStyles((String) MXConstants.FONT_DECORATION, "line-through");
+		getGraph().setCellStyles((String) MXConstants.FONT_DECORATION, "line-through");
 		linethrough = true;
 		}
 		else {
-		graph.setCellStyles((String) MXConstants.FONT_DECORATION, null);
+		getGraph().setCellStyles((String) MXConstants.FONT_DECORATION, null);
 		linethrough = false;
-		}
-}
+		}		
+	}
 }

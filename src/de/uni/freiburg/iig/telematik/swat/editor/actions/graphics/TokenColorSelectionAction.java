@@ -35,9 +35,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 public class TokenColorSelectionAction extends AbstractPNEditorAction {
 	public static Color DEFAULT_FILL_COLOR = new Color(255, 255, 255);
 	public static Color DEFAULT_GRADIENT_COLOR = new Color(0, 0, 0);
-	// private Color backgroundColor;
-	// private Color gradientColor;
-	// private GradientRotation gradientRotation;
+
 	private Color tokenColor;
 	private String tokenLabel;
 	private JPanel parent;
@@ -78,28 +76,22 @@ public class TokenColorSelectionAction extends AbstractPNEditorAction {
 
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		FillStyle fillStlye = getEditor().getEditorToolbar().getGraphicsToolbar().getFillStyle();
-		Color backgroundColor;
+	public void setParent(JPanel parent) {
+		this.parent = parent;
+	}
 
-		backgroundColor = JColorChooser.showDialog(parent, "Token Color", null);
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		FillStyle fillStlye = getEditor().getEditorToolbar().getGraphicsToolbar().getFillStyle();
+		Color backgroundColor = JColorChooser.showDialog(parent, "Token Color", null);
 		if(backgroundColor != null){
 		setTokenColor(backgroundColor);
 
 		if (tokenLabel != null) {
 			AbstractCPNGraphics cpnGraphics = (AbstractCPNGraphics) editor.getGraphComponent().getGraph().getNetContainer().getPetriNetGraphics();
-//			Map colors = cpnGraphics.getColors();
-//			colors.put(tokenLabel, getTokenColor());
-//			cpnGraphics.setColors(colors);
-			((mxGraphModel) graph.getModel()).execute(new TokenColorChange(editor,tokenLabel,getTokenColor()));
+			((mxGraphModel) getGraph().getModel()).execute(new TokenColorChange(editor,tokenLabel,getTokenColor()));
 		}
-		}
-		
-	}
-
-	public void setParent(JPanel parent) {
-		this.parent = parent;
+		}		
 	}
 
 }

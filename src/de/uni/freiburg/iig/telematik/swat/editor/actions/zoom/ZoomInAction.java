@@ -19,24 +19,22 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class ZoomInAction extends AbstractPNEditorAction {
-	
+
 	private static final long serialVersionUID = 7450908146578160638L;
 	private mxGraphView view;
 	private double currentZoom;
-	
-	
-	public ZoomInAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
-		super(editor, "Zoom In", IconFactory.getIcon("zoom_in"));		
-		view = getEditor().getGraphComponent().getGraph().getView();
-		
 
+	public ZoomInAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
+		super(editor, "Zoom In", IconFactory.getIcon("zoom_in"));
+		view = getEditor().getGraphComponent().getGraph().getView();
 
 	}
 
-	public void actionPerformed(ActionEvent e) {
-	currentZoom = view.getScale();
-	if(currentZoom >=0 && currentZoom<=4)
-		getEditor().getGraphComponent().zoomTo(currentZoom + EditorProperties.getInstance().getDefaultZoomStep(), getEditor().getGraphComponent().isCenterZoom());
-		}
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		currentZoom = view.getScale();
+		if (currentZoom >= 0 && currentZoom <= 4)
+			getEditor().getGraphComponent().zoomTo(currentZoom + EditorProperties.getInstance().getDefaultZoomStep(), getEditor().getGraphComponent().isCenterZoom());
+	}
 
 }

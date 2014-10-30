@@ -39,7 +39,14 @@ public class AddAnalysisContextAction extends AbstractPNEditorAction {
 		super(pnEditor, "New Analysis Context", IconFactory.getIcon("plus_analysis_context"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+
+	private String requestFileName(String message, String title) {
+		return new FileNameDialog(SwingUtilities.getWindowAncestor(editor.getGraphComponent()), message, title, false).requestInput();
+
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if (editor != null) {
 			IFNet ifNet = (IFNet) getEditor().getNetContainer().getPetriNet();
 			if (SwatComponents.getInstance().containsACModels()) {
@@ -57,7 +64,7 @@ public class AddAnalysisContextAction extends AbstractPNEditorAction {
 					;
 					String name = requestFileName("Pleache choose the name for new Analysis Context for " + getEditor().getNetContainer().getPetriNet().getName() + " :", "New Analysis Context");
 					if (name != null) {
-						AnalysisContext ac = new AnalysisContext(ifNet, ifSubjects, SecurityLevel.LOW);
+						AnalysisContext ac = new AnalysisContext(acModel);
 						ac.setName(name);
 						for (String a : ac.getActivities()) {
 							ac.setSubjectDescriptor(a, ifSubjects.iterator().next());
@@ -81,12 +88,6 @@ public class AddAnalysisContextAction extends AbstractPNEditorAction {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(), "You first need to define your Access Controll Model and its Subjects to build an appropriate Analysis Context",
 						"Subjects missing", JOptionPane.ERROR_MESSAGE);
 
-		}
-
-	}
-
-	private String requestFileName(String message, String title) {
-		return new FileNameDialog(SwingUtilities.getWindowAncestor(editor.getGraphComponent()), message, title, false).requestInput();
-
+		}		
 	}
 }

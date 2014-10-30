@@ -23,8 +23,9 @@ public class PasteAction extends AbstractPNEditorAction {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		transferAction.actionPerformed(new ActionEvent(this.getEditor().getGraphComponent(), e.getID(), e.getActionCommand()));
+		
 	}
 
 }

@@ -25,21 +25,6 @@ public class ShowHideLabelsAction extends AbstractPNEditorAction {
 
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-
-		if (getIcon().getImage() == visible) {
-			graph.setCellStyles("noLabel", "1");
-			fontTB.setFontEnabled(false);
-			
-		}
-		else if (getIcon().getImage() == invisible) {
-			graph.setCellStyles("noLabel", "0");
-			fontTB.setFontEnabled(true);
-
-		}
-
-	}
 
 	public void setHideIconImage() {
 		getIcon().setImage(invisible);
@@ -53,6 +38,21 @@ public class ShowHideLabelsAction extends AbstractPNEditorAction {
 	public void setFontToolbar(FontToolBar fontToolBar) {
 		fontTB = fontToolBar;
 		
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+
+		if (getIcon().getImage() == visible) {
+			getGraph().setCellStyles("noLabel", "1");
+			fontTB.setFontEnabled(false);
+			
+		}
+		else if (getIcon().getImage() == invisible) {
+			getGraph().setCellStyles("noLabel", "0");
+			fontTB.setFontEnabled(true);
+
+		}		
 	}
 
 }

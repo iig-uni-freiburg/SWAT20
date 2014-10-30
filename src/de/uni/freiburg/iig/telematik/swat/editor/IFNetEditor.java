@@ -3,19 +3,24 @@ package de.uni.freiburg.iig.telematik.swat.editor;
 import java.io.File;
 import java.io.IOException;
 
+import com.mxgraph.model.mxGraphModel;
+
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 public class IFNetEditor extends AbstractIFNetEditor {
 
@@ -27,6 +32,14 @@ public class IFNetEditor extends AbstractIFNetEditor {
 
 	public IFNetEditor(GraphicalIFNet netContainer, File fileReference) throws ParameterException {
 		super(netContainer, fileReference);
+		updateAnalysisContextSelection(netContainer);
+	}
+
+	private void updateAnalysisContextSelection(GraphicalIFNet netContainer) {
+		if(netContainer.getPetriNet().getAnalysisContext() != null){
+			AnalysisContext analysisContext = SwatComponents.getInstance().getAnalysisContext(netContainer.getPetriNet().getName(), netContainer.getPetriNet().getAnalysisContext().getName());
+			((mxGraphModel) getGraphComponent().getGraph().getModel()).execute(new AnalysisContextChange(this, analysisContext));
+		}
 	}
 	
 	@Override

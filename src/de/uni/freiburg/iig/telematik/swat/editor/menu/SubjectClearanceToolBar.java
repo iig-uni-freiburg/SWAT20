@@ -83,12 +83,13 @@ public class SubjectClearanceToolBar extends JToolBar {
 								newSubjectMapping.put(s, labeling.getSubjectClearance(s));
 							}
 							newSubjectMapping.put(subjectDescriptor, SecurityLevel.LOW);
-							labeling.addSubjects(subjects);
-							Labeling newLabeling = new Labeling(labeling.getActivities(), newSubjectMapping.keySet(), labeling.getSubjects());
-							for(String s:newSubjectMapping.keySet()){
-								newLabeling.setSubjectClearance(s, newSubjectMapping.get(s));}
+							//FIXME:
+//							labeling.addSubjects(subjects);
+//							Labeling newLabeling = new Labeling(labeling.getActivities(), newSubjectMapping.keySet(), labeling.getSubjects());
+//							for(String s:newSubjectMapping.keySet()){
+//								newLabeling.setSubjectClearance(s, newSubjectMapping.get(s));}
 							
-							((mxGraphModel) graph.getModel()).execute(new AnalysisContextChange(editor,new AnalysisContext(newLabeling)));
+//							((mxGraphModel) graph.getModel()).execute(new AnalysisContextChange(editor,new AnalysisContext(newLabeling)));
 
 						}
 					

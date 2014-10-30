@@ -26,8 +26,10 @@ public class EnterEditingAction extends AbstractPNEditorAction {
 		super(editor, "Edit", IconFactory.getIcon("edit"));
 	}
 	
-	public void actionPerformed(ActionEvent e) {
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		getEditor().getEditorToolbar().setEditingMode();
+		
 	}
 
 

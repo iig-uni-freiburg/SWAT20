@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup;
 
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
@@ -13,10 +12,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TransitionLabelingChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TransitionSilentChange;
 
 public class TransitionLabelingAction extends AbstractPNEditorAction {
 
@@ -27,8 +24,9 @@ public class TransitionLabelingAction extends AbstractPNEditorAction {
 		securityLevel = sl;
 	}
 
+
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		IFNetGraph graph = (IFNetGraph) getEditor().getGraphComponent().getGraph();
 		PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
 
@@ -37,7 +35,9 @@ public class TransitionLabelingAction extends AbstractPNEditorAction {
 		if (ac.getActivities().contains(cell.getId()))
 			((mxGraphModel) graph.getModel()).execute(new TransitionLabelingChange(graph,cell.getId(),securityLevel));
 		else {
-			Labeling labeling = new Labeling(graph.getNetContainer().getPetriNet(), ac.getSubjects());
+//			Labeling labeling = new Labeling(graph.getNetContainer().getPetriNet(), ac.getSubjects());
+			 Labeling labeling = new Labeling();
+
 			for (String a : ac.getActivities())
 				labeling.setActivityClassification(a, ac.getLabeling().getActivityClassification(a));
 			ac.setLabeling(labeling);
@@ -49,6 +49,6 @@ public class TransitionLabelingAction extends AbstractPNEditorAction {
 	
 	else {
 		JOptionPane.showMessageDialog(null,"No Analysis Context defined","Analysis Context Missing", JOptionPane.WARNING_MESSAGE);
-	}
+	}		
 	}
 }

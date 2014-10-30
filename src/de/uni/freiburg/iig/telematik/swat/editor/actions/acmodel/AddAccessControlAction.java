@@ -28,11 +28,16 @@ public class AddAccessControlAction extends AbstractPNEditorAction {
 		super(pnEditor, "New Organizational Context", IconFactory.getIcon("accesscontrol"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if (editor != null) {
+			
+			//Get ifNet
 			IFNet ifNet = (IFNet) getEditor().getNetContainer().getPetriNet();
 			String name = ifNet.getName() + "_Context";
 			Set<String> transitions = PNUtils.getNameSetFromTransitions(ifNet.getTransitions(), true);
+			
+			//Create Context
 			SWATContextForAC context = new SWATContextForAC(name, transitions);
 			Set<String> initialSubjects = new HashSet<String>();
 			initialSubjects.add("initialSubject");
@@ -46,5 +51,6 @@ public class AddAccessControlAction extends AbstractPNEditorAction {
 			}
 
 		}
+		
 	}
 }

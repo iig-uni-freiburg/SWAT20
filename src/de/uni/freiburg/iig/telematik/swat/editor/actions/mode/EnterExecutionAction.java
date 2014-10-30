@@ -29,16 +29,13 @@ public class EnterExecutionAction extends AbstractPNEditorAction {
 
 	
 	public EnterExecutionAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
-		super(editor, "Exeuctin", IconFactory.getIcon("play"));
-//		play = getIcon().getImage();
-//		reset = IconFactory.getIcon("restart").getImage();
-		
+		super(editor, "Exeuctin", IconFactory.getIcon("play"));		
 	}
-	
-	public void actionPerformed(ActionEvent e) {
-		getEditor().getEditorToolbar().setExecutionMode();
 
-		
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		getEditor().getEditorToolbar().setExecutionMode();		
 	}
 
 

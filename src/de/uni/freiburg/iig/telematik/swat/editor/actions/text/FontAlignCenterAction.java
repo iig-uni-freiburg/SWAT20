@@ -19,15 +19,10 @@ public FontAlignCenterAction(PNEditor editor) throws ParameterException, Propert
 		super(editor, "Center", IconFactory.getIcon("center"));
 	}
 
-	/**
-	 * 
-	 */
-	public void actionPerformed(ActionEvent e)
-	{
-		mxGraph graph = getEditor().getGraphComponent().getGraph();
-		if (graph != null && !graph.isSelectionEmpty())
-		{
-			graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_CENTER);
-		}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		if (getGraph() != null && !getGraph().isSelectionEmpty())
+			getGraph().setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_CENTER);		
 	}
 }

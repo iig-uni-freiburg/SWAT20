@@ -24,22 +24,6 @@ public class LineShapeAction extends AbstractPNEditorAction {
 		curve = IconFactory.getIcon("round").getImage();
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-
-		if (getIcon().getImage() == line) {
-			graph.setCellStyles(mxConstants.STYLE_ROUNDED, "true");
-			graph.setCellStyles(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ENTITY_RELATION);
-			getIcon().setImage(curve);
-		}
-		else if (getIcon().getImage() == curve) {
-			graph.setCellStyles(mxConstants.STYLE_ROUNDED, "false");
-			graph.setCellStyles(mxConstants.STYLE_EDGE, "direct");
-			getIcon().setImage(line);
-		}
-
-	}
-
 	public void setCurveIconImage() {
 		getIcon().setImage(curve);
 
@@ -47,6 +31,20 @@ public class LineShapeAction extends AbstractPNEditorAction {
 
 	public void setLineIconImage() {
 		getIcon().setImage(line);
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		if (getIcon().getImage() == line) {
+			getGraph().setCellStyles(mxConstants.STYLE_ROUNDED, "true");
+			getGraph().setCellStyles(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ENTITY_RELATION);
+			getIcon().setImage(curve);
+		}
+		else if (getIcon().getImage() == curve) {
+			getGraph().setCellStyles(mxConstants.STYLE_ROUNDED, "false");
+			getGraph().setCellStyles(mxConstants.STYLE_EDGE, "direct");
+			getIcon().setImage(line);
+		}		
 	}
 
 }

@@ -29,7 +29,7 @@ public class SWATAdvancedACLTable extends JTable implements ObjectPermissionItem
 
 	private static final long serialVersionUID = 223793804425867377L;
 
-	private ACLModel aclModel = new ACLModel();
+	private ACLModel aclModel = new ACLModel("acmodel");
 	
 	private SWATActivityPermissionTableModel transactionModel = null;
 	private SWATObjectPermissionTableModel objectModel = null;
@@ -60,7 +60,7 @@ public class SWATAdvancedACLTable extends JTable implements ObjectPermissionItem
 		Validate.notNull(subjects);
 		Validate.noNullElements(subjects);
 		
-		aclModel = new ACLModel();
+		aclModel = new ACLModel("acmodel");
 		aclModel.setSubjects(subjects);
 		aclModel.setActivities(context.getActivities());
 		if(context.hasAttributes())

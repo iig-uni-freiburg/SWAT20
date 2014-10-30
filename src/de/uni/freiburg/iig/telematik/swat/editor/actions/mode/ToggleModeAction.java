@@ -34,9 +34,10 @@ public class ToggleModeAction extends AbstractPNEditorAction {
 		play = IconFactory.getIcon("switch_play").getImage();
 		
 	}
-	
-	public void actionPerformed(ActionEvent e) {
 
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if (getIcon().getImage() == edit) {
 			getEditor().getEditorToolbar().setExecutionMode();
 			getIcon().setImage(play);
@@ -44,9 +45,7 @@ public class ToggleModeAction extends AbstractPNEditorAction {
 		else if (getIcon().getImage() == play) {
 			getEditor().getEditorToolbar().setEditingMode();
 			getIcon().setImage(edit);
-		}
-	
-		
+		}		
 	}
 
 

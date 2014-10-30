@@ -29,20 +29,6 @@ public class NewNodeAction extends AbstractPNEditorAction {
 	 */
 	private static final long serialVersionUID = 7020268186996809614L;
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		PNGraphCell source = (PNGraphCell) graph.getSelectionCell();
-		PNGraphCell target = null;
-		double centerX = source.getGeometry().getCenterX();
-		double centerY = source.getGeometry().getCenterY();
-		centerX += deltaX;
-		centerY += deltaY;
-		if(centerX >0 && centerY>0){
-		target = createNewNodeWithEdge(source,getEditor().getGraphComponent().getGraph(),centerX,centerY);
-		graph.setSelectionCell(target);}
-		
-	}
 	/**
 	 * @param source
 	 * @param pnGraph
@@ -70,6 +56,20 @@ public class NewNodeAction extends AbstractPNEditorAction {
 			e2.printStackTrace();
 		}
 		return target;
+	}
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		PNGraph graph = getEditor().getGraphComponent().getGraph();
+		PNGraphCell source = (PNGraphCell) graph.getSelectionCell();
+		PNGraphCell target = null;
+		double centerX = source.getGeometry().getCenterX();
+		double centerY = source.getGeometry().getCenterY();
+		centerX += deltaX;
+		centerY += deltaY;
+		if(centerX >0 && centerY>0){
+		target = createNewNodeWithEdge(source,getEditor().getGraphComponent().getGraph(),centerX,centerY);
+		graph.setSelectionCell(target);}
+				
 	}
     
 

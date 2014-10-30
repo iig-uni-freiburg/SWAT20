@@ -28,10 +28,9 @@ public class SelectAction extends AbstractPNEditorAction {
 	private static final long serialVersionUID = 1728027231812006823L;
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		 graph.selectPNGraphCells(type);
-		
+		 graph.selectPNGraphCells(type);		
 	}
 
 

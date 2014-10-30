@@ -44,37 +44,7 @@ public class LayoutAction extends AbstractPNEditorAction {
 
 	private static final long serialVersionUID = 1728027231812006823L;
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(layout != null){
-		mxGraph graph = getEditor().getGraphComponent().getGraph();
-		Object cell = graph.getSelectionCell();
 
-		if (cell == null || graph.getModel().getChildCount(cell) == 0) {
-			cell = graph.getDefaultParent();
-		}
-
-		graph.getModel().beginUpdate();
-		try {
-			long t0 = System.currentTimeMillis();
-			layout.execute(cell);
-		} finally {
-			mxMorphing morph = new mxMorphing(getEditor().getGraphComponent(), 20, 1.2, 20);
-
-			morph.addListener(mxEvent.DONE, new mxIEventListener() {
-
-				public void invoke(Object sender, mxEventObject evt) {
-					getEditor().getGraphComponent().getGraph().getModel().endUpdate();
-//					getGraph().updatePositionPropertiesFromCells();
-				}
-
-			});
-
-			morph.startAnimation();
-		}
-		}
-		
-	}
 	/**
 	 * Creates an action that executes the specified layout.
 	 * 
@@ -232,6 +202,36 @@ public class LayoutAction extends AbstractPNEditorAction {
 		}
 
 		return layout;
+	}
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		if(layout != null){
+		mxGraph graph = getEditor().getGraphComponent().getGraph();
+		Object cell = graph.getSelectionCell();
+
+		if (cell == null || graph.getModel().getChildCount(cell) == 0) {
+			cell = graph.getDefaultParent();
+		}
+
+		graph.getModel().beginUpdate();
+		try {
+			long t0 = System.currentTimeMillis();
+			layout.execute(cell);
+		} finally {
+			mxMorphing morph = new mxMorphing(getEditor().getGraphComponent(), 20, 1.2, 20);
+
+			morph.addListener(mxEvent.DONE, new mxIEventListener() {
+
+				public void invoke(Object sender, mxEventObject evt) {
+					getEditor().getGraphComponent().getGraph().getModel().endUpdate();
+//					getGraph().updatePositionPropertiesFromCells();
+				}
+
+			});
+
+			morph.startAnimation();
+		}
+		}		
 	}
 
 

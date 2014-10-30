@@ -25,22 +25,6 @@ public class ShowHideTokensOnArcsAction extends AbstractPNEditorAction {
 
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-
-		if (getIcon().getImage() == visible) {
-			graph.setTokenOnArcVisibility(false);
-			fontTB.setTokenOnArcEnabled(false);
-			
-		}
-		else if (getIcon().getImage() == invisible) {
-			graph.setTokenOnArcVisibility(true);
-			fontTB.setTokenOnArcEnabled(true);
-
-		}
-
-	}
-
 	public void setHideIconImage() {
 		getIcon().setImage(invisible);
 
@@ -53,6 +37,22 @@ public class ShowHideTokensOnArcsAction extends AbstractPNEditorAction {
 	public void setFontToolbar(FontToolBar fontToolBar) {
 		fontTB = fontToolBar;
 		
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		PNGraph graph = getEditor().getGraphComponent().getGraph();
+
+		if (getIcon().getImage() == visible) {
+			graph.setTokenOnArcVisibility(false);
+			fontTB.setTokenOnArcEnabled(false);
+			
+		}
+		else if (getIcon().getImage() == invisible) {
+			graph.setTokenOnArcVisibility(true);
+			fontTB.setTokenOnArcEnabled(true);
+
+		}		
 	}
 
 }

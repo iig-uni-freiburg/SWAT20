@@ -18,13 +18,13 @@ public class TransitionTimeAction extends AbstractPNEditorAction {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		IFNetGraph graph = (IFNetGraph) editor.getGraphComponent().getGraph();
 		PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
 		//TransitionView view = new TransitionView(cell.getId(), SwatComponents.getInstance().getTimeAnalysisForNet(editor.getNetContainer()));
 		TransitionView view = new TransitionView(cell.getId(), SwatComponents.getInstance().getTimeContext(
 				graph.getNetContainer().getPetriNet().getName(), "hardcodedTimeContext"));
-		view.setVisible(true);
+		view.setVisible(true);		
 	}
 
 }

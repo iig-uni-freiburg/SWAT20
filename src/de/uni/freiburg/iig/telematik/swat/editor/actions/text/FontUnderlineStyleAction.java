@@ -24,17 +24,16 @@ public class FontUnderlineStyleAction extends AbstractPNEditorAction {
 	}
 
 
-	public void actionPerformed(ActionEvent e) {
-				PNGraph graph = getEditor().getGraphComponent().getGraph();
-
-				if(!underline){
-				graph.setCellStyles((String) MXConstants.FONT_DECORATION, "underline");
-				underline = true;
-				}
-				else {
-				graph.setCellStyles((String) MXConstants.FONT_DECORATION, null);
-				underline = false;
-				}
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		if(!underline){
+		getGraph().setCellStyles((String) MXConstants.FONT_DECORATION, "underline");
+		underline = true;
 		}
+		else {
+		getGraph().setCellStyles((String) MXConstants.FONT_DECORATION, null);
+		underline = false;
+		}		
+	}
 
 }

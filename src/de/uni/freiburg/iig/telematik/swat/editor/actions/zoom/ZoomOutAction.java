@@ -34,10 +34,12 @@ public class ZoomOutAction extends AbstractPNEditorAction {
 
 	}
 
-	public void actionPerformed(ActionEvent e) {
-	currentZoom = view.getScale();
-	if(currentZoom >0 +  EditorProperties.getInstance().getDefaultZoomStep() )
-		getEditor().getGraphComponent().zoomTo(currentZoom - EditorProperties.getInstance().getDefaultZoomStep(), getEditor().getGraphComponent().isCenterZoom());
-		}
 
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		currentZoom = view.getScale();
+		if(currentZoom >0 +  EditorProperties.getInstance().getDefaultZoomStep() )
+			getEditor().getGraphComponent().zoomTo(currentZoom - EditorProperties.getInstance().getDefaultZoomStep(), getEditor().getGraphComponent().isCenterZoom());
+			}
 }

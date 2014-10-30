@@ -17,10 +17,12 @@ public class RedoAction extends AbstractPNEditorAction {
 		super(pnEditor, "Redo", IconFactory.getIcon("redo"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if (editor != null) {
 			editor.getUndoManager().redo();
 			editor.getGraphComponent().getGraph().updateViews();
-		}
+		}		
 	}
 }

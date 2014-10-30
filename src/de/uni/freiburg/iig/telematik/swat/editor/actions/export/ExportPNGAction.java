@@ -38,8 +38,8 @@ public class ExportPNGAction extends AbstractPNEditorAction {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		JFileChooser fc = new JFileChooser(getEditor().getFileReference());
 		fc.addChoosableFileFilter(new FileFilter() {
 			public String getDescription() {
@@ -65,7 +65,6 @@ public class ExportPNGAction extends AbstractPNEditorAction {
 			PNGraph pnGraph = editor.getGraphComponent().getGraph();
 
 			
-			try {
 				JFrame f = new JFrame();
 				PNGraphComponent forPrint = new PNGraphComponent(pnGraph) {
 				};
@@ -111,11 +110,7 @@ public class ExportPNGAction extends AbstractPNEditorAction {
 				g2.dispose();
 				document.close();
 
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (DocumentException e1) {
-				e1.printStackTrace();
-			}
-		}
+		}		
 	}
+
 }

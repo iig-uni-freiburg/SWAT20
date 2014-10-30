@@ -1,12 +1,21 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions;
 
+import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public abstract class AbstractPNEditorAction extends AbstractAction {
 
@@ -50,5 +59,36 @@ public abstract class AbstractPNEditorAction extends AbstractAction {
 	protected PNEditor getEditor() {
 		return editor;
 	}
+	
+	protected PNGraph getGraph() {
+	return getEditor().getGraphComponent().getGraph();
+	}	
+	
+	protected PNGraphCell getGraphSelectionCell() {
+	return (PNGraphCell) getGraph().getSelectionCell();
+	}
+	
+	protected boolean isCellSelected() {
+	return getGraphSelectionCell() != null;
+	}
+	
+	protected void updateViewWithSelectedCell() {
+		if(isCellSelected()){
+		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
+		setWithOneCell.add(getGraphSelectionCell());
+		getEditor().getEditorToolbar().updateView(setWithOneCell);
+		}		
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+			doFancyStuff(e);
+		} catch(Exception ex){
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	protected abstract void doFancyStuff(ActionEvent e) throws Exception;
+	
 
 }

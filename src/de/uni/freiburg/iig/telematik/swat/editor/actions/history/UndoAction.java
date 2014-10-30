@@ -17,10 +17,12 @@ public class UndoAction extends AbstractPNEditorAction {
 		super(pnEditor, "Undo", IconFactory.getIcon("undo"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if (editor != null) {
 			editor.getUndoManager().undo();
 			editor.getGraphComponent().getGraph().updateViews();
-		}
+		}		
 	}
+
 }

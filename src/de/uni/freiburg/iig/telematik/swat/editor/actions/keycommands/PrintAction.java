@@ -17,15 +17,16 @@ public class PrintAction extends AbstractPNEditorAction {
 		super(pnEditor);
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public boolean isSuccess() {
+		return success;
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		success = false;		
 		System.out.println("\n//PRINT NET INFORMATION//\n");
 		System.out.println(editor.getNetContainer().getPetriNet());
 		System.out.println(editor.getNetContainer().getPetriNetGraphics());
-		System.out.println("////////////////////////" + editor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getEnabledTransitions());
-	}
-
-	public boolean isSuccess() {
-		return success;
+		System.out.println("////////////////////////" + editor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getEnabledTransitions());		
 	}
 }

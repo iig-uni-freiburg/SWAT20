@@ -23,19 +23,16 @@ public class FontItalicStyleAction extends AbstractPNEditorAction {
 		super(editor, "Italic", IconFactory.getIcon("italic"));		
 	}
 
-
-	public void actionPerformed(ActionEvent e) {
-		mxIGraphModel model = getEditor().getGraphComponent().getGraph().getModel();
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if(!italic){
-		graph.setCellStyles((String) MXConstants.FONT_STYLE, "italic");
+		getGraph().setCellStyles((String) MXConstants.FONT_STYLE, "italic");
 		italic = true;
 		}
 		else {
-		graph.setCellStyles((String) MXConstants.FONT_STYLE, "normal");
+			getGraph().setCellStyles((String) MXConstants.FONT_STYLE, "normal");
 		italic = false;
-		}
-		}
+		}		
+	}
 
 }

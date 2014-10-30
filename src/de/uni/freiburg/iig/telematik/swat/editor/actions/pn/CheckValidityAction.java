@@ -22,7 +22,8 @@ public class CheckValidityAction extends AbstractPNEditorAction {
 		super(pnEditor, "CheckSoundness", IconFactory.getIcon("validcwn"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if (editor != null) {
 			AbstractPetriNet pn = editor.getNetContainer().getPetriNet();
 			if (pn instanceof CPN) {
@@ -37,6 +38,6 @@ public class CheckValidityAction extends AbstractPNEditorAction {
 				} 
 				
 			}
-		}
+		}		
 	}
 }

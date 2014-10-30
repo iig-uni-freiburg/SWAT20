@@ -16,7 +16,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 @SuppressWarnings("serial")
-public class FillGradientRotationHorizontal extends AbstractPNEditorAction {
+public class FillGradientRotationHorizontal extends AbstractPNEditorGraphicsAction {
 
 	public FillGradientRotationHorizontal(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "gradient_horizontal", IconFactory.getIcon("gradient_horizontal"));
@@ -26,17 +26,23 @@ public class FillGradientRotationHorizontal extends AbstractPNEditorAction {
 		getIcon().setImage(newimg);
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		
-		if (graph.isLabelSelected())
-			graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, GradientRotation.HORIZONTAL.toString());
-		else
-			graph.setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.HORIZONTAL.toString());
-		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
-		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
-		setWithOneCell.add(selectedCell);
-		getEditor().getEditorToolbar().updateView(setWithOneCell);
+	@Override
+	protected void performLabelAction() {
+		getGraph().setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, GradientRotation.HORIZONTAL.toString());		
 	}
+
+	@Override
+	protected void performNoLabelAction() {
+		getGraph().setCellStyles(MXConstants.GRADIENT_ROTATION, GradientRotation.HORIZONTAL.toString());
+		
+	}
+
+	@Override
+	protected void doMoreFancyStuff(ActionEvent e) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 }

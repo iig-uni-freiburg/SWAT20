@@ -22,8 +22,18 @@ public class SaveAction extends AbstractPNEditorAction {
 	public SaveAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "Save", IconFactory.getIcon("save"));
 	}
-	
-	public void actionPerformed(ActionEvent e) {
+
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		success = true;
 		try {
 			String filename = editor.getFileReference().getAbsolutePath();
@@ -33,14 +43,6 @@ public class SaveAction extends AbstractPNEditorAction {
 		} catch (Exception ex) {
 			success = false;
 			errorMessage = ex.getMessage();
-		}
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public String getErrorMessage() {
-		return errorMessage;
+		}		
 	}
 }

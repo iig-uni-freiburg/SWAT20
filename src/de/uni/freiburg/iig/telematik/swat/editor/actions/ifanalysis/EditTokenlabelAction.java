@@ -27,7 +27,8 @@ public class EditTokenlabelAction extends AbstractPNEditorAction {
 		super(pnEditor, "Edit Tokenlabel", IconFactory.getIcon("tokenlabel"));
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		if (editor != null) {
 			IFNet ifNet = (IFNet) getEditor().getNetContainer().getPetriNet();
 			ACModel acModel = ((IFNetGraph) editor.getGraphComponent().getGraph()).getSelectedACModel();
@@ -39,7 +40,7 @@ public class EditTokenlabelAction extends AbstractPNEditorAction {
 			if(acModel instanceof RBACModel){
 				ifSubjects = ((RBACModel) acModel).getRoles();
 			};
-			AnalysisContext ac = new AnalysisContext(ifNet, ifSubjects, SecurityLevel.LOW);
-		}
+			AnalysisContext ac = new AnalysisContext(acModel);
+		}		
 	}
 }

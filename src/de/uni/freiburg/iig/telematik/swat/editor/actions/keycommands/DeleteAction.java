@@ -24,8 +24,8 @@ public class DeleteAction extends AbstractPNEditorAction {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		transferAction.actionPerformed(new ActionEvent(this.getEditor().getGraphComponent(), e.getID(), e.getActionCommand()));
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		transferAction.actionPerformed(new ActionEvent(this.getEditor().getGraphComponent(), e.getID(), e.getActionCommand()));		
 	}
 
 }

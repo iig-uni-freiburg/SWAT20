@@ -34,8 +34,15 @@ public class MakeSilentAction extends AbstractPNEditorAction {
 		reset = IconFactory.getIcon("restart").getImage();
 		
 	}
-	
-	public void actionPerformed(ActionEvent e) {
+
+
+	public void setExecutionImage() {
+		getIcon().setImage(play);
+		
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
 		getEditor().getEditorToolbar().setExecutionMode();
 		getEditor().getGraphComponent().getGraph().clearSelection();
 		getEditor().getGraphComponent().getGraph().setExecution(true);
@@ -47,14 +54,6 @@ public class MakeSilentAction extends AbstractPNEditorAction {
 			getEditor().getGraphComponent().getGraph().getNetContainer().getPetriNet().reset();
 			getEditor().getGraphComponent().getGraph().refresh();
 			getEditor().getGraphComponent().highlightEnabledTransitions();
-		}
-	
-		
-	}
-
-
-	public void setExecutionImage() {
-		getIcon().setImage(play);
-		
+		}		
 	}
 }

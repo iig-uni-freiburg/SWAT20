@@ -136,12 +136,14 @@ public class TokenlabelToolBar extends JToolBar {
 								newAttributeMapping.put(a, labeling.getAttributeClassification(a));
 							}
 							newAttributeMapping.put(tokenLabel, SecurityLevel.LOW);
-							labeling.addAttributes(attributes);
-							Labeling newLabeling = new Labeling(labeling.getActivities(), newAttributeMapping.keySet(), labeling.getSubjects());
-							for(String a:newAttributeMapping.keySet()){
-								newLabeling.setAttributeClassification(a, newAttributeMapping.get(a));}
+							//FIXME:
+//							labeling.
+//							labeling.addAttributes(attributes);
+//							Labeling newLabeling = new Labeling(labeling.getActivities(), newAttributeMapping.keySet(), labeling.getSubjects());
+//							for(String a:newAttributeMapping.keySet()){
+//								newLabeling.setAttributeClassification(a, newAttributeMapping.get(a));}
 							
-							((mxGraphModel) graph.getModel()).execute(new AnalysisContextChange(editor,new AnalysisContext(newLabeling)));
+//							((mxGraphModel) graph.getModel()).execute(new AnalysisContextChange(editor,new AnalysisContext(newLabeling)));
 
 						}
 					

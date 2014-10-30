@@ -16,30 +16,30 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 @SuppressWarnings("serial")
-public class LineSolidAction extends AbstractPNEditorAction {
+public class LineSolidAction extends AbstractPNEditorGraphicsAction {
 
 	public LineSolidAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "gradient_vertical", IconFactory.getIcon("solid"));
 		java.awt.Image img = getIcon().getImage();
 		int size = getIcon().getIconWidth();
-		java.awt.Image newimg = img.getScaledInstance(size /2, size /3 , java.awt.Image.SCALE_SMOOTH);
+		java.awt.Image newimg = img.getScaledInstance(size / 2, size / 3, java.awt.Image.SCALE_SMOOTH);
 		getIcon().setImage(newimg);
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
+	@Override
+	protected void performLabelAction() {
+		getGraph().setCellStyles(MXConstants.LABEL_LINE_STYLE, "solid");		
+	}
+
+	@Override
+	protected void performNoLabelAction() {
+		getGraph().setCellStyles(MXConstants.LINE_STYLE, "solid");
+	}
+
+	@Override
+	protected void doMoreFancyStuff(ActionEvent e) throws Exception {
+		// TODO Auto-generated method stub
 		
-		if (graph.isLabelSelected()) {
-			graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "solid");
-		} 
-		else{
-		graph.setCellStyles(MXConstants.LINE_STYLE, "solid");
-		
-		}
-		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
-		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
-		setWithOneCell.add(selectedCell);
-		getEditor().getEditorToolbar().updateView(setWithOneCell);
 	}
 
 }

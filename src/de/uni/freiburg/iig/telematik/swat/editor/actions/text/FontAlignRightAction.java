@@ -22,12 +22,9 @@ public FontAlignRightAction(PNEditor editor) throws ParameterException, Property
 		super(editor, "Right", IconFactory.getIcon("right"));
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
-		mxGraph graph = getEditor().getGraphComponent().getGraph();
-		if (graph != null && !graph.isSelectionEmpty())
-		{
-			graph.setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_RIGHT);
-		}
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		if (getGraph() != null && !getGraph().isSelectionEmpty())
+			getGraph().setCellStyles(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_RIGHT);
 	}
 }

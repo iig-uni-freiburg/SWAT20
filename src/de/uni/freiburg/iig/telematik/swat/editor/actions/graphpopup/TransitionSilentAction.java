@@ -55,25 +55,6 @@ public class TransitionSilentAction extends AbstractPNEditorAction {
 
 	private static final long serialVersionUID = 1728027231812006823L;
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		PNGraphCell selectedCell =  (PNGraphCell) graph.getSelectionCell();
-		if(selectedCell != null){
-			((mxGraphModel) graph.getModel()).beginUpdate();
-			((mxGraphModel) graph.getModel()).execute(new TransitionSilentChange((PNGraph)graph,selectedCell.getId(),silent));
-			if(silent){
-			graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#00000");
-			graph.setCellStyles(mxConstants.STYLE_NOLABEL, "1");
-			}
-			else{
-				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, EditorProperties.getInstance().getDefaultNodeColor());
-				graph.setCellStyles(mxConstants.STYLE_NOLABEL, "0");
-			}
-			((mxGraphModel) graph.getModel()).endUpdate();
-		}
-
-	}
 	/**
 	 * Creates an action that executes the specified layout.
 	 * 
@@ -200,6 +181,26 @@ public class TransitionSilentAction extends AbstractPNEditorAction {
 		}
 
 		return layout;
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		PNGraph graph = getEditor().getGraphComponent().getGraph();
+		PNGraphCell selectedCell =  (PNGraphCell) graph.getSelectionCell();
+		if(selectedCell != null){
+			((mxGraphModel) graph.getModel()).beginUpdate();
+			((mxGraphModel) graph.getModel()).execute(new TransitionSilentChange((PNGraph)graph,selectedCell.getId(),silent));
+			if(silent){
+			graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#00000");
+			graph.setCellStyles(mxConstants.STYLE_NOLABEL, "1");
+			}
+			else{
+				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, EditorProperties.getInstance().getDefaultNodeColor());
+				graph.setCellStyles(mxConstants.STYLE_NOLABEL, "0");
+			}
+			((mxGraphModel) graph.getModel()).endUpdate();
+		}
+		
 	}
 
 

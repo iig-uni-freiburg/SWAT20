@@ -16,7 +16,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 @SuppressWarnings("serial")
-public class LineDashAction extends AbstractPNEditorAction {
+public class LineDashAction extends AbstractPNEditorGraphicsAction {
 
 	public LineDashAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "gradient_horizontal", IconFactory.getIcon("dash"));
@@ -26,18 +26,22 @@ public class LineDashAction extends AbstractPNEditorAction {
 		getIcon().setImage(newimg);
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
+	@Override
+	protected void performLabelAction() {
+		getGraph().setCellStyles(MXConstants.LABEL_LINE_STYLE, "dash");
 		
-		if (graph.isLabelSelected()) {
-			graph.setCellStyles(MXConstants.LABEL_LINE_STYLE, "dash");
-		} else{
-		graph.setCellStyles(MXConstants.LINE_STYLE, "dash");}
-	
-		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
-		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
-		setWithOneCell.add(selectedCell);
-		getEditor().getEditorToolbar().updateView(setWithOneCell);
 	}
+
+	@Override
+	protected void performNoLabelAction() {
+		getGraph().setCellStyles(MXConstants.LINE_STYLE, "dash");		
+	}
+
+	@Override
+	protected void doMoreFancyStuff(ActionEvent e) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

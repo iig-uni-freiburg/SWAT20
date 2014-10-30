@@ -46,24 +46,6 @@ public class PopUpToolBarAction extends AbstractPNEditorAction {
 		newWindowButton(popupToolBar, toolbarContent, newDialogButton);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (getPopupFrame() == null) {
-			popupToolBar.setButton(getButton(), false);
-
-			popupToolBar.add(toolbarContent);
-			popupToolBar.add(newDialogButton);
-
-			int size = 0;
-			try {
-				size = SwatProperties.getInstance().getIconSize().getSize();
-			} catch (PropertyException e1) {
-			} catch (IOException e1) {
-			}
-			popupToolBar.show(getButton(), 0, size + size / 2);
-		}
-	}
-
 	protected JDialog getPopupFrame() {
 		return popupDialog;
 	}
@@ -128,6 +110,24 @@ public class PopUpToolBarAction extends AbstractPNEditorAction {
 
 	public JDialog getDialog() {
 		return dialog;
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		if (getPopupFrame() == null) {
+			popupToolBar.setButton(getButton(), false);
+
+			popupToolBar.add(toolbarContent);
+			popupToolBar.add(newDialogButton);
+
+			int size = 0;
+			try {
+				size = SwatProperties.getInstance().getIconSize().getSize();
+			} catch (PropertyException e1) {
+			} catch (IOException e1) {
+			}
+			popupToolBar.show(getButton(), 0, size + size / 2);
+		}		
 	}
 
 }

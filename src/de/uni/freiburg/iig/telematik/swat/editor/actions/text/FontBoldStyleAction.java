@@ -23,22 +23,17 @@ public class FontBoldStyleAction extends AbstractPNEditorAction {
 		super(editor, "Bold", IconFactory.getIcon("bold"));		
 	}
 
-	public void actionPerformed(ActionEvent e) {
-				mxIGraphModel model = getEditor().getGraphComponent().getGraph().getModel();
-				PNGraph graph = getEditor().getGraphComponent().getGraph();
 
-				if(!bold){
-				graph.setCellStyles((String) MXConstants.FONT_WEIGHT, "bold");
-				bold = true;
-				}
-				else {
-				graph.setCellStyles((String) MXConstants.FONT_WEIGHT, "normal");
-				bold = false;
-				}
-				
-				
-
-				
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		if(!bold){
+		getGraph().setCellStyles((String) MXConstants.FONT_WEIGHT, "bold");
+		bold = true;
 		}
+		else {
+		getGraph().setCellStyles((String) MXConstants.FONT_WEIGHT, "normal");
+		bold = false;
+		}		
+	}
 
 }

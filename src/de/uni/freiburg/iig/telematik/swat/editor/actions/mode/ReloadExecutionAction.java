@@ -33,16 +33,13 @@ public class ReloadExecutionAction extends AbstractPNEditorAction {
 
 		
 	}
-	
-	public void actionPerformed(ActionEvent e) {
 
-			getEditor().getGraphComponent().getGraph().getNetContainer().getPetriNet().reset();
-			getEditor().getGraphComponent().getGraph().refresh();
-			getEditor().getEditorToolbar().setExecutionMode();
 
-		
-	
-		
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		getEditor().getGraphComponent().getGraph().getNetContainer().getPetriNet().reset();
+		getEditor().getGraphComponent().getGraph().refresh();
+		getEditor().getEditorToolbar().setExecutionMode();		
 	}
 
 }

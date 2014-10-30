@@ -26,12 +26,9 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class FillColorSelectionAction extends AbstractPNEditorAction {
+public class FillColorSelectionAction extends AbstractPNEditorGraphicsAction {
 	public static Color DEFAULT_FILL_COLOR = new Color(255, 255, 255);
 	public static Color DEFAULT_GRADIENT_COLOR = new Color(0, 0, 0);
-//	private Color backgroundColor;
-//	private Color gradientColor;
-//	private GradientRotation gradientRotation;
 
 	public FillColorSelectionAction(PNEditor editor) throws ParameterException, PropertyException, IOException {
 		super(editor, "FillColor", IconFactory.getIcon("fill"));
@@ -59,84 +56,6 @@ public class FillColorSelectionAction extends AbstractPNEditorAction {
 
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		PNGraph graph = getEditor().getGraphComponent().getGraph();
-		FillStyle fillStlye = getEditor().getEditorToolbar().getGraphicsToolbar().getFillStyle();
-		Color backgroundColor;
-		switch (fillStlye) {
-		case SOLID:
-			if (!graph.isSelectionEmpty()) {
-				backgroundColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
-if(backgroundColor != null){
-				if (graph.isLabelSelected()) {
-					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(backgroundColor));
-				} else {
-					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(backgroundColor));
-				}
-				}
-
-
-
-			}
-			break;
-		case GRADIENT:
-			if (!graph.isSelectionEmpty()) {
-				Color gradientColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Gradient Color", null);
-				if(gradientColor != null){
-				if (graph.isLabelSelected()) {
-					graph.setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, mxUtils.hexString(gradientColor));
-
-				} else {
-					graph.setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(gradientColor));
-				}
-				}
-				
-			}
-			break;
-		case NOFILL:
-			if (!graph.isSelectionEmpty()) {
-				Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
-				if(newColor != null){
-				if (graph.isLabelSelected()){
-					graph.setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(newColor));
-					graph.setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, null);
-					graph.setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, mxUtils.hexString(FillGradientColorAction.DEFAULT_GRADIENT_COLOR));}
-
-				else{
-					graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(newColor));
-					graph.setCellStyles(MXConstants.GRADIENT_ROTATION, null);
-					graph.setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(FillGradientColorAction.DEFAULT_GRADIENT_COLOR));
-	
-					}
-				getEditor().getEditorToolbar().getGraphicsToolbar().setFillStyle(FillStyle.SOLID);
-				}
-			
-			}
-			break;
-		default:
-			break;
-
-		}
-		PNGraphCell selectedCell = (PNGraphCell) graph.getSelectionCell();
-		if(selectedCell != null){
-		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
-		setWithOneCell.add(selectedCell);
-		getEditor().getEditorToolbar().updateView(setWithOneCell);
-		}
-
-//		try {
-//			setFillColor(backgroundColor, gradientColor, this.gradientRotation);
-//			getEditor().getEditorToolbar().setFillStyle(fillStlye, backgroundColor, gradientColor, this.gradientRotation);
-//		} catch (PropertyException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-
-	}
-
 	public void setNoFill() {
 		ImageIcon noFill;
 		try {
@@ -157,4 +76,72 @@ if(backgroundColor != null){
 		}
 
 	}
+
+	@Override
+	protected void performLabelAction() {
+
+		switch (getEditor().getEditorToolbar().getGraphicsToolbar().getFillStyle()) {
+		case SOLID:
+			Color backgroundColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
+			if (backgroundColor != null) {
+				getGraph().setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(backgroundColor));
+			}
+			break;
+		case GRADIENT:
+			Color gradientColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Gradient Color", null);
+			if (gradientColor != null) {
+				getGraph().setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, mxUtils.hexString(gradientColor));
+			}
+			break;
+		case NOFILL:
+			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
+			if (newColor != null) {
+				getGraph().setCellStyles(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, mxUtils.hexString(newColor));
+				getGraph().setCellStyles(MXConstants.LABEL_GRADIENT_ROTATION, null);
+				getGraph().setCellStyles(MXConstants.LABEL_GRADIENTCOLOR, mxUtils.hexString(FillGradientColorAction.DEFAULT_GRADIENT_COLOR));
+				getEditor().getEditorToolbar().getGraphicsToolbar().setFillStyle(FillStyle.SOLID);
+			}
+			break;
+		}
+	}
+
+	@Override
+	protected void performNoLabelAction() {
+		switch (getEditor().getEditorToolbar().getGraphicsToolbar().getFillStyle()) {
+		case SOLID:
+			if (!getGraph().isSelectionEmpty()) {
+				Color backgroundColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
+				if (backgroundColor != null) {
+					getGraph().setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(backgroundColor));
+				}
+			}
+			break;
+		case GRADIENT:
+			Color gradientColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Gradient Color", null);
+			if (gradientColor != null) {
+				getGraph().setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(gradientColor));
+
+			}
+
+			break;
+		case NOFILL:
+			Color newColor = JColorChooser.showDialog(getEditor().getGraphComponent(), "Background Color", null);
+			if (newColor != null) {
+				getGraph().setCellStyles(mxConstants.STYLE_FILLCOLOR, mxUtils.hexString(newColor));
+				getGraph().setCellStyles(MXConstants.GRADIENT_ROTATION, null);
+				getGraph().setCellStyles(mxConstants.STYLE_GRADIENTCOLOR, mxUtils.hexString(FillGradientColorAction.DEFAULT_GRADIENT_COLOR));
+				getEditor().getEditorToolbar().getGraphicsToolbar().setFillStyle(FillStyle.SOLID);
+			}
+
+			break;
+
+		}
+	}
+
+	@Override
+	protected void doMoreFancyStuff(ActionEvent e) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
 }
