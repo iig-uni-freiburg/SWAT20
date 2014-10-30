@@ -2,13 +2,16 @@ package de.uni.freiburg.iig.telematik.swat.editor.menu;
 
 
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillColorSelectionAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class CirclePanel extends JPanel {
@@ -17,18 +20,12 @@ public class CirclePanel extends JPanel {
    int size = 10;
 
 //=========================================== constructor
-   public CirclePanel(Color tokenColor) {
+   public CirclePanel(Color tokenColor) throws PropertyException, IOException {
 	   color = tokenColor;
 	  
-	try {
+
 		size = SwatProperties.getInstance().getIconSize().getSize()/3;
-	} catch (PropertyException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+
      
 	setPreferredSize(new Dimension(size, size));
 //       setBackground(Color.white);

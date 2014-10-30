@@ -2,15 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
 import java.util.Set;
 
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxICell;
-import com.mxgraph.model.mxGraphModel.mxValueChange;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
-import de.invation.code.toval.types.Multiset;
-import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 
@@ -26,102 +19,87 @@ public class AccessModeChange extends mxAtomicGraphModelChange {
 	private String color;
 
 	/**
-	 * @param newCapacity 
-	 * @param color 
-	 * @param string 
-	 * @param graph2 
+	 * @param newCapacity
+	 * @param color
+	 * @param string
+	 * @param graph2
 	 * 
 	 */
 
 	/**
 	 * 
 	 */
-//	public TokenChange(PNGraph pnGraph, PNGraphCell cell, Multiset value)
-//	{
-//		this.graph = pnGraph;
-//		this.cell = cell;
-//		this.value = value;
-//		this.previous = this.value;
-//	}
+	// public TokenChange(PNGraph pnGraph, PNGraphCell cell, Multiset value)
+	// {
+	// this.graph = pnGraph;
+	// this.cell = cell;
+	// this.value = value;
+	// this.previous = this.value;
+	// }
 
 	public AccessModeChange(PNGraph graph, String name, String color, Set am) {
 		this.graph = (IFNetGraph) graph;
 		this.name = name;
 		this.color = color;
 		this.value = am;
-		this.previous = this.value;	
-		}
+		this.previous = this.value;
+	}
 
 	/**
 	 * 
 	 */
-	public void setCell(String value)
-	{
-		name =  value;
+	public void setCell(String value) {
+		name = value;
 	}
 
 	/**
 	 * @return the cell
 	 */
-	public Object getName()
-	{
+	public Object getName() {
 		return name;
 	}
 
 	/**
 	 * 
 	 */
-	public void setValue(Set value)
-	{
+	public void setValue(Set value) {
 		this.value = value;
 	}
 
 	/**
 	 * @return the value
 	 */
-	public Object getValue()
-	{
+	public Object getValue() {
 		return value;
 	}
 
 	/**
 	 * 
 	 */
-	public void setPrevious(Set value)
-	{
+	public void setPrevious(Set value) {
 		previous = value;
 	}
 
 	/**
 	 * @return the previous
 	 */
-	public Object getPrevious()
-	{
+	public Object getPrevious() {
 		return previous;
 	}
 
 	/**
 	 * Changes the root of the model.
 	 */
-	public void execute()
-	{
+	public void execute() {
 		value = previous;
-		previous = valueForCellChanged(name,color,
-				previous);
-		
-	}
-	
-	protected Set valueForCellChanged(String name, String color, Set newAM)
-	{
-		Set oldValue = graph.getAccessModeforTransition(name,color);
-		try {
-			graph.updateAccessModeTransition(name, color,newAM);
-		} catch (ParameterException e) {
-		}		
+		previous = valueForCellChanged(name, color, previous);
 
+	}
+
+	protected Set valueForCellChanged(String name, String color, Set newAM) {
+		Set oldValue = graph.getAccessModeforTransition(name, color);
+		graph.updateAccessModeTransition(name, color, newAM);
 		return oldValue;
 	}
-
-
 
 }

@@ -28,65 +28,25 @@ public class PTGraphComponent extends PNGraphComponent {
 		return false;
 	}
 
-
 	private boolean isExecution;
 
 	@Override
 	protected boolean singleClickOnTransition(PNGraphCell cell, MouseEvent e) {
 		isExecution = getGraph().isExecution();
-		if(isExecution){
+		if (isExecution) {
+
 			try {
 				getGraph().fireTransition(cell);
-				highlightEnabledTransitions();
-
 			} catch (ParameterException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Parameter Exception \nReason: " + e1.getMessage(), "Parameter Exception", JOptionPane.ERROR);
 			} catch (PNException e1) {
-//				JOptionPane.showMessageDialog(PTGraphComponent.this, e1.getMessage(), "Execution Error", JOptionPane.ERROR_MESSAGE);
-
+				JOptionPane.showMessageDialog(null, "Petri Net Exception \nReason: " + e1.getMessage(), "Petri Net Exception", JOptionPane.ERROR);
 			}
+			highlightEnabledTransitions();
+
 		}
 		return true;
 	}
-//	@Override
-//	public void highlightEnabledTransitions() {
-//		Set<String> nameSet = null;
-//		try {
-//			nameSet = PNUtils.getNameSetFromTransitions(getGraph().getNetContainer().getPetriNet().getEnabledTransitions(), true);
-//		} catch (ParameterException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		removeCellOverlays();
-//		for(String n:nameSet){
-//			final PNGraphCell cell =getGraph().nodeReferences.get(n);
-//			Rectangle geo = cell.getGeometry().getRectangle();
-////			enabledTransitionsPanel =
-//			mxCellOverlay overlay = null;
-//			try {
-//				overlay = new mxCellOverlay(IconFactory.getIcon("playred"), null);
-//				overlay.setAlign(mxConstants.ALIGN_CENTER);
-//				overlay.setVerticalAlign(mxConstants.ALIGN_MIDDLE);
-//
-//			} catch (ParameterException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (PropertyException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			addCellOverlay(cell, overlay);
-////			getGraphics().fillRect(geo.x, geo.y, geo.width, geo.height);;
-//			
-//		}
-//		
-//		
-//	}
-
 
 	private static final long serialVersionUID = -1698182711658593407L;
 
@@ -106,14 +66,12 @@ public class PTGraphComponent extends PNGraphComponent {
 			Validate.notNegativeInteger(tokens);
 			Multiset<String> multiSet = new Multiset<String>();
 			multiSet.setMultiplicity("black", new Integer(tokens));
-			((mxGraphModel) getGraph().getModel()).execute(new TokenChange((PNGraph)getGraph(),cell.getId(),multiSet));
+			((mxGraphModel) getGraph().getModel()).execute(new TokenChange((PNGraph) getGraph(), cell.getId(), multiSet));
 		} catch (ParameterException ex) {
 			JOptionPane.showMessageDialog(PTGraphComponent.this, "Input is not a positive integer.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
 		}
 		return true;
 	}
-
-
 
 	@Override
 	protected boolean doubleClickOnArcLabel(PNGraphCell cell, MouseEvent e) {
@@ -123,7 +81,7 @@ public class PTGraphComponent extends PNGraphComponent {
 		} catch (ParameterException ex) {
 			JOptionPane.showMessageDialog(PTGraphComponent.this, "Input is not a positive integer.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
 		}
-		
+
 		if (weight != null) {
 			try {
 				getGraph().getPNProperties().setArcWeight(this, cell.getId(), weight);
@@ -137,27 +95,23 @@ public class PTGraphComponent extends PNGraphComponent {
 	@Override
 	protected boolean mouseWheelOnPlace(PNGraphCell cell, MouseWheelEvent e) {
 		isExecution = getGraph().isExecution();
-		if(!isExecution)
-			((mxGraphModel) getGraph().getModel()).execute(new TokenMouseWheelChange((PNGraph)getGraph(),cell,e.getWheelRotation()));
-	
+		if (!isExecution)
+			((mxGraphModel) getGraph().getModel()).execute(new TokenMouseWheelChange((PNGraph) getGraph(), cell, e.getWheelRotation()));
+
 		return true;
 	}
-
 
 	/**
 	 * Resets the control points of the given edge.
 	 */
-	public Object resetEdge(Object edge)
-	{
+	public Object resetEdge(Object edge) {
 		mxGeometry geo = getGraph().getModel().getGeometry(edge);
 
-		if (geo != null)
-		{
+		if (geo != null) {
 			// Resets the control points
 			List<mxPoint> points = geo.getPoints();
 
-			if (points != null && !points.isEmpty())
-			{
+			if (points != null && !points.isEmpty()) {
 				geo = (mxGeometry) geo.clone();
 				geo.setPoints(null);
 				getGraph().getModel().setGeometry(edge, geo);
@@ -166,7 +120,5 @@ public class PTGraphComponent extends PNGraphComponent {
 
 		return edge;
 	}
-	
-
 
 }

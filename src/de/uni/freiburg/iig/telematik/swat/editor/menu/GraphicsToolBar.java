@@ -257,12 +257,8 @@ public class GraphicsToolBar extends JToolBar {
 		int iconSize = 0;
 		try {
 			iconSize = SwatProperties.getInstance().getIconSize().getSize();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Minimize-Button could not be added. \nReason: " + e.getMessage(), "" + e.getClass(), JOptionPane.ERROR);
 		}
 		JPanel pane = new JPanel();
 		pane.setLayout(new GridBagLayout());
@@ -336,12 +332,8 @@ public class GraphicsToolBar extends JToolBar {
 		int iconSize = 0;
 		try {
 			iconSize = SwatProperties.getInstance().getIconSize().getSize();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Minimize-Button could not be added. \nReason: " + e.getMessage(), "" + e.getClass(), JOptionPane.ERROR);
 		}
 		JPanel pane = new JPanel();
 		pane.setLayout(new GridBagLayout());
@@ -511,7 +503,7 @@ public class GraphicsToolBar extends JToolBar {
 
 	}
 
-	public void updateView(Set<PNGraphCell> selectedComponents) {
+	public void updateView(Set<PNGraphCell> selectedComponents) throws PropertyException, IOException {
 		if (!pnEditor.getGraphComponent().getGraph().isExecution()) {
 			if (selectedComponents == null || selectedComponents.isEmpty()) {
 				deactivate();
@@ -633,7 +625,7 @@ public class GraphicsToolBar extends JToolBar {
 		}
 	}
 
-	private void setFillToolbar(Fill fill, boolean isLabel) {
+	private void setFillToolbar(Fill fill, boolean isLabel) throws PropertyException, IOException {
 		boolean isFillSolid = false;
 		boolean isFillGradient = false;
 		boolean isFillEmpty = false;
@@ -672,54 +664,34 @@ public class GraphicsToolBar extends JToolBar {
 			} else
 				gradientRotation = GradientRotation.VERTICAL;
 
-			try {
-				// backgroundColorAction.setFillColor(fillColor);
-				// gradientColorAction.setFillColor(fillColor,
-				// gradientColor);
+			if (!containsFillColor) {
 
-				if (!containsFillColor) {
-					try {
-						setFillStyle(FillStyle.NOFILL, null, null, null);
-						isFillEmpty = true;
+				setFillStyle(FillStyle.NOFILL, null, null, null);
+				isFillEmpty = true;
 
-					} catch (PropertyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else if (containsFillColor && containsGradientColor && containsGradientRotation && !isLabel) {
-					setFillStyle(FillStyle.GRADIENT, fillColor, gradientColor, gradientRotation);
-					isFillGradient = true;
-				} else {
-					setFillStyle(FillStyle.SOLID, fillColor, fillColor, gradientRotation);
-					isFillSolid = true;
+			} else if (containsFillColor && containsGradientColor && containsGradientRotation && !isLabel) {
+				setFillStyle(FillStyle.GRADIENT, fillColor, gradientColor, gradientRotation);
+				isFillGradient = true;
+			} else {
+				setFillStyle(FillStyle.SOLID, fillColor, fillColor, gradientRotation);
+				isFillSolid = true;
+			}
+			currentFillColor = fillColor;
+			if (containsGradientRotation) {
+				switch (gradientRotation) {
+				case DIAGONAL:
+					isGradientDiagonal = true;
+					break;
+				case HORIZONTAL:
+					isGradientHorizontal = true;
+					break;
+				case VERTICAL:
+					isGradientVertical = true;
+					break;
+				default:
+					break;
+
 				}
-				currentFillColor = fillColor;
-				if (containsGradientRotation) {
-					switch (gradientRotation) {
-					case DIAGONAL:
-						isGradientDiagonal = true;
-						break;
-					case HORIZONTAL:
-						isGradientHorizontal = true;
-						break;
-					case VERTICAL:
-						isGradientVertical = true;
-						break;
-					default:
-						break;
-
-					}
-				}
-
-			} catch (PropertyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 
 			gradientColorButton.repaint();
@@ -745,43 +717,27 @@ public class GraphicsToolBar extends JToolBar {
 
 	}
 
-	private void setLineStyle(LineStyle nofill, Color fillColor, Style linestyle, boolean isLineCurve) {
+	private void setLineStyle(LineStyle nofill, Color fillColor, Style linestyle, boolean isLineCurve) throws ParameterException, PropertyException, IOException {
 		switch (nofill) {
 		case NOFILL:
 			lineColorSelectionAction.setNoFill();
 			break;
 		case NORMAL:
 			if (fillColor != null)
-				try {
-					lineColorSelectionAction.setFillColor(fillColor, 1.0, linestyle, isLineCurve);
-				} catch (PropertyException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				lineColorSelectionAction.setFillColor(fillColor, 1.0, linestyle, isLineCurve);
 			break;
 		default:
 			break;
 		}
 		if (fillColor != null) {
-			try {
-				lineAction.setFillColor(fillColor, 1.0);
-				curveAction.setLineColor(fillColor);
-			} catch (PropertyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			lineAction.setFillColor(fillColor, 1.0);
+			curveAction.setLineColor(fillColor);
 		}
 
 		colorSelectionButton.repaint();
 	}
 
-	private void setLineToolbar(Line line) {
+	private void setLineToolbar(Line line) throws ParameterException, PropertyException, IOException {
 		boolean isLineEmpty = false;
 		boolean isLineLine = false;
 		boolean isLineCurve = false;

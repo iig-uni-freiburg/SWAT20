@@ -18,58 +18,39 @@ public class ExportToolBar extends JToolBar {
 
 	private static final long serialVersionUID = -6491749112943066366L;
 
-
 	// Actions
 
 	private ExportPDFAction pdfAction;
-	
+
 	// Buttons
 	private JButton pdfButton;
 
 	// Tooltips
 	private String pdfButtonTooltip = "Export to PDF";
 
-
 	private ExportPNGAction pngAction;
-
 
 	private JButton pngButton;
 
-
 	private String pngButtonTooltip = "Export to PNG";
 
-	public ExportToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
+	public ExportToolBar(final PNEditor pnEditor, int orientation) throws ParameterException, PropertyException, IOException {
 		super(orientation);
 		Validate.notNull(pnEditor);
 
-		try {
+		pdfAction = new ExportPDFAction(pnEditor);
+		pngAction = new ExportPNGAction(pnEditor);
 
-			pdfAction = new ExportPDFAction(pnEditor);	
-			pngAction = new ExportPNGAction(pnEditor);	
-			
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		setFloatable(false);
-
-
-
 
 		pdfButton = add(pdfAction);
 		setButtonSettings(pdfButton);
 		pdfButton.setToolTipText(pdfButtonTooltip);
-		
+
 		pngButton = add(pngAction);
 		setButtonSettings(pngButton);
-		pngButton.setToolTipText(pngButtonTooltip );
+		pngButton.setToolTipText(pngButtonTooltip);
 
-	
-		
-		
 	}
 
 	private void setButtonSettings(final JButton button) {

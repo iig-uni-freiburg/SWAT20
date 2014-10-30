@@ -73,15 +73,17 @@ public class PNTreeNodeRenderer extends DefaultTreeCellRenderer {
 	public static Image createTransitionImage() {
 		Color defaultFillColor = Utils.parseColor(nodeColor  );
 		IconSize iconsize = null;
-		try {
-			iconsize = SwatProperties.getInstance().getIconSize();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+			try {
+				iconsize = SwatProperties.getInstance().getIconSize();
+			} catch (PropertyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		int size = iconsize.getSize();
 
 

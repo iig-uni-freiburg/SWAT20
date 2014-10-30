@@ -106,7 +106,7 @@ public class ExportPNGAction extends AbstractPNEditorAction {
 				f.getContentPane().add(forPrint);
 				f.pack();
 				forPrint.paint(g2);
-				try{ImageIO.write(b,"png",new File(filename));}catch (Exception e1) {}
+				ImageIO.write(b,"png",new File(filename));
 				g2.dispose();
 				document.close();
 

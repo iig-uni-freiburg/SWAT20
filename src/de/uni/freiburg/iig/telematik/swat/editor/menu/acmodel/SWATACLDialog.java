@@ -115,15 +115,13 @@ public class SWATACLDialog extends AbstractDialog {
 
 				@Override
 				public void itemStateChanged(ItemEvent e) {
-					try {
+
 						if(viewComboBox.getSelectedIndex() == 0){
 							aclTable.setView(SWATAdvancedACLTable.VIEW.TRANSACTION);
 						} else {
 							aclTable.setView(SWATAdvancedACLTable.VIEW.OBJECT);
 						}
-					} catch (ParameterException e1) {
-						e1.printStackTrace();
-					}
+
 				}
 				
 			});

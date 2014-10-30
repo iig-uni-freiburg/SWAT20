@@ -358,27 +358,7 @@ public class SWATACModelDialog extends JDialog {
 						Set<String> subjectsToRemove = new HashSet<String>(acModel.getSubjects());
 						subjectsToRemove.removeAll(editedSubjects);
 						if(!subjectsToRemove.isEmpty()){
-							//Check if there are contexts referring to this ac-model
-//							try{
-//								Set<String> contextNames = SwatComponents.getInstance().getContextsWithACModel(acModel);
-//								if(!contextNames.isEmpty()){
-//									for(String contextName: contextNames){
-//										Context context = SwatComponents.getInstance().getContext(contextName);
-//										if(!editedSubjects.containsAll(context.getSubjects())){
-//											//The edited set of subjects does not contain all context subjects
-//											//-> Don't change ac-model subjects to prevent inconsistencies.
-//											JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot change subjects of access control model.\nReason: New subject set does not contain all subjects of connected context \""+context.getName()+"\"", "Inconsistency Exception", JOptionPane.ERROR_MESSAGE);
-//											return;
-//										}
-//									}
-//								}
-//							}catch(Exception ex){
-//								JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Exception while checking consistency of connected contexts.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-//								return;
-//							}
-							
-							//Changing the subject set does not cause any inconsistencies with connected contexts.
-							//Remove the subjects from the ac-model.
+
 							try {
 								acModel.removeSubjects(subjectsToRemove);
 							} catch (ParameterException e1) {
@@ -403,137 +383,7 @@ public class SWATACModelDialog extends JDialog {
 		}
 		return btnSubjects;
 	}
-	
-//	private JButton getButtonActivities(){
-//		if(btnActivities == null){
-//			btnActivities = new JButton("Activities...");
-//			btnActivities.addActionListener(new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					Set<String> editedActivities = null;
-//					try {
-//						editedActivities = ValueEditingDialog.showDialog(ACModelForSWATDialog.this, "AC Model Activities", acModel.getTransactions());
-//					} catch (Exception e2) {
-//						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "<html>Cannot launch value editing dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-//					}
-//					if(editedActivities != null){
-//						if(editedActivities.isEmpty()){
-//							JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot remove all activities from access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-//							return;
-//						}
-//						Set<String> activitiesToRemove = new HashSet<String>(acModel.getTransactions());
-//						activitiesToRemove.removeAll(editedActivities);
-//						if(!activitiesToRemove.isEmpty()){
-//							//Check if there are contexts referring to this ac-model
-//							try{
-//								Set<String> contextNames = SwatComponents.getInstance().getContextsWithACModel(acModel);
-//								if(!contextNames.isEmpty()){
-//									for(String contextName: contextNames){
-//										Context context = SwatComponents.getInstance().getContext(contextName);
-//										if(!editedActivities.containsAll(context.getActivities())){
-//											//The edited set of activities does not contain all context activities
-//											//-> Don't change ac-model activities to prevent inconsistencies.
-//											JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot change activities of access control model.\nReason: New activity set does not contain all activities of connected context \""+context.getName()+"\"", "Inconsistency Exception", JOptionPane.ERROR_MESSAGE);
-//											return;
-//										}
-//									}
-//								}
-//							}catch(Exception ex){
-//								JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Exception while checking consistency of connected contexts.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-//								return;
-//							}
-//							
-//							//Changing the activity set does not cause any inconsistencies with connected contexts.
-//							//Remove the activities from the ac-model.
-//							try {
-//								acModel.removeTransactions(activitiesToRemove);
-//							} catch (ParameterException e1) {
-//								JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot remove activities from access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-//								return;
-//							}
-//						}
-//						try {
-//							acModel.setTransactions(editedActivities);
-//						} catch (ParameterException e1) {
-//							JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot set activities of access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-//							return;
-//						}
-//						updateTextArea();
-//					} else {
-//						//The user cancelled the dialog.
-//						//Do nothing.
-//					}
-//				}
-//			});
-//			btnActivities.setBounds(145, 395, 110, 29);
-//		}
-//		return btnActivities;
-//	}
-	
-//	private JButton getButtonAttributes(){
-//		if(btnAttributes == null){
-//			btnAttributes = new JButton("Attributes...");
-//			btnAttributes.addActionListener(new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					Set<String> editedAttributes = null;
-//					try {
-//						editedAttributes = ValueEditingDialog.showDialog(ACModelForSWATDialog.this, "AC Model Attributes", acModel.getObjects());
-//					} catch (Exception e2) {
-//						JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "<html>Cannot launch value editing dialog.<br>Reason: "+e2.getMessage()+"</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-//					}
-//					if(editedAttributes != null){
-//						if(editedAttributes.isEmpty()){
-//							JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot remove all attributes from access control model.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-//							return;
-//						}
-//						Set<String> attributesToRemove = new HashSet<String>(acModel.getObjects());
-//						attributesToRemove.removeAll(editedAttributes);
-//						if(!attributesToRemove.isEmpty()){
-//							//Check if there are contexts referring to this ac-model
-//							try{
-//								Set<String> contextNames = SwatComponents.getInstance().getContextsWithACModel(acModel);
-//								if(!contextNames.isEmpty()){
-//									for(String contextName: contextNames){
-//										Context context = SwatComponents.getInstance().getContext(contextName);
-//										if(!editedAttributes.containsAll(context.getAttributes())){
-//											//The edited set of attributes does not contain all context attributes
-//											//-> Don't change ac-model attributes to prevent inconsistencies.
-//											JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot change attributes of access control model.\nReason: New attribute set does not contain all attributes of connected context \""+context.getName()+"\"", "Inconsistency Exception", JOptionPane.ERROR_MESSAGE);
-//											return;
-//										}
-//									}
-//								}
-//							}catch(Exception ex){
-//								JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Exception while checking consistency of connected contexts.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
-//								return;
-//							}
-//							
-//							//Changing the attribute set does not cause any inconsistencies with connected contexts.
-//							//Remove the attributes from the ac-model.
-//							try {
-//								acModel.removeObjects(attributesToRemove);
-//							} catch (ParameterException e1) {
-//								JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot remove attributes from access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-//								return;
-//							}
-//						}
-//						try {
-//							acModel.setObjects(editedAttributes);
-//						} catch (ParameterException e1) {
-//							JOptionPane.showMessageDialog(ACModelForSWATDialog.this, "Cannot set attributes of access control model\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-//							return;
-//						}
-//						updateTextArea();
-//					} else {
-//						//The user cancelled the dialog.
-//						//Do nothing.
-//					}
-//				}
-//			});
-//			btnAttributes.setBounds(270, 395, 110, 29);
-//		}
-//		return btnAttributes;
-//	}
-//	
+
 	private void addNewACLModel(String name) throws ParameterException, IOException, PropertyException {
 //		ACLModel newACLModel = new ACLModel(name);
 		ACLModel newACLModel = new ACLModel(name);
@@ -564,9 +414,7 @@ public class SWATACModelDialog extends JDialog {
 		if(roleLattice != null){
 			RBACModel newRBACModel = new RBACModel(name, roleLattice);
 			newRBACModel.setSubjects(SWATACModelDialog.this.context.getSubjects());
-//			if(ACModelForSWATDialog.this.context.hasAttributes()){
-//				newRBACModel.setObjects(ACModelForSWATDialog.this.context.getAttributes());
-//			}
+
 			if(SWATACModelDialog.this.context.hasActivities()){
 				newRBACModel.setActivities(SWATACModelDialog.this.context.getActivities());
 			}
@@ -621,7 +469,6 @@ public class SWATACModelDialog extends JDialog {
 		Class aclModelType = radioACL.isSelected() ? ACLModel.class : RBACModel.class;
 		
 		for(ACModel acModel: SwatComponents.getInstance().getACModels()){
-//			if(aclModelType.isInstance(acModel) && context.isCompatible(acModel)){
 			if(aclModelType.isInstance(acModel)){
 				theModel.addElement(acModel.getName());
 			}
@@ -643,8 +490,8 @@ public class SWATACModelDialog extends JDialog {
 				try {
 					SwatComponents.getInstance().storeACModel(acModel);
 				} catch (SwatComponentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(this, "AC-Model"+acModel.getName()+"could not be stored. \nReason: "+e.getMessage(), "Swat Component Exception", JOptionPane.ERROR);
+
 				}
 
 	}

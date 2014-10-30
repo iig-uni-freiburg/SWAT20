@@ -1,22 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions.graphics;
 
 import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
-import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public abstract class AbstractPNEditorGraphicsAction extends AbstractPNEditorAction {
 	/**

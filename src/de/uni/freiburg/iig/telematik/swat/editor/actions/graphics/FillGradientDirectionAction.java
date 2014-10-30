@@ -46,18 +46,11 @@ public class FillGradientDirectionAction extends AbstractPNEditorGraphicsAction 
 		getIcon().setImage(newimg);
 	}
 
-	private Image getVerticalImage() {
+	private Image getVerticalImage() throws PropertyException, IOException {
 		int size = 0;
-		try {
-			IconSize iconSize = SwatProperties.getInstance().getIconSize();
-			size = iconSize.getSize();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		IconSize iconSize = SwatProperties.getInstance().getIconSize();
+		size = iconSize.getSize();
+
 		Image image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB_PRE);
 		Graphics g = image.getGraphics();
 		Graphics2D g2 = (Graphics2D) g;

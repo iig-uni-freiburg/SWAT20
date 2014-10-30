@@ -427,17 +427,25 @@ public class ToolBar extends JToolBar {
 		return b;
 	}
 
-	public void updateView(Set<PNGraphCell> selectedComponents) {
+	public void updateView(Set<PNGraphCell> selectedComponents) throws EditorToolbarException {
 		switch (mode) {
 		case EDIT:
 			fontToolbar.updateView(selectedComponents);
-			graphicsToolbar.updateView(selectedComponents);
+			try {
+				graphicsToolbar.updateView(selectedComponents);
+			} catch (PropertyException e) {
+				throw new EditorToolbarException("Invalid Property.\nReason: " + e.getMessage());
+			} catch (IOException e) {
+				throw new EditorToolbarException("Invalid File Path.\nReason: " + e.getMessage());
+			}
 			break;
 		case PLAY:
 			break;
 
 		}
 	}
+	
+
 
 	public void setExecutionMode() {
 		mode = Mode.PLAY;

@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -72,7 +73,7 @@ public abstract class AbstractPNEditorAction extends AbstractAction {
 	return getGraphSelectionCell() != null;
 	}
 	
-	protected void updateViewWithSelectedCell() {
+	protected void updateViewWithSelectedCell() throws EditorToolbarException {
 		if(isCellSelected()){
 		Set<PNGraphCell> setWithOneCell = new HashSet<PNGraphCell>();
 		setWithOneCell.add(getGraphSelectionCell());

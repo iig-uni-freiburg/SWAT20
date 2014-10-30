@@ -125,13 +125,7 @@ public class PTGraph extends PNGraph {
 
 	@Override
 	protected void setArcLabel(PNGraph sender, String arcName, String weight) {
-		try {
 			getPNProperties().setArcWeight(sender, arcName, weight);
-		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 
 	@Override

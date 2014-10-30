@@ -946,11 +946,9 @@ public class SWATContextForAC {
 			for(String activity: getActivities()){
 				builder.append(activity);
 				builder.append(": ");
-				try {
+	
 					builder.append(getACModel().getAuthorizedSubjectsForTransaction(activity));
-				} catch (CompatibilityException e) {
-					e.printStackTrace();
-				}
+
 				builder.append('\n');
 			}
 			
@@ -962,7 +960,7 @@ public class SWATContextForAC {
 			for(String attribute: getAttributes()){
 				builder.append(attribute);
 				builder.append(": ");
-				try {
+
 					Map<String, Set<DataUsage>> subjectsAndPermissions = getACModel().getAuthorizedSubjectsAndPermissionsForObject(attribute);
 					if(!subjectsAndPermissions.isEmpty()){
 						builder.append('[');
@@ -973,9 +971,7 @@ public class SWATContextForAC {
 						}
 						builder.append(']');
 					}
-				} catch (CompatibilityException e) {
-					e.printStackTrace();
-				}
+
 				builder.append('\n');
 			}
 			
@@ -986,11 +982,9 @@ public class SWATContextForAC {
 			for(String activity: getActivities()){
 				builder.append(activity);
 				builder.append(": ");
-				try {
+	
 					builder.append(getAuthorizedSubjects(activity));
-				} catch (CompatibilityException e) {
-					e.printStackTrace();
-				}
+
 				builder.append('\n');
 			}
 		}

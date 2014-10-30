@@ -51,20 +51,11 @@ public class TokenColorSelectionAction extends AbstractPNEditorAction {
 		this.tokenLabel = tokenLabel;
 	}
 
-	public void setTokenColor(Color fillColor) {
+	public void setTokenColor(Color fillColor) throws PropertyException, IOException {
 		this.tokenColor = fillColor;
 		Image image;
-		try {
-			image = Utils.createIconImage(fillColor, fillColor, GradientRotation.VERTICAL, SwatProperties.getInstance().getIconSize().getSize());
-			setIconImage(image);
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		image = Utils.createIconImage(fillColor, fillColor, GradientRotation.VERTICAL, SwatProperties.getInstance().getIconSize().getSize());
+		setIconImage(image);
 	}
 
 	public Color getTokenColor() {
@@ -84,14 +75,14 @@ public class TokenColorSelectionAction extends AbstractPNEditorAction {
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		FillStyle fillStlye = getEditor().getEditorToolbar().getGraphicsToolbar().getFillStyle();
 		Color backgroundColor = JColorChooser.showDialog(parent, "Token Color", null);
-		if(backgroundColor != null){
-		setTokenColor(backgroundColor);
+		if (backgroundColor != null) {
+			setTokenColor(backgroundColor);
 
-		if (tokenLabel != null) {
-			AbstractCPNGraphics cpnGraphics = (AbstractCPNGraphics) editor.getGraphComponent().getGraph().getNetContainer().getPetriNetGraphics();
-			((mxGraphModel) getGraph().getModel()).execute(new TokenColorChange(editor,tokenLabel,getTokenColor()));
+			if (tokenLabel != null) {
+				AbstractCPNGraphics cpnGraphics = (AbstractCPNGraphics) editor.getGraphComponent().getGraph().getNetContainer().getPetriNetGraphics();
+				((mxGraphModel) getGraph().getModel()).execute(new TokenColorChange(editor, tokenLabel, getTokenColor()));
+			}
 		}
-		}		
 	}
 
 }

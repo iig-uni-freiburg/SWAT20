@@ -7,7 +7,10 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.handler;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.TrayIcon.MessageType;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JOptionPane;
 
 import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.handler.mxConnectPreview;
@@ -16,6 +19,7 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.view.mxCellState;
 
+import de.invation.code.toval.parser.ParserException.ErrorCode;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
@@ -56,7 +60,6 @@ public class ConnectionHandler extends mxConnectionHandler {
 					PNGraph graph = getGraphComponent().getGraph();
 
 					graph.getModel().beginUpdate();
-					// try {
 					mxICell cell = (mxICell) previewState.getCell();
 					Object src = cell.getTerminal(true);
 					Object trg = cell.getTerminal(false);
@@ -70,11 +73,9 @@ public class ConnectionHandler extends mxConnectionHandler {
 					}
 
 					if (commit) {
-						try {
-							result = ((PNGraph) graphComponent.getGraph()).addNewFlowRelation((PNGraphCell) src, (PNGraphCell) trg);
-						} catch (ParameterException e1) {
-							e1.printStackTrace();
-						}
+
+						result = ((PNGraph) graphComponent.getGraph()).addNewFlowRelation((PNGraphCell) src, (PNGraphCell) trg);
+
 					}
 					fireEvent(new mxEventObject(mxEvent.STOP, "event", e, "commit", commit, "cell", (commit) ? result : null));
 
@@ -89,7 +90,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 						}
 					}
 					graph.getModel().endUpdate();
-					//Repaint to avoid graph-artifacts of unallowed connections
+					// Repaint to avoid graph-artifacts of unallowed connections
 					graph.repaint();
 				}
 
@@ -111,8 +112,7 @@ public class ConnectionHandler extends mxConnectionHandler {
 				PNGraph graph = getGraphComponent().getGraph();
 				double dx = first.getX() - e.getX();
 				double dy = first.getY() - e.getY();
-				
-				
+
 				PNGraphCell targetCell = null;
 				Object edgeCell = null;
 
@@ -137,21 +137,17 @@ public class ConnectionHandler extends mxConnectionHandler {
 						}
 
 						edgeCell = connectPreview.stop(graphComponent.isSignificant(dx, dy), e);
-						
+
 						if (edgeCell != null) {
 							eventSource.fireEvent(new mxEventObject(mxEvent.CONNECT, "cell", edgeCell, "event", e, "target", targetCell));
 						}
 
 						e.consume();
-					} catch (ParameterException e1) {
-						System.out.println(getSource().getType() + "-Vertex could not be created");
-						e1.printStackTrace();
 					} finally {
 						graph.getModel().endUpdate();
-						if(targetCell != null){
+						if (targetCell != null) {
 							((PNGraph) graphComponent.getGraph()).setSelectionCell(targetCell);
-						}
-						else {
+						} else {
 							((PNGraph) graphComponent.getGraph()).setSelectionCell(edgeCell);
 						}
 
@@ -163,34 +159,24 @@ public class ConnectionHandler extends mxConnectionHandler {
 
 		reset();
 	}
-	
+
 	@Override
 	/**
 	 * 
 	 */
-	public void paint(Graphics g)
-	{
-		if (bounds != null)
-		{
-			if (connectIcon != null)
-			{
-				g.drawImage(connectIcon.getImage(), bounds.x, bounds.y,
-						bounds.width, bounds.height, null);
-			}
-			else if (handleEnabled)
-			{
+	public void paint(Graphics g) {
+		if (bounds != null) {
+			if (connectIcon != null) {
+				g.drawImage(connectIcon.getImage(), bounds.x, bounds.y, bounds.width, bounds.height, null);
+			} else if (handleEnabled) {
 				g.setColor(Color.BLACK);
-				g.draw3DRect(bounds.x, bounds.y, bounds.width - 1,
-						bounds.height - 1, true);
+				g.draw3DRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, true);
 				g.setColor(Color.LIGHT_GRAY);
-				g.fill3DRect(bounds.x + 1, bounds.y + 1, bounds.width - 2,
-						bounds.height - 2, true);
+				g.fill3DRect(bounds.x + 1, bounds.y + 1, bounds.width - 2, bounds.height - 2, true);
 				g.setColor(Color.BLUE);
-				g.drawRect(bounds.x + bounds.width / 2 - 1, bounds.y
-						+ bounds.height / 2 - 1, 1, 1);
+				g.drawRect(bounds.x + bounds.width / 2 - 1, bounds.y + bounds.height / 2 - 1, 1, 1);
 			}
 		}
 	}
-
 
 }

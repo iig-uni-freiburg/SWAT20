@@ -36,12 +36,12 @@ public class IFNetEditor extends AbstractIFNetEditor {
 	}
 
 	private void updateAnalysisContextSelection(GraphicalIFNet netContainer) {
-		if(netContainer.getPetriNet().getAnalysisContext() != null){
+		if (netContainer.getPetriNet().getAnalysisContext() != null) {
 			AnalysisContext analysisContext = SwatComponents.getInstance().getAnalysisContext(netContainer.getPetriNet().getName(), netContainer.getPetriNet().getAnalysisContext().getName());
 			((mxGraphModel) getGraphComponent().getGraph().getModel()).execute(new AnalysisContextChange(this, analysisContext));
 		}
 	}
-	
+
 	@Override
 	protected GraphicalIFNet createNetContainer() {
 		return new GraphicalIFNet(new IFNet(), new IFNetGraphics());
@@ -54,16 +54,11 @@ public class IFNetEditor extends AbstractIFNetEditor {
 
 	@Override
 	protected PNProperties createPNProperties() {
-		try {
-			return new IFNetProperties(getNetContainer());
-		} catch (ParameterException e) {
-			// Should not happen, since getNetContainer never returns null;
-			e.printStackTrace();
-		}
-		return null;
+		return new IFNetProperties(getNetContainer());
+
 	}
 
-	@SuppressWarnings("rawtypes") 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected String getArcConstraint(AbstractFlowRelation relation) {
 		// TODO: Do something
@@ -78,37 +73,43 @@ public class IFNetEditor extends AbstractIFNetEditor {
 
 	@Override
 	protected PNGraphComponent createGraphComponent() {
-		try {
-			return new IFNetGraphComponent(new IFNetGraph(getNetContainer(), getPNProperties()));
-		} catch (ParameterException e) {
-			// Should not happen, since getNetContainer() and getPNProperties() never return null;
-			e.printStackTrace();
-		}
-		return null;
+		return new IFNetGraphComponent(new IFNetGraph(getNetContainer(), getPNProperties()));
+
 	}
 
 	@Override
 	public EditorPopupMenu getPopupMenu() {
-		// TODO Auto-generated method stub
+		try {
+			return new EditorPopupMenu(this);
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public TransitionPopupMenu getTransitionPopupMenu() {
-		try {
-			try {
-				return new TransitionPopupMenu(this);
-			} catch (PropertyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (ParameterException e) {
-			e.printStackTrace();
-		}
-		return null;
+				try {
+					return new TransitionPopupMenu(this);
+				} catch (ParameterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (PropertyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+
 	}
 
 }

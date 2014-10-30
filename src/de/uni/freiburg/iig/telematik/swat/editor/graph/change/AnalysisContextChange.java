@@ -100,11 +100,7 @@ public class AnalysisContextChange extends mxAtomicGraphModelChange {
 
 	protected AnalysisContext valueForCellChanged(AnalysisContext value) {
 		AnalysisContext oldValue = graph.getCurrentAnalysisContext();
-		try {
-			graph.updateAnalysisContext(value);
-		} catch (ParameterException e) {
-			e.printStackTrace();
-		}
+		graph.updateAnalysisContext(value);
 
 		return oldValue;
 	}

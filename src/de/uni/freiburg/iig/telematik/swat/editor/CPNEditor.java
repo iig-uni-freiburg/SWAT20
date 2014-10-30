@@ -40,7 +40,7 @@ public class CPNEditor extends AbstractCPNEditor {
 	public GraphicalCPN getNetContainer() {
 		return (GraphicalCPN) super.getNetContainer();
 	}
-	
+
 	@Override
 	public GraphicalCPN createNetContainer() {
 		return new GraphicalCPN(new CPN(), new CPNGraphics());
@@ -48,16 +48,10 @@ public class CPNEditor extends AbstractCPNEditor {
 
 	@Override
 	protected PNProperties createPNProperties() {
-		try {
 			return new CPNProperties(getNetContainer());
-		} catch (ParameterException e) {
-			// Should not happen, since getNetContainer never returns null;
-			e.printStackTrace();
-		}
-		return null;
 	}
 
-	@SuppressWarnings("rawtypes") 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected String getArcConstraint(AbstractFlowRelation relation) {
 		// TODO: Do something
@@ -71,13 +65,7 @@ public class CPNEditor extends AbstractCPNEditor {
 
 	@Override
 	protected PNGraphComponent createGraphComponent() {
-		try {
 			return new CPNGraphComponent(new CPNGraph(getNetContainer(), getPNProperties()));
-		} catch (ParameterException e) {
-			// Should not happen, since getNetContainer() and getPNProperties() never return null;
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override
@@ -96,10 +84,6 @@ public class CPNEditor extends AbstractCPNEditor {
 		}
 		return null;
 	}
-	
-//	public final static String PNML = PNEditor.class.getResource("/samples/sampleCPnet.pnml").getPath();
-//	public final static String LABELING = PNEditor.class.getResource("/samples/sampleIFnetLabeling01.xml").getPath();
-
 
 	private static void testEmptyNet(JFrame frame) throws IOException, ParserException, ParameterException {
 		JPanel panel = createFrameEpmtyNet(frame);
@@ -110,27 +94,6 @@ public class CPNEditor extends AbstractCPNEditor {
 
 	}
 
-
-//	private static void openSampleNetWithProperties(JFrame frame) throws IOException, ParserException, ParameterException {
-//		JPanel panel = createFrame(frame);
-//		PropertiesView pV = ((PNEditor) panel).getPropertiesView();
-//		frame.setLayout(new BorderLayout());
-//		frame.getContentPane().add(panel, BorderLayout.CENTER);
-//		frame.getContentPane().add(pV, BorderLayout.LINE_END);
-//
-//	}
-//	
-
-//	public static JPanel createFrame(JFrame frame) throws IOException, ParserException, ParameterException {
-//		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> netContainer = new PNMLParser().parse(PNML, false,false);
-//		JPanel panel = new CPNEditor(((GraphicalCPN) netContainer), new File(PNML));
-//		frame.setTitle("CPNet Editor");
-//		frame.setSize(800, 500);
-//		panel.setBackground(Color.black);
-//		return panel;
-//	}
-
-	
 	public static JPanel createFrameEpmtyNet(JFrame frame) throws IOException, ParserException, ParameterException {
 		String userHome = System.getProperty("user.home");
 		File file = new File(userHome + "test");
@@ -147,17 +110,4 @@ public class CPNEditor extends AbstractCPNEditor {
 		return null;
 	}
 
-
-//	public static void main(String[] args) throws IOException, ParserException, ParameterException {
-//		JFrame frame = new JFrame();
-////		 testEmptyNet(frame);
-//		openSampleNetWithProperties(frame);
-//		
-//		// show all
-//		frame.setVisible(true);
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//	}
-
-
-	
 }

@@ -114,13 +114,13 @@ public class FontToolBar extends JToolBar {
 
 	private JLabel fontLabel;
 
-	public FontToolBar(final PNEditor pnEditor, int orientation) throws ParameterException {
+	public FontToolBar(final PNEditor pnEditor, int orientation) throws ParameterException, PropertyException, IOException {
 		super(orientation);
 		Validate.notNull(pnEditor);
 //		setLayout(new WrapLayout(FlowLayout.LEFT));
 		this.pnEditor = pnEditor;
 
-		try {
+
 			showHideTokensOnArcsAction = new ShowHideTokensOnArcsAction(pnEditor);
 			showHideTokensOnArcsAction.setFontToolbar(this);
 			showHideLabelsAction = new ShowHideLabelsAction(pnEditor);
@@ -134,11 +134,7 @@ public class FontToolBar extends JToolBar {
 			alignRightAction = new FontAlignRightAction(pnEditor);
 			textRotationAction = new FontRotationAction(pnEditor);	
 			
-		} catch (PropertyException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		setFloatable(false);
 		showHideTokensOnArcsButton = (JButton) add(showHideTokensOnArcsAction, false);
 		setButtonSettings(showHideTokensOnArcsButton);

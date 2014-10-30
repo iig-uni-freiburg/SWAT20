@@ -1,12 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup;
 
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxCompactTreeLayout;
@@ -20,16 +16,13 @@ import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxRectangle;
-import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
+import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxGraph;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 
 public class LayoutAction extends AbstractPNEditorAction {
 
@@ -54,52 +47,6 @@ public class LayoutAction extends AbstractPNEditorAction {
 	 *            example.
 	 * @return an action that executes the specified layout
 	 */
-//	@SuppressWarnings("serial")
-//	public Action graphLayout(String key, boolean animate) {
-//		final mxIGraphLayout layout = createLayout(key, animate);
-//
-//		if (layout != null) {
-//			return new AbstractAction(mxResources.get(key)) {
-//				public void actionPerformed(ActionEvent e) {
-//					mxGraph graph = graphComponent.getGraph();
-//					Object cell = graph.getSelectionCell();
-//
-//					if (cell == null || graph.getModel().getChildCount(cell) == 0) {
-//						cell = graph.getDefaultParent();
-//					}
-//
-//					graph.getModel().beginUpdate();
-//					try {
-//						long t0 = System.currentTimeMillis();
-//						layout.execute(cell);
-//					} finally {
-//						mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
-//
-//						morph.addListener(mxEvent.DONE, new mxIEventListener() {
-//
-//							public void invoke(Object sender, mxEventObject evt) {
-//								graphComponent.getGraph().getModel().endUpdate();
-////								getGraph().updatePositionPropertiesFromCells();
-//							}
-//
-//						});
-//
-//						morph.startAnimation();
-//					}
-//
-//				}
-//
-//			};
-//		} else {
-//			return new AbstractAction(mxResources.get(key)) {
-//
-//				public void actionPerformed(ActionEvent e) {
-//					JOptionPane.showMessageDialog(graphComponent, mxResources.get("noLayout"));
-//				}
-//
-//			};
-//		}
-//	}
 	
 	/**
 	 * Creates a layout instance for the given identifier.
@@ -224,7 +171,6 @@ public class LayoutAction extends AbstractPNEditorAction {
 
 				public void invoke(Object sender, mxEventObject evt) {
 					getEditor().getGraphComponent().getGraph().getModel().endUpdate();
-//					getGraph().updatePositionPropertiesFromCells();
 				}
 
 			});

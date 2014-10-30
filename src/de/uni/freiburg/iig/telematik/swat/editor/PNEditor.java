@@ -2,18 +2,14 @@ package de.uni.freiburg.iig.telematik.swat.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
@@ -47,13 +43,11 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxRectangle;
-import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 
-import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
@@ -85,9 +79,9 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNode;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 
 public abstract class PNEditor extends JPanel implements WorkbenchComponent, TreeSelectionListener, PNGraphListener {
 
@@ -279,30 +273,12 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 		getGraph().getModel().addListener(mxEvent.UNDO, undoHandler);
 		getGraph().getView().addListener(mxEvent.UNDO, undoHandler);
 
-		// // Keeps the selection in sync with the command history
-		// mxIEventListener undoHandler = new mxIEventListener()
-		// {
-		// public void invoke(Object source, mxEventObject evt)
-		// {
-		// List<mxUndoableChange> changes = ((mxUndoableEdit) evt
-		// .getProperty("edit")).getChanges();
-		// getGraph().setSelectionCells(getGraph()
-		// .getSelectionCellsForChanges(changes));
-		// }
-		// };
 	}
 
 	@Override
 	public JComponent getMainComponent() {
 		return this;
 	}
-
-	// private JPanel getPalettePanel() throws ParameterException {
-	// if (palettePanel == null) {
-	// palettePanel = new PalettePanel();
-	// }
-	// return palettePanel;
-	// }
 
 	private JPanel getStatusPanel() {
 		if (statusPanel == null) {
@@ -559,21 +535,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		// if(e.getSource() == null || e.getSource() == this)
-		// return;
-		// JTree sourceTree = null;
-		// try{
-		// sourceTree = (JTree) e.getSource();
-		// } catch(Exception ex){
-		// return;
-		// }
-		// PNTreeNode node = null;
-		// try{
-		// node = (PNTreeNode) sourceTree.getLastSelectedPathComponent();
-		// }catch(Exception ex){
-		// return;
-		// }
-		// treeNodeSelected(node);
+
 	}
 
 	private void treeNodeSelected(PNTreeNode node) {
@@ -642,7 +604,13 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 			PNGraphCell selectedCell = selectedComponents.iterator().next();
 			propertiesView.selectNode(selectedCell.getId());
 		}
-		toolbar.updateView(selectedComponents);
+		try {
+			toolbar.updateView(selectedComponents);
+		} catch (EditorToolbarException e) {
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot update selected Toolbar components.\nReason: " + e.getMessage(), "Editor Toolbar Exception",
+					JOptionPane.ERROR_MESSAGE);
+
+		}
 	}
 
 	/**

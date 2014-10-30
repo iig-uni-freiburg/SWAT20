@@ -101,7 +101,13 @@ public class TokenlabelToolBar extends JToolBar {
 	private void addRow(final String tokenLabel) {
 
 		Color tokenColor = colors.get(tokenLabel);
-		CirclePanel circle = new CirclePanel(tokenColor);
+		CirclePanel circle = null;
+		try {
+			circle = new CirclePanel(tokenColor);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(editor.getGraphComponent(), "Circle-Panel could not be created. \nReason: "+ e.getMessage(), e.getClass().toString(), JOptionPane.ERROR);
+		}
+
 		panel.add(circle);
 		panel.add(new JLabel(tokenLabel));
 		panel.add(new JLabel(":  "));

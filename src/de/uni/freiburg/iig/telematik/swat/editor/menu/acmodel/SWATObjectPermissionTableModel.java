@@ -14,9 +14,8 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemListener;
 
-
 public class SWATObjectPermissionTableModel extends AbstractTableModel implements ObjectPermissionItemListener {
-	
+
 	private static final long serialVersionUID = -4658501093720360981L;
 	private List<String> colNames = null;
 	private List<String> rowNames = null;
@@ -24,8 +23,8 @@ public class SWATObjectPermissionTableModel extends AbstractTableModel implement
 	private CircularObjectPermissionPanel[][] permissionPanels = null;
 
 	private List<ObjectPermissionItemListener> permissionItemListeners = new ArrayList<ObjectPermissionItemListener>();
-	
-	public SWATObjectPermissionTableModel(ACLModel aclModel){
+
+	public SWATObjectPermissionTableModel(ACLModel aclModel) {
 		rowNames = new ArrayList<String>(aclModel.getSubjects());
 		Collections.sort(rowNames);
 		colNames = new ArrayList<String>(aclModel.getObjects());
@@ -33,49 +32,38 @@ public class SWATObjectPermissionTableModel extends AbstractTableModel implement
 		this.aclModel = aclModel;
 
 		permissionPanels = new CircularObjectPermissionPanel[rowNames.size()][colNames.size()];
-		for(int i=0; i<rowNames.size(); i++){
-			for(int j=0; j<colNames.size(); j++){
+		for (int i = 0; i < rowNames.size(); i++) {
+			for (int j = 0; j < colNames.size(); j++) {
 				permissionPanels[i][j] = new CircularObjectPermissionPanel(rowNames.get(i) + " - " + colNames.get(j), aclModel.getValidUsageModes());
 				permissionPanels[i][j].addPermissionItemListener(this);
-				try {
-					permissionPanels[i][j].setPermission(aclModel.getObjectPermissionsForSubject(rowNames.get(i), colNames.get(j)));
-				} catch (CompatibilityException e) {
-					e.printStackTrace();
-				} catch (ParameterException e) {
-					e.printStackTrace();
-				}
-			}	
+				permissionPanels[i][j].setPermission(aclModel.getObjectPermissionsForSubject(rowNames.get(i), colNames.get(j)));
+
+			}
 		}
 		update();
 	}
-	
-	public String getRowName(int index){
+
+	public String getRowName(int index) {
 		return rowNames.get(index);
 	}
-	
-	public Dimension preferredCellSize(){
+
+	public Dimension preferredCellSize() {
 		return permissionPanels[0][0].getPreferredSize();
 	}
-	
-	public void reset(){
-		for(int i=0; i<rowNames.size(); i++){
-			for(int j=0; j<colNames.size(); j++){
+
+	public void reset() {
+		for (int i = 0; i < rowNames.size(); i++) {
+			for (int j = 0; j < colNames.size(); j++) {
 				permissionPanels[i][j].setPermission(null);
 			}
 		}
 		fireTableDataChanged();
 	}
-	
-	public void update(){
-		for(int i=0; i<rowNames.size(); i++){
-			for(int j=0; j<colNames.size(); j++){
-				try {
-					permissionPanels[i][j].setPermission(aclModel.getObjectPermissionsForSubject(rowNames.get(i), colNames.get(j)));
-				} catch (CompatibilityException e) {
-					e.printStackTrace();
-				} catch (ParameterException e) {
-					e.printStackTrace();
-				}
+
+	public void update() {
+		for (int i = 0; i < rowNames.size(); i++) {
+			for (int j = 0; j < colNames.size(); j++) {
+				permissionPanels[i][j].setPermission(aclModel.getObjectPermissionsForSubject(rowNames.get(i), colNames.get(j)));
 			}
 		}
 		fireTableDataChanged();
@@ -88,43 +76,42 @@ public class SWATObjectPermissionTableModel extends AbstractTableModel implement
 
 	@Override
 	public int getColumnCount() {
-		return colNames.size()+1;
+		return colNames.size() + 1;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if(columnIndex == 0)
+		if (columnIndex == 0)
 			return rowNames.get(rowIndex);
-		return permissionPanels[rowIndex][columnIndex-1];
+		return permissionPanels[rowIndex][columnIndex - 1];
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Class getColumnClass(int c) {
 		return getValueAt(0, c).getClass();
-    }
+	}
 
 	@Override
 	public String getColumnName(int column) {
-		if(column == 0)
+		if (column == 0)
 			return "";
-		return colNames.get(column-1);
+		return colNames.get(column - 1);
 	}
 
-    public boolean isCellEditable(int row, int col) {
-    	if(col == 0)
-    		return false;
-    	return true;
-    }
-    
-    public void addPermissionItemListener(ObjectPermissionItemListener listener){
+	public boolean isCellEditable(int row, int col) {
+		if (col == 0)
+			return false;
+		return true;
+	}
+
+	public void addPermissionItemListener(ObjectPermissionItemListener listener) {
 		permissionItemListeners.add(listener);
 	}
 
 	@Override
 	public void permissionChanged(ObjectPermissionItemEvent e) {
-		for(ObjectPermissionItemListener listener: permissionItemListeners)
+		for (ObjectPermissionItemListener listener : permissionItemListeners)
 			listener.permissionChanged(e);
 	}
 
-	
 }

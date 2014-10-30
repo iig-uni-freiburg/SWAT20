@@ -107,12 +107,13 @@ public class TokenConfigurerToolBar extends JToolBar {
 			addRow(net.getInitialMarking(), colorName);
 		}
 
-		try {
-			addButton = new JButton(IconFactory.getIcon("maximize"));
-		} catch (ParameterException e1) {
-		} catch (PropertyException e1) {
-		} catch (IOException e1) {
-		}
+
+			try {
+				addButton = new JButton(IconFactory.getIcon("maximize"));
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Maximize-Button could not be added. \nReason: "+e.getMessage(), ""+e.getClass(), JOptionPane.ERROR);
+			}
+	
 
 		addButton.addMouseListener(new MouseAdapter() {
 
@@ -155,9 +156,8 @@ public class TokenConfigurerToolBar extends JToolBar {
 			tokenColorAction.setTokenColor(Color.BLACK);
 			JComponent tokenColorButton = nestedAdd(tokenColorAction);
 			myPanel.add(tokenColorButton);
-		} catch (ParameterException e) {
-		} catch (PropertyException e) {
-		} catch (IOException e) {
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Colour could not be added. \nReason: "+e.getMessage(), ""+e.getClass(), JOptionPane.ERROR);
 		}
 
 		myPanel.add(Box.createHorizontalStrut(15)); // a spacer
@@ -231,9 +231,8 @@ public class TokenConfigurerToolBar extends JToolBar {
 			row.add(remove, BorderLayout.LINE_END);
 			tokenPanel.add(row);
 
-		} catch (ParameterException e1) {
-		} catch (PropertyException e1) {
-		} catch (IOException e1) {
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Action could not be added. \nReason: "+e.getMessage(), ""+e.getClass(), JOptionPane.ERROR);
 		}
 
 	}

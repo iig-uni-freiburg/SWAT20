@@ -64,52 +64,6 @@ public class TransitionSilentAction extends AbstractPNEditorAction {
 	 *            example.
 	 * @return an action that executes the specified layout
 	 */
-//	@SuppressWarnings("serial")
-//	public Action graphLayout(String key, boolean animate) {
-//		final mxIGraphLayout layout = createLayout(key, animate);
-//
-//		if (layout != null) {
-//			return new AbstractAction(mxResources.get(key)) {
-//				public void actionPerformed(ActionEvent e) {
-//					mxGraph graph = graphComponent.getGraph();
-//					Object cell = graph.getSelectionCell();
-//
-//					if (cell == null || graph.getModel().getChildCount(cell) == 0) {
-//						cell = graph.getDefaultParent();
-//					}
-//
-//					graph.getModel().beginUpdate();
-//					try {
-//						long t0 = System.currentTimeMillis();
-//						layout.execute(cell);
-//					} finally {
-//						mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
-//
-//						morph.addListener(mxEvent.DONE, new mxIEventListener() {
-//
-//							public void invoke(Object sender, mxEventObject evt) {
-//								graphComponent.getGraph().getModel().endUpdate();
-////								getGraph().updatePositionPropertiesFromCells();
-//							}
-//
-//						});
-//
-//						morph.startAnimation();
-//					}
-//
-//				}
-//
-//			};
-//		} else {
-//			return new AbstractAction(mxResources.get(key)) {
-//
-//				public void actionPerformed(ActionEvent e) {
-//					JOptionPane.showMessageDialog(graphComponent, mxResources.get("noLayout"));
-//				}
-//
-//			};
-//		}
-//	}
 	
 	/**
 	 * Creates a layout instance for the given identifier.

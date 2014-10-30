@@ -55,18 +55,10 @@ public class NodeToolBarAction extends PopUpToolBarAction {
 		getIcon().setImage(createIconImage());
 	}
 
-	public static Image createIconImage() {
+	public static Image createIconImage() throws PropertyException, IOException {
 		Color defaultFillColor = Utils.parseColor(nodeColor );
 		IconSize iconsize = null;
-		try {
 			iconsize = SwatProperties.getInstance().getIconSize();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		int size = iconsize.getSize();
 
 		Image image = new BufferedImage (size, size, BufferedImage.TYPE_INT_ARGB_PRE);

@@ -52,24 +52,15 @@ public class FillColorSelectionAction extends AbstractPNEditorGraphicsAction {
 
 	}
 
-	public void setNoFill() {
+	public void setNoFill() throws ParameterException, PropertyException, IOException {
 		ImageIcon noFill;
-		try {
+
 			noFill = IconFactory.getIcon("no_fill");
 			java.awt.Image img = noFill.getImage();
 			int size = getIcon().getIconWidth();
 			java.awt.Image newimg = img.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH);
 			getIcon().setImage(newimg);
-		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 
 	}
 

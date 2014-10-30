@@ -35,14 +35,10 @@ public class SaveAction extends AbstractPNEditorAction {
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		success = true;
-		try {
 			String filename = editor.getFileReference().getAbsolutePath();
 			PNSerialization.serialize(editor.getNetContainer(), PNSerializationFormat.PNML, filename);
 			editor.setModified(false);
 			editor.setFileReference(new File(filename));
-		} catch (Exception ex) {
-			success = false;
-			errorMessage = ex.getMessage();
-		}		
+		
 	}
 }

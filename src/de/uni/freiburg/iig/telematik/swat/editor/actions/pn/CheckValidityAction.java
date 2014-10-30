@@ -29,15 +29,15 @@ public class CheckValidityAction extends AbstractPNEditorAction {
 			if (pn instanceof CPN) {
 				CPN cpn = (CPN) pn;
 
-			try{
+				try {
 					cpn.checkValidity();
 					JOptionPane.showMessageDialog(editor.getGraphComponent(), "Awesome! You're Coloured Workflow Net is VALID.", "CWN is VALID - Awesome Job!", JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (PNValidationException e1) {
 					JOptionPane.showMessageDialog(editor.getGraphComponent(), e1.getMessage(), "CWN Validation Failed", JOptionPane.ERROR_MESSAGE);
-				} 
-				
+				}
+
 			}
-		}		
+		}
 	}
 }

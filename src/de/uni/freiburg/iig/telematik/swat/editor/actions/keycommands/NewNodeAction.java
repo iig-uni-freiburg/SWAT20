@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.actions.keycommands;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.Action;
 
@@ -34,29 +35,27 @@ public class NewNodeAction extends AbstractPNEditorAction {
 	 * @param pnGraph
 	 * @param centerX
 	 * @param centerY
-	 * @return 
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 * @throws ParameterException 
 	 */
-	protected PNGraphCell createNewNodeWithEdge(PNGraphCell source, PNGraph pnGraph, double centerX, double centerY) {
+	protected PNGraphCell createNewNodeWithEdge(PNGraphCell source, PNGraph pnGraph, double centerX, double centerY) throws ParameterException, UnsupportedEncodingException {
 		PNGraphCell target = null;
-		try {
-			switch (source.getType()) {
-			case PLACE:
-				target = (PNGraphCell) pnGraph.addNewTransition(new mxPoint(centerX, centerY));
-				break;
-			case TRANSITION:
-				target = (PNGraphCell) pnGraph.addNewPlace(new mxPoint(centerX, centerY));
-				break;
-			case ARC:
-				break;
-			}
-			if(target != null)
-			pnGraph.addNewFlowRelation(source, target);
-		} catch (ParameterException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+		switch (source.getType()) {
+		case PLACE:
+			target = (PNGraphCell) pnGraph.addNewTransition(new mxPoint(centerX, centerY));
+			break;
+		case TRANSITION:
+			target = (PNGraphCell) pnGraph.addNewPlace(new mxPoint(centerX, centerY));
+			break;
+		case ARC:
+			break;
 		}
+		if (target != null)
+			pnGraph.addNewFlowRelation(source, target);
 		return target;
 	}
+
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		PNGraph graph = getEditor().getGraphComponent().getGraph();
@@ -66,11 +65,11 @@ public class NewNodeAction extends AbstractPNEditorAction {
 		double centerY = source.getGeometry().getCenterY();
 		centerX += deltaX;
 		centerY += deltaY;
-		if(centerX >0 && centerY>0){
-		target = createNewNodeWithEdge(source,getEditor().getGraphComponent().getGraph(),centerX,centerY);
-		graph.setSelectionCell(target);}
-				
+		if (centerX > 0 && centerY > 0) {
+			target = createNewNodeWithEdge(source, getEditor().getGraphComponent().getGraph(), centerX, centerY);
+			graph.setSelectionCell(target);
+		}
+
 	}
-    
 
 }

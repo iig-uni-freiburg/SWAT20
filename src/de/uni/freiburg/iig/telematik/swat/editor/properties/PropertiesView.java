@@ -146,12 +146,9 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 		tableModel.setColumnCount(2);
 		for (PNProperty property : list) {
 			PropertiesField field = null;
-			try {
+
 				field = new PropertiesField(pnProperty, nodeName, properties.getValue(pnProperty, nodeName, property), property);
-			} catch (ParameterException e1) {
-				System.out.println("properties.getValue(...) Values could not be called");
-				e1.printStackTrace();
-			}
+
 			tableModel.addRow(new Object[] { property, field });
 			switch (property) {
 			case ARC_WEIGHT:

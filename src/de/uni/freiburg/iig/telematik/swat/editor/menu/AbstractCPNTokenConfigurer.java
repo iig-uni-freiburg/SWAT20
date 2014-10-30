@@ -119,7 +119,12 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 	private void addRow(String tokenLabel) {
 
 		Color tokenColor = colors.get(tokenLabel);
-		CirclePanel circle = new CirclePanel(tokenColor);
+		CirclePanel circle = null;
+		try {
+			circle = new CirclePanel(tokenColor);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Circle-Panel could not be generated. \nReason: "+e.getMessage(), ""+e.getClass(), JOptionPane.ERROR);
+		}
 		panel.add(circle);
 
 		final String tokenName = tokenLabel;
@@ -145,29 +150,18 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 						((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph) graph, paName, newMarking));
 					else
 						((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph) graph, paName, newMarking));
-					// graph.updateTokenConfigurer(placeName);
 				}
 			});
 			panel.add(spinner);
 		}
 		if (isTransition) {
-			// panel.add(Box.createGlue());
-			// AccessModePanel aMPanel = new
-			// AccessModePanel(accessMode.get(tokenName));
+
 			JPanel amPanel = new JPanel();
 			amPanel.add(createAccessModeCheckBox(tokenName, AccessMode.READ, "r"));
 			amPanel.add(createAccessModeCheckBox(tokenName, AccessMode.WRITE, "w"));
 			amPanel.add(createAccessModeCheckBox(tokenName, AccessMode.DELETE, "d"));
 			amPanel.add(createAccessModeCheckBox(tokenName, AccessMode.CREATE, "c"));
-			// JCheckBox write = new JCheckBox("w");
-			// write.setSelected(am.contains(AccessMode.WRITE));
-			// JCheckBox delete = new JCheckBox("d");
-			// delete.setSelected(am.contains(AccessMode.DELETE));
-			// JCheckBox create = new JCheckBox("c");
-			// create.setSelected(am.contains(AccessMode.CREATE));
-			//
-			// amPanel.add(read); amPanel.add(write);
-			// amPanel.add(delete);amPanel.add(create);
+
 			panel.add(amPanel);
 
 		}
@@ -177,9 +171,8 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 		JButton remove = null;
 		try {
 			remove = new JButton(IconFactory.getIcon("minimize"));
-		} catch (ParameterException e) {
-		} catch (PropertyException e) {
-		} catch (IOException e) {
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Minimize-Button could not be added. \nReason: "+e.getMessage(), ""+e.getClass(), JOptionPane.ERROR);
 		}
 		remove.addActionListener(new ActionListener() {
 
@@ -286,14 +279,7 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 	protected void setNewMarking(Multiset<String> newPlaceMarking) {
 	}
 
-	// public static void setDialog(JDialog dialog2) {
-	// dialog = dialog2;
-	//
-	// }
-	//
-	// public static JDialog getDialog() {
-	// return dialog;
-	// }
+
 
 	public void updateView() {
 		panel.removeAll();
@@ -429,9 +415,11 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 					}
 				});
 			}
-		} catch (ParameterException e) {
-		} catch (PropertyException e) {
-		} catch (IOException e) {
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Buttons could not be added. \nReason: "+e.getMessage(), ""+e.getClass(), JOptionPane.ERROR);
+
+
 		}
 
 		panel.add(addButton);

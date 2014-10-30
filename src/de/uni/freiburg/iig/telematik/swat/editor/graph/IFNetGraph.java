@@ -61,7 +61,6 @@ public class IFNetGraph extends PNGraph {
 	}
 
 	private boolean containsAnalysisContext = false;
-	private AnalysisContext currentAC;
 	private ACModel selectedACModel;
 	public IFNetGraph(GraphicalIFNet GraphicalIFNet, IFNetProperties IFNetProperties) throws ParameterException {
 		super(GraphicalIFNet, IFNetProperties);
@@ -322,7 +321,7 @@ default:
 	}
 
 	@Override
-	protected void drawAdditionalTransitionGrahpics(mxGraphics2DCanvas canvas, mxCellState state) {
+	protected void drawAdditionalTransitionGrahpics(mxGraphics2DCanvas canvas, mxCellState state) throws ParameterException, PropertyException, IOException {
 		PNGraphCell cell = (PNGraphCell) state.getCell();
 		AbstractRegularIFNetTransition transistion = (AbstractRegularIFNetTransition) getNetContainer().getPetriNet().getTransition(cell.getId());
 
@@ -352,19 +351,9 @@ default:
 				Color color = getNetContainer().getPetriNetGraphics().getColors().get(c);
 				ImageIcon imageIcon = null;
 
-				try {
-					imageIcon = IconFactory.getIcon(imageString);
 
-				} catch (ParameterException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (PropertyException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+						imageIcon = IconFactory.getIcon(imageString);
+
 
 				BufferedImage image = colorPNG(color, imageIcon);
 
@@ -399,19 +388,9 @@ default:
 				g.drawString(l.toString(), posX, posY);
 
 				ImageIcon img = null;
-				try {
+
 					img = IconFactory.getIcon("user");
 
-				} catch (ParameterException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (PropertyException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 
 				// ImageObserver observer;
 				int x = (int) state.getCenterX() + (int) (state.getWidth() / 6);
