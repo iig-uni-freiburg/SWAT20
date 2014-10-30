@@ -17,28 +17,30 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowElement.PTequivalent;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.LayoutAction;
 
 public class AristaFlowToPnmlConverter {
 
 	private File aristaFlowTemplate;
-	private PTNet net;
+	private IFNet net;
 	private Element startNode;
 	private Map<String, AristaFlowElement> elements = new HashMap<String, AristaFlowElement>();
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		AristaFlowToPnmlConverter converter = new AristaFlowToPnmlConverter(new File("/tmp/af.template"));
 		converter.parse();
-		GraphicalPTNet ifnet = new GraphicalPTNet();
+		GraphicalIFNet ifnet = new GraphicalIFNet();
 		ifnet.setPetriNet(converter.getNet());
-		PTNetEditor editor = new PTNetEditor(ifnet, new File("/tmp/test.pnml"));
+		IFNetEditor editor = new IFNetEditor(ifnet, new File("/tmp/test.pnml"));
 		JFrame panel = new JFrame();
 		panel.setSize(300, 300);
 		panel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,14 +52,14 @@ public class AristaFlowToPnmlConverter {
 
 	public AristaFlowToPnmlConverter(File file) {
 		aristaFlowTemplate = file;
-		this.net = new PTNet();
+		this.net = new IFNet();
 	}
 
-	public PTNet getNet() {
+	public IFNet getNet() {
 		return net;
 	}
 
-	public PTNet parse() throws ParserConfigurationException, SAXException, IOException {
+	public IFNet parse() throws ParserConfigurationException, SAXException, IOException {
 		Document doc = getDOM();
 		insertElements(doc);
 		//insertTransition(doc);
@@ -68,12 +70,23 @@ public class AristaFlowToPnmlConverter {
 
 		loadNames(doc);
 
+		setInitialMarking();
+
+
 		return net;
 
 	}
 
+	private void setInitialMarking() {
+		IFNetMarking marking = new IFNetMarking();
+		Multiset<String> initialSet = new Multiset<String>();
+		initialSet.add("black");
+		marking.set("n0", initialSet);
+		net.setInitialMarking(marking);
+	}
+
 	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getGraphicalPN() {
-		GraphicalPTNet net = new GraphicalPTNet();
+		GraphicalIFNet net = new GraphicalIFNet();
 		net.setPetriNet(getNet());
 		return net;
 	}
@@ -91,7 +104,7 @@ public class AristaFlowToPnmlConverter {
 		}
 
 		//store names for IFnet
-		for (PTTransition transition : net.getTransitions()) {
+		for (AbstractIFNetTransition transition : net.getTransitions()) {
 			//System.out.println("Setting name: " + transition.getLabel() + " to: " + names.get(transition.getLabel()));
 			if (names.get(transition.getLabel()) != null)
 				transition.setLabel(names.get(transition.getLabel()));
@@ -182,7 +195,7 @@ public class AristaFlowToPnmlConverter {
 	}
 
 	private void aristaFlowElementsToIFnet() {
-		net = new PTNet();
+		net = new IFNet();
 		for (AristaFlowElement element : elements.values()) {
 			addAristaFlowElementToNet(element);
 		}
@@ -200,10 +213,8 @@ public class AristaFlowToPnmlConverter {
 		switch (element.type) {
 		case PLACE:
 			net.addPlace(element.internalName);
-			net.getPlace(element.internalName).setCapacity(1);
-			if (element.internalName.equals("n0")) {
-				net.getPlace(element.internalName).setState(1);
-			}
+			//net.getPlace(element.internalName).setCapacity(1);
+			net.getPlace(element.internalName).setColorCapacity("black", 1);
 			break;
 		case TRANSITION:
 			net.addTransition(element.internalName);
@@ -217,17 +228,17 @@ public class AristaFlowToPnmlConverter {
 		switch (element.type) {
 		case PLACE:
 			for (String incoming : element.incomingLinks) {
-				net.addFlowRelationTP(incoming, element.internalName, 1);
+				net.addFlowRelationTP(incoming, element.internalName);
 			}
 			for (String outcoming : element.outgoingLinks) {
-				net.addFlowRelationPT(element.internalName, outcoming, 1);
+				net.addFlowRelationPT(element.internalName, outcoming);
 			}
 		case TRANSITION:
 			for (String incoming : element.incomingLinks) {
-				net.addFlowRelationPT(incoming, element.internalName, 1);
+				net.addFlowRelationPT(incoming, element.internalName);
 			}
 			for (String outcoming : element.outgoingLinks) {
-				net.addFlowRelationTP(element.internalName, outcoming, 1);
+				net.addFlowRelationTP(element.internalName, outcoming);
 			}
 			break;
 		default:
