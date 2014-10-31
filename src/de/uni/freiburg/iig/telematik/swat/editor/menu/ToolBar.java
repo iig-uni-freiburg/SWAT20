@@ -35,8 +35,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisConte
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.acmodel.AddAccessControlAction;
-//import de.uni.freiburg.iig.telematik.swat.editor.actions.FontAction;
-//import de.uni.freiburg.iig.telematik.swat.editor.actions.SaveAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.RedoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.history.UndoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.AddAnalysisContextAction;
@@ -52,8 +50,9 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
-import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 
 public class ToolBar extends JToolBar {
 
@@ -63,7 +62,11 @@ public class ToolBar extends JToolBar {
 
 	protected static final String NO_SELECTION = "no selection...";
 
+	protected static final String NO_SELECTION_TIME = "no time context...";
+
 	private JComboBox comboAnalysisContextModel = null;
+
+	private JComboBox comboTimeContextModel = null;
 
 	// further variables
 	private PNEditor pnEditor = null;
@@ -230,6 +233,12 @@ public class ToolBar extends JToolBar {
 			editSubjectClearanceButton = (JToggleButton) add(editSubjectClearanceAction, true);
 			editSubjectClearanceAction.setButton(editSubjectClearanceButton);
 		}
+		
+		if (!SwatComponents.getInstance().getTimeContexts(this.pnEditor.getNetContainer().getPetriNet().getName()).isEmpty()) {
+			addSeparator();
+			add(getComboTimeContextModel());
+			addSeparator();
+		}
 
 		doLayout();
 
@@ -345,6 +354,39 @@ public class ToolBar extends JToolBar {
 			comboAnalysisContextModel.setSelectedItem(modelName);
 		}
 
+	}
+
+	private JComboBox getComboTimeContextModel() {
+		if (comboTimeContextModel != null) {
+			comboTimeContextModel.setMinimumSize(new Dimension(200, 24));
+			comboTimeContextModel.setPreferredSize(new Dimension(200, 24));
+			comboTimeContextModel.setMaximumSize(new Dimension(200, 24));
+			return comboTimeContextModel;
+		}
+		updateTimeContextModelComboBox();
+
+		comboTimeContextModel.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				if (arg0.getItem() instanceof TimeContext)
+					SwatState.getInstance().setActiveContext((TimeContext) arg0.getItem());
+			}
+		});
+
+		return comboTimeContextModel;
+	}
+
+	private void updateTimeContextModelComboBox() {
+		DefaultComboBoxModel theModel = (DefaultComboBoxModel) comboTimeContextModel.getModel();
+		theModel.removeAllElements();
+		List<TimeContext> timeContexts = SwatComponents.getInstance().getTimeContexts(pnEditor.getNetContainer().getPetriNet().getName());
+		theModel.addElement(NO_SELECTION_TIME);
+		if (timeContexts != null && !timeContexts.isEmpty()) {
+			for (TimeContext context : timeContexts) {
+				theModel.addElement(context);
+			}
+		}
 	}
 
 	private void zoomButtonSettings() {

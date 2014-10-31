@@ -32,7 +32,6 @@ public class AristaFlowToPnmlConverter {
 
 	private File aristaFlowTemplate;
 	private IFNet net;
-	private Element startNode;
 	private Map<String, AristaFlowElement> elements = new HashMap<String, AristaFlowElement>();
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
@@ -72,9 +71,7 @@ public class AristaFlowToPnmlConverter {
 
 		setInitialMarking();
 
-
 		return net;
-
 	}
 
 	private void setInitialMarking() {
@@ -128,8 +125,6 @@ public class AristaFlowToPnmlConverter {
 							AristaFlowElement.PTequivalent.PLACE));
 					break;
 				case NT_STARTFLOW:
-					startNode = element;
-					//net.addPlace(element.getAttribute("nodeID"), element.getAttribute("nodeID"));
 					elements.put(element.getAttribute("nodeID"), new AristaFlowElement(element.getAttribute("nodeID"),
 							AristaFlowElement.PTequivalent.PLACE));
 					break;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 
 public class SwatState {
@@ -14,6 +15,8 @@ public class SwatState {
 	private OperatingMode operatingMode = null;
 	
 	private String activeFile = null;
+
+	private TimeContext activeContext = null;
 
 	private List<SwatStateListener> listeners = new ArrayList<SwatStateListener>();
 	
@@ -50,6 +53,14 @@ public class SwatState {
 		return activeFile;
 	}
 
+	public TimeContext getActiveContext() {
+		return activeContext;
+	}
+
+	public void setActiveContext(TimeContext activeContext) {
+		this.activeContext = activeContext;
+	}
+
 	public void addListener(SwatStateListener listener) throws ParameterException{
 		Validate.notNull(listener);
 		if(!listeners.contains(listener))
@@ -59,4 +70,5 @@ public class SwatState {
 	public enum OperatingMode {
 		EDIT_MODE, ANALYSIS_MODE;
 	}
+
 }
