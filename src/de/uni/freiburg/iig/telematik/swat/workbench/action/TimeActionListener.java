@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.WindowConstants;
@@ -20,6 +19,7 @@ import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 import org.jfree.ui.ApplicationFrame;
 
+import de.invation.code.toval.validate.InconsistencyException;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
@@ -31,17 +31,19 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
-public class TimeActionListener implements ActionListener {
+public class TimeActionListener extends AbstractWorkbenchAction {
 
 	long[] results;
 	private int numberOfRuns = 50000;
 	private int numberOfBins = 50;
 
 	public TimeActionListener(int numberOfRuns) {
+		super("");
 		this.numberOfRuns = numberOfRuns;
 	}
 
 	public TimeActionListener() {
+		super("");
 	}
 
 	@Override
@@ -74,7 +76,7 @@ public class TimeActionListener implements ActionListener {
 	}
 
 	private AbstractTransition<?, Object> chooseTransition(PNTraverser<AbstractTransition<?, Object>> traverser,
-			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net) {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net) throws InconsistencyException {
 		return traverser.chooseNextTransition((List<AbstractTransition<?, Object>>) net.getPetriNet().getEnabledTransitions());
 	}
 
@@ -84,22 +86,47 @@ public class TimeActionListener implements ActionListener {
 		TimeMachine<?, ?, ?, ?, ?, ?, ?> timeMachine = getTimeMachine(net);
 		PNTraverser<AbstractTransition<?, Object>> traverser = getTraverser(net);
 
-		//do at least the first Run
-		//do while enabled transitions available and timeMachine increases time
-		boolean firstRun = true;
-		while (firstRun || (timeMachine.incTime() && net.getPetriNet().hasEnabledTransitions())) {
-			firstRun = false;
-			AbstractTransition<?, Object> transition = chooseTransition(traverser, net);
-			try {
-				timeMachine.fire(transition.getName());
-				time = timeMachine.getTime();
-			} catch (PNException e1) {
-				e1.printStackTrace();
-			}
+		//		//do at least the first Run
+		//		//do while enabled transitions available and timeMachine increases time
+		//		boolean firstRun = true;
+		//		while (firstRun || (timeMachine.incTime() && net.getPetriNet().hasEnabledTransitions())) {
+		//			firstRun = false;
+		//			AbstractTransition<?, Object> transition = chooseTransition(traverser, net);
+		//			try {
+		//				timeMachine.fire(transition.getName());
+		//				time = timeMachine.getTime();
+		//			} catch (PNException e1) {
+		//				e1.printStackTrace();
+		//			}
+		//		}
+		//		timeMachine.reset();
+		//		return time;
+
+		while (true) {
+			while (simulateAllEnabledTransitions(net, timeMachine, traverser))
+				;
+			if (!timeMachine.incTime())
+				break;
 		}
+
+		time = timeMachine.getTime();
 		timeMachine.reset();
 		return time;
+	}
 
+	private boolean simulateAllEnabledTransitions(AbstractGraphicalPN net, TimeMachine timeMachine,
+			PNTraverser<AbstractTransition<?, Object>> traverser) {
+		AbstractTransition<?, Object> transition = chooseTransition(traverser, net);
+		boolean didFire = false;
+		while (transition != null) {
+			try {
+				timeMachine.fire(transition.getName());
+				didFire = true;
+			} catch (PNException e) {
+			}
+			transition = chooseTransition(traverser, net);
+		}
+		return didFire;
 	}
 
 	private static void generateDiagram(long[] results2, int bins) {
@@ -147,6 +174,12 @@ public class TimeActionListener implements ActionListener {
 		aFrame.setSize(new Dimension(800, 600));
 		aFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		aFrame.setVisible(true);
+	}
+
+	@Override
+	protected void doFancyStuff(ActionEvent e) throws Exception {
+		// TODO Auto-generated method stub
+
 	}
 
 }

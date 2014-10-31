@@ -672,8 +672,8 @@ public class SwatComponents {
 	public void renamePetriNet(String oldID, String newID) throws SwatComponentException{
 		validatePetriNet(oldID);
 		nets.put(newID, getPetriNet(oldID));
-		nets.remove(oldID);
 		netFiles.put(newID, getPetriNetFile(oldID));
+		nets.remove(oldID);
 		netFiles.remove(oldID);
 		getPetriNet(newID).getPetriNet().setName(newID);
 		listenerSupport.notifyPetriNetRenamed(nets.get(newID));

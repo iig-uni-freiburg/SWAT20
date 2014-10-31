@@ -45,7 +45,6 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.AFtemplateImportActio
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.PrismAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
@@ -139,6 +138,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	 * @throws ParameterException
 	 **/
 	private void createButtons() throws ParameterException, PropertyException, IOException {
+		standardItems.add(new JButton(new SaveActiveComponentAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.DELETE));
 		standardItems.add(getSwitchworkingDirectoryButton());
@@ -331,9 +331,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				break;
 			case OPEN:
 				break;
-			case SAVE:
-				addActionListener(new SaveActiveComponentAction(tabView));
-				break;
 			case SAVE_ALL:
 				addActionListener(new SaveAllAction());
 				break;
@@ -369,10 +366,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				setToolTipText("Analyze active AristaFlow instance");
 				addActionListener(new AristaFlowAction());
 				break;
-			case PRISM:
-				setToolTipText("Analyze with PRISM");
-				addActionListener(new PrismAnalyzeAction(tabView));
-				break;
+			//			case PRISM:
+			//				setToolTipText("Analyze with PRISM");
+			//				addActionListener(new PrismAnalyzeAction(tabView));
+			//				break;
 			case DELETE:
 				setToolTipText("Remove from Workbench");
 				addActionListener(new DeleteAction());

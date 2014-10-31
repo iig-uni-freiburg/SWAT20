@@ -101,7 +101,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	private JMenuItem getSaveEntry() {
 		JMenuItem save = new JMenuItem("Save", UIManager.getIcon("FileView.floppyDriveIcon"));
 		//save.setRolloverEnabled(true);
-		save.addActionListener(new SaveActiveComponentAction(tabView));
+		save.addActionListener(new SaveActiveComponentAction());
 		return save;
 	}
 

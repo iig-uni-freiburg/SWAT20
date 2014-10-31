@@ -9,10 +9,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.prism.generator.IFNetToPrismConverter;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
+import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 
-public class PrismAnalyzeAction extends AbstractAction {
+class PrismAnalyzeAction extends AbstractAction {
 
 	private SwatTabView tabView;
 
