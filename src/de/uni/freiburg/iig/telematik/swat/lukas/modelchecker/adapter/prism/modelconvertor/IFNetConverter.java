@@ -5,17 +5,10 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import de.invation.code.toval.types.Multiset;
-import de.uni.freiburg.iig.telematik.sepia.mg.ifnet.IFNetMarkingGraphRelation;
-import de.uni.freiburg.iig.telematik.sepia.mg.ifnet.IFNetMarkingGraphState;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 
 
 public class IFNetConverter extends CPNConverter {
@@ -24,6 +17,7 @@ public class IFNetConverter extends CPNConverter {
 
 	public IFNetConverter(IFNet net) {
 		super(net);
+		mNet = net;
 	}
 	
 	@SuppressWarnings("static-access")
