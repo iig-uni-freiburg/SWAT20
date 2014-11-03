@@ -135,7 +135,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 		// If not, add all PN components to the graph.
 
 		// Check if net contains Graphical Info and keep that information
-		if (netContainer.getPetriNetGraphics().getPlaceGraphics().size() > 0) {
+		if (netContainer.getPetriNetGraphics().getPlaceGraphics().size() > 0 || netContainer.getPetriNet().isEmpty())  {
 			containedGraphics = true;
 		}
 		if (!netContainer.getPetriNet().isEmpty()) {
