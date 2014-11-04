@@ -14,7 +14,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 public class AFSqlLogImportAction extends AbstractWorkbenchAction {
 
 	public AFSqlLogImportAction() {
-		super("");
+		this("");
 	}
 
 	public AFSqlLogImportAction(String name) {
