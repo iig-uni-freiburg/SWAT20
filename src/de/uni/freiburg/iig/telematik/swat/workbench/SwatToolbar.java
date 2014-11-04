@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,13 +34,11 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
-import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowSQLConnector;
-import de.uni.freiburg.iig.telematik.swat.sciff.DatabaseChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AFtemplateImportAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.AFSqlLogImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
@@ -179,7 +176,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 
 	private JButton getAristaFlowButton() throws ParameterException, PropertyException, IOException {
-		JButton aristaFlow = new SwatToolbarButton(ToolbarButtonType.ARISTAFLOW);
+		JButton aristaFlow = new JButton(new AFSqlLogImportAction());
 		return aristaFlow;
 	}
 
@@ -362,10 +359,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				//addActionListener(new LolaTransformAction());
 				addActionListener(new LolaAnalyzeAction());
 				break;
-			case ARISTAFLOW:
-				setToolTipText("Analyze active AristaFlow instance");
-				addActionListener(new AristaFlowAction());
-				break;
+			//			case ARISTAFLOW:
+			//				setToolTipText("Analyze active AristaFlow instance");
+			//				addActionListener(new AristaFlowAction());
+			//				break;
 			//			case PRISM:
 			//				setToolTipText("Analyze with PRISM");
 			//				addActionListener(new PrismAnalyzeAction(tabView));
@@ -401,34 +398,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE, TIME;
 	}
 	
-	class AristaFlowAction implements ActionListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			try {
-				AristaFlowSQLConnector connector = DatabaseChooser.DatabaseChooser();
-				//LogFileViewer viewer = con.dumpIntoWorkbench();
-				LogModel model = connector.getModel();
-				model = SwatComponents.getInstance().storeLogModelTo(model, model.getName());
-				SwatComponents.getInstance().addLogModel(model);
-				//SwatComponents.getInstance().reload();
-				//connector.parse();
-				//SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(connector.getTempFile());
-				//sciffAction.actionPerformed(e);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			} catch (ClassNotFoundException e2) {
-				e2.printStackTrace();
-			} catch (IOException e3) {
-				e3.printStackTrace();
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-
-
-		}
-
-	}
 
 	class DeleteAction implements ActionListener, KeyListener {
 
