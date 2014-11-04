@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.jfree.chart.ChartFactory;
@@ -17,7 +18,6 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
-import org.jfree.ui.ApplicationFrame;
 
 import de.invation.code.toval.validate.InconsistencyException;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
@@ -34,12 +34,13 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 public class TimeActionListener extends AbstractWorkbenchAction {
 
 	long[] results;
-	private int numberOfRuns = 50000;
+	private int numberOfRuns = 100000;
 	private int numberOfBins = 50;
 
 	public TimeActionListener(int numberOfRuns) {
 		super("");
 		this.numberOfRuns = numberOfRuns;
+		this.numberOfBins = 100000;
 	}
 
 	public TimeActionListener() {
@@ -102,11 +103,12 @@ public class TimeActionListener extends AbstractWorkbenchAction {
 		//		timeMachine.reset();
 		//		return time;
 
-		while (true) {
+		while (net.getPetriNet().hasEnabledTransitions() || timeMachine.incTime()) {
 			while (simulateAllEnabledTransitions(net, timeMachine, traverser))
 				;
-			if (!timeMachine.incTime())
-				break;
+			timeMachine.incTime();
+			//			if (!timeMachine.incTime())
+			//				break;
 		}
 
 		time = timeMachine.getTime();
@@ -139,7 +141,7 @@ public class TimeActionListener extends AbstractWorkbenchAction {
 		//histo.setType(HistogramType.RELATIVE_FREQUENCY);
 		histo.setType(HistogramType.SCALE_AREA_TO_1);
 
-		ApplicationFrame aFrame = new ApplicationFrame("Time analysis");
+		JFrame aFrame = new JFrame("Time analysis");
 		//ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
 		JFreeChart chart = ChartFactory.createHistogram("Distribution of simulated workflow duration",
 				"Duration of Workflow execution in ms", "Relative occurence", histo, PlotOrientation.VERTICAL, true, true, false);
@@ -172,7 +174,7 @@ public class TimeActionListener extends AbstractWorkbenchAction {
 		aFrame.setContentPane(panel);
 		aFrame.setPreferredSize(new java.awt.Dimension(800, 600));
 		aFrame.setSize(new Dimension(800, 600));
-		aFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		aFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		aFrame.setVisible(true);
 	}
 

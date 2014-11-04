@@ -357,22 +357,26 @@ public class ToolBar extends JToolBar {
 	}
 
 	private JComboBox getComboTimeContextModel() {
-		if (comboTimeContextModel != null) {
+		if (comboTimeContextModel == null) {
+			comboTimeContextModel = new JComboBox();
 			comboTimeContextModel.setMinimumSize(new Dimension(200, 24));
 			comboTimeContextModel.setPreferredSize(new Dimension(200, 24));
 			comboTimeContextModel.setMaximumSize(new Dimension(200, 24));
-			return comboTimeContextModel;
+
+			comboTimeContextModel.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent arg0) {
+					if (arg0.getItem() instanceof TimeContext)
+						SwatState.getInstance().setActiveContext(pnEditor.getNetContainer().getPetriNet().getName(),
+								((TimeContext) arg0.getItem()).getName());
+				}
+			});
+
 		}
+
 		updateTimeContextModelComboBox();
 
-		comboTimeContextModel.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent arg0) {
-				if (arg0.getItem() instanceof TimeContext)
-					SwatState.getInstance().setActiveContext((TimeContext) arg0.getItem());
-			}
-		});
 
 		return comboTimeContextModel;
 	}
@@ -387,6 +391,7 @@ public class ToolBar extends JToolBar {
 				theModel.addElement(context);
 			}
 		}
+		comboTimeContextModel.repaint();
 	}
 
 	private void zoomButtonSettings() {

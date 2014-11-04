@@ -9,7 +9,7 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
 
 public interface IDistributionView extends TimeBehavior {
 
-	public AbstractRealDistribution getDistribution();
+	//public AbstractRealDistribution getDistribution();
 
 	public JComponent getConfigView();
 
@@ -18,5 +18,8 @@ public interface IDistributionView extends TimeBehavior {
 	public Icon getDistributionIcon();
 
 	public DistributionType getType();
+
+	/** return distribution for given transition or null if not applicable **/
+	public AbstractRealDistribution getDistribution();
 
 }

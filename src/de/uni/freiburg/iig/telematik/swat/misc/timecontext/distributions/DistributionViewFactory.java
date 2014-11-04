@@ -1,5 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions;
 
+import java.util.List;
+
+
 public class DistributionViewFactory {
 
 	public static IDistributionView getDistributionView(DistributionType type) {
@@ -19,6 +22,21 @@ public class DistributionViewFactory {
 		default:
 			return null;
 		}
+	}
+
+	public static IDistributionView getDistributionView(double[] realTimeSamples) {
+		return new MeasuredDistributionView(realTimeSamples, 100);
+	}
+
+	public static IDistributionView getDistributionView(List<Double> realTimeSamples) {
+		double[] result = new double[realTimeSamples.size()];
+		int i = 0;
+		for (double d : realTimeSamples) {
+			result[i] = d;
+			i++;
+		}
+
+		return getDistributionView(result);
 	}
 
 }

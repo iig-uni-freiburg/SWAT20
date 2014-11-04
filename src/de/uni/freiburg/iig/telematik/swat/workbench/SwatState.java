@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
@@ -16,7 +17,7 @@ public class SwatState {
 	
 	private String activeFile = null;
 
-	private TimeContext activeContext = null;
+	private HashMap<String, String> activeContext = new HashMap<String, String>();
 
 	private List<SwatStateListener> listeners = new ArrayList<SwatStateListener>();
 	
@@ -53,12 +54,19 @@ public class SwatState {
 		return activeFile;
 	}
 
-	public TimeContext getActiveContext() {
-		return activeContext;
+	public TimeContext getActiveContext(String netID) {
+		String timeContextName = activeContext.get(netID);
+		Validate.notNull(timeContextName);
+		Validate.notEmpty(timeContextName);
+		TimeContext result = SwatComponents.getInstance().getTimeContext(netID, timeContextName);
+		Validate.notNull(result);
+		return result;
 	}
 
-	public void setActiveContext(TimeContext activeContext) {
-		this.activeContext = activeContext;
+	public void setActiveContext(String netID, String activeContext) {
+		if (SwatComponents.getInstance().getTimeContext(netID, activeContext) == null)
+			throw new ParameterException(activeContext + " is not a valid timecontext");
+		this.activeContext.put(netID, activeContext);
 	}
 
 	public void addListener(SwatStateListener listener) throws ParameterException{

@@ -3,6 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions;
 import java.util.Arrays;
 import java.util.Random;
 
+import org.apache.commons.math3.distribution.AbstractRealDistribution;
+
 public class MeasuredDistributionView extends AbstractDistributionView {
 
 	double[] bins;
@@ -121,6 +123,12 @@ public class MeasuredDistributionView extends AbstractDistributionView {
 		for (int i = 1; i < numberOfBins; i++) {
 			bins[i] = bins[i - 1] + step; //value for each bin
 		}
+	}
+
+	@Override
+	public AbstractRealDistribution getDistribution() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

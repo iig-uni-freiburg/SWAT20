@@ -20,6 +20,9 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 	@XStreamOmitField
 	protected AbstractRealDistribution distribution;
 
+	@XStreamOmitField
+	protected String paramNames[];
+
 	@Override
 	public double getNeededTime() {
 		if (distribution == null)
@@ -27,15 +30,12 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 		return distribution.sample();
 	}
 
+
 	protected double params[];
-	protected String paramNames[];
+
 	protected DistributionType type = DistributionType.UNKNOWN;
 
-	@Override
-	public AbstractRealDistribution getDistribution() {
-		// must be implemented by overriding classes
-		return null;
-	}
+	//public abstract AbstractRealDistribution getDistribution();
 
 	@Override
 	public JPanel getConfigView() {

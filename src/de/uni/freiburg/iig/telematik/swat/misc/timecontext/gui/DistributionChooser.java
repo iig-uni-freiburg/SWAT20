@@ -73,7 +73,7 @@ public class DistributionChooser extends JDialog implements ActionListener {
 		return result.toArray(outArray);
 	}
 
-	/** JComboBox Listener: Repaint GUI on change **/
+	/** JComboBox & Button Listener: Repaint GUI on change **/
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource() instanceof JComboBox) {
