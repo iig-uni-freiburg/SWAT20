@@ -122,7 +122,9 @@ public class TimeContext implements PNTimeContext {
 	}
 
 	protected void storeContext() throws FileNotFoundException {
-		String serialString = new XStream().toXML(this);
+		XStream xstream = new XStream();
+		xstream.autodetectAnnotations(true);
+		String serialString = xstream.toXML(this);
 		PrintWriter writer = new PrintWriter(file);
 		writer.write(serialString);
 		writer.checkError();

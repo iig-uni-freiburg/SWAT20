@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.time.TransitionTimeAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.time.TransitionTimingInfoAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class IFNetGraphComponent extends PNGraphComponent {
@@ -93,7 +93,7 @@ public class IFNetGraphComponent extends PNGraphComponent {
 	@Override
 	protected boolean rightClickOnArc(PNGraphCell cell, MouseEvent e) {
 		try{
-			TransitionTimeAction action = new TransitionTimeAction(((PNEditor) Workbench.getInstance().getTabView().getSelectedComponent()));
+			TransitionTimingInfoAction action = new TransitionTimingInfoAction(((PNEditor) Workbench.getInstance().getTabView().getSelectedComponent()));
 			action.actionPerformed(null);
 		} catch (ClassCastException e2) {
 		}

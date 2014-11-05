@@ -25,7 +25,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.TransitionLabelingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.TransitionSilentAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.time.ClearTimeAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.time.TransitionTimeAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.time.SetTransititionTimingAction;
+import de.uni.freiburg.iig.telematik.swat.editor.actions.time.TransitionTimingInfoAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.SubjectDescriptorChange;
@@ -117,9 +118,11 @@ public class TransitionPopupMenu extends JPopupMenu {
 
 	private JMenu getTimingMenu(PNEditor pnEditor) {
 		JMenu submenu4 = new JMenu("Timing");
-		JMenuItem item1 = new JMenuItem(new TransitionTimeAction(pnEditor));
+		JMenuItem item = new JMenuItem(new SetTransititionTimingAction(pnEditor));
+		JMenuItem item1 = new JMenuItem(new TransitionTimingInfoAction(pnEditor));
 		JMenuItem item2 = new JMenuItem(new ClearTimeAction(pnEditor));
 		//item1.addActionListener(new TransitionTimeAction(pnEditor));
+		submenu4.add(item);
 		submenu4.add(item1);
 		submenu4.add(item2);
 		return submenu4;

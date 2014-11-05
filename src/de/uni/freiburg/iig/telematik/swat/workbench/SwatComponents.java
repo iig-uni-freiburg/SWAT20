@@ -876,7 +876,9 @@ public class SwatComponents {
 		try {
 			File pathToTimeContexts = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getTimeContextDirectoryName());
 			pathToTimeContexts.mkdirs();
-			String serialString = new XStream().toXML(aContext);
+			XStream xstream = new XStream();
+			xstream.autodetectAnnotations(true);
+			String serialString = xstream.toXML(aContext);
 			PrintWriter writer = new PrintWriter(pathToTimeContexts.getAbsolutePath() + "/" + aContext.getName() + ".xml");
 			writer.write(serialString);
 			writer.checkError();

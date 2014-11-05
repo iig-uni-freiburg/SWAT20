@@ -13,13 +13,13 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.TransitionView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 
-public class TransitionTimeAction extends AbstractPNEditorAction {
+public class TransitionTimingInfoAction extends AbstractPNEditorAction {
 
 	private static final long serialVersionUID = 6281674267218778803L;
 
-	public TransitionTimeAction(PNEditor editor) {
+	public TransitionTimingInfoAction(PNEditor editor) {
 		super(editor);
-		this.putValue(NAME, "set timing...");
+		this.putValue(NAME, "get timing info");
 	}
 
 	@Override
