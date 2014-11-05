@@ -10,12 +10,15 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.AbstractDistributionView;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionViewFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.IDistributionView;
 
 public class DistributionChooser extends JDialog implements ActionListener {
+
+	private static final long serialVersionUID = 4283113245125626969L;
+
 	JComboBox selector;
 	JPanel panel = new JPanel(); //or could use cardLayout
 	JButton ok_btn = new JButton("OK");
@@ -29,14 +32,14 @@ public class DistributionChooser extends JDialog implements ActionListener {
 			System.out.println("Distribution is: " + chooser.getDistribution());
 	}
 
-	public TimeBehavior getDistribution() {
+	public AbstractDistributionView getDistribution() {
 		System.out.println(selector.getSelectedItem());
-		return ((IDistributionView) selector.getSelectedItem());
+		return ((AbstractDistributionView) selector.getSelectedItem());
 	}
 
 	public void choose() {
 		//setModal(true);
-		setModalityType(ModalityType.APPLICATION_MODAL);
+		//setModalityType(ModalityType.APPLICATION_MODAL);
 		setVisible(true);
 	}
 
@@ -51,22 +54,43 @@ public class DistributionChooser extends JDialog implements ActionListener {
 		cancel_btn.addActionListener(this);
 		this.setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(300, 300);
+		setSize(300, 150);
 		selector = new JComboBox(getDistributionViews());
 		selector.addActionListener(this);
 		this.add(selector);
 		panel.add(((IDistributionView) selector.getSelectedItem()).getConfigView());
 		this.add(panel);
-		this.add(cancel_btn);
-		this.add(ok_btn);
+		JPanel buttons = new JPanel();
+		buttons.setLayout((new BoxLayout(buttons, BoxLayout.X_AXIS)));
+		buttons.add(cancel_btn);
+		buttons.add(ok_btn);
+		//panel.add(buttons);
+		this.add(buttons);
+
 		//this.setVisible(true);
 	}
 
-	private IDistributionView[] getDistributionViews() {
-		ArrayList<IDistributionView> result = new ArrayList<IDistributionView>();
-		IDistributionView[] outArray = new IDistributionView[1];
+	public DistributionChooser(AbstractDistributionView timeBehavior) {
+		this();
+		AbstractDistributionView currentView = (AbstractDistributionView) selector.getItemAt(getIndexOfTimeBehavior(timeBehavior));
+		currentView.setParams(timeBehavior.getParams());
+		selector.setSelectedIndex(getIndexOfTimeBehavior(timeBehavior));
+	}
+
+	private int getIndexOfTimeBehavior(AbstractDistributionView timeBehavior) {
+		for (int i = 0; i < selector.getItemCount(); i++) {
+			AbstractDistributionView selectorItem = (AbstractDistributionView) selector.getItemAt(i);
+			if (selectorItem.getType().equals(timeBehavior.getType()))
+				return i;
+		}
+		return 0;
+	}
+
+	private AbstractDistributionView[] getDistributionViews() {
+		ArrayList<AbstractDistributionView> result = new ArrayList<AbstractDistributionView>();
+		AbstractDistributionView[] outArray = new AbstractDistributionView[1];
 		for (DistributionType type : DistributionType.values()) {
-			IDistributionView current = DistributionViewFactory.getDistributionView(type);
+			AbstractDistributionView current = DistributionViewFactory.getDistributionView(type);
 			if (current != null)
 				result.add(current);
 		}

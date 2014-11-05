@@ -23,6 +23,9 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 	@XStreamOmitField
 	protected String paramNames[];
 
+	@XStreamOmitField
+	JTextField[] textFields;
+
 	@Override
 	public double getNeededTime() {
 		if (distribution == null)
@@ -41,7 +44,8 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 	public JPanel getConfigView() {
 
 		JLabel[] labels = new JLabel[paramNames.length];
-		params = new double[paramNames.length];
+		if (params == null)
+			params = new double[paramNames.length];
 		JPanel panel = new JPanel();
 		JTextField[] textFields = new JTextField[params.length];
 
@@ -49,7 +53,7 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 			labels[i] = new JLabel(paramNames[i]);
 			panel.add(labels[i]);
 			textFields[i] = new JTextField();
-			textFields[i].setPreferredSize(new Dimension(40, 20));
+			textFields[i].setPreferredSize(new Dimension(60, 20));
 			textFields[i].setText(Double.toString(params[i]));
 			textFields[i].addPropertyChangeListener(new TextAction(i));
 			panel.add(textFields[i]);
@@ -108,6 +112,9 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 
 	public void setParams(double... parameters) {
 		params = parameters;
+		//		for (int i = 0; i < parameters.length; i++) {
+		//			textFields[i].setText(Double.toString(parameters[i]));
+		//		}
 	}
 
 	public double[] getParams() {

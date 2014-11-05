@@ -46,7 +46,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.TimeActionListener;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.TimeSimulationAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -84,9 +84,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 		setFloatable(false);
 		setRollover(true);
-
-		//HACK!: To show PNEditor-Icons (they seem to be bigger) 
-		//setPreferredSize(new Dimension(200, ICON_SIZE + 30));
 		
 		setLayout(new WrapLayout(3));
 
@@ -147,7 +144,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		//standardItems.add(getLolaButton());
 		standardItems.add(getAristaFlowButton());
-		standardItems.add(new SwatToolbarButton(ToolbarButtonType.TIME));
+		standardItems.add(new JButton(new TimeSimulationAction()));
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));
 		
 //		ButtonGroup group = new ButtonGroup();
@@ -203,8 +200,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private JButton getSwitchworkingDirectoryButton() throws ParameterException, PropertyException, IOException{
 		if (openButton == null)
 			openButton = new SwatToolbarButton(ToolbarButtonType.SWITCH_DIRECTORY);
-		// newButton.addActionListener(new
-		// OpenWorkingDirectoryAction(SwingUtilities.getWindowAncestor(this)));
 		return openButton;
 	}
 	
@@ -212,8 +207,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private JButton getNewNetButton() throws ParameterException, PropertyException, IOException{
 		
 		JButton newButton = new SwatToolbarButton(ToolbarButtonType.NEW);		
-		//newButton.addActionListener(new createNewAction(ToolbarButtonType.NEW_PT));
-
 		return newButton;
 	}
 	
@@ -359,14 +352,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				//addActionListener(new LolaTransformAction());
 				addActionListener(new LolaAnalyzeAction());
 				break;
-			//			case ARISTAFLOW:
-			//				setToolTipText("Analyze active AristaFlow instance");
-			//				addActionListener(new AristaFlowAction());
-			//				break;
-			//			case PRISM:
-			//				setToolTipText("Analyze with PRISM");
-			//				addActionListener(new PrismAnalyzeAction(tabView));
-			//				break;
 			case DELETE:
 				setToolTipText("Remove from Workbench");
 				addActionListener(new DeleteAction());
@@ -374,10 +359,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				setMnemonic(KeyEvent.VK_DELETE);
 				//set
 				break;
-			case TIME:
-				setToolTipText("Simulate Timing");
-				//addActionListener(new TimeActionListener());
-				addActionListener(new TimeActionListener());
 			}
 		}
 		
@@ -524,14 +505,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private String requestFileName(String message, String title){
 			return new FileNameDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this.getParent()), message, title, false)
 					.requestInput();
-	}
-
-		private File getAbsolutePathToWorkingDir(String name) throws PropertyException, ParameterException, IOException {
-			File file = new File(SwatProperties.getInstance().getWorkingDirectory(), name + ".pnml");
-			if (file.exists())
-				throw new ParameterException("File already exists");
-			//TODO: Validate, test if SWATComponent already contains net with same name... etc?
-			return file;
 	}
 }
 

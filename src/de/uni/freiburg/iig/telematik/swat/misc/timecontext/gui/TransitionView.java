@@ -129,7 +129,7 @@ public class TransitionView extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				DistributionChooser chooser = new DistributionChooser();
+				DistributionChooser chooser = new DistributionChooser(timeContext.getTimeBehavior(transitionName));
 				chooser.choose();
 				if (!chooser.userAbort()) {
 					timeContext.addTimeBehavior(transitionName, chooser.getDistribution());

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DistributionViewFactory {
 
-	public static IDistributionView getDistributionView(DistributionType type) {
+	public static AbstractDistributionView getDistributionView(DistributionType type) {
 		switch (type) {
 		case NORMAL:
 			return new NormalDistributionView();
@@ -24,11 +24,11 @@ public class DistributionViewFactory {
 		}
 	}
 
-	public static IDistributionView getDistributionView(double[] realTimeSamples) {
+	public static AbstractDistributionView getDistributionView(double[] realTimeSamples) {
 		return new MeasuredDistributionView(realTimeSamples, 100);
 	}
 
-	public static IDistributionView getDistributionView(List<Double> realTimeSamples) {
+	public static AbstractDistributionView getDistributionView(List<Double> realTimeSamples) {
 		double[] result = new double[realTimeSamples.size()];
 		int i = 0;
 		for (double d : realTimeSamples) {

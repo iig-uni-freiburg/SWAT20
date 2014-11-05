@@ -70,11 +70,22 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 
 	protected void setTooltip(String toolTip) {
 		Validate.notNull(toolTip);
+		Validate.notEmpty(toolTip);
 		putValue(SHORT_DESCRIPTION, toolTip);
 	}
 
 	protected String getTooltip() {
 		return (String) getValue(SHORT_DESCRIPTION);
+	}
+
+	protected void setText(String buttonText) {
+		Validate.notNull(buttonText);
+		Validate.notEmpty(buttonText);
+		putValue(NAME, buttonText);
+	}
+
+	protected String getText() {
+		return (String) getValue(NAME);
 	}
 
 	//	protected SwatTreeView getTreeView() {

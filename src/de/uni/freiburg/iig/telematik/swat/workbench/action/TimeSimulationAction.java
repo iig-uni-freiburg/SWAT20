@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -19,48 +21,75 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.InconsistencyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.event.TokenEvent;
+import de.uni.freiburg.iig.telematik.sepia.event.TokenListener;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.TimeMachine;
 import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
-public class TimeActionListener extends AbstractWorkbenchAction {
+public class TimeSimulationAction extends AbstractWorkbenchAction {
 
-	long[] results;
-	private int numberOfRuns = 100000;
-	private int numberOfBins = 50;
+	private static final long serialVersionUID = 1729386246000057281L;
 
-	public TimeActionListener(int numberOfRuns) {
+	double[] results;
+	private int numberOfRuns = 50000;
+	private int numberOfBins = 100;
+
+	private boolean drainPlaceReached = false;
+
+	public TimeSimulationAction(int numberOfRuns) {
 		super("");
 		this.numberOfRuns = numberOfRuns;
-		this.numberOfBins = 100000;
+		setTooltip("Simulate Timing");
+		try {
+			setIcon(IconFactory.getIcon("time"));
+		} catch (ParameterException e) {
+			setText("simulate Timing");
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			setText("simulate Timing");
+			e.printStackTrace();
+		} catch (IOException e) {
+			setText("simulate Timing");
+			e.printStackTrace();
+		}
 	}
 
-	public TimeActionListener() {
-		super("");
+	public TimeSimulationAction() {
+		this(80000);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		results = new long[numberOfRuns];
+		System.out.println("Drain-Place: " + getNet().getPetriNet().getDrainPlaces().toString());
+		System.out.println("Source-Place: " + getNet().getPetriNet().getSourcePlaces().toString());
+		results = new double[numberOfRuns];
+		setupDrainPlaceListener(getNet());
 		for (int i = 0; i < results.length; i++) {
 			results[i] = getOneSimulationRun();
 		}
 
-		System.out.println("Needed times:");
-		for (long l : results)
-			System.out.print(" " + l);
+		//		System.out.println("Needed times:");
+		//		for (long l : results)
+		//			System.out.print(" " + l);
+		numberOfBins = (int) (Math.max(Math.sqrt(results.length) / 3, 5) + 1);
 		generateDiagram(results, numberOfBins);
+		System.out.println("Average time: " + getAverage(results));
 	}
 
-	public long[] getSimulationResults() {
+	public double[] getSimulationResults() {
 		return results;
 	}
 
@@ -81,14 +110,14 @@ public class TimeActionListener extends AbstractWorkbenchAction {
 		return traverser.chooseNextTransition((List<AbstractTransition<?, Object>>) net.getPetriNet().getEnabledTransitions());
 	}
 
-	private long getOneSimulationRun() {
-		long time = 0;
+	private double getOneSimulationRun() {
+		double time = 0;
 		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = getNet();
 		TimeMachine<?, ?, ?, ?, ?, ?, ?> timeMachine = getTimeMachine(net);
 		PNTraverser<AbstractTransition<?, Object>> traverser = getTraverser(net);
 
-		//		//do at least the first Run
-		//		//do while enabled transitions available and timeMachine increases time
+		//do at least the first Run
+		//do while enabled transitions available and timeMachine increases time
 		//		boolean firstRun = true;
 		//		while (firstRun || (timeMachine.incTime() && net.getPetriNet().hasEnabledTransitions())) {
 		//			firstRun = false;
@@ -103,26 +132,45 @@ public class TimeActionListener extends AbstractWorkbenchAction {
 		//		timeMachine.reset();
 		//		return time;
 
-		while (net.getPetriNet().hasEnabledTransitions() || timeMachine.incTime()) {
-			while (simulateAllEnabledTransitions(net, timeMachine, traverser))
-				;
-			timeMachine.incTime();
-			//			if (!timeMachine.incTime())
-			//				break;
-		}
+		//		while (net.getPetriNet().hasEnabledTransitions() || fireAllEnabledTransitions(net, timeMachine, traverser)
+		//				|| timeMachine.hasPendingActions()) {
+		//				timeMachine.incTime();
+		//		}
 
+		//fireAllEnabledTransitions(net, timeMachine, traverser);
+		while (fireAllEnabledTransitions(net, timeMachine, traverser) || timeMachine.hasPendingActions()
+				|| net.getPetriNet().hasEnabledTransitions()) {
+			if (drainPlaceReached) {
+				System.out.println("Drain-Place reached");
+				break;
+			}
+			timeMachine.incTime();
+		}
 		time = timeMachine.getTime();
 		timeMachine.reset();
+		drainPlaceReached = false;
+
+		//		while (net.getPetriNet().hasEnabledTransitions() || timeMachine.incTime()) {
+		//			while (fireAllEnabledTransitions(net, timeMachine, traverser))
+		//				;
+		//			timeMachine.incTime();
+		//			//			if (!timeMachine.incTime())
+		//			//				break;
+		//		}
+
+		//		time = timeMachine.getTime();
+		//		timeMachine.reset();
 		return time;
 	}
 
-	private boolean simulateAllEnabledTransitions(AbstractGraphicalPN net, TimeMachine timeMachine,
+	private boolean fireAllEnabledTransitions(AbstractGraphicalPN net, TimeMachine timeMachine,
 			PNTraverser<AbstractTransition<?, Object>> traverser) {
 		AbstractTransition<?, Object> transition = chooseTransition(traverser, net);
 		boolean didFire = false;
 		while (transition != null) {
 			try {
 				timeMachine.fire(transition.getName());
+				//System.out.println(this.getClass().getSimpleName() + ": fired " + transition.getName());
 				didFire = true;
 			} catch (PNException e) {
 			}
@@ -131,15 +179,34 @@ public class TimeActionListener extends AbstractWorkbenchAction {
 		return didFire;
 	}
 
-	private static void generateDiagram(long[] results2, int bins) {
+	@SuppressWarnings("unchecked")
+	private void setupDrainPlaceListener(AbstractGraphicalPN net) {
+		for (AbstractPlace p : (Collection<AbstractPlace>) net.getPetriNet().getDrainPlaces()) {
+			p.addTokenListener(new TokenListener<AbstractPlace>() {
+
+				@Override
+				public void tokensAdded(TokenEvent<? extends AbstractPlace> o) {
+					System.out.println("Reached " + o.getSource().getLabel());
+					drainPlaceReached = true;
+				}
+
+				@Override
+				public void tokensRemoved(TokenEvent<? extends AbstractPlace> o) {
+				}
+			});
+
+		}
+	}
+
+	private static void generateDiagram(double[] results2, int bins) {
 		double[] buffer = new double[results2.length];
 		for (int i = 0; i < results2.length; i++)
 			buffer[i] = results2[i];
 		// The histogram takes an array
 		HistogramDataset histo = new HistogramDataset();
 		histo.addSeries("Relative Occurence of Duration", buffer, bins);
-		//histo.setType(HistogramType.RELATIVE_FREQUENCY);
-		histo.setType(HistogramType.SCALE_AREA_TO_1);
+		histo.setType(HistogramType.RELATIVE_FREQUENCY);
+		//histo.setType(HistogramType.SCALE_AREA_TO_1);
 
 		JFrame aFrame = new JFrame("Time analysis");
 		//ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
@@ -176,6 +243,13 @@ public class TimeActionListener extends AbstractWorkbenchAction {
 		aFrame.setSize(new Dimension(800, 600));
 		aFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		aFrame.setVisible(true);
+	}
+
+	private double getAverage(double[] values) {
+		double sum = 0;
+		for (double l : values)
+			sum += l;
+		return sum / (double) values.length;
 	}
 
 	@Override

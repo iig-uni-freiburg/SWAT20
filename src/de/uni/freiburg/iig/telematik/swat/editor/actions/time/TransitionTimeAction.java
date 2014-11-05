@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis;
+package de.uni.freiburg.iig.telematik.swat.editor.actions.time;
 
 import java.awt.event.ActionEvent;
 
@@ -19,6 +19,7 @@ public class TransitionTimeAction extends AbstractPNEditorAction {
 
 	public TransitionTimeAction(PNEditor editor) {
 		super(editor);
+		this.putValue(NAME, "set timing...");
 	}
 
 	@Override

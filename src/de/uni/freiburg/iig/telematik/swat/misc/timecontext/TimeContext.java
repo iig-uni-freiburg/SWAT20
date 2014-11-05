@@ -13,6 +13,7 @@ import com.thoughtworks.xstream.XStream;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.PNTimeContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTNet;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.AbstractDistributionView;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionViewFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.logAdapter.ISCIFFAdapter;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.logAdapter.TimeAwareAdapter;
@@ -21,7 +22,7 @@ public class TimeContext implements PNTimeContext {
 
 	//TODO: timing for Places. How to get it from the log?
 
-	Map<String, TimeBehavior> transitionTime = new HashMap<String, TimeBehavior>();
+	Map<String, AbstractDistributionView> transitionTime = new HashMap<String, AbstractDistributionView>();
 	File file;
 	String name;
 	String correspondingNet;
@@ -64,7 +65,7 @@ public class TimeContext implements PNTimeContext {
 		this.file = fileToSave;
 	}
 
-	public void addTimeBehavior(String transitionName, TimeBehavior behavior) {
+	public void addTimeBehavior(String transitionName, AbstractDistributionView behavior) {
 		transitionTime.put(transitionName, behavior);
 	}
 
@@ -74,7 +75,7 @@ public class TimeContext implements PNTimeContext {
 		return 0;
 	}
 
-	public TimeBehavior getTimeBehavior(String transition) {
+	public AbstractDistributionView getTimeBehavior(String transition) {
 		if (transitionTime.containsKey(transition))
 			return transitionTime.get(transition);
 		return null;
@@ -99,15 +100,15 @@ public class TimeContext implements PNTimeContext {
 	}
 
 	@Override
-	public long getDelayPT(String placeName, String transitionName) {
+	public double getDelayPT(String placeName, String transitionName) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public long getDelayTP(String transitionName, String placeName) {
+	public double getDelayTP(String transitionName, String placeName) {
 		if (transitionTime.containsKey(transitionName))
-			return (long) transitionTime.get(transitionName).getNeededTime();
+			return transitionTime.get(transitionName).getNeededTime();
 		else
 			return 0;
 	}
@@ -130,6 +131,10 @@ public class TimeContext implements PNTimeContext {
 
 	public String toString() {
 		return getName();
+	}
+
+	public void removeBehavior(String name) {
+		transitionTime.remove(name);
 	}
 
 }
