@@ -39,7 +39,7 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
-public class TimeSimulationAction extends AbstractWorkbenchAction {
+public class SimulateTimeAction extends AbstractWorkbenchAction {
 
 	private static final long serialVersionUID = 1729386246000057281L;
 
@@ -49,7 +49,7 @@ public class TimeSimulationAction extends AbstractWorkbenchAction {
 
 	private boolean drainPlaceReached = false;
 
-	public TimeSimulationAction(int numberOfRuns) {
+	public SimulateTimeAction(int numberOfRuns) {
 		super("");
 		this.numberOfRuns = numberOfRuns;
 		setTooltip("Simulate Timing");
@@ -67,14 +67,14 @@ public class TimeSimulationAction extends AbstractWorkbenchAction {
 		}
 	}
 
-	public TimeSimulationAction() {
-		this(80000);
+	public SimulateTimeAction() {
+		this(100000);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("Drain-Place: " + getNet().getPetriNet().getDrainPlaces().toString());
-		System.out.println("Source-Place: " + getNet().getPetriNet().getSourcePlaces().toString());
+		//		System.out.println("Drain-Place: " + getNet().getPetriNet().getDrainPlaces().toString());
+		//		System.out.println("Source-Place: " + getNet().getPetriNet().getSourcePlaces().toString());
 		results = new double[numberOfRuns];
 		setupDrainPlaceListener(getNet());
 		for (int i = 0; i < results.length; i++) {
@@ -101,7 +101,7 @@ public class TimeSimulationAction extends AbstractWorkbenchAction {
 		return new TimeMachine(net.getPetriNet(), SwatComponents.getInstance().getTimeContexts(net.getPetriNet().getName()).get(0));
 	}
 
-	private PNTraverser<AbstractTransition<?, Object>> getTraverser(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net){
+	private PNTraverser<AbstractTransition<?, Object>> getTraverser(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net) {
 		return new RandomPNTraverser((AbstractPetriNet<?, ?, ?, ?, ?, ?, ?>) net.getPetriNet());
 	}
 
@@ -186,7 +186,7 @@ public class TimeSimulationAction extends AbstractWorkbenchAction {
 
 				@Override
 				public void tokensAdded(TokenEvent<? extends AbstractPlace> o) {
-					System.out.println("Reached " + o.getSource().getLabel());
+					//System.out.println("Reached " + o.getSource().getLabel());
 					drainPlaceReached = true;
 				}
 
@@ -219,7 +219,6 @@ public class TimeSimulationAction extends AbstractWorkbenchAction {
 
 		renderer.setDrawBarOutline(false);
 
-
 		renderer.setSeriesOutlinePaint(0, Color.red);
 
 		//plot.getRangeAxis().setRange(0, 0.2);
@@ -235,12 +234,11 @@ public class TimeSimulationAction extends AbstractWorkbenchAction {
 		legend.setItemFont(nwfont);
 		//chart.setLegend(legend);
 
-
 		ChartPanel panel = new ChartPanel(chart);
-		panel.setPreferredSize(new java.awt.Dimension(800, 600));
+		panel.setPreferredSize(new java.awt.Dimension(900, 600));
 		aFrame.setContentPane(panel);
-		aFrame.setPreferredSize(new java.awt.Dimension(800, 600));
-		aFrame.setSize(new Dimension(800, 600));
+		aFrame.setPreferredSize(new java.awt.Dimension(900, 600));
+		aFrame.setSize(new Dimension(900, 600));
 		aFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		aFrame.setVisible(true);
 	}

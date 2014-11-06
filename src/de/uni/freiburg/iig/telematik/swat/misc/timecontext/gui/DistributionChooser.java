@@ -26,21 +26,32 @@ public class DistributionChooser extends JDialog implements ActionListener {
 	boolean okay = false;
 
 	public static void main(String[] args) {
-		DistributionChooser chooser = new DistributionChooser();
+		AbstractDistributionView view = DistributionViewFactory.getDistributionView(DistributionType.UNIFORM);
+		System.out.println("Setting view params");
+		view.setParams(1, 2);
+		System.out.println("view BEFORE: " + view);
+		DistributionChooser chooser = new DistributionChooser(view);
 		chooser.choose();
-		if (!chooser.userAbort())
-			System.out.println("Distribution is: " + chooser.getDistribution());
+		if (!chooser.userAbort()) {
+			System.out.println("USER choosen distribution is: " + chooser.getDistribution());
+		}
+		System.out.println("view AFTER: " + view);
 	}
 
 	public AbstractDistributionView getDistribution() {
-		System.out.println(selector.getSelectedItem());
+		System.out.println("New Distribution: " + selector.getSelectedItem());
 		return ((AbstractDistributionView) selector.getSelectedItem());
 	}
 
 	public void choose() {
 		//setModal(true);
-		//setModalityType(ModalityType.APPLICATION_MODAL);
-		setVisible(true);
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		super.setVisible(true);
+	}
+
+	public void setVisible(boolean b) {
+		if (b)
+			choose();
 	}
 
 	public boolean userAbort() {
@@ -58,7 +69,7 @@ public class DistributionChooser extends JDialog implements ActionListener {
 		selector = new JComboBox(getDistributionViews());
 		selector.addActionListener(this);
 		this.add(selector);
-		panel.add(((IDistributionView) selector.getSelectedItem()).getConfigView());
+		panel.add(((AbstractDistributionView) selector.getSelectedItem()).getConfigView());
 		this.add(panel);
 		JPanel buttons = new JPanel();
 		buttons.setLayout((new BoxLayout(buttons, BoxLayout.X_AXIS)));
@@ -72,17 +83,23 @@ public class DistributionChooser extends JDialog implements ActionListener {
 
 	public DistributionChooser(AbstractDistributionView timeBehavior) {
 		this();
-		AbstractDistributionView currentView = (AbstractDistributionView) selector.getItemAt(getIndexOfTimeBehavior(timeBehavior));
-		currentView.setParams(timeBehavior.getParams());
-		selector.setSelectedIndex(getIndexOfTimeBehavior(timeBehavior));
+		if (timeBehavior != null) {
+			AbstractDistributionView currentView = (AbstractDistributionView) selector.getItemAt(getIndexOfTimeBehavior(timeBehavior));
+			currentView.setParams(timeBehavior.getParams());
+			selector.setSelectedIndex(getIndexOfTimeBehavior(timeBehavior));
+		}
 	}
 
 	private int getIndexOfTimeBehavior(AbstractDistributionView timeBehavior) {
+		if (timeBehavior == null)
+			return 0;
+
 		for (int i = 0; i < selector.getItemCount(); i++) {
 			AbstractDistributionView selectorItem = (AbstractDistributionView) selector.getItemAt(i);
 			if (selectorItem.getType().equals(timeBehavior.getType()))
 				return i;
 		}
+
 		return 0;
 	}
 

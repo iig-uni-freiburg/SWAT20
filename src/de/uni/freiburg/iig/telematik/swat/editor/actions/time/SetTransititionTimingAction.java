@@ -12,6 +12,7 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.Abstrac
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.DistributionChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 public class SetTransititionTimingAction extends AbstractPNEditorAction {
 
@@ -24,16 +25,31 @@ public class SetTransititionTimingAction extends AbstractPNEditorAction {
 
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		super.actionPerformed(e);
 		TimeContext context = SwatState.getInstance().getActiveContext(editor.getNetContainer().getPetriNet().getName());
 		IFNetGraph graph = (IFNetGraph) editor.getGraphComponent().getGraph();
 		PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
+		System.out.println("Time context for " + cell.getId() + " before: " + context.getTimeBehavior(cell.getId()));
 		AbstractDistributionView view = context.getTimeBehavior(cell.getId());
 		DistributionChooser chooser = new DistributionChooser(view);
 		chooser.setVisible(true);
+		if (chooser.userAbort())
+			System.out.println("User aborted");
 		if (!chooser.userAbort()) {
 			context.addTimeBehavior(cell.getId(), chooser.getDistribution());
-			SwatComponents.getInstance().storeTimeContext(context, editor.getNetContainer().getPetriNet().getName());
+			try {
+				SwatComponents.getInstance().storeTimeContext(context, editor.getNetContainer().getPetriNet().getName());
+			} catch (SwatComponentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+		System.out.println("Time context for " + cell.getId() + " AFTER: " + context.getTimeBehavior(cell.getId()));
 	}
 
 }

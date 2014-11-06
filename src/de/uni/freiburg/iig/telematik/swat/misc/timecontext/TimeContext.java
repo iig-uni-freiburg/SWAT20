@@ -66,6 +66,7 @@ public class TimeContext implements PNTimeContext {
 	}
 
 	public void addTimeBehavior(String transitionName, AbstractDistributionView behavior) {
+		//System.out.println("Adding time Behavior: " + behavior.toString());
 		transitionTime.put(transitionName, behavior);
 	}
 

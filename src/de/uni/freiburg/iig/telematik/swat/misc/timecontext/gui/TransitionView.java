@@ -70,21 +70,6 @@ public class TransitionView extends JDialog {
 		}
 		if (behavior instanceof StochasticTimeBehavior || behavior instanceof IDistributionView) {
 			distributionType.setText(behavior.toString());
-			//			//savely castable
-			//			AbstractRealDistribution currentDistribution = ((StochasticTimeBehavior) behavior).getDistribution();
-			//			if (currentDistribution instanceof NormalDistribution) {
-			//				distributionType.setText("Normal distributed");
-			//			}
-			//			else if (currentDistribution instanceof LogNormalDistribution) {
-			//				distributionType.setText("Log-Normal distributed");
-			//			} else if (currentDistribution instanceof GammaDistribution) {
-			//				distributionType.setText("Gamme distributed");
-			//			} else if (currentDistribution instanceof WeibullDistribution) {
-			//				distributionType.setText("Weibull distributed");
-			//			}
-			//			else {
-			//				distributionType.setText("unknown");
-			//			}
 		}
 		distributionType.revalidate();
 

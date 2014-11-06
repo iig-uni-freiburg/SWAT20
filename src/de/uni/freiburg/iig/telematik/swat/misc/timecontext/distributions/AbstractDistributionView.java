@@ -1,13 +1,14 @@
 package de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions;
 
 import java.awt.Dimension;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 
@@ -15,16 +16,14 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeBehavior;
 
-public abstract class AbstractDistributionView implements IDistributionView, TimeBehavior {
+public abstract class AbstractDistributionView implements IDistributionView, TimeBehavior, Cloneable {
+
 
 	@XStreamOmitField
 	protected AbstractRealDistribution distribution;
 
 	@XStreamOmitField
 	protected String paramNames[];
-
-	@XStreamOmitField
-	JTextField[] textFields;
 
 	@Override
 	public double getNeededTime() {
@@ -55,19 +54,9 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 			textFields[i] = new JTextField();
 			textFields[i].setPreferredSize(new Dimension(60, 20));
 			textFields[i].setText(Double.toString(params[i]));
-			textFields[i].addPropertyChangeListener(new TextAction(i));
+			textFields[i].getDocument().addDocumentListener(new TextAction(i));
 			panel.add(textFields[i]);
 		}
-		//
-		//		mean.setPreferredSize(new Dimension(50, 20));
-		//		sd.setPreferredSize(new Dimension(50, 20));
-		//		JPanel panel = new JPanel();
-		//		panel.add(new JLabel("Mean: "));
-		//		panel.add(mean);
-		//		panel.add(new JLabel("Derivation: "));
-		//		panel.add(sd);
-		//		panel.setVisible(true);
-		//		return panel;
 
 		panel.setVisible(true);
 		return panel;
@@ -84,23 +73,6 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 		return type;
 	}
 
-	class TextAction implements PropertyChangeListener {
-		protected int i;
-
-		public TextAction(int i) {
-			this.i = i;
-		}
-
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			try {
-				params[i] = Double.parseDouble(((JTextField) evt.getSource()).getText());
-			} catch (NumberFormatException e) {
-			}
-			//params[i] = Double.parseDouble(evt.getNewValue().toString());
-		}
-
-	}
 
 	public void setParamNames(String... names) {
 		paramNames = names;
@@ -111,10 +83,7 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 	}
 
 	public void setParams(double... parameters) {
-		params = parameters;
-		//		for (int i = 0; i < parameters.length; i++) {
-		//			textFields[i].setText(Double.toString(parameters[i]));
-		//		}
+		params = parameters.clone();
 	}
 
 	public double[] getParams() {
@@ -138,19 +107,43 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 
 
 		return type.toString() + paramString.toString() + " distributed";
-		//		switch (type) {
-		//		case NORMAL:
-		//			return "Normal distributed";
-		//		case LOG_NORMAL:
-		//			return "Log-Normal distributed";
-		//		case BETA:
-		//			return "Beta distributed";
-		//		case EXPONENTIAL:
-		//			return "Exponential distributed
-		//
-		//		default:
-		//			return "unknown";
-		//		}
+	}
+
+	protected class TextAction implements DocumentListener {
+		protected int i;
+
+		public TextAction(int i) {
+			this.i = i;
+		}
+
+		public void update(DocumentEvent arg0) {
+			try {
+				params[i] = Double.parseDouble(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
+			} catch (NumberFormatException e) {
+			}
+			//params[i] = Double.parseDouble(evt.getNewValue().toString());
+			catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			update(e);
+
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			update(e);
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			update(e);
+
+		}
 	}
 
 }
