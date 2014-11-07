@@ -1,8 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.lukas.patterns.tests;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import de.invation.code.toval.constraint.NumberConstraint;
 import de.invation.code.toval.constraint.NumberOperator;
 import de.invation.code.toval.types.Multiset;
@@ -286,7 +283,8 @@ public class IFNetTestUtils {
 		tOut.addAccessMode("green", AccessMode.READ);
 		tOut.addAccessMode("green", AccessMode.WRITE);
 		
-        Labeling labels = new Labeling(net, new ArrayList<String>(Arrays.asList("Karl", "Peter", "Hans")));
+		//Labeling labels = new Labeling(net, new ArrayList<String>(Arrays.asList("Karl", "Peter", "Hans")));
+		Labeling labels = new Labeling(); //FIXME
 		
 		labels.setSubjectClearance("Peter", SecurityLevel.HIGH);
 		labels.setSubjectClearance("Hans", SecurityLevel.LOW);
@@ -437,7 +435,8 @@ public class IFNetTestUtils {
 		RegularIFNetTransition tOut = (RegularIFNetTransition) net.getTransition("tOut");
 		tOut.addAccessMode("green", AccessMode.DELETE);
 		
-		Labeling labels = new Labeling(net, new ArrayList<String>(Arrays.asList("Karl", "Peter", "Hans")));
+		//Labeling labels = new Labeling(net, new ArrayList<String>(Arrays.asList("Karl", "Peter", "Hans")));
+		Labeling labels = new Labeling(); //FIXME
 		
 		labels.setSubjectClearance("Peter", SecurityLevel.HIGH);
 		labels.setSubjectClearance("Hans", SecurityLevel.LOW);

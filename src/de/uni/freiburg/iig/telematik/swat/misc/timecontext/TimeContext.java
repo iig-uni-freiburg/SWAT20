@@ -26,9 +26,18 @@ public class TimeContext implements PNTimeContext {
 	File file;
 	String name;
 	String correspondingNet;
+	double intendedFinishTime;
 	
 	
 
+
+	public double getIntendedFinishTime() {
+		return intendedFinishTime;
+	}
+
+	public void setIntendedFinishTime(double intendedFinishTime) {
+		this.intendedFinishTime = intendedFinishTime;
+	}
 
 	public String getName() {
 		return name;
