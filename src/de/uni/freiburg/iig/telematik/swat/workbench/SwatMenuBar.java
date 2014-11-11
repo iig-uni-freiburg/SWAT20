@@ -17,6 +17,7 @@ import javax.swing.WindowConstants;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
@@ -85,6 +86,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		fileMenu.add(open);
 		fileMenu.add(saveAll);
 		fileMenu.add(save);
+		fileMenu.add(new DeleteAction("Delete", null));
 		fileMenu.add(importEntry);
 		fileMenu.addSeparator();
 		fileMenu.add(exit);

@@ -1,9 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -20,6 +23,7 @@ public class DeleteAction extends AbstractWorkbenchAction {
 	public DeleteAction(String name) {
 		super(name);
 		setTooltip("Delete currently selected item");
+		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		try {
 			this.setIcon(IconFactory.getIcon("delete"));
 		} catch (ParameterException e) {
@@ -34,6 +38,12 @@ public class DeleteAction extends AbstractWorkbenchAction {
 		}
 	}
 
+	public DeleteAction(String name, Icon icon) {
+		super(name);
+		setTooltip("Delete currently selected item");
+		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+	}
+
 	public DeleteAction() {
 		this("");
 	}
@@ -41,6 +51,7 @@ public class DeleteAction extends AbstractWorkbenchAction {
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		//get selected item
+		try {
 		SwatTreeNode selectedNode = (SwatTreeNode) SwatTreeView.getInstance().getSelectionPath().getLastPathComponent();
 		int userAnswer = JOptionPane.showConfirmDialog(Workbench.getInstance(), "Delete " + selectedNode.getDisplayName() + " from DISK?");
 
@@ -57,6 +68,9 @@ public class DeleteAction extends AbstractWorkbenchAction {
 			SwatComponents.getInstance().removeLogFile(selectedNode.getDisplayName(), true);
 		default:
 			break;
+		}
+		} catch (NullPointerException e1) {
+			//nothing marked in TreeView
 		}
 
 	}

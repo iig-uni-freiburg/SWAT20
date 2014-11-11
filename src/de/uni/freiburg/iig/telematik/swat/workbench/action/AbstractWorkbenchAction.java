@@ -7,6 +7,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
@@ -86,6 +87,10 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 
 	protected String getText() {
 		return (String) getValue(NAME);
+	}
+
+	protected void setAcceleratorKey(KeyStroke key) {
+		putValue(ACCELERATOR_KEY, key);
 	}
 
 	//	protected SwatTreeView getTreeView() {

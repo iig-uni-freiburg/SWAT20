@@ -265,33 +265,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 
 
-	
-	//	public class ImportAction implements ActionListener {
-	//		@Override
-	//		public void actionPerformed(ActionEvent arg0) {
-	//			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = PNParserDialog.showPetriNetDialog(SwingUtilities
-	//					.getWindowAncestor(SwatToolbar.this));
-	//			if (net == null)
-	//				return;
-	//			String fileName = requestFileName("Name for imported net?", "New name?");
-	//			try {
-	//				File file = getAbsolutePathToWorkingDir(fileName);
-	//				SwatComponents.getInstance().putIntoSwatComponent(net, file);
-	//				treeView.removeAndUpdateSwatComponents();
-	//			} catch (PropertyException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			} catch (ParameterException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//		}
-	//	}
-
 	private class SwatToolbarButton extends JButton{
 
 		private static final long serialVersionUID = 9184814296174960480L;
@@ -378,81 +351,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE, TIME;
 	}
 	
-
-
-//	class DeleteAction implements ActionListener, KeyListener {
-//
-//		@Override
-//		public void actionPerformed(ActionEvent arg0) {
-//			File file = null;
-//				SwatTreeNode selectedNode = (SwatTreeNode) treeView.getSelectionPath().getLastPathComponent();
-//			try {
-//				switch (selectedNode.getObjectType()) {
-//				case PETRI_NET:
-//					PNEditor editor = (PNEditor) selectedNode.getUserObject();
-//					SwatComponents.getInstance().removePetriNet(editor.getNetContainer().getPetriNet().getName(), true);
-//					file=SwatComponents.getInstance().getPetriNetFile(((AbstractGraphicalPN) selectedNode.getUserObject()).getPetriNet().getName());
-//					break;
-//				case PETRI_NET_ANALYSIS:
-//					break;
-//				default:
-//					//file=((SwatComponent)selectedNode.getUserObject()).getFile();
-//					//file = SwatComponents.getInstance().getFile((XESLogModel) selectedNode.getUserObject());
-//					break;
-//				}
-//			} catch (SwatComponentException e) {
-//				Workbench.getInstance().errorMessage("Could not delete " + selectedNode.getDisplayName() + ". \nReason: " + e.getMessage());
-//
-//			}
-//
-////				boolean deleted = FileHelper.removeLinkOnly(file);
-////				if (deleted) {
-////					try {
-////						//tabView.remove(tabView.getSelectedIndex());
-////						tabView.remove(selectedNode);
-//////						for (int i = 0; i < tabView.getTabCount(); i++) {
-//////							if (tabView.getTabComponentAt(i) == selectedNode.getUserObject()) {
-//////								tabView.remove(i);
-//////							}
-////						//						}
-////					} catch (java.lang.IndexOutOfBoundsException e) {
-////						//Tab wasn't open
-////					}
-////					SwatComponents.getInstance().remove(file);
-////				}
-////			} catch (ArrayIndexOutOfBoundsException e) {
-////
-////			}
-//
-//
-//		}
-
-	//		@Override
-	//		public void keyPressed(KeyEvent arg0) {
-	//			int code=arg0.getKeyCode();
-	//			if (code == KeyEvent.VK_DELETE) {
-	//				actionPerformed(null);
-	//			}
-	//
-	//		}
-	//
-	//		@Override
-	//		public void keyReleased(KeyEvent arg0) {
-	//			// TODO Auto-generated method stub
-	//
-	//		}
-	//
-	//		@Override
-	//		public void keyTyped(KeyEvent arg0) {
-	//			// TODO Auto-generated method stub
-	//
-	//		}
-	//
-	//	}
-
-
-
-
 
 	class createNewAction implements ActionListener {
 
