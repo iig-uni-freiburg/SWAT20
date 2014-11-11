@@ -778,6 +778,47 @@ public class SwatComponents {
 		return null;
 	}
 	
+	public void removeLogFile(String logName, boolean deleteFromDisk) {
+		LogModel logToDelete = getLogModel(logName);
+		
+		if (logToDelete == null)
+			return;
+		
+		removeLogFromList(logName);
+
+		if (deleteFromDisk) {
+			FileUtils.deleteDirectory(logToDelete.getFileReference().getParent(), true, false);
+		}
+
+		listenerSupport.notifyLogRemoved(logToDelete);
+
+	}
+
+	public LogModel getLogModel(String logName) {
+		for(LogModel model:xesLogs){
+			if (model.getName().equals(logName))
+				return model;
+		}
+
+		for (LogModel model : aristaLogs) {
+			if (model.getName().equals(logName))
+				return model;
+		}
+
+		for (LogModel model : mxmlLogs) {
+			if (model.getName().equals(logName))
+			return model;
+		}
+
+		return null;
+	}
+
+	private void removeLogFromList(String logName) {
+		LogModel modelToRemove = getLogModel(logName);
+		aristaLogs.remove(modelToRemove);
+		xesLogs.remove(modelToRemove);
+		mxmlLogs.remove(modelToRemove);
+	}
 
 	//---- Adding and removing analyses -------------------------------------------------------------------------------------
 	

@@ -2,8 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -39,14 +37,15 @@ import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AFSqlLogImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AFtemplateImportAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SimulateTimeAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -134,7 +133,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private void createButtons() throws ParameterException, PropertyException, IOException {
 		standardItems.add(new JButton(new SaveActiveComponentAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
-		standardItems.add(new SwatToolbarButton(ToolbarButtonType.DELETE));
+		standardItems.add(new JButton(new DeleteAction()));
 		standardItems.add(getSwitchworkingDirectoryButton());
 		standardItems.add(getNewNetButton());
 		//standardItems.add(new JButton(new ImportAction()));
@@ -352,13 +351,13 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				//addActionListener(new LolaTransformAction());
 				addActionListener(new LolaAnalyzeAction());
 				break;
-			case DELETE:
-				setToolTipText("Remove from Workbench");
-				addActionListener(new DeleteAction());
-				//addKeyListener(new DeleteAction());
-				setMnemonic(KeyEvent.VK_DELETE);
-				//set
-				break;
+			//			case DELETE:
+			//				setToolTipText("Remove from Workbench");
+			//				addActionListener(new DeleteAction());
+			//				//addKeyListener(new DeleteAction());
+			//				setMnemonic(KeyEvent.VK_DELETE);
+			//				//set
+			//				break;
 			}
 		}
 		
@@ -381,75 +380,75 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	
 
 
-	class DeleteAction implements ActionListener, KeyListener {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			File file = null;
-				SwatTreeNode selectedNode = (SwatTreeNode) treeView.getSelectionPath().getLastPathComponent();
-			try {
-				switch (selectedNode.getObjectType()) {
-				case PETRI_NET:
-					PNEditor editor = (PNEditor) selectedNode.getUserObject();
-					SwatComponents.getInstance().removePetriNet(editor.getNetContainer().getPetriNet().getName(), true);
-					file=SwatComponents.getInstance().getPetriNetFile(((AbstractGraphicalPN) selectedNode.getUserObject()).getPetriNet().getName());
-					break;
-				case PETRI_NET_ANALYSIS:
-					break;
-				default:
-					//file=((SwatComponent)selectedNode.getUserObject()).getFile();
-					//file = SwatComponents.getInstance().getFile((XESLogModel) selectedNode.getUserObject());
-					break;
-				}
-			} catch (SwatComponentException e) {
-				Workbench.getInstance().errorMessage("Could not delete " + selectedNode.getDisplayName() + ". \nReason: " + e.getMessage());
-
-			}
-
-//				boolean deleted = FileHelper.removeLinkOnly(file);
-//				if (deleted) {
-//					try {
-//						//tabView.remove(tabView.getSelectedIndex());
-//						tabView.remove(selectedNode);
-////						for (int i = 0; i < tabView.getTabCount(); i++) {
-////							if (tabView.getTabComponentAt(i) == selectedNode.getUserObject()) {
-////								tabView.remove(i);
-////							}
-//						//						}
-//					} catch (java.lang.IndexOutOfBoundsException e) {
-//						//Tab wasn't open
-//					}
-//					SwatComponents.getInstance().remove(file);
+//	class DeleteAction implements ActionListener, KeyListener {
+//
+//		@Override
+//		public void actionPerformed(ActionEvent arg0) {
+//			File file = null;
+//				SwatTreeNode selectedNode = (SwatTreeNode) treeView.getSelectionPath().getLastPathComponent();
+//			try {
+//				switch (selectedNode.getObjectType()) {
+//				case PETRI_NET:
+//					PNEditor editor = (PNEditor) selectedNode.getUserObject();
+//					SwatComponents.getInstance().removePetriNet(editor.getNetContainer().getPetriNet().getName(), true);
+//					file=SwatComponents.getInstance().getPetriNetFile(((AbstractGraphicalPN) selectedNode.getUserObject()).getPetriNet().getName());
+//					break;
+//				case PETRI_NET_ANALYSIS:
+//					break;
+//				default:
+//					//file=((SwatComponent)selectedNode.getUserObject()).getFile();
+//					//file = SwatComponents.getInstance().getFile((XESLogModel) selectedNode.getUserObject());
+//					break;
 //				}
-//			} catch (ArrayIndexOutOfBoundsException e) {
+//			} catch (SwatComponentException e) {
+//				Workbench.getInstance().errorMessage("Could not delete " + selectedNode.getDisplayName() + ". \nReason: " + e.getMessage());
 //
 //			}
+//
+////				boolean deleted = FileHelper.removeLinkOnly(file);
+////				if (deleted) {
+////					try {
+////						//tabView.remove(tabView.getSelectedIndex());
+////						tabView.remove(selectedNode);
+//////						for (int i = 0; i < tabView.getTabCount(); i++) {
+//////							if (tabView.getTabComponentAt(i) == selectedNode.getUserObject()) {
+//////								tabView.remove(i);
+//////							}
+////						//						}
+////					} catch (java.lang.IndexOutOfBoundsException e) {
+////						//Tab wasn't open
+////					}
+////					SwatComponents.getInstance().remove(file);
+////				}
+////			} catch (ArrayIndexOutOfBoundsException e) {
+////
+////			}
+//
+//
+//		}
 
-
-		}
-
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-			int code=arg0.getKeyCode();
-			if (code == KeyEvent.VK_DELETE) {
-				actionPerformed(null);
-			}
-
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
+	//		@Override
+	//		public void keyPressed(KeyEvent arg0) {
+	//			int code=arg0.getKeyCode();
+	//			if (code == KeyEvent.VK_DELETE) {
+	//				actionPerformed(null);
+	//			}
+	//
+	//		}
+	//
+	//		@Override
+	//		public void keyReleased(KeyEvent arg0) {
+	//			// TODO Auto-generated method stub
+	//
+	//		}
+	//
+	//		@Override
+	//		public void keyTyped(KeyEvent arg0) {
+	//			// TODO Auto-generated method stub
+	//
+	//		}
+	//
+	//	}
 
 
 
