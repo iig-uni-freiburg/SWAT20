@@ -9,6 +9,7 @@ import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -54,7 +55,9 @@ public class RenameAction extends AbstractWorkbenchAction {
 		case XES_LOG:
 		case ARISTAFLOW_LOG:
 			oldName = node.getDisplayName();
-			newName = requestNetName("Enter new name for Petri net", "Rename Petri net");
+			newName = requestNetName("Enter new name for Log", "Rename Log");
+			LogModel model = SwatComponents.getInstance().getLogModel(oldName);
+			SwatComponents.getInstance().renameLog(oldName, newName);
 
 		default:
 			break;

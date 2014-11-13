@@ -4,6 +4,9 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
@@ -51,6 +54,17 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 			Workbench.errorMessage("Could not save Petri Net: " + e.getMessage());
 		}
 		
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		try {
+			doFancyStuff(e);
+			SwatTabView.getInstance().unsetModifiedCurrent();
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), e1.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+
 	}
 
 

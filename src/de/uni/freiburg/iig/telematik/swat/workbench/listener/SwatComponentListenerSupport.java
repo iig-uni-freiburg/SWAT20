@@ -109,8 +109,9 @@ public class SwatComponentListenerSupport extends AbstractListenerSupport<SwatCo
 		}
 	}
 
-	public void notifyLogRenamed(LogModel newModel) {
+	public void notifyLogRenamed(LogModel oldModel, LogModel newModel) {
 		for (SwatComponentsListener listener : listeners) {
+			listener.logRemoved(oldModel);
 			listener.componentsChanged();
 		}
 

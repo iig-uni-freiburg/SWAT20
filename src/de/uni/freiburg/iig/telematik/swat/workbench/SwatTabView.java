@@ -35,6 +35,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.editor.CPNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
@@ -43,12 +45,14 @@ import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 
 @SuppressWarnings("serial")
-public class SwatTabView extends JTabbedPane  implements PNEditorListener {
+public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatComponentsListener {
 	
 	private static SwatTabView tabView = new SwatTabView();
 	
@@ -97,11 +101,20 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	@SuppressWarnings("rawtypes")
 	private void addPNEditor(AbstractGraphicalPN petriNet, String tabName) throws SwatComponentException {
 		if(petriNet instanceof GraphicalPTNet){
-			addTab(tabName, new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getPetriNetFile(petriNet.getPetriNet().getName())));
+			PTNetEditor ptEditor = new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getPetriNetFile(
+					petriNet.getPetriNet().getName()));
+			ptEditor.addEditorListener(this);
+			addTab(tabName, ptEditor);
 		} else if(petriNet instanceof GraphicalCPN){
-			addTab(tabName, new CPNEditor((GraphicalCPN) petriNet, SwatComponents.getInstance().getPetriNetFile(petriNet.getPetriNet().getName())));
+			CPNEditor cpnEditor = new CPNEditor((GraphicalCPN) petriNet, SwatComponents.getInstance().getPetriNetFile(
+					petriNet.getPetriNet().getName()));
+			cpnEditor.addEditorListener(this);
+			addTab(tabName, cpnEditor);
 		} else if(petriNet instanceof GraphicalIFNet){
-			addTab(tabName, new IFNetEditor((GraphicalIFNet) petriNet, SwatComponents.getInstance().getPetriNetFile(petriNet.getPetriNet().getName())));
+			IFNetEditor ifEditor = new IFNetEditor((GraphicalIFNet) petriNet, SwatComponents.getInstance().getPetriNetFile(
+					petriNet.getPetriNet().getName()));
+			ifEditor.addEditorListener(this);
+			addTab(tabName, ifEditor);
 		}
 		//openedSwatComponents.put(petriNet, getComponentAt(getComponentCount()-1));
 		openedSwatComponents.put(petriNet, getComponentAt(getTabCount() - 1));
@@ -269,6 +282,16 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(title));
 	}
 	
+	public void unsetModifiedCurrent() {
+		((ButtonTabComponent) getTabComponentAt(getSelectedIndex())).unsetModified();
+	}
+
+	public void unsetModifiedAll() {
+		for (int i = 0; i < getTabCount(); i++) {
+			((ButtonTabComponent) getTabComponentAt(i)).unsetModified();
+		}
+	}
+
 	/** notifies SwatTabViewListener if something interesting happened **/
 	public class SwatTabViewAdapter implements ChangeListener {
 
@@ -321,6 +344,7 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 	 */
 	public class ButtonTabComponent extends JPanel {
 		private final String title;
+		private JLabel label;
 
 		public ButtonTabComponent(final String title) {
 			//unset default FlowLayout' gaps
@@ -332,11 +356,14 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 			setOpaque(false);
 
 			//make JLabel read titles from JTabbedPane
-			JLabel label = new JLabel() {
-				public String getText() {
-					return title;
-				}
-			};
+			//			JLabel label = new JLabel() {
+			//				public String getText() {
+			//					return title;
+			//				}
+			//			};
+			label = new JLabel();
+
+			label.setText(title);
 
 			add(label);
 			//add more space between the label and the button
@@ -346,6 +373,23 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 			add(button);
 			//add more space to the top of the component
 			setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+		}
+
+		public void setModified() {
+			//title = name;
+			if (!label.getText().endsWith("*"))
+				label.setText(title + "*");
+			System.out.println(label.getText());
+			repaint();
+		}
+
+		public void unsetModified() {
+			if (label.getText().endsWith("*"))
+				label.setText(label.getText().substring(0, label.getText().length() - 1));
+		}
+
+		public String getName() {
+			return title;
 		}
 
 		private class TabButton extends JButton implements ActionListener {
@@ -429,11 +473,104 @@ public class SwatTabView extends JTabbedPane  implements PNEditorListener {
 
 	@Override
 	public void modificationStateChanged(boolean modified) {
-		if (modified)
-			getSelectedComponent().setName(getSelectedComponent().getName() + "*");
+		if (modified) {
+			((ButtonTabComponent) getTabComponentAt(getSelectedIndex())).setModified();
+			//getTabComponentAt(getSelectedIndex()).setName(getTabComponentAt(getSelectedIndex()).getName() + "*");
+			getTabComponentAt(getSelectedIndex()).repaint();
+			revalidate();
+			repaint();
+		}
 		else
-			getSelectedComponent().setName(getSelectedComponent().getName().replace("*", ""));
+			((ButtonTabComponent) getTabComponentAt(getSelectedIndex())).unsetModified();
 		
+	}
+
+	@Override
+	public void petriNetAdded(AbstractGraphicalPN net) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void petriNetRemoved(AbstractGraphicalPN net) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void petriNetRenamed(AbstractGraphicalPN net) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void acModelAdded(ACModel acModel) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void acModelRemoved(ACModel acModel) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void analysisContextAdded(String netID, AnalysisContext context) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void analysisContextRemoved(String netID, AnalysisContext context) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void analysisAdded(String netID, Analysis analysis) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void analysisRemoved(String netID, Analysis analysis) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void timeContextAdded(String netID, TimeContext context) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void timeContextRemoved(String netID, TimeContext context) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void logAdded(LogModel log) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void logRemoved(LogModel log) {
+		for (Object openedComponent : openedSwatComponents.keySet()) {
+			if (openedComponent instanceof LogFileViewer) {
+				((LogFileViewer) openedComponent).getName().equals(log.getName());
+				remove(openedSwatComponents.get(openedComponent));
+			}
+		}
+	}
+
+	@Override
+	public void componentsChanged() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

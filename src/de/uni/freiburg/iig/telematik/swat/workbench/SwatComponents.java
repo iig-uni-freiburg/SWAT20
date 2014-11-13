@@ -689,9 +689,6 @@ public class SwatComponents {
 	
 	//---- Adding and removing Logs -----------------------------------------------------------------------------------------
 	
-//	TODO: informNodeAdded(SwatTreeView.getInstance().new SwatTreeNode(newModel, SwatComponentType.LOG_FILE, file));
-//  TODO: informListenerOfModelChange();
-	
 	public void addAristaFlowLog(File file, String name) throws SwatComponentException{
 		try {
 			File destFile = new File(String.format(CSVLogNameFormat, SwatProperties.getInstance().getPathForLogs(), name));
@@ -827,8 +824,10 @@ public class SwatComponents {
 	}
 
 	public void renameLog(String oldID, String newID) throws SwatComponentException {
-		getLogModel(oldID).setName(newID);
-		listenerSupport.notifyLogRenamed(getLogModel(newID));
+		LogModel oldModel = getLogModel(oldID);
+		addLogModel(storeLogModelAs(getLogModel(oldID), newID));
+		removeLogFile(oldID, true);
+		listenerSupport.notifyLogRenamed(oldModel, getLogModel(newID));
 	}
 
 	//---- Adding and removing analyses -------------------------------------------------------------------------------------
@@ -1062,73 +1061,8 @@ public class SwatComponents {
 	
 	//-----------------------------------------------------------------------------------------------------------------------
 
-	
-
-//	public void setLayoutNeed(AbstractGraphicalPN net) {
-//		needsLayout.add(net.getPetriNet().getName());
-//	}
-//
-//	public boolean getLayoutNeed(AbstractGraphicalPN net) {
-//		return needsLayout.contains(net.getPetriNet().getName());
-//	}
-//
-//	public void removeLayoutNeed(AbstractGraphicalPN net) {
-//		needsLayout.remove(net.getPetriNet().getName());
-//	}
-
-//	public void remove(File file) {
-//		HashMap<Object, File> all = new HashMap<Object, File>();
-//		all.putAll(xml);
-//		all.putAll(logs);
-//		all.putAll(nets);
-//		for (Entry<Object, File> entry : all.entrySet()) {
-//			if (entry.getValue().equals(file))
-//			remove(entry.getKey());
-//		}
-//	}
-
-//	private void remove(Object key) {
-//		boolean found=false;
-//		if (xml.containsKey(key)) {
-//			xml.remove(key);
-//			found=true;
-//		}
-//
-//		if (logs.containsKey(key)) {
-//			logs.remove(key);
-//			found=true;
-//		}
-//		if (nets.containsKey(key)) {
-//			nets.remove(key);
-//			found=true;
-//		}
-//		
-//		if(found) informElementRemoved(key);
-//	}
-	
 
 
-
-//	private void informNodeAdded(SwatTreeNode swatTreeNode) {
-//		for (SwatComponentsListener listener : this.listener) {
-//			listener.nodeAdded(swatTreeNode);
-//		}
-//
-//	}
-
-
-//	private File generateCsvLogPath(String name) throws PropertyException, IOException {
-//		//Make Directory
-//		File folder = new File(SwatProperties.getInstance().getPathForLogs(), name);
-//		folder.mkdir();
-//		return new File(folder, name + ".csv");
-//	}
-
-	
-
-
-	
-	
 	//---- Adding and removing analysis contexts ----------------------------------------------------------------------------
 
 	public List<Analysis> getAnalyses(String netID){
