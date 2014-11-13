@@ -14,13 +14,13 @@ import de.uni.freiburg.iig.telematik.swat.workbench.PNNameDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
-public class ImportAction extends AbstractWorkbenchAction {
+public class PTImportAction extends AbstractWorkbenchAction {
 
-	public ImportAction() {
+	public PTImportAction() {
 		this("Import PT-Net");
 	}
 
-	public ImportAction(String name) {
+	public PTImportAction(String name) {
 		super(name);
 		try {
 			setIcon(IconFactory.getIcon("import"));

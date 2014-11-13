@@ -37,18 +37,25 @@ public class RenameAction extends AbstractWorkbenchAction {
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		SwatTreeNode node = (SwatTreeNode) Workbench.getInstance().getTreeView().getSelectionPath().getLastPathComponent();
+		String oldName, newName;
 		
 		switch(node.getObjectType()){
 		case LABELING:
 			break;
 		case PETRI_NET:
-			String oldName = node.getDisplayName();
-			String newName = requestNetName("Enter new name for Petri net", "Rename Petri net");
+			oldName = node.getDisplayName();
+			newName = requestNetName("Enter new name for Petri net", "Rename Petri net");
 			if(newName != null && !newName.equals(oldName))
 				SwatComponents.getInstance().renamePetriNet(oldName, newName);
 			break;
 		case PETRI_NET_ANALYSIS:
 			break;
+		case MXML_LOG:
+		case XES_LOG:
+		case ARISTAFLOW_LOG:
+			oldName = node.getDisplayName();
+			newName = requestNetName("Enter new name for Petri net", "Rename Petri net");
+
 		default:
 			break;
 		}

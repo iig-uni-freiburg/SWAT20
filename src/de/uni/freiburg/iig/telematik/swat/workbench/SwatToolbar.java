@@ -38,8 +38,9 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AFSqlLogImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AFtemplateImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.LogImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
@@ -140,6 +141,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(getImportButon());
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.AF_TEMPLATE));
 		standardItems.add(new JButton(new AFtemplateImportAction()));
+		standardItems.add(new JButton(new LogImportAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		//standardItems.add(getLolaButton());
 		standardItems.add(getAristaFlowButton());
@@ -167,7 +169,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	private JButton getImportButon() throws ParameterException, PropertyException, IOException {
 		//JButton newButton = new SwatToolbarButton(ToolbarButtonType.IMPORT);
-		JButton importButton = new JButton(new ImportAction());
+		JButton importButton = new JButton(new PTImportAction());
 		return importButton;
 	}
 
@@ -283,7 +285,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 			switch(type){
 			case IMPORT:
 				setToolTipText("Import PT-Net from filesystem");
-				addActionListener(new ImportAction());
+				addActionListener(new PTImportAction());
 				break;
 			case NEW:
 				SwatNewNetToolbar newNetTB = new SwatNewNetToolbar(tabView, treeView);

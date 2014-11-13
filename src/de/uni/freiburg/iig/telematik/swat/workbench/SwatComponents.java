@@ -705,8 +705,14 @@ public class SwatComponents {
 	}
 	
 
-	public LogModel storeLogModelTo(LogModel model, String LogModelName) {
+	public LogModel storeLogModelAs(LogModel model, String LogModelName) {
 		try {
+			int i = 0;
+			while (getLogModel(LogModelName) != null) {
+				LogModelName += ++i;
+				model.setName(LogModelName);
+			}
+
 			File pathForLogModel = new File(SwatProperties.getInstance().getPathForLogs(), LogModelName);
 			pathForLogModel.mkdirs();
 			String fileSuffix = FileUtils.getExtension(model.getFileReference());
@@ -719,7 +725,7 @@ public class SwatComponents {
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not store log.\nReason: " + e.getMessage());
 		}
-		return null;
+		return model;
 	}
 	
 	public void addLogModel(LogModel model){
@@ -818,6 +824,11 @@ public class SwatComponents {
 		aristaLogs.remove(modelToRemove);
 		xesLogs.remove(modelToRemove);
 		mxmlLogs.remove(modelToRemove);
+	}
+
+	public void renameLog(String oldID, String newID) throws SwatComponentException {
+		getLogModel(oldID).setName(newID);
+		listenerSupport.notifyLogRenamed(getLogModel(newID));
 	}
 
 	//---- Adding and removing analyses -------------------------------------------------------------------------------------
