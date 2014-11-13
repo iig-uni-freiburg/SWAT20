@@ -379,7 +379,6 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 			//title = name;
 			if (!label.getText().endsWith("*"))
 				label.setText(title + "*");
-			System.out.println(label.getText());
 			repaint();
 		}
 
