@@ -15,7 +15,7 @@ public class OpenWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void doFancyStuff(ActionEvent e) throws Exception {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Choose existing working directory");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -24,7 +24,7 @@ public class OpenWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             String workingDirectory = file.getAbsolutePath()+System.getProperty("file.separator");
-			addKnownWorkingDirectory(workingDirectory);
+			addKnownWorkingDirectory(workingDirectory, false);
         }
 	}
 

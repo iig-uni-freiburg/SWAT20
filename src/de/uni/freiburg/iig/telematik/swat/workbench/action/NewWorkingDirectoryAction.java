@@ -6,9 +6,8 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
-import de.invation.code.toval.properties.PropertyException;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
@@ -16,33 +15,30 @@ public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
 	private static final long serialVersionUID = 3421975574956233676L;
 	
 	public NewWorkingDirectoryAction(Window parentWindow){
-		super(parentWindow, "New Working Dir");
-		//super(parentWindow, "New Working Directory");
+		super(parentWindow, "New Working Directory");
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void doFancyStuff(ActionEvent e) throws Exception {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Choose location for new working directory");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int returnVal = fileChooser.showOpenDialog(parent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            String workingDirectoryLocation = file.getAbsolutePath();
-            File dir = new File(workingDirectoryLocation + System.getProperty("file.separator") + SwatProperties.defaultWorkingDirectoryName);
+        	File file = fileChooser.getSelectedFile();
+            String simulationDirectoryLocation = file.getAbsolutePath();
+            File dir = new File(simulationDirectoryLocation + "/" + SwatProperties.defaultWorkingDirectoryName);
             if(dir.exists()){
             	int count = 1;
-            	while((dir = new File(workingDirectoryLocation +  System.getProperty("file.separator") + SwatProperties.defaultWorkingDirectoryName + count)).exists()){
+            	while((dir = new File(simulationDirectoryLocation + "/" + SwatProperties.defaultWorkingDirectoryName + count)).exists()){
             		count++;
             	}
             } 
             dir.mkdir();
-            String workingDirectory = dir.getAbsolutePath() + System.getProperty("file.separator");
+            String simulationDirectory = dir.getAbsolutePath() + "/";
  
- 
-			addKnownWorkingDirectory(workingDirectory);
-
+            addKnownWorkingDirectory(simulationDirectory, true);
         }
 	}
 

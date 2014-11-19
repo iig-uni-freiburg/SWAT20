@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
@@ -139,12 +138,7 @@ public class SwatProperties extends AbstractProperties{
 		String propertyValue = getProperty(SwatProperty.KNOWN_WORKING_DIRECTORIES);
 		if(propertyValue == null)
 			return result;
-		StringTokenizer directoryTokens = StringUtils.splitArrayString(propertyValue, String.valueOf(ArrayUtils.VALUE_SEPARATION));
-		while(directoryTokens.hasMoreTokens()){
-			String nextToken = directoryTokens.nextToken();
-			result.add(nextToken.substring(1, nextToken.length()-1));
-		}
-		return result;
+		return new HashSet<String>(StringUtils.splitArrayStringQuoted(propertyValue, '\''));
 	}
 
 	//-- Simulation component paths (not stored in property file)

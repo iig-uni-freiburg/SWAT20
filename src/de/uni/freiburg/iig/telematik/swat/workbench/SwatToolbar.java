@@ -299,7 +299,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				addActionListener(new SaveAllAction());
 				break;
 			case SWITCH_DIRECTORY:
-				addActionListener(new SwitchWorkingDirectoryAction(treeView, tabView));
+				addActionListener(new SwitchWorkingDirectoryAction());
 				break;
 			case NEW_CPN:
 				setToolTipText("Create new CPnet");

@@ -125,7 +125,7 @@ public class SwatComponents {
 		timeContexts.clear();
 		acModels.clear();
 		loadSwatComponents();
-//		informListenerOfModelChange();
+		listenerSupport.notifyComponentsChanged();
 	}
 	
 	private void loadACModels(){

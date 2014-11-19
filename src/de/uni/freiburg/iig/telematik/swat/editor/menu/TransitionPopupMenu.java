@@ -80,7 +80,7 @@ public class TransitionPopupMenu extends JPopupMenu {
 	}
 
 	private void updateSubjectDescriptorMenu() {
-		submenu3.removeAll();
+//		submenu3.removeAll();
 		if(SwatComponents.getInstance().containsACModels()){
 			if(graph instanceof IFNetGraph){
 			if(((IFNetGraph)graph).getSelectedACModel() != null){

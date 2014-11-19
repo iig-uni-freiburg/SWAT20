@@ -72,7 +72,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		JMenu fileMenu = new JMenu("File");
 
 		JMenuItem open = new JMenuItem("Switch working directory", UIManager.getIcon("FileView.directoryIcon"));
-		open.addActionListener(new SwitchWorkingDirectoryAction(treeView, tabView));
+		open.addActionListener(new SwitchWorkingDirectoryAction());
 
 		JMenuItem saveAll = getSaveAllEntry();
 		JMenuItem save = getSaveEntry();
