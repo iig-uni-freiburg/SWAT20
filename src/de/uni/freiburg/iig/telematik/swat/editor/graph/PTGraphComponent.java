@@ -62,6 +62,7 @@ public class PTGraphComponent extends PNGraphComponent {
 	@Override
 	protected boolean doubleClickOnPlace(PNGraphCell cell, MouseEvent e) {
 		String tokens = JOptionPane.showInputDialog(PTGraphComponent.this, "Input new amount of tokens");
+		if(tokens != null){
 		try {
 			Validate.notNegativeInteger(tokens);
 			Multiset<String> multiSet = new Multiset<String>();
@@ -71,11 +72,14 @@ public class PTGraphComponent extends PNGraphComponent {
 			JOptionPane.showMessageDialog(PTGraphComponent.this, "Input is not a positive integer.", "Invalid parameter", JOptionPane.ERROR_MESSAGE);
 		}
 		return true;
+		}
+		return false;
 	}
 
 	@Override
 	protected boolean doubleClickOnArcLabel(PNGraphCell cell, MouseEvent e) {
 		String weight = JOptionPane.showInputDialog(PTGraphComponent.this, "Input new arc weight");
+		if(weight != null){
 		try {
 			Validate.positiveInteger(weight);
 		} catch (ParameterException ex) {
@@ -90,6 +94,8 @@ public class PTGraphComponent extends PNGraphComponent {
 			}
 		}
 		return true;
+		}
+		return false;
 	}
 
 	@Override
