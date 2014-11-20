@@ -30,6 +30,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import de.invation.code.toval.graphic.component.RestrictedTextField;
+import de.invation.code.toval.graphic.component.event.RestrictedTextFieldListener;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
@@ -257,7 +258,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 		((JTextField) child.getTable().getValueAt(i, 1)).setText(oldValue);
 	}
 
-	public class PropertiesField extends RestrictedTextField {
+	public class PropertiesField extends RestrictedTextField implements RestrictedTextFieldListener {
 
 		private static final long serialVersionUID = -2791152505686200734L;
 
@@ -295,7 +296,7 @@ public class PropertiesView extends JTree implements PNPropertiesListener {
 		}
 
 		@Override
-		protected void valueChanged(String oldValue, String newValue) {
+		public void valueChanged(String oldValue, String newValue) {
 			propertiesFieldValueChanged(type, name, property, oldValue, newValue);
 		}
 
