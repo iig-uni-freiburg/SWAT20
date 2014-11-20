@@ -81,7 +81,7 @@ public class TokenlabelToolBar extends JToolBar {
 
 	private JPanel panel;
 
-	private IFNetGraph graph;
+	private PNGraph graph;
 
 	private Labeling labeling;
 
@@ -92,7 +92,7 @@ public class TokenlabelToolBar extends JToolBar {
 		this.editor = pnEditor;
 		panel = new JPanel();
 		panel.setLayout(new SpringLayout());
-		graph = (IFNetGraph) editor.getGraphComponent().getGraph();
+		graph = (PNGraph) editor.getGraphComponent().getGraph();
 		setFloatable(false);
 		updateView();
 
@@ -134,7 +134,7 @@ public class TokenlabelToolBar extends JToolBar {
 					if ((state == ItemEvent.SELECTED)) {
 						((mxGraphModel) graph.getModel()).beginUpdate();
 						if(!labeling.getAttributes().contains(tokenLabel)){
-							AnalysisContext ac = graph.getCurrentAnalysisContext();
+							AnalysisContext ac = ((IFNetGraph)graph).getCurrentAnalysisContext();
 							Set<String> attributes = labeling.getAttributes();
 							
 							 HashMap<String, SecurityLevel> newAttributeMapping = new HashMap<String, SecurityLevel>();
@@ -183,15 +183,17 @@ public class TokenlabelToolBar extends JToolBar {
 		panel.add(new JLabel("Label"));
 		panel.add(Box.createGlue());
 		panel.add(new JLabel("Security Level"));
-		colors = graph.getNetContainer().getPetriNetGraphics().getColors();
-		graph = (IFNetGraph) editor.getGraphComponent().getGraph();
+		colors = ((AbstractCPNGraphics)graph.getNetContainer().getPetriNetGraphics()).getColors();
+		graph = (PNGraph) editor.getGraphComponent().getGraph();
 		if (getTokenColors().contains("black"))
 			colors.put("black", Color.BLACK);
-		if (graph.getCurrentAnalysisContext() != null) {
-			labeling = graph.getCurrentAnalysisContext().getLabeling();
+		if(graph instanceof IFNetGraph){
+		if (((IFNetGraph)graph).getCurrentAnalysisContext() != null) {
+			labeling = ((IFNetGraph)graph).getCurrentAnalysisContext().getLabeling();
+		}
 		}
 		int size = 0;
-		Set<String> colorsTemp = graph.getNetContainer().getPetriNet().getTokenColors();
+		Set<String> colorsTemp = ((AbstractCPN)graph.getNetContainer().getPetriNet()).getTokenColors();
 		for (String colorName : colors.keySet()) {
 			addRow(colorName);
 			size++;
