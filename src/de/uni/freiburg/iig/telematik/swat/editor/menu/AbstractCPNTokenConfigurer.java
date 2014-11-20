@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,7 +14,6 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -25,6 +23,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerModel;
@@ -33,14 +33,13 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.omg.CosNaming.IstringHelper;
-
 import com.mxgraph.model.mxGraphModel;
 
+import de.invation.code.toval.graphic.component.RestrictedTextField;
+import de.invation.code.toval.graphic.component.RestrictedTextField.Restriction;
+import de.invation.code.toval.graphic.component.event.RestrictedTextFieldListener;
 import de.invation.code.toval.graphic.util.SpringUtilities;
-import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.types.Multiset;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractCPNGraphics;
@@ -133,14 +132,22 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 			int cap = 99;
 			if (isPlace && !(place.getColorCapacity(tokenName) < 0))
 				cap = place.getColorCapacity(tokenName);
-			SpinnerModel model = new SpinnerNumberModel(size, -1, cap, 1);
-			JSpinner spinner = new JSpinner(model);
+			int min = 0;
+			int step = 1;
+			SpinnerModel model = new SpinnerNumberModel(size, min, cap, step);
+			Spinner spinner = new Spinner(model, tokenName, cap);
+			RestrictedTextField textfield = new RestrictedTextField(Restriction.ZERO_OR_POSITIVE_INTEGER, ""+size+"");
+			textfield.addListener(spinner);
+			textfield.setValidateOnTyping(true);
+			spinner.setEditor(textfield);
 			spinner.addChangeListener(new ChangeListener() {
 
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					JSpinner spinner = (JSpinner) e.getSource();
+					JSpinner spinner = (Spinner) e.getSource();
 					Integer currentValue = (Integer) spinner.getValue();
+					RestrictedTextField tf = (RestrictedTextField) spinner.getEditor();
+					tf.setText(""+currentValue+""); 
 
 					Multiset<String> newMarking = getMultiSet();
 					if (newMarking == null)
@@ -238,6 +245,37 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 		}
 		panel.add(remove);
 
+	}
+	
+	private class Spinner extends JSpinner implements RestrictedTextFieldListener {
+
+		private String tokenName;
+		private int capacity;
+
+		public Spinner(SpinnerModel model,String tokenName, int cap) {
+			super(model);
+			this.tokenName = tokenName;
+			this.capacity = cap;
+		}
+
+		@Override
+		public void valueChanged(String oldValue, String newValue) {
+			
+			Integer currentValue = new Integer(newValue);
+			if(currentValue <= capacity){
+			this.setValue(currentValue);
+			Multiset<String> newMarking = getMultiSet();
+			if (newMarking == null)
+				newMarking = new Multiset<String>();
+			newMarking.setMultiplicity(tokenName, currentValue);
+			if (isPlace)
+				((mxGraphModel) graph.getModel()).execute(new TokenChange((PNGraph) graph, paName, newMarking));
+			else
+				((mxGraphModel) graph.getModel()).execute(new ConstraintChange((PNGraph) graph, paName, newMarking));
+			}
+			else ((RestrictedTextField)getEditor()).setText(""+capacity);
+		}
+		
 	}
 
 	private JCheckBox createAccessModeCheckBox(final String tokenName, final AccessMode accessModi, String accessModeName) {
@@ -488,7 +526,7 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 		// C capPanel = new JPanel();
 		panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
-		JPanel boundOrInfinite = new JPanel();
+		JPanel boundOrInfinite = new JPanel(new SpringLayout());
 		if (isPlace) {
 			boundOrInfinite.add(infiniteButton);
 			boundOrInfinite.add(boundButton);
