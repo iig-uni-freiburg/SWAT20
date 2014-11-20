@@ -81,6 +81,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.tree.PNTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 
 public abstract class PNEditor extends JPanel implements WorkbenchComponent, TreeSelectionListener, PNGraphListener {
@@ -415,7 +416,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 		protected ActionMap createActionMap() {
 			ActionMap map = super.createActionMap();
 			try {
-				map.put("save", new SaveAction(PNEditor.this));
+				map.put("save", new SaveActiveComponentAction());
 				map.put("undo", new UndoAction(PNEditor.this));
 				map.put("redo", new RedoAction(PNEditor.this));
 				map.put("printNet", new PrintAction(PNEditor.this));
