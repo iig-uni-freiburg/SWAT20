@@ -91,6 +91,10 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 		return openedSwatComponents.keySet().contains(node.getUserObject());
 	}
 
+	public boolean hasUnsavedChange(int index) {
+		return ((ButtonTabComponent) getTabComponentAt(index)).unsaved;
+	}
+
 
 	private JTextArea getTextArea(String text){
 		JTextArea newArea = new JTextArea(text);
