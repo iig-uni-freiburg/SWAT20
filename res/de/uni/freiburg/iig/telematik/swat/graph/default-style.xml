@@ -1,5 +1,4 @@
 <mxStylesheet>
-	<include name="/basic-style.xml"/>
 	<add as="defaultVertex" extend="defaultVertex">
 		<add as="strokeColor" value="#000000"/>
 		<add as="fillColor" value="#ffffff"/>
