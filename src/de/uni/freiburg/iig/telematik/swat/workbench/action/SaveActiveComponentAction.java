@@ -77,6 +77,7 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 			if (component.getMainComponent() instanceof PNEditor) {
 				savePN((PNEditor) component.getMainComponent());
 				AnalyzePanelController.getInstance().objectChanged(component.getFile().getName());
+				((PNEditor) component.getMainComponent()).getUndoManager().clear();
 			}
 		} else {
 			Workbench.errorMessage("Could not save: Active pane is not of type PNEditor");
