@@ -41,6 +41,8 @@ public class LogImportAction extends AbstractWorkbenchAction {
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		File f = getFile();
+		if (f == null)
+			return;
 		SwatLog type = getType(f);
 		if (type == null) {
 			JOptionPane.showMessageDialog(Workbench.getInstance(), "Log of unknown format");

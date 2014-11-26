@@ -39,6 +39,7 @@ public class ImportAction extends AbstractWorkbenchAction {
 		final JPopupMenu menu = new JPopupMenu("Menu");
 		menu.add(new PTImportAction());
 		menu.add(new LogImportAction());
+		menu.add(new AFtemplateImportAction());
 		menu.setInvoker((Component) e.getSource());
 		//menu.show(source, 1, 2);
 		menu.setLocation((int) source.getLocationOnScreen().getX(), (int) source.getLocationOnScreen().getY());

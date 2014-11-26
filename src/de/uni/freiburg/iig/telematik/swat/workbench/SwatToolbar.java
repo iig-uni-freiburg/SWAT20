@@ -137,7 +137,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(getSwitchworkingDirectoryButton());
 		standardItems.add(getNewNetButton());
 		//standardItems.add(new JButton(new ImportAction()));
-		standardItems.add(getImportButon());
+		//standardItems.add(getImportButon());
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.AF_TEMPLATE));
 		//		standardItems.add(new JButton(new AFtemplateImportAction()));
 		//		standardItems.add(new JButton(new LogImportAction()));
@@ -168,11 +168,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		return lola;
 	}
 
-	private JButton getImportButon() throws ParameterException, PropertyException, IOException {
-		//JButton newButton = new SwatToolbarButton(ToolbarButtonType.IMPORT);
-		JButton importButton = new JButton(new PTImportAction());
-		return importButton;
-	}
 
 	private JButton getAristaFlowButton() throws ParameterException, PropertyException, IOException {
 		JButton aristaFlow = new JButton(new AFSqlLogImportAction());
