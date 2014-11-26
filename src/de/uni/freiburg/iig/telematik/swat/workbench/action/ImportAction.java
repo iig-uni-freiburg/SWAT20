@@ -40,6 +40,7 @@ public class ImportAction extends AbstractWorkbenchAction {
 		menu.add(new PTImportAction());
 		menu.add(new LogImportAction());
 		menu.add(new AFtemplateImportAction());
+		menu.add(new AFSqlLogImportAction());
 		menu.setInvoker((Component) e.getSource());
 		//menu.show(source, 1, 2);
 		menu.setLocation((int) source.getLocationOnScreen().getX(), (int) source.getLocationOnScreen().getY());

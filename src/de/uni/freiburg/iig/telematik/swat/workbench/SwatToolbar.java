@@ -144,7 +144,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(new JButton(new ImportAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		//standardItems.add(getLolaButton());
-		standardItems.add(getAristaFlowButton());
+		//standardItems.add(getAristaFlowButton());
 		standardItems.add(new JButton(new SimulateTimeAction()));
 		//standardItems.add(new JButton(new SimulateInstanceAwareAction()));
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));

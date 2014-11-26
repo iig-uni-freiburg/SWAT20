@@ -348,7 +348,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	 */
 	public class ButtonTabComponent extends JPanel {
 		private final String title;
-		private JLabel label;
+		private JLabel label = new JLabel();
 		protected Component component;
 		boolean unsaved = false;
 
@@ -361,15 +361,6 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 			this.component = component;
 			this.title = title;
 			setOpaque(false);
-
-			//make JLabel read titles from JTabbedPane
-			//			JLabel label = new JLabel() {
-			//				public String getText() {
-			//					return title;
-			//				}
-			//			};
-			label = new JLabel();
-
 			label.setText(title);
 
 			add(label);

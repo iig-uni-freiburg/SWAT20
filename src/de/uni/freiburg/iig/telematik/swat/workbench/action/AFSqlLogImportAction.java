@@ -13,8 +13,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 
 public class AFSqlLogImportAction extends AbstractWorkbenchAction {
 
+	private static final long serialVersionUID = -8056607967062900854L;
+
 	public AFSqlLogImportAction() {
-		this("");
+		this("Import AF log from Database");
 	}
 
 	public AFSqlLogImportAction(String name) {
