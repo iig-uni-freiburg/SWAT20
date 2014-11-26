@@ -526,7 +526,9 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 		// C capPanel = new JPanel();
 		panel.add(Box.createGlue());
 		panel.add(Box.createGlue());
-		JPanel boundOrInfinite = new JPanel(new SpringLayout());
+//		JPanel boundOrInfinite = new JPanel(new SpringLayout()); --> Exception in thread "AWT-EventQueue-0" java.lang.ArrayIndexOutOfBoundsException: No such child: 0
+		JPanel boundOrInfinite = new JPanel();
+
 		if (isPlace) {
 			boundOrInfinite.add(infiniteButton);
 			boundOrInfinite.add(boundButton);
@@ -543,7 +545,7 @@ public class AbstractCPNTokenConfigurer extends JDialog {
 			panel.add(Box.createGlue());
 		}
 
-		SpringUtilities.makeCompactGrid(boundOrInfinite, 1, 2, 1, 1, 1, 1);
+			SpringUtilities.makeCompactGrid(boundOrInfinite, 1, 2, 1, 1, 1, 1);
 		panel.add(boundOrInfinite);
 
 		panel.add(Box.createGlue());
