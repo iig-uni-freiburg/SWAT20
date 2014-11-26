@@ -279,7 +279,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	public void addTab(String title, Component component) {
 		super.addTab(title, component);
 		//make tab removable
-		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(title));
+		this.setTabComponentAt(this.getTabCount() - 1, new ButtonTabComponent(title, component));
 	}
 	
 	public void unsetModifiedCurrent() {
@@ -345,13 +345,16 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	public class ButtonTabComponent extends JPanel {
 		private final String title;
 		private JLabel label;
+		protected Component component;
+		boolean unsaved = false;
 
-		public ButtonTabComponent(final String title) {
+		public ButtonTabComponent(final String title, Component component) {
 			//unset default FlowLayout' gaps
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 			if (title == null) {
 				throw new NullPointerException("TabbedPane is null");
 			}
+			this.component = component;
 			this.title = title;
 			setOpaque(false);
 
@@ -376,13 +379,14 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 		}
 
 		public void setModified() {
-			//title = name;
+			unsaved = true;
 			if (!label.getText().endsWith("*"))
 				label.setText(title + "*");
 			repaint();
 		}
 
 		public void unsetModified() {
+			unsaved = false;
 			if (label.getText().endsWith("*"))
 				label.setText(label.getText().substring(0, label.getText().length() - 1));
 		}
@@ -414,21 +418,52 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 			public void actionPerformed(ActionEvent e) {
 				int i = indexOfTabComponent(ButtonTabComponent.this);
+				int userChoice = JOptionPane.CANCEL_OPTION;
 				if (i != -1) {
-					//openedSwatComponents.remove(SwatTabView.this.getComponent(i));
-					for (Map.Entry<Object, Component> entry : openedSwatComponents.entrySet()) {
-						if (entry.getValue().equals(SwatTabView.this.getComponent(i))) {
-							openedSwatComponents.remove(entry.getKey());
-							break;
-						}
-					}
 
-					SwatTabView.this.remove(i);
+					}
+				if (!checkClose())
+					return;
+				openedSwatComponents.remove(component);
+				//openedSwatComponents.remove(SwatTabView.this.getComponent(i));
+				for (Map.Entry<Object, Component> entry : openedSwatComponents.entrySet()) {
+					if (entry.getValue().equals(SwatTabView.this.getComponent(i))) {
+						openedSwatComponents.remove(entry.getKey());
+						break;
+					}
 				}
+				SwatTabView.this.remove(i);
 			}
 
 			//we don't want to update UI for this button
 			public void updateUI() {
+			}
+
+			private boolean checkClose() {
+				int userChoice = JOptionPane.CANCEL_OPTION;
+				if (unsaved) {
+					userChoice = JOptionPane.showConfirmDialog(SwatTabView.getInstance(), "Save unsaved changes for "
+							+ ((PNEditor) component).getNetContainer().getPetriNet().getName() + "?");
+					switch (userChoice) {
+					case JOptionPane.CANCEL_OPTION:
+						System.out.println("Aborting");
+						return false;
+					case JOptionPane.YES_OPTION:
+						try {
+							SwatComponents.getInstance().storePetriNet(((PNEditor) component).getNetContainer().getPetriNet().getName());
+						} catch (SwatComponentException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						break;
+					case JOptionPane.NO_OPTION:
+						PNEditor editor = (PNEditor) component;
+						while (editor.getUndoManager().canUndo())
+							editor.getUndoManager().undo();
+					}
+
+				}
+				return true;
 			}
 
 			//paint the cross
