@@ -122,7 +122,9 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 		try {
 			doFancyStuff(e);
 		} catch(Exception ex){
-			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), ex.getMessage(),
+					"Error " + ex.getMessage(),
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

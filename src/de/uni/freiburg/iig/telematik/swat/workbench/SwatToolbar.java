@@ -36,9 +36,8 @@ import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AFSqlLogImportAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.AFtemplateImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.LogImportAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
@@ -140,12 +139,14 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		//standardItems.add(new JButton(new ImportAction()));
 		standardItems.add(getImportButon());
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.AF_TEMPLATE));
-		standardItems.add(new JButton(new AFtemplateImportAction()));
-		standardItems.add(new JButton(new LogImportAction()));
+		//		standardItems.add(new JButton(new AFtemplateImportAction()));
+		//		standardItems.add(new JButton(new LogImportAction()));
+		standardItems.add(new JButton(new ImportAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
 		//standardItems.add(getLolaButton());
 		standardItems.add(getAristaFlowButton());
 		standardItems.add(new JButton(new SimulateTimeAction()));
+		//standardItems.add(new JButton(new SimulateInstanceAwareAction()));
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));
 		
 //		ButtonGroup group = new ButtonGroup();
