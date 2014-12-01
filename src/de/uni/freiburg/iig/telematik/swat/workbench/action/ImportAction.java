@@ -15,6 +15,7 @@ public class ImportAction extends AbstractWorkbenchAction {
 
 	public ImportAction(String name) {
 		super(name);
+		setTooltip("Import from filesystem");
 		try {
 			setIcon(IconFactory.getIcon("import"));
 		} catch (ParameterException e) {

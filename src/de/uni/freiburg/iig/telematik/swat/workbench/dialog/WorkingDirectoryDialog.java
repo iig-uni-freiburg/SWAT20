@@ -160,7 +160,7 @@ public class WorkingDirectoryDialog extends JDialog implements PropertyChangeLis
 	private void updateValueList(){
 		stringListModel.clear();
 		try {
-			for(String knownDirectory: SwatProperties.getInstance().getKnownWorkingDirectories()){
+			for (String knownDirectory : SwatProperties.getInstance().getKnownWorkingDirectories()) {
 				stringListModel.addElement(FileUtils.getDirName(knownDirectory));
 				directories.add(knownDirectory);
 			}

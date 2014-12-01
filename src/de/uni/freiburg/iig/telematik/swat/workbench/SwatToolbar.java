@@ -134,7 +134,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(new JButton(new SaveActiveComponentAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
 		standardItems.add(new JButton(new DeleteAction()));
-		standardItems.add(getSwitchworkingDirectoryButton());
+		standardItems.add(new JButton(new SwitchWorkingDirectoryAction()));
 		standardItems.add(getNewNetButton());
 		//standardItems.add(new JButton(new ImportAction()));
 		//standardItems.add(getImportButon());
@@ -194,11 +194,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 //		return rdbtnEdit;
 //	}
 	
-	private JButton getSwitchworkingDirectoryButton() throws ParameterException, PropertyException, IOException{
-		if (openButton == null)
-			openButton = new SwatToolbarButton(ToolbarButtonType.SWITCH_DIRECTORY);
-		return openButton;
-	}
+	//	private JButton getSwitchworkingDirectoryButton() throws ParameterException, PropertyException, IOException{
+	//		if (openButton == null)
+	//			openButton = new SwatToolbarButton(ToolbarButtonType.SWITCH_DIRECTORY);
+	//		return openButton;
+	//	}
 	
 	
 	private JButton getNewNetButton() throws ParameterException, PropertyException, IOException{
@@ -251,9 +251,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		repaint();
 	}
 
-	public void addOpenActionListener(ActionListener listener) throws ParameterException, PropertyException, IOException {
-		getSwitchworkingDirectoryButton().addActionListener(listener);
-	}
+	//	public void addOpenActionListener(ActionListener listener) throws ParameterException, PropertyException, IOException {
+	//		getSwitchworkingDirectoryButton().addActionListener(listener);
+	//	}
 
 	/** reset Toolbar, restore standard components **/
 	public void clear() {
@@ -293,9 +293,6 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				break;
 			case SAVE_ALL:
 				addActionListener(new SaveAllAction());
-				break;
-			case SWITCH_DIRECTORY:
-				addActionListener(new SwitchWorkingDirectoryAction());
 				break;
 			case NEW_CPN:
 				setToolTipText("Create new CPnet");
