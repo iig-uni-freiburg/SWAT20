@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
@@ -18,6 +19,7 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenu;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
@@ -186,7 +188,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 			if(e.getClickCount()==1){
 				if(e.isPopupTrigger()){
 					// Right click on tree node
-					//TODO: Trigger rename process
+					showPopup(swatNode, e);
 				} else {
 					// Left click on tree node
 					notifyComponentSelected(swatNode);
@@ -195,6 +197,27 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 				// Double click on tree node
 				notifyComponentActivated(swatNode);
 			}
+		}
+
+		public void mousePressed(MouseEvent e) {
+			if (e.isPopupTrigger()) {
+				Object selectedNode = getSelectionPath().getLastPathComponent();
+				SwatTreeNode swatNode = (SwatTreeNode) selectedNode;
+				showPopup(swatNode, e);
+			}
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			if (e.isPopupTrigger()) {
+				Object selectedNode = getSelectionPath().getLastPathComponent();
+				SwatTreeNode swatNode = (SwatTreeNode) selectedNode;
+				showPopup(swatNode, e);
+			}
+		}
+
+		private void showPopup(SwatTreeNode node, MouseEvent e) {
+			SwatTreePopupMenu menu = new SwatTreePopupMenu(node);
+			menu.show((Component) e.getSource(), e.getX(), e.getY());
 		}
 	}
 

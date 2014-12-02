@@ -33,6 +33,23 @@ public class RenameAction extends AbstractWorkbenchAction {
 		}
 	}
 
+	public RenameAction(String string) {
+		super(string);
+		setTooltip("Rename");
+		try {
+			setIcon(IconFactory.getIcon("rename"));
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	private static final long serialVersionUID = 365967570541436082L;
 
 	@Override
