@@ -188,7 +188,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 			if(e.getClickCount()==1){
 				if(e.isPopupTrigger()){
 					// Right click on tree node
-					showPopup(swatNode, e);
+					showPopup(e);
 				} else {
 					// Left click on tree node
 					notifyComponentSelected(swatNode);
@@ -201,23 +201,23 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 
 		public void mousePressed(MouseEvent e) {
 			if (e.isPopupTrigger()) {
-				Object selectedNode = getSelectionPath().getLastPathComponent();
-				SwatTreeNode swatNode = (SwatTreeNode) selectedNode;
-				showPopup(swatNode, e);
+				showPopup(e);
 			}
 		}
 
 		public void mouseReleased(MouseEvent e) {
 			if (e.isPopupTrigger()) {
-				Object selectedNode = getSelectionPath().getLastPathComponent();
-				SwatTreeNode swatNode = (SwatTreeNode) selectedNode;
-				showPopup(swatNode, e);
+				showPopup(e);
 			}
 		}
 
-		private void showPopup(SwatTreeNode node, MouseEvent e) {
-			SwatTreePopupMenu menu = new SwatTreePopupMenu(node);
-			menu.show((Component) e.getSource(), e.getX(), e.getY());
+		private void showPopup(MouseEvent e) {
+			Object selectedNode = getSelectionPath().getLastPathComponent();
+			if (selectedNode instanceof SwatTreeNode) {
+				SwatTreeNode swatNode = (SwatTreeNode) selectedNode;
+				SwatTreePopupMenu menu = new SwatTreePopupMenu(swatNode);
+				menu.show((Component) e.getSource(), e.getX(), e.getY());
+			}
 		}
 	}
 
