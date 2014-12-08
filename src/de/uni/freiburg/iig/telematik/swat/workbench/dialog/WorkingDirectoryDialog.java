@@ -24,6 +24,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import de.invation.code.toval.file.FileUtils;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.workbench.CustomListRenderer;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AbstractWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.NewWorkingDirectoryAction;
@@ -161,8 +162,12 @@ public class WorkingDirectoryDialog extends JDialog implements PropertyChangeLis
 		stringListModel.clear();
 		try {
 			for (String knownDirectory : SwatProperties.getInstance().getKnownWorkingDirectories()) {
-				stringListModel.addElement(FileUtils.getDirName(knownDirectory));
-				directories.add(knownDirectory);
+				try {
+					stringListModel.addElement(FileUtils.getDirName(knownDirectory));
+					directories.add(knownDirectory);
+				} catch (ParameterException e) {
+					//Directory no longer available. Do not put into directories list
+				}
 			}
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(WorkingDirectoryDialog.this, "Cannot extract known simulation directories.\nReason: "+e.getMessage(), "Internal Error", JOptionPane.ERROR_MESSAGE);
