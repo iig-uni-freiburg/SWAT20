@@ -386,6 +386,11 @@ public class SwatComponents {
 		sortLogModelLists();
 	}
 	
+	//---- Store and load Analyse Patterns --------------------------------------------------------------------------------
+
+
+	//---- Load and Store Time Context -------------------------------------------------------------------------------------
+
 	private void loadTimeContextsFor(String netID) {
 		MessageDialog.getInstance().addMessage("Loading time contexts for net \"" +netID+ "\"...");
 		File pathToAnalysisContexts = null;
@@ -560,12 +565,13 @@ public class SwatComponents {
 	public void storeAllPetriNets() throws SwatComponentException{
 		for(String netID: nets.keySet()){
 			storePetriNet(netID);
+			//Workbench.consoleMessage("Saved " + netID);
 		}
 	}
 	
 	public void storePetriNet(String netID) throws SwatComponentException {
 		try {
-		AbstractGraphicalPN net = getPetriNet(netID);
+			AbstractGraphicalPN net = getPetriNet(netID);
 			String path = getPetriNetFile(netID).getCanonicalPath();
 			System.out.println("net: "+net );
 			System.out.println("path: "+path );

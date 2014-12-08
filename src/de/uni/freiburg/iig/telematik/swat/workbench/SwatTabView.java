@@ -350,7 +350,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 		private final String title;
 		private JLabel label = new JLabel();
 		protected Component component;
-		boolean unsaved = false;
+		public boolean unsaved = false;
 
 		public ButtonTabComponent(final String title, Component component) {
 			//unset default FlowLayout' gaps
@@ -599,6 +599,11 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	@Override
 	public void componentsChanged() {
 		// TODO Auto-generated method stub
+
+	}
+
+	public void unsetModified(int i) {
+		((ButtonTabComponent) getTabComponentAt(i)).unsetModified();
 
 	}
 
