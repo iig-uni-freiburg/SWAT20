@@ -323,7 +323,7 @@ default:
 	@Override
 	protected void drawAdditionalTransitionGrahpics(mxGraphics2DCanvas canvas, mxCellState state) throws ParameterException, PropertyException, IOException {
 		PNGraphCell cell = (PNGraphCell) state.getCell();
-		AbstractRegularIFNetTransition transistion = (AbstractRegularIFNetTransition) getNetContainer().getPetriNet().getTransition(cell.getId());
+		AbstractIFNetTransition transition = (AbstractIFNetTransition) getNetContainer().getPetriNet().getTransition(cell.getId());
 
 		Graphics g = canvas.getGraphics();
 		Graphics2D g2 = (Graphics2D) g;
@@ -334,47 +334,49 @@ default:
 		int spacingY = 5;
 		int spacingX = 3;
 		
-		for (String c : getNetContainer().getPetriNet().getTokenColors()) {
-			Set<AccessMode> am = (Set<AccessMode>) transistion.getAccessModes(c);
-			
-			//Build String to get right PNG File
-			if (!am.isEmpty()) {
-				String imageString = "";
-				if (am.contains(AccessMode.READ))
-					imageString = "r";
-				if (am.contains(AccessMode.WRITE))
-					imageString = imageString + "w";
-				if (am.contains(AccessMode.CREATE))
-					imageString = imageString + "c";
-				if (am.contains(AccessMode.DELETE))
-					imageString = imageString + "d";
-				Color color = getNetContainer().getPetriNetGraphics().getColors().get(c);
-				ImageIcon imageIcon = null;
-
-
-						imageIcon = IconFactory.getIcon(imageString);
-
-
-				BufferedImage image = colorPNG(color, imageIcon);
-
+		if(!transition.isDeclassificator()){
+			for (String c : getNetContainer().getPetriNet().getTokenColors()) {
+				Set<AccessMode> am = (Set<AccessMode>) ((AbstractRegularIFNetTransition) transition).getAccessModes(c);
 				
-				//Position and Draw PNG
-				int a = (int) state.getX() + spacingX;
-				int b = (int) state.getY() + spacingY;
-				if (state.getWidth() >= spacingX + image.getWidth() * (1 + j) + (k * spacingX))
-					a = a + (j * (image.getWidth() + spacingX));
-				else {
-					j = 0;
-					k++;
-				}
+				//Build String to get right PNG File
+				if (!am.isEmpty()) {
+					String imageString = "";
+					if (am.contains(AccessMode.READ))
+						imageString = "r";
+					if (am.contains(AccessMode.WRITE))
+						imageString = imageString + "w";
+					if (am.contains(AccessMode.CREATE))
+						imageString = imageString + "c";
+					if (am.contains(AccessMode.DELETE))
+						imageString = imageString + "d";
+					Color color = getNetContainer().getPetriNetGraphics().getColors().get(c);
+					ImageIcon imageIcon = null;
 
-				if (state.getHeight() >= spacingY + image.getHeight() * (1 + k) + (k * spacingY)) {
-					b = (int) b + (k * (image.getHeight() + spacingY));
-					g2.drawImage(image, a, b, null);
-					j++;
-				} else {
-					g2.setFont(new Font("TimesRoman", Font.PLAIN, 8));
-					g2.drawString("...more", (int) state.getX() + 2, (int) (state.getY() + state.getHeight()) - 2);
+
+							imageIcon = IconFactory.getIcon(imageString);
+
+
+					BufferedImage image = colorPNG(color, imageIcon);
+
+					
+					//Position and Draw PNG
+					int a = (int) state.getX() + spacingX;
+					int b = (int) state.getY() + spacingY;
+					if (state.getWidth() >= spacingX + image.getWidth() * (1 + j) + (k * spacingX))
+						a = a + (j * (image.getWidth() + spacingX));
+					else {
+						j = 0;
+						k++;
+					}
+
+					if (state.getHeight() >= spacingY + image.getHeight() * (1 + k) + (k * spacingY)) {
+						b = (int) b + (k * (image.getHeight() + spacingY));
+						g2.drawImage(image, a, b, null);
+						j++;
+					} else {
+						g2.setFont(new Font("TimesRoman", Font.PLAIN, 8));
+						g2.drawString("...more", (int) state.getX() + 2, (int) (state.getY() + state.getHeight()) - 2);
+					}
 				}
 			}
 		}
