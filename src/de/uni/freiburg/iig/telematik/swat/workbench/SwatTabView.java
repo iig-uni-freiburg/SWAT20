@@ -12,9 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.AbstractButton;
@@ -24,7 +22,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -56,7 +53,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	
 	private static SwatTabView tabView = new SwatTabView();
 	
-	private Map<Object, Component> openedSwatComponents = new HashMap<Object, Component>();
+	//private Map<Object, Component> openedSwatComponents = new HashMap<Object, Component>();
 
 	private Set<SwatTabViewListener> listeners = new HashSet<SwatTabViewListener>();
 
@@ -69,18 +66,30 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	}
 
 	public void componentSelected(SwatTreeNode node) {
-		for(Object openedComponent: openedSwatComponents.keySet()){
-			if(openedComponent == node.getUserObject()){
-				try {
-					//due to close button: userObject might reside inside openendComponents but tab is not visible
-					setSelectedComponent(openedSwatComponents.get(openedComponent));
-				} catch (IllegalArgumentException e) {
-					//Tab no longer visible. Remove from openedSwatComponents
-					openedSwatComponents.remove(openedComponent);
-				}
-				return;
-			}
+		int index = getIndexOf(node.getDisplayName());
+		if (index >= 0)
+			setSelectedIndex(getIndexOf(node.getDisplayName()));
+		
+		//		for(Object openedComponent: openedSwatComponents.keySet()){
+		//			if(openedComponent == node.getUserObject()){
+		//				try {
+		//					//due to close button: userObject might reside inside openendComponents but tab is not visible
+		//					setSelectedComponent(openedSwatComponents.get(openedComponent));
+		//				} catch (IllegalArgumentException e) {
+		//					//Tab no longer visible. Remove from openedSwatComponents
+		//					openedSwatComponents.remove(openedComponent);
+		//				}
+		//				return;
+		//			}
+		//		}
+	}
+
+	public int getIndexOf(String tabDisplayName) {
+		for (int i = 0; i < getTabCount(); i++) {
+			if (((ButtonTabComponent) getTabComponentAt(i)).getName().equalsIgnoreCase(tabDisplayName))
+				return i;
 		}
+		return -1;
 	}
 	
 	public void addTabViewListener(SwatTabViewListener listener) {
@@ -88,19 +97,27 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	}
 
 	public boolean containsComponent(SwatTreeNode node) {
-		return openedSwatComponents.keySet().contains(node.getUserObject());
+		if (getIndexOf(node.getDisplayName()) >= 0)
+			return true;
+		return false;
 	}
+
+	//	public boolean containsTab(String name) {
+	//		for (int i = 0; i < getTabCount(); i++)
+	//			if (((TabButton) getTabComponentAt(i)).getName.equals(name))
+	//				return true;
+	//	}
 
 	public boolean hasUnsavedChange(int index) {
 		return ((ButtonTabComponent) getTabComponentAt(index)).unsaved;
 	}
 
 
-	private JTextArea getTextArea(String text){
-		JTextArea newArea = new JTextArea(text);
-		newArea.setEditable(false);
-		return newArea;
-	}
+	//	private JTextArea getTextArea(String text){
+	//		JTextArea newArea = new JTextArea(text);
+	//		newArea.setEditable(false);
+	//		return newArea;
+	//	}
 	
 	@SuppressWarnings("rawtypes")
 	private void addPNEditor(AbstractGraphicalPN petriNet, String tabName) throws SwatComponentException {
@@ -121,7 +138,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 			addTab(tabName, ifEditor);
 		}
 		//openedSwatComponents.put(petriNet, getComponentAt(getComponentCount()-1));
-		openedSwatComponents.put(petriNet, getComponentAt(getTabCount() - 1));
+		//openedSwatComponents.put(petriNet, getComponentAt(getTabCount() - 1));
 		setSelectedIndex(getTabCount()-1);
 	}
 	
@@ -142,6 +159,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	 */
 	@SuppressWarnings("rawtypes")
 	public WorkbenchComponent addNewTab(SwatTreeNode node) {
+		System.out.println("Adding " + node.getDisplayName());
 		if (alreadyOpen(node.getDisplayName()))
 			return null;
 		try {
@@ -229,54 +247,106 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 		addTab(node.getDisplayName(), viewer.getMainComponent());
 		setSelectedIndex(getTabCount() - 1);
 		//openedSwatComponents.put((LogFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
-		openedSwatComponents.put((LogModel) node.getUserObject(), viewer);
+		//openedSwatComponents.put((LogModel) node.getUserObject(), viewer);
 	}
 	
 	public void removeAll() {
 		super.removeAll();
-		openedSwatComponents.clear();
+		//openedSwatComponents.clear();
 	}
 	
-	private void remove(AbstractGraphicalPN ptnet) {
-		Component component = openedSwatComponents.get(ptnet);
-		for (int i = 0; i < getTabCount(); i++) {
-			System.out.println("Component: " + component + " TabComponent: " + getTabComponentAt(i));
-			if (getComponentAt(i) == (component)) {
-				removeTabAt(i);
-				openedSwatComponents.remove(component);
+	public boolean closeTabAndAskUser(String netID){
+		for(int i = 0;i<getTabCount();i++){
+			if (((ButtonTabComponent) getTabComponentAt(i)).getName().equalsIgnoreCase(netID)) {
+				System.out.println("Asking close for " + ((ButtonTabComponent) getTabComponentAt(i)).getName());
+				return closeTabAndAskUser(i);
 			}
 		}
+		return true; //tab not open
+	}
 
+	/**
+	 * ask user if unsaved changes. Returns false if aborted. Saves tab if
+	 * needed
+	 **/
+	public boolean closeTabAndAskUser(int index) {
+		ButtonTabComponent tab = (ButtonTabComponent) getTabComponentAt(index);
+		boolean unsaved = tab.unsaved;
+		int userChoice = JOptionPane.CANCEL_OPTION;
+		if (unsaved) { //test if this tab has unsaved changes
+			userChoice = JOptionPane.showConfirmDialog(SwatTabView.getInstance(), "Save unsaved changes for " + tab.getName() + "?");
+			switch (userChoice) {
+			case JOptionPane.CANCEL_OPTION:
+				return false; //User wants to abort
+			case JOptionPane.YES_OPTION:
+				try {
+					SwatComponents.getInstance().storePetriNet(((PNEditor) getComponent(index)).getNetContainer().getPetriNet().getName());
+				} catch (SwatComponentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				break;
+			case JOptionPane.NO_OPTION:
+				System.out.println(this.getClass().getSimpleName() + ": Trying to cast tab at index " + index + "(" + getComponent(index)
+						+ ") to PNEditor");
+				PNEditor editor = (PNEditor) getComponent(index);
+				while (editor.getUndoManager().canUndo())
+					editor.getUndoManager().undo();
+			}
+
+		}
+		removeTabAt(index);
+		//openedSwatComponents.remove(getComponent(index));
+		return true; //user decided to either save or reject changes
+	}
+
+	private void remove(AbstractGraphicalPN ptnet) {
+		try {
+			removeTabAt(getIndexOf(ptnet.getPetriNet().getName()));
+		} catch (IndexOutOfBoundsException e) {
+
+		}
 	}
 
 	public void remove(SwatTreeNode node) {
-		switch (node.getObjectType()) {
-		case LABELING:
-			// TODO:
-			break;
-		case PETRI_NET:
-			remove((AbstractGraphicalPN) node.getUserObject());
-			break;
-		case MXML_LOG:
-		case ARISTAFLOW_LOG:
-			remove((LogModel) node.getUserObject());
-			openedSwatComponents.remove(node.getUserObject());
-			break;
+		try {
+			removeTabAt(getIndexOf(node.getDisplayName()));
+		} catch (IndexOutOfBoundsException e) {
 
 		}
+		//		switch (node.getObjectType()) {
+		//		case LABELING:
+		//			// TODO:
+		//			break;
+		//		case PETRI_NET:
+		//			remove((AbstractGraphicalPN) node.getUserObject());
+		//			break;
+		//		case MXML_LOG:
+		//		case ARISTAFLOW_LOG:
+		//			remove((LogModel) node.getUserObject());
+		//			openedSwatComponents.remove(node.getUserObject());
+		//			break;
+		//
+		//		}
 	}
 
 	private void remove(LogModel userObject) {
-		Component component = openedSwatComponents.get(userObject);
-		for (int i = 0; i < getTabCount(); i++) {
-			System.out.println("Component: " + component + " TabComponent: " + getTabComponentAt(i));
-			if (getComponentAt(i) == (component)) {
-				removeTabAt(i);
-				openedSwatComponents.remove(component);
+		try {
+			removeTabAt(getIndexOf(userObject.getName()));
+		}
+			catch(IndexOutOfBoundsException e){
+				
 			}
 		}
+//		Component component = openedSwatComponents.get(userObject);
+//		for (int i = 0; i < getTabCount(); i++) {
+//			System.out.println("Component: " + component + " TabComponent: " + getTabComponentAt(i));
+//			if (getComponentAt(i) == (component)) {
+//				removeTabAt(i);
+//				openedSwatComponents.remove(component);
+//			}
+//		}
 
-	}
 
 	/** make Tab with close button **/
 	@Override
@@ -390,7 +460,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 			return title;
 		}
 
-		private class TabButton extends JButton implements ActionListener {
+		public class TabButton extends JButton implements ActionListener {
 			public TabButton() {
 				int size = 17;
 				setPreferredSize(new Dimension(size, size));
@@ -418,31 +488,25 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 					}
 				if (!checkClose())
-					return;
-				openedSwatComponents.remove(component);
-				//openedSwatComponents.remove(SwatTabView.this.getComponent(i));
-				for (Map.Entry<Object, Component> entry : openedSwatComponents.entrySet()) {
-					if (entry.getValue().equals(SwatTabView.this.getComponent(i))) {
-						openedSwatComponents.remove(entry.getKey());
-						break;
-					}
-				}
-				SwatTabView.this.remove(i);
+					return; //user aborted
+
+				SwatTabView.this.remove(i); //remove current
 			}
 
 			//we don't want to update UI for this button
 			public void updateUI() {
 			}
 
+			/** ask user if unsaved changes. Returns false if aborted **/
 			private boolean checkClose() {
 				int userChoice = JOptionPane.CANCEL_OPTION;
-				if (unsaved) {
+				if (unsaved) { //test if this tab has unsaved changes
 					userChoice = JOptionPane.showConfirmDialog(SwatTabView.getInstance(), "Save unsaved changes for "
 							+ ((PNEditor) component).getNetContainer().getPetriNet().getName() + "?");
 					switch (userChoice) {
 					case JOptionPane.CANCEL_OPTION:
 						System.out.println("Aborting");
-						return false;
+						return false; //User wants to abort
 					case JOptionPane.YES_OPTION:
 						try {
 							SwatComponents.getInstance().storePetriNet(((PNEditor) component).getNetContainer().getPetriNet().getName());
@@ -458,7 +522,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 					}
 
 				}
-				return true;
+				return true; //user decided to either save or reject changes
 			}
 
 			//paint the cross
@@ -588,12 +652,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 	@Override
 	public void logRemoved(LogModel log) {
-		for (Object openedComponent : openedSwatComponents.keySet()) {
-			if (openedComponent instanceof LogFileViewer) {
-				((LogFileViewer) openedComponent).getName().equals(log.getName());
-				remove(openedSwatComponents.get(openedComponent));
-			}
-		}
+		removeTabAt(getIndexOf(log.getName()));
 	}
 
 	@Override

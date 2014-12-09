@@ -677,11 +677,14 @@ public class SwatComponents {
 	
 	public void renamePetriNet(String oldID, String newID) throws SwatComponentException{
 		validatePetriNet(oldID);
-		nets.put(newID, getPetriNet(oldID));
-		netFiles.put(newID, getPetriNetFile(oldID));
+		AbstractGraphicalPN newNet = getPetriNet(oldID);
+		newNet.getPetriNet().setName(newID);
+		File newFile = getPetriNetFile(oldID);
 		nets.remove(oldID);
 		netFiles.remove(oldID);
-		getPetriNet(newID).getPetriNet().setName(newID);
+		nets.put(newID, newNet);
+		netFiles.put(newID, newFile);
+		storePetriNet(newID);
 		listenerSupport.notifyPetriNetRenamed(nets.get(newID));
 	}
 

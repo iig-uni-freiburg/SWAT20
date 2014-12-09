@@ -247,26 +247,32 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	@Override
 	public void componentActivated(SwatTreeNode node) {
+
+		if (getTabView().containsComponent(node))
+			return;
+
 		WorkbenchComponent swatComponent = null;
-		if (!getTabView().containsComponent(node)) {
-			// add SwatTreeNode to tab and get its swatComponent to make its propertyView
-			swatComponent = getTabView().addNewTab(node);
-			getPropertiesPanel().removeAll();
-			if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
-				getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
-			} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-				String name=node.getDisplayName();
-				if(swatComponent instanceof PNEditor) {
-					 if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
-						 name=((SwatTreeNode) node.getParent()).getDisplayName();
-					 }
-				}
-				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
-			}
-			getPropertiesPanel().validate();
-			getPropertiesPanel().repaint();
-			getPropertiesPanel().updateUI();
+		// add SwatTreeNode to tab and get its swatComponent to make its propertyView
+		swatComponent = getTabView().addNewTab(node);
+		getPropertiesPanel().removeAll();
+
+		if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 		}
+
+		else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+			String name = node.getDisplayName();
+			if (swatComponent instanceof PNEditor) {
+				if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
+					name = ((SwatTreeNode) node.getParent()).getDisplayName();
+				}
+			}
+			//Here: Analyze Panel is loaded
+			getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
+		}
+		getPropertiesPanel().validate();
+		getPropertiesPanel().repaint();
+		getPropertiesPanel().updateUI();
 
 		//Update Toolbar
 		updateToolbar();
