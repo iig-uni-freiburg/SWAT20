@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,7 +13,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -75,7 +78,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	private SwatTabView tabView = null;
 	private SwatTreeView treeView = null;
 
-	private List<JButton> standardItems = new LinkedList<JButton>();
+	private List<JComponent> standardItems = new LinkedList<JComponent>();
 
 	public SwatToolbar(SwatTabView tabView, SwatTreeView treeView) {
 		this.tabView = tabView;
@@ -116,7 +119,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 
 	private void addStandardButtons() {
-		for (JButton button : standardItems) {
+		for (JComponent button : standardItems) {
 			add(button);
 			button.setFocusable(false);
 		}
@@ -149,16 +152,19 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		//standardItems.add(new JButton(new SimulateInstanceAwareAction()));
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));
 		
-//		ButtonGroup group = new ButtonGroup();
-//		group.add(getAnalysisRadioButton());
-//		group.add(getEditRadioButton());
-//		getEditRadioButton().setSelected(true);
-		removeBorder();
+		ButtonGroup group = new ButtonGroup();
+		group.add(getAnalysisRadioButton());
+		group.add(getEditRadioButton());
+		getEditRadioButton().setSelected(true);
+		//removeBorder();
+
+		standardItems.add(getAnalysisRadioButton());
+		standardItems.add(getEditRadioButton());
 	}
 	
 	private void removeBorder() {
 		Border emptyBorder = BorderFactory.createEmptyBorder();
-		for (JButton button : standardItems) {
+		for (JComponent button : standardItems) {
 			button.setBorder(emptyBorder);
 		}
 	}
@@ -174,25 +180,25 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		return aristaFlow;
 	}
 
-//	private JRadioButton getAnalysisRadioButton(){
-//		if(rdbtnAnalysis == null){
-//			rdbtnAnalysis = new JRadioButton("Analyse");
-//			rdbtnAnalysis.setMnemonic(KeyEvent.VK_A);
-//			rdbtnAnalysis.setActionCommand(ACTION_COMMAND_ANALYSIS_MODE);
-//			rdbtnAnalysis.addActionListener(this);
-//		}
-//		return rdbtnAnalysis;
-//	}
+	private JRadioButton getAnalysisRadioButton(){
+		if(rdbtnAnalysis == null){
+			rdbtnAnalysis = new JRadioButton("Analyse");
+			rdbtnAnalysis.setMnemonic(KeyEvent.VK_A);
+			rdbtnAnalysis.setActionCommand(ACTION_COMMAND_ANALYSIS_MODE);
+			rdbtnAnalysis.addActionListener(this);
+		}
+		return rdbtnAnalysis;
+	}
 	
-//	private JRadioButton getEditRadioButton(){
-//		if(rdbtnEdit == null){
-//			rdbtnEdit = new JRadioButton("Edit");
-//			rdbtnEdit.setMnemonic(KeyEvent.VK_E);
-//			rdbtnEdit.setActionCommand(ACTION_COMMAND_EDIT_MODE);
-//			rdbtnEdit.addActionListener(this);
-//		}
-//		return rdbtnEdit;
-//	}
+	private JRadioButton getEditRadioButton(){
+		if(rdbtnEdit == null){
+			rdbtnEdit = new JRadioButton("Edit");
+			rdbtnEdit.setMnemonic(KeyEvent.VK_E);
+			rdbtnEdit.setActionCommand(ACTION_COMMAND_EDIT_MODE);
+			rdbtnEdit.addActionListener(this);
+		}
+		return rdbtnEdit;
+	}
 	
 	//	private JButton getSwitchworkingDirectoryButton() throws ParameterException, PropertyException, IOException{
 	//		if (openButton == null)
@@ -242,10 +248,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	public void operatingModeChanged() {
 		switch(SwatState.getInstance().getOperatingMode()){
 		case ANALYSIS_MODE:
-//			getAnalysisRadioButton().setSelected(true);
+			getAnalysisRadioButton().setSelected(true);
 			break;
 		case EDIT_MODE:
-//			getEditRadioButton().setSelected(true);
+			getEditRadioButton().setSelected(true);
 			break;
 		}
 		repaint();
