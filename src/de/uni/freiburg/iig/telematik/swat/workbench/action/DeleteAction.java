@@ -40,6 +40,8 @@ public class DeleteAction extends AbstractWorkbenchAction {
 
 	public DeleteAction(String name, Icon icon) {
 		super(name);
+		if (icon != null)
+			setIcon(icon);
 		setTooltip("Delete currently selected item");
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 	}

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -57,6 +58,7 @@ public class AFtemplateImportAction extends AbstractWorkbenchAction {
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		JFileChooser fc = new JFileChooser();
 		int returnVal = fc.showOpenDialog(Workbench.getInstance());
+		String errorMessage = "";
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
@@ -67,19 +69,24 @@ public class AFtemplateImportAction extends AbstractWorkbenchAction {
 				AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = converter.getGraphicalPN();
 				net.getPetriNet().setName(requestNetName("Please enter a name for the imported net", "Please enter a new name"));
 				SwatComponents.getInstance().addPetriNet(net);
+				Workbench.consoleMessage("Imported " + net.getPetriNet().getName());
 
 			} catch (ParserConfigurationException e1) {
-				Workbench.errorMessage("Could not parse AristaFlow log");
+				errorMessage = "Could not parse AristaFlow log";
 			} catch (SAXException e2) {
-				Workbench.errorMessage("AristaFlow log has wrong format");
+				errorMessage = "AristaFlow log has wrong format";
 			} catch (SwatComponentException e3) {
-				Workbench.errorMessage("Could not parse AristaFlow log");
+				errorMessage = "Could not parse AristaFlow log";
 			} catch (IOException e4) {
-				Workbench.errorMessage("Could not parse or access AristaFlow log");
+				errorMessage = "Could not access AristaFlow log";
+			} finally {
+				if (errorMessage != "") {
+					Workbench.errorMessage(errorMessage);
+					JOptionPane.showMessageDialog(Workbench.getInstance(), errorMessage);
+				}
 			}
 
 		}
-		
 	}
 
 }

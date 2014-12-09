@@ -52,6 +52,7 @@ public class LogImportAction extends AbstractWorkbenchAction {
 		String logName = f.getName().replaceFirst("[.][^.]+$", "");
 		SwatComponents.getInstance().storeLogModelAs(model, logName);
 		SwatComponents.getInstance().addLogModel(model);
+		Workbench.consoleMessage("Imported " + logName);
 	}
 
 	protected File getFile() {

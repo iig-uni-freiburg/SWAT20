@@ -47,6 +47,7 @@ public class PTImportAction extends AbstractWorkbenchAction {
 			net.getPetriNet().setName(name);
 		}
 		SwatComponents.getInstance().addPetriNet(net);
+		Workbench.consoleMessage("Imported " + net.getPetriNet().getName());
 	}
 	
 	private String requestNetName(String message, String title) {

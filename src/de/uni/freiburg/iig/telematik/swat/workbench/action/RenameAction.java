@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
+import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
@@ -27,32 +28,28 @@ public class RenameAction extends AbstractWorkbenchAction {
 		try {
 			setIcon(IconFactory.getIcon("rename"));
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+	}
+
+	public RenameAction(String name, Icon icon) {
+		super(name);
+		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+		if (icon != null)
+			setIcon(icon);
 	}
 
 	public RenameAction(String string) {
 		super(string);
+		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 		setTooltip("Rename");
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 		try {
 			setIcon(IconFactory.getIcon("rename"));
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 

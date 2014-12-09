@@ -19,6 +19,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
@@ -82,6 +83,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		fileMenu.add(saveAll);
 		fileMenu.add(save);
 		fileMenu.add(new DeleteAction("Delete", null));
+		fileMenu.add(new RenameAction("Rename", null));
 		fileMenu.add(importEntry);
 		fileMenu.addSeparator();
 		fileMenu.add(exit);

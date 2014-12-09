@@ -59,6 +59,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 	private SwatTabView() {
 		addChangeListener(new SwatTabViewAdapter());
+		SwatComponents.getInstance().addSwatComponentListener(this);
 	}
 
 	public static SwatTabView getInstance() {
@@ -86,8 +87,9 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 	public int getIndexOf(String tabDisplayName) {
 		for (int i = 0; i < getTabCount(); i++) {
-			if (((ButtonTabComponent) getTabComponentAt(i)).getName().equalsIgnoreCase(tabDisplayName))
+			if (((ButtonTabComponent) getTabComponentAt(i)).getName().equalsIgnoreCase(tabDisplayName)){
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -586,7 +588,9 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 	@Override
 	public void petriNetRemoved(AbstractGraphicalPN net) {
-		// TODO Auto-generated method stub
+		int remove = getIndexOf(net.getPetriNet().getName());
+		if (remove >= 0)
+			remove(remove);
 
 	}
 
@@ -652,7 +656,10 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 	@Override
 	public void logRemoved(LogModel log) {
-		removeTabAt(getIndexOf(log.getName()));
+		System.out.println("Removing " + log.getName());
+		int indexToRemove = getIndexOf(log.getName());
+		if (indexToRemove >= 0)
+			removeTabAt(getIndexOf(log.getName()));
 	}
 
 	@Override
