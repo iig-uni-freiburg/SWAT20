@@ -6,6 +6,9 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
+import org.jfree.io.FileUtilities;
+
+import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -29,7 +32,7 @@ public class IconFactory {
 		Validate.notEmpty(name);
 		Validate.notNull(size);
 		String imagePath;
-
+		
 		if (pressed){
 			imagePath = String.format(imagePathFormatPressed, size.getSize(), name, size.getSize());
 		}

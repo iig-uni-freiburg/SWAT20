@@ -576,7 +576,19 @@ default:
 	public void setSelectedACModel(ACModel selectedACModel) {
 		this.selectedACModel = selectedACModel;
 	}
+	public ACModel getCurrentAccessControlModel() {
+		return this.selectedACModel;
+	}
 
+	public void updateAccessControlModel(ACModel acModel) {
+		setContainsAnalysisContext(true);
+		if (acModel != null && getNetContainer().getPetriNet().getAnalysisContext() != null)
+			getNetContainer().getPetriNet().getAnalysisContext().setContext(acModel, true);
+		else
+			getNetContainer().getPetriNet().removeAnalysisContext();
+		setSelectedACModel(acModel);
+		refresh();
+	}
 
 
 

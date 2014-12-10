@@ -7,15 +7,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.Box.Filler;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -32,6 +35,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.acmodel.AddAccessControlAction;
@@ -49,7 +53,9 @@ import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarExceptio
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AccessControlChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
@@ -65,8 +71,11 @@ public class ToolBar extends JToolBar {
 	protected static final String NO_SELECTION_TIME = "no time context...";
 
 	private JComboBox comboAnalysisContextModel = null;
-
+	private JComboBox comboAccessControlModel = null;
+	
 	private JComboBox comboTimeContextModel = null;
+	
+
 
 	// further variables
 	private PNEditor pnEditor = null;
@@ -150,9 +159,17 @@ public class ToolBar extends JToolBar {
 
 	private SubjectClearanceToolBar editSubjectClearanceToolbar;
 
-	private JComboBox acSelectionBox;
+	private JComboBox acoSelectionBox;
 
 	private ItemListener il;
+
+	private Object acSelectionBox;
+
+	private JLabel linkLabel;
+
+	private String linkLabelTooltip = "Shows if Access Control Model is in sync with Analysis Context";
+
+
 
 	public ToolBar(final PNEditor pnEditor, int orientation) throws EditorToolbarException {
 		super(orientation);
@@ -223,10 +240,13 @@ public class ToolBar extends JToolBar {
 		if (addAnalysisContextAction != null) {
 			addSeparator();
 			addAccessControlbutton = (JToggleButton) add(addAccessControlAction, true);
-
+			acoSelectionBox = getComboAccessControlModel();
+			add(acoSelectionBox);
+			linkLabel = getLinkLabel();
+			add(linkLabel);
 			addAnalysisContextbutton = (JToggleButton) add(addAnalysisContextAction, true);
-			acSelectionBox = getComboAnalysisContextModel();
-			add(acSelectionBox);
+			acoSelectionBox = getComboAnalysisContextModel();
+			add(acoSelectionBox);
 
 			editTokenlabelButton = (JToggleButton) add(editTokenlabelAction, true);
 			editTokenlabelAction.setButton(editTokenlabelButton);
@@ -250,6 +270,25 @@ public class ToolBar extends JToolBar {
 		redoButton.setToolTipText(redoTooltip);
 		fontButton.setToolTipText(fontTooltip);
 
+	}
+
+	private JLabel getLinkLabel() {
+		ImageIcon link = null;
+		try {
+			link = IconFactory.getIcon("link");
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JLabel label = new JLabel(link);
+		label.setToolTipText(linkLabelTooltip);
+		return label;
 	}
 
 	private void createToolbarActions(final PNEditor pnEditor) throws PropertyException, IOException {
@@ -339,6 +378,49 @@ public class ToolBar extends JToolBar {
 		comboAnalysisContextModel.setMaximumSize(new Dimension(200, 24));
 		return comboAnalysisContextModel;
 	}
+	
+	private JComboBox getComboAccessControlModel() {
+		if (comboAccessControlModel == null) {
+			comboAccessControlModel = new JComboBox();
+			comboAccessControlModel.setBounds(102, 78, 190, 27);
+
+			updateAccessControlModelComboBox(null);
+
+			comboAccessControlModel.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					try {
+						String accessControlModelName = null;
+						if (comboAccessControlModel.getSelectedItem() != null)
+							accessControlModelName = comboAccessControlModel.getSelectedItem().toString();
+						ACModel accessControlModel;
+						if (accessControlModelName != null && !accessControlModelName.contentEquals(NO_SELECTION)) {
+							PNGraph graph = pnEditor.getGraphComponent().getGraph();
+							if (graph instanceof IFNetGraph) {
+								accessControlModel = SwatComponents.getInstance().getACModel(accessControlModelName);
+
+								((mxGraphModel) pnEditor.getGraphComponent().getGraph().getModel()).execute(new AccessControlChange(pnEditor, accessControlModel));
+
+							}
+
+						} else {
+							accessControlModel = null;
+							((mxGraphModel) pnEditor.getGraphComponent().getGraph().getModel()).execute(new AccessControlChange(pnEditor, null));
+
+						}
+					} catch (ParameterException e1) {
+						JOptionPane.showMessageDialog(pnEditor.getGraphComponent(), "Cannot update view.", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+			});
+		}
+		comboAccessControlModel.setMinimumSize(new Dimension(200, 24));
+		comboAccessControlModel.setPreferredSize(new Dimension(200, 24));
+		comboAccessControlModel.setMaximumSize(new Dimension(200, 24));
+		return comboAccessControlModel;
+	}
 
 	@SuppressWarnings("rawtypes")
 	private void updateAnalysisContextModelComboBox(String modelName) {
@@ -354,6 +436,24 @@ public class ToolBar extends JToolBar {
 		}
 		if (modelName != null) {
 			comboAnalysisContextModel.setSelectedItem(modelName);
+		}
+
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void updateAccessControlModelComboBox(String modelName) {
+		DefaultComboBoxModel theModel = (DefaultComboBoxModel) comboAccessControlModel.getModel();
+		theModel.removeAllElements();
+		 Collection<ACModel> acModels = SwatComponents.getInstance().getACModels();
+		theModel.addElement(NO_SELECTION);
+		if (acModels != null) {
+			for (ACModel acModel : acModels) {
+				if (acModel != null)
+					theModel.addElement(acModel.getName());
+			}
+		}
+		if (modelName != null) {
+			comboAccessControlModel.setSelectedItem(modelName);
 		}
 
 	}
