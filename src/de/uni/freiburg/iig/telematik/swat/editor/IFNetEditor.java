@@ -3,6 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.editor;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JToolBar;
+
 import com.mxgraph.model.mxGraphModel;
 
 import de.invation.code.toval.properties.PropertyException;
@@ -12,12 +14,14 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
@@ -110,6 +114,11 @@ public class IFNetEditor extends AbstractIFNetEditor {
 				}
 				return null;
 
+	}
+	
+	@Override
+	protected ToolBar createNetSpecificToolbar() throws EditorToolbarException {
+		return new ToolBar(this, JToolBar.HORIZONTAL);
 	}
 
 }

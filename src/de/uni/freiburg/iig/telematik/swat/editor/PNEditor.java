@@ -70,11 +70,11 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphListener;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.NodePalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.NodePalettePanel;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
@@ -210,7 +210,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 	private void setUpGUI() {
 		setLayout(new BorderLayout());
 		try {
-			toolbar = new ToolBar(this, JToolBar.HORIZONTAL);
+			toolbar = createNetSpecificToolbar();
 		} catch (EditorToolbarException e) {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot create Toolbar.\nReason: " + e.getMessage(), "Editor Toolbar Exception",
 					JOptionPane.ERROR_MESSAGE);
@@ -222,6 +222,8 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 		keyboardHandler = new KeyboardHandler(graphComponent);
 
 	}
+
+	protected abstract ToolBar createNetSpecificToolbar() throws EditorToolbarException;
 
 	public ToolBar getEditorToolbar() {
 		return toolbar;

@@ -18,9 +18,9 @@ import javax.swing.SwingUtilities;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.PopupToolBar;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.TokenlabelToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBarDialog;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.PopupToolBar;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.TokenlabelToolBar;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 

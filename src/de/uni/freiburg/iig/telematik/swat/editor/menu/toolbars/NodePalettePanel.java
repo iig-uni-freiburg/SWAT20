@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.menu;
+package de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,6 +24,7 @@ import com.mxgraph.util.mxRectangle;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties.PNComponent;
 
 public class NodePalettePanel extends JPanel {

@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.menu;
+package de.uni.freiburg.iig.telematik.swat.editor.menu.popup;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

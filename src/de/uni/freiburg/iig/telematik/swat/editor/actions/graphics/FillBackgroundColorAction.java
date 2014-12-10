@@ -14,7 +14,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Fill.G
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.MXConstants;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.GraphicsToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 

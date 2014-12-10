@@ -13,7 +13,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.attributes.Line;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.LineStyle;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.GraphicsToolBar.LineStyle;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 

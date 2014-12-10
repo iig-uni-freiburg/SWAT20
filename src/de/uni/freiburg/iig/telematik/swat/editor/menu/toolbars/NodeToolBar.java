@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.menu;
+package de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars;
 
 import javax.swing.JPanel;
 import javax.swing.JToolBar;

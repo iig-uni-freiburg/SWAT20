@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
@@ -14,11 +15,13 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.PTGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraphComponent;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PropertiesView;
 
@@ -118,6 +121,11 @@ public class PTNetEditor extends PNEditor {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	protected ToolBar createNetSpecificToolbar() throws EditorToolbarException {
+		return new ToolBar(this, JToolBar.HORIZONTAL);
 	}
 
 }

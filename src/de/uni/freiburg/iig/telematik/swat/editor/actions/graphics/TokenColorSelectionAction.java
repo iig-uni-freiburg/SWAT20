@@ -28,7 +28,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.Utils;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenColorChange;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.GraphicsToolBar.FillStyle;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.GraphicsToolBar.FillStyle;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 

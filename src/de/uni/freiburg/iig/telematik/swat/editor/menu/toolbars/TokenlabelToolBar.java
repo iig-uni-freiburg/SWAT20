@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.menu;
+package de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -69,6 +69,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenColorChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenSecurityLevelChange;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.CirclePanel;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class TokenlabelToolBar extends JToolBar {

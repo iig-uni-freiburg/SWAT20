@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.editor.menu;
+package de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

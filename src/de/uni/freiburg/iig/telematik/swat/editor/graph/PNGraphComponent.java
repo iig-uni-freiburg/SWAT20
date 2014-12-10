@@ -51,8 +51,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.DefaultTextShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.EllipseShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.HtmlTextShape;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.shape.RectangleShape;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorPopupMenu;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.graph.GraphResource;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
