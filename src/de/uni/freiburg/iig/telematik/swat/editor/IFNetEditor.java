@@ -19,6 +19,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractToolBar;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.TransitionPopupMenu;
@@ -117,8 +119,8 @@ public class IFNetEditor extends AbstractIFNetEditor {
 	}
 	
 	@Override
-	protected ToolBar createNetSpecificToolbar() throws EditorToolbarException {
-		return new ToolBar(this, JToolBar.HORIZONTAL);
+	protected AbstractToolBar createNetSpecificToolbar() throws EditorToolbarException {
+		return new IFNetToolBar(this, JToolBar.HORIZONTAL);
 	}
 
 }

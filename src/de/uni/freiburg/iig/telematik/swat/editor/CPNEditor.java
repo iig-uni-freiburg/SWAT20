@@ -20,6 +20,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarExceptio
 import de.uni.freiburg.iig.telematik.swat.editor.graph.CPNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.CPNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractToolBar;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.CPNToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.TransitionPopupMenu;
@@ -114,8 +116,8 @@ public class CPNEditor extends AbstractCPNEditor {
 	}
 	
 	@Override
-	protected ToolBar createNetSpecificToolbar() throws EditorToolbarException {
-		return new ToolBar(this, JToolBar.HORIZONTAL);
+	protected AbstractToolBar createNetSpecificToolbar() throws EditorToolbarException {
+		return new CPNToolBar(this, JToolBar.HORIZONTAL);
 	}
 
 }

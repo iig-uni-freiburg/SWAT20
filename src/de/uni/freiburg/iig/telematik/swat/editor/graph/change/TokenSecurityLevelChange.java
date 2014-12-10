@@ -6,6 +6,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel
 import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
 
 public class TokenSecurityLevelChange extends mxAtomicGraphModelChange {
 
@@ -54,7 +55,7 @@ public class TokenSecurityLevelChange extends mxAtomicGraphModelChange {
 	public void execute() {
 		value = previous;
 		previous = valueForCellChanged(name, previous);
-		editor.getEditorToolbar().updateTokenlabelConfigurer();
+		((IFNetToolBar)editor.getEditorToolbar()).updateTokenlabelConfigurer();
 
 	}
 

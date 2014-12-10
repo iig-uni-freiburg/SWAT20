@@ -68,7 +68,7 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 
-public class IFNetToolBar extends JToolBar {
+public class IFNetToolBar extends AbstractToolBar {
 
 	private static final long serialVersionUID = -6491749112943066366L;
 
@@ -180,7 +180,7 @@ public class IFNetToolBar extends JToolBar {
 
 
 	public IFNetToolBar(final PNEditor pnEditor, int orientation) throws EditorToolbarException {
-		super(orientation);
+		super(pnEditor, orientation);
 		Validate.notNull(pnEditor);
 		this.pnEditor = pnEditor;
 		try {
@@ -671,6 +671,18 @@ public class IFNetToolBar extends JToolBar {
 	public void addAnalysisContextToComboBox(String name) {
 		comboAnalysisContextModel.addItem(name);
 		comboAnalysisContextModel.setSelectedItem(name);
+	}
+
+	@Override
+	protected void addNetSpecificToolbarButtons() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void createAdditionalToolbarActions(PNEditor pnEditor) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -26,6 +26,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TransitionSilentChange;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
@@ -80,7 +81,7 @@ public class AddAnalysisContextAction extends AbstractPNEditorAction {
 									"Analysis Context not added", JOptionPane.ERROR_MESSAGE);
 							e1.printStackTrace();
 						}
-						editor.getEditorToolbar().addAnalysisContextToComboBox(name);
+						((IFNetToolBar)editor.getEditorToolbar()).addAnalysisContextToComboBox(name);
 
 					}
 				}

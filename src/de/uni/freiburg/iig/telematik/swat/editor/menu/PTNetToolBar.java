@@ -9,8 +9,14 @@ public class PTNetToolBar extends AbstractToolBar {
 		super(pnEditor, orientation);
 	}
 
+
 	@Override
-	protected void addNetSpecificToolbar() {
+	protected void createAdditionalToolbarActions(PNEditor pnEditor) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	protected void addNetSpecificToolbarButtons() {
 		// TODO Auto-generated method stub
 		
 	}

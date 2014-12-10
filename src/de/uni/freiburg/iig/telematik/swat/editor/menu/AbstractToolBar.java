@@ -153,6 +153,7 @@ public abstract class AbstractToolBar extends JToolBar {
 		this.pnEditor = pnEditor;
 		try {
 			createToolbarActions(pnEditor);
+			createAdditionalToolbarActions(pnEditor);
 		} catch (ParameterException e) {
 			throw new EditorToolbarException("Invalid Parameter.\nReason: " + e.getMessage());
 		} catch (PropertyException e) {
@@ -220,7 +221,7 @@ public abstract class AbstractToolBar extends JToolBar {
 			addSeparator();
 		}
 
-		addNetSpecificToolbar();
+		addNetSpecificToolbarButtons();
 		doLayout();
 
 		exportButton.setToolTipText(exportButtonTooltip);
@@ -233,7 +234,9 @@ public abstract class AbstractToolBar extends JToolBar {
 
 	}
 
-	protected abstract void addNetSpecificToolbar();
+	protected abstract void createAdditionalToolbarActions(PNEditor pnEditor);
+
+	protected abstract void addNetSpecificToolbarButtons();
 
 	private void createToolbarActions(final PNEditor pnEditor) throws PropertyException, IOException {
 		exportToolbar = new ExportToolBar(pnEditor, JToolBar.HORIZONTAL);

@@ -19,7 +19,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarExceptio
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PTGraphComponent;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractToolBar;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.PTNetToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.PTProperties;
@@ -124,8 +125,8 @@ public class PTNetEditor extends PNEditor {
 	}
 
 	@Override
-	protected ToolBar createNetSpecificToolbar() throws EditorToolbarException {
-		return new ToolBar(this, JToolBar.HORIZONTAL);
+	protected AbstractToolBar createNetSpecificToolbar() throws EditorToolbarException {
+		return new PTNetToolBar(this, JToolBar.HORIZONTAL);
 	}
 
 }

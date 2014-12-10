@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisConte
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
 
 public class AnalysisContextChange extends mxAtomicGraphModelChange {
 
@@ -94,8 +95,8 @@ public class AnalysisContextChange extends mxAtomicGraphModelChange {
 	public void execute() {
 		value = previous;
 		previous = valueForCellChanged(previous);
-		editor.getEditorToolbar().updateTokenlabelConfigurer();
-		editor.getEditorToolbar().updateSubjectClearanceConfigurer();
+		((IFNetToolBar)editor.getEditorToolbar()).updateTokenlabelConfigurer();
+		((IFNetToolBar)editor.getEditorToolbar()).updateSubjectClearanceConfigurer();
 	}
 
 	protected AnalysisContext valueForCellChanged(AnalysisContext value) {

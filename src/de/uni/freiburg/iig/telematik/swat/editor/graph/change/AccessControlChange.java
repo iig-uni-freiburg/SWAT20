@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
 
 public class AccessControlChange extends mxAtomicGraphModelChange {
 
@@ -94,8 +95,8 @@ public class AccessControlChange extends mxAtomicGraphModelChange {
 	public void execute() {
 		value = previous;
 		previous = valueForCellChanged(previous);
-		editor.getEditorToolbar().updateTokenlabelConfigurer();
-		editor.getEditorToolbar().updateSubjectClearanceConfigurer();
+		((IFNetToolBar)editor.getEditorToolbar()).updateTokenlabelConfigurer();
+		((IFNetToolBar)editor.getEditorToolbar()).updateSubjectClearanceConfigurer();
 	}
 
 	protected ACModel valueForCellChanged(ACModel value) {

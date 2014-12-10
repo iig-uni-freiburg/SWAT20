@@ -70,6 +70,7 @@ import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphListener;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
@@ -92,7 +93,7 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 	protected JPanel statusPanel = null;
 	protected NodePalettePanel palettePanel = null;
 	protected PNGraphComponent graphComponent;
-	protected ToolBar toolbar = null;
+	protected AbstractToolBar toolbar = null;
 	protected mxRubberband rubberband;
 	protected mxKeyboardHandler keyboardHandler;
 	protected mxUndoManager undoManager;
@@ -223,9 +224,9 @@ public abstract class PNEditor extends JPanel implements WorkbenchComponent, Tre
 
 	}
 
-	protected abstract ToolBar createNetSpecificToolbar() throws EditorToolbarException;
+	protected abstract AbstractToolBar createNetSpecificToolbar() throws EditorToolbarException;
 
-	public ToolBar getEditorToolbar() {
+	public AbstractToolBar getEditorToolbar() {
 		return toolbar;
 	}
 

@@ -68,7 +68,7 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 
-public class CPNToolBar extends JToolBar {
+public class CPNToolBar extends AbstractToolBar {
 
 	private static final long serialVersionUID = -6491749112943066366L;
 
@@ -180,168 +180,28 @@ public class CPNToolBar extends JToolBar {
 
 
 	public CPNToolBar(final PNEditor pnEditor, int orientation) throws EditorToolbarException {
-		super(orientation);
-		Validate.notNull(pnEditor);
-		this.pnEditor = pnEditor;
-		try {
-			createToolbarActions(pnEditor);
-		} catch (ParameterException e) {
-			throw new EditorToolbarException("Invalid Parameter.\nReason: " + e.getMessage());
-		} catch (PropertyException e) {
-			throw new EditorToolbarException("Invalid Property.\nReason: " + e.getMessage());
-		} catch (IOException e) {
-			throw new EditorToolbarException("Invalid File Path.\nReason: " + e.getMessage());
-		}
-		setFloatable(false);
-
-		// saveButton = add(saveAction);
-		// setButtonSettings(saveButton);
-
-		exportButton = (JToggleButton) add(exportAction, true);
-		exportAction.setButton(exportButton);
-
-		addSeparator();
-
-		toggleModeButton = add(toggleModeAction);
-		toggleModeButton.setBorderPainted(false);
-		toggleModeButton.setIconTextGap(0);
-		toggleModeButton.setText("EDIT");
-		enterExecutionButton = add(enterExecutionAction);
-		setButtonSettings(enterExecutionButton);
-
-		enterEditingButton = add(enterEditingAction);
-		setButtonSettings(enterEditingButton);
-
-		add(new Filler(new Dimension(0, 0), new Dimension(20, 0), new Dimension(30, 0)));
-		reloadExecutionButton = add(reloadExecutionAction);
-		setButtonSettings(reloadExecutionButton);
-		setExecutionButtonsVisible(false);
-
-		undoButton = (JToggleButton) add(undoAction, true);
-		redoButton = (JToggleButton) add(redoAction, true);
-
-		nodeButton = (JToggleButton) add(nodeAction, true);
-
-		nodeAction.setButton(nodeButton);
-
-		fontButton = (JToggleButton) add(fontAction, true);
-		fontAction.setButton(fontButton);
-
-		graphicsButton = (JToggleButton) add(graphicsAction, true);
-		graphicsAction.setButton(graphicsButton);
-
-		zoomButton = (JToggleButton) add(zoomAction, true);
-		zoomButtonSettings();
-
-		zoomAction.setButton(zoomButton);
-
-		if (tokenAction != null) {
-			tokenButton = (JToggleButton) add(tokenAction, true);
-
-			tokenAction.setButton(tokenButton);
-
-			checkValidityButton = (JToggleButton) add(checkValidityAction, true);
-			checkSoundnessButton = (JToggleButton) add(checkSoundnessAction, true);
-
-		}
-
-		if (addAnalysisContextAction != null) {
-			addSeparator();
-			addAccessControlbutton = (JToggleButton) add(addAccessControlAction, true);
-			acoSelectionBox = getComboAccessControlModel();
-			add(acoSelectionBox);
-			linkLabel = getLinkLabel();
-			add(linkLabel);
-			addAnalysisContextbutton = (JToggleButton) add(addAnalysisContextAction, true);
-			acoSelectionBox = getComboAnalysisContextModel();
-			add(acoSelectionBox);
-
-			editTokenlabelButton = (JToggleButton) add(editTokenlabelAction, true);
-			editTokenlabelAction.setButton(editTokenlabelButton);
-			editSubjectClearanceButton = (JToggleButton) add(editSubjectClearanceAction, true);
-			editSubjectClearanceAction.setButton(editSubjectClearanceButton);
-		}
+		super(pnEditor, orientation);
 		
-		if (!SwatComponents.getInstance().getTimeContexts(this.pnEditor.getNetContainer().getPetriNet().getName()).isEmpty()) {
-			addSeparator();
-			add(getComboTimeContextModel());
-			addSeparator();
-		}
+		
 
-		doLayout();
 
-		exportButton.setToolTipText(exportButtonTooltip);
-		enterExecutionButton.setToolTipText(executionButtonTooltip);
-		enterEditingButton.setToolTipText(editingButtonTooltip);
-
-		undoButton.setToolTipText(undoTooltip);
-		redoButton.setToolTipText(redoTooltip);
-		fontButton.setToolTipText(fontTooltip);
 
 	}
 
-	private JLabel getLinkLabel() {
-		ImageIcon link = null;
-		try {
-			link = IconFactory.getIcon("link");
-		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		JLabel label = new JLabel(link);
-		label.setToolTipText(linkLabelTooltip);
-		return label;
-	}
+
 
 	private void createToolbarActions(final PNEditor pnEditor) throws PropertyException, IOException {
-		exportToolbar = new ExportToolBar(pnEditor, JToolBar.HORIZONTAL);
-		exportAction = new PopUpToolBarAction(pnEditor, "Export", "export", exportToolbar);
 
-		toggleModeAction = new ToggleModeAction(pnEditor);
-		enterExecutionAction = new EnterExecutionAction(pnEditor);
-		reloadExecutionAction = new ReloadExecutionAction(pnEditor);
-		enterEditingAction = new EnterEditingAction(pnEditor);
 
-		undoAction = new UndoAction(pnEditor);
-		redoAction = new RedoAction(pnEditor);
-
-		nodeToolbar = new NodeToolBar(pnEditor, JToolBar.HORIZONTAL);
-		nodeAction = new NodeToolBarAction(pnEditor, "Node", nodeToolbar);
-
-		fontToolbar = new FontToolBar(pnEditor, JToolBar.HORIZONTAL);
-		fontAction = new PopUpToolBarAction(pnEditor, "Font", "text", fontToolbar);
-
-		graphicsToolbar = new GraphicsToolBar(pnEditor, JToolBar.HORIZONTAL);
-		graphicsAction = new PopUpToolBarAction(pnEditor, "Graphics", "bg_color", graphicsToolbar);
-
-		zoomToolbar = new ZoomToolBar(pnEditor, JToolBar.HORIZONTAL);
-		zoomAction = new PopUpToolBarAction(pnEditor, "Zoom", "zoom_in", zoomToolbar);
-		if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN
-				|| pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
 			tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
 			tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
 			tokenlabelToolbar = new TokenlabelToolBar(pnEditor, JToolBar.HORIZONTAL);
 			editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", "tokenlabel", tokenlabelToolbar);
-			if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN) {
 				checkValidityAction = new CheckValidityAction(pnEditor);
 				checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
-			}
-		}
+			
+		
 
-		if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
-			addAccessControlAction = new AddAccessControlAction(pnEditor);
-			addAnalysisContextAction = new AddAnalysisContextAction(pnEditor);
-			tokenlabelToolbar = new TokenlabelToolBar(pnEditor, JToolBar.HORIZONTAL);
-			editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", "tokenlabel", tokenlabelToolbar);
-			editSubjectClearanceToolbar = new SubjectClearanceToolBar(pnEditor, JToolBar.HORIZONTAL);
-			editSubjectClearanceAction = new PopUpToolBarAction(pnEditor, "Edit Clearance", "user_shield", editSubjectClearanceToolbar);
-		}
 	}
 
 	private JComboBox getComboAnalysisContextModel() {
@@ -671,6 +531,41 @@ public class CPNToolBar extends JToolBar {
 	public void addAnalysisContextToComboBox(String name) {
 		comboAnalysisContextModel.addItem(name);
 		comboAnalysisContextModel.setSelectedItem(name);
+	}
+
+	@Override
+	protected void addNetSpecificToolbarButtons() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void createAdditionalToolbarActions(PNEditor pnEditor) {
+		try {
+		if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN
+				|| pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.IFNet) {
+			tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
+
+				tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
+
+			tokenlabelToolbar = new TokenlabelToolBar(pnEditor, JToolBar.HORIZONTAL);
+			editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", "tokenlabel", tokenlabelToolbar);
+			if (pnEditor.getGraphComponent().getGraph().getNetContainer().getPetriNet().getNetType() == NetType.CPN) {
+				checkValidityAction = new CheckValidityAction(pnEditor);
+				checkSoundnessAction = new ChecKSoundnessAction(pnEditor);
+			}
+		}
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
