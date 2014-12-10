@@ -381,7 +381,7 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 	public Object addNewFlowRelation(PNGraphCell sourceCell, PNGraphCell targetCell) {
 		AbstractFlowRelation relation = null;
 
-		if (sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION) {
+		if ((sourceCell != null) && (targetCell != null)  && sourceCell.getType() == PNComponent.PLACE && targetCell.getType() == PNComponent.TRANSITION) {
 			relation = getNetContainer().getPetriNet().addFlowRelationPT(sourceCell.getId(), targetCell.getId());
 		} else if (sourceCell.getType() == PNComponent.TRANSITION && targetCell.getType() == PNComponent.PLACE) {
 			relation = getNetContainer().getPetriNet().addFlowRelationTP(sourceCell.getId(), targetCell.getId());
@@ -442,13 +442,18 @@ public abstract class PNGraph extends mxGraph implements PNPropertiesListener, m
 			index++;
 		}
 		String nodeName = prefix + index;
-		if (getNetContainer().getPetriNet().addTransition(nodeName)) {
-			AbstractTransition transition = getNetContainer().getPetriNet().getTransition(nodeName);
-			NodeGraphics nodeGraphicsWithMousePosition = new NodeGraphics();
-			AnnotationGraphics annotationGraphics = new AnnotationGraphics();
-			addGraphicalInfoToPNTransition(point, transition, nodeGraphicsWithMousePosition, annotationGraphics);
-			newCell = insertPNTransition(transition, nodeGraphicsWithMousePosition, annotationGraphics);
-		}
+		try {
+			if (getNetContainer().getPetriNet().addTransition(nodeName)) {
+				AbstractTransition transition = getNetContainer().getPetriNet().getTransition(nodeName);
+				NodeGraphics nodeGraphicsWithMousePosition = new NodeGraphics();
+				AnnotationGraphics annotationGraphics = new AnnotationGraphics();
+				addGraphicalInfoToPNTransition(point, transition, nodeGraphicsWithMousePosition, annotationGraphics);
+				newCell = insertPNTransition(transition, nodeGraphicsWithMousePosition, annotationGraphics);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(),"Internal Exception", JOptionPane.ERROR_MESSAGE);
+}
+
 		return newCell;
 
 	}
