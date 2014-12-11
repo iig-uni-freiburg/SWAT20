@@ -6,6 +6,7 @@ import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.menu.CPNToolBar;
 
 public class TokenColorChange extends mxAtomicGraphModelChange {
 
@@ -54,7 +55,7 @@ public class TokenColorChange extends mxAtomicGraphModelChange {
 	public void execute() {
 		value = previous;
 		previous = valueForCellChanged(name, previous);
-		editor.getEditorToolbar().updateGlobalTokenConfigurer();
+		((CPNToolBar)editor.getEditorToolbar()).updateGlobalTokenConfigurer();
 		editor.getGraphComponent().getGraph().updateViews();
 	}
 

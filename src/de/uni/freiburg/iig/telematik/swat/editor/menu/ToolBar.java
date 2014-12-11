@@ -558,7 +558,7 @@ public class ToolBar extends JToolBar {
 		});
 	}
 
-	private JComponent add(Action action, boolean asToggleButton) {
+	protected JComponent add(Action action, boolean asToggleButton) {
 		if (!asToggleButton)
 			return super.add(action);
 		JToggleButton b = createToggleActionComponent(action);

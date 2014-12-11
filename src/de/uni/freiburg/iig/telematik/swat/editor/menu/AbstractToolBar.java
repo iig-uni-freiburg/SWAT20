@@ -69,7 +69,7 @@ public abstract class AbstractToolBar extends JToolBar {
 
 
 	// further variables
-	private PNEditor pnEditor = null;
+	PNEditor pnEditor = null;
 	private boolean ignoreZoomChange = false;
 	private Mode mode = Mode.EDIT;
 
@@ -110,7 +110,6 @@ public abstract class AbstractToolBar extends JToolBar {
 	private ExportToolBar exportToolbar;
 	private ZoomToolBar zoomToolbar;
 	private NodeToolBar nodeToolbar;
-	private TokenToolBar tokenToolbar;
 
 	// Tooltips
 	private String executionButtonTooltip = "execution mode";
@@ -120,31 +119,6 @@ public abstract class AbstractToolBar extends JToolBar {
 	private String exportButtonTooltip = "export to pdf";
 	private String undoTooltip = "undo";
 	private String redoTooltip = "redo";
-
-	private PopUpToolBarAction tokenAction;
-	private JToggleButton tokenButton;
-	private ChecKSoundnessAction checkSoundnessAction;
-	private JToggleButton checkSoundnessButton;
-	private CheckValidityAction checkValidityAction;
-	private JToggleButton checkValidityButton;
-
-
-
-
-
-
-
-
-
-
-
-
-
-	private ItemListener il;
-
-	private JLabel linkLabel;
-
-
 
 
 	public AbstractToolBar(final PNEditor pnEditor, int orientation) throws EditorToolbarException {
@@ -203,16 +177,6 @@ public abstract class AbstractToolBar extends JToolBar {
 		zoomButtonSettings();
 
 		zoomAction.setButton(zoomButton);
-
-		if (tokenAction != null) {
-			tokenButton = (JToggleButton) add(tokenAction, true);
-
-			tokenAction.setButton(tokenButton);
-
-			checkValidityButton = (JToggleButton) add(checkValidityAction, true);
-			checkSoundnessButton = (JToggleButton) add(checkSoundnessAction, true);
-
-		}
 
 		
 		if (!SwatComponents.getInstance().getTimeContexts(this.pnEditor.getNetContainer().getPetriNet().getName()).isEmpty()) {
@@ -359,7 +323,7 @@ public abstract class AbstractToolBar extends JToolBar {
 		});
 	}
 
-	private JComponent add(Action action, boolean asToggleButton) {
+	protected JComponent add(Action action, boolean asToggleButton) {
 		if (!asToggleButton)
 			return super.add(action);
 		JToggleButton b = createToggleActionComponent(action);
@@ -455,7 +419,5 @@ public abstract class AbstractToolBar extends JToolBar {
 		return graphicsToolbar;
 	}
 
-	public void updateGlobalTokenConfigurer() {
-		tokenToolbar.updateView();
-	}
+
 }
