@@ -15,12 +15,12 @@ import javax.swing.JToolBar;
 import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.WrapLayout;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.NewNetAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.menu.WrapLayout;
 
 /**
  * Model for Buttons. Holds buttons like "open", "save", ... With

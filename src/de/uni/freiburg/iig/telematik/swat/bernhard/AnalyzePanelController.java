@@ -3,7 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.io.File;
 import java.util.HashMap;
 
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 /**
  * this class is used to select the AnalyzePanel for a given

@@ -26,7 +26,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowElement.PTequivalent;
 import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.LayoutAction;
+import de.uni.freiburg.iig.telematik.wolfgang.actions.graphpopup.LayoutAction;
 
 public class AristaFlowToPnmlConverter {
 

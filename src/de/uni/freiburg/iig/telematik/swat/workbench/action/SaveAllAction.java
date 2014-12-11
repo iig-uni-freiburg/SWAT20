@@ -6,7 +6,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;

@@ -31,7 +31,6 @@ import javax.swing.UIManager;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;

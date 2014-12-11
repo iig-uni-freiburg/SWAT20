@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.editor;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JToolBar;
@@ -14,30 +13,29 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.swat.editor.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraphComponent;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBar;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.EditorPopupMenu;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.popup.TransitionPopupMenu;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.wolfgang.exception.EditorToolbarException;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.menu.AbstractToolBar;
+import de.uni.freiburg.iig.telematik.wolfgang.menu.popup.EditorPopupMenu;
+import de.uni.freiburg.iig.telematik.wolfgang.menu.popup.TransitionPopupMenu;
+import de.uni.freiburg.iig.telematik.wolfgang.properties.PNProperties;
 
 public class IFNetEditor extends AbstractIFNetEditor {
 
 	private static final long serialVersionUID = 8612413737377657095L;
 
-	public IFNetEditor(File fileReference) throws ParameterException {
-		super(fileReference);
+	public IFNetEditor() {
+		super();
 	}
 
-	public IFNetEditor(GraphicalIFNet netContainer, File fileReference) throws ParameterException {
-		super(netContainer, fileReference);
+	public IFNetEditor(GraphicalIFNet netContainer) {
+		super(netContainer);
 		updateAnalysisContextSelection(netContainer);
 	}
 

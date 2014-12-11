@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 /**
  * An abstract class representing a Parameter used by the

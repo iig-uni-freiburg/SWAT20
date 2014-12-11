@@ -40,5 +40,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jfreechart/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart/jfreechart-1.0.19.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WOLFGANG"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

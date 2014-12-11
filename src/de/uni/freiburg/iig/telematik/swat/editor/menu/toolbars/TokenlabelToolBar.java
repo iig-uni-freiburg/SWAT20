@@ -1,76 +1,34 @@
 package de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.ItemSelectable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.Action;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
-
-import org.postgresql.jdbc4.Jdbc4Connection;
 
 import com.mxgraph.model.mxGraphModel;
 
-import de.invation.code.toval.graphic.component.RestrictedTextField;
-import de.invation.code.toval.graphic.component.RestrictedTextField.Restriction;
 import de.invation.code.toval.graphic.util.SpringUtilities;
-import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.types.Multiset;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractCPNGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.CPNGraphics;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.IFNetGraphics;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNFlowRelation;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNMarking;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.FillColorSelectionAction;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.graphics.TokenColorSelectionAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.change.ConstraintChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenChange;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenColorChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenSecurityLevelChange;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.CirclePanel;
-import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.wolfgang.menu.CirclePanel;
 
 public class TokenlabelToolBar extends JToolBar {
 

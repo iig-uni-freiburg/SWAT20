@@ -1,7 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import java.util.List;
-
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
 /**
  * This class represents a parameter that accepts several activities as values

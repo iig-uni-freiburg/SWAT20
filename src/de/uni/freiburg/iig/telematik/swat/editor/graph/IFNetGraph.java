@@ -41,10 +41,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.AbstractCPNTokenConfigurer;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.EditorProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraph;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.wolfgang.menu.AbstractCPNTokenConfigurer;
 
 /**
  * @author julius

@@ -6,8 +6,7 @@ import java.util.Map;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
 
 /**
  * This Class is used to retrieve places and arcs which are between the

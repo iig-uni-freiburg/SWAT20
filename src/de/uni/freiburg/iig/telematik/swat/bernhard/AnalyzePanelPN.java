@@ -4,19 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import de.invation.code.toval.graphic.dialog.ValueEditingDialog;
-import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.menu.acmodel.SWATACModelDialog;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.PrismExecutor;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.PrismResult;

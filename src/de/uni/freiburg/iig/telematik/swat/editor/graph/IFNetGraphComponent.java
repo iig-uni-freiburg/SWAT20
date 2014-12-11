@@ -7,9 +7,10 @@ import java.awt.event.MouseWheelEvent;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.time.TransitionTimingInfoAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphComponent;
 
 public class IFNetGraphComponent extends PNGraphComponent {
 

@@ -20,9 +20,7 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.SubjectSecurityLevelChange;
 
 public class SubjectClearanceToolBar extends JToolBar {

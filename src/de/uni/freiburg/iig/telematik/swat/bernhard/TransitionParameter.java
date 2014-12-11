@@ -1,11 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 
 /**
  * This Class represents a parameter panel where a Transition of an

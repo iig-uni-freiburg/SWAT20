@@ -7,7 +7,6 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {

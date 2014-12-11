@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import java.util.List;
 /**
  * This interface defines all functions that are necessary to
  * retrieve informations from a logfile and from a ptnet.

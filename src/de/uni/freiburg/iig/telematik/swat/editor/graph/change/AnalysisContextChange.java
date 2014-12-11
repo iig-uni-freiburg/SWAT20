@@ -2,12 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
-import de.invation.code.toval.types.Multiset;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
 
 public class AnalysisContextChange extends mxAtomicGraphModelChange {

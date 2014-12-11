@@ -5,6 +5,10 @@ import java.util.Set;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
+import de.uni.freiburg.iig.telematik.wolfgang.properties.PNProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.properties.PNProperties.PNComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.properties.PNProperty;
+import de.uni.freiburg.iig.telematik.wolfgang.properties.PNPropertyChangeEvent;
 
 public class IFNetProperties extends PNProperties {
 	

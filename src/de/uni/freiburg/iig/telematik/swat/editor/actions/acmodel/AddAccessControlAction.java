@@ -13,12 +13,11 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.acmodel.SWATACModelDialog;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.acmodel.SWATContextForAC;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.wolfgang.actions.AbstractPNEditorAction;
 
 public class AddAccessControlAction extends AbstractPNEditorAction {
 

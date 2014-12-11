@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import de.uni.freiburg.iig.telematik.swat.editor.menu.ToolBarDialog;
+import de.uni.freiburg.iig.telematik.wolfgang.menu.ToolBarDialog;
 
 public class WorkbenchPopupToolBar {
 	private JToolBar verticalToolBar;

@@ -1,22 +1,17 @@
 package de.uni.freiburg.iig.telematik.swat.misc;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import de.invation.code.toval.file.FileReader;
-import de.invation.code.toval.file.FileUtils;
 import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem.OperatingSystems;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 

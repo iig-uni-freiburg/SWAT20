@@ -4,15 +4,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
 

@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import de.invation.code.toval.validate.CompatibilityException;
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.CircularObjectPermissionPanel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.graphic.permission.ObjectPermissionItemEvent;

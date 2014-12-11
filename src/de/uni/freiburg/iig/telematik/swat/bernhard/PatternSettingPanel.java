@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -8,41 +7,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNTransition;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.InformationFlowPattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
-import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 
 /**
  * This class represents a Panel with all its Components Labels, Remove Button A

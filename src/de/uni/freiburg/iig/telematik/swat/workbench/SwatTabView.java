@@ -35,11 +35,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
-import de.uni.freiburg.iig.telematik.swat.editor.CPNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.event.PNEditorListener;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
@@ -47,6 +43,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
+import de.uni.freiburg.iig.telematik.wolfgang.event.PNEditorListener;
 
 @SuppressWarnings("serial")
 public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatComponentsListener {

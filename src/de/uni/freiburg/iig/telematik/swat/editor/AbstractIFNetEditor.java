@@ -1,24 +1,22 @@
 package de.uni.freiburg.iig.telematik.swat.editor;
 
-import java.io.File;
-
-import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.swat.editor.properties.IFNetProperties;
-import de.uni.freiburg.iig.telematik.swat.editor.properties.PNProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.properties.PNProperties;
 
-public abstract class AbstractIFNetEditor extends PNEditor {
+public abstract class AbstractIFNetEditor extends PNEditorComponent {
 
 	private static final long serialVersionUID = 7463202384539027183L;
 
-	public AbstractIFNetEditor(File fileReference) throws ParameterException {
-		super(fileReference);
+	public AbstractIFNetEditor() {
+		super();
 	}
 
 	@SuppressWarnings("rawtypes")
-	public AbstractIFNetEditor(AbstractGraphicalIFNet netContainer, File fileReference) throws ParameterException {
-		super(netContainer, fileReference);
+	public AbstractIFNetEditor(AbstractGraphicalIFNet netContainer) {
+		super(netContainer);
 	}
 
 	@Override
