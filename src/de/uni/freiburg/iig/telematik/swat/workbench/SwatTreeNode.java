@@ -18,13 +18,14 @@ public class SwatTreeNode extends DefaultMutableTreeNode {
 		this.objectType = objectType;
 //		this.fileReference = fileReference;
 		setDisplayName();
+		allowsChildren = true;
 	}
 
 //	public File getFileReference() {
 //		return fileReference;
 //	}
 
-	//TODO: Display name fŸr AC, etc.
+	//TODO: Display name fï¿½r AC, etc.
 	@SuppressWarnings("rawtypes")
 	private void setDisplayName() {
 		switch (objectType) {
