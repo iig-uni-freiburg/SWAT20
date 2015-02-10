@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +20,8 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
 import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
 import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 import org.processmining.analysis.sciffchecker.logic.util.TimeGranularity;
+
+import com.thoughtworks.xstream.XStream;
 
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
@@ -79,6 +82,8 @@ public class SciffAnalyzeAction extends AbstractAction {
 				rule = SciffRuleDialog.showRuleDialog(null);
 			}
 
+			//saveRule(rule);
+
 			SCIFFChecker checker = new SCIFFChecker();
 			CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
 			SciffPresenter sciff = new SciffPresenter(report, rule, previouseRuleString, file);
@@ -91,6 +96,17 @@ public class SciffAnalyzeAction extends AbstractAction {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+	}
+
+	/** Store this rule into xml file **/
+	private void saveRule(CompositeRule rule) {
+		XStream stream = new XStream();
+		try {
+			stream.toXML(rule, new FileWriter(new File("/tmp/", rule.toString() + ".rule")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 

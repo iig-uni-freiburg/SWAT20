@@ -13,20 +13,16 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 
 public class ImportAction extends AbstractWorkbenchAction {
 
+	private static final long serialVersionUID = -6755567361911699870L;
+
 	public ImportAction(String name) {
 		super(name);
 		setTooltip("Import from filesystem");
 		try {
 			setIcon(IconFactory.getIcon("import"));
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
@@ -43,7 +39,6 @@ public class ImportAction extends AbstractWorkbenchAction {
 		menu.add(new AFtemplateImportAction());
 		menu.add(new AFSqlLogImportAction());
 		menu.setInvoker((Component) e.getSource());
-		//menu.show(source, 1, 2);
 		menu.setLocation((int) source.getLocationOnScreen().getX(), (int) source.getLocationOnScreen().getY());
 		menu.setVisible(true);
 	}
