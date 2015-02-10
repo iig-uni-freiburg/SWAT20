@@ -30,7 +30,7 @@ public class SwatProperties extends AbstractProperties{
 	protected static final String pathACModels = "acModel/";
 	protected static final String pathNameAnalysisContext = "analysis-contexts";
 	protected static final String pathNameTimeContext = "time-contexts";
-	protected static final String pathNameNetAnalyses = "analysis";
+	protected static final String pathNameNetAnalyses = "analysis/";
 	
 	protected static final String propertyFileName = "SwatProperties";
 	
