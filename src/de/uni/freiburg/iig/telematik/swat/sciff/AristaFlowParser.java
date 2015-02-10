@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -207,6 +209,7 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 		int i = 0;
 		for (Entry<String, ISciffLogTrace> entry : traces.entrySet()) {
 			LogTrace<LogEntry> logTrace = new LogTrace<LogEntry>(i);
+			i++;
 			for (int j = 0; j < entry.getValue().size(); j++) {
 				String name;
 				try {
@@ -219,14 +222,11 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 					logEntry.setOriginator(iSciffLogEntry.getOriginator());
 					logTrace.addEntry(logEntry);
 				} catch (IndexOutOfBoundsException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//continue
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//continue
 				} catch (LockingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//continue
 				}
 
 			}
@@ -242,6 +242,35 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 			logEntry.addMetaAttribute(new DataAttribute(entry.getKey(), entry.getValue()));
 		}
 
+	}
+
+	public Collection<String> getOriginatorCandidates() {
+		HashSet<String> result = new HashSet<String>();
+		ISciffLogEntry entry;
+
+		for (ISciffLogTrace trace : getInstances()) {
+			Iterator<ISciffLogEntry> iter = trace.iterator();
+			while (iter.hasNext()) {
+				entry = iter.next();
+				result.add(entry.getOriginator());
+			}
+		}
+		return Collections.unmodifiableSet(result);
+	}
+
+	public Collection<String> getActivityCandidates() {
+
+		HashSet<String> result = new HashSet<String>();
+		ISciffLogEntry entry;
+
+		for (ISciffLogTrace trace : getInstances()) {
+			Iterator<ISciffLogEntry> iter = trace.iterator();
+			while (iter.hasNext()) {
+				entry = iter.next();
+				result.add(entry.getElement());
+			}
+		}
+		return Collections.unmodifiableSet(result);
 	}
 
 }
