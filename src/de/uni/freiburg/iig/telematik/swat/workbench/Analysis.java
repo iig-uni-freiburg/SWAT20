@@ -26,5 +26,8 @@ public class Analysis {
 		return patternSetting;
 	}
 	
+	public String toString() {
+		return name;
+	}
 	
 }
