@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,8 +58,9 @@ public class SwatComponents {
 	private Map<String, File> netFiles = new HashMap<String, File>();
 	private Map<String, List<AnalysisContext>> analysisContexts = new HashMap<String, List<AnalysisContext>>();
 	private Map<String, List<TimeContext>> timeContexts = new HashMap<String, List<TimeContext>>();
-	private Map<String, List<String>> netAnalysesNames = new HashMap<String, List<String>>();
-	private Map<String, Analysis> analyses = new HashMap<String, Analysis>();
+	//	private Map<String, List<String>> netAnalysesNames = new HashMap<String, List<String>>();
+	//	private Map<String, Analysis> analyses = new HashMap<String, Analysis>();
+	private Map<String, List<Analysis>> analyses = new HashMap<String, List<Analysis>>();
 	
 	private Map<String, ACModel> acModels = new HashMap<String, ACModel>();
 	private List<LogModel> aristaLogs = new ArrayList<LogModel>();
@@ -113,8 +115,12 @@ public class SwatComponents {
 		
 		//4. Load ACModel-Analysis context relations
 		
+		//5. Load Analysis
+		MessageDialog.getInstance().addMessage(" 4. Loading analyses:");
+		loadAnalyses();
 	}
 	
+
 	public void reload() throws SwatComponentException {
 		nets.clear();
 		netFiles.clear();
@@ -386,6 +392,49 @@ public class SwatComponents {
 		sortLogModelLists();
 	}
 	
+	private void loadLogAnalysisFor(String logID) {
+		MessageDialog.getInstance().addMessage("Loading analyses for log \"" + logID + "\"...");
+		File pathToAnalyses = null;
+		try {
+			pathToAnalyses = new File(getLogModel(logID).getFileReference().getParent(), SwatProperties.getInstance()
+					.getNetAnalysesDirectoryName());
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot access analyses directory.\nReason:" + e.getMessage());
+			return;
+		}
+
+		if (!pathToAnalyses.exists()) {
+			MessageDialog.getInstance().addMessage("No analyses for net.");
+			return;
+		}
+
+		List<File> analysisFiles = null;
+		try {
+			analysisFiles = FileUtils.getFilesInDirectory(pathToAnalyses.getAbsolutePath(), true, true, "xml");
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract analysis files.\nReason:" + e.getMessage());
+			return;
+		}
+
+		for (File analysisFile : analysisFiles) {
+			XStream xstream = new XStream();
+			Analysis analysis = null;
+			try {
+				analysis = (Analysis) xstream.fromXML(analysisFile);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot parse analysis for log \"" + logID + "\"");
+				continue;
+			}
+
+			try {
+				addAnalysisForLog(analysis, logID, false);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot add analysis for net \"" + logID + "\"");
+			}
+			MessageDialog.getInstance().addMessage("Added analysis for Log\"" + analysis.getName() + "\"");
+		}
+	}
+
 	//---- Store and load Analyse Patterns --------------------------------------------------------------------------------
 
 
@@ -825,6 +874,14 @@ public class SwatComponents {
 		return null;
 	}
 
+	public List<LogModel> getLogs() {
+		LinkedList<LogModel> result = new LinkedList<LogModel>();
+		result.addAll(aristaLogs);
+		result.addAll(mxmlLogs);
+		result.addAll(xesLogs);
+		return result;
+	}
+
 	private void removeLogFromList(String logName) {
 		LogModel modelToRemove = getLogModel(logName);
 		aristaLogs.remove(modelToRemove);
@@ -839,25 +896,64 @@ public class SwatComponents {
 		listenerSupport.notifyLogRenamed(oldModel, getLogModel(newID));
 	}
 
+	public boolean containsLogWithID(String logID) {
+		return (getLogModel(logID) != null);
+	}
+
 	//---- Adding and removing analyses -------------------------------------------------------------------------------------
 	
 	public void addAnalysis(Analysis analysis, String netID, boolean storeToFile) throws SwatComponentException {
-		if(netAnalysesNames.get(netID) == null)
-			netAnalysesNames.put(netID, new ArrayList<String>());
-		netAnalysesNames.get(netID).add(analysis.getName());
+		System.out.println("Adding " + analysis.getName());
+		if (!analyses.containsKey(netID) || analyses.get(netID) == null)
+			analyses.put(netID, new ArrayList<Analysis>());
+
+		//test if this analysis is already present. Remove if so
+		for (Analysis availableAnalyses : getAnalyses(netID)) {
+			if (availableAnalyses.getName().equalsIgnoreCase(analysis.getName())) {
+				getAnalyses(netID).remove(availableAnalyses);
+				break;
+			}
+		}
+
+		analyses.get(netID).add(analysis);
 		if(storeToFile){
 			storeAnalysis(analysis, netID);
 		}
 		listenerSupport.notifyAnalysisAdded(netID, analysis);
 	}
 	
+	public void addAnalysisForLog(Analysis analysis, String logID, boolean storeToFile) throws SwatComponentException {
+		System.out.println("Adding " + analysis.getName());
+		if (!analyses.containsKey(logID) || !containsLogWithID(logID))
+			analyses.put(logID, new ArrayList<Analysis>()); //create new entry
+
+		//put analysis in HashMap
+		analyses.get(logID).add(analysis);
+
+		//test if this analysis is already present. Remove if so.
+		for (Analysis availableAnalyses : getAnalyses(logID)) {
+			if (availableAnalyses.getName().equalsIgnoreCase(analysis.getName())) {
+				getAnalyses(logID).remove(availableAnalyses);
+				break;
+			}
+		}
+
+		if (storeToFile) {
+			storeAnalysisForLog(analysis, logID);
+		}
+		listenerSupport.notifyAnalysisAdded(logID, analysis);
+
+	}
+
 	public void storeAnalysis(Analysis analysis, String netID) throws SwatComponentException {
+		System.out.println("Storing " + analysis.getName());
 		try {
 			File storagePath = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getNetAnalysesDirectoryName());
 			storagePath.mkdirs();
 			XStream xstream=new XStream();
 			String serialString = xstream.toXML(analysis);
-			PrintWriter writer = new PrintWriter(String.format(AnalysisNameFormat, storagePath, analysis.getName()));
+			PrintWriter writer = new PrintWriter(new File(storagePath.getAbsolutePath(), analysis.getName() + ".xml"));
+			//PrintWriter writer = new PrintWriter(String.format(AnalysisNameFormat, storagePath.getAbsolutePath(), analysis.getName()));
 			writer.write(serialString);
 			writer.checkError();
 			writer.close();
@@ -866,10 +962,94 @@ public class SwatComponents {
 		}
 	}
 	
+	public void storeAnalysisForLog(Analysis analysis, String logID) throws SwatComponentException {
+		try {
+			System.out.println("Storing Log" + analysis.getName());
+		File storagePath = new File(getLogModel(logID).getFileReference().getParent(), SwatProperties.getInstance()
+				.getNetAnalysesDirectoryName());
+		storagePath.mkdirs();
+		XStream xstream = new XStream();
+		String serialString = xstream.toXML(analysis);
+		PrintWriter writer = new PrintWriter(new File(storagePath.getAbsolutePath(), analysis.getName() + ".xml"));
+		writer.write(serialString);
+		writer.checkError();
+		writer.close();
+		}
+		catch (Exception e) {
+			throw new SwatComponentException("Cannot store analysis \"" + analysis.getName() + "\".\nReason: "+e.getMessage());
+		}
+
+	}
+
+	private void loadAnalyses() {
+		for (String netID : nets.keySet()) {
+			MessageDialog.getInstance().addMessage("Loading analyses for: " + netID);
+			loadNetAnalysisFor(netID);
+		}
+
+		//logfiles
+
+		for (LogModel model : getLogs()) {
+			loadLogAnalysisFor(model.getName());
+		}
+
+	}
+
+	public void renameAnalysis(String netID, String oldName, String newName){
+		Analysis oldAnalysis = getAnalysis(netID, oldName);
+		Analysis newAnalysis=new Analysis(newName, oldAnalysis.getPatternSetting());
+		try {
+			addAnalysis(newAnalysis, netID, true);
+			removeAnalysis(netID, oldName, true);
+			listenerSupport.notifyAnalysisRemoved(netID, oldAnalysis);
+			listenerSupport.notifyAnalysisAdded(netID, newAnalysis);
+		} catch (SwatComponentException e) {
+			Workbench.errorMessage("Could not remove " + oldName + ": Could not resolve file");
+			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not remove " + oldName + ": Could not resolve file");
+			e.printStackTrace();
+		}
+	}
+
+	//	private void loadAnalysis(String netID) throws SwatComponentException {
+	//		File net = getPetriNetFile(netID).getParentFile();
+	//		XStream xStream = new XStream();
+	//		try {
+	//			File analysisDir = new File(net, SwatProperties.getInstance().getNetAnalysesDirectoryName());
+	//			List<File> analysesFiles = FileUtils.getFilesInDirectory(analysisDir.getAbsolutePath(), true, true, "xml");
+	//			for (File analysis : analysesFiles) {
+	//				try {
+	//				Analysis loadedAnalysis = (Analysis) xStream.fromXML(analysis);
+	//					addAnalysis(loadedAnalysis, netID, false);
+	//				} catch (ClassCastException e1) {
+	//					MessageDialog.getInstance().addMessage("Could not parse " + analysis.getName() + " for " + netID);
+	//					e1.printStackTrace();
+	//					//throw new SwatComponentException("Could not parse " + analysis.getName() + " for " + netID);
+	//				}
+	//			}
+	//		} catch (IOException e) {
+	//			e.printStackTrace();
+	//			throw new SwatComponentException("Could not load analyses for " + netID + " Reason: " + e.getMessage());
+	//		}
+	//
+	//	}
 	
-	
+
 	//---- Adding and removing analysis contexts ----------------------------------------------------------------------------
 	
+
+	private void removeAnalysis(String netID, String oldName, boolean fromFileSystem) throws SwatComponentException {
+		//build path were it was stored
+			if(fromFileSystem){
+				File analysisFile = new File(getPetriNetFile(netID).getParentFile(), oldName + ".xml");
+				if (!analysisFile.exists())
+				throw new SwatComponentException("Could not resolve analysis file for " + oldName);
+				FileUtils.removeLinkOnly(analysisFile);
+			}
+			
+			analyses.remove(getAnalysis(netID, oldName));
+
+	}
+
 	public List<AnalysisContext> getAnalysisContexts(String netID) {
 		if(!analysisContexts.containsKey(netID))
 			return new ArrayList<AnalysisContext>();
@@ -1075,26 +1255,39 @@ public class SwatComponents {
 	//---- Adding and removing analysis contexts ----------------------------------------------------------------------------
 
 	public List<Analysis> getAnalyses(String netID){
-		if(!netAnalysesNames.containsKey(netID))
+		if (!analyses.containsKey(netID))
 			return new ArrayList<Analysis>();
-		List<Analysis> netAnalyses = new ArrayList<Analysis>(); 
-		for(String analysisName: netAnalysesNames.get(netID))
-			netAnalyses.add(analyses.get(analysisName));
-		return netAnalyses;
+		return analyses.get(netID);
+	}
+
+	public Analysis getAnalysis(String netID, String analysisName) {
+		if (!analyses.containsKey(netID))
+			return null;
+
+		for (Analysis analysis : analyses.get(netID)) {
+			if (analysis.getName().equalsIgnoreCase(analysisName))
+				return analysis;
+		}
+		return null;
 	}
 
 	public Analysis getAnalysisByName(String analysisName) {
-		if (!analyses.containsKey(analysisName))
-			return null;
-		return analyses.get(analysisName);
+		for (List<Analysis> analysises : analyses.values()) {
+			for (Analysis analysis : analysises) {
+				if (analysis.getName().equalsIgnoreCase(analysisName))
+					return analysis;
+			}
+		}
+		return null;
 	}
 
-	/** get analyses associated with net netID **/
-	public List<String> getAnalysesNames(String netID) {
-		if (!netAnalysesNames.containsKey(netID))
-			return new ArrayList<String>();
-		return netAnalysesNames.get(netID);
-	}
+	//	/** get analyses associated with net netID **/
+	//	public List<String> getAnalysesNames(String netID) {
+	//		ArrayList<String> names = new ArrayList<String>();
+	//		for (Analysis analysis : analyses.get(netID))
+	//			names.add(analysis.getName());
+	//		return names;
+	//	}
 
 //	public File getFile(LogModel model) {
 //		File file = logs.get(model);
