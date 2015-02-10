@@ -9,10 +9,11 @@ import com.mxgraph.swing.handler.mxCellMarker;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.PlacePredicate;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
-import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.PatternParameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.StatePredicate;
 
 
 public class GraphHighlighter {
@@ -38,17 +39,17 @@ public class GraphHighlighter {
 		mArcmap = pnEditor.getGraphComponent().getGraph().arcReferences;
 	}
 	
-	public GraphHighlighter(PNEditor pnEditor, ArrayList<Operand> operands) {
+	public GraphHighlighter(PNEditor pnEditor, ArrayList<PatternParameter> operands) {
 		this(pnEditor);
 		mPNEditor = pnEditor;
 		initPlacesAndTransitions(operands);
 	}
 	
-	private void initPlacesAndTransitions(ArrayList<Operand> operands) {
-		for (Operand op : operands) {
-			if (op instanceof Transition) {
+	private void initPlacesAndTransitions(ArrayList<PatternParameter> operands) {
+		for (PatternParameter op : operands) {
+			if (op instanceof Activity) {
 				mTransitionNames.add(op.getName());
-			} else if (op instanceof PlacePredicate) {
+			} else if (op instanceof StatePredicate) {
 				mPlaceNames.add(op.getName());
 			}
 		}

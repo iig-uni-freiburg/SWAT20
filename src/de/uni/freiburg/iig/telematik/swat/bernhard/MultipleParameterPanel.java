@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
 /**
  * This class represents a Parameterpanel, where several other Parameters
  * can be added
@@ -155,9 +155,9 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 	}
 
 	@Override
-	public List<ParamValue> getValue() {
+	public List<GuiParamValue> getValue() {
 		// TODO Auto-generated method stub
-		ArrayList<ParamValue> values=new ArrayList<ParamValue>();
+		ArrayList<GuiParamValue> values=new ArrayList<GuiParamValue>();
 		for(ParameterPanel panel: panelList) {
 			values.addAll(panel.getValue());
 		}
@@ -165,13 +165,13 @@ public abstract class MultipleParameterPanel extends ParameterPanel {
 	}
 
 	@Override
-	public void setValue(List<ParamValue> value) {
+	public void setValue(List<GuiParamValue> value) {
 		// TODO Auto-generated method stub
 		panelList.clear();
 		content.removeAll();
-		for(ParamValue val:value) {
+		for(GuiParamValue val:value) {
 			ParameterPanel p=addParameter();
-			ArrayList<ParamValue> list=new ArrayList<ParamValue>();
+			ArrayList<GuiParamValue> list=new ArrayList<GuiParamValue>();
 			list.add(val);
 			p.setValue(list);
 		}

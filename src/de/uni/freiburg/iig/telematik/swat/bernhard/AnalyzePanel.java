@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -15,6 +17,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,6 +25,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,20 +33,26 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
+import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PRISMPatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.PatternParameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
+import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 /**
  * This class represents the Pattern-Overview. It its an
  * abstract class. The functionality between the analysis of Petri nets
@@ -52,18 +62,23 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
  * @author bernhard
  * 
  */
-public abstract class AnalyzePanel {
+public abstract class AnalyzePanel implements SwatComponentsListener {
 	
-	private JPanel content;
-	private JPanel propertyPanel;
-	private JLabel analysisName;
+	protected JPanel content;
+	protected JPanel propertyPanel;
+	protected JLabel analysisName;
 	private JButton editButton, runButton, saveButton;
 	private String fileName;
 	protected PatternWizard patternWizard;
 	protected AnalysisComponentInfoProvider objectInformationReader;
 	protected PatternFactory patternFactory;
 	protected List<PatternSetting> patternSettings;
-	private PNEditor mPNEditor;
+	protected PNEditor mPNEditor;
+	protected JComboBox dropDownMenu;
+	/** Name of net/log this analysis belongs to **/
+	protected String analysisSourceName;
+
+	protected final String NEW_ANALYSIS = "New ...";
 
 	/**
 	 * this method adjusts values to be displayed. E.g. display
@@ -72,7 +87,7 @@ public abstract class AnalyzePanel {
 	 * @return a String with the adjusted value
 	 */
 	// 
-	protected abstract String adjustValue(ParamValue val);
+	protected abstract String adjustValue(GuiParamValue val);
 	/**
 	 * add a Button to the newPanel Panel to visualize a Counterexample
 	 * the functionality of such a button differs depending
@@ -81,7 +96,7 @@ public abstract class AnalyzePanel {
 	 * path or traces
 	 * @param newPanel the panel to which the button should be added
 	 */
-	protected abstract void addCounterExampleButton(PatternResult result, JPanel newPanel);
+	protected abstract void addCounterExampleButton(PRISMPatternResult result, JPanel newPanel);
 	/**
 	 * is called when the user presses the Run Button
 	 * The funcionality differs depending on the object beeing
@@ -89,6 +104,13 @@ public abstract class AnalyzePanel {
 	 */
 	protected abstract void analyze();
 	
+	@Override
+	/**add as SwatComponentListener**/
+	public void analysisAdded(String netID, Analysis analysis) {
+		if (netID.equalsIgnoreCase(analysisSourceName)) //react only on own analysis
+			updateDropDownList(analysis.getName());
+	}
+
 	/**
 	 * should be invoked when the analyzed object was changed
 	 */
@@ -108,11 +130,18 @@ public abstract class AnalyzePanel {
 	 * @param file the filename of the file being analyzed
 	 */
 	public AnalyzePanel(WorkbenchComponent component, String file) {
+		System.out.println("Creating Analyze Panel...");
+		SwatComponents.getInstance().addSwatComponentListener(this);
 		fileName = file.split("[.]")[0];
+		//fileName = ((LogModel) component).getFileReference().getAbsolutePath();
 		patternFactory = new PatternFactory(component);
-		patternSettings = new ArrayList<PatternSetting>();
+		patternSettings = new ArrayList<PatternSetting>(); //TODO: with SwatComponent
 		if (component instanceof PNEditor) {
 			mPNEditor = (PNEditor) component;
+			analysisSourceName = ((PNEditor) component).getNetContainer().getPetriNet().getName();
+		}
+ else if (component instanceof LogFileViewer) {
+			analysisSourceName = ((LogFileViewer) component).getName();
 		}
 		initGui();
 
@@ -135,6 +164,7 @@ public abstract class AnalyzePanel {
 		buttonPanel.add(editButton);
 		buttonPanel.add(runButton);
 		buttonPanel.add(saveButton);
+		box.add(getDropDownMenu());
 		box.add(Helpers.jPanelLeft(analysisName));
 		box.add(buttonPanel);
 
@@ -171,6 +201,33 @@ public abstract class AnalyzePanel {
 			}
 		});
 	}
+
+	protected JComboBox getDropDownMenu() {
+		if(this.dropDownMenu==null){
+			this.dropDownMenu=new JComboBox();
+			dropDownMenu.addItem(NEW_ANALYSIS);
+			try {
+			for(Analysis analysis: SwatComponents.getInstance().getAnalyses(mPNEditor.getNetContainer().getPetriNet().getName())){
+				this.dropDownMenu.addItem(analysis);
+			}
+			} catch (NullPointerException e) {
+				//Nothing to add... continue
+			}
+
+			dropDownMenu.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getStateChange() == ItemEvent.SELECTED)
+						reactOnDropDownChange();
+				}
+			});
+
+		}
+
+		return this.dropDownMenu;
+	}
+
 	/**
 	 * invoked when the user presses the Run Button
 	 */
@@ -269,11 +326,11 @@ public abstract class AnalyzePanel {
 					
 					final JPanel panel = new JPanel();
 					panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-					final ArrayList<Operand> operands = res.getPatternOperands();
+					final ArrayList<PatternParameter> operands = res.getPatternOperands();
 					double prob = res.getProbability();
 					String patternDesc = "Pattern:";
 					ArrayList<String> operandNames = new ArrayList<String>();
-					for (Operand op : operands) {
+					for (PatternParameter op : operands) {
 						operandNames.add(op.getName());
 					}
 					Collections.sort(operandNames);
@@ -339,7 +396,7 @@ public abstract class AnalyzePanel {
 			JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			resultPanel.add(new JLabel("Result: "));
 			// check whether a result exists
-			PatternResult result = p.getResult();
+			PRISMPatternResult result = (PRISMPatternResult) p.getResult();
 			if (result != null) {
 				try {
 					if (result.isFulfilled()) {
@@ -434,18 +491,77 @@ public abstract class AnalyzePanel {
 		return true;
 	}
 	
+	/** update GUI according to selected item in DropDownMenu **/
+	protected void reactOnDropDownChange() {
+		if (getDropDownMenu().getSelectedItem() instanceof String) {
+			analysisName.setText("new analysis...");
+			patternSettings = new LinkedList<PatternSetting>();
+			patternWizard.setPatternSettings(patternSettings);
+			update();
+		}
+
+		try {
+			Analysis selectedAnalysis = (Analysis) getDropDownMenu().getSelectedItem();
+			patternSettings = selectedAnalysis.getPatternSetting();
+			patternWizard.setPatternSettings(patternSettings);
+			analysisName.setText(selectedAnalysis.getName());
+			update();
+		} catch (ClassCastException e) {
+			//nothing to do here...
+		}
+	}
+
 	/**
 	 * open a save dialog and save the analysis
 	 */
-
 	public void save() {
-		String n =AnalysisStorage.store(patternWizard.getPatternSettings(), fileName);
-		if(n != null)
-			setAnalyseName(n);
-		// update the tree
-		SwatTreeView.getInstance().componentsChanged();
-		SwatTreeView.getInstance().expandAll();
-		SwatTreeView.getInstance().updateUI();
+		Object dropDownObject = getDropDownMenu().getSelectedItem();
+		String nameString;
+		if (getDropDownMenu().getSelectedItem() == null || dropDownObject instanceof String) {
+			//currently no item selected in dropdown list or "new analysis" is selected. Ask for name
+			nameString = new FileNameDialog(Workbench.getInstance(), "Please enter name for analysis", "Analysis Name", true)
+					.requestInput();
+		}
+		else {
+			//use currently selected analysis as name
+			nameString = getDropDownMenu().getSelectedItem().toString();
+		}
+		if (nameString == null || nameString.equals(""))
+				return;
+
+		Analysis analysis = new Analysis(nameString, patternWizard.getPatternSettings());
+		try {
+			SwatComponents.getInstance().addAnalysis(analysis, analysisSourceName, true);
+			updateDropDownList(nameString);
+		} catch (SwatComponentException e) {
+			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not store Analysis: " + e.getMessage());
+			e.printStackTrace();
+		}
+		//		String n = AnalysisStorage.store(patternWizard.getPatternSettings(), fileName);
+		//		if(n != null)
+		//			setAnalyseName(n);
+		//		// update the tree
+		//		SwatTreeView.getInstance().componentsChanged();
+		//		SwatTreeView.getInstance().expandAll();
+		//		SwatTreeView.getInstance().updateUI();
+		analysisName.setText(analysis.getName());
+	}
+
+	private void updateDropDownList(String nameToSelect) {
+		getDropDownMenu().removeAllItems();
+		dropDownMenu.addItem(NEW_ANALYSIS); //Standard item
+		int i = 0;
+		int indexOfThisAnalysis = -1;
+		for (Analysis analysis : SwatComponents.getInstance().getAnalyses(analysisSourceName)) {
+			dropDownMenu.addItem(analysis);
+			if (analysis.getName().equalsIgnoreCase(nameToSelect))
+				indexOfThisAnalysis = i;
+			i++;
+		}
+		if (indexOfThisAnalysis != -1) //select this analysis
+			getDropDownMenu().setSelectedIndex(indexOfThisAnalysis);
+		else
+			getDropDownMenu().setSelectedIndex(getDropDownMenu().getItemCount() - 1);
 	}
 	/**
 	 * create a list of JLabels that will later be added to an
@@ -456,14 +572,14 @@ public abstract class AnalyzePanel {
 	 */
 	public List<JLabel> getLabelListForPatternSetting(PatternSetting ps) {
 		ArrayList<JLabel> labels=new ArrayList<JLabel>();
-		for(Parameter para: ps.getParameters()) {
+		for(GuiParameter para: ps.getParameters()) {
 			String paraString=para.getName()+": ";
 			int count=0;
 			boolean labelsLeft=false;
 			// display the values
 
 			for(int i=0; i < para.getValue().size(); i++) {
-				ParamValue val=para.getValue().get(i);
+				GuiParamValue val=para.getValue().get(i);
 				labelsLeft=true;
 				if(count > 0) {
 					labels.add(new JLabel(paraString));
@@ -472,7 +588,7 @@ public abstract class AnalyzePanel {
 					count=0;
 					labelsLeft=false;
 				}
-				if(val.getOperandType()==OperandType.STATEPREDICATE) {
+				if(val.getOperandType()==GuiParamType.STATEPREDICATE) {
 					
 					String conjunctions[]=val.getOperandName().split(" & ");
 					int conjunction_count=0;

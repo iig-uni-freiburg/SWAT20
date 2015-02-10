@@ -8,8 +8,8 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
 /**
  * This class represents a Parameter which can either be an activity or
  * a state predicate. The user can choose the type of the parameter
@@ -85,7 +85,7 @@ public class ActivityOrStatePredicateParameter extends
 	}
 
 	@Override
-	public List<ParamValue> getValue() {
+	public List<GuiParamValue> getValue() {
 		// TODO Auto-generated method stub
 		if(activityActive) {
 			return activityPanel.getValue();
@@ -95,14 +95,14 @@ public class ActivityOrStatePredicateParameter extends
 	}
 
 	@Override
-	public void setValue(List<ParamValue> value) {
+	public void setValue(List<GuiParamValue> value) {
 		// TODO Auto-generated method stub
-		ParamValue val=value.get(0);
-		if(val.getOperandType() == OperandType.TRANSITION) {
+		GuiParamValue val=value.get(0);
+		if(val.getOperandType() == GuiParamType.ACTIVITY) {
 			chooseTypeBox.setSelectedItem("Activity");
 			setTypeActivity();
 			activityPanel.setValue(value);
-		} else if (val.getOperandType() == OperandType.STATEPREDICATE) {
+		} else if (val.getOperandType() == GuiParamType.STATEPREDICATE) {
 			chooseTypeBox.setSelectedItem("State Predicate");
 			setTypeStatePredicate();
 			statePredicatePanel.setValue(value);

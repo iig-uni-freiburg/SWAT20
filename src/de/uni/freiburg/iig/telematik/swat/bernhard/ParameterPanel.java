@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
+
 /**
  * An abstract class representing a Parameter used by the
  * pattern wizard. There are two abstract functions getValue() and
@@ -40,10 +41,10 @@ public abstract class ParameterPanel {
 	 * Return a list of the selected ParamValues
 	 * @return
 	 */
-	public abstract List<ParamValue> getValue();
+	public abstract List<GuiParamValue> getValue();
 	/**
 	 * Load the given values and adjust the graphical components
 	 * @param value the new values to be set
 	 */
-	public abstract void setValue(List<ParamValue> value);
+	public abstract void setValue(List<GuiParamValue> value);
 }

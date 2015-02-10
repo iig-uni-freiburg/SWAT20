@@ -19,8 +19,8 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.InformationFlowPattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
 
 /**
@@ -70,7 +70,7 @@ public class PatternSettingPanel {
 			PatternFactory patternFactory) {
 		// pattern = PatternDatabase.getInstance()
 		// .getPattern(patternName);
-		List<Parameter> parameters = patternFactory
+		List<GuiParameter> parameters = patternFactory
 				.getParametersOfPattern(patternName);
 		this.patternWizard = patternWizard;
 		
@@ -120,7 +120,7 @@ public class PatternSettingPanel {
 		}
 
 		ParameterPanelFactory factory = new ParameterPanelFactory(patternWizard.getNetInformations());
-		for (Parameter pp : parameters) {
+		for (GuiParameter pp : parameters) {
 			ParameterPanel patternPara = factory.createPanel(pp);
 			JPanel paraPanel = new JPanel(new GridLayout(1,2,10,10));
 			paraPanel.add(new JLabel("Choose " + pp.getName()));
@@ -161,7 +161,7 @@ public class PatternSettingPanel {
 		patternSetting = ps;
 		// ps.updateParameterAppliedString();
 		assert (ps.getParameters().size() == parameterPanelList.size());
-		List<Parameter> paraList = ps.getParameters();
+		List<GuiParameter> paraList = ps.getParameters();
 		
 		for (int i = 0; i < paraList.size(); i++) {
 			// set value
@@ -183,11 +183,11 @@ public class PatternSettingPanel {
 		// store the values taken from the jcomponents
 
 		for (ParameterPanel paraPanel : parameterPanelList) {
-			for (Parameter patternPara : patternSetting.getParameters()) {
+			for (GuiParameter patternPara : patternSetting.getParameters()) {
 				if (paraPanel.getName().equals(patternPara.getName())) {
 					// if its an activity, take the name and not the label
 					// System.out.println("PatternSetting: set value "+paraPanel.getValue());
-					patternPara.setValue((ArrayList<ParamValue>) (paraPanel
+					patternPara.setValue((ArrayList<GuiParamValue>) (paraPanel
 							.getValue()));
 				}
 			}

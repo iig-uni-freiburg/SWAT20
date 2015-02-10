@@ -16,6 +16,7 @@ import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 

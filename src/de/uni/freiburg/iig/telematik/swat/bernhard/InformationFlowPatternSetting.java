@@ -3,13 +3,14 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PRISMPatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 
 
 public class InformationFlowPatternSetting extends PatternSetting {
 
-	public InformationFlowPatternSetting(String name, List<Parameter> parameters) {
+	public InformationFlowPatternSetting(String name, List<GuiParameter> parameters) {
 		super(name, parameters);
 		mResults = new ArrayList<PatternResult>();
 	}
@@ -33,14 +34,14 @@ public class InformationFlowPatternSetting extends PatternSetting {
 		} else {
 			mResults.add(nextResult);
 			if (result == null) {
-				result = nextResult.clone();
+				result = ((PRISMPatternResult) nextResult).clone();
 			} else {
-				double prob = result.getProbability();
+				double prob = ((PRISMPatternResult) result).getProbability();
 				boolean satisfied = result.isFulfilled();
-				prob = (prob < nextResult.getProbability())? nextResult.getProbability() : prob;
+				prob = (prob < ((PRISMPatternResult) nextResult).getProbability())? ((PRISMPatternResult) nextResult).getProbability() : prob;
 				satisfied = satisfied || nextResult.isFulfilled();
-				result.setFulfilled(satisfied);
-				result.setProbability(prob);
+				((PRISMPatternResult) result).setFulfilled(satisfied);
+				((PRISMPatternResult) result).setProbability(prob);
 			}
 		}
 	}

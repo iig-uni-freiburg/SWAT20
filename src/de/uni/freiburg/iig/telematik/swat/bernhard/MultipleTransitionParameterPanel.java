@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
 /**
  * This class represents a parameter that accepts several activities as values
  * @author bernhard
@@ -32,7 +32,7 @@ public class MultipleTransitionParameterPanel extends MultipleParameterPanel {
 	@Override
 	protected ParameterPanel getNewPanel() {
 		// TODO Auto-generated method stub
-		return new DropDownParameter(name, OperandType.TRANSITION, informationReader.getActivities());
+		return new DropDownParameter(name, GuiParamType.ACTIVITY, informationReader.getActivities());
 	}
 
 }

@@ -3,8 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.util.List;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 /**
  * This class represents a parameterized pattern with its name,
  * parameters and the result from the analysis.
@@ -30,7 +30,7 @@ public class PatternSetting {
 	 * @param name the name of the pattern
 	 * @param parameters the parameters that will be set later by the user
 	 */
-	public PatternSetting(String name, List<Parameter> parameters) {
+	public PatternSetting(String name, List<GuiParameter> parameters) {
 		super();
 		this.name = name;
 		this.parameters = parameters;
@@ -44,7 +44,7 @@ public class PatternSetting {
 	}
 
 	private String name;
-	private List<Parameter> parameters;
+	private List<GuiParameter> parameters;
 	protected PatternResult result;
 	
 
@@ -56,7 +56,7 @@ public class PatternSetting {
 		this.name = name;
 	}
 
-	public List<Parameter> getParameters() {
+	public List<GuiParameter> getParameters() {
 		return parameters;
 	}
 	/**
@@ -70,7 +70,7 @@ public class PatternSetting {
 		return ps;
 	}
 
-	public void setParameters(List<Parameter> parameters) {
+	public void setParameters(List<GuiParameter> parameters) {
 		this.parameters = parameters;
 	}
 
@@ -87,8 +87,8 @@ public class PatternSetting {
 			return false;
 		}
 		for(int i=0; i < parameters.size(); i++) {
-			List<ParamValue> myValues=parameters.get(i).getValue();
-			List<ParamValue> otherValues=ps.getParameters().get(i).getValue();
+			List<GuiParamValue> myValues=parameters.get(i).getValue();
+			List<GuiParamValue> otherValues=ps.getParameters().get(i).getValue();
 			if(myValues.size() != otherValues.size()) {
 				return false;
 			}
@@ -113,7 +113,7 @@ public class PatternSetting {
 	@Override
 	public String toString() {
 		String s=name+"\n";
-		for(Parameter p:parameters) {
+		for(GuiParameter p:parameters) {
 			s+=p.toString()+", ";
 		}
 		s=s.substring(0, s.length()-3);

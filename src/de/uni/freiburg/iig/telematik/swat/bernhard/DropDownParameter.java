@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 /**
@@ -16,7 +18,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
  *
  */
 public class DropDownParameter extends ParameterPanel {
-	protected OperandType type;
+	protected GuiParamType type;
 	protected JComboBox valueBox;
 	/**
 	 * Create a DropDownParameter for parameter with given name, type
@@ -25,7 +27,7 @@ public class DropDownParameter extends ParameterPanel {
 	 * @param type the type of the parameter. Have a look at the enum OperandType
 	 * @param values the possible values to choose
 	 */
-	public DropDownParameter(String name, OperandType type, String[] values) {
+	public DropDownParameter(String name, GuiParamType type, String[] values) {
 		super(name);
 		this.type=type;
 		valueBox = new JComboBox(values);
@@ -34,15 +36,15 @@ public class DropDownParameter extends ParameterPanel {
 	}
 
 	@Override
-	public List<ParamValue> getValue() {
+	public List<GuiParamValue> getValue() {
 		// TODO Auto-generated method stub
-		ArrayList<ParamValue> list=new ArrayList<ParamValue>();
-		list.add(new ParamValue((String) valueBox.getSelectedItem(), type));
+		ArrayList<GuiParamValue> list=new ArrayList<GuiParamValue>();
+		list.add(new GuiParamValue((String) valueBox.getSelectedItem(), type));
 		return list;
 	}
 
 	@Override
-	public void setValue(List<ParamValue> val) {
+	public void setValue(List<GuiParamValue> val) {
 		// TODO Auto-generated method stub
 		// System.out.println("setze "+val);
 		valueBox.setSelectedItem(val.get(0).getOperandName());

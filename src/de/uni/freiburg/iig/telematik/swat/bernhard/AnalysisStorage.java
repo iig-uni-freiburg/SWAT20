@@ -29,7 +29,8 @@ public class AnalysisStorage {
 	 * @param objectName The Filename of the analyzed Object
 	 * @return the name entered by the user, null if the user aborted the dialog
 	 */
-	public static String store(List<PatternSetting> patternSettings, String objectName) {
+	private static String store(List<PatternSetting> patternSettings, String objectName) {
+		//now private as this is done by swatWorkbench
 		XStream xstream=new XStream();
 		String xml=xstream.toXML(patternSettings);
 		String path=null;

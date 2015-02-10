@@ -1,6 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
+
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
+
 
 /**
  * This Class represents a parameter panel where a Transition of an
@@ -17,7 +19,7 @@ public abstract class TransitionParameter extends DropDownParameter {
 	 * used to retrieve the list of transitions
 	 */
 	public TransitionParameter(String name, String[] activities) {
-		super(name, OperandType.TRANSITION, activities);
+		super(name, GuiParamType.ACTIVITY, activities);
 	}
 	
 }

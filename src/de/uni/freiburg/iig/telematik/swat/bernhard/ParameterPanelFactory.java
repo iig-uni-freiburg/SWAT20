@@ -1,9 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
+import java.util.Arrays;
 import java.util.Set;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 /**
  * This class is used to create the parameterpanel for a given
  * Parameter.
@@ -20,17 +21,17 @@ public class ParameterPanelFactory {
 	 * @return a ParameterPanel which allows the user to select a value
 	 * for the given Parameter
 	 */
-	public ParameterPanel createPanel(Parameter p) {
+	public ParameterPanel createPanel(GuiParameter p) {
 		ParameterPanel patternPara = null;
 		String name = p.getName();
-		Set<OperandType> operandSet = p.getTypes();
+		Set<GuiParamType> operandSet = p.getTypes();
 		
-		if (operandSet.contains(OperandType.TOKEN)) {
+		if (operandSet.contains(GuiParamType.TOKEN)) {
 			patternPara = new DropDownParameter(name,
-					OperandType.TOKEN, ((PetriNetInformation) componentInfo)
+					GuiParamType.TOKEN, ((PetriNetInformation) componentInfo)
 					.getDataTypesArray());
-		} else if (operandSet.contains(OperandType.TRANSITION)
-				&& operandSet.contains(OperandType.STATEPREDICATE)) {
+		} else if (operandSet.contains(GuiParamType.ACTIVITY)
+				&& operandSet.contains(GuiParamType.STATEPREDICATE)) {
 			if (p.getMultiplicity() == -1) {
 				patternPara = new MultipleTransitionOrStatePredicateParameterPanel(
 						name, "Transition or State Predicate",
@@ -39,12 +40,12 @@ public class ParameterPanelFactory {
 				patternPara = new ActivityOrStatePredicateParameter(
 						name, (PetriNetInformation) componentInfo);
 			}
-		} else if (operandSet.contains(OperandType.TRANSITION)) {
+		} else if (operandSet.contains(GuiParamType.ACTIVITY)) {
 			if (p.getMultiplicity() == 1) {
 				
 				if (componentInfo instanceof PetriNetInformation) {
 					patternPara = new TransitionParaPNet(name, (PetriNetInformation) componentInfo);
-				} else {
+				} else { //LogModelInformation
 					patternPara = new TransitionParaLogFile(name, (LogFileInformation) componentInfo);
 				}
 		
@@ -56,12 +57,12 @@ public class ParameterPanelFactory {
 				patternPara = new MultipleTransitionParameterPanel(name,
 						"Transition", componentInfo, p.getMultiplicity());
 			}
-		} else if (operandSet.contains(OperandType.STATEPREDICATE)) {
+		} else if (operandSet.contains(GuiParamType.STATEPREDICATE)) {
 			patternPara = new StatePredicateParameter(name,
 					((PetriNetInformation) componentInfo));
-		} else if (operandSet.contains(OperandType.ROLE)) {
-			patternPara = new DropDownParameter(name,
-					OperandType.ROLE, componentInfo.getRoles());
+		} else if (operandSet.contains(GuiParamType.ROLE)) {
+			//Get Roles AND Subjects
+			patternPara = new DropDownParameter(name,GuiParamType.ROLE, getRolesAndSubject(componentInfo));
 		}
 		return patternPara;
 	}
@@ -72,5 +73,11 @@ public class ParameterPanelFactory {
 	 */
 	public ParameterPanelFactory(AnalysisComponentInfoProvider logInformation) {
 		this.componentInfo = logInformation;
+	}
+
+	private String[] getRolesAndSubject(AnalysisComponentInfoProvider componentInfo) {
+		String[] result = Arrays.copyOf(componentInfo.getRoles(), componentInfo.getRoles().length + componentInfo.getSubjects().length);
+		System.arraycopy(componentInfo.getSubjects(), 0, result, componentInfo.getRoles().length, componentInfo.getSubjects().length);
+		return result;
 	}
 }

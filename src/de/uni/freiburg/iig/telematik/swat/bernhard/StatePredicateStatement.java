@@ -10,8 +10,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
 /**
  * This Class represents a single statement of an state predicate.
  * A state predicate consinsts of at least one StatePredicateStatement
@@ -54,20 +54,20 @@ public class StatePredicateStatement extends ParameterPanel {
 	}
 
 	@Override
-	public List<ParamValue> getValue() {
+	public List<GuiParamValue> getValue() {
 		// TODO Auto-generated method stub
-		ArrayList<ParamValue> list=new ArrayList<ParamValue>();
+		ArrayList<GuiParamValue> list=new ArrayList<GuiParamValue>();
 		String placeName=pnReader.getLabelToPlaceDictionary().get((String) placesBox.getSelectedItem());
 		String result=placeName;
 		result+="_"+colorsBox.getSelectedItem();
 		result+=" "+(String) ((JComboBox)relationsBox).getSelectedItem();
 		result+=" "+(Integer) numberSpinner.getValue();
-		list.add(new ParamValue(result, OperandType.STATEPREDICATE));
+		list.add(new GuiParamValue(result, GuiParamType.STATEPREDICATE));
 		return list;
 	}
 
 	@Override
-	public void setValue(List<ParamValue> val) {
+	public void setValue(List<GuiParamValue> val) {
 		String arr[]=val.get(0).getOperandName().split(" ");
 		String place=arr[0].split("_")[0];
 		place=pnReader.getPlacesToLabelDictionary().get(place);

@@ -3,8 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
 /**
  * This Class represents the Parameter for a state predicate which consists
  * of several StatePredicateStatements
@@ -35,9 +35,9 @@ public class StatePredicateParameter extends MultipleParameterPanel {
 	 * return a StatePredicate as p1 >= 0 & p3 < 3
 	 */
 	@Override
- 	public List<ParamValue> getValue() {
+ 	public List<GuiParamValue> getValue() {
 		// TODO Auto-generated method stub
-		ArrayList<ParamValue> value=new ArrayList<ParamValue>();
+		ArrayList<GuiParamValue> value=new ArrayList<GuiParamValue>();
 		String val="";
 		for(int i=0; i < panelList.size(); i++) {
 			val+=panelList.get(i).getValue().get(0).getOperandName();
@@ -45,19 +45,19 @@ public class StatePredicateParameter extends MultipleParameterPanel {
 				val+=" & ";
 			}
 		}
-		value.add(new ParamValue(val,OperandType.STATEPREDICATE));
+		value.add(new GuiParamValue(val,GuiParamType.STATEPREDICATE));
 		return value;
 	}
 	@Override
-	public void setValue(List<ParamValue> value) {
+	public void setValue(List<GuiParamValue> value) {
 		// TODO Auto-generated method stub
 		panelList.clear();
 		content.removeAll();
 		String conjunctions[]=value.get(0).getOperandName().split(" & ");
 		for(String conjunction: conjunctions) {
 			ParameterPanel p=addParameter();
-			ParamValue newValue=new ParamValue(conjunction,OperandType.STATEPREDICATE);
-			ArrayList<ParamValue> list=new ArrayList<ParamValue>();
+			GuiParamValue newValue=new GuiParamValue(conjunction,GuiParamType.STATEPREDICATE);
+			ArrayList<GuiParamValue> list=new ArrayList<GuiParamValue>();
 			list.add(newValue);
 			p.setValue(list);
 		}

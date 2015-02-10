@@ -10,8 +10,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 
 /**
  * a class containing some help functions
@@ -93,20 +93,20 @@ public class Helpers {
 	 * @return
 	 */
 	
-	public static List<Parameter> cloneParameterList(List<Parameter> parameters) {
-		ArrayList<Parameter> newList=new ArrayList<Parameter>();
-		for(Parameter p:parameters) {
-			Parameter newP=new Parameter(p.getTypes(),p.getMultiplicity(),p.getName());
-			newP.setValue((ArrayList<ParamValue>) copyParamValueList(p.getValue()));
+	public static List<GuiParameter> cloneParameterList(List<GuiParameter> parameters) {
+		ArrayList<GuiParameter> newList=new ArrayList<GuiParameter>();
+		for(GuiParameter p:parameters) {
+			GuiParameter newP=new GuiParameter(p.getTypes(),p.getMultiplicity(),p.getName());
+			newP.setValue((ArrayList<GuiParamValue>) copyParamValueList(p.getValue()));
 			newList.add(newP);
 		}
 		return newList;
 	}
 
-	public static List<ParamValue> copyParamValueList(List<ParamValue> values) {
-		ArrayList<ParamValue> newList=new ArrayList<ParamValue>();
-		for(ParamValue pv:values) {
-			newList.add(new ParamValue(pv.getOperandName(),pv.getOperandType()));
+	public static List<GuiParamValue> copyParamValueList(List<GuiParamValue> values) {
+		ArrayList<GuiParamValue> newList=new ArrayList<GuiParamValue>();
+		for(GuiParamValue pv:values) {
+			newList.add(new GuiParamValue(pv.getOperandName(),pv.getOperandType()));
 		}
 		return newList;
 	}
