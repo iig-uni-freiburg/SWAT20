@@ -9,6 +9,7 @@ import java.util.Calendar;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -19,6 +20,8 @@ import javax.swing.WindowConstants;
 
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelPN;
+import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
+import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
@@ -220,6 +223,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			messagePanel.setSelectedIndex(1);
 		} catch (ArrayIndexOutOfBoundsException e) {
 		}
+	}
+
+	public static void errorMessageWithNotification(String message) {
+		JOptionPane.showMessageDialog(getInstance(), message);
+		errorMessage(message);
 	}
 
 	public static void errorMessage(String message) {
