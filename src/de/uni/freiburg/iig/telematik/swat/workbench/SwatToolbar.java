@@ -39,6 +39,7 @@ import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AFSqlLogImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.EditPropertiesAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LolaAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
@@ -147,6 +148,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		//		standardItems.add(new JButton(new LogImportAction()));
 		standardItems.add(new JButton(new ImportAction()));
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.RENAME));
+		standardItems.add(new SwatToolbarButton(ToolbarButtonType.EDIT_PROPERTY));
 		//standardItems.add(getLolaButton());
 		//standardItems.add(getAristaFlowButton());
 		standardItems.add(new JButton(new SimulateTimeAction()));
@@ -317,6 +319,10 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				setToolTipText("Rename current net");
 				addActionListener(new RenameAction());
 				break;
+			case EDIT_PROPERTY:
+				setToolTipText("Edit SWAT Properties");
+				addActionListener(new EditPropertiesAction());
+				break;
 			case DETECTIVE:
 				setToolTipText("Convert to Lola");
 				setHorizontalTextPosition(SwingConstants.CENTER);
@@ -350,7 +356,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private enum ToolbarButtonType {
-		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE, TIME;
+		NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE, TIME, EDIT_PROPERTY;
 	}
 	
 

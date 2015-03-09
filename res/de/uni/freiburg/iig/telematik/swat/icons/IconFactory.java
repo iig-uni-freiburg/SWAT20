@@ -24,7 +24,7 @@ public class IconFactory {
 		return getIcon(name, SwatProperties.getInstance().getIconSize(), true);
 	}
 
-	private static ImageIcon getIcon(String name, IconSize size, boolean pressed) throws ParameterException {
+	private static ImageIcon getIcon(String name, de.uni.freiburg.iig.telematik.wolfgang.icons.IconFactory.IconSize size, boolean pressed) throws ParameterException {
 		Validate.notNull(name);
 		Validate.notEmpty(name);
 		Validate.notNull(size);

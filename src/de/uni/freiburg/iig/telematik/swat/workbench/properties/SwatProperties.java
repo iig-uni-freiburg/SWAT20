@@ -18,9 +18,10 @@ import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcher;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatPropertyChangeListener;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.WolfgangProperties;
 
 
-public class SwatProperties extends AbstractProperties{
+public class SwatProperties extends WolfgangProperties{
 	
 	protected static final String defaultWorkingDirectory = ".";
 	public static final String defaultWorkingDirectoryName = "SwatWorkingDirectory";
@@ -174,7 +175,7 @@ public class SwatProperties extends AbstractProperties{
 		setProperty(SwatProperty.REQUIRE_NET_TYPE, requestNetType);
 	}
 	
-	public boolean getRequestNetType() throws PropertyException, ParameterException{
+	public boolean getRequestNetType() throws PropertyException{
 		String propertyValueRequestNetType = getProperty(SwatProperty.REQUIRE_NET_TYPE);
 		
 		Boolean requestNetType = null;
@@ -191,7 +192,7 @@ public class SwatProperties extends AbstractProperties{
 		setProperty(SwatProperty.VERIFY_PNML_SCHEMA, pnValidation);
 	}
 	
-	public boolean getPNValidation() throws PropertyException, ParameterException{
+	public boolean getPNValidation() throws PropertyException{
 		String propertyValueValidation = getProperty(SwatProperty.VERIFY_PNML_SCHEMA);
 		
 		Boolean validation = null;
@@ -269,26 +270,26 @@ public class SwatProperties extends AbstractProperties{
 	}
 	
 	// ------- Icon Size--------------------------------------------------------------------
-
-	public IconSize getIconSize() throws PropertyException {
-		String propertyValue = getProperty(SwatProperty.ICON_SIZE);
-		if (propertyValue == null || propertyValue.equals("")) {
-			IconSize result = IconSize.valueOf("MEDIUM");
-			return result;
-			//throw new PropertyException(SwatProperty.ICON_SIZE, propertyValue);
-		}
-		try {
-			IconSize result = IconSize.valueOf(propertyValue);
-			return result;
-		} catch (Exception e) {
-			throw new PropertyException(SwatProperty.ICON_SIZE, propertyValue);
-		}
-	}
-	
-	public void setIconSize(IconSize size) throws PropertyException, ParameterException {
-		Validate.notNull(size);
-		setProperty(SwatProperty.ICON_SIZE, size.toString());
-	}
+//	@Override
+//	public IconSize getIconSize() throws PropertyException {
+//		String propertyValue = getProperty(SwatProperty.ICON_SIZE);
+//		if (propertyValue == null || propertyValue.equals("")) {
+//			IconSize result = IconSize.valueOf("MEDIUM");
+//			return result;
+//			//throw new PropertyException(SwatProperty.ICON_SIZE, propertyValue);
+//		}
+//		try {
+//			IconSize result = IconSize.valueOf(propertyValue);
+//			return result;
+//		} catch (Exception e) {
+//			throw new PropertyException(SwatProperty.ICON_SIZE, propertyValue);
+//		}
+//	}
+//	
+//	public void setIconSize(IconSize size) throws PropertyException, ParameterException {
+//		Validate.notNull(size);
+//		setProperty(SwatProperty.ICON_SIZE, size.toString());
+//	}
 	
 	//-------  SQL Properties --------------------------------------------------------------
 	
