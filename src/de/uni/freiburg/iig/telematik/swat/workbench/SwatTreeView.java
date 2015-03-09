@@ -15,7 +15,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
@@ -23,6 +23,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenu;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 @SuppressWarnings("serial")
 public class SwatTreeView extends JTree implements SwatStateListener, SwatComponentsListener {
@@ -153,7 +154,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	}
 	
 	@SuppressWarnings("unchecked")
-	public SwatTreeNode getComponent(WorkbenchComponent component) {
+	public SwatTreeNode getComponent(ViewComponent component) {
 		Enumeration<SwatTreeNode> children = root.children();
 		while (children.hasMoreElements()) {
 			SwatTreeNode node = children.nextElement();
@@ -243,10 +244,10 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	public void petriNetRenamed(AbstractGraphicalPN net) {}
 
 	@Override
-	public void acModelAdded(ACModel acModel) {}
+	public void acModelAdded(AbstractACModel acModel) {}
 
 	@Override
-	public void acModelRemoved(ACModel acModel) {}
+	public void acModelRemoved(AbstractACModel acModel) {}
 
 	@Override
 	public void analysisContextAdded(String netID, AnalysisContext context) {}

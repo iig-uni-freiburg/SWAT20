@@ -61,7 +61,8 @@ import de.uni.freiburg.iig.telematik.swat.lukas.patterns.WeaklyLostData;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.WeaklyRedData;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.WriteDown;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.XLeadsTo;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 public class PatternFactory {
 	
@@ -70,12 +71,12 @@ public class PatternFactory {
 	
 	private HashMap<String, String> mSupportedPatterns;
 
-	public PatternFactory(WorkbenchComponent component) {
+	public PatternFactory(ViewComponent component) {
 		
 		mSupportedPatterns = new HashMap<String, String>();
 		
-		if (component instanceof PNEditor) {
-			mNet = ((PNEditor) component).netContainer.getPetriNet();
+		if (component instanceof PNEditorComponent) {
+			mNet = ((PNEditorComponent) component).netContainer.getPetriNet();
 			mOutputPlace = mNet.getDrainPlaces().iterator().next();
 			
 			if (mNet instanceof PTNet || mNet instanceof CPN) {

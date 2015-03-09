@@ -33,9 +33,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
-import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
@@ -43,6 +42,11 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.CPNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.event.PNEditorListener;
 
 @SuppressWarnings("serial")
@@ -121,21 +125,21 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	@SuppressWarnings("rawtypes")
 	private void addPNEditor(AbstractGraphicalPN petriNet, String tabName) throws SwatComponentException {
 		if(petriNet instanceof GraphicalPTNet){
-			PTNetEditor ptEditor = new PTNetEditor((GraphicalPTNet) petriNet, SwatComponents.getInstance().getPetriNetFile(
-					petriNet.getPetriNet().getName()));
+			PTNetEditorComponent ptEditor = new PTNetEditorComponent((GraphicalPTNet) petriNet);
 			ptEditor.addEditorListener(this);
 			addTab(tabName, ptEditor);
 		} else if(petriNet instanceof GraphicalCPN){
-			CPNEditor cpnEditor = new CPNEditor((GraphicalCPN) petriNet, SwatComponents.getInstance().getPetriNetFile(
-					petriNet.getPetriNet().getName()));
+			CPNEditorComponent cpnEditor = new CPNEditorComponent((GraphicalCPN) petriNet);
 			cpnEditor.addEditorListener(this);
 			addTab(tabName, cpnEditor);
 		} else if(petriNet instanceof GraphicalIFNet){
-			IFNetEditor ifEditor = new IFNetEditor((GraphicalIFNet) petriNet, SwatComponents.getInstance().getPetriNetFile(
-					petriNet.getPetriNet().getName()));
+			IFNetEditorComponent ifEditor = new IFNetEditorComponent((GraphicalIFNet) petriNet);
 			ifEditor.addEditorListener(this);
 			addTab(tabName, ifEditor);
 		}
+		
+//		Misses: , SwatComponents.getInstance().getPetriNetFile(
+//				petriNet.getPetriNet().getName())?
 		//openedSwatComponents.put(petriNet, getComponentAt(getComponentCount()-1));
 		//openedSwatComponents.put(petriNet, getComponentAt(getTabCount() - 1));
 		setSelectedIndex(getTabCount()-1);
@@ -157,7 +161,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	 *         out of the node
 	 */
 	@SuppressWarnings("rawtypes")
-	public WorkbenchComponent addNewTab(SwatTreeNode node) {
+	public ViewComponent addNewTab(SwatTreeNode node) {
 		System.out.println("Adding " + node.getDisplayName());
 		if (alreadyOpen(node.getDisplayName()))
 			return null;
@@ -195,7 +199,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 				addLogFile(node);
 				break;
 			}
-			return (WorkbenchComponent) getComponentAt(getTabCount() - 1);
+			return (ViewComponent) getComponentAt(getTabCount() - 1);
 		} catch (ParameterException e) {
 			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
 			return null;
@@ -279,7 +283,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 				return false; //User wants to abort
 			case JOptionPane.YES_OPTION:
 				try {
-					SwatComponents.getInstance().storePetriNet(((PNEditor) getComponent(index)).getNetContainer().getPetriNet().getName());
+					SwatComponents.getInstance().storePetriNet(((PNEditorComponent) getComponent(index)).getNetContainer().getPetriNet().getName());
 				} catch (SwatComponentException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -288,7 +292,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 			case JOptionPane.NO_OPTION:
 				System.out.println(this.getClass().getSimpleName() + ": Trying to cast tab at index " + index + "(" + getComponent(index)
 						+ ") to PNEditor");
-				PNEditor editor = (PNEditor) getComponent(index);
+				PNEditorComponent editor = (PNEditorComponent) getComponent(index);
 				while (editor.getUndoManager().canUndo())
 					editor.getUndoManager().undo();
 			}
@@ -370,9 +374,11 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 		@Override
 		public void stateChanged(ChangeEvent arg0) {
+			if(((SwatTabView) arg0.getSource()).getSelectedComponent() instanceof ViewComponent){
 			for (SwatTabViewListener listener : listeners) {
 				listener.activeTabChanged(((SwatTabView) arg0.getSource()).getSelectedIndex(),
-						(WorkbenchComponent) ((SwatTabView) arg0.getSource()).getSelectedComponent());
+						(ViewComponent) ((SwatTabView) arg0.getSource()).getSelectedComponent());
+			}
 			}
 
 		}
@@ -501,21 +507,21 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 				int userChoice = JOptionPane.CANCEL_OPTION;
 				if (unsaved) { //test if this tab has unsaved changes
 					userChoice = JOptionPane.showConfirmDialog(SwatTabView.getInstance(), "Save unsaved changes for "
-							+ ((PNEditor) component).getNetContainer().getPetriNet().getName() + "?");
+							+ ((PNEditorComponent) component).getNetContainer().getPetriNet().getName() + "?");
 					switch (userChoice) {
 					case JOptionPane.CANCEL_OPTION:
 						System.out.println("Aborting");
 						return false; //User wants to abort
 					case JOptionPane.YES_OPTION:
 						try {
-							SwatComponents.getInstance().storePetriNet(((PNEditor) component).getNetContainer().getPetriNet().getName());
+							SwatComponents.getInstance().storePetriNet(((PNEditorComponent) component).getNetContainer().getPetriNet().getName());
 						} catch (SwatComponentException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 						break;
 					case JOptionPane.NO_OPTION:
-						PNEditor editor = (PNEditor) component;
+						PNEditorComponent editor = (PNEditorComponent) component;
 						while (editor.getUndoManager().canUndo())
 							editor.getUndoManager().undo();
 					}
@@ -598,13 +604,13 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	}
 
 	@Override
-	public void acModelAdded(ACModel acModel) {
+	public void acModelAdded(AbstractACModel acModel) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void acModelRemoved(ACModel acModel) {
+	public void acModelRemoved(AbstractACModel acModel) {
 		// TODO Auto-generated method stub
 
 	}

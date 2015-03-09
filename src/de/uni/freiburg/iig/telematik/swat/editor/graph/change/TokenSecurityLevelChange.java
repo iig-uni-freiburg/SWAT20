@@ -3,9 +3,10 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
-import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 
 public class TokenSecurityLevelChange extends mxAtomicGraphModelChange {
 
@@ -13,14 +14,14 @@ public class TokenSecurityLevelChange extends mxAtomicGraphModelChange {
 	SecurityLevel value;
 	protected SecurityLevel previous;
 	private IFNetGraph graph;
-	private IFNetEditor editor;
+	private IFNetEditorComponent editor;
 
 	public TokenSecurityLevelChange() {
 		this(null, null, null);
 	}
 
-	public TokenSecurityLevelChange(PNEditor editor2, String name, SecurityLevel sl) {
-		this.editor = (IFNetEditor) editor2;
+	public TokenSecurityLevelChange(PNEditorComponent editor2, String name, SecurityLevel sl) {
+		this.editor = (IFNetEditorComponent) editor2;
 		this.graph = (IFNetGraph) editor2.getGraphComponent().getGraph();
 		this.name = name;
 		this.value = sl;
@@ -59,10 +60,12 @@ public class TokenSecurityLevelChange extends mxAtomicGraphModelChange {
 	}
 
 	protected SecurityLevel valueForCellChanged(String label, SecurityLevel value) {
-		SecurityLevel oldValue = graph.getSecurityLabelForTokenlabel(label);
-		graph.updateSecurityLabelForTokenlabel(label, value);
-
-		return oldValue;
+		//TODO: Adapt to new ACStructure 
+//		SecurityLevel oldValue = graph.getSecurityLabelForTokenlabel(label);
+//		graph.updateSecurityLabelForTokenlabel(label, value);
+//
+//		return oldValue;
+		return null;
 	}
 
 }

@@ -7,11 +7,12 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.AbstractPNEditorAction;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
 
 public class ClearTimeAction extends AbstractPNEditorAction {
 
-	public ClearTimeAction(PNEditor editor) throws ParameterException {
+	public ClearTimeAction(PNEditorComponent editor) throws ParameterException {
 		super(editor);
 		this.putValue(NAME, "clear timing");
 	}

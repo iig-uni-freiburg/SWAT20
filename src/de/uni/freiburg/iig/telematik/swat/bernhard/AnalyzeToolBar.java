@@ -25,9 +25,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
 
 /**
  * This class represents a Toolbar used to play a counterexample (CE) it consists of
@@ -48,7 +48,7 @@ public class AnalyzeToolBar extends JToolBar {
 	 * 
 	 */
 	private Map<String, mxCellMarker> markerReference = new HashMap<String, mxCellMarker>();
-	private PNEditor pnEditor;
+	private PNEditorComponent pnEditor;
 	private CounterExampleVisualization counterExample;
 	private JButton resetButton, stepButton, backButton, highlightButton,
 			playPauseButton;
@@ -61,7 +61,7 @@ public class AnalyzeToolBar extends JToolBar {
 	 * @param pnEditor the PNEditor containing the PTNET
 	 * @throws ParameterException
 	 */
-	public AnalyzeToolBar(final PNEditor pnEditor) throws ParameterException {
+	public AnalyzeToolBar(final PNEditorComponent pnEditor) throws ParameterException {
 		super(JToolBar.HORIZONTAL);
 		Validate.notNull(pnEditor);
 		// setLayout(new WrapLayout(FlowLayout.LEFT));

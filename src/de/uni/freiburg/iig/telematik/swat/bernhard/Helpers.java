@@ -10,9 +10,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
-
 /**
  * a class containing some help functions
  * @author bernhard

@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 
 public class SubjectDescriptorChange extends mxAtomicGraphModelChange {
 
@@ -52,10 +52,13 @@ public class SubjectDescriptorChange extends mxAtomicGraphModelChange {
 	}
 
 	protected String valueForCellChanged(String activity, String subject) {
-		String oldValue = graph.getCurrentSubjectDescriptorForTransition(activity);
-		graph.updateSubjectDescriptorForTransition(activity, subject);
+		//TODO: Adapt to new ACStructure 
 
-		return oldValue;
+//		String oldValue = graph.getCurrentSubjectDescriptorForTransition(activity);
+//		graph.updateSubjectDescriptorForTransition(activity, subject);
+//
+//		return oldValue;
+		return null;
 	}
 
 }

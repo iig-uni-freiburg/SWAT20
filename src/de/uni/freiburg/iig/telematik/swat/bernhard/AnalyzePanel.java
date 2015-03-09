@@ -36,23 +36,18 @@ import javax.swing.UIManager;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
-import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PRISMPatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.PatternParameter;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 /**
  * This class represents the Pattern-Overview. It its an
  * abstract class. The functionality between the analysis of Petri nets
@@ -73,7 +68,7 @@ public abstract class AnalyzePanel implements SwatComponentsListener {
 	protected AnalysisComponentInfoProvider objectInformationReader;
 	protected PatternFactory patternFactory;
 	protected List<PatternSetting> patternSettings;
-	protected PNEditor mPNEditor;
+	protected PNEditorComponent mPNEditor;
 	protected JComboBox dropDownMenu;
 	/** Name of net/log this analysis belongs to **/
 	protected String analysisSourceName;
@@ -129,16 +124,16 @@ public abstract class AnalyzePanel implements SwatComponentsListener {
 	 * @param component the SwatComponent to which this AnalyzePanel should belong to
 	 * @param file the filename of the file being analyzed
 	 */
-	public AnalyzePanel(WorkbenchComponent component, String file) {
+	public AnalyzePanel(ViewComponent component, String file) {
 		System.out.println("Creating Analyze Panel...");
 		SwatComponents.getInstance().addSwatComponentListener(this);
 		fileName = file.split("[.]")[0];
 		//fileName = ((LogModel) component).getFileReference().getAbsolutePath();
 		patternFactory = new PatternFactory(component);
 		patternSettings = new ArrayList<PatternSetting>(); //TODO: with SwatComponent
-		if (component instanceof PNEditor) {
-			mPNEditor = (PNEditor) component;
-			analysisSourceName = ((PNEditor) component).getNetContainer().getPetriNet().getName();
+		if (component instanceof PNEditorComponent) {
+			mPNEditor = (PNEditorComponent) component;
+			analysisSourceName = ((PNEditorComponent) component).getNetContainer().getPetriNet().getName();
 		}
  else if (component instanceof LogFileViewer) {
 			analysisSourceName = ((LogFileViewer) component).getName();

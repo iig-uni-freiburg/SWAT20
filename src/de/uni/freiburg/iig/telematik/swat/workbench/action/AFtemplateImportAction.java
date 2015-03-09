@@ -44,8 +44,7 @@ public class AFtemplateImportAction extends AbstractWorkbenchAction {
 	private static final long serialVersionUID = -33523248788649572L;
 
 	private String requestNetName(String message, String title) {
-		String name = new FileNameDialog(SwingUtilities.getWindowAncestor(SwatTreeView.getInstance().getParent()), message, title, false)
-				.requestInput();
+		String name = FileNameDialog.showDialog(SwingUtilities.getWindowAncestor(SwatTreeView.getInstance().getParent()), message, title, false);
 		return name;
 		//			if (name.endsWith(".pnml"))
 		//				return name;

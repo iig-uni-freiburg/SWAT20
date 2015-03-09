@@ -19,8 +19,6 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.InformationFlowPattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory;
 
 /**

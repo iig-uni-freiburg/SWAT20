@@ -3,8 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.util.List;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 /**
  * This class represents a parameterized pattern with its name,
  * parameters and the result from the analysis.

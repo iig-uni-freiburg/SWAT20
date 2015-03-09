@@ -17,23 +17,19 @@ import de.uni.freiburg.iig.telematik.jawl.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.jawl.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PRISMPatternResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.sciff.SCIFFAdapter;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.sciff.SCIFFResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 /**
  * this is the specific subclass of AnalyzePanel which implements
  * the functionality used to analyze logfiles
@@ -49,7 +45,7 @@ public class AnalyzePanelLogfile extends AnalyzePanel {
 	 * @param component the LogFileViewer
 	 * @param log the filename of the logfile
 	 */
-	public AnalyzePanelLogfile(WorkbenchComponent component, String log) {
+	public AnalyzePanelLogfile(ViewComponent component, String log) {
 		super(component, log);
 		objectInformationReader=new LogFileInformation( (LogFileViewer) component);
 		objectChanged();
@@ -149,8 +145,7 @@ public class AnalyzePanelLogfile extends AnalyzePanel {
 		String nameString;
 		if (getDropDownMenu().getSelectedItem() == null || dropDownObject instanceof String) {
 			//currently no item selected in dropdown list or "new analysis" is selected. Ask for name
-			nameString = new FileNameDialog(Workbench.getInstance(), "Please enter name for analysis", "Analysis Name", true)
-					.requestInput();
+			nameString = FileNameDialog.showDialog(Workbench.getInstance(), "Please enter name for analysis", "Analysis Name", true);
 		} else {
 			//use currently selected analysis as name
 			nameString = getDropDownMenu().getSelectedItem().toString();
@@ -221,13 +216,13 @@ public class AnalyzePanelLogfile extends AnalyzePanel {
 	}
 
 	@Override
-	public void acModelAdded(ACModel acModel) {
+	public void acModelAdded(AbstractACModel acModel) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void acModelRemoved(ACModel acModel) {
+	public void acModelRemoved(AbstractACModel acModel) {
 		// TODO Auto-generated method stub
 
 	}

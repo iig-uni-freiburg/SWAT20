@@ -9,37 +9,30 @@ import com.mxgraph.swing.handler.mxCellMarker;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.PatternParameter;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.StatePredicate;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
 
 
 public class GraphHighlighter {
 	
-	private PNEditor mPNEditor;
+	private PNEditorComponent mPNEditor;
 	private AbstractPetriNet<?,?,?,?,?,?,?> mNet;
 	private Map<String, mxCellMarker> markerReference;
 	private ArrayList<String> mPlaceNames;
 	private ArrayList<String> mTransitionNames;
-	private Map<String, PNGraphCell> mNodemap;
-	private Map<String, PNGraphCell> mArcmap; 
 	
 	// arcList.add("arcTP_" + transitions.get(i) + place);
 	// arcList.add("arcPT_" + place + transitions.get(j));
 	
-	private GraphHighlighter(PNEditor pnEditor) {
+	private GraphHighlighter(PNEditorComponent pnEditor) {
 		mPNEditor = pnEditor;
 		mNet = pnEditor.netContainer.getPetriNet();
 		markerReference = new HashMap<String, mxCellMarker>();
 		mPlaceNames = new ArrayList<String>();
 		mTransitionNames = new ArrayList<String>();
-		mNodemap = pnEditor.getGraphComponent().getGraph().nodeReferences;
-		mArcmap = pnEditor.getGraphComponent().getGraph().arcReferences;
 	}
 	
-	public GraphHighlighter(PNEditor pnEditor, ArrayList<PatternParameter> operands) {
+	public GraphHighlighter(PNEditorComponent pnEditor, ArrayList<PatternParameter> operands) {
 		this(pnEditor);
 		mPNEditor = pnEditor;
 		initPlacesAndTransitions(operands);
@@ -70,7 +63,7 @@ public class GraphHighlighter {
 				String flowRelName = "arcTP_" + transitionName + placeName;
 				flowRel = mNet.getFlowRelation(flowRelName);
 				if (flowRel != null) {
-					PNGraphCell cell = mArcmap.get(flowRelName);
+					PNGraphCell cell = mPNEditor.getGraphComponent().getGraph().getNodeCell(flowRelName);
 					final mxCellMarker marker = getCellMarker(cell);
 					marker.highlight(mPNEditor.getGraphComponent().getGraph().getView()
 							.getState(cell), Color.RED);
@@ -78,7 +71,7 @@ public class GraphHighlighter {
 					flowRelName = "arcPT_" + placeName + transitionName;
 					flowRel = mNet.getFlowRelation(flowRelName);
 					if (flowRel != null) {
-						PNGraphCell cell = mArcmap.get(flowRelName);
+						PNGraphCell cell = mPNEditor.getGraphComponent().getGraph().getNodeCell(flowRelName);
 						final mxCellMarker marker = getCellMarker(cell);
 						marker.highlight(mPNEditor.getGraphComponent().getGraph().getView()
 								.getState(cell), Color.RED);
@@ -93,7 +86,7 @@ public class GraphHighlighter {
 		nodeNames.addAll(mPlaceNames);
 		nodeNames.addAll(mTransitionNames);
 		for (String node : nodeNames) {
-			PNGraphCell cell = mNodemap.get(node);
+			PNGraphCell cell = mPNEditor.getGraphComponent().getGraph().getNodeCell(node);
 			final mxCellMarker marker = getCellMarker(cell);
 			marker.highlight(mPNEditor.getGraphComponent().getGraph().getView()
 					.getState(cell), Color.RED);

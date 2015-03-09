@@ -9,9 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
 /**
  * This Class represents a single statement of an state predicate.
  * A state predicate consinsts of at least one StatePredicateStatement

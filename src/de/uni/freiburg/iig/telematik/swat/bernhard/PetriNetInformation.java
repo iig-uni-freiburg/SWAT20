@@ -3,22 +3,16 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPN;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
-import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 /**
  * this class reads all necessary information from a petri net given
@@ -29,7 +23,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
  */
 public class PetriNetInformation implements AnalysisComponentInfoProvider {
 
-	private PNEditor pneditor;
+	private PNEditorComponent pneditor;
 	// dictionary that maps the labels of the transitions
 	// to the real name in the net
 	
@@ -49,7 +43,7 @@ public class PetriNetInformation implements AnalysisComponentInfoProvider {
 	 * Create an PetriNetInformation object for a given PNEditor
 	 * @param pneditor
 	 */
-	public PetriNetInformation(PNEditor pneditor) {
+	public PetriNetInformation(PNEditorComponent pneditor) {
 		super();
 		this.pneditor = pneditor;
 		transitionToLabelDic = new HashMap<String, String>();
@@ -84,21 +78,22 @@ public class PetriNetInformation implements AnalysisComponentInfoProvider {
 		subjectList.clear();
 		try {
 		if (SwatComponents.getInstance().containsACModels()) {
-			if(pneditor instanceof IFNetEditor){
-				IFNetEditor ifneditor = (IFNetEditor) pneditor;
-			ACModel acModel = ((IFNetGraph)ifneditor.getGraphComponent().getGraph()).getSelectedACModel();
-			if (acModel != null) {
-				System.out.println(acModel.getClass());
-
-				Set<String> ifSubjects = new HashSet<String>();
-				if (acModel instanceof ACLModel) {
-					ifSubjects = acModel.getSubjects();
-				}
-				if (acModel instanceof RBACModel) {
-					ifSubjects = ((RBACModel) acModel).getRoles();
-				}
-				subjectList.addAll(ifSubjects);
-			}
+			if(pneditor instanceof IFNetEditorComponent){
+				//TODO: Adapt to new ACStructure 
+//				IFNetEditorComponent ifneditor = (IFNetEditorComponent) pneditor;
+//			AbstractACModel acModel = ((IFNetGraph)ifneditor.getGraphComponent().getGraph()).getSelectedACModel();
+//			if (acModel != null) {
+//				System.out.println(acModel.getClass());
+//
+//				Set<String> ifSubjects = new HashSet<String>();
+//				if (acModel instanceof ACLModel) {
+//					ifSubjects = acModel.getContext().getSubjects();
+//				}
+//				if (acModel instanceof RBACModel) {
+//					ifSubjects = ((RBACModel) acModel).getRoles();
+//				}
+//				subjectList.addAll(ifSubjects);
+//			}
 			}
 				
 		}

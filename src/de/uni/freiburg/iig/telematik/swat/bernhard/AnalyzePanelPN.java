@@ -27,24 +27,16 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PRISMPatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.PrismAdapter;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.PrismResult;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.PatternParameter;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.DataflowAntiPattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 /**
  * This class implements the functionality for analyzing a PTNet.
  * @author bernhard
@@ -52,13 +44,13 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
  */
 public class AnalyzePanelPN extends AnalyzePanel {
 
-	private PNEditor pnEditor;
+	private PNEditorComponent pnEditor;
 	protected AnalyzeToolBar toolBar;
-	public AnalyzePanelPN(WorkbenchComponent component, String net) {
+	public AnalyzePanelPN(ViewComponent component, String net) {
 		super(component, net);
-		pnEditor=(PNEditor) component;
+		pnEditor=(PNEditorComponent) component;
 		objectInformationReader=new PetriNetInformation(pnEditor);
-		toolBar = new AnalyzeToolBar((PNEditor) component);
+		toolBar = new AnalyzeToolBar((PNEditorComponent) component);
 		objectChanged();
 		update();
 		// TODO Auto-generated constructor stub

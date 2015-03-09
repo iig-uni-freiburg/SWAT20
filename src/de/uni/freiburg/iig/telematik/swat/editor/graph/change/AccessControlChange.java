@@ -2,9 +2,10 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 
 public class AccessControlChange extends mxAtomicGraphModelChange {
 
@@ -12,10 +13,10 @@ public class AccessControlChange extends mxAtomicGraphModelChange {
 	 *
 	 */
 	protected String name;
-	ACModel value;
-	protected ACModel previous;
+	AbstractACModel value;
+	protected AbstractACModel previous;
 	private IFNetGraph graph;
-	private PNEditor editor;
+	private PNEditorComponent editor;
 
 	/**
 	 * 
@@ -35,7 +36,7 @@ public class AccessControlChange extends mxAtomicGraphModelChange {
 	// this.previous = this.value;
 	// }
 
-	public AccessControlChange(PNEditor editor, ACModel acModel) {
+	public AccessControlChange(PNEditorComponent editor, AbstractACModel acModel) {
 		this.editor = editor;
 		this.graph = (IFNetGraph) editor.getGraphComponent().getGraph();
 		this.name = name;
@@ -60,7 +61,7 @@ public class AccessControlChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setValue(ACModel value) {
+	public void setValue(AbstractACModel value) {
 		this.value = value;
 	}
 
@@ -74,7 +75,7 @@ public class AccessControlChange extends mxAtomicGraphModelChange {
 	/**
 	 * 
 	 */
-	public void setPrevious(ACModel value) {
+	public void setPrevious(AbstractACModel value) {
 		previous = value;
 	}
 
@@ -95,11 +96,14 @@ public class AccessControlChange extends mxAtomicGraphModelChange {
 		((IFNetToolBar)editor.getEditorToolbar()).updateSubjectClearanceConfigurer();
 	}
 
-	protected ACModel valueForCellChanged(ACModel value) {
-		ACModel oldValue = graph.getCurrentAccessControlModel();
-		graph.updateAccessControlModel(value);
+	protected AbstractACModel valueForCellChanged(AbstractACModel value) {
+		//TODO: Adapt to new ACStructure 
 
-		return oldValue;
+//		AbstractACModel oldValue = graph.getCurrentAccessControlModel();
+//		graph.updateAccessControlModel(value);
+
+//		return oldValue;
+		return null;
 	}
 
 }

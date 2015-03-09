@@ -6,11 +6,11 @@ import java.io.File;
 import javax.swing.JFileChooser;
 
 import de.invation.code.toval.file.FileUtils;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 public class ExportAction extends AbstractWorkbenchAction {
 
@@ -25,8 +25,8 @@ public class ExportAction extends AbstractWorkbenchAction {
 		// Export current active tab
 		Object current = SwatTabView.getInstance().getSelectedComponent();
 		File file = null;
-		if (current instanceof PNEditor) {
-			file = SwatComponents.getInstance().getPetriNetFile(((PNEditor) current).getNetContainer().getPetriNet().getName());
+		if (current instanceof PNEditorComponent) {
+			file = SwatComponents.getInstance().getPetriNetFile(((PNEditorComponent) current).getNetContainer().getPetriNet().getName());
 		} else if (current instanceof LogModel) {
 			file = ((LogModel) current).getFileReference();
 		}

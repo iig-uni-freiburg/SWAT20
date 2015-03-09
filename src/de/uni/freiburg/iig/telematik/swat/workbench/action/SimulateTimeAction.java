@@ -37,6 +37,7 @@ import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 public class SimulateTimeAction extends AbstractWorkbenchAction {
 
@@ -93,7 +94,7 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 	}
 
 	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNet() {
-		return ((PNEditor) Workbench.getInstance().getTabView().getSelectedComponent()).getNetContainer();
+		return ((PNEditorComponent) Workbench.getInstance().getTabView().getSelectedComponent()).getNetContainer();
 	}
 
 	private TimeMachine<?, ?, ?, ?, ?, ?, ?> getTimeMachine(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net) {

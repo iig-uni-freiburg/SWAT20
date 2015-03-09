@@ -2,12 +2,10 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.PNGraphCell;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 /**
  * This Class is used to retrieve places and arcs which are between the
@@ -26,12 +24,9 @@ public class PlacesArcsAlgorithm<T extends AbstractFlowRelation> {
 	 * @param nodeList an empty list to which the places should be added
 	 * @param arcList an empty list to which the arcs should be added
 	 */
-	public void addPlacesArcs(PNEditor pnEditor, List<String> path,
+	public void addPlacesArcs(PNEditorComponent pnEditor, List<String> path,
 			List<String> nodeList, List<String> arcList) {
-		Map<String, PNGraphCell> nodemap = pnEditor.getGraphComponent()
-				.getGraph().nodeReferences;
-		Map<String, PNGraphCell> arcmap = pnEditor.getGraphComponent()
-				.getGraph().arcReferences;
+
 
 		// System.out.println(nodemap);
 		// get places to mark

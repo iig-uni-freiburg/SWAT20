@@ -102,6 +102,6 @@ public class RenameAction extends AbstractWorkbenchAction {
 	}
 
 	private String requestNetName(String message, String title) {
-		return new FileNameDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false).requestInput();
+		return  FileNameDialog.showDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false);
 	}
 }

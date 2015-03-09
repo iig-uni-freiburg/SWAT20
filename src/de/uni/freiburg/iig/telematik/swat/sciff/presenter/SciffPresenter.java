@@ -275,7 +275,7 @@ public class SciffPresenter {
 	}
 
 	private String requestFileName(String message, String title) {
-		String fileName = new FileNameDialog(null, message, title, false).requestInput();
+		String fileName = FileNameDialog.showDialog(null, message, title, false);
 		if (fileName.endsWith("analysis"))
 			return fileName;
 		else

@@ -14,9 +14,10 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 
@@ -43,7 +44,7 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 
 	private static final long serialVersionUID = 7231652730616663333L;
 
-	private void savePN(PNEditor mainComponent) {
+	private void savePN(PNEditorComponent mainComponent) {
 		try {
 			SwatComponents.getInstance().storePetriNet(mainComponent.getNetContainer().getPetriNet().getName());
 			MessageDialog.getInstance().addMessage("Successfully saved Petri Net");
@@ -71,12 +72,12 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		SwatTabView tabView = SwatTabView.getInstance();
 		Component selectedComponent = tabView.getSelectedComponent();
-		if (selectedComponent instanceof WorkbenchComponent) {
-			WorkbenchComponent component = (WorkbenchComponent) tabView.getSelectedComponent();
-			if (component.getMainComponent() instanceof PNEditor) {
-				savePN((PNEditor) component.getMainComponent());
-				AnalyzePanelController.getInstance().objectChanged(component.getFile().getName());
-				((PNEditor) component.getMainComponent()).getUndoManager().clear();
+		if (selectedComponent instanceof ViewComponent) {
+			ViewComponent component = (ViewComponent) tabView.getSelectedComponent();
+			if (component.getMainComponent() instanceof PNEditorComponent) {
+				savePN((PNEditorComponent) component.getMainComponent());
+				AnalyzePanelController.getInstance().objectChanged(component.getName());
+				((PNEditorComponent) component.getMainComponent()).getUndoManager().clear();
 			}
 		} else {
 			Workbench.errorMessage("Could not save: Active pane is not of type PNEditor");

@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.listener;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
@@ -15,9 +15,9 @@ public interface SwatComponentsListener {
 	
 	public void petriNetRenamed(AbstractGraphicalPN net);
 
-	public void acModelAdded(ACModel acModel);
+	public void acModelAdded(AbstractACModel acModel);
 	
-	public void acModelRemoved(ACModel acModel);
+	public void acModelRemoved(AbstractACModel acModel);
 	
 	public void analysisContextAdded(String netID, AnalysisContext context);
 	

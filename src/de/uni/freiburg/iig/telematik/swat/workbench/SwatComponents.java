@@ -29,7 +29,7 @@ import de.uni.freiburg.iig.telematik.sepia.serialize.AnalysisContextSerializatio
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACLModelProperties;
 import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
@@ -62,7 +62,7 @@ public class SwatComponents {
 	//	private Map<String, Analysis> analyses = new HashMap<String, Analysis>();
 	private Map<String, List<Analysis>> analyses = new HashMap<String, List<Analysis>>();
 	
-	private Map<String, ACModel> acModels = new HashMap<String, ACModel>();
+	private Map<String, AbstractACModel> acModels = new HashMap<String, AbstractACModel>();
 	private List<LogModel> aristaLogs = new ArrayList<LogModel>();
 	private List<LogModel> mxmlLogs = new ArrayList<LogModel>();
 	private List<LogModel> xesLogs = new ArrayList<LogModel>();
@@ -157,7 +157,7 @@ public class SwatComponents {
 		}
 		
 		for(String acFile: acFiles){
-			ACModel acModel = loadACModel(acFile);
+			AbstractACModel acModel = loadACModel(acFile);
 			try{
 				if(acModel != null)
 					addACModel(acModel, false);
@@ -167,7 +167,7 @@ public class SwatComponents {
 		}
 	}
 	
-	private ACModel loadACModel(String acFile) {
+	private AbstractACModel loadACModel(String acFile) {
 		MessageDialog.getInstance().addMessage("Loading AC model: " + FileUtils.getName(acFile) + "...   ");
 		ACModelProperties testProperties = new ACModelProperties();
 		try {
@@ -177,17 +177,17 @@ public class SwatComponents {
 			return null;
 		}
 
-		ACModel newModel = null;
+		AbstractACModel newModel = null;
 		try {
 			// Check ACModel type
 			if (testProperties.getType().equals(ACModelType.ACL)) {
 				ACLModelProperties aclProperties = new ACLModelProperties();
 				aclProperties.load(acFile);
-				newModel = new ACLModel(aclProperties);
+				newModel = new ACLModel(aclProperties.getName());
 			} else {
 				RBACModelProperties rbacProperties = new RBACModelProperties();
 				rbacProperties.load(acFile);
-				newModel = new RBACModel(rbacProperties);
+				newModel = new RBACModel(rbacProperties.getName());
 			}
 		} catch (Exception e) {
 			MessageDialog.getInstance().addMessage("Cannot load access control model.\nReason:" + e.getMessage());
@@ -1137,7 +1137,7 @@ public class SwatComponents {
 	 * @param acModel The model to add.
 	 * @throws SwatComponentException
 	 */
-	public void addACModel(ACModel acModel) throws SwatComponentException {
+	public void addACModel(AbstractACModel acModel) throws SwatComponentException {
 		addACModel(acModel, true);
 	}
 	
@@ -1148,7 +1148,7 @@ public class SwatComponents {
 	 * @param storeToFile Indicates if the model should be stored on disk.
 	 * @throws SwatComponentException
 	 */
-	public void addACModel(ACModel acModel, boolean storeToFile) throws SwatComponentException {
+	public void addACModel(AbstractACModel acModel, boolean storeToFile) throws SwatComponentException {
 		Validate.notNull(acModel);
 		Validate.notNull(storeToFile);
 		acModels.put(acModel.getName(), acModel);
@@ -1164,7 +1164,7 @@ public class SwatComponents {
 	 * @param acModel The model to store.
 	 * @throws SwatComponentException
 	 */
-	public void storeACModel(ACModel acModel) throws SwatComponentException {
+	public void storeACModel(AbstractACModel acModel) throws SwatComponentException {
 		Validate.notNull(acModel);
 		try{
 			File pathToStore = new File(SwatProperties.getInstance().getPathForACModels(), acModel.getName());
@@ -1198,7 +1198,7 @@ public class SwatComponents {
 	 * Returns all access control models, i.e. models stored in the simulation directory.
 	 * @return A set containing all contexts.
 	 */
-	public Collection<ACModel> getACModels(){
+	public Collection<AbstractACModel> getACModels(){
 		return Collections.unmodifiableCollection(acModels.values());
 	}
 	
@@ -1207,7 +1207,7 @@ public class SwatComponents {
 	 * @param name The name of the desired access control model.
 	 * @return The model with the given name, or <code>null</code> if there is no such model.
 	 */
-	public ACModel getACModel(String name) throws ParameterException{
+	public AbstractACModel getACModel(String name) throws ParameterException{
 		Validate.notNull(name);
 		return acModels.get(name);
 	}
@@ -1227,7 +1227,7 @@ public class SwatComponents {
 	 */
 	public void removeACModel(String name, boolean removeFileFromDisk) throws SwatComponentException {
 		validateACModel(name);
-		ACModel modelToRemove = acModels.get(name);
+		AbstractACModel modelToRemove = acModels.get(name);
 		acModels.remove(name);
 		
 		if(removeFileFromDisk){

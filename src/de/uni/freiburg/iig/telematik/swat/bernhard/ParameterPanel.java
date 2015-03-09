@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-
 /**
  * An abstract class representing a Parameter used by the
  * pattern wizard. There are two abstract functions getValue() and

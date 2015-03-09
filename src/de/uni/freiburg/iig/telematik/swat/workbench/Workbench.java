@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
 import java.awt.Toolkit;
-import java.io.IOException;
 import java.util.Calendar;
 
 import javax.swing.JComponent;
@@ -20,14 +19,14 @@ import javax.swing.WindowConstants;
 
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelPN;
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener, SwatStateListener {
 
@@ -257,7 +256,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		if (getTabView().containsComponent(node))
 			return;
 
-		WorkbenchComponent swatComponent = null;
+		ViewComponent swatComponent = null;
 		// add SwatTreeNode to tab and get its swatComponent to make its propertyView
 		swatComponent = getTabView().addNewTab(node);
 		getPropertiesPanel().removeAll();
@@ -268,7 +267,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 		else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
 			String name = node.getDisplayName();
-			if (swatComponent instanceof PNEditor) {
+			if (swatComponent instanceof PNEditorComponent) {
 				if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
 					name = ((SwatTreeNode) node.getParent()).getDisplayName();
 				}
@@ -307,22 +306,9 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //		return null;
 //	}
 
-	@SuppressWarnings("rawtypes")
-	private String getPathForSwatComponent(WorkbenchComponent component) {
-		if (component instanceof PTNetEditor) {
-			try {
-				return ((PTNetEditor) component).getFileReference().getCanonicalPath();
-			} catch (IOException e) {
-				MessageDialog.getInstance().addMessage("Cannot get file for AbstractGraphicalPN");
-				e.printStackTrace();
-				return null;
-			}
-		} else
-			return null;
-	}
 
 	@Override
-	public void activeTabChanged(int index, WorkbenchComponent component) {
+	public void activeTabChanged(int index, ViewComponent component) {
 		if (index < 0)
 			return; //no tabs inside
 		// Update Properties Panel & Toolbar according to active tab
@@ -344,12 +330,12 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	public void operatingModeChanged() {
 		try {
 			//Update Properties View & Toolbar
-		WorkbenchComponent swatComponent = (WorkbenchComponent) getTabView().getSelectedComponent();
+		ViewComponent swatComponent = (ViewComponent) getTabView().getSelectedComponent();
 		getPropertiesPanel().removeAll();
 		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-			if(swatComponent instanceof PNEditor){
+			if(swatComponent instanceof PNEditorComponent){
 				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(swatComponent.getName(), swatComponent).getContent());
 				//((PNEditor)swatComponent).setEnabled(false);
 			}
@@ -371,13 +357,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	/** check if a PNEditor got activated and update Toolbar if needed **/
 	private void updateToolbar() {
-		if (getTabView().getSelectedComponent() instanceof PNEditor) {
+		if (getTabView().getSelectedComponent() instanceof PNEditorComponent) {
 			try {
-				PNEditor editor = (PNEditor) getTabView().getSelectedComponent();
+				PNEditorComponent editor = (PNEditorComponent) getTabView().getSelectedComponent();
 				getSwatToolbar().clear();
 			
 				if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-					getSwatToolbar().add(((AnalyzePanelPN)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), editor)).getToolBar());
+					getSwatToolbar().add(((AnalyzePanelPN)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), (ViewComponent) editor)).getToolBar());
 				} else {
 					getSwatToolbar().add(editor.getEditorToolbar());
 				}

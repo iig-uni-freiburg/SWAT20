@@ -2,9 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
 /**
  * This Class represents the Parameter for a state predicate which consists
  * of several StatePredicateStatements

@@ -4,19 +4,20 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.TransitionView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.AbstractPNEditorAction;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
 
 public class TransitionTimingInfoAction extends AbstractPNEditorAction {
 
 	private static final long serialVersionUID = 6281674267218778803L;
 
-	public TransitionTimingInfoAction(PNEditor editor) {
+	public TransitionTimingInfoAction(PNEditorComponent editor) {
 		super(editor);
 		this.putValue(NAME, "get timing info");
 	}

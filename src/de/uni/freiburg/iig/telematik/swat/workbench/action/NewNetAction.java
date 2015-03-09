@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.PNNameDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
@@ -47,7 +48,7 @@ public class NewNetAction extends AbstractWorkbenchAction {
 				SwatComponents.getInstance().addPetriNet(newPTNet);
 				break;
 			case NEW_IF:
-				GraphicalIFNet newIFNet = new GraphicalIFNet();
+				GraphicalIFNet newIFNet = new GraphicalIFNet(new IFNet());
 				newIFNet.getPetriNet().setName(netName);
 				SwatComponents.getInstance().addPetriNet(newIFNet);
 				break;

@@ -2,9 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.util.Arrays;
 import java.util.Set;
-
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParameter;
 /**
  * This class is used to create the parameterpanel for a given
  * Parameter.

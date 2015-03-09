@@ -3,8 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.bernhard;
 import java.io.File;
 import java.util.HashMap;
 
-import de.uni.freiburg.iig.telematik.swat.editor.PNEditor;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 /**
  * this class is used to select the AnalyzePanel for a given
  * SwatComponent which has a file open that is being analyzed
@@ -36,10 +36,10 @@ public class AnalyzePanelController {
 	 * @param component the corresponding SwatComponent
 	 * @return the AnalyzePanel associated with the component
 	 */
-	public AnalyzePanel getAnalyzePanel(String name, WorkbenchComponent component) {
+	public AnalyzePanel getAnalyzePanel(String name, ViewComponent component) {
 		if(panelDic.get(name) == null) {
 			AnalyzePanel a=null;
-			if(component instanceof PNEditor) {
+			if(component instanceof PNEditorComponent) {
 				a=new AnalyzePanelPN(component, name);
 			
 			} else {

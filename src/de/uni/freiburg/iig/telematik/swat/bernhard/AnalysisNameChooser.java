@@ -1,9 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
 import java.awt.Window;
-import java.io.File;
-
-import javax.swing.JOptionPane;
 
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 

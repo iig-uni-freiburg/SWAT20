@@ -11,6 +11,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 public class SaveAllAction extends AbstractAction {
 
@@ -48,8 +49,8 @@ public class SaveAllAction extends AbstractAction {
 	}
 
 	private void save(int i) {
-		if (SwatTabView.getInstance().getComponentAt(i) instanceof PNEditor) {
-			PNEditor editor = (PNEditor) SwatTabView.getInstance().getComponentAt(i);
+		if (SwatTabView.getInstance().getComponentAt(i) instanceof PNEditorComponent) {
+			PNEditorComponent editor = (PNEditorComponent) SwatTabView.getInstance().getComponentAt(i);
 			String netID = editor.getNetContainer().getPetriNet().getName();
 			try {
 				SwatComponents.getInstance().storePetriNet(netID);

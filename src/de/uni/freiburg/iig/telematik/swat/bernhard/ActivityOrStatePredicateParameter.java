@@ -7,9 +7,6 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
 /**
  * This class represents a Parameter which can either be an activity or
  * a state predicate. The user can choose the type of the parameter

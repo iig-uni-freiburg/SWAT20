@@ -15,6 +15,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 
 public class LolaRunner {
@@ -37,7 +38,7 @@ public class LolaRunner {
 
 	}
 
-	public LolaRunner(PNEditor editor) {
+	public LolaRunner(PNEditorComponent editor) {
 		this((PTNet) editor.getNetContainer().getPetriNet());
 	}
 
@@ -82,7 +83,7 @@ public class LolaRunner {
 		this.lolaTransformator = new LolaTransformator(net);
 	}
 
-	public void changePTNet(PNEditor editor) {
+	public void changePTNet(PNEditorComponent editor) {
 		this.lolaTransformator = new LolaTransformator(editor);
 	}
 

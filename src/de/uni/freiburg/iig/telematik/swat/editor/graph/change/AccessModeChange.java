@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraph;
 
 public class AccessModeChange extends mxAtomicGraphModelChange {

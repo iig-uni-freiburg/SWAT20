@@ -6,11 +6,6 @@ import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue;
 /**
  * This class represents a DropDown Parameter, which will be displayed
  * in the pattern wizard

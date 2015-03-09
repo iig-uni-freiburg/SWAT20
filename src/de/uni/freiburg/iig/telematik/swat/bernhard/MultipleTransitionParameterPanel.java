@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.bernhard;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamType;
 /**
  * This class represents a parameter that accepts several activities as values
  * @author bernhard

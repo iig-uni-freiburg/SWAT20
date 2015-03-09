@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.GuiParamValue;
-
 public class TransitionParaPNet extends TransitionParameter {
 	
 

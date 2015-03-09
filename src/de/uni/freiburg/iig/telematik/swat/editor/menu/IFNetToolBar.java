@@ -20,19 +20,21 @@ import com.mxgraph.model.mxGraphModel;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.acmodel.AddAccessControlAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.AddAnalysisContextAction;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AccessControlChange;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AnalysisContextChange;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.SubjectClearanceToolBar;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.TokenlabelToolBar;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.wolfgang.actions.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.pn.ChecKSoundnessAction;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.pn.CheckValidityAction;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.exception.EditorToolbarException;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.AbstractToolBar;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.toolbars.TokenToolBar;
@@ -92,7 +94,7 @@ public class IFNetToolBar extends AbstractToolBar {
 
 
 
-	public IFNetToolBar(final PNEditor pnEditor, int orientation) throws EditorToolbarException {
+	public IFNetToolBar(final PNEditorComponent pnEditor, int orientation) throws EditorToolbarException {
 		super(pnEditor, orientation);
 
 	}
@@ -175,7 +177,7 @@ public class IFNetToolBar extends AbstractToolBar {
 						String accessControlModelName = null;
 						if (comboAccessControlModel.getSelectedItem() != null)
 							accessControlModelName = comboAccessControlModel.getSelectedItem().toString();
-						ACModel accessControlModel;
+						AbstractACModel accessControlModel;
 						if (accessControlModelName != null && !accessControlModelName.contentEquals(NO_SELECTION)) {
 							PNGraph graph = pnEditor.getGraphComponent().getGraph();
 							if (graph instanceof IFNetGraph) {
@@ -225,10 +227,10 @@ public class IFNetToolBar extends AbstractToolBar {
 	private void updateAccessControlModelComboBox(String modelName) {
 		DefaultComboBoxModel theModel = (DefaultComboBoxModel) comboAccessControlModel.getModel();
 		theModel.removeAllElements();
-		 Collection<ACModel> acModels = SwatComponents.getInstance().getACModels();
+		 Collection<AbstractACModel> acModels = SwatComponents.getInstance().getACModels();
 		theModel.addElement(NO_SELECTION);
 		if (acModels != null) {
-			for (ACModel acModel : acModels) {
+			for (AbstractACModel acModel : acModels) {
 				if (acModel != null)
 					theModel.addElement(acModel.getName());
 			}
@@ -275,7 +277,7 @@ public class IFNetToolBar extends AbstractToolBar {
 	}
 
 	@Override
-	protected void createAdditionalToolbarActions(PNEditor pnEditor) {
+	protected void createAdditionalToolbarActions(PNEditorComponent pnEditor) {
 		
 			try {
 				tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
@@ -315,6 +317,12 @@ public class IFNetToolBar extends AbstractToolBar {
 	public void addAnalysisContextToComboBox(String name) {
 		comboAnalysisContextModel.addItem(name);
 		comboAnalysisContextModel.setSelectedItem(name);
+	}
+
+	@Override
+	protected void setNetSpecificButtonsVisible(boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

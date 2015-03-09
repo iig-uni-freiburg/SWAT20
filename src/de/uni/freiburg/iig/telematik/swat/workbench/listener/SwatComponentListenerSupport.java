@@ -3,7 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.listener;
 import de.invation.code.toval.event.AbstractListenerSupport;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.ACModel;
+import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
@@ -47,14 +47,14 @@ public class SwatComponentListenerSupport extends AbstractListenerSupport<SwatCo
 		notifyComponentsChanged();
 	}
 	
-	public void notifyACModelAdded(ACModel acModel){
+	public void notifyACModelAdded(AbstractACModel acModel){
 		for(SwatComponentsListener listener: listeners){
 			listener.acModelAdded(acModel);
 		}
 		notifyComponentsChanged();
 	}
 	
-	public void notifyACModelRemoved(ACModel acModel){
+	public void notifyACModelRemoved(AbstractACModel acModel){
 		for(SwatComponentsListener listener: listeners){
 			listener.acModelRemoved(acModel);
 		}

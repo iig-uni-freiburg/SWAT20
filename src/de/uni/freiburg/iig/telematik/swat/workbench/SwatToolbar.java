@@ -32,6 +32,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.lola.LolaTransformator;
@@ -50,6 +51,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirector
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.WrapLayout;
 
 /**
@@ -213,7 +215,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private String requestFileName(String message, String title){
-		return new FileNameDialog(SwingUtilities.getWindowAncestor(getParent()), message, title, false).requestInput();
+		return FileNameDialog.showDialog(SwingUtilities.getWindowAncestor(getParent()), message, title, false);
 	}
 	
 	private File getAbsolutePathToWorkingDir(String name) throws PropertyException, ParameterException, IOException {
@@ -379,7 +381,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 						net = new GraphicalPTNet();
 						break;
 					case NEW_IF:
-						net = new GraphicalIFNet();
+						net = new GraphicalIFNet(new IFNet());
 						//newNet = new GraphicalIFNet();
 						break;
 					default:
@@ -400,8 +402,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	}
 	
 	private String requestFileName(String message, String title){
-			return new FileNameDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this.getParent()), message, title, false)
-					.requestInput();
+			return FileNameDialog.showDialog(SwingUtilities.getWindowAncestor(SwatToolbar.this.getParent()), message, title, false);
 	}
 }
 
@@ -410,7 +411,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			try {
-			PNEditor editor = (PNEditor) tabView.getSelectedComponent();
+			PNEditorComponent editor = (PNEditorComponent) tabView.getSelectedComponent();
 				LolaTransformator lola = new LolaTransformator(editor);
 				LolaPresenter presenter = new LolaPresenter(lola.getNetAsLolaFormat());
 				presenter.show();

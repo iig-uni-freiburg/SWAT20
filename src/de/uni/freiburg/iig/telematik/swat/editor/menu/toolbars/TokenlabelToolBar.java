@@ -3,7 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,11 +21,11 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractCPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenSecurityLevelChange;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.CirclePanel;
 
@@ -34,7 +33,7 @@ public class TokenlabelToolBar extends JToolBar {
 
 	private static final long serialVersionUID = -6491749112943066366L;
 
-	private PNEditor editor;
+	private PNEditorComponent editor;
 
 	private Map<String, Color> colors;
 
@@ -46,7 +45,7 @@ public class TokenlabelToolBar extends JToolBar {
 
 	private String tokenLabel;
 
-	public TokenlabelToolBar(final PNEditor pnEditor, int horizontal) throws ParameterException {
+	public TokenlabelToolBar(final PNEditorComponent pnEditor, int horizontal) throws ParameterException {
 		Validate.notNull(pnEditor);
 		this.editor = pnEditor;
 		panel = new JPanel();
@@ -92,25 +91,26 @@ public class TokenlabelToolBar extends JToolBar {
 
 					if ((state == ItemEvent.SELECTED)) {
 						((mxGraphModel) graph.getModel()).beginUpdate();
-						if(!labeling.getAttributes().contains(tokenLabel)){
-							AnalysisContext ac = ((IFNetGraph)graph).getCurrentAnalysisContext();
-							Set<String> attributes = labeling.getAttributes();
-							
-							 HashMap<String, SecurityLevel> newAttributeMapping = new HashMap<String, SecurityLevel>();
-							for(String a:attributes){
-								newAttributeMapping.put(a, labeling.getAttributeClassification(a));
-							}
-							newAttributeMapping.put(tokenLabel, SecurityLevel.LOW);
-							//FIXME:
-//							labeling.
-//							labeling.addAttributes(attributes);
-//							Labeling newLabeling = new Labeling(labeling.getActivities(), newAttributeMapping.keySet(), labeling.getSubjects());
-//							for(String a:newAttributeMapping.keySet()){
-//								newLabeling.setAttributeClassification(a, newAttributeMapping.get(a));}
-							
-//							((mxGraphModel) graph.getModel()).execute(new AnalysisContextChange(editor,new AnalysisContext(newLabeling)));
-
-						}
+						//TODO: Adapt to new ACStructure 
+//						if(!labeling.getAttributes().contains(tokenLabel)){
+//							AnalysisContext ac = ((IFNetGraph)graph).getCurrentAnalysisContext();
+//							Set<String> attributes = labeling.getAttributes();
+//							
+//							 HashMap<String, SecurityLevel> newAttributeMapping = new HashMap<String, SecurityLevel>();
+//							for(String a:attributes){
+//								newAttributeMapping.put(a, labeling.getAttributeClassification(a));
+//							}
+//							newAttributeMapping.put(tokenLabel, SecurityLevel.LOW);
+//							//FIXME:
+////							labeling.
+////							labeling.addAttributes(attributes);
+////							Labeling newLabeling = new Labeling(labeling.getActivities(), newAttributeMapping.keySet(), labeling.getSubjects());
+////							for(String a:newAttributeMapping.keySet()){
+////								newLabeling.setAttributeClassification(a, newAttributeMapping.get(a));}
+//							
+////							((mxGraphModel) graph.getModel()).execute(new AnalysisContextChange(editor,new AnalysisContext(newLabeling)));
+//
+//						}
 					
 						if (itemEvent.getItem().equals(SecurityLevel.LOW.toString()))
 							((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenSecurityLevelChange(editor, tokenLabel, SecurityLevel.LOW));
@@ -147,9 +147,10 @@ public class TokenlabelToolBar extends JToolBar {
 		if (getTokenColors().contains("black"))
 			colors.put("black", Color.BLACK);
 		if(graph instanceof IFNetGraph){
-		if (((IFNetGraph)graph).getCurrentAnalysisContext() != null) {
-			labeling = ((IFNetGraph)graph).getCurrentAnalysisContext().getLabeling();
-		}
+			//TODO: Adapt to new ACStructure 
+//		if (((IFNetGraph)graph).getCurrentAnalysisContext() != null) {
+//			labeling = ((IFNetGraph)graph).getCurrentAnalysisContext().getLabeling();
+//		}
 		}
 		int size = 0;
 		Set<String> colorsTemp = ((AbstractCPN)graph.getNetContainer().getPetriNet()).getTokenColors();

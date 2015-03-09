@@ -3,8 +3,9 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 
 public class AnalysisContextChange extends mxAtomicGraphModelChange {
 
@@ -15,7 +16,7 @@ public class AnalysisContextChange extends mxAtomicGraphModelChange {
 	AnalysisContext value;
 	protected AnalysisContext previous;
 	private IFNetGraph graph;
-	private PNEditor editor;
+	private PNEditorComponent editor;
 
 	/**
 	 * 
@@ -35,7 +36,7 @@ public class AnalysisContextChange extends mxAtomicGraphModelChange {
 	// this.previous = this.value;
 	// }
 
-	public AnalysisContextChange(PNEditor editor, AnalysisContext ac) {
+	public AnalysisContextChange(PNEditorComponent editor, AnalysisContext ac) {
 		this.editor = editor;
 		this.graph = (IFNetGraph) editor.getGraphComponent().getGraph();
 		this.name = name;
@@ -96,10 +97,14 @@ public class AnalysisContextChange extends mxAtomicGraphModelChange {
 	}
 
 	protected AnalysisContext valueForCellChanged(AnalysisContext value) {
-		AnalysisContext oldValue = graph.getCurrentAnalysisContext();
-		graph.updateAnalysisContext(value);
+		//TODO: Adapt to new ACStructure 
 
-		return oldValue;
+//		AnalysisContext oldValue = graph.getCurrentAnalysisContext();
+//		graph.updateAnalysisContext(value);
+//
+//		return oldValue;
+	
+	return null;
 	}
 
 }

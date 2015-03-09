@@ -11,6 +11,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 public class LolaTransformator {
 
@@ -21,7 +22,7 @@ public class LolaTransformator {
 		this.net = net;
 	}
 
-	public LolaTransformator(PNEditor neteditor) {
+	public LolaTransformator(PNEditorComponent neteditor) {
 		this.net = (PTNet) neteditor.getNetContainer().getPetriNet();
 	}
 

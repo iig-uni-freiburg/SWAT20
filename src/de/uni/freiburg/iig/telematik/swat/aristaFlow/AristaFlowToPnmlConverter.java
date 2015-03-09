@@ -25,8 +25,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowElement.PTequivalent;
-import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.graphpopup.LayoutAction;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 
 public class AristaFlowToPnmlConverter {
 
@@ -37,9 +37,10 @@ public class AristaFlowToPnmlConverter {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		AristaFlowToPnmlConverter converter = new AristaFlowToPnmlConverter(new File("/tmp/af.template"));
 		converter.parse();
-		GraphicalIFNet ifnet = new GraphicalIFNet();
+		GraphicalIFNet ifnet = new GraphicalIFNet(new IFNet());
 		ifnet.setPetriNet(converter.getNet());
-		IFNetEditor editor = new IFNetEditor(ifnet, new File("/tmp/test.pnml"));
+		IFNetEditorComponent editor = new IFNetEditorComponent(ifnet);
+		//ifnet, new File("/tmp/test.pnml")
 		JFrame panel = new JFrame();
 		panel.setSize(300, 300);
 		panel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,7 +84,7 @@ public class AristaFlowToPnmlConverter {
 	}
 
 	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getGraphicalPN() {
-		GraphicalIFNet net = new GraphicalIFNet();
+		GraphicalIFNet net = new GraphicalIFNet(new IFNet());
 		net.setPetriNet(getNet());
 		return net;
 	}

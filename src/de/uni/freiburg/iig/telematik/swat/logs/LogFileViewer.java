@@ -19,15 +19,15 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 
 /**
  * presents view on mxml files. extends {@link JEditorPane}, implements
- * {@link WorkbenchComponent}
+ * {@link ViewComponent}
  **/
-public class LogFileViewer extends JScrollPane implements WorkbenchComponent {
+public class LogFileViewer extends JScrollPane implements ViewComponent {
 	private static final long serialVersionUID = 7051631037013916120L;
 	private JComponent properties = null;
 	private JButton analyzeButton = null;

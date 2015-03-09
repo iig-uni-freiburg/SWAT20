@@ -3,7 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
-import de.uni.freiburg.iig.telematik.swat.editor.graph.IFNetGraph;
+import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 
 public class TransitionLabelingChange extends mxAtomicGraphModelChange {
 
@@ -53,10 +53,12 @@ public class TransitionLabelingChange extends mxAtomicGraphModelChange {
 	}
 
 	protected SecurityLevel valueForCellChanged(String name, SecurityLevel value) {
-		SecurityLevel oldValue = graph.getCurrentTransitionLabeling(name);
-		graph.updateTransitionLabeling(name, value);
-
-		return oldValue;
+		//TODO: Adapt to new ACStructure 
+//		SecurityLevel oldValue = graph.getCurrentTransitionLabeling(name);
+//		graph.updateTransitionLabeling(name, value);
+//
+//		return oldValue;
+		return null;
 	}
 
 }
