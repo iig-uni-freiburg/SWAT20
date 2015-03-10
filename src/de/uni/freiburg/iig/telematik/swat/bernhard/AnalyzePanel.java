@@ -514,8 +514,7 @@ public abstract class AnalyzePanel implements SwatComponentsListener {
 		String nameString;
 		if (getDropDownMenu().getSelectedItem() == null || dropDownObject instanceof String) {
 			//currently no item selected in dropdown list or "new analysis" is selected. Ask for name
-			nameString = new FileNameDialog(Workbench.getInstance(), "Please enter name for analysis", "Analysis Name", true)
-					.requestInput();
+			nameString = FileNameDialog.showDialog(Workbench.getInstance(), "Please enter name for analysis", "Analysis Name", true);
 		}
 		else {
 			//use currently selected analysis as name
@@ -527,7 +526,7 @@ public abstract class AnalyzePanel implements SwatComponentsListener {
 		Analysis analysis = new Analysis(nameString, patternWizard.getPatternSettings());
 		try {
 			SwatComponents.getInstance().addAnalysis(analysis, analysisSourceName, true);
-			updateDropDownList(nameString);
+			//updateDropDownList(nameString);
 		} catch (SwatComponentException e) {
 			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not store Analysis: " + e.getMessage());
 			e.printStackTrace();
