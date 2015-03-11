@@ -28,9 +28,6 @@ public class TimeContext implements PNTimeContext {
 	String correspondingNet;
 	double intendedFinishTime;
 	
-	
-
-
 	public double getIntendedFinishTime() {
 		return intendedFinishTime;
 	}
@@ -116,7 +113,7 @@ public class TimeContext implements PNTimeContext {
 	}
 
 	@Override
-	public double getDelayTP(String transitionName, String placeName) {
+	synchronized public double getDelayTP(String transitionName, String placeName) {
 		if (transitionTime.containsKey(transitionName))
 			return transitionTime.get(transitionName).getNeededTime();
 		else

@@ -3,7 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.misc;
 
 public class OperatingSystem {
 	
-	static OperatingSystems getOperatingSystem() {
+	public static OperatingSystems getOperatingSystem() {
 		String OS = System.getProperty("os.name").toLowerCase();
 		if (OS.contains("win"))
 			return OperatingSystems.win;
