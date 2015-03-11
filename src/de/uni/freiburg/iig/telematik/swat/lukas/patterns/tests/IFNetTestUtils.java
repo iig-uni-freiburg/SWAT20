@@ -284,7 +284,8 @@ public class IFNetTestUtils {
 		tOut.addAccessMode("green", AccessMode.WRITE);
 		
 		//Labeling labels = new Labeling(net, new ArrayList<String>(Arrays.asList("Karl", "Peter", "Hans")));
-		Labeling labels = new Labeling(); //FIXME
+		Labeling labels = new Labeling();
+		labels.setRequireContext(false);
 		
 		labels.setSubjectClearance("Peter", SecurityLevel.HIGH);
 		labels.setSubjectClearance("Hans", SecurityLevel.LOW);
@@ -436,7 +437,8 @@ public class IFNetTestUtils {
 		tOut.addAccessMode("green", AccessMode.DELETE);
 		
 		//Labeling labels = new Labeling(net, new ArrayList<String>(Arrays.asList("Karl", "Peter", "Hans")));
-		Labeling labels = new Labeling(); //FIXME
+		Labeling labels = new Labeling();
+		labels.setRequireContext(false);
 		
 		labels.setSubjectClearance("Peter", SecurityLevel.HIGH);
 		labels.setSubjectClearance("Hans", SecurityLevel.LOW);

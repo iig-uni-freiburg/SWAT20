@@ -8,15 +8,15 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 
-import de.uni.freiburg.iig.telematik.jawl.parser.ParsingMode;
-import de.uni.freiburg.iig.telematik.jawl.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
+import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.lukas.IOUtils;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.IFNetConverter;
-import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.sciff.SCIFFExecutor;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.sciff.SCIFFAdapter;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.sciff.SCIFFResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.ResourcePattern;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.OrganizationalPattern;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 
 public class TestUtils {
@@ -29,7 +29,7 @@ public class TestUtils {
 	
 	private File mIFNetFile;
 	private File mPropertyFile;
-	private ResourcePattern mResourcePattern;
+	private OrganizationalPattern mResourcePattern;
 	private String mProcessLogFileName;
 	private boolean mIsAntiPattern;
 	
@@ -37,13 +37,13 @@ public class TestUtils {
 		mIsAntiPattern = pattern.isAntiPattern();
 		IFNetConverter converter = new IFNetConverter(net);
 		mIFNetFile = IOUtils.writeToFile(mWorkingDir, "model.pm",
-				converter.convert().toString());
+				converter.translate().toString());
 		mPropertyFile = IOUtils.writeToFile(mWorkingDir, "property.pctl",
 				pattern.getPrismProperty(false));
 		
 	}
 	
-	public TestUtils(String pLogFileName, ResourcePattern pattern) {
+	public TestUtils(String pLogFileName, OrganizationalPattern pattern) {
 		
 		mProcessLogFileName = pLogFileName;
 		mResourcePattern = pattern;
@@ -75,11 +75,11 @@ public class TestUtils {
 			XESLogParser parser = new XESLogParser();
 			parser.parse(new File(mWorkingDir + mResDir +mProcessLogFileName), ParsingMode.COMPLETE);
 			LogParserAdapter adapter = new LogParserAdapter(parser);
-			SCIFFExecutor sciffExec = new SCIFFExecutor(adapter);
-			ArrayList<ResourcePattern> patterns = new ArrayList<ResourcePattern>();
+			SCIFFAdapter sciffExec = new SCIFFAdapter(adapter);
+			ArrayList<CompliancePattern> patterns = new ArrayList<CompliancePattern>();
 			patterns.add(mResourcePattern);
 			ArrayList<SCIFFResult> res = sciffExec.analyze(patterns);
-			return res.get(0).isSatisfied();
+			return res.get(0).isFulfilled();
 			
 		}
 	}
