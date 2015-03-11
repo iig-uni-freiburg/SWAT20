@@ -16,10 +16,10 @@ import com.thoughtworks.xstream.XStream;
 
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.jawl.parser.LogParser;
-import de.uni.freiburg.iig.telematik.jawl.parser.LogParserInterface;
-import de.uni.freiburg.iig.telematik.jawl.parser.LogParsingFormat;
-import de.uni.freiburg.iig.telematik.jawl.parser.ParsingMode;
+import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
+import de.uni.freiburg.iig.telematik.sewol.parser.LogParserInterface;
+import de.uni.freiburg.iig.telematik.sewol.parser.LogParsingFormat;
+import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;

@@ -26,10 +26,10 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogSummary;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
 
-import de.uni.freiburg.iig.telematik.jawl.log.DataAttribute;
-import de.uni.freiburg.iig.telematik.jawl.log.LockingException;
-import de.uni.freiburg.iig.telematik.jawl.log.LogEntry;
-import de.uni.freiburg.iig.telematik.jawl.log.LogTrace;
+import de.uni.freiburg.iig.telematik.sewol.log.DataAttribute;
+import de.uni.freiburg.iig.telematik.sewol.log.LockingException;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 
 public class AristaFlowParser implements ISciffLogReader, Serializable {
 	private File log;
