@@ -27,13 +27,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 
+import de.invation.code.toval.misc.soabase.SOABase;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
@@ -674,6 +675,18 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	public void unsetModified(int i) {
 		((ButtonTabComponent) getTabComponentAt(i)).unsetModified();
 
+	}
+
+	@Override
+	public void contextAdded(SOABase soaBase) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void contextRemoved(SOABase soaBase) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

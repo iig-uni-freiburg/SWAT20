@@ -17,7 +17,7 @@ import org.processmining.analysis.sciffchecker.logic.model.variable.RoleVariable
 import org.processmining.analysis.sciffchecker.logic.model.variable.StringVariableAttribute;
 import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Role;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
 

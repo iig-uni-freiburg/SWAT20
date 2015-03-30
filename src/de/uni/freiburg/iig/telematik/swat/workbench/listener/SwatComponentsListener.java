@@ -1,8 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.listener;
 
+import de.invation.code.toval.misc.soabase.SOABase;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
@@ -18,6 +19,10 @@ public interface SwatComponentsListener {
 	public void acModelAdded(AbstractACModel acModel);
 	
 	public void acModelRemoved(AbstractACModel acModel);
+	
+	public void contextAdded(SOABase soaBase);
+	
+	public void contextRemoved(SOABase soaBase);
 	
 	public void analysisContextAdded(String netID, AnalysisContext context);
 	

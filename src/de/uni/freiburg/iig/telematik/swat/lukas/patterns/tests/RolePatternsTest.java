@@ -6,9 +6,9 @@ import java.util.Arrays;
 import org.junit.Before;
 
 import de.invation.code.toval.properties.PropertyException;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.RoleLattice;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.lattice.RoleRelation;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.lattice.RoleLattice;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.lattice.RoleRelation;
 
 public class RolePatternsTest {
 	

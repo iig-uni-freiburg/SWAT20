@@ -20,7 +20,7 @@ import com.mxgraph.model.mxGraphModel;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.acmodel.AddAccessControlAction;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.ifanalysis.AddAnalysisContextAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.AccessControlChange;
@@ -30,8 +30,8 @@ import de.uni.freiburg.iig.telematik.swat.editor.menu.toolbars.TokenlabelToolBar
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.PopUpToolBarAction;
-import de.uni.freiburg.iig.telematik.wolfgang.actions.pn.ChecKSoundnessAction;
-import de.uni.freiburg.iig.telematik.wolfgang.actions.pn.CheckValidityAction;
+import de.uni.freiburg.iig.telematik.wolfgang.actions.properties.CheckSoundnessAction;
+import de.uni.freiburg.iig.telematik.wolfgang.actions.properties.CheckValidityAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
@@ -57,7 +57,7 @@ public class IFNetToolBar extends AbstractToolBar {
 
 	private PopUpToolBarAction tokenAction;
 	private JToggleButton tokenButton;
-	private ChecKSoundnessAction checkSoundnessAction;
+	private CheckSoundnessAction checkSoundnessAction;
 	private CheckValidityAction checkValidityAction;
 
 

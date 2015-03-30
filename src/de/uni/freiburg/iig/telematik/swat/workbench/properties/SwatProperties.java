@@ -8,7 +8,6 @@ import java.util.Set;
 
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.misc.StringUtils;
-import de.invation.code.toval.properties.AbstractProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
@@ -29,6 +28,7 @@ public class SwatProperties extends WolfgangProperties{
 	protected static final String pathNets = "nets/";
 	protected static final String pathLogs = "logs/";
 	protected static final String pathACModels = "acModel/";
+	protected static final String pathContexts = "contexts/";
 	protected static final String pathNameAnalysisContext = "analysis-contexts";
 	protected static final String pathNameTimeContext = "time-contexts";
 	protected static final String pathNameNetAnalyses = "analysis/";
@@ -144,6 +144,10 @@ public class SwatProperties extends WolfgangProperties{
 
 	//-- Simulation component paths (not stored in property file)
 	
+	public String getPathForContexts() throws PropertyException{
+		return getWorkingDirectory().concat(pathContexts);
+	}
+	
 	public String getPathForNets() throws PropertyException{
 		return getWorkingDirectory().concat(pathNets);
 	}
@@ -258,13 +262,14 @@ public class SwatProperties extends WolfgangProperties{
 		checkSubDirectory(directory, pathNets, createSubdirectories);
 		checkSubDirectory(directory, pathLogs, createSubdirectories);
 		checkSubDirectory(directory, pathACModels, createSubdirectories);
+		checkSubDirectory(directory, pathContexts, createSubdirectories);
 	}
 	
 	private static void checkSubDirectory(String workingDirectory, String subDirectoryName, boolean ensureSubdirectory){
 		File dir = new File(workingDirectory + subDirectoryName);
 		if(!dir.exists()){
 			if(!ensureSubdirectory)
-				throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Corrupt structure of simulation directory:\n"+dir.getAbsolutePath());
+				throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Corrupt structure of swat working directory:\n"+dir.getAbsolutePath());
 			dir.mkdir();
 		}
 	}

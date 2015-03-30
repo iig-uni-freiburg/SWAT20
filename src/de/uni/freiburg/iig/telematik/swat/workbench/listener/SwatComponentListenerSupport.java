@@ -1,9 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.listener;
 
 import de.invation.code.toval.event.AbstractListenerSupport;
+import de.invation.code.toval.misc.soabase.SOABase;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
@@ -22,6 +23,20 @@ public class SwatComponentListenerSupport extends AbstractListenerSupport<SwatCo
 	public void notifyPetriNetRemoved(AbstractGraphicalPN net){
 		for(SwatComponentsListener listener: listeners){
 			listener.petriNetRemoved(net);
+		}
+		notifyComponentsChanged();
+	}
+	
+	public void notifyContextAdded(SOABase soaBase){
+		for(SwatComponentsListener listener: listeners){
+			listener.contextAdded(soaBase);
+		}
+		notifyComponentsChanged();
+	}
+	
+	public void notifyContextRemoved(SOABase soaBase){
+		for(SwatComponentsListener listener: listeners){
+			listener.contextRemoved(soaBase);
 		}
 		notifyComponentsChanged();
 	}

@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;

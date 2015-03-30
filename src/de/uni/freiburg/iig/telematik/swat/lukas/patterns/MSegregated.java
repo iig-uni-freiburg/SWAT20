@@ -20,7 +20,7 @@ import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
 import de.invation.code.toval.misc.SetUtils;
 import de.invation.code.toval.misc.SetUtils.PowerSet;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Role;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
 

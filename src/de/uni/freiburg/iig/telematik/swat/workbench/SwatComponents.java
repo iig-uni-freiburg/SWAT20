@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import com.thoughtworks.xstream.XStream;
 
 import de.invation.code.toval.file.FileUtils;
+import de.invation.code.toval.misc.soabase.SOABase;
+import de.invation.code.toval.misc.soabase.SOABaseProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -29,14 +31,14 @@ import de.uni.freiburg.iig.telematik.sepia.serialize.AnalysisContextSerializatio
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.AbstractACModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.acl.ACLModel;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACLModelProperties;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACMValidationException;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelProperties;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.ACModelType;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.properties.RBACModelProperties;
-import de.uni.freiburg.iig.telematik.seram.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.acl.ACLModel;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACLModelProperties;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACMValidationException;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACModelProperties;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACModelType;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.RBACModelProperties;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModelComparator;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
@@ -58,11 +60,12 @@ public class SwatComponents {
 	private Map<String, File> netFiles = new HashMap<String, File>();
 	private Map<String, List<AnalysisContext>> analysisContexts = new HashMap<String, List<AnalysisContext>>();
 	private Map<String, List<TimeContext>> timeContexts = new HashMap<String, List<TimeContext>>();
-	//	private Map<String, List<String>> netAnalysesNames = new HashMap<String, List<String>>();
-	//	private Map<String, Analysis> analyses = new HashMap<String, Analysis>();
 	private Map<String, List<Analysis>> analyses = new HashMap<String, List<Analysis>>();
 	
+	private Map<String, SOABase> contexts = new HashMap<String, SOABase>();
+	
 	private Map<String, AbstractACModel> acModels = new HashMap<String, AbstractACModel>();
+	
 	private List<LogModel> aristaLogs = new ArrayList<LogModel>();
 	private List<LogModel> mxmlLogs = new ArrayList<LogModel>();
 	private List<LogModel> xesLogs = new ArrayList<LogModel>();
@@ -96,28 +99,35 @@ public class SwatComponents {
 	//------- Load simulation components ------------------------------------------------------------------------------------
 	
 	private void loadSwatComponents() throws SwatComponentException {
-		//1. Load AC-Models
-		MessageDialog.getInstance().addMessage("3. Loading AC Models");
+		//1. Load  Contexts
+		MessageDialog.getInstance().addMessage("1. Loading Contexts");
+		loadContexts();
+		MessageDialog.getInstance().addMessage("Done.");
+		
+		//2. Load AC-Models
+		MessageDialog.getInstance().addMessage("2. Loading AC Models");
 		loadACModels();
 		MessageDialog.getInstance().addMessage("Done.");
 		
-		//2. Load Petri nets
-		MessageDialog.getInstance().addMessage("1. Searching for Petri nets:");
+		//3. Load Petri nets
+		MessageDialog.getInstance().addMessage("3. Searching for Petri nets:");
 		loadPetriNets();
 		MessageDialog.getInstance().addMessage("Done.");
 		MessageDialog.getInstance().newLine();
 
-		//3. Load logfiles
-		MessageDialog.getInstance().addMessage("2. Searching for log files:");
+		//4. Load logfiles
+		MessageDialog.getInstance().addMessage("4. Searching for log files:");
 		loadLogFiles();
 		MessageDialog.getInstance().addMessage("Done.");
 		MessageDialog.getInstance().newLine();
 		
-		//4. Load ACModel-Analysis context relations
+		//5. Load ACModel-Analysis context relations
 		
-		//5. Load Analysis
-		MessageDialog.getInstance().addMessage(" 4. Loading analyses:");
+		//6. Load Analyses
+		MessageDialog.getInstance().addMessage(" 5. Loading analyses:");
 		loadAnalyses();
+		MessageDialog.getInstance().addMessage("Done.");
+		MessageDialog.getInstance().newLine();
 	}
 	
 
@@ -132,6 +142,44 @@ public class SwatComponents {
 		acModels.clear();
 		loadSwatComponents();
 		listenerSupport.notifyComponentsChanged();
+	}
+	
+	private void loadContexts(){
+		MessageDialog.getInstance().addMessage("Loading Contexts...");
+		String contextDirectory = null;
+		try{
+			contextDirectory = SwatProperties.getInstance().getPathForContexts();
+		} catch (PropertyException e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract path for contexts.\nReason:" + e.getMessage());
+			return;
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot access context directory.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		// Extract context files
+		Collection<String> contextFiles = null;
+		try {
+			contextFiles = FileUtils.getFileNamesInDirectory(contextDirectory, true);
+		} catch(Exception e){
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract context files.\nReason:" + e.getMessage());
+			return;
+		}
+		
+		for(String contextFile: contextFiles){
+			try{
+				SOABase soaBase = SOABase.createFromFile(new File(contextFile));
+				try {
+					if (soaBase != null)
+						addContext(soaBase, false);
+				} catch (SwatComponentException e) {
+					MessageDialog.getInstance().addMessage("Exception: Cannot add access control model.\nReason:" + e.getMessage());
+				}
+			} catch(Exception e){
+				MessageDialog.getInstance().addMessage("Exception: Cannot create context from file\""+FileUtils.getName(contextFile)+"\".\nReason:" + e.getMessage());
+				return;
+			}
+		}
 	}
 	
 	private void loadACModels(){
@@ -176,6 +224,18 @@ public class SwatComponents {
 			MessageDialog.getInstance().addMessage("Cannot load access control model.\nReason:" + e.getMessage());
 			return null;
 		}
+		
+		String contextName = null;
+		try{
+			contextName = testProperties.getContextName();
+		}catch(Exception e){
+			
+		}
+		//Check if referred context has been loaded before
+		if(!containsContext(contextName)){
+			MessageDialog.getInstance().addMessage("Cannot load access control model.\nReason: Reference to non-existing context\"" + contextName + "\"");
+			return null;
+		}
 
 		AbstractACModel newModel = null;
 		try {
@@ -183,7 +243,7 @@ public class SwatComponents {
 			if (testProperties.getType().equals(ACModelType.ACL)) {
 				ACLModelProperties aclProperties = new ACLModelProperties();
 				aclProperties.load(acFile);
-				newModel = new ACLModel(aclProperties.getName());
+				newModel = new ACLModel(aclProperties, getContext(contextName));
 			} else {
 				RBACModelProperties rbacProperties = new RBACModelProperties();
 				rbacProperties.load(acFile);
@@ -548,7 +608,7 @@ public class SwatComponents {
 				acModelName = relationProperties.getACModelName();
 				contextName = relationProperties.getAnalysisContextName();
 			} catch(Exception e){
-				MessageDialog.getInstance().addMessage("Exception: Cannot extraxct analysis context relation properties.\nReason:" + e.getMessage());
+				MessageDialog.getInstance().addMessage("Exception: Cannot extract analysis context relation properties.\nReason:" + e.getMessage());
 			}
 			
 			
@@ -1127,13 +1187,135 @@ public class SwatComponents {
 			throw new SwatComponentException("Cannot store time context \"" + aContext.getName() + "\".\nReason: "+e.getMessage());
 		}
 	}
-	
+
+	//---- Adding and removing Contexts -------------------------------------------------------------------------------------
+
+	/**
+	 * Adds a new context.<br>
+	 * 
+	 * @param soaBase The context to add.
+	 * @throws SwatComponentException
+	 */
+	public void addContext(SOABase soaBase) throws SwatComponentException {
+		addContext(soaBase, true);
+	}
+
+	/**
+	 * Adds a new context.<br>
+	 * Depending on the value of the store-parameter, the model is also stores as property-file in the simulation directory.
+	 * 
+	 * 
+	 * @param soaBase The context to add.
+	 * @param storeToFile Indicates if the context should be stored to disk.
+	 * @throws SwatComponentException
+	 */
+	public void addContext(SOABase soaBase, boolean storeToFile) throws SwatComponentException {
+		Validate.notNull(soaBase);
+		Validate.notNull(storeToFile);
+		contexts.put(soaBase.getName(), soaBase);
+		if (storeToFile) {
+			storeContext(soaBase);
+		}
+		listenerSupport.notifyContextAdded(soaBase);
+	}
+
+	/**
+	 * Stores the given context in form of a property-file in the working directory.<br>
+	 * 
+	 * @param soaBase The context to store.
+	 * @throws SwatComponentException
+	 */
+	public void storeContext(SOABase soaBase) throws SwatComponentException {
+		Validate.notNull(soaBase);
+		try {
+			File pathToStore = new File(SwatProperties.getInstance().getPathForContexts(), soaBase.getName());
+			soaBase.getProperties().store(pathToStore.getAbsolutePath());
+		} catch (PropertyException e) {
+			throw new SwatComponentException("Cannot extract context path.<br>Reason: " + e.getMessage());
+		} catch (IOException e) {
+			throw new SwatComponentException("Cannot store context file to disk.<br>Reason: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Checks, if there are context-components.
+	 * 
+	 * @return <code>true</code> if there is at least one context;<br>
+	 *         <code>false</code> otherwise.
+	 */
+	public boolean containsContexts() {
+		return !contexts.isEmpty();
+	}
+
+	/**
+	 * Checks, if there is a context with the given name.
+	 * 
+	 * @return <code>true</code> if there is such a context;<br>
+	 *         <code>false</code> otherwise.
+	 */
+	public boolean containsContext(String name) {
+		return contexts.get(name) != null;
+	}
+
+	/**
+	 * Returns all contexts, i.e. models stored in the working directory.
+	 * 
+	 * @return A set containing all contexts.
+	 */
+	public Collection<SOABase> getContexts() {
+		return Collections.unmodifiableCollection(contexts.values());
+	}
+
+	/**
+	 * Returns the context with the given name, if there is one.
+	 * 
+	 * @param name The name of the desired context.
+	 * @return The context with the given name, or <code>null</code> if there is no such model.
+	 */
+	public SOABase getContext(String name) throws ParameterException {
+		Validate.notNull(name);
+		return contexts.get(name);
+	}
+
+	/**
+	 * Returns the names of all contexts.
+	 */
+	public Set<String> getContextNames() {
+		return Collections.unmodifiableSet(contexts.keySet());
+	}
+
+	/**
+	 * Removes the context with the given name from the swat components<br>
+	 * and also deletes the corresponding property-file in the working directory.
+	 * 
+	 * @param name The name of the context to remove.
+	 */
+	public void removeContext(String name, boolean removeFileFromDisk) throws SwatComponentException {
+		validateContext(name);
+		SOABase contextToRemove = contexts.get(name);
+		contexts.remove(name);
+
+		if (removeFileFromDisk) {
+			try {
+				FileUtils.deleteFile(SwatProperties.getInstance().getPathForContexts() + name);
+			} catch (PropertyException e) {
+				throw new SwatComponentException("Cannot extract context path.<br>Reason: " + e.getMessage());
+			} catch (IOException e) {
+				throw new SwatComponentException("Cannot delete context file from disk.<br>Reason: " + e.getMessage());
+			}
+		}
+		listenerSupport.notifyContextRemoved(contextToRemove);
+	}
+
+	private void validateContext(String name) throws SwatComponentException {
+		if (!contexts.containsKey(name))
+			throw new SwatComponentException("SwatComponents does not contain a context with name \"" + name + "\"");
+	}
 	
 	//---- Adding and removing AC models ------------------------------------------------------------------------------------
 	
 	/**
 	 * Adds a new access control model.<br>
-	 * The context is also stores as property-file in the simulation directory.
 	 * @param acModel The model to add.
 	 * @throws SwatComponentException
 	 */

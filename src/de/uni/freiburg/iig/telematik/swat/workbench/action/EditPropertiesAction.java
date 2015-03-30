@@ -2,13 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.Icon;
-import javax.swing.SwingUtilities;
-
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatToolbar;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SWATPropertySettingDialog;
-import de.uni.freiburg.iig.telematik.wolfgang.editor.WGMenuBar;
-import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.PropertySettingDialog;
 
 public class EditPropertiesAction extends AbstractWorkbenchAction {
 

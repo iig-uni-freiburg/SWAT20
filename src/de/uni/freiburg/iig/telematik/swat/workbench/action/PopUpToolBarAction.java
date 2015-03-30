@@ -42,8 +42,6 @@ public class PopUpToolBarAction extends AbstractAction {
 		newDialogButton = new JButton(IconFactory.getIcon("maximize"));
 		newDialogButton.setBorderPainted(false);
 		newWindowButton(popupToolBar, toolbarContent, newDialogButton);
-		   
-		
 	}
 
 	@Override
