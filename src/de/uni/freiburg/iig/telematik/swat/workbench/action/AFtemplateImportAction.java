@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -80,8 +79,7 @@ public class AFtemplateImportAction extends AbstractWorkbenchAction {
 				errorMessage = "Could not access AristaFlow log";
 			} finally {
 				if (errorMessage != "") {
-					Workbench.errorMessage(errorMessage);
-					JOptionPane.showMessageDialog(Workbench.getInstance(), errorMessage);
+					Workbench.errorMessage(errorMessage, null, true);
 				}
 			}
 

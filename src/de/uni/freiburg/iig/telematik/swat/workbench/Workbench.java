@@ -20,6 +20,7 @@ import javax.swing.WindowConstants;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelPN;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -224,12 +225,29 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		}
 	}
 
-	public static void errorMessageWithNotification(String message) {
+	public static void errorMessage(String message, Exception e, boolean showPopup) {
+		String messageToShow = "";
+		if (!message.isEmpty())
+			messageToShow = message + " ";
+		if (e != null)
+			messageToShow += e.getMessage();
+		if (showPopup)
+			JOptionPane.showMessageDialog(myWorkbench, messageToShow);
+		errorMessage(messageToShow);
+
+		try {
+			ErrorStorage.getInstance().addMessage(message, e);
+		} catch (Exception ex) {
+		}
+
+	}
+
+	private static void errorMessageWithNotification(String message) {
 		JOptionPane.showMessageDialog(getInstance(), message);
 		errorMessage(message);
 	}
 
-	public static void errorMessage(String message) {
+	private static void errorMessage(String message) {
 		getConsoleArea().append(
 				Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
 						+ Calendar.getInstance().get(Calendar.SECOND) + " - ");

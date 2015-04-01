@@ -18,10 +18,12 @@ import javax.swing.WindowConstants;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.ExportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SendExceptionsAsEmail;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.LolaPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.PrismPathChooser;
@@ -79,16 +81,27 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 		JMenuItem importEntry = getImportEntry();
 
+		JMenuItem help = getHelpEntry();
+
 		fileMenu.add(new SwitchWorkingDirectoryAction(UIManager.getIcon("FileView.directoryIcon")));
 		fileMenu.add(saveAll);
 		fileMenu.add(save);
 		fileMenu.add(new DeleteAction("Delete", null));
 		fileMenu.add(new RenameAction("Rename", null));
+		fileMenu.add(new ExportAction("Export active tab"));
 		fileMenu.add(importEntry);
 		fileMenu.addSeparator();
 		fileMenu.add(exit);
+		fileMenu.addSeparator();
+		fileMenu.add(help);
 
 		return fileMenu;
+	}
+
+	private JMenuItem getHelpEntry() {
+		JMenuItem importEntry = new JMenuItem("Help");
+		importEntry.addActionListener(new SendExceptionsAsEmail("Send Bug Report...", null));
+		return importEntry;
 	}
 
 	private JMenuItem getImportEntry() {

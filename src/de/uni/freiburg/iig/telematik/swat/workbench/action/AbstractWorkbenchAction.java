@@ -6,12 +6,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
@@ -122,10 +122,8 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 		try {
 			doFancyStuff(e);
 		} catch(Exception ex){
-			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), "Error Message ",
-					"Error " + ex.getMessage(),
-					JOptionPane.ERROR_MESSAGE);
-			Workbench.errorMessage(this.getClass().getSimpleName() + ": " + ex.getMessage());
+			Workbench.errorMessage(this.getClass().getSimpleName(), ex, true);
+			ErrorStorage.getInstance().addMessage("Error during AbstractWorkbenchAction " + this.getClass().getSimpleName(), ex);
 		}
 	}
 	

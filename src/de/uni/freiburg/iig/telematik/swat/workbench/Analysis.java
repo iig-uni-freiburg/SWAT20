@@ -9,6 +9,7 @@ public class Analysis {
 
 	private String name = null;
 	private List<PatternSetting> patternSetting = null;
+	private int hashCode = 0;
 	
 	public Analysis(String name, List<PatternSetting> patternSetting) {
 		super();
@@ -28,6 +29,18 @@ public class Analysis {
 	
 	public String toString() {
 		return name;
+	}
+
+	public int getHashCode() {
+		return hashCode;
+	}
+
+	public void setHashCode(int hashCode) {
+		try{
+		this.hashCode = hashCode;
+		} catch (RuntimeException e) {
+			hashCode = 0;
+		}
 	}
 	
 }

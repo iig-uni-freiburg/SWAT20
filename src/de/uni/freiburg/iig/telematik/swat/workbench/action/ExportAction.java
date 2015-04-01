@@ -38,7 +38,7 @@ public class ExportAction extends AbstractWorkbenchAction {
 				try {
 					FileUtils.copy(file, dialog.getSelectedFile());
 				} catch (Exception e1) {
-					Workbench.errorMessageWithNotification("Could not copy " + file + " to " + dialog.getSelectedFile() + ": " + e1.getMessage());
+					Workbench.errorMessage("Could not copy " + file + " to " + dialog.getSelectedFile(), e1, true);
 					e1.printStackTrace();
 				}
 			}

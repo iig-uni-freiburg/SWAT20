@@ -59,7 +59,7 @@ public class SaveAllAction extends AbstractAction {
 				SwatTabView.getInstance().unsetModified(i);
 			} catch (SwatComponentException e) {
 				JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not successfully store " + netID);
-				Workbench.errorMessage("Could not successfully store " + netID);
+				Workbench.errorMessage("Could not successfully store " + netID, e, false);
 			}
 		}
 

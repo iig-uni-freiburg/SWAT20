@@ -51,7 +51,7 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 			Workbench.consoleMessage("Successfully saved Petri Net");
 		} catch (SwatComponentException e) {
 			MessageDialog.getInstance().addMessage("ERROR: Could not save Petri Net: " + e.getMessage());
-			Workbench.errorMessage("Could not save Petri Net: " + e.getMessage());
+			Workbench.errorMessage("Could not save Petri Net. ", e, true);
 		}
 		
 	}
@@ -80,7 +80,7 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 				((PNEditorComponent) component.getMainComponent()).getUndoManager().clear();
 			}
 		} else {
-			Workbench.errorMessage("Could not save: Active pane is not of type PNEditor");
+			Workbench.errorMessage("Could not save: Active pane is not of type PNEditor", null, false);
 
 		}
 
