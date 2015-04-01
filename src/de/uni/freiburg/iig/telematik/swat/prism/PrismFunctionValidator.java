@@ -45,13 +45,13 @@ public class PrismFunctionValidator {
 			if (pr.verifyProperties())
 				return true; //all good
 		} catch (ParameterException e) {
-			Workbench.errorMessageWithNotification("Error loading Prism");
+			Workbench.errorMessage("Error loading Prism", null, true);
 			e.printStackTrace();
 		} catch (PropertyException e) {
-			Workbench.errorMessageWithNotification("Could not retrieve Prism Path. Please set prism path");
+			Workbench.errorMessage("Could not retrieve Prism Path. Please set prism path", null, true);
 			e.printStackTrace();
 		} catch (IOException e) {
-			Workbench.errorMessageWithNotification("Could not ressolve Prism Model Checker");
+			Workbench.errorMessage("Could not ressolve Prism Model Checker", null, true);
 			e.printStackTrace();
 		}
 		return false;
@@ -71,7 +71,7 @@ public class PrismFunctionValidator {
 			return true;
 
 		} catch (IOException e) {
-			Workbench.errorMessageWithNotification("Could not access temp dir: " + tempModel.getAbsolutePath());
+			Workbench.errorMessage("Could not access temp dir: " + tempModel.getAbsolutePath(), e, false);
 			e.printStackTrace();
 			return false;
 		}
