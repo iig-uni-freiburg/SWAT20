@@ -6,10 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-
-import javax.swing.JOptionPane;
-
-import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+//import java.nio.charset.Charset;
+//import java.nio.file.Files;
+//import java.nio.file.Paths;
 
 public class IOUtils {
 	
@@ -36,7 +35,6 @@ public class IOUtils {
  
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not save to " + file + "\br Reason: " + e.getMessage());
 		} finally {
 			try {
 				if (fop != null) {
