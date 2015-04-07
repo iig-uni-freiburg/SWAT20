@@ -8,23 +8,23 @@ import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelCheckerFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.PatternController;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 public class AnalysisController {
 	
 	private static AnalysisController mAnalysisController;
 	
-	private HashMap<WorkbenchComponent, PatternController> mComponentToPatternControllerMap;
+	private HashMap<ViewComponent, PatternController> mComponentToPatternControllerMap;
 	
-	private HashMap<WorkbenchComponent, AnalyzePanel> mComponentToAnalyzePanelMap;
+	private HashMap<ViewComponent, AnalyzePanel> mComponentToAnalyzePanelMap;
 
-	private WorkbenchComponent mComponent;
+	private ViewComponent mComponent;
 
 	private AnalyzePanel mAnalyzePanel;
 	
 	private PatternController mPatternController;
 	
-	public static AnalysisController getInstance(WorkbenchComponent component) {
+	public static AnalysisController getInstance(ViewComponent component) {
 		
 		if (mAnalysisController == null) {
 			mAnalysisController = new AnalysisController();
@@ -37,11 +37,11 @@ public class AnalysisController {
 	}
 	
 	private AnalysisController() {
-		mComponentToPatternControllerMap = new HashMap<WorkbenchComponent, PatternController>(); 
-		mComponentToAnalyzePanelMap = new HashMap<WorkbenchComponent, AnalyzePanel>();
+		mComponentToPatternControllerMap = new HashMap<ViewComponent, PatternController>();
+		mComponentToAnalyzePanelMap = new HashMap<ViewComponent, AnalyzePanel>();
 	}
 
-	private void setComponent(WorkbenchComponent component) {
+	private void setComponent(ViewComponent component) {
 
 		mComponent = component;
 		

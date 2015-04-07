@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.swat.editor.CPNEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.IFNetEditor;
-import de.uni.freiburg.iig.telematik.swat.editor.PTNetEditor;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.AnalysisController;
+import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.gui.PatternDialog;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.factory.AbstractPatternFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.factory.CWNPatternFactory;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.factory.IFNetPatternFactory;
@@ -23,9 +21,11 @@ import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.model_info_provider.PTNetInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.model_info_provider.XESLogInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.gui.PatternDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.CPNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 
 public class PatternController {
@@ -38,21 +38,21 @@ public class PatternController {
 	public PatternController(AnalysisController anaController) {
 		AbstractPatternFactory mPatternFactory = null;
 		mAnalysisController = anaController;
-		WorkbenchComponent component = (WorkbenchComponent) 
+		ViewComponent component = (ViewComponent)
 				Workbench.getInstance().getTabView().getSelectedComponent();
 		
-		if (component instanceof PTNetEditor) {
+		if (component instanceof PTNetEditorComponent) {
 			mPatternFactory = new PTNetPatternFactory();
 			mModelInformationProvider = new PTNetInfoProvider((PTNet) 
-					((PTNetEditor) component).netContainer.getPetriNet());
-		} else if (component instanceof CPNEditor) {
+ ((PTNetEditorComponent) component).netContainer.getPetriNet());
+		} else if (component instanceof CPNEditorComponent) {
 			mPatternFactory = new CWNPatternFactory();
 			mModelInformationProvider = new CWNInfoProvider((CPN) 
-					((CPNEditor) component).netContainer.getPetriNet());
-		} else if (component instanceof IFNetEditor) {
+ ((CPNEditorComponent) component).netContainer.getPetriNet());
+		} else if (component instanceof IFNetEditorComponent) {
 			mPatternFactory = new IFNetPatternFactory();
 			mModelInformationProvider = new IFNetInfoProvider((IFNet) 
-					((IFNetEditor) component).netContainer.getPetriNet());
+ ((IFNetEditorComponent) component).netContainer.getPetriNet());
 		} else if (component instanceof LogFileViewer) {
 			mPatternFactory = new XESLogPatternFactory();
 			mModelInformationProvider = new XESLogInfoProvider(((LogFileViewer) component).getFile());
