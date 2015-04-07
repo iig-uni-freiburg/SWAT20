@@ -2,15 +2,24 @@ package de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.mode
 
 import java.util.Calendar;
 import java.util.Iterator;
-
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.DeclassificationTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.TransitionToIDMapper;
 
-public abstract class PrismConverter {
+/**
+ * The PrismTranslator is used to translate a petri net into a DTMC (Discrete Time Markov Chain) 
+ * in the Prism language. The rules of the translation partially depends on the type of the petri net. 
+ * There are separate classes which extend this class in order to perform the translation for the
+ * different petri net types (simple petri net, cpn, ifnet).
+ *
+ * @author Lukas Sättler
+ * @version 1.0
+ */
+public abstract class PrismTranslator {
 	
 	private final String VERSION = "1.0";
 	
@@ -18,15 +27,17 @@ public abstract class PrismConverter {
 	
 	protected boolean bounded = true;
 	
+	public static final String transitionVarName = "current_trans"; 
+	
 	public boolean isBoundedNet() {
 		return bounded;
 	}
 	
-	protected PrismConverter(AbstractPetriNet<?,?,?,?,?,?,?> net) {
+	protected PrismTranslator(AbstractPetriNet<?,?,?,?,?,?,?> net) {
 		mAbstractNet = net;
 	}
 	
-	public StringBuilder convert() {
+	public StringBuilder translate() {
 		
 		StringBuilder placeVars = createPlaceVars();
 		StringBuilder transitionVars = createTransitionVars();
@@ -52,10 +63,11 @@ public abstract class PrismConverter {
 				transitionVarBuilder.append("//Regular Transition" + "\n");
 			}
 			
-			transitionVarBuilder.append(t.getName() + " : [0..1] init 0;" + "\n");
-			transitionVarBuilder.append(t.getName() + "_last"+" : [0..1] init 0;" + "\n"+ "\n");
+			//transitionVarBuilder.append(t.getName() + " : [0..1] init 0;" + "\n");
+			transitionVarBuilder.append(t.getName() + "_fired"+" : [0..1] init 0;" + "\n"+ "\n");
 		}
-		
+		int numberOfTransitions = TransitionToIDMapper.getTransitionCount();
+		transitionVarBuilder.append(transitionVarName + " : [0.." + numberOfTransitions + "] init 0;" + "\n");
 		return transitionVarBuilder;
 	}
 	
@@ -104,6 +116,7 @@ public abstract class PrismConverter {
 		Iterator<AbstractPlace<?,?>> placeIter = 
 				(Iterator<AbstractPlace<?, ?>>) mAbstractNet.getDrainPlaces().iterator();
 		
+		// check whether output places contain a token
 		while(placeIter.hasNext()){
 			AbstractPlace<?,?> curPlace = placeIter.next();
 			if (placeIter.hasNext()) {
@@ -113,19 +126,7 @@ public abstract class PrismConverter {
 			}
 		}
 		
-		String loopEffect = "";
-		@SuppressWarnings("unchecked")
-		Iterator<AbstractTransition<?,?>> transIter = (Iterator<AbstractTransition<?, ?>>) 
-				mAbstractNet.getTransitions().iterator();
-		
-		while(transIter.hasNext()){
-			AbstractTransition<?,?> t = transIter.next();
-			if (transIter.hasNext()) {
-				loopEffect += "(" + t.getName() + "_last'= 0) &";
-			} else {
-				loopEffect += " (" + t.getName() + "_last'= 0)";
-			}
-		}
+		String loopEffect = " (" + transitionVarName + "'= 0)";
 		
 		termLoopBuilder.append("[] ");	
 		termLoopBuilder.append(enableCondition);
@@ -161,7 +162,7 @@ public abstract class PrismConverter {
 		net.addFlowRelationTP("t2", "p3");
 		
 		PTNetConverter c = new PTNetConverter(net);
-		StringBuilder sb = c.convert();
+		StringBuilder sb = c.translate();
 		System.out.println(sb.toString());
 		
 	}

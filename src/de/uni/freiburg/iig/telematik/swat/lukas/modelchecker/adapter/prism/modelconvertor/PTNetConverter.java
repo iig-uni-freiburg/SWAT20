@@ -8,8 +8,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTFlowRelat
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTTransition;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.TransitionToIDMapper;
 
-public class PTNetConverter extends PrismConverter {
+public class PTNetConverter extends PrismTranslator {
 
 	public PTNetConverter(AbstractPTNet<?,?,?,?,?,?> net) {
 		super(net);
@@ -95,8 +96,9 @@ public class PTNetConverter extends PrismConverter {
 							"+" + outConstraint + ")");										
 			}
 			
-			firingEffectBuilder.append(" & (" + t.getName()+"'=1"+ ")");
-			firingEffectBuilder.append(" & (" + t.getName()+"_last'=1"+ ")");
+			firingEffectBuilder.append(" & (" + transitionVarName + 
+					"'="+ TransitionToIDMapper.getID(t.getName()) + ")");
+			firingEffectBuilder.append(" & (" + t.getName()+"_fired'=1"+ ")");
 			
 			 @SuppressWarnings("unchecked")
 			Iterator<AbstractPTTransition<?>> tIterator = 

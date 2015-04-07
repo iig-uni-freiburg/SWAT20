@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.lukas.operands;
 
-public class User extends Operand {
+public class User extends PatternParameter {
 
 	private String mUserName;
 	

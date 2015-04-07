@@ -6,17 +6,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PRISMPatternResult;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.ResourcePattern;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.OrganizationalPattern;
 
-public class PrismResult implements Iterable<Map.Entry<CompliancePattern, PatternResult>> {
+public class PrismResult implements Iterable<Map.Entry<CompliancePattern, PRISMPatternResult>> {
 
-	HashMap<CompliancePattern, PatternResult> mResults;
+	HashMap<CompliancePattern, PRISMPatternResult> mResults;
 	
 	public PrismResult(ArrayList<CompliancePattern> patterns, String resultStr) {
 		
-		mResults = new HashMap<CompliancePattern, PatternResult>();
+		mResults = new HashMap<CompliancePattern, PRISMPatternResult>();
 		
 		ArrayList<String> resultStrs = getResultsStringForPattern(resultStr);
 
@@ -26,7 +26,7 @@ public class PrismResult implements Iterable<Map.Entry<CompliancePattern, Patter
 			String resString = resultStrs.get(i);
 			double probability = getProb(resString);
 			boolean isFulfilled = isFulfilled(resString, isAntiPattern);
-			PatternResult pr = new PatternResult(probability, isFulfilled, cp.getOperands());
+			PRISMPatternResult pr = new PRISMPatternResult(probability, isFulfilled, cp.getOperands());
 			mResults.put(cp, pr);	
 		}
 		
@@ -35,7 +35,7 @@ public class PrismResult implements Iterable<Map.Entry<CompliancePattern, Patter
 	public PrismResult(ArrayList<CompliancePattern> patterns, String resultStr,
 			String states) {
 		
-		mResults = new HashMap<CompliancePattern, PatternResult>();
+		mResults = new HashMap<CompliancePattern, PRISMPatternResult>();
 			
 		ArrayList<String> resultStrs = getResultsStringForPattern(resultStr);
 		
@@ -45,11 +45,11 @@ public class PrismResult implements Iterable<Map.Entry<CompliancePattern, Patter
 				j--;
 			}
 			CompliancePattern cp = patterns.get(j);
-			PatternResult pr = mResults.get(cp);
+			PRISMPatternResult pr = mResults.get(cp);
 			if (pr == null) {
 				double probability = getProb(res);
 				boolean isFulfilled = isFulfilled(res, cp.isAntiPattern());
-				pr = new PatternResult(probability, isFulfilled, cp.getOperands());
+				pr = new PRISMPatternResult(probability, isFulfilled, cp.getOperands());
 				mResults.put(cp, pr);
 			} else {
 				ArrayList<String> path = getViolatingPath(res, states);
@@ -149,18 +149,18 @@ public class PrismResult implements Iterable<Map.Entry<CompliancePattern, Patter
 		return mResults;
 	}*/
 	
-	public PatternResult getPatternResult(CompliancePattern pattern) {
+	public PRISMPatternResult getPatternResult(CompliancePattern pattern) {
 		
 		return mResults.get(pattern);
 		
 	}
 
 	@Override
-	public Iterator<Entry<CompliancePattern, PatternResult>> iterator() {
+	public Iterator<Entry<CompliancePattern, PRISMPatternResult>> iterator() {
 		return mResults.entrySet().iterator();
 	}
 	
-	public void addPatternResult(ResourcePattern p, PatternResult res) {
+	public void addPatternResult(OrganizationalPattern p, PRISMPatternResult res) {
 		mResults.put(p, res);
 	}
 	

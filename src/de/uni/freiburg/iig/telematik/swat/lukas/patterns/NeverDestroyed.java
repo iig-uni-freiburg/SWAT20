@@ -7,7 +7,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Token;
 
-public class NeverDestroyed extends DataflowPattern {
+public class NeverDestroyed extends DataflowAntiPattern {
 	
 	public static final String NAME = "Never Destroyed D";
 	

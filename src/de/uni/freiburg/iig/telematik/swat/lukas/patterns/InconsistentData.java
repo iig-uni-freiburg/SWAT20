@@ -15,7 +15,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Token;
 
-public class InconsistentData extends DataflowPattern {
+public class InconsistentData extends DataflowAntiPattern {
 	
 	public static final String NAME = "Inconsistent Data D";
 	public static final String DESC = "A task is using a data element while another is writing or destroying it.";

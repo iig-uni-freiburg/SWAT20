@@ -3,7 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.NetElementExpression;
 
-public class Universal extends AtomicPattern {
+public class Universal extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "Universal P";
 	

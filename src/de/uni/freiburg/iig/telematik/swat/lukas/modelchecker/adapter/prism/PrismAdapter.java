@@ -20,15 +20,23 @@ import de.uni.freiburg.iig.telematik.swat.lukas.IOUtils;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.CPNConverter;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.IFNetConverter;
 import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.PTNetConverter;
-import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.PrismConverter;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.PrismTranslator;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class PrismExecutor {
+/**
+ * The PrismAdapter is used to provide Prism with the necessary input 
+ * (a petri net and compliance rules) and to capture the output of the design time
+ * verification with PRISM.
+ *
+ * @author Lukas Sättler
+ * @version 1.0
+ */
+public class PrismAdapter {
 	
 	private String mPrismPath;
 	
-	private PrismConverter mConverter;
+	private PrismTranslator mConverter;
 	
 	private String mFilesPath = System.getProperty("user.dir");
 	
@@ -38,8 +46,13 @@ public class PrismExecutor {
 	
 	private final String mStatesFileName = "states";
 
-	public PrismExecutor(AbstractPetriNet<?,?,?,?,?,?,?> net) {
-		
+	/**
+	 * Constructs a PrismAdapter
+	 *
+	 * @param net the petri net that simulated using Prism
+	 */
+	public PrismAdapter(AbstractPetriNet<?,?,?,?,?,?,?> net) {
+		TransitionToIDMapper.createMap(net);
 		if (net instanceof IFNet) {
 			mConverter = new IFNetConverter((IFNet) net);
 		} else if (net instanceof CPN) {
@@ -68,10 +81,16 @@ public class PrismExecutor {
 		}
 	}
 	
-	
+	/**
+	 * Initiates the verification of a petri net with Prism. The method returns the result of the 
+	 * design time verification with Prism.
+	 *
+	 * @param  patterns a set of compliance rules that have to be satisfied by the petri net
+	 * @return the verification result
+	 */
 	public PrismResult analyze(ArrayList<CompliancePattern> patterns) {
 		
-		File modelFile = IOUtils.writeToFile(mFilesPath, mModelFileName, mConverter.convert().toString());
+		File modelFile = IOUtils.writeToFile(mFilesPath, mModelFileName, mConverter.translate().toString());
 		
 		String properties = "";
 		for (CompliancePattern pattern : patterns) {

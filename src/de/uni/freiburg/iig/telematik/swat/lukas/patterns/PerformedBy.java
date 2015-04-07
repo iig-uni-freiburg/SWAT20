@@ -19,14 +19,14 @@ import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Role;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
-public class PerformedBy extends ResourcePattern {
+public class PerformedBy extends OrganizationalPattern {
 	
 	public static final String NAME = "T Performed-By R";
 	public static final String DESC = "Transition T is performed by a User with Role R.";
 	
-	public PerformedBy(Transition t, Role role) {
+	public PerformedBy(Activity t, Role role) {
 				
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
@@ -53,7 +53,7 @@ public class PerformedBy extends ResourcePattern {
 		setRules(rules); 
 	}
 	
-	public PerformedBy(Transition t, Role role, RBACModel accessModel) {
+	public PerformedBy(Activity t, Role role, RBACModel accessModel) {
 		
 		Set<String> legalRoles = accessModel.getDominatingRoles(role.getName());
 		legalRoles.add(role.getName());

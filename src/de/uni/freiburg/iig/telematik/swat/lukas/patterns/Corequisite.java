@@ -2,9 +2,9 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.StateExpression;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
-public class Corequisite extends CompositePattern {
+public class Corequisite extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "P Co-Requisite Q";
 	
@@ -17,7 +17,7 @@ public class Corequisite extends CompositePattern {
 		mOperands.add(t2);
 	}
 	
-	public Corequisite(Transition t1, Transition t2, AbstractPlace<?,?> p) {
+	public Corequisite(Activity t1, Activity t2, AbstractPlace<?,?> p) {
 		super("((F" + t1.toString() + ") & (F" + t2.toString() + ")) | "
 				+ "(!(F(" + t1.toString() + ")) & (!(F(" + t2.toString() + "))))", 
 				"E[F((" + p.getName() + "_black=1) & (((" + t1.getName() + "=1) & (" + t2.getName() + "=0)) | ((" + t1.getName() + "=0) & (" + t2.getName() + "=1))))]");

@@ -2,22 +2,22 @@ package de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter;
 
 import java.util.ArrayList;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.PatternParameter;
 
 public class PatternResult {
 
 	private double mProb;
 	private boolean mFulfilled;
 	private ArrayList<String> mViolatingPath;
-	private ArrayList<Operand> mPatternOperands;
+	private ArrayList<PatternParameter> mPatternOperands;
 
 	public PatternResult(double prob, boolean fulfilled, 
-			ArrayList<String> violatingPaths, ArrayList<Operand> patternOperands) {
+ ArrayList<String> violatingPaths, ArrayList<PatternParameter> patternOperands) {
 		this(prob, fulfilled, patternOperands);
 		mViolatingPath =  violatingPaths;
 	}
 	
-	public PatternResult(double prob, boolean fulfilled, ArrayList<Operand> patternOperands) {
+	public PatternResult(double prob, boolean fulfilled, ArrayList<PatternParameter> patternOperands) {
 		mProb = prob;
 		mFulfilled = fulfilled;
 		mPatternOperands = patternOperands;
@@ -47,7 +47,7 @@ public class PatternResult {
 		mFulfilled = fulfilled;
 	}
 	
-	public ArrayList<Operand> getPatternOperands() {
+	public ArrayList<PatternParameter> getPatternOperands() {
 		return mPatternOperands;
 	}
 	

@@ -7,7 +7,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Token;
 
-public class WeaklyRedData extends DataflowPattern {
+public class WeaklyRedData extends DataflowAntiPattern {
 	
 	public static final String NAME = "Weakly Redundant Data D";
 	

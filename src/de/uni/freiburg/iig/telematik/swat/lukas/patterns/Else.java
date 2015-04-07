@@ -5,14 +5,13 @@ import java.util.List;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.NetElementExpression;
 
-public class Else extends AtomicPattern {
+public class Else extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "P LeadsTo Q Else R";
 	public static final String DESC = "IF P occurs, Q should occur otherwise R.";
 
 	public Else(NetElementExpression op1, NetElementExpression op2, NetElementExpression op3) {
 		super();
-		
 		List<NetElementExpression> operands = new ArrayList<NetElementExpression>();
 		operands.add(op1);
 		operands.add(op2);

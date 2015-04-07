@@ -16,15 +16,15 @@ import org.processmining.analysis.sciffchecker.logic.model.variable.RoleVariable
 import org.processmining.analysis.sciffchecker.logic.model.variable.StringVariableAttribute;
 import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
 
-public class SegregatedFrom extends ResourcePattern {
+public class SegregatedFrom extends OrganizationalPattern {
 	
 	public static final String NAME = "A1 Segregated-From A2";
 	public static final String DESC = null;
 	
-	public SegregatedFrom(Transition t1, Transition t2) {
+	public SegregatedFrom(Activity t1, Activity t2) {
 		
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);

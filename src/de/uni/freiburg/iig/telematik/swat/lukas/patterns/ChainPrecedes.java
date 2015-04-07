@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.NetElementExpression;
 
-public class ChainPrecedes extends AtomicPattern {
+public class ChainPrecedes extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "P, Q Chain-Precedes R";
 	

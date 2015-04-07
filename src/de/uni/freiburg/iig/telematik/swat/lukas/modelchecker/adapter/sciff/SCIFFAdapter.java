@@ -11,24 +11,46 @@ import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
 import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 import org.processmining.analysis.sciffchecker.logic.util.TimeGranularity;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.ResourcePattern;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.OrganizationalPattern;
 
-public class SCIFFExecutor {
+/**
+ * The SCIFFAdapter is used to provide SCIFF with the necessary input 
+ * (a log file and compliance rules) and to capture the output of the audit time 
+ * verification with SCIFF.
+ *
+ * @author Lukas Sättler
+ * @version 1.0
+ */
+
+public class SCIFFAdapter {
 	
 	private ISciffLogReader mLogReader;
 	
-	public SCIFFExecutor(ISciffLogReader logReader) {
+	/**
+	 * Constructs a SCIFFAdapter
+	 *
+	 * @param logReader a reader which is used to parse the log
+	 */
+	public SCIFFAdapter(ISciffLogReader logReader) {
 		mLogReader = logReader;
 	}
 	
 	
-	public ArrayList<SCIFFResult> analyze(ArrayList<ResourcePattern> patterns) {
+	/**
+	 * Initiates the verification of a process log with SCIFF. The method returns the result of the 
+	 * audit time verification with SCIFF.
+	 *
+	 * @param logReader a reader which is used to parse the log
+	 * @return the result of the verification
+	 */
+	public ArrayList<SCIFFResult> analyze(ArrayList<CompliancePattern> patterns) {
 		
 		ArrayList<SCIFFResult> results = new ArrayList<SCIFFResult>();
 		
-		for (ResourcePattern rp : patterns) {
+		for (CompliancePattern rp : patterns) {
 			
-			List<CompositeRule> rules = rp.getRules();
+			List<CompositeRule> rules = ((OrganizationalPattern) rp).getRules();
 			SCIFFResult sr = new SCIFFResult();
 			
 			for (CompositeRule rule : rules) {

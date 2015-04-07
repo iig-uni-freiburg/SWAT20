@@ -15,18 +15,18 @@ import org.processmining.analysis.sciffchecker.logic.model.variable.ActivityType
 import org.processmining.analysis.sciffchecker.logic.model.variable.OriginatorVariable;
 import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.User;
 
-public class MBounded extends ResourcePattern {
+public class MBounded extends OrganizationalPattern {
 	
 	public static final String NAME = "A1,...,An M-Bounded U";
 	public static final String DESC = "The activities A1,...,An are performed by the same user U.";
 	
-	public MBounded(List<Transition> transitions, User user) {
+	public MBounded(List<Activity> transitions, User user) {
 		
 		List<CompositeRule> rules = new ArrayList<CompositeRule>();
-		for (Transition trans : transitions) {
+		for (Activity trans : transitions) {
 			rules.add(createRule(trans, user));
 		}
 		
@@ -34,7 +34,7 @@ public class MBounded extends ResourcePattern {
 		
 	}
 
-	private CompositeRule createRule(Transition trans, User user) {
+	private CompositeRule createRule(Activity trans, User user) {
 		
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);

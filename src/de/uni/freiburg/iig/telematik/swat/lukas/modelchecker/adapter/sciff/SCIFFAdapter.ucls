@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.6" icons="false" always-add-relationships="true" generalizations="true" realizations="true" 
+  associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.sciff.SCIFFAdapter" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/sciff/SCIFFAdapter.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="288" y="292"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.sciff.SCIFFResult" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/sciff/SCIFFResult.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="286" y="418"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="3" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/PatternResult.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="695" y="410"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <realization id="4">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
+  <dependency id="5">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <classifier-display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="false">    
+    <attributes public="false" package="false" protected="false" private="false" static="false"/>    
+    <operations public="true" package="false" protected="false" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

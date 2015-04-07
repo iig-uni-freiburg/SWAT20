@@ -111,7 +111,7 @@ public class PatternFactory {
 	}
 	
 	
-	public ArrayList<Parameter> getParametersOfPattern(String patternName) {
+	public ArrayList<GuiParameter> getParametersOfPattern(String patternName) {
 		ParameterProvider pp = new ParameterProvider();
 		return pp.getParameters(patternName);
 	}

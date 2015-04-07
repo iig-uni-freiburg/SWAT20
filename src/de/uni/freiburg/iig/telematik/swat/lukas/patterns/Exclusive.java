@@ -2,9 +2,9 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.StateExpression;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
-public class Exclusive extends CompositePattern {
+public class Exclusive extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "P Exclusive Q";
 	
@@ -18,7 +18,7 @@ public class Exclusive extends CompositePattern {
 		mOperands.add(op2);
 	}
 	
-	public Exclusive(Transition t1, Transition t2, AbstractPlace<?, ?> p) {
+	public Exclusive(Activity t1, Activity t2, AbstractPlace<?, ?> p) {
 		super("(!(F" + t1.toString() + ") | (G(!" + t2.toString() 
 				+ "))) & (!(F"  + t2.toString() + ") | (G(!" 
 				+ t1.toString() + ")))", "E[F((" + p.getName() + "_black=1) & "

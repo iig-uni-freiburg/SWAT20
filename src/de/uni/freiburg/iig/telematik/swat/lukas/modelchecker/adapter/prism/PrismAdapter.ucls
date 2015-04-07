@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.6" icons="false" always-add-relationships="true" generalizations="true" realizations="true" 
+  associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.PrismAdapter" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/prism/PrismAdapter.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="204" y="186"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.PrismResult" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/prism/PrismResult.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="198" y="378"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" 
+    name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.TransitionToIDMapper" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/prism/TransitionToIDMapper.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="272" y="36"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" 
+    name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.CPNConverter" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/prism/modelconvertor/CPNConverter.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="663" y="280"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" 
+    name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.IFNetConverter" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/prism/modelconvertor/IFNetConverter.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="654" y="408"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" 
+    name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.PrismTranslator" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/prism/modelconvertor/PrismTranslator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="808" y="56"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" 
+    name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.modelconvertor.PTNetConverter" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/prism/modelconvertor/PTNetConverter.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1039" y="271"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PRISMPatternResult" 
+    project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/PRISMPatternResult.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-265" y="370"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="9" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.PatternResult" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/modelchecker/adapter/PatternResult.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-264" y="88"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="false">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <generalization id="10">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <association id="11">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="12" name="mResults"/>      
+      <multiplicity id="13" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="18">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="20">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <generalization id="21">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <dependency id="22">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="23">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="24">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <realization id="25">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </realization>  
+  <association id="26">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="27" name="mConverter"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="29">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <classifier-display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="false">    
+    <attributes public="false" package="false" protected="false" private="false" static="false"/>    
+    <operations public="true" package="true" protected="false" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

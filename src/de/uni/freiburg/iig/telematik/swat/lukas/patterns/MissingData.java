@@ -6,7 +6,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Token;
 
-public class MissingData extends DataflowPattern {
+public class MissingData extends DataflowAntiPattern {
 	
 	public static final String NAME = "Missing Data D";
 	

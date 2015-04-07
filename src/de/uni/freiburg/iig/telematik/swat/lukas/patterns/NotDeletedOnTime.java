@@ -11,8 +11,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractRegularIFNetTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Token;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
-public class NotDeletedOnTime extends DataflowPattern {
+public class NotDeletedOnTime extends DataflowAntiPattern {
 	
 	public static final String NAME = "D Not Deleted On Time";
 	
@@ -48,12 +49,11 @@ public class NotDeletedOnTime extends DataflowPattern {
 			setPrismProperty("false", true);
 		} else if (transitions.size() == 1) {
 			AbstractRegularIFNetTransition<IFNetFlowRelation> t = transitions.iterator().next();
-			formula += "G((" + t.getName() + "_last=1) => ((" + t.getName() + "_last=1) U (G(!" + readToken + "))))";
+			formula += "G("+ (new Activity(t.getName())).toString() +" => (" + (new Activity(t.getName())).toString() + "U (G(!" + readToken + "))))";
 			setPrismProperty(formula, true);
 		} else {
 			for (AbstractRegularIFNetTransition<IFNetFlowRelation> t : transitions) {
-				formula += " | (G((" + t.getName() + "_last=1) => ((" + t.getName() + 
-						"_last=1) U (G(!" + readToken + ")))))";
+				formula += " | (G("+ (new Activity(t.getName())).toString() +" => ("+ (new Activity(t.getName())).toString() +" U (G(!" + readToken + ")))))";
 			}
 			formula = formula.substring(3, formula.length());
 			setPrismProperty(formula, true);

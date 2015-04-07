@@ -11,8 +11,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNTransition;
+import de.uni.freiburg.iig.telematik.swat.lukas.modelchecker.adapter.prism.TransitionToIDMapper;
 
-public class CPNConverter extends PrismConverter {
+public class CPNConverter extends PrismTranslator {
 
 	private AbstractCPN<?, ?, ?, ?, ?, ?> mNet;
 
@@ -146,28 +147,9 @@ public class CPNConverter extends PrismConverter {
 			if (enablednessBuilder.toString().endsWith("& ")) {
 				enablednessBuilder.delete(enablednessBuilder.length() - 2, enablednessBuilder.length());
 			}
-			
-			firingEffectBuilder.append("(" + t.getName()+"'=1"+ ") & " );
-			firingEffectBuilder.append("(" + t.getName()+"_last'=1"+ ") & ");
-			
-			 @SuppressWarnings("unchecked")
-			Iterator<AbstractCPNTransition<?>> tIterator = 
-					 (Iterator<AbstractCPNTransition<?>>) mNet.getTransitions().iterator();	
-			 
-			AbstractCPNTransition<?> currentTransition = null;
-	        
-			while(tIterator.hasNext()) {
-				
-				currentTransition = tIterator.next();
-				
-				if (!currentTransition.equals(t)) {
-					if(tIterator.hasNext()){
-						firingEffectBuilder.append("(" + currentTransition.getName()+"_last'=0"+ ") & ");
-					} else {
-						firingEffectBuilder.append("(" + currentTransition.getName()+"_last'=0"+ ");");
-					}
-				}
-			}
+			int transitionId = TransitionToIDMapper.getID(t.getName());
+			firingEffectBuilder.append("(" + transitionVarName + "'= " + transitionId + ") & " );
+			firingEffectBuilder.append("(" + t.getName()+"_fired'=1"+ ") & ");
 			
 			if (firingEffectBuilder.lastIndexOf("&") == firingEffectBuilder.length() - 2) {
 				firingEffectBuilder.delete(firingEffectBuilder.length() - 3, firingEffectBuilder.length());

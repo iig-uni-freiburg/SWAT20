@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.lukas.operands;
 
-public class Role extends Operand {
+public class Role extends PatternParameter {
 	
 	private String mRolename;
 

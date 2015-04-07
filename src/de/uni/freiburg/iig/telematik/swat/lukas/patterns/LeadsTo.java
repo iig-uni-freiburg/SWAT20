@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.NetElementExpression;
 
-public class LeadsTo extends AtomicPattern {
+public class LeadsTo extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "P Leads-To Q";
 	

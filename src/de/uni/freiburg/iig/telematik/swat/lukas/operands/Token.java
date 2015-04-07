@@ -1,6 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.lukas.operands;
 
-public class Token extends Operand {
+public class Token extends PatternParameter {
 
 	private String mColor;
 

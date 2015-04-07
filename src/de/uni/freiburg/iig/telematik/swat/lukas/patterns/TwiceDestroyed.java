@@ -6,7 +6,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Token;
 
-public class TwiceDestroyed extends DataflowPattern {
+public class TwiceDestroyed extends DataflowAntiPattern {
 	
 	public static final String NAME = "Twice Destroyed D";
 	

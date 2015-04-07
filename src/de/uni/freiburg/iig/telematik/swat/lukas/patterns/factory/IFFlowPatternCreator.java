@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +20,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AccessMode;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Token;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.BottomPattern;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.Causal;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompliancePattern;
@@ -28,6 +29,15 @@ import de.uni.freiburg.iig.telematik.swat.lukas.patterns.ReadUp;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.UsageConflict;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.WriteDown;
 
+
+/**
+ * The IFFlowPatternCreator is a helper class which creates information flow compliance rules.
+ * The information flow compliance rules have to satisfied by an ifnet which is a design time model
+ * of a business process. 
+ *
+ * @author Lukas Sättler
+ * @version 1.0
+ */
 
 public class IFFlowPatternCreator {
 	
@@ -38,6 +48,13 @@ public class IFFlowPatternCreator {
 	}
 
 	
+	/**
+	 * Returns a list compliance rules describing a requirement on the information flow of a
+	 * business process modelled by an ifnet. 
+	 *
+	 * @param  patternName the name of the pattern that is used to create the compliance rules
+	 * @return the list of compliance rules describing the requirement on the ifnet
+	 */
 	public ArrayList<CompliancePattern> createPatterns(String patternName) {
 		
 		ArrayList<CompliancePattern> patterns = new ArrayList<CompliancePattern>();
@@ -56,7 +73,7 @@ public class IFFlowPatternCreator {
 								accessModes != null && 
 								accessModes.get(color) != null && 
 								accessModes.get(color).contains(AccessMode.READ)) {
-							patterns.add(new ReadUp(new Transition(transition.getName()), new Token(color)));
+							patterns.add(new ReadUp(new Activity(transition.getName()), new Token(color)));
 						}
 					}
 				}
@@ -76,7 +93,7 @@ public class IFFlowPatternCreator {
 								accessModes != null && 
 								accessModes.get(color) != null &&
 								accessModes.get(color).contains(AccessMode.WRITE)) {
-							patterns.add(new WriteDown(new Transition(transition.getName()), new Token(color)));
+							patterns.add(new WriteDown(new Activity(transition.getName()), new Token(color)));
 						}
 					}
 				}
@@ -111,8 +128,8 @@ public class IFFlowPatternCreator {
 						AbstractIFNetTransition<IFNetFlowRelation> lowTransition = relOfPlace.getTransition();
 						// check whether transition has security level is low
 						if (SecurityLevel.LOW == label.getActivityClassification(lowTransition.getName())) {
-							patterns.add(new Causal(new Transition(highTransition.getName()),
-									outputPlace, new Transition(lowTransition.getName())));
+							patterns.add(new Causal(new Activity(highTransition.getName()),
+									outputPlace, new Activity(lowTransition.getName())));
 						}
 					}
 				}
@@ -177,7 +194,7 @@ public class IFFlowPatternCreator {
 						Multiset<String> commonConsumedColors = relHigh.getConstraint().intersection(relLow.getConstraint());
 						if (commonConsumedColors.size() > 0) {
 							patterns.add(new UsageConflict(highTransition,
-									new Transition(lowTransition.getName()), p));
+									lowTransition, p, commonConsumedColors));
 						}
 					}
 				}

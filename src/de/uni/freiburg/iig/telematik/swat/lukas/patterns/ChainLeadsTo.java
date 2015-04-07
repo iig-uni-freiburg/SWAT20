@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.NetElementExpression;
 
-public class ChainLeadsTo extends AtomicPattern {
+public class ChainLeadsTo extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "P, Q Chain-Leads-To R";
 	

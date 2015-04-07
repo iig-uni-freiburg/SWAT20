@@ -13,7 +13,6 @@ public class SCIFFResult {
 	private ArrayList<Integer> mExceptionInstances;
 	
 	public SCIFFResult() {
-		
 		mWrongInstances = new ArrayList<Integer>();
 		mCorrectInstances = new ArrayList<Integer>();
 		mExceptionInstances = new ArrayList<Integer>();
@@ -28,7 +27,7 @@ public class SCIFFResult {
 		
 	}
 
-	public boolean isSatisfied() {
+	public boolean isFulfilled() {
 		return (mWrongInstances.size() == 0)? true : false;
 	}
 }

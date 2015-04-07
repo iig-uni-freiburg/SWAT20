@@ -15,16 +15,16 @@ import org.processmining.analysis.sciffchecker.logic.model.variable.OriginatorVa
 import org.processmining.analysis.sciffchecker.logic.model.variable.StringVariableAttribute;
 import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
-public class BoundedWith extends ResourcePattern {
+public class BoundedWith extends OrganizationalPattern {
 	
-	public static final String NAME = "A1 Bounded-With A2";
+	public static final String NAME = "T1 Bounded-With T2";
 	public static final String DESC = "Activity A1 and Activity A2 is performed by the same user.";
 	
 	
 	
-	public BoundedWith(Transition t1, Transition t2) {
+	public BoundedWith(Activity t1, Activity t2) {
 		
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);

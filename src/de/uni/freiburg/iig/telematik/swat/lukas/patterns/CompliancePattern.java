@@ -2,14 +2,14 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import java.util.ArrayList;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.PatternParameter;
 
 /**
  * This abstract class is a superclass of all implemented compliance patterns.
  * */
 public abstract class CompliancePattern {
 	
-	protected ArrayList<Operand> mOperands;
+	protected ArrayList<PatternParameter> mOperands;
 	
 	private String mPrismLTLProperty;
 	
@@ -18,7 +18,7 @@ public abstract class CompliancePattern {
 	private boolean mIsAntipattern;
 	
 	public CompliancePattern(boolean isAntipatten) {
-		mOperands = new ArrayList<Operand>();
+		mOperands = new ArrayList<PatternParameter>();
 		mIsAntipattern = isAntipatten;
 	}
 	
@@ -41,7 +41,7 @@ public abstract class CompliancePattern {
 		return mPrismLTLProperty;
 	}
 	
-	public ArrayList<Operand> getOperands() {
+	public ArrayList<PatternParameter> getOperands() {
 		return mOperands;
 	}
 	
@@ -97,5 +97,6 @@ public abstract class CompliancePattern {
 	public abstract String getName();
 	
 	public abstract String getDescription();
+
 
 }

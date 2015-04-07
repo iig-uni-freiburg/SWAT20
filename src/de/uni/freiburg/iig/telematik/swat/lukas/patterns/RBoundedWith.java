@@ -19,14 +19,14 @@ import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Role;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
-public class RBoundedWith extends ResourcePattern {
+public class RBoundedWith extends OrganizationalPattern {
 	
 	public static final String NAME = "T1, T2 R-Bounded-With R";
 	public static final String DESC = "Activities T1 and T2 have to be performed by different Users with the same Role R.";
 	
-	public RBoundedWith(Transition t1, Transition t2, Role role) {
+	public RBoundedWith(Activity t1, Activity t2, Role role) {
 		
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
@@ -68,7 +68,7 @@ public class RBoundedWith extends ResourcePattern {
 		setRules(rules);
 	}
 	
-	public RBoundedWith(Transition t1, Transition t2, Role role, RBACModel accessModel) {
+	public RBoundedWith(Activity t1, Activity t2, Role role, RBACModel accessModel) {
 		
 		Set<String> legalRoles = accessModel.getDominatingRoles(role.getName());
 		legalRoles.add(role.getName());

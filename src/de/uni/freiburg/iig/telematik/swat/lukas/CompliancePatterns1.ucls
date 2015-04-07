@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.6" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.PatternFactory" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/factory/PatternFactory.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="935" y="93"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="false" protected="true" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompliancePattern" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/CompliancePattern.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="902" y="252"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.CompositePattern" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/CompositePattern.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="741" y="460"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.Parameter" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/factory/Parameter.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="442" y="105"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.operands.Operand" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/operands/Operand.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="427" y="357"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.CoAbsent" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/CoAbsent.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="823" y="539"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.AtomicPattern" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/AtomicPattern.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1190" y="463"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.InformationFlowPattern" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/InformationFlowPattern.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1451" y="305"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.DataflowPattern" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/DataflowPattern.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="320" y="464"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.InconsistentData" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/InconsistentData.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="217" y="539"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.LeadsTo" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/LeadsTo.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1094" y="619"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.MissingData" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/MissingData.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="97" y="540"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.NotDeletedOnTime" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/NotDeletedOnTime.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="357" y="539"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.PBNI" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/PBNI.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1407" y="383"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.UsageConflict" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/UsageConflict.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1361" y="460"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.WeaklyLostData" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/WeaklyLostData.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="491" y="539"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.XLeadsTo" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/XLeadsTo.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1119" y="540"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.ResourcePattern" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/ResourcePattern.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1717" y="307"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.SegregatedFrom" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/SegregatedFrom.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1859" y="386"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.MutexChoice" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/MutexChoice.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="621" y="540"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.Exists" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/Exists.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1197" y="540"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.BoundedWith" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/BoundedWith.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1631" y="384"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="23" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.OperandType" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/factory/OperandType.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="205" y="27"/>    
+    <display autosize="true" stereotype="true" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="24" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.factory.ParamValue" 
+    project="SWAT20" file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/factory/ParamValue.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="201" y="138"/>    
+    <display autosize="true" stereotype="true" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.Exclusive" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/Exclusive.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="914" y="540"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.Absent" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/Absent.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1484" y="538"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="27" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.Universal" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/Universal.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1398" y="537"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="28" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.Causal" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/Causal.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1486" y="460"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="29" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.Corequisite" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/Corequisite.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="726" y="539"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.ChainPrecedes" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/ChainPrecedes.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1291" y="539"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.Else" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/Else.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1029" y="540"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.PerformedBy" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/PerformedBy.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1741" y="384"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="de.uni.freiburg.iig.telematik.swat.lukas.patterns.WriteDown" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/lukas/patterns/WriteDown.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1497" y="383"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanel" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/bernhard/AnalyzePanel.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="423" y="295"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="35" language="java" name="de.uni.freiburg.iig.telematik.swat.bernhard.PatternSetting" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/bernhard/PatternSetting.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="213" y="296"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="36" language="java" name="de.uni.freiburg.iig.telematik.swat.bernhard.PatternWizard" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/bernhard/PatternWizard.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="682" y="252"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="37" language="java" name="de.uni.freiburg.iig.telematik.swat.workbench.Analysis" project="SWAT20" 
+    file="/SWAT20/src/de/uni/freiburg/iig/telematik/swat/workbench/Analysis.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="306" y="351"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="38">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <generalization id="39">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="18"/>  
+  </generalization>  
+  <generalization id="40">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <generalization id="41">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <association id="42">    
+    <end type="SOURCE" refId="34" navigable="false">      
+      <attribute id="43" name="patternSettings"/>      
+      <multiplicity id="44" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="35" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="45">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="18"/>  
+  </generalization>  
+  <association id="46">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="47" name="mValues"/>      
+      <multiplicity id="48" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="49">    
+    <bendpoint x="1067" y="530"/>    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <association id="50">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="51" name="patternFactory"/>      
+      <multiplicity id="52" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="53">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="54" name="analyzePanel"/>      
+      <multiplicity id="55" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="56">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <association id="57">    
+    <end type="SOURCE" refId="35" navigable="false">      
+      <attribute id="58" name="parameters"/>      
+      <multiplicity id="59" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="60">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="37"/>  
+  </dependency>  
+  <association id="61">    
+    <end type="SOURCE" refId="34" navigable="false">      
+      <attribute id="62" name="patternWizard"/>      
+      <multiplicity id="63" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="36" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="64">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="65" name="mOperandType"/>      
+      <multiplicity id="66" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="67">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <association id="68">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="69" name="mOperands"/>      
+      <multiplicity id="70" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="71">    
+    <end type="SOURCE" refId="34" navigable="false">      
+      <attribute id="72" name="patternFactory"/>      
+      <multiplicity id="73" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="74">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="24"/>  
+  </dependency>  
+  <generalization id="75">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="76">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <generalization id="77">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <dependency id="78">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <association id="79">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="80" name="mTypes"/>      
+      <multiplicity id="81" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="82">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <generalization id="83">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <generalization id="84">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="18"/>  
+  </generalization>  
+  <generalization id="85">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <dependency id="86">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <generalization id="87">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="88">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="89">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <generalization id="90">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <dependency id="91">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <generalization id="92">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <generalization id="93">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="94">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="95">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="96">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <dependency id="97">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <generalization id="98">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <association id="99">    
+    <end type="SOURCE" refId="37" navigable="false">      
+      <attribute id="100" name="patternSetting"/>      
+      <multiplicity id="101" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="35" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="102">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="103">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="104">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false" static="true"/>    
+    <operations public="false" package="false" protected="false" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

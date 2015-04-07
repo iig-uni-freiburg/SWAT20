@@ -1,10 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.StateExpression;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
 
-public class Absent extends AtomicPattern {
+public class Absent extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "Absent P";
 	
@@ -15,7 +15,7 @@ public class Absent extends AtomicPattern {
 		mOperands.add(op);
 	}
 	
-	public Absent(Transition t) {
+	public Absent(Activity t) {
 		super("G(!" + t.toString() + ")", "A[G " + t.getNegation().replace("_last", "") + "]");
 		mOperands.add(t);
 	}

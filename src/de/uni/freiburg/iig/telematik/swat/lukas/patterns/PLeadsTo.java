@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.NetElementExpression;
 
-public class PLeadsTo extends CompositePattern {
+public class PLeadsTo extends ControlAndDataflowPattern {
 	
     public static final String NAME = "P PLeadsTo Q";
 	

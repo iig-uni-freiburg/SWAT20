@@ -2,9 +2,9 @@ package de.uni.freiburg.iig.telematik.swat.lukas.patterns;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.StateExpression;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
-public class CoAbsent extends CompositePattern {
+public class CoAbsent extends ControlAndDataflowPattern {
 	
 	public static final String NAME = "P Co-Absent Q";
 	
@@ -16,7 +16,7 @@ public class CoAbsent extends CompositePattern {
 		mOperands.add(op2);
 	}
 	
-	public CoAbsent(Transition t1, Transition t2, AbstractPlace<?,?> outPlace) {
+	public CoAbsent(Activity t1, Activity t2, AbstractPlace<?,?> outPlace) {
 		super("!(G(!" + t1.toString() + ")) | " + "(G(!" + t2.toString() + "))", 
 				"E[F((" + outPlace.getName() + "_black=1) & (" + t1.getName() + "=0) & (" +t2.getName() + "=1))]");
 		mOperands.add(t1);

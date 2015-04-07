@@ -22,15 +22,15 @@ import de.invation.code.toval.misc.SetUtils;
 import de.invation.code.toval.misc.SetUtils.PowerSet;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.lukas.operands.Role;
-import de.uni.freiburg.iig.telematik.swat.lukas.operands.Transition;
+import de.uni.freiburg.iig.telematik.swat.lukas.operands.Activity;
 
-public class MSegregated extends ResourcePattern {
+public class MSegregated extends OrganizationalPattern {
 	
 	public static final String NAME  = "(T1,..., Tn) M-Segregated (R1,..., Rm)";
 	public static final String DESC = "All Transitions have to be performed by one of the roles (R1,...,Rm)."
 			+ " But not all Transitions are performed by the same role.";
 	
-	public MSegregated(Set<Transition> transitions, Set<Role> roles) {
+	public MSegregated(Set<Activity> transitions, Set<Role> roles) {
 		
 		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
 		
@@ -42,15 +42,15 @@ public class MSegregated extends ResourcePattern {
 
 	}
 	
-	public MSegregated(List<Transition> transitions, List<Role> roles, RBACModel model) {
+	public MSegregated(List<Activity> transitions, List<Role> roles, RBACModel model) {
 		
 
 	}
 
 
-	private void ensureValidRole(Set<Transition> transitions, Set<Role> roles,
+	private void ensureValidRole(Set<Activity> transitions, Set<Role> roles,
 			ArrayList<CompositeRule> rules) {
-		for (Transition trans : transitions) {
+		for (Activity trans : transitions) {
 			
 			CompositeRule cr = new CompositeRule();
 			Rule r = new Rule(cr);
@@ -84,20 +84,20 @@ public class MSegregated extends ResourcePattern {
 	}
 
 
-	private void ensureUnequalRoles(Set<Transition> transitions,
+	private void ensureUnequalRoles(Set<Activity> transitions,
 			ArrayList<CompositeRule> rules) {
-		PowerSet<Transition> transPowerSet = SetUtils.getPowerSet(transitions);
+		PowerSet<Activity> transPowerSet = SetUtils.getPowerSet(transitions);
 		
-		for (List<HashSet<Transition>> subsetsOfSameSize : transPowerSet.values()) {
+		for (List<HashSet<Activity>> subsetsOfSameSize : transPowerSet.values()) {
 			
-			for (HashSet<Transition> subset : subsetsOfSameSize) {
+			for (HashSet<Activity> subset : subsetsOfSameSize) {
 				
 				CompositeRule cr = new CompositeRule();
 				Rule r = new Rule(cr);
 				// define body
 				Conjunction body = new Conjunction(r);
 				int counter = 0;
-				for (Transition trans : subset) {
+				for (Activity trans : subset) {
 					counter++;
 					String variableName = "A" + counter;
 					SimpleActivityExecution activityExec = 

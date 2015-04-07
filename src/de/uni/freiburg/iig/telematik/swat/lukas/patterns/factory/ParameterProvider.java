@@ -11,7 +11,7 @@ import de.uni.freiburg.iig.telematik.swat.lukas.patterns.ChainPrecedes;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CoAbsent;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.CoExists;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.Corequisite;
-import de.uni.freiburg.iig.telematik.swat.lukas.patterns.DataflowPattern;
+import de.uni.freiburg.iig.telematik.swat.lukas.patterns.DataflowAntiPattern;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.Else;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.Exclusive;
 import de.uni.freiburg.iig.telematik.swat.lukas.patterns.Exists;
@@ -52,12 +52,12 @@ public class ParameterProvider {
 		mTwoTransitionRP = new HashSet<String>(Arrays.asList(SegregatedFrom.NAME, USegregatedFrom.NAME,
 				BoundedWith.NAME));
 		mDFPatterns = new HashSet<String>();
-		mDFPatterns.addAll(DataflowPattern.getPatternDescription().keySet());
+		mDFPatterns.addAll(DataflowAntiPattern.getPatternDescription().keySet());
 	}
 	
-	public ArrayList<Parameter> getParameters(String patternName) {
+	public ArrayList<GuiParameter> getParameters(String patternName) {
 		
-		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+		ArrayList<GuiParameter> parameters = new ArrayList<GuiParameter>();
 		if (mOneParameterCFPatterns.contains(patternName)) {
 			
 			ArrayList<String> paramNames = new ArrayList<String>(Arrays.asList("P"));
@@ -74,47 +74,47 @@ public class ParameterProvider {
 			
 		} else if (mDFPatterns.contains(patternName)) {
 			
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TOKEN)),1, "D"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.TOKEN)),1, "D"));
 			
 		} else if (mTwoTransitionRP.contains(patternName)) {
 			
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1, "T1"));
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1, "T2"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ACTIVITY)),1, "T1"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ACTIVITY)),1, "T2"));
 			
 		} else if (patternName.equals(PerformedBy.NAME)) {
 			
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1, "T"));
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.ROLE)), 1 , "R"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ACTIVITY)),1, "T"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ROLE)), 1 , "R"));
 			
 		} else if (patternName.equals(RBoundedWith.NAME)) {
 			
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1, "T1"));
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)),1, "T2"));
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.ROLE)),1, "R"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ACTIVITY)),1, "T1"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ACTIVITY)),1, "T2"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ROLE)),1, "R"));
 			
 		} else if (patternName.equals(MSegregated.NAME)) {
 			
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION)), -1, "(T1, ..., TN)"));
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.ROLE)), -1, "(R1, ..., RM)"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ACTIVITY)), -1, "(T1, ..., TN)"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ROLE)), -1, "(R1, ..., RM)"));
 			
 		} else if (patternName.equals(Else.NAME)) {
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION, OperandType.STATEPREDICATE)), 1, "P"));
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.TRANSITION, OperandType.STATEPREDICATE)), -1, "Q, R"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ACTIVITY, GuiParamType.STATEPREDICATE)), 1, "P"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.ACTIVITY, GuiParamType.STATEPREDICATE)), -1, "Q, R"));
 		} else if (patternName.equals(Universal.NAME)) {
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.STATEPREDICATE)), 1, "P"));
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.STATEPREDICATE)), 1, "P"));
 		} else if (!mNoParameterIFPatterns.contains(patternName)) {
 			try {
 				throw new UnsupportedPattern("The given pattern is not supported! "
@@ -129,11 +129,11 @@ public class ParameterProvider {
 		
 	}
 
-	private void addControlFlowParameters(ArrayList<Parameter> parameters, int i, ArrayList<String> paramNames) {
+	private void addControlFlowParameters(ArrayList<GuiParameter> parameters, int i, ArrayList<String> paramNames) {
 		
 		for (int j = 0; j < i; j++) {
-			parameters.add(new Parameter(new HashSet<OperandType>(
-					Arrays.asList(OperandType.STATEPREDICATE, OperandType.TRANSITION)), 1, paramNames.get(j)));	
+			parameters.add(new GuiParameter(new HashSet<GuiParamType>(
+					Arrays.asList(GuiParamType.STATEPREDICATE, GuiParamType.ACTIVITY)), 1, paramNames.get(j)));	
 		}
 	}
 
