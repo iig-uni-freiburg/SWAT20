@@ -17,9 +17,8 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelPN;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
@@ -291,7 +290,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 				}
 			}
 			//Here: Analyze Panel is loaded
-			getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
+			//getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
+			getPropertiesPanel().add(getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel()));
 		}
 		getPropertiesPanel().validate();
 		getPropertiesPanel().repaint();
@@ -336,7 +336,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 			getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
 		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-			getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(component.getName(), component).getContent());
+			getPropertiesPanel().add(AnalysisController.getInstance(component).getAnalyzePanel());
 				
 		}
 		getPropertiesPanel().repaint();
@@ -354,11 +354,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
 		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
 			if(swatComponent instanceof PNEditorComponent){
-				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(swatComponent.getName(), swatComponent).getContent());
+					getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
 				//((PNEditor)swatComponent).setEnabled(false);
 			}
 				if (swatComponent instanceof LogFileViewer)
-				getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(swatComponent.getName(), swatComponent).getContent());
+					getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
 				//getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
 		}
 		
@@ -381,7 +381,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 				getSwatToolbar().clear();
 			
 				if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-					getSwatToolbar().add(((AnalyzePanelPN)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), (ViewComponent) editor)).getToolBar());
+					//getSwatToolbar().add(((AnalyzePanelPN)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), (ViewComponent) editor)).getToolBar());
 				} else {
 					getSwatToolbar().add(editor.getEditorToolbar());
 				}
