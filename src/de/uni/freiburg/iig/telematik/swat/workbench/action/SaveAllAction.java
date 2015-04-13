@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -25,7 +24,7 @@ public class SaveAllAction extends AbstractAction {
 				save(i);
 			}
 		}
-		AnalyzePanelController.getInstance().allObjectsChanged();
+		//AnalyzePanelController.getInstance().allObjectsChanged();
 
 		//		try {
 		//			SwatComponents.getInstance().storeAllPetriNets();

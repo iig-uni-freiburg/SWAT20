@@ -9,7 +9,6 @@ import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -76,7 +75,7 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 			ViewComponent component = (ViewComponent) tabView.getSelectedComponent();
 			if (component.getMainComponent() instanceof PNEditorComponent) {
 				savePN((PNEditorComponent) component.getMainComponent());
-				AnalyzePanelController.getInstance().objectChanged(component.getName());
+				//AnalyzePanelController.getInstance().objectChanged(component.getName());
 				((PNEditorComponent) component.getMainComponent()).getUndoManager().clear();
 			}
 		} else {
