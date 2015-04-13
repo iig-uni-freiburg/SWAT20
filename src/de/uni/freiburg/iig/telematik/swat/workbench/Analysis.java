@@ -3,15 +3,15 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import java.util.List;
 
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.swat.bernhard.PatternSetting;
+import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
 
 public class Analysis {
 
 	private String name = null;
-	private List<PatternSetting> patternSetting = null;
+	private List<CompliancePattern> patternSetting = null;
 	private int hashCode = 0;
 	
-	public Analysis(String name, List<PatternSetting> patternSetting) {
+	public Analysis(String name, List<CompliancePattern> patternSetting) {
 		super();
 		Validate.notNull(name);
 		Validate.notNull(patternSetting);
@@ -23,7 +23,7 @@ public class Analysis {
 		return name;
 	}
 
-	public List<PatternSetting> getPatternSetting() {
+	public List<CompliancePattern> getPatternSetting() {
 		return patternSetting;
 	}
 	

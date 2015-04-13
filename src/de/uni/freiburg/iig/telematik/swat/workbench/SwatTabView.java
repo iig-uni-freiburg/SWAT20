@@ -22,7 +22,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -35,9 +34,9 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
-import de.uni.freiburg.iig.telematik.swat.bernhard.AnalyzePanelController;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
@@ -186,7 +185,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 				// switch operation mode and load analysis
 				SwatState.getInstance().setOperatingMode(this, OperatingMode.ANALYSIS_MODE);
 				//AnalyzePanelController.getInstance().loadSetting(parent.getFileReference().getName(), node.getFileReference());
-				AnalyzePanelController.getInstance().loadSetting(node.getDisplayName());
+				AnalysisController.getInstance((ViewComponent) node.getUserObject()).getAnalyzePanel();
 				break;
 			case AC_MODEL:
 				break;
@@ -202,10 +201,12 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 			}
 			return (ViewComponent) getComponentAt(getTabCount() - 1);
 		} catch (ParameterException e) {
-			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
+			Workbench.errorMessage("Cannot display component", e, false);
+			e.printStackTrace();
+			//JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
 			return null;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			Workbench.errorMessage("Cannot display component", e, false);
 			e.printStackTrace();
 			return null;
 		}
