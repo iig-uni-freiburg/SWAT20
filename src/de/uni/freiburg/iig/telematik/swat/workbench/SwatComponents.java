@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,16 +19,19 @@ import com.thoughtworks.xstream.XStream;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.soabase.SOABase;
-import de.invation.code.toval.misc.soabase.SOABaseProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPNNameComparator;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
-import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.PNMLIFNetAnalysisContextParser;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.AnalysisContextParser;
+import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.LabelingParser;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.NetType;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sepia.serialize.AnalysisContextSerialization;
+import de.uni.freiburg.iig.telematik.sepia.serialize.LabelingSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
@@ -56,14 +60,17 @@ public class SwatComponents {
 	
 	private static SwatComponents instance = null;
 	
+	@SuppressWarnings("rawtypes")
 	private Map<String, AbstractGraphicalPN> nets = new HashMap<String, AbstractGraphicalPN>();
 	private Map<String, File> netFiles = new HashMap<String, File>();
 	private Map<String, List<AnalysisContext>> analysisContexts = new HashMap<String, List<AnalysisContext>>();
+	private Map<String, List<Labeling>> labelings = new HashMap<String, List<Labeling>>();
 	private Map<String, List<TimeContext>> timeContexts = new HashMap<String, List<TimeContext>>();
 	private Map<String, List<Analysis>> analyses = new HashMap<String, List<Analysis>>();
 	
 	private Map<String, SOABase> contexts = new HashMap<String, SOABase>();
 	
+	@SuppressWarnings("rawtypes")
 	private Map<String, AbstractACModel> acModels = new HashMap<String, AbstractACModel>();
 	
 	private List<LogModel> aristaLogs = new ArrayList<LogModel>();
@@ -100,31 +107,27 @@ public class SwatComponents {
 	
 	private void loadSwatComponents() throws SwatComponentException {
 		//1. Load  Contexts
-		MessageDialog.getInstance().addMessage("1. Loading Contexts");
 		loadContexts();
 		MessageDialog.getInstance().addMessage("Done.");
 		
 		//2. Load AC-Models
-		MessageDialog.getInstance().addMessage("2. Loading AC Models");
 		loadACModels();
 		MessageDialog.getInstance().addMessage("Done.");
 		
 		//3. Load Petri nets
-		MessageDialog.getInstance().addMessage("3. Searching for Petri nets:");
+		//   - analysis contexts
+		//   - labelings
+		//   - time contexts
 		loadPetriNets();
 		MessageDialog.getInstance().addMessage("Done.");
 		MessageDialog.getInstance().newLine();
 
 		//4. Load logfiles
-		MessageDialog.getInstance().addMessage("4. Searching for log files:");
 		loadLogFiles();
 		MessageDialog.getInstance().addMessage("Done.");
 		MessageDialog.getInstance().newLine();
 		
-		//5. Load ACModel-Analysis context relations
-		
-		//6. Load Analyses
-		MessageDialog.getInstance().addMessage(" 5. Loading analyses:");
+		//5. Load Analyses
 		loadAnalyses();
 		MessageDialog.getInstance().addMessage("Done.");
 		MessageDialog.getInstance().newLine();
@@ -140,6 +143,7 @@ public class SwatComponents {
 		analysisContexts.clear();
 		timeContexts.clear();
 		acModels.clear();
+		contexts.clear();
 		loadSwatComponents();
 		listenerSupport.notifyComponentsChanged();
 	}
@@ -182,6 +186,7 @@ public class SwatComponents {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private void loadACModels(){
 		MessageDialog.getInstance().addMessage("Loading AC models...");
 		String modelDirectory = null;
@@ -215,6 +220,7 @@ public class SwatComponents {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private AbstractACModel loadACModel(String acFile) {
 		MessageDialog.getInstance().addMessage("Loading AC model: " + FileUtils.getName(acFile) + "...   ");
 		ACModelProperties testProperties = new ACModelProperties();
@@ -289,12 +295,16 @@ public class SwatComponents {
 		for (File netFile : netFiles) {
 			String loadedNetID = loadPetriNet(netFile);
 			if(loadedNetID != null){
-				loadAnalysisContextsFor(loadedNetID);
+				if(getPetriNet(loadedNetID).getPetriNet().getNetType() == NetType.IFNet){
+					Collection<AnalysisContext> analysisContexts = loadAnalysisContextsFor(loadedNetID);
+					loadLabelings(loadedNetID, analysisContexts);
+				}
 				loadTimeContextsFor(loadedNetID);
 			}
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private String loadPetriNet(File netDirectory) {
 		MessageDialog.getInstance().addMessage("Loading Petri net in folder \"" + FileUtils.getDirName(netDirectory) + "\"...");
 		
@@ -342,33 +352,34 @@ public class SwatComponents {
 		return loadedNet.getPetriNet().getName();
 	}
 	
-	private void loadAnalysisContextsFor(String netID) {
+	private Collection<AnalysisContext> loadAnalysisContextsFor(String netID) {
 		MessageDialog.getInstance().addMessage("Loading analysis contexts for net \"" +netID+ "\"...");
+		Collection<AnalysisContext> result = new HashSet<AnalysisContext>();
 		File pathToAnalysisContexts = null;
 		try{
 			pathToAnalysisContexts = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName());
 		} catch (Exception e) {
 			MessageDialog.getInstance().addMessage("Exception: Cannot access analysis context directory.\nReason:" + e.getMessage());
-			return;
+			return result;
 		}
 		
 		if (!pathToAnalysisContexts.exists()){
 			MessageDialog.getInstance().addMessage("No analysis contexts for net.");
-			return;
+			return result;
 		}
 		
 		List<File> contextFiles = null;
 		try {
-			contextFiles = FileUtils.getFilesInDirectory(pathToAnalysisContexts.getAbsolutePath(), true, true, "xml");
+			contextFiles = FileUtils.getFilesInDirectory(pathToAnalysisContexts.getAbsolutePath(), true, true, "acon");
 		} catch (Exception e) {
 			MessageDialog.getInstance().addMessage("Exception: Cannot extract analysis context files.\nReason:" + e.getMessage());
-			return;
+			return result;
 		}
 			
 		for (File contextFile : contextFiles) {
 			AnalysisContext aContext = null;
 			try {
-				aContext = PNMLIFNetAnalysisContextParser.parse(contextFile, false);
+				aContext = AnalysisContextParser.parse(contextFile, acModels.values());
 			} catch (Exception e) {
 				MessageDialog.getInstance().addMessage("Cannot parse analysis context for net \""+netID+"\"");
 				continue;
@@ -376,13 +387,54 @@ public class SwatComponents {
 			
 			try {
 				addAnalysisContext(aContext, netID, false);
+				result.add(aContext);
 			} catch (Exception e) {
 				MessageDialog.getInstance().addMessage("Cannot add analysis context for net \""+netID+"\"");
 			}
 			MessageDialog.getInstance().addMessage("Added analysis context \""+aContext.getName()+"\"");
 		}
+		return result;
+	}
+	
+	private void loadLabelings(String netID, Collection<AnalysisContext> analysisContexts) {
+		MessageDialog.getInstance().addMessage("Loading labelings for net \"" +netID+ "\"...");
+		File pathToLabelings = null;
+		try{
+			pathToLabelings = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName());
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot access labeling directory.\nReason:" + e.getMessage());
+			return;
+		}
 		
-		loadAnalysisContextRelations(pathToAnalysisContexts);
+		if (!pathToLabelings.exists()){
+			MessageDialog.getInstance().addMessage("No labelings for net.");
+			return;
+		}
+		
+		List<File> labelingFiles = null;
+		try {
+			labelingFiles = FileUtils.getFilesInDirectory(pathToLabelings.getAbsolutePath(), true, true, "labeling");
+		} catch (Exception e) {
+			MessageDialog.getInstance().addMessage("Exception: Cannot extract labeling files.\nReason:" + e.getMessage());
+			return;
+		}
+			
+		for (File labelingFile : labelingFiles) {
+			Labeling labeling = null;
+			try {
+				labeling = LabelingParser.parse(labelingFile, analysisContexts);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot parse labeling for net \""+netID+"\"");
+				continue;
+			}
+			
+			try {
+				addLabeling(labeling, netID, labeling.getAnalysisContext().getName(), false);
+			} catch (Exception e) {
+				MessageDialog.getInstance().addMessage("Cannot add analysis context for net \""+netID+"\"");
+			}
+			MessageDialog.getInstance().addMessage("Added analysis context \""+labeling.getName()+"\"");
+		}
 	}
 	
 	private void loadLogFiles() {
@@ -498,7 +550,7 @@ public class SwatComponents {
 	//---- Store and load Analyse Patterns --------------------------------------------------------------------------------
 
 
-	//---- Load and Store Time Context -------------------------------------------------------------------------------------
+	//---- Load and Store Time Contexts -----------------------------------------------------------------------------------
 
 	private void loadTimeContextsFor(String netID) {
 		MessageDialog.getInstance().addMessage("Loading time contexts for net \"" +netID+ "\"...");
@@ -583,41 +635,10 @@ public class SwatComponents {
 		}
 	}
 	
-	private void loadAnalysisContextRelations(File directory) {
-		MessageDialog.getInstance().addMessage("Loading analysis context relations for net...");
-		
-		List<File> propertiesFiles = null;
-		try {
-			propertiesFiles = FileUtils.getFilesInDirectory(directory.getAbsolutePath(), true, true, "properties");
-		} catch (Exception e) {
-			MessageDialog.getInstance().addMessage("Exception: Cannot extract analysis context relation.\nReason:" + e.getMessage());
-			return;
-		}
-		for (File propertiesFile : propertiesFiles) {
-			AnalysisContextRelationProperties relationProperties = new AnalysisContextRelationProperties();
-			try {
-				relationProperties.load(propertiesFile.getAbsolutePath());
-			} catch(Exception e){
-				MessageDialog.getInstance().addMessage("Exception: Cannot load analysis context relation.\nReason:" + e.getMessage());
-				continue;
-			}
-			
-			String acModelName = null;
-			String contextName = null;
-			try {
-				acModelName = relationProperties.getACModelName();
-				contextName = relationProperties.getAnalysisContextName();
-			} catch(Exception e){
-				MessageDialog.getInstance().addMessage("Exception: Cannot extract analysis context relation properties.\nReason:" + e.getMessage());
-			}
-			
-			
-		}
-	}
-	
 	
 	//---- Adding and removing Petri nets -----------------------------------------------------------------------------------
 	
+	@SuppressWarnings("rawtypes")
 	public void addPetriNet(AbstractGraphicalPN net) throws SwatComponentException {
 		File pathFile = generateNetPath(net.getPetriNet().getName());
 		pathFile.mkdir();
@@ -645,6 +666,7 @@ public class SwatComponents {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private String addPetriNet(AbstractGraphicalPN net, File file, boolean storeToFile) throws SwatComponentException {
 		Validate.notNull(net);
 		Validate.notNull(file);
@@ -678,6 +700,7 @@ public class SwatComponents {
 		}
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void storePetriNet(String netID) throws SwatComponentException {
 		try {
 			AbstractGraphicalPN net = getPetriNet(netID);
@@ -729,10 +752,12 @@ public class SwatComponents {
 	 * Returns all Petri nets, i.e. nets stored in the simulation directory.
 	 * @return A set containing all Petri nets.
 	 */
+	@SuppressWarnings("rawtypes")
 	public Collection<AbstractGraphicalPN> getPetriNets(){
 		return Collections.unmodifiableCollection(nets.values());
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public List<AbstractGraphicalPN> getPetriNetsSorted(){
 		List<AbstractGraphicalPN> netList = new ArrayList<AbstractGraphicalPN>(SwatComponents.getInstance().getPetriNets());
 		Collections.sort(netList, new GraphicalPNNameComparator());
@@ -745,6 +770,7 @@ public class SwatComponents {
 	 * @return The Petri net with the given name, or <code>null</code> if there is no such net.
 	 * @throws ParameterException if the given name is <code>null</code>.
 	 */
+	@SuppressWarnings("rawtypes")
 	public AbstractGraphicalPN getPetriNet(String netID) throws SwatComponentException{
 		validatePetriNet(netID);
 		return nets.get(netID);
@@ -755,7 +781,6 @@ public class SwatComponents {
 		return netFiles.get(netID);
 	}
 	
-	
 	/**
 	 * Removes the Petri net with the given name from the simulation components<br>
 	 * and also deletes the corresponding property-file in the simulation directory.
@@ -764,6 +789,7 @@ public class SwatComponents {
 	 * @throws ParameterException if there is an internal parameter misconfiguration.
 	 * @throws IOException if the corresponding property file for the Petri net cannot be deleted.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void removePetriNet(String netID, boolean removeFilesFromDisk) throws SwatComponentException{
 		validatePetriNet(netID);
 		AbstractGraphicalPN netToRemove = nets.get(netID);
@@ -784,6 +810,7 @@ public class SwatComponents {
 		timeContexts.remove(netID);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void renamePetriNet(String oldID, String newID) throws SwatComponentException{
 		validatePetriNet(oldID);
 		AbstractGraphicalPN newNet = getPetriNet(oldID);
@@ -1054,61 +1081,63 @@ public class SwatComponents {
 		}
 
 	}
-
-	public void renameAnalysis(String netID, String oldName, String newName){
-		Analysis oldAnalysis = getAnalysis(netID, oldName);
-		Analysis newAnalysis=new Analysis(newName, oldAnalysis.getPatternSetting());
-		try {
-			addAnalysis(newAnalysis, netID, true);
-			removeAnalysis(netID, oldName, true);
-			listenerSupport.notifyAnalysisRemoved(netID, oldAnalysis);
-			listenerSupport.notifyAnalysisAdded(netID, newAnalysis);
-		} catch (SwatComponentException e) {
-			Workbench.errorMessage("Could not remove " + oldName + ": Could not resolve file");
-			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not remove " + oldName + ": Could not resolve file");
-			e.printStackTrace();
+	
+	private void removeAnalysis(String netID, String analysisName, boolean fromFileSystem) throws SwatComponentException {
+		// build path were it was stored
+		if (fromFileSystem) {
+			File analysisFile = new File(getPetriNetFile(netID).getParentFile(), analysisName + ".xml");
+			if (!analysisFile.exists())
+				throw new SwatComponentException("Could not resolve analysis file for " + analysisName);
+			FileUtils.removeLinkOnly(analysisFile);
 		}
+
+		analyses.remove(getAnalysis(netID, analysisName));
 	}
 
-	//	private void loadAnalysis(String netID) throws SwatComponentException {
-	//		File net = getPetriNetFile(netID).getParentFile();
-	//		XStream xStream = new XStream();
-	//		try {
-	//			File analysisDir = new File(net, SwatProperties.getInstance().getNetAnalysesDirectoryName());
-	//			List<File> analysesFiles = FileUtils.getFilesInDirectory(analysisDir.getAbsolutePath(), true, true, "xml");
-	//			for (File analysis : analysesFiles) {
-	//				try {
-	//				Analysis loadedAnalysis = (Analysis) xStream.fromXML(analysis);
-	//					addAnalysis(loadedAnalysis, netID, false);
-	//				} catch (ClassCastException e1) {
-	//					MessageDialog.getInstance().addMessage("Could not parse " + analysis.getName() + " for " + netID);
-	//					e1.printStackTrace();
-	//					//throw new SwatComponentException("Could not parse " + analysis.getName() + " for " + netID);
-	//				}
-	//			}
-	//		} catch (IOException e) {
-	//			e.printStackTrace();
-	//			throw new SwatComponentException("Could not load analyses for " + netID + " Reason: " + e.getMessage());
-	//		}
-	//
-	//	}
+//	public void renameAnalysis(String netID, String oldName, String newName){
+//		Analysis oldAnalysis = getAnalysis(netID, oldName);
+//		Analysis newAnalysis=new Analysis(newName, oldAnalysis.getPatternSetting());
+//		try {
+//			addAnalysis(newAnalysis, netID, true);
+//			removeAnalysis(netID, oldName, true);
+//			listenerSupport.notifyAnalysisRemoved(netID, oldAnalysis);
+//			listenerSupport.notifyAnalysisAdded(netID, newAnalysis);
+//		} catch (SwatComponentException e) {
+//			Workbench.errorMessage("Could not remove " + oldName + ": Could not resolve file");
+//			JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not remove " + oldName + ": Could not resolve file");
+//			e.printStackTrace();
+//		}
+//	}
+	
+	public List<Analysis> getAnalyses(String netID){
+		if (!analyses.containsKey(netID))
+			return new ArrayList<Analysis>();
+		return analyses.get(netID);
+	}
+
+	public Analysis getAnalysis(String netID, String analysisName) {
+		if (!analyses.containsKey(netID))
+			return null;
+
+		for (Analysis analysis : analyses.get(netID)) {
+			if (analysis.getName().equals(analysisName))
+				return analysis;
+		}
+		return null;
+	}
+
+	public Analysis getAnalysisByName(String analysisName) {
+		for (List<Analysis> analysises : analyses.values()) {
+			for (Analysis analysis : analysises) {
+				if (analysis.getName().equalsIgnoreCase(analysisName))
+					return analysis;
+			}
+		}
+		return null;
+	}
 	
 
 	//---- Adding and removing analysis contexts ----------------------------------------------------------------------------
-	
-
-	private void removeAnalysis(String netID, String oldName, boolean fromFileSystem) throws SwatComponentException {
-		//build path were it was stored
-			if(fromFileSystem){
-				File analysisFile = new File(getPetriNetFile(netID).getParentFile(), oldName + ".xml");
-				if (!analysisFile.exists())
-				throw new SwatComponentException("Could not resolve analysis file for " + oldName);
-				FileUtils.removeLinkOnly(analysisFile);
-			}
-			
-			analyses.remove(getAnalysis(netID, oldName));
-
-	}
 
 	public List<AnalysisContext> getAnalysisContexts(String netID) {
 		if(!analysisContexts.containsKey(netID))
@@ -1123,6 +1152,20 @@ public class SwatComponents {
 		}
 		return null;
 	}
+	
+	public AnalysisContext getAnalysisContext(String aContextName) {
+		for(String netID: analysisContexts.keySet()){
+			for(AnalysisContext context: analysisContexts.get(netID)){
+				if(context.getName().equals(aContextName))
+					return context;
+			}
+		}
+		return null;
+	}
+	
+	public boolean containsAnalysisContext(String aContextName) {
+		return getAnalysisContext(aContextName) != null;
+	}
 
 	public void addAnalysisContext(AnalysisContext aContext, String netID, boolean storeToFile) throws SwatComponentException {
 		if(analysisContexts.get(netID) == null)
@@ -1132,6 +1175,43 @@ public class SwatComponents {
 			storeAnalysisContext(aContext, netID);
 		}
 		listenerSupport.notifyAnalysisContextAdded(netID, aContext);
+	}
+	
+	public void removeAnalysisContext(String analysisContextName, String netID, boolean removeFilesFromDisk) throws SwatComponentException{
+		validatePetriNet(netID);
+		validateAnalysisContext(analysisContextName);
+		if(!analysisContexts.containsKey(netID))
+			return;
+		AnalysisContext contextToRemove = null;
+		for(AnalysisContext context: analysisContexts.get(netID)){
+			if(context.getName().equals(analysisContextName)){
+				contextToRemove = context;
+				break;
+			}
+		}
+		analysisContexts.get(netID).remove(contextToRemove);
+		if(analysisContexts.get(netID).isEmpty())
+			analysisContexts.remove(netID);
+		
+		if(removeFilesFromDisk){
+			try {
+				FileUtils.deleteFile(new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName()) + analysisContextName + ".acon");
+			} catch (IOException e) {
+				throw new SwatComponentException("Cannot delete analysis context file from disk.<br>Reason: " + e.getMessage());
+			}
+		}
+
+		if(labelings.containsKey(analysisContextName) && removeFilesFromDisk){
+			for(Labeling labeling: labelings.get(analysisContextName)){
+				try {
+					FileUtils.deleteFile(new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName()) + labeling.getName() + ".labeling");
+				} catch (IOException e) {
+					throw new SwatComponentException("Cannot delete analysis context file from disk.<br>Reason: " + e.getMessage());
+				}
+			}
+		}
+		labelings.remove(analysisContextName);
+		listenerSupport.notifyAnalysisContextRemoved(netID, contextToRemove);
 	}
 
 	public void storeAnalysisContext(AnalysisContext aContext, String netID) throws SwatComponentException {
@@ -1146,6 +1226,10 @@ public class SwatComponents {
 		}
 	}
 	
+	private void validateAnalysisContext(String analysisContextName) throws SwatComponentException{
+		if(!containsAnalysisContext(analysisContextName))
+			throw new SwatComponentException("SwatComponents does not contain an analysis context with name \"" + analysisContextName + "\"");
+	}
 	
 	//---- Adding and removing time contexts --------------------------------------------------------------------------------
 	
@@ -1319,6 +1403,7 @@ public class SwatComponents {
 	 * @param acModel The model to add.
 	 * @throws SwatComponentException
 	 */
+	@SuppressWarnings("rawtypes")
 	public void addACModel(AbstractACModel acModel) throws SwatComponentException {
 		addACModel(acModel, true);
 	}
@@ -1330,6 +1415,7 @@ public class SwatComponents {
 	 * @param storeToFile Indicates if the model should be stored on disk.
 	 * @throws SwatComponentException
 	 */
+	@SuppressWarnings("rawtypes")
 	public void addACModel(AbstractACModel acModel, boolean storeToFile) throws SwatComponentException {
 		Validate.notNull(acModel);
 		Validate.notNull(storeToFile);
@@ -1346,6 +1432,7 @@ public class SwatComponents {
 	 * @param acModel The model to store.
 	 * @throws SwatComponentException
 	 */
+	@SuppressWarnings("rawtypes")
 	public void storeACModel(AbstractACModel acModel) throws SwatComponentException {
 		Validate.notNull(acModel);
 		try{
@@ -1380,6 +1467,7 @@ public class SwatComponents {
 	 * Returns all access control models, i.e. models stored in the simulation directory.
 	 * @return A set containing all contexts.
 	 */
+	@SuppressWarnings("rawtypes")
 	public Collection<AbstractACModel> getACModels(){
 		return Collections.unmodifiableCollection(acModels.values());
 	}
@@ -1389,6 +1477,7 @@ public class SwatComponents {
 	 * @param name The name of the desired access control model.
 	 * @return The model with the given name, or <code>null</code> if there is no such model.
 	 */
+	@SuppressWarnings("rawtypes")
 	public AbstractACModel getACModel(String name) throws ParameterException{
 		Validate.notNull(name);
 		return acModels.get(name);
@@ -1407,6 +1496,7 @@ public class SwatComponents {
 	 * and also deletes the corresponding property-file in the simulation directory.
 	 * @param name The name of the model to remove.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void removeACModel(String name, boolean removeFileFromDisk) throws SwatComponentException {
 		validateACModel(name);
 		AbstractACModel modelToRemove = acModels.get(name);
@@ -1430,38 +1520,83 @@ public class SwatComponents {
 	}
 	
 	
-	//-----------------------------------------------------------------------------------------------------------------------
+	//---- Adding and removing labelings ------------------------------------------------------------------------------------
 
-
-
-	//---- Adding and removing analysis contexts ----------------------------------------------------------------------------
-
-	public List<Analysis> getAnalyses(String netID){
-		if (!analyses.containsKey(netID))
-			return new ArrayList<Analysis>();
-		return analyses.get(netID);
-	}
-
-	public Analysis getAnalysis(String netID, String analysisName) {
-		if (!analyses.containsKey(netID))
-			return null;
-
-		for (Analysis analysis : analyses.get(netID)) {
-			if (analysis.getName().equalsIgnoreCase(analysisName))
-				return analysis;
+	public void addLabeling(Labeling labeling, String netID, String analysisContextName, boolean storeToFile) throws SwatComponentException {
+		if(labelings.get(analysisContextName) == null)
+			labelings.put(analysisContextName, new ArrayList<Labeling>());
+		labelings.get(analysisContextName).add(labeling);
+		if(storeToFile){
+			storeLabeling(labeling, netID, analysisContextName);
 		}
-		return null;
+		listenerSupport.notifyLabelingAdded(netID, analysisContextName, labeling);
 	}
 
-	public Analysis getAnalysisByName(String analysisName) {
-		for (List<Analysis> analysises : analyses.values()) {
-			for (Analysis analysis : analysises) {
-				if (analysis.getName().equalsIgnoreCase(analysisName))
-					return analysis;
+	public void storeLabeling(Labeling labeling, String netID, String analysisContextName) throws SwatComponentException {
+		try {
+			File pathToLabelings = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName());
+			pathToLabelings.mkdirs();
+			LabelingSerialization.serialize(labeling, pathToLabelings.getAbsolutePath() + labeling.getName());
+		} catch (SerializationException e) {
+			throw new SwatComponentException("Cannot serialize labeling \"" + labeling.getName() + "\".<br>Reason: "+e.getMessage());
+		} catch (IOException e) {
+			throw new SwatComponentException("Cannot store labeling \"" + labeling.getName() + "\".<br>Reason: "+e.getMessage());
+		}
+	}
+	
+	public List<Labeling> getLabelings(String analysisContextName){
+		if (!labelings.containsKey(analysisContextName))
+			return new ArrayList<Labeling>();
+		return labelings.get(analysisContextName);
+	}
+	
+//	private Labeling getLabeling(String analysisContextName, String labelingName) {
+//		for(Labeling labeling: getLabelings(analysisContextName)){
+//			if(labeling.getName().equals(labelingName))
+//				return labeling;
+//		}
+//		return null;
+//	}
+//	
+	private Labeling getLabelingByName(String labelingName) {
+		for (List<Labeling> labelingList : labelings.values()) {
+			for (Labeling labeling : labelingList) {
+				if (labeling.getName().equals(labelingName))
+					return labeling;
 			}
 		}
 		return null;
 	}
+	
+	public boolean containsLabeling(String labelingName) {
+		return getLabelingByName(labelingName) != null;
+	}
+	
+	public void removeLabeling(String labelingName, String netID, String analysisContextName, boolean removeFileFromDisk) throws SwatComponentException{
+		validateLabeling(labelingName);
+		validateAnalysisContext(analysisContextName);
+		if(!labelings.containsKey(analysisContextName))
+			return;
+		labelings.get(analysisContextName).remove(labelingName);
+		if(labelings.get(analysisContextName).isEmpty())
+			labelings.remove(analysisContextName);
+		if(removeFileFromDisk){
+			try {
+				FileUtils.deleteFile(new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getAnalysisContextDirectoryName()) + labelingName + ".labeling");
+			} catch (IOException e) {
+				throw new SwatComponentException("Cannot delete labeling file from disk.<br>Reason: " + e.getMessage());
+			}
+		}
+	}
+	
+	private void validateLabeling(String labelingName) throws SwatComponentException{
+		if(!containsLabeling(labelingName))
+			throw new SwatComponentException("SwatComponents does not contain a labeling with name \"" + labelingName + "\"");
+	}
+	
+	//---- Adding and removing analyses ----------------------------------------------------------------------------
+
+
 
 	//	/** get analyses associated with net netID **/
 	//	public List<String> getAnalysesNames(String netID) {

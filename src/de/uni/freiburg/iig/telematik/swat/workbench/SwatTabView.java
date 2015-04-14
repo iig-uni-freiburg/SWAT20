@@ -33,6 +33,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
@@ -686,6 +687,18 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 
 	@Override
 	public void contextRemoved(SOABase soaBase) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void labelingAdded(String netID, String analysisContextName, Labeling labeling) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void labelingRemoved(String netID, String analysisContextName, Labeling labeling) {
 		// TODO Auto-generated method stub
 		
 	}

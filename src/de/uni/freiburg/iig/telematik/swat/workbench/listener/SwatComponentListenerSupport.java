@@ -4,11 +4,13 @@ import de.invation.code.toval.event.AbstractListenerSupport;
 import de.invation.code.toval.misc.soabase.SOABase;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
 
+@SuppressWarnings("rawtypes")
 public class SwatComponentListenerSupport extends AbstractListenerSupport<SwatComponentsListener> {
 
 	private static final long serialVersionUID = -5976107306359206805L;
@@ -86,6 +88,20 @@ public class SwatComponentListenerSupport extends AbstractListenerSupport<SwatCo
 	public void notifyAnalysisContextRemoved(String netID, AnalysisContext context){
 		for(SwatComponentsListener listener: listeners){
 			listener.analysisContextRemoved(netID, context);
+		}
+		notifyComponentsChanged();
+	}
+	
+	public void notifyLabelingAdded(String netID, String analysisContextName, Labeling labeling){
+		for(SwatComponentsListener listener: listeners){
+			listener.labelingAdded(netID, analysisContextName, labeling);
+		}
+		notifyComponentsChanged();
+	}
+	
+	public void notifyLabelingRemoved(String netID, String analysisContextName, Labeling labeling){
+		for(SwatComponentsListener listener: listeners){
+			listener.labelingRemoved(netID, analysisContextName, labeling);
 		}
 		notifyComponentsChanged();
 	}

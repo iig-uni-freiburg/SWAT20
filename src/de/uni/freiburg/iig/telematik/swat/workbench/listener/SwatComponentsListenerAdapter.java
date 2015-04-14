@@ -3,11 +3,13 @@ package de.uni.freiburg.iig.telematik.swat.workbench.listener;
 import de.invation.code.toval.misc.soabase.SOABase;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
 
+@SuppressWarnings("rawtypes")
 public class SwatComponentsListenerAdapter implements SwatComponentsListener {
 
 	@Override
@@ -57,5 +59,11 @@ public class SwatComponentsListenerAdapter implements SwatComponentsListener {
 
 	@Override
 	public void contextRemoved(SOABase soaBase) {}
+
+	@Override
+	public void labelingAdded(String netID, String analysisContextName, Labeling labeling) {}
+
+	@Override
+	public void labelingRemoved(String netID, String analysisContextName, Labeling labeling) {}
 
 }

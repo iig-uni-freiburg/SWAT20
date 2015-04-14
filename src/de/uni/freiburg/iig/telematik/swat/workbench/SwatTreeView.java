@@ -16,6 +16,7 @@ import javax.swing.tree.DefaultTreeModel;
 import de.invation.code.toval.misc.soabase.SOABase;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
@@ -290,6 +291,18 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 
 	@Override
 	public void contextRemoved(SOABase soaBase) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void labelingAdded(String netID, String analysisContextName, Labeling labeling) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void labelingRemoved(String netID, String analysisContextName, Labeling labeling) {
 		// TODO Auto-generated method stub
 		
 	}
