@@ -3,7 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import java.util.List;
 
 import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 
 public class Analysis {
 

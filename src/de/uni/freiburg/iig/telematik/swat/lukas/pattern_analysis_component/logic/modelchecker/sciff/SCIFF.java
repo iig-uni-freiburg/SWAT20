@@ -16,7 +16,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelChecker;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 
 public class SCIFF extends ModelChecker {

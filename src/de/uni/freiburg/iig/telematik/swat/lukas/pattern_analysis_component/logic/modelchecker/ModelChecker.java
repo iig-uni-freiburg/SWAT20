@@ -2,7 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logi
 
 import java.util.ArrayList;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 
 public abstract class ModelChecker {
 

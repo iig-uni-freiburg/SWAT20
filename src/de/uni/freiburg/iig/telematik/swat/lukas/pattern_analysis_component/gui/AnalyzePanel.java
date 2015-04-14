@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.AnalysisController;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class AnalyzePanel extends JPanel {

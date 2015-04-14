@@ -6,8 +6,8 @@ import java.util.HashMap;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.gui.AnalyzePanel;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelChecker;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelCheckerFactory;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.PatternController;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.PatternController;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 public class AnalysisController {
