@@ -27,38 +27,33 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorCompon
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
-
 public class PatternController {
-	
+
 	private ModelInfoProvider mModelInformationProvider;
 	private ArrayList<CompliancePattern> mPatterns;
 	private PatternDialog mPatternDialog;
 	private AnalysisController mAnalysisController;
 
-	public PatternController(AnalysisController anaController) {
+	public PatternController(AnalysisController anaController) throws PatternException {
 		AbstractPatternFactory mPatternFactory = null;
 		mAnalysisController = anaController;
-		ViewComponent component = (ViewComponent)
-				Workbench.getInstance().getTabView().getSelectedComponent();
-		
+		ViewComponent component = (ViewComponent) Workbench.getInstance().getTabView().getSelectedComponent();
+
 		if (component instanceof PTNetEditorComponent) {
 			mPatternFactory = new PTNetPatternFactory();
-			mModelInformationProvider = new PTNetInfoProvider((PTNet) 
- ((PTNetEditorComponent) component).netContainer.getPetriNet());
+			mModelInformationProvider = new PTNetInfoProvider((PTNet) ((PTNetEditorComponent) component).netContainer.getPetriNet());
 		} else if (component instanceof CPNEditorComponent) {
 			mPatternFactory = new CWNPatternFactory();
-			mModelInformationProvider = new CWNInfoProvider((CPN) 
- ((CPNEditorComponent) component).netContainer.getPetriNet());
+			mModelInformationProvider = new CWNInfoProvider((CPN) ((CPNEditorComponent) component).netContainer.getPetriNet());
 		} else if (component instanceof IFNetEditorComponent) {
 			mPatternFactory = new IFNetPatternFactory();
-			mModelInformationProvider = new IFNetInfoProvider((IFNet) 
- ((IFNetEditorComponent) component).netContainer.getPetriNet());
+			mModelInformationProvider = new IFNetInfoProvider((IFNet) ((IFNetEditorComponent) component).netContainer.getPetriNet());
 		} else if (component instanceof LogFileViewer) {
 			mPatternFactory = new XESLogPatternFactory();
 			mModelInformationProvider = new XESLogInfoProvider(((LogFileViewer) component).getFile());
 		}
-		
-		mPatterns = mPatternFactory.createPatterns();
+
+		mPatterns = mPatternFactory.loadPatterns();
 		for (CompliancePattern pattern : mPatterns) {
 			pattern.acceptInfoProfider(mModelInformationProvider);
 		}
@@ -68,34 +63,34 @@ public class PatternController {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void componentMoved(ComponentEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void componentShown(ComponentEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void componentHidden(ComponentEvent e) {
 				mAnalysisController.updateAnalysePanel();
 			}
-			
+
 		});
-				
+
 	}
-	
+
 	public ArrayList<CompliancePattern> getPatterns() {
 		return mPatterns;
 	}
-	
+
 	public void openPatternDialog() {
 		mPatternDialog.setVisible(true);
 	}

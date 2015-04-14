@@ -20,6 +20,7 @@ import javax.swing.WindowConstants;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
+import de.uni.freiburg.iig.telematik.swat.patterns.PatternException;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -291,7 +292,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			}
 			//Here: Analyze Panel is loaded
 			//getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
-			getPropertiesPanel().add(getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel()));
+			try {
+				getPropertiesPanel().add(getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel()));
+			} catch (PatternException e) {
+				errorMessage("Cannot load analysis panel", e, true);
+			}
 		}
 		getPropertiesPanel().validate();
 		getPropertiesPanel().repaint();
@@ -336,7 +341,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
 			getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
 		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-			getPropertiesPanel().add(AnalysisController.getInstance(component).getAnalyzePanel());
+			try {
+				getPropertiesPanel().add(AnalysisController.getInstance(component).getAnalyzePanel());
+			} catch (PatternException e) {
+				errorMessage("Cannot load analysis panel", e, true);
+			}
 				
 		}
 		getPropertiesPanel().repaint();
@@ -347,28 +356,36 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	@Override
 	public void operatingModeChanged() {
 		try {
-			//Update Properties View & Toolbar
-		ViewComponent swatComponent = (ViewComponent) getTabView().getSelectedComponent();
-		getPropertiesPanel().removeAll();
-		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
-			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
-		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-			if(swatComponent instanceof PNEditorComponent){
-					getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
-				//((PNEditor)swatComponent).setEnabled(false);
-			}
+			// Update Properties View & Toolbar
+			ViewComponent swatComponent = (ViewComponent) getTabView().getSelectedComponent();
+			getPropertiesPanel().removeAll();
+			if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+				getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+			} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+				if (swatComponent instanceof PNEditorComponent) {
+					try {
+						getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
+					} catch (PatternException e) {
+						errorMessage("Cannot load analysis panel", e, true);
+					}
+					// ((PNEditor)swatComponent).setEnabled(false);
+				}
 				if (swatComponent instanceof LogFileViewer)
-					getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
-				//getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
-		}
-		
-			//pack();
+					try {
+						getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
+					} catch (PatternException e) {
+						errorMessage("Cannot load analysis panel", e, true);
+					}
+				// getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
+			}
+
+			// pack();
 			getPropertiesPanel().repaint();
 			getPropertiesPanel().updateUI();
-		//getPropertiesPanel().repaint();
-		updateToolbar();
+			// getPropertiesPanel().repaint();
+			updateToolbar();
 		} catch (NullPointerException e) {
-			//Can happens when Arista-Flow analysis is called with no active tabs
+			// Can happens when Arista-Flow analysis is called with no active tabs
 
 		}
 	}
