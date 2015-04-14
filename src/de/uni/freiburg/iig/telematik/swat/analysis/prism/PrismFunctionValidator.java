@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.prism;
+package de.uni.freiburg.iig.telematik.swat.analysis.prism;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -9,7 +9,6 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem;
 import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem.OperatingSystems;
-import de.uni.freiburg.iig.telematik.swat.prism.generator.PrismRunner;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 

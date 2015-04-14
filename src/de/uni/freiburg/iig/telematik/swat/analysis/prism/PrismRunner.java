@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.uni.freiburg.iig.telematik.swat.prism.generator;
+package de.uni.freiburg.iig.telematik.swat.analysis.prism;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 
 /**

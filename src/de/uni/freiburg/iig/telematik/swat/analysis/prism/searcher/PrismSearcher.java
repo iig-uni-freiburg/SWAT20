@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.prism.searcher;
+package de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher;
 
 import java.io.File;
 import java.io.FilenameFilter;

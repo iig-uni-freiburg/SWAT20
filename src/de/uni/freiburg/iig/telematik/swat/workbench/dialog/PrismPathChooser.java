@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import de.invation.code.toval.graphic.dialog.ConditionalFileDialog;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.prism.PrismFunctionValidator;
-import de.uni.freiburg.iig.telematik.swat.prism.searcher.PrismSearcherFactory;
+import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
+import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcherFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class PrismPathChooser extends ConditionalFileDialog {
