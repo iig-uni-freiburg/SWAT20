@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lola;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola;
 
 import java.io.File;
 import java.io.IOException;

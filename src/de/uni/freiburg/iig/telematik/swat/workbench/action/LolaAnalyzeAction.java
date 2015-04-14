@@ -7,10 +7,10 @@ import java.util.Map;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola.LolaPresenter;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola.LolaRunner;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola.LolaRunner.LOLA_TEST;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
-import de.uni.freiburg.iig.telematik.swat.lola.LolaRunner;
-import de.uni.freiburg.iig.telematik.swat.lola.LolaRunner.LOLA_TEST;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 

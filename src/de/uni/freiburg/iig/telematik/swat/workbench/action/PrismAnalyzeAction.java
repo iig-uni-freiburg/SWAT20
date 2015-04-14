@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.swat.lola.LolaPresenter;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.prism.generator.IFNetToPrismConverter;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
