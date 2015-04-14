@@ -2,16 +2,19 @@ package de.uni.freiburg.iig.telematik.swat.analysis.gui;
 
 import java.awt.Component;
 import java.io.IOException;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class PatternResultPanel extends JPanel {
 	
@@ -44,10 +47,14 @@ public class PatternResultPanel extends JPanel {
 				probLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 				this.add(probLabel);
 			} catch (ParameterException e) {
+				Workbench.errorMessage("Wrong parameter or parameter exception while displaying pattern result", e, true);
 				e.printStackTrace();
 			} catch (PropertyException e) {
-				e.printStackTrace();
+				//could not load icon
+				Workbench.errorMessage("Could not load icon for result panel", e, false);
 			} catch (IOException e) {
+				//could not load icon
+				Workbench.errorMessage("Could not load icon for result panel", e, false);
 				e.printStackTrace();
 			}
 		} else {

@@ -38,7 +38,7 @@ public class SCIFF extends ModelChecker {
 	}
 
 	@Override
-	public void run(ArrayList<CompliancePattern> patterns) {
+	public void run(ArrayList<CompliancePattern> patterns) throws Exception {
 		
 		for (CompliancePattern pattern : patterns) {
 			if (!pattern.isInstantiated()) continue;
@@ -57,9 +57,11 @@ public class SCIFF extends ModelChecker {
 				} catch (JDOMException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					throw new Exception(e);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					throw new Exception(e);
 				}
 			}
 		}

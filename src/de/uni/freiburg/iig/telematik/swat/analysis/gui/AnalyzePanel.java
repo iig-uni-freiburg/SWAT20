@@ -93,7 +93,7 @@ public class AnalyzePanel extends JPanel {
 				try {
 					mAnalysisController.runModelChecker();
 				} catch (Exception e) {
-					Workbench.errorMessage("Analysis Exception", e, true);
+					Workbench.errorMessage("Analysis Exception while running model checker: " + e.getMessage(), e, true);
 				}
 			}
 		});
