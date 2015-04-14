@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.gui;
+package de.uni.freiburg.iig.telematik.swat.analysis.gui;
 
 import java.awt.Component;
 import java.io.IOException;

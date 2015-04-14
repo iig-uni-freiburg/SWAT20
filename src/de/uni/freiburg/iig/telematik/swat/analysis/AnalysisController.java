@@ -1,11 +1,11 @@
-package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic;
+package de.uni.freiburg.iig.telematik.swat.analysis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.gui.AnalyzePanel;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelChecker;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelCheckerFactory;
+import de.uni.freiburg.iig.telematik.swat.analysis.gui.AnalyzePanel;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelChecker;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelCheckerFactory;
 import de.uni.freiburg.iig.telematik.swat.patterns.PatternController;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;

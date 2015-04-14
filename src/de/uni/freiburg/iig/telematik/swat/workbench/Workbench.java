@@ -17,8 +17,8 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;

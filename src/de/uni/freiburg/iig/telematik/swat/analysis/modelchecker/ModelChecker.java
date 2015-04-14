@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker;
 
 import java.util.ArrayList;
 

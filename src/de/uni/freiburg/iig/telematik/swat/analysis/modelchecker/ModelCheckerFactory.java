@@ -1,11 +1,11 @@
-package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.PRISM;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.SCIFF;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism.PRISM;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.sciff.SCIFF;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.CPNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;

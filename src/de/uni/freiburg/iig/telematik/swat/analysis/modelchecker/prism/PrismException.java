@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism;
 
 public class PrismException extends Exception {
 

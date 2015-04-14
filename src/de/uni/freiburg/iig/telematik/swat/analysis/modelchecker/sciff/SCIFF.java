@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.sciff;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelChecker;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelChecker;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 

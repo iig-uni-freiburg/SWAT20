@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism.modeltranlator;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator;
 
 import java.util.Calendar;
 import java.util.Collection;

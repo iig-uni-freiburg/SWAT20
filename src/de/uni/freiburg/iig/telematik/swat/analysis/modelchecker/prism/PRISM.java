@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -17,11 +17,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelChecker;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism.modeltranlator.CPNAdapter;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism.modeltranlator.IFNetAdapter;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism.modeltranlator.PTNetConverter;
-import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism.modeltranlator.PrismModelAdapter;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelChecker;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.CPNAdapter;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.IFNetAdapter;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.PTNetConverter;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.PrismModelAdapter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
