@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.sciff.presenter;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.presenter;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,9 +20,9 @@ import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParserInterface;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
-import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser;
-import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
 
 public class LogSerializer {
 	private String logFile;

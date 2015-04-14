@@ -29,10 +29,10 @@ import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParserInterface;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.presenter.SciffPresenter;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
-import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser;
-import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser.whichTimestamp;
-import de.uni.freiburg.iig.telematik.swat.sciff.presenter.SciffPresenter;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 

@@ -19,7 +19,7 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogSummary
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
 import org.processmining.analysis.sciffchecker.logic.util.EventType;
 
-import de.uni.freiburg.iig.telematik.swat.sciff.AristaFlowParser;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
 
 /** takes an ISCIFFLog and extracts timing information **/
 public class ISCIFFAdapter implements TimeAwareAdapter, ISciffLogReader {

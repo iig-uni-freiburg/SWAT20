@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.sciff;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff;
 
 import java.io.BufferedReader;
 import java.io.File;

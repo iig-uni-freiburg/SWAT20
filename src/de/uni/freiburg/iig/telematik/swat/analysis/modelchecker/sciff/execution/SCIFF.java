@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.execution;
 
 import java.io.File;
 import java.io.IOException;

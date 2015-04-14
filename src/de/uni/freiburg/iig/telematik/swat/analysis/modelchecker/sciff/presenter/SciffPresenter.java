@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.sciff.presenter;
+package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.presenter;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -32,7 +32,7 @@ import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.sciff.LogFilePartitioner;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.LogFilePartitioner;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
