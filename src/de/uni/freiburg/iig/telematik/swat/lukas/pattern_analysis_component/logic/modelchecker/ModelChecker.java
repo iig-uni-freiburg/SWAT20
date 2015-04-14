@@ -6,6 +6,6 @@ import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.
 
 public abstract class ModelChecker {
 
-	public abstract void run(ArrayList<CompliancePattern> patterns);
+	public abstract void run(ArrayList<CompliancePattern> patterns) throws Exception;
 	
 }

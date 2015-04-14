@@ -76,7 +76,7 @@ public class AnalysisController {
 		return mPatternController.getPatterns();
 	}
 	
-	public void runModelChecker() {
+	public void runModelChecker() throws Exception {
 		ModelChecker modelChecker = ModelCheckerFactory.createModelChecker(mComponent);
 		modelChecker.run(getPatterns());
 		updateAnalysePanel();

@@ -4,7 +4,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uni.freiburg.iig.telematik.swat.lukas.ClassFinder;
+import de.invation.code.toval.reflect.ReflectionUtils;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_creator_component.logic.patterns.CompliancePattern;
 
 public abstract class AbstractPatternFactory {
@@ -16,7 +16,7 @@ public abstract class AbstractPatternFactory {
 	protected ArrayList<CompliancePattern> loadPatterns() {
 		
 		
-			List<Class<?>> classes = ClassFinder.find(mPackage);
+			List<Class<?>> classes = ReflectionUtils.getClasses(mPackage);
 			mSupportedPatterns = new ArrayList<CompliancePattern>();
 			
 			for (Class<?> cl : classes) {

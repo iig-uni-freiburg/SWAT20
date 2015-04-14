@@ -10,13 +10,13 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.PumpStreamHandler;
 
+import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
-import de.uni.freiburg.iig.telematik.swat.lukas.IOUtils;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.ModelChecker;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism.modeltranlator.CPNAdapter;
 import de.uni.freiburg.iig.telematik.swat.lukas.pattern_analysis_component.logic.modelchecker.prism.modeltranlator.IFNetAdapter;
@@ -72,35 +72,43 @@ private String mPrismPath;
 	}
 
 	@Override
-	public void run(ArrayList<CompliancePattern> patterns) {
+	public void run(ArrayList<CompliancePattern> patterns) throws PrismException {
+		File modelFile = null;
+		try {
+			modelFile = FileUtils.writeFile(mFilesPath, mModelFileName, mConverter.translate().toString());
+		} catch(Exception e){
+			throw new PrismException("Cannot write mode lfile to disk", e);
+		}
 		
-		File modelFile = IOUtils.writeToFile(mFilesPath, mModelFileName, mConverter.translate().toString());
 		String properties = "";
 		for (CompliancePattern pattern : patterns) {
 			if (!pattern.isInstantiated()) continue;
 			properties += pattern.getFormalization() + "\n\n";
 		}
-		File propertiesFile = IOUtils.writeToFile(mFilesPath, mPropertiesFileName, properties);
+		File propertiesFile = null;
+		try {
+			propertiesFile = FileUtils.writeFile(mFilesPath, mPropertiesFileName, properties);
+		} catch(Exception e){
+			throw new PrismException("Cannot write properties file to disk", e);
+		}
+		
 		try {
 			String resultStr = execToString(modelFile, propertiesFile);
 			if (mConverter.isBoundedNet()) {
-				
-				String states = IOUtils.readFile(mFilesPath + File.separator + mStatesFileName);
+				String states = FileUtils.readStringFromFile(mFilesPath + File.separator + mStatesFileName);
 				new PrismOutputHandler(patterns, resultStr, states);
-				
 			} else {
 				new PrismOutputHandler(patterns, resultStr);
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ExecuteException e) {
+			throw new PrismException("Prism execution exception", e);
+		} catch (IOException e) {
+			throw new PrismException("I/O exception during Prism execution", e);
 		}
 
 	}
 	
-	
-	private String execToString(File model, File properties) {
-		
+	private String execToString(File model, File properties) throws ExecuteException, IOException {
 		String command;
 		String prism = (System.getProperty("os.name").contains("Windows"))? "prism.bat" : "prism";
 		
@@ -118,14 +126,7 @@ private String mPrismPath;
 	    DefaultExecutor exec = new DefaultExecutor();
 	    PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
 	    exec.setStreamHandler(streamHandler);
-	    try {
-			exec.execute(commandline);
-		} catch (ExecuteException e) {
-			System.out.println(errorStream.toString());
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	    exec.execute(commandline);
 	    return(outputStream.toString());
 	    
 	}
