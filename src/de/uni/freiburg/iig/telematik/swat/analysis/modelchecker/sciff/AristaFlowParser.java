@@ -32,6 +32,7 @@ import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 
 public class AristaFlowParser implements ISciffLogReader, Serializable {
+	private static final long serialVersionUID = -420321215814744113L;
 	private File log;
 	private LinkedHashMap<String, ISciffLogTrace> traces = new LinkedHashMap<String, ISciffLogTrace>();
 	private BufferedReader br;

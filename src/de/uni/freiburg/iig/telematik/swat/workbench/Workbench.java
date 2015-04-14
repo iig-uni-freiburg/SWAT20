@@ -386,6 +386,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			updateToolbar();
 		} catch (NullPointerException e) {
 			// Can happens when Arista-Flow analysis is called with no active tabs
+			errorMessage("Nothing to display: No active tab", e, true);
 
 		}
 	}

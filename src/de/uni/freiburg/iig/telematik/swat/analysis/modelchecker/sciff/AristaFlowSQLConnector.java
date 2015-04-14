@@ -15,6 +15,7 @@ import java.util.List;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /** Reads AristaFlow database and converts to csv file **/
@@ -40,8 +41,7 @@ public class AristaFlowSQLConnector {
 			prop.setAristaFlowPass("ADEPT2DB");
 			//prop.store();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//No connection to Database
 		}
 
 		AristaFlowSQLConnector con;
@@ -58,7 +58,7 @@ public class AristaFlowSQLConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Workbench.errorMessage("Could not write to temporary directory ", e, true);
 			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -99,16 +99,25 @@ public class AristaFlowSQLConnector {
 	 * @throws IOException
 	 * @throws SQLException
 	 **/
-	public AristaFlowSQLConnector() throws ClassNotFoundException, IOException, SQLException {
+	public AristaFlowSQLConnector() {
 		//Create PostreSQL connection
-		Class.forName("org.postgresql.Driver");
-		String url = SwatProperties.getInstance().getAristaFlowURL();
-		String user = SwatProperties.getInstance().getAristaFlowUser();
-		String pass = SwatProperties.getInstance().getAristaFlowPass();
-		con = DriverManager.getConnection(url, user, pass);
-		//con = DriverManager.getConnection(server + "/InvoiceLocal", user, password);
-		st = con.createStatement();
-		fileWriter = new FileWriter(tempFile);
+		try {
+			Class.forName("org.postgresql.Driver");
+			String url = SwatProperties.getInstance().getAristaFlowURL();
+			String user = SwatProperties.getInstance().getAristaFlowUser();
+			String pass = SwatProperties.getInstance().getAristaFlowPass();
+			con = DriverManager.getConnection(url, user, pass);
+			//con = DriverManager.getConnection(server + "/InvoiceLocal", user, password);
+			st = con.createStatement();
+			fileWriter = new FileWriter(tempFile);
+		} catch (ClassNotFoundException e) {
+			Workbench.errorMessage("Could not find database driver", e, true);
+		} catch (IOException e) {
+			Workbench.errorMessage("Could not access properties or write to file", e, true);
+		} catch (SQLException e) {
+			Workbench.errorMessage("Could not access database", e, true);
+		}
+
 	}
 
 	public void connectToDatabase(String database) throws SQLException, IOException {

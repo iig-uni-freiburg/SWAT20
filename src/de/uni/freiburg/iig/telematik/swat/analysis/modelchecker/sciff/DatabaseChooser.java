@@ -21,7 +21,7 @@ public class DatabaseChooser {
 
 	}
 
-	public static AristaFlowSQLConnector DatabaseChooser() throws SQLException, IOException, ClassNotFoundException {
+	public static AristaFlowSQLConnector DatabaseChooser() throws SQLException, ClassNotFoundException, IOException {
 		AristaFlowSQLConnector connector = new AristaFlowSQLConnector();
 		String[] possibilities = connector.getDatabases();
 		String s = (String) JOptionPane.showInputDialog(null, "Which Arista Flow datbase to use", "Choose Database",
