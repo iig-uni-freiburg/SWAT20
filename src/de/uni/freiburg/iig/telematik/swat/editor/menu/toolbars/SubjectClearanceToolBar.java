@@ -127,7 +127,7 @@ public class SubjectClearanceToolBar extends JToolBar {
 //		}
 		int size = 0;
 		if(labeling != null)
-		for (String subject : labeling.getSubjects()) {
+		for (String subject : labeling.getAnalysisContext().getACModel().getContext().getSubjects()) {
 			addRow(subject);
 			size++;
 		}
