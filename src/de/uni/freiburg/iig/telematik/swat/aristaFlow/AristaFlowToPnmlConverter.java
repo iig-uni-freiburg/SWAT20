@@ -25,6 +25,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowElement.PTequivalent;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.graphpopup.LayoutAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 
@@ -200,6 +201,7 @@ public class AristaFlowToPnmlConverter {
 			try {
 				addAristaFlowElementTransitions(element);
 			} catch (ParameterException e) {
+				Workbench.errorMessage("Problem generating IFnet with element " + element.displayName, e, false);
 			}
 		}
 

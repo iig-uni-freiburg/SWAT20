@@ -235,16 +235,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			JOptionPane.showMessageDialog(myWorkbench, messageToShow);
 		errorMessage(messageToShow);
 
-		try {
-			ErrorStorage.getInstance().addMessage(message, e);
-		} catch (Exception ex) {
-		}
+		ErrorStorage.getInstance().addMessage(message, e);
 
-	}
-
-	private static void errorMessageWithNotification(String message) {
-		JOptionPane.showMessageDialog(getInstance(), message);
-		errorMessage(message);
 	}
 
 	private static void errorMessage(String message) {
@@ -256,6 +248,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		try {
 			messagePanel.setSelectedIndex(0);
 		} catch (ArrayIndexOutOfBoundsException e) {
+			//only for message Panel
 		}
 	}
 
