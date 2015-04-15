@@ -170,7 +170,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	
 	public SwatMenuBar getSwatMenu() {
 		if(menuBar == null){
-			menuBar = new SwatMenuBar(getTabView(), getTreeView());
+			menuBar = new SwatMenuBar();
 		}
 		return menuBar;
 	}

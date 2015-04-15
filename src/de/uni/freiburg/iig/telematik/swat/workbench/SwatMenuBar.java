@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -48,13 +49,10 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	private static final String iconNameFormat = "../resources/icons/%s/%s-%s.png";
 	private static int ICON_SIZE = 26;
 
-	private SwatTabView tabView;
-	private SwatTreeView treeView;
-
 	JRadioButtonMenuItem editModeButton = null;
 	JRadioButtonMenuItem analysisModeButton = null;
 
-	public SwatMenuBar(SwatTabView swatTabView, SwatTreeView swatTreeView) {
+	public SwatMenuBar() {
 		super();
 		try {
 			SwatState.getInstance().addListener(this);
@@ -62,12 +60,11 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 			// Cannot happen, since this is never null.
 		}
 
-		this.tabView = swatTabView;
-		this.treeView = swatTreeView;
-
 		add(getFileMenu());
 		add(getEditMenu());
 		add(getSettingsMenu());
+		add(Box.createHorizontalGlue());
+		add(getHelpEntry());
 
 	}
 
@@ -81,8 +78,6 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 		JMenuItem importEntry = getImportEntry();
 
-		JMenuItem help = getHelpEntry();
-
 		fileMenu.add(new SwitchWorkingDirectoryAction(UIManager.getIcon("FileView.directoryIcon")));
 		fileMenu.add(saveAll);
 		fileMenu.add(save);
@@ -93,14 +88,13 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		fileMenu.addSeparator();
 		fileMenu.add(exit);
 		fileMenu.addSeparator();
-		fileMenu.add(help);
 
 		return fileMenu;
 	}
 
-	private JMenuItem getHelpEntry() {
-		JMenuItem importEntry = new JMenuItem("Help");
-		importEntry.addActionListener(new SendExceptionsAsEmail("Send Bug Report...", null));
+	private JMenu getHelpEntry() {
+		JMenu importEntry = new JMenu("Help");
+		importEntry.add(new SendExceptionsAsEmail("Send Bug Report...", null));
 		return importEntry;
 	}
 
@@ -242,7 +236,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frame.setJMenuBar(new SwatMenuBar(SwatTabView.getInstance(), SwatTreeView.getInstance()));
+		frame.setJMenuBar(new SwatMenuBar());
 		frame.pack();
 		frame.setVisible(true);
 	}

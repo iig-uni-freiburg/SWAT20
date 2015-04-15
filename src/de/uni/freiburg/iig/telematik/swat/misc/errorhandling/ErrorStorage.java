@@ -14,15 +14,12 @@ import java.util.LinkedList;
 public class ErrorStorage {
 	static ErrorStorage myErrorStorage = new ErrorStorage();
 	private ErrorStore store = new ErrorStore();
+	private final String email = "zahoransky@gmx.de";
 
 	public static void main(String args[]) throws IOException, URISyntaxException {
 		ErrorStorage eStore = ErrorStorage.getInstance();
-		//eStore.addMessage("Test1", new Exception("blubb"));
-		//eStore.addMessage("Test2", new Exception("blubb"));
-		//eStore.addMessage("Test3", new Exception("blubb"));
 		eStore.addMessage(null, new Exception("String is empty"));
 		eStore.addMessage("Exception is empty", null);
-		//System.out.println(("mailto:zahoransky@iig.uni-freiburg.de&bsubject=BugreportSWAT&body=" + eStore.toString()).substring(66, 76));
 		eStore.sendAsMail();
 	}
 
@@ -50,7 +47,7 @@ public class ErrorStorage {
 		String errorStrings;
 		try {
 			errorStrings = URLEncoder.encode(store.toString(), "UTF-8").replace("+", "%20");
-			Desktop.getDesktop().mail(new URI("mailto:zahoransky@iig.uni-freiburg.de?subject=Bugreport%20SWAT&body=" + errorStrings));
+			Desktop.getDesktop().mail(new URI("mailto:" + email + "?subject=Bugreport%20SWAT&body=" + errorStrings));
 			return true;
 		} catch (UnsupportedEncodingException e) {
 		} catch (IOException e) {
