@@ -92,6 +92,7 @@ public class PatternController {
 	}
 
 	public void openPatternDialog() {
+		mPatternDialog.setLocationByPlatform(true);
 		mPatternDialog.setVisible(true);
 	}
 

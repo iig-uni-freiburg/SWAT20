@@ -38,8 +38,8 @@ public abstract class PrismModelAdapter {
 		mAbstractNet = net;
 	}
 	
-	public StringBuilder translate() {
-		
+	public StringBuilder translate() throws PlaceException {
+
 		StringBuilder placeVars = createPlaceVars();
 		StringBuilder transitionVars = createTransitionVars();
 		StringBuilder transitions = createTransitions();
@@ -140,11 +140,11 @@ public abstract class PrismModelAdapter {
 	}
 
 	
-	protected abstract StringBuilder createPlaceVars();
+	protected abstract StringBuilder createPlaceVars() throws PlaceException;
 	
 	protected abstract StringBuilder createTransitions();
 	
-	public static void main(String [] args) {
+	public static void main(String[] args) throws PlaceException {
 		
 		PTNet net = new PTNet(); 
 		net.addPlace("p1");

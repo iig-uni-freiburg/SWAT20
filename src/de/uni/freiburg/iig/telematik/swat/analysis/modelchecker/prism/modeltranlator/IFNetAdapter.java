@@ -22,7 +22,7 @@ public class IFNetAdapter extends CPNAdapter {
 	
 	@SuppressWarnings("static-access")
 	@Override
-	protected StringBuilder createPlaceVars() {
+	protected StringBuilder createPlaceVars() throws PlaceException {
 		
 		StringBuilder allPlacesBuilder = new StringBuilder();
 		
@@ -56,6 +56,7 @@ public class IFNetAdapter extends CPNAdapter {
 						placeBuilder.append("[0.." + p.getColorCapacity(color) + "] ");
 					} else {
 						System.out.println("Not a valid CWN! Place " + p.getName() + "is not bounded.");
+						throw new PlaceException("Not a valid CWN! Place " + p.getName() + "is not bounded.");
 					}
 					
 					if (mNet.getInitialMarking().get(p.getName()) != null) {

@@ -24,7 +24,7 @@ public class CPNAdapter extends PrismModelAdapter {
 
 	@SuppressWarnings("static-access")
 	@Override
-	protected StringBuilder createPlaceVars() {
+	protected StringBuilder createPlaceVars() throws PlaceException {
 		
 		StringBuilder allPlacesBuilder = new StringBuilder();
 		

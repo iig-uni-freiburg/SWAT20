@@ -21,8 +21,10 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelChecker;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.CPNAdapter;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.IFNetAdapter;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.PTNetConverter;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.PlaceException;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.PrismModelAdapter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class PRISM extends ModelChecker {
@@ -47,10 +49,13 @@ private String mPrismPath;
 				mPrismPath += File.separator;
 			}
 		} catch (ParameterException e) {
+			Workbench.errorMessage("Could not load PRISM", e, true);
 			e.printStackTrace();
 		} catch (PropertyException e) {
+			Workbench.errorMessage("Could not load PRISM. Please set PRISM path", e, true);
 			e.printStackTrace();
 		} catch (IOException e) {
+			Workbench.errorMessage("Could not load PRISM", e, true);
 			e.printStackTrace();
 		}
 	}
@@ -76,8 +81,10 @@ private String mPrismPath;
 		File modelFile = null;
 		try {
 			modelFile = FileUtils.writeFile(mFilesPath, mModelFileName, mConverter.translate().toString());
-		} catch(Exception e){
-			throw new PrismException("Cannot write mode lfile to disk", e);
+		} catch (PlaceException e1) {
+			Workbench.errorMessage(e1.getMessage(), e1, true);
+		} catch (Exception e) {
+			throw new PrismException("Cannot write mode file to disk", e);
 		}
 		
 		String properties = "";

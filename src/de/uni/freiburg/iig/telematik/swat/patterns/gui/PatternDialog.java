@@ -18,7 +18,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.patterns.gui.PatternPanel;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 
 
@@ -135,6 +134,11 @@ public class PatternDialog extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(900, 600);
 		
+	}
+
+	public static void main(String args[]) {
+		PatternDialog dialog = new PatternDialog(null);
+		dialog.setVisible(true);
 	}
 
 
