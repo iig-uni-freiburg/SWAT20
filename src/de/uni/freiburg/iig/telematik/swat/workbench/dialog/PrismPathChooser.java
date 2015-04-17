@@ -36,8 +36,10 @@ public class PrismPathChooser extends ConditionalFileDialog {
 								"Prism failed the execution test. this prism version might differ from prism-4.2.beta1.\br might cause trouble with SWAT",
 								null, false);
 		} catch (ParameterException e) {
+			Workbench.errorMessage("Could not get prism executable path", e, true);
 			return false;
 		} catch (IOException e) {
+			Workbench.errorMessage("Could not access prism executable", e, true);
 			return false;
 		}
 		return true;

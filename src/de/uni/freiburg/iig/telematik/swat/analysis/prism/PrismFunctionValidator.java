@@ -45,13 +45,10 @@ public class PrismFunctionValidator {
 				return true; //all good
 		} catch (ParameterException e) {
 			Workbench.errorMessage("Error loading Prism", null, true);
-			e.printStackTrace();
 		} catch (PropertyException e) {
 			Workbench.errorMessage("Could not retrieve Prism Path. Please set prism path", null, true);
-			e.printStackTrace();
 		} catch (IOException e) {
 			Workbench.errorMessage("Could not ressolve Prism Model Checker", null, true);
-			e.printStackTrace();
 		}
 		return false;
 	}

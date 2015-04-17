@@ -17,6 +17,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ExportAction;
@@ -170,9 +171,10 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 				if (prismPath != null) {
 					try {
 						SwatProperties.getInstance().setPrismPath(prismPath);
+						if (!PrismFunctionValidator.checkPrism())
+							Workbench.errorMessage("Could not verify PRISM executable", null, true);
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot set Prism path.\n Reason: "
-								+ e1.getMessage(), "Error while setting Prism path", JOptionPane.ERROR_MESSAGE);
+						Workbench.errorMessage("Could not set PRISM path", e1, true);
 					}
 				}
 			}

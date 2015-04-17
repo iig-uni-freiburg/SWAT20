@@ -5,7 +5,7 @@ import java.util.List;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 
-public class Analysis {
+public class Analysis implements Comparable {
 
 	private String name = null;
 	private List<CompliancePattern> patternSetting = null;
@@ -41,6 +41,13 @@ public class Analysis {
 		} catch (RuntimeException e) {
 			hashCode = 0;
 		}
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		if (o instanceof Analysis)
+			return ((Analysis) o).getName().compareTo(getName());
+		return 0;
 	}
 	
 }

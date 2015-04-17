@@ -1,28 +1,40 @@
 package de.uni.freiburg.iig.telematik.swat.analysis.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
-public class AnalyzePanel extends JPanel {
+/** Panel on right side of SWAT. Shows analysis results **/
+public class AnalyzePanel extends JPanel implements ItemListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -34,6 +46,8 @@ public class AnalyzePanel extends JPanel {
 
 	private AnalysisController mAnalysisController;
 	
+	private JComboBox dropDown;
+
 	public AnalyzePanel(AnalysisController analysisController) {	
 		mAnalysisController = analysisController;
 		updatePatternResults();
@@ -61,6 +75,8 @@ public class AnalyzePanel extends JPanel {
 	JPanel propertyPanel = new JPanel();
 	propertyPanel.setLayout(new BoxLayout(propertyPanel, BoxLayout.Y_AXIS));
 	Box box = Box.createVerticalBox();
+
+		box.add(getAnalysisDropDown(Workbench.getInstance().getNameOfCurrentComponent()));
 
 	JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	buttonPanel.add(editButton);
@@ -98,6 +114,15 @@ public class AnalyzePanel extends JPanel {
 			}
 		});
 		
+		saveButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveRules();
+
+			}
+		});
+
 		ArrayList<CompliancePattern> patterns = mAnalysisController.getPatterns();
 		for (CompliancePattern pattern : patterns) {
 			if (pattern.isInstantiated()) {
@@ -107,12 +132,47 @@ public class AnalyzePanel extends JPanel {
 		this.add(content);
 	}
 	
+	private Component getAnalysisDropDown(String netID) {
+		if (dropDown == null) {
+			List<Analysis> analyses = SwatComponents.getInstance().getAnalyses(netID);
+			Collections.sort(analyses);
+			dropDown = new JComboBox();
+			dropDown.addItem("New Analysis...");
+			for (Analysis a : analyses)
+				dropDown.addItem(a);
+
+			dropDown.addItemListener(this);
+		}
+
+		return dropDown;
+	}
+
 	private JPanel jPanelLeft(JComponent k) {
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.add(k);
 		return p;
 	}
 
+	@SuppressWarnings("rawtypes")
+	private void saveRules() {
+		SwatComponents sc = SwatComponents.getInstance();
+		try {
+			AbstractGraphicalPN net = sc.getPetriNet(Workbench.getInstance().getNameOfCurrentComponent());
+			String name = JOptionPane.showInputDialog(this, "Please name analysis");
+			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
+			save.setHashCode(net.getPetriNet().hashCode());
+			sc.storeAnalysis(save, net.getPetriNet().getName());
+
+		} catch (SwatComponentException e) {
+			Workbench.errorMessage("Could not save analysis", e, true);
+		}
+	}
+
+	@Override
+	/**Listen to dropdown change**/
+	public void itemStateChanged(ItemEvent e) {
+		//updatePatternResults();
+	}
 	
 	
 	/*

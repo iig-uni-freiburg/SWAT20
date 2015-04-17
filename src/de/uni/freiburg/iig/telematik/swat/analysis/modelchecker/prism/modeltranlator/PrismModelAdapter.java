@@ -36,6 +36,7 @@ public abstract class PrismModelAdapter {
 	
 	protected PrismModelAdapter(AbstractPetriNet<?,?,?,?,?,?,?> net) {
 		mAbstractNet = net;
+		//bounded = net.isBounded();
 	}
 	
 	public StringBuilder translate() throws PlaceException {

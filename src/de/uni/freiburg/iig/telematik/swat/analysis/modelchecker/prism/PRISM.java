@@ -110,7 +110,8 @@ private String mPrismPath;
 		} catch (ExecuteException e) {
 			throw new PrismException("Prism execution exception", e);
 		} catch (IOException e) {
-			throw new PrismException("I/O exception during Prism execution", e);
+			throw new PrismException("Net might not be bounded - Prism I/O exception, File: " + mFilesPath + File.separator
+					+ mStatesFileName, e);
 		}
 
 	}
@@ -121,7 +122,8 @@ private String mPrismPath;
 		
 		if (mConverter.isBoundedNet()) {
 			command = mPrismPath + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
-					" " + properties.getAbsolutePath() + " -exportstates " + mStatesFileName; 
+ " " + properties.getAbsolutePath()
+					+ " -exportstates " + mStatesFileName;
 		} else {
 			command = mPrismPath + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
 					" " + properties.getAbsolutePath() + " -ex";
@@ -132,6 +134,7 @@ private String mPrismPath;
 	    CommandLine commandline = CommandLine.parse(command);
 	    DefaultExecutor exec = new DefaultExecutor();
 	    PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
+		Workbench.consoleMessage("Executing: " + command);
 	    exec.setStreamHandler(streamHandler);
 	    exec.execute(commandline);
 	    return(outputStream.toString());

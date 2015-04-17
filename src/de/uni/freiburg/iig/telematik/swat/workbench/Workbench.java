@@ -38,6 +38,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(250, 500);
 	private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(300,80);
 	private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(300, 550);
+	private static final boolean SHOW_STACK_TRACES = true;
 	
 //	private MultiSplitPane splitPane = null;
 	private SwatToolbar toolbar = null;
@@ -185,6 +186,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return treeView;
 	}
 	
+	public String getNameOfCurrentComponent() {
+		Object o = tabView.getSelectedComponent();
+		if (o instanceof PNEditorComponent)
+			return ((PNEditorComponent) o).getNetContainer().getPetriNet().getName();
+		return "";
+	}
+
 	private static JComponent getMessagePanel() {
 		if(messagePanel == null){
 			messagePanel = new JTabbedPane();
@@ -236,6 +244,9 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		errorMessage(messageToShow);
 
 		ErrorStorage.getInstance().addMessage(message, e);
+
+		if (SHOW_STACK_TRACES)
+			e.printStackTrace();
 
 	}
 

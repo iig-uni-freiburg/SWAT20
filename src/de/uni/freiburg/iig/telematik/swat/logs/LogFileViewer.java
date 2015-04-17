@@ -19,6 +19,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
@@ -55,9 +56,9 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 			editor.setEditable(false);
 			getViewport().add(editor);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			Workbench.errorMessage("Could not generate Log viewer, URL malformed", e, true);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Workbench.errorMessage("Could not generate Log viewer, I/O Error", e, true);
 		}
 		return this;
 	}

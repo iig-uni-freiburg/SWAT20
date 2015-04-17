@@ -27,6 +27,7 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorCompon
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
+/** Pattern Editor **/
 public class PatternController {
 
 	private ModelInfoProvider mModelInformationProvider;
