@@ -22,6 +22,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class PatternPanel extends JPanel {
 
@@ -31,8 +32,12 @@ public class PatternPanel extends JPanel {
 	
 	public PatternPanel(CompliancePattern pattern) {
 		mPattern = pattern;
-		pattern.instantiate();
-		initGui();
+		try {
+			pattern.instantiate();
+			initGui();
+		} catch (Exception e) {
+			Workbench.errorMessage("Could not instantiate rule " + pattern.getName(), e, true);
+		}
 		
 	}
 	

@@ -274,6 +274,17 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 		return Collections.unmodifiableSet(result);
 	}
 
+	//	public List<List<LogTrace<LogEntry>>> parse(File file, ParsingMode parsingMode) throws IOException, ParserException {
+	//		try {
+	//			log = file;
+	//			br = new BufferedReader(new java.io.FileReader(log));
+	//			parse(whichTimestamp.BOTH);
+	//			return getLogEntries();
+	//		} catch (Exception e) {
+	//			throw new IOException("Could not access " + file + e.getMessage());
+	//		}
+	//	}
+
 }
 
 class AristaFlowLogSummary implements ISciffLogSummary, Serializable {
@@ -379,6 +390,7 @@ class AristaFlowLogTrace implements ISciffLogTrace, Serializable {
 
 class AristaFlowLogEntry implements ISciffLogEntry, Serializable {
 
+	private static final long serialVersionUID = -7119459636969391384L;
 	public String element;
 	public String originator;
 	public EventType type;
