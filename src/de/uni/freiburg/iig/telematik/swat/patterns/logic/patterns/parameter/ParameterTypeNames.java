@@ -10,6 +10,8 @@ public class ParameterTypeNames {
 	
 	public static final String USER = "User";
 	
+	public static final String NUMBER = "Number";
+
 	public static final String STATEPREDICATE = "State Predicate";
 
 }

@@ -13,6 +13,8 @@ public class ParaValuePanelFactory {
 		
 		if (parameterTypeStr.equals(ParameterTypeNames.STATEPREDICATE)) {
 			panel = new StatePredicateParamValuePanel(parameter);
+		} else if (parameterTypeStr.equals(ParameterTypeNames.NUMBER)) {
+			panel = new NumberParamValuePanel(parameter);
 		} else {
 			panel = new StandardParamValuePanel(parameter);
 		} 
