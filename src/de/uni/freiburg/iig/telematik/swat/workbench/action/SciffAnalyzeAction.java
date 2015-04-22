@@ -11,7 +11,9 @@ import java.util.Iterator;
 
 import javax.swing.AbstractAction;
 
+import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.output.XMLOutputter;
 import org.processmining.analysis.sciffchecker.gui.SciffRuleDialog;
 import org.processmining.analysis.sciffchecker.logic.SCIFFChecker;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogEntry;
@@ -20,6 +22,7 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
 import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
 import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 import org.processmining.analysis.sciffchecker.logic.util.TimeGranularity;
+import org.processmining.analysis.sciffchecker.logic.xml.XMLRuleSerializer;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -83,6 +86,11 @@ public class SciffAnalyzeAction extends AbstractAction {
 			}
 
 			//saveRule(rule);
+
+			Element output = XMLRuleSerializer.serialize(rule, "test");
+			XMLOutputter outPutter = new XMLOutputter();
+			System.out.println("Rule: ");
+			outPutter.output(output, System.out);
 
 			SCIFFChecker checker = new SCIFFChecker();
 			CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);

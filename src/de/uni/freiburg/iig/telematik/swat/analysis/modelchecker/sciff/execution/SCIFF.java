@@ -19,6 +19,7 @@ import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelChecker;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -43,9 +44,12 @@ public class SCIFF extends ModelChecker {
 			//try AristaFlowLogParser
 			try {
 				AristaFlowParser parser = new AristaFlowParser(xesLogFile);
+				parser.parse(whichTimestamp.BOTH);
 				mLogReader = parser;
 			} catch (FileNotFoundException e) {
-				Workbench.errorMessage("Could not parse and analyze " + xesLogFile.getName() + ". File not found", e, true);
+				Workbench.errorMessage("Could not parse " + xesLogFile.getName() + ". File not found", e, true);
+			} catch (Exception e) {
+				Workbench.errorMessage("Could not parse " + xesLogFile.getName() + ". parser error", e, true);
 			}
 		}
 	}
