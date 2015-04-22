@@ -71,9 +71,8 @@ public class IfAThenB extends CompliancePattern {
 			String actName = mParameters.get(0).getValue().getValue();
 			StringConstantAttribute activity1Name = new StringConstantAttribute(actName);
 			new SimpleStringConstraint(atv1, StringOP.EQUAL, activity1Name);
-			r.setBody(body);
 		} 
-		
+		r.setBody(body);
 
 		Disjunction disjunct = new Disjunction(r);
 		Conjunction conj = new Conjunction(disjunct);
