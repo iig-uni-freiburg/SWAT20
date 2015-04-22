@@ -20,36 +20,42 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePatt
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class IfAThenB extends CompliancePattern {
+public class IfAthenBorC extends CompliancePattern {
 
-	protected final String mPatternName = "If A then B";
+	public static void main(String args[]) {
+		IfAthenBorC test = new IfAthenBorC();
+		test.printRule();
+	}
 
-	protected final String mDescription = "If Activity A exists, activity B must exist";
-
-	// <RuleEntry name="test"><Rule><Body><Conjunction><Activities><SimpleActivity name="A" forbidden="false" /></Activities></Conjunction></Body><Head><Disjunction><Conjunction><Activities><SimpleActivity name="B" forbidden="false" /></Activities></Conjunction></Disjunction></Head></Rule></RuleEntry>
-
-	public IfAThenB() {
+	public IfAthenBorC() {
 		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(paramTypes, "B"));
+		mParameters.add(new Parameter(paramTypes, "C"));
 		//mPatternName = "If A then B";
 		setFormalization();
-	}
-
-	public static void main(String args[]) {
-		IfAThenB test = new IfAThenB();
-		test.printRule();
 	}
 
 	@Override
 	public void acceptInfoProfider(ModelInfoProvider provider) {
 		XESLogInfoProvider xesInfo = (XESLogInfoProvider) provider;
 		mInfoProvider = xesInfo;
-		Parameter p = mParameters.get(0);
-		p.setTypeRange(ParameterTypeNames.ACTIVITY, xesInfo.getActivities());
-		Parameter q = mParameters.get(1);
-		q.setTypeRange(ParameterTypeNames.ACTIVITY, xesInfo.getActivities());
+		Parameter a = mParameters.get(0);
+		Parameter b = mParameters.get(1);
+		Parameter c = mParameters.get(2);
+		a.setTypeRange(ParameterTypeNames.ACTIVITY, xesInfo.getActivities());
+		b.setTypeRange(ParameterTypeNames.ACTIVITY, xesInfo.getActivities());
+		c.setTypeRange(ParameterTypeNames.ACTIVITY, xesInfo.getActivities());
+	}
 
+	@Override
+	public String getName() {
+		return "If Activity A then B or C";
+	}
+
+	@Override
+	public String getDescription() {
+		return "If Activity A exists then Activity B or C must exist";
 	}
 
 	@Override
@@ -72,22 +78,29 @@ public class IfAThenB extends CompliancePattern {
 			StringConstantAttribute activity1Name = new StringConstantAttribute(actName);
 			new SimpleStringConstraint(atv1, StringOP.EQUAL, activity1Name);
 			r.setBody(body);
-		} 
-		
+		}
 
 		Disjunction disjunct = new Disjunction(r);
-		Conjunction conj = new Conjunction(disjunct);
-		
-		SimpleActivityExecution activityExec2 = new SimpleActivityExecution(conj, "B", EventType.complete, false);
-		
+		Conjunction conj1 = new Conjunction(disjunct);
+
+		SimpleActivityExecution activityExec2 = new SimpleActivityExecution(conj1, "B", EventType.complete, false);
+
 		if (mParameters.get(1).getValue().getType().equals(ParameterTypeNames.ACTIVITY)) {
 
 			ActivityTypeVariable atv2 = new ActivityTypeVariable(activityExec2);
 			StringConstantAttribute activityB = new StringConstantAttribute(mParameters.get(1).getValue().getValue());
 			new SimpleStringConstraint(atv2, StringOP.EQUAL, activityB);
 			//r.setHead(head);
+		}
 
-		} 
+		Conjunction conj2 = new Conjunction(disjunct);
+
+		SimpleActivityExecution activityExec3 = new SimpleActivityExecution(conj2, "C", EventType.complete, false);
+		if (mParameters.get(2).getValue().getType().equals(ParameterTypeNames.ACTIVITY)) {
+			ActivityTypeVariable atv3 = new ActivityTypeVariable(activityExec3);
+			StringConstantAttribute activityC = new StringConstantAttribute(mParameters.get(2).getValue().getValue());
+			new SimpleStringConstraint(atv3, StringOP.EQUAL, activityC);
+		}
 
 		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
 		rules.add(cr);
@@ -97,17 +110,8 @@ public class IfAThenB extends CompliancePattern {
 
 	@Override
 	public boolean isAntiPattern() {
+		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public String getName() {
-		return mPatternName;
-	}
-
-	@Override
-	public String getDescription() {
-		return mDescription;
 	}
 
 }
