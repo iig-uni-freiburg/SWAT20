@@ -25,7 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
@@ -156,12 +155,13 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	@SuppressWarnings("rawtypes")
 	private void saveRules() {
 		SwatComponents sc = SwatComponents.getInstance();
+		String analysisName = Workbench.getInstance().getNameOfCurrentComponent();
 		try {
-			AbstractGraphicalPN net = sc.getPetriNet(Workbench.getInstance().getNameOfCurrentComponent());
+			//AbstractGraphicalPN net = sc.getPetriNet(Workbench.getInstance().getNameOfCurrentComponent());
 			String name = JOptionPane.showInputDialog(this, "Please name analysis");
 			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
-			save.setHashCode(net.getPetriNet().hashCode());
-			sc.storeAnalysis(save, net.getPetriNet().getName());
+			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
+			sc.storeAnalysis(save, analysisName);
 
 		} catch (SwatComponentException e) {
 			Workbench.errorMessage("Could not save analysis", e, true);

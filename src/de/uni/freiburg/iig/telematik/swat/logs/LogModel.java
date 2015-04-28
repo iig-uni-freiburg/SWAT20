@@ -36,4 +36,9 @@ public class LogModel {
 	public SwatLog getType() {
 		return type;
 	}
+
+	@Override
+	public int hashCode() {
+		return fileReference.hashCode();
+	}
 }

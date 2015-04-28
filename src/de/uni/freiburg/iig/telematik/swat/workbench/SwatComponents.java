@@ -1034,8 +1034,31 @@ public class SwatComponents {
 
 	public void storeAnalysis(Analysis analysis, String netID) throws SwatComponentException {
 		System.out.println("Storing " + analysis.getName());
+		File storagePath = null;
+		if (getLogModel(netID) != null) {
+			try {
+				storagePath = new File(getLogModel(netID).getFileReference().getParent(), SwatProperties.getInstance().getPathForLogs());
+			} catch (PropertyException e) {
+				//empty by purpose!
+				e.printStackTrace();
+			} catch (IOException e) {
+				//empty by purpose!
+				e.printStackTrace();
+			}
+		}
+
+		if (getPetriNet(netID) != null) {
+			try {
+				storagePath = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getNetAnalysesDirectoryName());
+			} catch (IOException e) {
+				// empty by purpose
+				e.printStackTrace();
+			}
+		}
+		
+		if (storagePath==null) 
+			throw new SwatComponentException("Could not get file path for "+netID);
 		try {
-			File storagePath = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getNetAnalysesDirectoryName());
 			storagePath.mkdirs();
 			XStream xstream=new XStream();
 			String serialString = xstream.toXML(analysis);

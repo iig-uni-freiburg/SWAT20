@@ -115,4 +115,8 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 		properties.repaint();
 	}
 
+	public int hashCode() {
+		return model.hashCode();
+	}
+
 }

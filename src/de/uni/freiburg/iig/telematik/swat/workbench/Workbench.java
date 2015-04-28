@@ -190,7 +190,18 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		Object o = tabView.getSelectedComponent();
 		if (o instanceof PNEditorComponent)
 			return ((PNEditorComponent) o).getNetContainer().getPetriNet().getName();
+		if (o instanceof LogFileViewer)
+			return ((LogFileViewer) o).getName();
 		return "";
+	}
+
+	public int getHashOfCurrentComponent() {
+		Object o = tabView.getSelectedComponent();
+		if (o instanceof PNEditorComponent)
+			return ((PNEditorComponent) o).getNetContainer().getPetriNet().hashCode();
+		if (o instanceof LogFileViewer)
+			return ((LogFileViewer) o).hashCode();
+		return -1;
 	}
 
 	private static JComponent getMessagePanel() {
