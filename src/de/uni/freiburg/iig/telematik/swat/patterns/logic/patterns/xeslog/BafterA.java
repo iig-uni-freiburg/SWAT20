@@ -22,10 +22,11 @@ import org.processmining.analysis.sciffchecker.logic.util.TimeDisplacement;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.XESLogInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.PatternRequirements;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class BafterA extends CompliancePattern {
+public class BafterA extends LogCompliancePattern {
 
 	public static void main(String args[]) {
 		BafterA test = new BafterA();
@@ -110,6 +111,11 @@ public class BafterA extends CompliancePattern {
 	public boolean isAntiPattern() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public PatternRequirements[] requires() {
+		PatternRequirements req[] = {PatternRequirements.COMPLETE};
+		return req;
 	}
 
 }

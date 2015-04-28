@@ -17,10 +17,11 @@ import org.processmining.analysis.sciffchecker.logic.util.EventType;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.XESLogInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.PatternRequirements;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class ExistenceN extends CompliancePattern {
+public class ExistenceN extends LogCompliancePattern {
 
 	public static void main(String args[]) {
 		ExistenceN rule = new ExistenceN();
@@ -121,6 +122,12 @@ public class ExistenceN extends CompliancePattern {
 			//Rule not yet instantiatet, return 2
 			return 2;
 		}
+	}
+
+	@Override
+	public PatternRequirements[] requires() {
+		PatternRequirements req[] = { PatternRequirements.COMPLETE };
+		return req;
 	}
 
 }

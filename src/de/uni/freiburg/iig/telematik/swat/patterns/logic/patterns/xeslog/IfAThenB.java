@@ -17,10 +17,11 @@ import org.processmining.analysis.sciffchecker.logic.util.EventType;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.XESLogInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.PatternRequirements;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class IfAThenB extends CompliancePattern {
+public class IfAThenB extends LogCompliancePattern {
 
 	protected final String mPatternName = "If A then B";
 
@@ -107,6 +108,12 @@ public class IfAThenB extends CompliancePattern {
 	@Override
 	public String getDescription() {
 		return mDescription;
+	}
+
+	@Override
+	public PatternRequirements[] requires() {
+		PatternRequirements req[] = { PatternRequirements.COMPLETE };
+		return req;
 	}
 
 }
