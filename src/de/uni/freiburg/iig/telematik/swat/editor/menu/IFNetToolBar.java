@@ -278,28 +278,25 @@ public class IFNetToolBar extends AbstractToolBar {
 
 	@Override
 	protected void createAdditionalToolbarActions(PNEditorComponent pnEditor) {
-		
-			try {
-				tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
-				tokenAction = new PopUpToolBarAction(pnEditor, "Token", "marking", tokenToolbar);
+		try {
+			tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
+			tokenAction = new PopUpToolBarAction(pnEditor, "Token", IconFactory.getIcon("marking"), tokenToolbar);
 			tokenlabelToolbar = new TokenlabelToolBar(pnEditor, JToolBar.HORIZONTAL);
-			editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", "tokenlabel", tokenlabelToolbar);
+			editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", IconFactory.getIcon("tokenlabel"), tokenlabelToolbar);
 			addAccessControlAction = new AddAccessControlAction(pnEditor);
 			addAnalysisContextAction = new AddAnalysisContextAction(pnEditor);
-			tokenlabelToolbar = new TokenlabelToolBar(pnEditor, JToolBar.HORIZONTAL);
-			editTokenlabelAction = new PopUpToolBarAction(pnEditor, "Tokenlabel", "tokenlabel", tokenlabelToolbar);
 			editSubjectClearanceToolbar = new SubjectClearanceToolBar(pnEditor, JToolBar.HORIZONTAL);
-			editSubjectClearanceAction = new PopUpToolBarAction(pnEditor, "Edit Clearance", "user_shield", editSubjectClearanceToolbar);
-			} catch (ParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (PropertyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			editSubjectClearanceAction = new PopUpToolBarAction(pnEditor, "Edit Clearance", IconFactory.getIcon("user_shield"), editSubjectClearanceToolbar);
+		} catch (ParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void updateGlobalTokenConfigurer() {

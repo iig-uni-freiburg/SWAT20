@@ -86,7 +86,7 @@ public class MessageDialog extends JDialog {
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
 		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
-		int wdwLeft = (int) ((screenSize.width/2.0) + ((PREFERRED_SIZE.width + Workbench.PREFERRED_SIZE_WORKBENCH.width + 10)/2.0)) - PREFERRED_SIZE.width;
+		int wdwLeft = (int) ((screenSize.width/2.0) + ((PREFERRED_SIZE.width + 800 + 10)/2.0)) - PREFERRED_SIZE.width;
 	    int wdwTop = screenSize.height / 2 - PREFERRED_SIZE.height / 2; 
 		pack();
 	    setLocation(wdwLeft, wdwTop);

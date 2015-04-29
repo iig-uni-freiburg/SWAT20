@@ -1,23 +1,30 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
 import java.awt.Toolkit;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
+import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitLayout;
+import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitLayout.Divider;
+import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitLayout.Leaf;
+import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitLayout.Split;
+import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitPane;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.patterns.PatternException;
@@ -33,11 +40,15 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
 	private static final long serialVersionUID = 6109154620023481119L;
 	
-	public static final Dimension PREFERRED_SIZE_WORKBENCH = new Dimension(1024,768);
-	private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200, 768);
-	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(250, 500);
-	private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(300,80);
-	private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(300, 550);
+//	public static final Dimension PREFERRED_SIZE_WORKBENCH = new Dimension(1024,768);
+	
+	private static final int MIN_WORKBENCH_HEIGHT = 700;
+	private static final int MIN_CONSOLE_PANEL_HEIGHT = 300;
+	
+	private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
+	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
+	private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(400,40);
+	private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(600, MIN_WORKBENCH_HEIGHT-MIN_CONSOLE_PANEL_HEIGHT);
 	private static final boolean SHOW_STACK_TRACES = true;
 	
 //	private MultiSplitPane splitPane = null;
@@ -57,10 +68,10 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		super();
 		setLookAndFeel();
 		setUpGUI();
-		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
-		int wdwLeft = (int) ((screenSize.width/2.0) - ((PREFERRED_SIZE_WORKBENCH.width + MessageDialog.PREFERRED_SIZE.width + 10)/2.0));
-	    int wdwTop = screenSize.height / 2 - PREFERRED_SIZE_WORKBENCH.height / 2; 
 		pack();
+		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+		int wdwLeft = (int) ((screenSize.width/2.0) - ((getWidth() + MessageDialog.PREFERRED_SIZE.width + 10)/2.0));
+	    int wdwTop = screenSize.height / 2 - getHeight() / 2; 
 	    setLocation(wdwLeft, wdwTop);
 		SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
 		SwatState.getInstance().addListener(this);
@@ -97,7 +108,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private void setUpGUI(){
 		setTitle("SWAT 2.0");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setPreferredSize(PREFERRED_SIZE_WORKBENCH);
+//		setPreferredSize(PREFERRED_SIZE_WORKBENCH);
 		setResizable(true);
 		
 		setContentPane(getContent());
@@ -109,35 +120,89 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 	private JComponent getContent(){
 		if(content == null){
 			content = new JPanel(new BorderLayout());
-			content.add(getSwatToolbar(), BorderLayout.NORTH);
+			
+//			String layoutDef = "(COLUMN top (ROW left (COLUMN center center.bottom) right) bottom)";
+//			MultiSplitLayout.Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
+			
+			content.add(getSwatToolbar(), BorderLayout.PAGE_START);
+			
+			
 
-			//content.add(getTreeView(), BorderLayout.WEST);
+			Leaf left = new Leaf("left");
+			left.setWeight(0.2);
+			Leaf right = new Leaf("right");
+			right.setWeight(0.2);
+			Leaf center = new Leaf("center");
+			center.setWeight(0.7);
+			Leaf centerBottom = new Leaf("center.bottom");
+			centerBottom.setWeight(0.3);
+			
+			MultiSplitLayout.Split centerCol = new Split();
+			centerCol.setRowLayout(false);
+			List centerColChildren = Arrays.asList(center, new Divider(), centerBottom);
+			centerCol.setChildren(centerColChildren);
+			centerCol.setWeight(0.6);
+			
+			MultiSplitLayout.Split centerRow = new Split();
+			centerRow.setRowLayout(true);
+			List centerRowChildren = Arrays.asList(left, new Divider(), centerCol, new Divider(), right);
+			centerRow.setChildren(centerRowChildren);
+			
+			MultiSplitPane multiSplitPane = new MultiSplitPane();
+			multiSplitPane.getMultiSplitLayout().setModel(centerRow);
+//			multiSplitPane.setDividerPainter(new DividerPainter() {
+//				
+//				@Override
+//				public void paint(Graphics g, Divider divider) {
+//					Rectangle rect = divider.getBounds();
+//					g.drawRect(rect.x, rect.y, rect.width, rect.height);
+//				}
+//			});
+			
+			
+			multiSplitPane.add(getTreeView(), "left");
+			multiSplitPane.add(getPropertiesPanel(), "right");
+			multiSplitPane.add(getTabView(), "center");
+			multiSplitPane.add(getMessagePanel(), "center.bottom");
+			content.add(multiSplitPane, BorderLayout.CENTER);
+			
+			JPanel bottomPanel = new JPanel();
+			bottomPanel.setPreferredSize(new Dimension(500,40));
+			bottomPanel.setMinimumSize(new Dimension(500,40));
+			bottomPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
+			content.add(bottomPanel, BorderLayout.PAGE_END);
 
-			//content.add(new JScrollPane(getPropertiesPanel(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-			//		JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.EAST);
-			content.add(getPropertiesPanel(), BorderLayout.EAST);
-			//content.add(propertieSplit, BorderLayout.EAST);
-			JSplitPane centerPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
-			centerPanel.add(getTabView());
-			centerPanel.add(getMessagePanel());
-			JSplitPane middlePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
-			JScrollPane scrollPane = new JScrollPane(getTreeView(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			scrollPane.setSize(PREFERRED_SIZE_TREEVIEW_PANEL);
-			middlePanel.add(scrollPane);
-			middlePanel.add(centerPanel);
-
-			//middlePanel.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
-			//middlePanel.add(propertieSplit);
-			//content.add(centerPanel, BorderLayout.CENTER);
-			//JSplitPane thirdSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
-			//thirdSplit.add(middlePanel);
-			//thirdSplit.add(getPropertiesPanel());
-			//thirdSplit.setSize(PREFERRED_SIZE_PROPERTIES_PANEL);
-			//thirdSplit.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
-			content.add(middlePanel, BorderLayout.CENTER);
-			centerPanel.setDividerLocation(0.8);
-			//content.add(thirdSplit, BorderLayout.CENTER);
+			
+//			
+//			content.add(getSwatToolbar(), BorderLayout.NORTH);
+//
+//			//content.add(getTreeView(), BorderLayout.WEST);
+//
+//			//content.add(new JScrollPane(getPropertiesPanel(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+//			//		JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.EAST);
+//			content.add(getPropertiesPanel(), BorderLayout.EAST);
+//			//content.add(propertieSplit, BorderLayout.EAST);
+//			JSplitPane centerPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
+//			centerPanel.add(getTabView());
+//			centerPanel.add(getMessagePanel());
+//			JSplitPane middlePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
+//			JScrollPane scrollPane = new JScrollPane(getTreeView(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+//					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//			scrollPane.setSize(PREFERRED_SIZE_TREEVIEW_PANEL);
+//			middlePanel.add(scrollPane);
+//			middlePanel.add(centerPanel);
+//
+//			//middlePanel.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
+//			//middlePanel.add(propertieSplit);
+//			//content.add(centerPanel, BorderLayout.CENTER);
+//			//JSplitPane thirdSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
+//			//thirdSplit.add(middlePanel);
+//			//thirdSplit.add(getPropertiesPanel());
+//			//thirdSplit.setSize(PREFERRED_SIZE_PROPERTIES_PANEL);
+//			//thirdSplit.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
+//			content.add(middlePanel, BorderLayout.CENTER);
+//			centerPanel.setDividerLocation(0.8);
+//			//content.add(thirdSplit, BorderLayout.CENTER);
 		}
 		return content;
 	}
@@ -154,7 +219,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			properties = new JPanel(new BorderLayout());
 			properties.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 			properties.setMinimumSize(PREFERRED_SIZE_PROPERTIES_PANEL);
-			properties.setSize(PREFERRED_SIZE_PROPERTIES_PANEL);
+//			properties.setSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 		}
 		return properties;
 	}
@@ -180,6 +245,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		 UIManager.put("Tree.rendererFillBackground", false);
 		if(treeView == null){
 			treeView = SwatTreeView.getInstance();
+			treeView.setPreferredSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			treeView.setMinimumSize(PREFERRED_SIZE_TREEVIEW_PANEL);
 			treeView.addTreeViewListener(this);
 		}
@@ -211,7 +277,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 			messagePanel.add(getConsoleArea(), "Console");
 			messagePanel.setPreferredSize(PREFERRED_SIZE_CONSOLE_PANEL);
 			messagePanel.setMinimumSize(PREFERRED_SIZE_CONSOLE_PANEL);
-			messagePanel.setMaximumSize(PREFERRED_SIZE_CONSOLE_PANEL);
+//			messagePanel.setMaximumSize(PREFERRED_SIZE_CONSOLE_PANEL);
 		}
 		return messagePanel;
 	}

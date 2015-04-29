@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -67,6 +68,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
 	private static final long serialVersionUID = -4279345402764581310L;
 	
+	private static final Color TOOLBAR_BG_COLOR = new Color(185,185,185);
+	private static final Color TOOLBAR_BORDER_COLOR = Color.black;
+	
 	private static final String ACTION_COMMAND_EDIT_MODE = "editMode";
 	private static final String ACTION_COMMAND_ANALYSIS_MODE = "analysisMode";
 	private static int ICON_SIZE = 32;
@@ -85,7 +89,9 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 	public SwatToolbar(SwatTabView tabView, SwatTreeView treeView) {
 		this.tabView = tabView;
 		this.treeView = treeView;
-
+		
+		setBackground(TOOLBAR_BG_COLOR);
+		setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, TOOLBAR_BORDER_COLOR));
 		setFloatable(false);
 		setRollover(true);
 		

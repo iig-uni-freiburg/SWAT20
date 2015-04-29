@@ -35,7 +35,9 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
+import de.uni.freiburg.iig.telematik.swat.editor.SwatIFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
@@ -53,7 +55,7 @@ import de.uni.freiburg.iig.telematik.wolfgang.event.PNEditorListener;
 @SuppressWarnings("serial")
 public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatComponentsListener {
 	
-	private static SwatTabView tabView = new SwatTabView();
+	private static SwatTabView tabView = null;
 	
 	//private Map<Object, Component> openedSwatComponents = new HashMap<Object, Component>();
 
@@ -65,6 +67,9 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 	}
 
 	public static SwatTabView getInstance() {
+		if(tabView == null){
+			tabView = new SwatTabView();
+		}
 		return tabView;
 	}
 
@@ -134,7 +139,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, SwatCo
 			cpnEditor.addEditorListener(this);
 			addTab(tabName, cpnEditor);
 		} else if(petriNet instanceof GraphicalIFNet){
-			IFNetEditorComponent ifEditor = new IFNetEditorComponent((GraphicalIFNet) petriNet);
+			IFNetEditorComponent ifEditor = new SwatIFNetEditorComponent((GraphicalIFNet) petriNet);
 			ifEditor.addEditorListener(this);
 			addTab(tabName, ifEditor);
 		}

@@ -43,6 +43,7 @@ import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACModelPrope
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.ACModelType;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.properties.RBACModelProperties;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
+import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModelComparator;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
@@ -84,7 +85,8 @@ public class SwatComponents {
 		try {
 			loadSwatComponents();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Cannot access working directory:<br>" + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "<html>Cannot access working directory:<br>" + e.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 	}
 	
@@ -732,7 +734,7 @@ public class SwatComponents {
 	 * @return <code>true</code> if there is at least one net;<br>
 	 * <code>false</code> otherwise.
 	 */
-	public boolean hasPetriNets(){
+	public boolean containsPetriNets(){
 		return !nets.isEmpty();
 	}
 	
@@ -924,6 +926,10 @@ public class SwatComponents {
 			return Collections.unmodifiableList(xesLogs);
 		}
 		return null;
+	}
+	
+	public boolean containsLogs() {
+		return !aristaLogs.isEmpty() || !mxmlLogs.isEmpty() || !xesLogs.isEmpty();
 	}
 	
 	public void removeLogFile(String logName, boolean deleteFromDisk) {

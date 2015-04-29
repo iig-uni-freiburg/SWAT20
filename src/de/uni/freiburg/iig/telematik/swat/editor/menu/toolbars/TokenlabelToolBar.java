@@ -45,7 +45,7 @@ public class TokenlabelToolBar extends JToolBar {
 
 	private String tokenLabel;
 
-	public TokenlabelToolBar(final PNEditorComponent pnEditor, int horizontal) throws ParameterException {
+	public TokenlabelToolBar(final PNEditorComponent pnEditor, int horizontal) {
 		Validate.notNull(pnEditor);
 		this.editor = pnEditor;
 		panel = new JPanel();
@@ -53,7 +53,6 @@ public class TokenlabelToolBar extends JToolBar {
 		graph = (PNGraph) editor.getGraphComponent().getGraph();
 		setFloatable(false);
 		updateView();
-
 	}
 
 	private void addRow(final String tokenLabel) {

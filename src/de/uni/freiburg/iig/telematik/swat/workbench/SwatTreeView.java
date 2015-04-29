@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -18,6 +19,8 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
+import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
+import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitPane;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
@@ -31,9 +34,15 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 public class SwatTreeView extends JTree implements SwatStateListener, SwatComponentsListener {
 	
 	private static final String PN_HEADING = "Petri nets";
+	private static final String LOGS_HEADING = "Process logs";
+	private static final String CONTEXTS_HEADING = "Execution contexts";
+	private static final String	ACMODELS_HEADING = "Access control models";
 	private static final String XES_LOGS_HEADING = "XES Logs";
 	private static final String MXML_LOGS_HEADING = "MXML Logs";
 	private static final String ARISTA_LOGS_HEADING = "AristaFlow Logs";
+	private static final Color DEFAULT_BG_COLOR = UIManager.getColor("Panel.background");
+	private static final Color BG_COLOR = Color.white;
+	private static final Color BORDER_COLOR = new Color(237,237,237);
 
 
 	private DefaultTreeModel treeModel;
@@ -42,39 +51,28 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	
 	private static SwatTreeView swatTreeInstance = new SwatTreeView();
 	
-	private DefaultMutableTreeNode root;
+	private DefaultMutableTreeNode rootNode;
 	private DefaultMutableTreeNode petriNetNode = null;
+	private DefaultMutableTreeNode logsNode = null;
 	private DefaultMutableTreeNode xesLogNode = null;
 	private DefaultMutableTreeNode mxmlLogNode = null;
 	private DefaultMutableTreeNode aristaLogNode = null;
+	private DefaultMutableTreeNode acModelsNode = null;
+	private DefaultMutableTreeNode contextsNode = null;
 
-	@SuppressWarnings("rawtypes")
 	private SwatTreeView() {
-		root = new DefaultMutableTreeNode("Working Directory");
-		treeModel = new DefaultTreeModel(root);
-        Color bgcolor = UIManager.getColor ( "Panel.background" );
-		this.setBackground(bgcolor);
+		rootNode = new DefaultMutableTreeNode("Working Directory");
+		treeModel = new DefaultTreeModel(rootNode);
+		this.setBackground(DEFAULT_BG_COLOR);
 		this.setModel(treeModel);
 		this.setShowsRootHandles(true);
 		this.setEditable(false);
-		initialize();
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		buildTree();
 		setToggleClickCount(0);//prevent collapse on double click
 
 		// this.setSelectionInterval(0,0);
 		addMouseListener(new TreeViewMouseAdapter());
-	}
-	
-	private void initialize(){
-		petriNetNode = new DefaultMutableTreeNode(PN_HEADING);
-		root.add(petriNetNode);
-		xesLogNode = new DefaultMutableTreeNode(XES_LOGS_HEADING);
-		root.add(xesLogNode);
-		mxmlLogNode = new DefaultMutableTreeNode(MXML_LOGS_HEADING);
-		root.add(mxmlLogNode);
-		aristaLogNode = new DefaultMutableTreeNode(ARISTA_LOGS_HEADING);
-		root.add(aristaLogNode);
-		createChildren();
-		expandAll();
 	}
 
 	public static SwatTreeView getInstance() {
@@ -82,47 +80,62 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	}
 
 	public void removeAndUpdateSwatComponents() {
-		root.removeAllChildren();
-		createChildren();
+		rootNode.removeAllChildren();
+		buildTree();
 		treeModel.reload();
 		expandAll();
-
 		repaint();
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void createChildren() {
+	private void buildTree() {
+		rootNode.removeAllChildren();
+		
 		// Petri Nets
-		petriNetNode.removeAllChildren();
-		xesLogNode.removeAllChildren();
-		mxmlLogNode.removeAllChildren();
-		aristaLogNode.removeAllChildren();
-
-		for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNetsSorted()){
-			SwatTreeNode node = new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET);
-			for(Analysis analysis: SwatComponents.getInstance().getAnalyses(node.getDisplayName())){
-				node.add(new SwatTreeNode(analysis, SwatComponentType.PETRI_NET_ANALYSIS));
+		if(SwatComponents.getInstance().containsPetriNets()){
+			petriNetNode = new DefaultMutableTreeNode(PN_HEADING);
+			rootNode.add(petriNetNode);
+			
+			for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNetsSorted()){
+				SwatTreeNode node = new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET);
+				for(Analysis analysis: SwatComponents.getInstance().getAnalyses(node.getDisplayName())){
+					node.add(new SwatTreeNode(analysis, SwatComponentType.PETRI_NET_ANALYSIS));
+				}
+				petriNetNode.add(node);
 			}
-			petriNetNode.add(node);
-		}
-
-		// XES-Logs
-		for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.XES)) {
-			xesLogNode.add(new SwatTreeNode(logFile, SwatComponentType.XES_LOG));
 		}
 		
-		// MXML-Logs
-		for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.MXML)) {
-			mxmlLogNode.add(new SwatTreeNode(logFile, SwatComponentType.MXML_LOG));
+		// Logs
+		if(SwatComponents.getInstance().containsLogs()){
+			logsNode = new DefaultMutableTreeNode(LOGS_HEADING);
+			rootNode.add(logsNode);
+			
+			// XES-Logs
+			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.XES)) {
+				xesLogNode.add(new SwatTreeNode(logFile, SwatComponentType.XES_LOG));
+			}
+			
+			// MXML-Logs
+			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.MXML)) {
+				mxmlLogNode.add(new SwatTreeNode(logFile, SwatComponentType.MXML_LOG));
+			}
+			
+			// Aristaflow-Logs
+			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.Aristaflow)) {
+				aristaLogNode.add(new SwatTreeNode(logFile, SwatComponentType.ARISTAFLOW_LOG));
+			}
 		}
 		
-		// Aristaflow-Logs
-		for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.Aristaflow)) {
-			aristaLogNode.add(new SwatTreeNode(logFile, SwatComponentType.ARISTAFLOW_LOG));
+		if(SwatComponents.getInstance().containsContexts()){
+			contextsNode = new DefaultMutableTreeNode(CONTEXTS_HEADING);
+			rootNode.add(contextsNode);
 		}
-
+		
+		if(SwatComponents.getInstance().containsACModels()){
+			acModelsNode = new DefaultMutableTreeNode(ACMODELS_HEADING);
+			rootNode.add(acModelsNode);
+		}
 		expandAll();
-
 	}
 	
 	public void expandAll() {
@@ -157,7 +170,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	
 	@SuppressWarnings("unchecked")
 	public SwatTreeNode getComponent(ViewComponent component) {
-		Enumeration<SwatTreeNode> children = root.children();
+		Enumeration<SwatTreeNode> children = rootNode.children();
 		while (children.hasMoreElements()) {
 			SwatTreeNode node = children.nextElement();
 			if (node.getUserObject().equals(component))
@@ -240,7 +253,9 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	public void petriNetAdded(AbstractGraphicalPN net) {}
 
 	@Override
-	public void petriNetRemoved(AbstractGraphicalPN net) {}
+	public void petriNetRemoved(AbstractGraphicalPN net) {
+		//TODO
+	}
 
 	@Override
 	public void petriNetRenamed(AbstractGraphicalPN net) {}
@@ -277,7 +292,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 
 	@Override
 	public void componentsChanged() {
-		createChildren();
+		buildTree();
 		treeModel.reload();
 		expandAll();
 		repaint();

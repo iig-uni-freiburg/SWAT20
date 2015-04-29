@@ -25,9 +25,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.workbench.Analysis;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;

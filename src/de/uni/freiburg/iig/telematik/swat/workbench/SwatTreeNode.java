@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 
 public class SwatTreeNode extends DefaultMutableTreeNode {
