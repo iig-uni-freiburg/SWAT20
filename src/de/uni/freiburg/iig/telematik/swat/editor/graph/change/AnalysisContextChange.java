@@ -92,7 +92,8 @@ public class AnalysisContextChange extends mxAtomicGraphModelChange {
 	public void execute() {
 		value = previous;
 		previous = valueForCellChanged(previous);
-		((IFNetToolBar)editor.getEditorToolbar()).updateTokenlabelConfigurer();
+		//TODO: Where to update now?
+//		((IFNetToolBar)editor.getEditorToolbar()).updateTokenlabelConfigurer();
 		((IFNetToolBar)editor.getEditorToolbar()).updateSubjectClearanceConfigurer();
 	}
 

@@ -55,7 +55,8 @@ public class TokenSecurityLevelChange extends mxAtomicGraphModelChange {
 	public void execute() {
 		value = previous;
 		previous = valueForCellChanged(name, previous);
-		((IFNetToolBar)editor.getEditorToolbar()).updateTokenlabelConfigurer();
+		//TODO: Where to update now?
+//		((IFNetToolBar)editor.getEditorToolbar()).updateTokenlabelConfigurer();
 
 	}
 
