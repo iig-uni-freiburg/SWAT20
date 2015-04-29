@@ -34,7 +34,7 @@ public class XESLogAbsent extends Absent {
 		setFormalization();
 	}
 
-	protected void setFormalization() {
+	public void setFormalization() {
 		
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);

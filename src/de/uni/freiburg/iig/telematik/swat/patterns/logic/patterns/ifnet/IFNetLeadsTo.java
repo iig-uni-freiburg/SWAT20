@@ -71,7 +71,7 @@ public class IFNetLeadsTo extends LeadsTo {
 	}
 
 	@Override
-	protected void setFormalization() {
+	public void setFormalization() {
 		
 		// the value of the first parameter which has been set in the pattern dialog.
 		String paramValue1 = Helpers.cutOffLabelInfo(mParameters.get(0).getValue().getValue());

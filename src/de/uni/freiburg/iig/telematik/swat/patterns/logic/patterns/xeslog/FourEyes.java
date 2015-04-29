@@ -71,7 +71,7 @@ public class FourEyes extends LogCompliancePattern {
 	}
 
 	@Override
-	protected void setFormalization() {
+	public void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
 		Conjunction body = new Conjunction(r);

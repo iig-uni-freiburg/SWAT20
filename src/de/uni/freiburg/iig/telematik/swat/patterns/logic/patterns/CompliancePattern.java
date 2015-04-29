@@ -2,6 +2,9 @@ package de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns;
 
 import java.util.ArrayList;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 
@@ -17,10 +20,13 @@ public abstract class CompliancePattern {
 	
 	private State mState = State.NOT_INSTANTIATED;
 	
+	@XStreamImplicit
 	protected ArrayList<Parameter> mParameters = new ArrayList<Parameter>();
 	
+	@XStreamOmitField
 	protected ModelInfoProvider mInfoProvider;
 
+	@XStreamOmitField
 	protected Object mFormalization;
 	
 	public abstract void acceptInfoProfider(ModelInfoProvider provider);
@@ -70,7 +76,7 @@ public abstract class CompliancePattern {
 	}
 
 
-	protected abstract void setFormalization();
+	public abstract void setFormalization();
 
 	public abstract boolean isAntiPattern();
 

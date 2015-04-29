@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
 public class Parameter {
 
 	private String mName;
+	@XStreamImplicit
 	private HashMap<String, ArrayList<String>> mRangeMap;
 	private ParameterValue mValue;
 	

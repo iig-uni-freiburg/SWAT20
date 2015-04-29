@@ -1,6 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.analysis;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
@@ -8,7 +11,8 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePatt
 public class Analysis implements Comparable {
 
 	private String name = null;
-	private List<CompliancePattern> patternSetting = null;
+	@XStreamImplicit(itemFieldName = "rule")
+	private List<CompliancePattern> patternSetting = new LinkedList<CompliancePattern>();
 	private int hashCode = 0;
 	
 	public Analysis(String name, List<CompliancePattern> patternSetting) {
@@ -16,7 +20,11 @@ public class Analysis implements Comparable {
 		Validate.notNull(name);
 		Validate.notNull(patternSetting);
 		this.name = name;
-		this.patternSetting = patternSetting;
+		//add only instantiated patterns
+		for (CompliancePattern p : patternSetting) {
+			if (p.isInstantiated())
+				this.patternSetting.add(p);
+		}
 	}
 
 	public String getName() {
@@ -50,4 +58,9 @@ public class Analysis implements Comparable {
 		return 0;
 	}
 	
+	public void setFormalizationOnPatterns() {
+		for (CompliancePattern p : patternSetting)
+			p.setFormalization();
+	}
+
 }

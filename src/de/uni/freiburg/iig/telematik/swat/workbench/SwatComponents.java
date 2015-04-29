@@ -535,6 +535,7 @@ public class SwatComponents {
 			Analysis analysis = null;
 			try {
 				analysis = (Analysis) xstream.fromXML(analysisFile);
+				analysis.setFormalizationOnPatterns();
 			} catch (Exception e) {
 				MessageDialog.getInstance().addMessage("Cannot parse analysis for log \"" + logID + "\"");
 				continue;
@@ -623,6 +624,7 @@ public class SwatComponents {
 			Analysis analysis = null;
 			try {
 				analysis = (Analysis) xstream.fromXML(analysisFile);
+				analysis.setFormalizationOnPatterns();
 			} catch (Exception e) {
 				MessageDialog.getInstance().addMessage("Cannot parse analysis for net \""+netID+"\"");
 				continue;
@@ -1043,17 +1045,15 @@ public class SwatComponents {
 		File storagePath = null;
 		if (getLogModel(netID) != null) {
 			try {
-				storagePath = new File(getLogModel(netID).getFileReference().getParent(), SwatProperties.getInstance().getPathForLogs());
-			} catch (PropertyException e) {
-				//empty by purpose!
-				e.printStackTrace();
+				storagePath = new File(getLogModel(netID).getFileReference().getParent(), SwatProperties.getInstance()
+						.getNetAnalysesDirectoryName());
 			} catch (IOException e) {
 				//empty by purpose!
 				e.printStackTrace();
 			}
 		}
 
-		if (getPetriNet(netID) != null) {
+		if (nets.containsValue(netID)) {
 			try {
 				storagePath = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getNetAnalysesDirectoryName());
 			} catch (IOException e) {
@@ -1067,6 +1067,7 @@ public class SwatComponents {
 		try {
 			storagePath.mkdirs();
 			XStream xstream=new XStream();
+			xstream.autodetectAnnotations(true);//adhere to XMLomitFields annotations
 			String serialString = xstream.toXML(analysis);
 			PrintWriter writer = new PrintWriter(new File(storagePath.getAbsolutePath(), analysis.getName() + ".xml"));
 			//PrintWriter writer = new PrintWriter(String.format(AnalysisNameFormat, storagePath.getAbsolutePath(), analysis.getName()));

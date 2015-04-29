@@ -72,11 +72,9 @@ public class SCIFF extends ModelChecker {
 						pattern.setSatisfied(true);
 					}
 				} catch (JDOMException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					throw new Exception(e);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					throw new Exception(e);
 				}

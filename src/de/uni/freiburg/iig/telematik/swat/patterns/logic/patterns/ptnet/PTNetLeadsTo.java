@@ -43,7 +43,7 @@ public class PTNetLeadsTo extends LeadsTo {
 	}
 
 	@Override
-	protected void setFormalization() {
+	public void setFormalization() {
 		
 		String paramValue1 = mParameters.get(0).getValue().getValue();
 		String paramType1 = mParameters.get(0).getValue().getType();

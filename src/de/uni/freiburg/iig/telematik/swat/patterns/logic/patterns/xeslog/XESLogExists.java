@@ -53,7 +53,7 @@ public class XESLogExists extends Exists {
 	}
 
 	@Override
-	protected void setFormalization() {
+	public void setFormalization() {
 		
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);

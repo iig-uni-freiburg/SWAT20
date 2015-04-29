@@ -48,7 +48,7 @@ public class IFNetAbsent extends Absent {
 	}
 
 	@Override
-	protected void setFormalization() {
+	public void setFormalization() {
 		String paramValue = Helpers.cutOffLabelInfo(mParameters.get(0).getValue().getValue());
 		String paramType = mParameters.get(0).getValue().getType();
 		if (paramType == ParameterTypeNames.TRANSITION) {

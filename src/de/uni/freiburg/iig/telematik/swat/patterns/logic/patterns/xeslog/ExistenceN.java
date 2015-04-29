@@ -65,7 +65,7 @@ public class ExistenceN extends LogCompliancePattern {
 	}
 
 	@Override
-	protected void setFormalization() {
+	public void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 
 		//Empty Body
