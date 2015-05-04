@@ -261,6 +261,16 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 		return "";
 	}
 
+	public SwatComponentType getTypeOfCurrentComponent() {
+		Object o = tabView.getSelectedComponent();
+		if (o instanceof PNEditorComponent)
+			return SwatComponentType.PETRI_NET;
+		else if (o instanceof LogFileViewer)
+			return SwatComponentType.XES_LOG;
+		else
+			return null;
+	}
+
 	public int getHashOfCurrentComponent() {
 		Object o = tabView.getSelectedComponent();
 		if (o instanceof PNEditorComponent)

@@ -141,5 +141,22 @@ public class PatternDialog extends JFrame {
 		dialog.setVisible(true);
 	}
 
+	public void setPattern(ArrayList<CompliancePattern> patterns) {
+		mPatterns.clear();
+		mDialogPanel.removeAll();
+		mDialogPanel.repaint();
+		mDialogPanel.updateUI();
+		for (CompliancePattern pattern : patterns) {
+			addPatternToPanel(pattern);
+		}
+	}
+
+	private void addPatternToPanel(CompliancePattern pattern) {
+		if (pattern.isInstantiated()) {
+			mPatterns.add(pattern);
+		}
+		mDialogPanel.add(new PatternPanel(pattern));
+		mDialogPanel.updateUI();
+	}
 
 }

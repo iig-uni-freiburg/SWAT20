@@ -27,7 +27,7 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorCompon
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
-/** Pattern Editor **/
+/** Holds patterns **/
 public class PatternController {
 
 	private ModelInfoProvider mModelInformationProvider;
@@ -58,6 +58,27 @@ public class PatternController {
 		for (CompliancePattern pattern : mPatterns) {
 			pattern.acceptInfoProfider(mModelInformationProvider);
 		}
+		generatePatternDialog();
+
+	}
+
+	public ArrayList<CompliancePattern> getPatterns() {
+		return mPatterns;
+	}
+
+	public void openPatternDialog() {
+		mPatternDialog.setLocationByPlatform(true);
+		mPatternDialog.setVisible(true);
+	}
+
+	public void setPatterns(ArrayList<CompliancePattern> patterns) {
+		mPatterns = patterns;
+		mPatternDialog.setPattern(mPatterns);
+		//generatePatternDialog();
+		mAnalysisController.updateAnalysePanel();
+	}
+
+	private void generatePatternDialog() {
 		mPatternDialog = new PatternDialog(mPatterns);
 		mPatternDialog.addComponentListener(new ComponentListener() {
 
@@ -85,16 +106,6 @@ public class PatternController {
 			}
 
 		});
-
-	}
-
-	public ArrayList<CompliancePattern> getPatterns() {
-		return mPatterns;
-	}
-
-	public void openPatternDialog() {
-		mPatternDialog.setLocationByPlatform(true);
-		mPatternDialog.setVisible(true);
 	}
 
 }

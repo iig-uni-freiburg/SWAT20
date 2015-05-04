@@ -68,6 +68,10 @@ public class AnalysisController {
 		return mPatternController.getPatterns();
 	}
 
+	public void setPatterns(ArrayList<CompliancePattern> patterns) {
+		mPatternController.setPatterns(patterns);
+	}
+
 	public void runModelChecker() throws Exception {
 		ModelChecker modelChecker = ModelCheckerFactory.createModelChecker(mComponent);
 		modelChecker.run(getPatterns());

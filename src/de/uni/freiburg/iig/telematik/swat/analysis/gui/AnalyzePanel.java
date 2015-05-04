@@ -27,7 +27,9 @@ import javax.swing.JScrollPane;
 
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
+import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
@@ -106,7 +108,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					mAnalysisController.runModelChecker();
+					invokeModelChecking();
 				} catch (Exception e) {
 					Workbench.errorMessage("Analysis Exception while running model checker: " + e.getMessage(), e, true);
 				}
@@ -131,6 +133,15 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		this.add(content);
 	}
 	
+	private void invokeModelChecking() throws Exception {
+		if (Workbench.getInstance().getTypeOfCurrentComponent().equals(SwatComponentType.PETRI_NET)) {
+			if (!PrismFunctionValidator.checkPrism())
+				Workbench.errorMessage("PRISM is not correctly set-up", new Exception("Could not load Prism"), true);
+			return;
+		}
+		mAnalysisController.runModelChecker();
+	}
+
 	private Component getAnalysisDropDown(String netID) {
 		if (dropDown == null) {
 			List<Analysis> analyses = SwatComponents.getInstance().getAnalyses(netID);
@@ -155,23 +166,32 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	@SuppressWarnings("rawtypes")
 	private void saveRules() {
 		SwatComponents sc = SwatComponents.getInstance();
-		String analysisName = Workbench.getInstance().getNameOfCurrentComponent();
+		String analysisTargetName = Workbench.getInstance().getNameOfCurrentComponent();
 		try {
 			//AbstractGraphicalPN net = sc.getPetriNet(Workbench.getInstance().getNameOfCurrentComponent());
 			String name = JOptionPane.showInputDialog(this, "Please name analysis");
 			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
 			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
-			sc.storeAnalysis(save, analysisName);
+			sc.addAnalysis(save, analysisTargetName, true);
+			dropDown.addItem(save);
 
 		} catch (SwatComponentException e) {
 			Workbench.errorMessage("Could not save analysis", e, true);
 		}
 	}
 
+	public void setPatterns(Analysis analysis){
+		mAnalysisController.setPatterns(analysis.getPatternSetting());
+	}
+
 	@Override
 	/**Listen to dropdown change**/
 	public void itemStateChanged(ItemEvent e) {
-		//updatePatternResults();
+		if (dropDown.getSelectedItem() instanceof Analysis) {
+			Analysis a = (Analysis) dropDown.getSelectedItem();
+			System.out.println("Setting pattern...");
+			setPatterns(a);
+		}
 	}
 	
 	

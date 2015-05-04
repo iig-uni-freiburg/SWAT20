@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.analysis;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,19 +21,20 @@ public class Analysis implements Comparable {
 		Validate.notNull(name);
 		Validate.notNull(patternSetting);
 		this.name = name;
+		this.patternSetting = patternSetting;
 		//add only instantiated patterns
-		for (CompliancePattern p : patternSetting) {
-			if (p.isInstantiated())
-				this.patternSetting.add(p);
-		}
+		//		for (CompliancePattern p : patternSetting) {
+		//			if (p.isInstantiated())
+		//				this.patternSetting.add(p);
+		//		}
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public List<CompliancePattern> getPatternSetting() {
-		return patternSetting;
+	public ArrayList<CompliancePattern> getPatternSetting() {
+		return new ArrayList<CompliancePattern>(patternSetting);
 	}
 	
 	public String toString() {

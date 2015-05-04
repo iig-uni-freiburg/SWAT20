@@ -601,6 +601,7 @@ public class SwatComponents {
 		File pathToAnalyses = null;
 		try{
 			pathToAnalyses = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getNetAnalysesDirectoryName());
+			MessageDialog.getInstance().addMessage("Loaded log-analysis for " + netID);
 		} catch (Exception e) {
 			MessageDialog.getInstance().addMessage("Exception: Cannot access analyses directory.\nReason:" + e.getMessage());
 			return;
@@ -1047,6 +1048,7 @@ public class SwatComponents {
 			try {
 				storagePath = new File(getLogModel(netID).getFileReference().getParent(), SwatProperties.getInstance()
 						.getNetAnalysesDirectoryName());
+				System.out.println("prepared to store analysis for log-file");
 			} catch (IOException e) {
 				//empty by purpose!
 				e.printStackTrace();
@@ -1056,6 +1058,7 @@ public class SwatComponents {
 		if (nets.containsValue(netID)) {
 			try {
 				storagePath = new File(getPetriNetFile(netID).getParent(), SwatProperties.getInstance().getNetAnalysesDirectoryName());
+				System.out.println("prepared to store analysis for net-file");
 			} catch (IOException e) {
 				// empty by purpose
 				e.printStackTrace();
