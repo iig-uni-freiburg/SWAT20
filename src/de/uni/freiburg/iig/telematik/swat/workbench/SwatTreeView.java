@@ -20,7 +20,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisConte
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
-import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitPane;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
@@ -108,6 +107,12 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		// Logs
 		if(SwatComponents.getInstance().containsLogs()){
 			logsNode = new DefaultMutableTreeNode(LOGS_HEADING);
+			xesLogNode = new DefaultMutableTreeNode(XES_LOGS_HEADING);
+			logsNode.add(xesLogNode);
+			mxmlLogNode = new DefaultMutableTreeNode(MXML_LOGS_HEADING);
+			logsNode.add(mxmlLogNode);
+			aristaLogNode = new DefaultMutableTreeNode(ARISTA_LOGS_HEADING);
+			logsNode.add(aristaLogNode);
 			rootNode.add(logsNode);
 			
 			// XES-Logs
