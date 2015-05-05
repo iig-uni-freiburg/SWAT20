@@ -68,6 +68,7 @@ public class FourEyes extends LogCompliancePattern {
 	public CompliancePattern duplicate() {
 		FourEyes duplicate = new FourEyes();
 		duplicate.acceptInfoProfider(mInfoProvider);
+		//duplicate.setLoadedFromDisk(loadedFromDisk);
 		return duplicate;
 	}
 

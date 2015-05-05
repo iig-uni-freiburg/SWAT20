@@ -68,6 +68,7 @@ public class CbetweenAandB extends LogCompliancePattern {
 	public CompliancePattern duplicate() {
 		CbetweenAandB duplicate = new CbetweenAandB();
 		duplicate.acceptInfoProfider(mInfoProvider);
+		//duplicate.setLoadedFromDisk(loadedFromDisk);
 		return duplicate;
 	}
 

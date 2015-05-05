@@ -62,6 +62,7 @@ public class ExistenceN extends LogCompliancePattern {
 	public CompliancePattern duplicate() {
 		ExistenceN duplicate = new ExistenceN();
 		duplicate.acceptInfoProfider(mInfoProvider);
+		//duplicate.setLoadedFromDisk(loadedFromDisk);
 		return duplicate;
 	}
 

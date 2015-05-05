@@ -1023,6 +1023,7 @@ public class SwatComponents {
 	
 	public void addAnalysisForLog(Analysis analysis, String logID, boolean storeToFile) throws SwatComponentException {
 		System.out.println("Adding log analysis" + analysis.getName());
+		analysis.setLoadedFromDisk();
 		if (!analyses.containsKey(logID))
 			analyses.put(logID, new ArrayList<Analysis>()); //create new entry
 

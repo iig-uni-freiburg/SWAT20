@@ -65,6 +65,7 @@ public class BafterA extends LogCompliancePattern {
 	public CompliancePattern duplicate() {
 		BafterA duplicate = new BafterA();
 		duplicate.acceptInfoProfider(mInfoProvider);
+		//duplicate.setLoadedFromDisk(loadedFromDisk);
 		return duplicate;
 	}
 

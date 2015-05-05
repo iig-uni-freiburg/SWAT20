@@ -34,7 +34,7 @@ public abstract class CompliancePattern {
 	public abstract String getDescription();
 	
 	@XStreamOmitField
-	private boolean loadedFromDisk = false;
+	protected boolean loadedFromDisk = false;
 
 	public boolean isLoadedFromDisk() {
 		return loadedFromDisk;
