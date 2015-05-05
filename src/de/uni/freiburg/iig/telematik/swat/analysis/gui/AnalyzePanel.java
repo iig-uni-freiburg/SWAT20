@@ -172,6 +172,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			String name = JOptionPane.showInputDialog(this, "Please name analysis");
 			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
 			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
+			save.setLoadedFromDisk();
 			sc.addAnalysis(save, analysisTargetName, true);
 			dropDown.addItem(save);
 
@@ -191,6 +192,8 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			Analysis a = (Analysis) dropDown.getSelectedItem();
 			System.out.println("Setting pattern...");
 			setPatterns(a);
+			updatePatternResults();
+			updateUI();
 		}
 	}
 	

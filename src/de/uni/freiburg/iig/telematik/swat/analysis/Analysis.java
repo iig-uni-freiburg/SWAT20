@@ -65,4 +65,9 @@ public class Analysis implements Comparable {
 			p.setFormalization();
 	}
 
+	public void setLoadedFromDisk() {
+		for (CompliancePattern p : patternSetting)
+			p.setLoadedFromDisk(true);
+	}
+
 }

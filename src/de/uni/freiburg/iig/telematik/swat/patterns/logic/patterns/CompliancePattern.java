@@ -35,6 +35,17 @@ public abstract class CompliancePattern {
 	
 	public abstract String getDescription();
 	
+	@XStreamOmitField
+	private boolean loadedFromDisk = false;
+
+	public boolean isLoadedFromDisk() {
+		return loadedFromDisk;
+	}
+
+	public void setLoadedFromDisk(boolean loadedFromDisk) {
+		this.loadedFromDisk = loadedFromDisk;
+	}
+
 	public ArrayList<Parameter> getParameters() {
 		return mParameters;
 	}

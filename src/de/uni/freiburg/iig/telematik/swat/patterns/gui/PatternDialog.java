@@ -134,6 +134,9 @@ public class PatternDialog extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(900, 600);
 		
+		//		for (CompliancePattern p : mPatterns)
+		//			addPatternToEditPane(p);
+
 	}
 
 	public static void main(String args[]) {
@@ -143,20 +146,23 @@ public class PatternDialog extends JFrame {
 
 	public void setPattern(ArrayList<CompliancePattern> patterns) {
 		mPatterns.clear();
+		mPatterns.addAll(patterns);
 		mDialogPanel.removeAll();
 		mDialogPanel.repaint();
 		mDialogPanel.updateUI();
 		for (CompliancePattern pattern : patterns) {
-			addPatternToPanel(pattern);
+			addPatternToEditPane(pattern);
 		}
+		mDialogPanel.repaint();
+		mDialogPanel.updateUI();
 	}
 
-	private void addPatternToPanel(CompliancePattern pattern) {
-		if (pattern.isInstantiated()) {
-			mPatterns.add(pattern);
+	private void addPatternToEditPane(CompliancePattern pattern) {
+
+		if (pattern.isInstantiated() && pattern.isLoadedFromDisk()) {
+			mDialogPanel.add(new PatternPanel(pattern));
+			//mPatterns.add(pattern);
 		}
-		mDialogPanel.add(new PatternPanel(pattern));
-		mDialogPanel.updateUI();
 	}
 
 }

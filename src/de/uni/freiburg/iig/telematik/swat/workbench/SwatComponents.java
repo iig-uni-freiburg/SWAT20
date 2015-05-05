@@ -626,6 +626,7 @@ public class SwatComponents {
 			try {
 				analysis = (Analysis) xstream.fromXML(analysisFile);
 				analysis.setFormalizationOnPatterns();
+				analysis.setLoadedFromDisk();
 			} catch (Exception e) {
 				MessageDialog.getInstance().addMessage("Cannot parse analysis for net \""+netID+"\"");
 				continue;

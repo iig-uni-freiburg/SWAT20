@@ -69,7 +69,10 @@ public class AnalysisController {
 	}
 
 	public void setPatterns(ArrayList<CompliancePattern> patterns) {
+		//mPatternController=new PatternController(this);
 		mPatternController.setPatterns(patterns);
+		updateAnalysePanel();
+		//mComponentToPatternControllerMap.put(m, value)
 	}
 
 	public void runModelChecker() throws Exception {

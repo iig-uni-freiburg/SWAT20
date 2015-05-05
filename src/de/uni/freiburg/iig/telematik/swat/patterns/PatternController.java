@@ -73,8 +73,8 @@ public class PatternController {
 
 	public void setPatterns(ArrayList<CompliancePattern> patterns) {
 		mPatterns = patterns;
+		//generatePatternDialog();//uncomment
 		mPatternDialog.setPattern(mPatterns);
-		//generatePatternDialog();
 		mAnalysisController.updateAnalysePanel();
 	}
 
