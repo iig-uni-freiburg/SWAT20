@@ -4,11 +4,14 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.IFNetContextAbstractAction;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatACModelChooserDialog;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 public class EditAccessControlAction extends IFNetContextAbstractAction {
@@ -21,15 +24,23 @@ public class EditAccessControlAction extends IFNetContextAbstractAction {
 
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
-		int i = JOptionPane.showConfirmDialog(getEditor().getGraphComponent(), "Is an AC Model selected?");
-
-			if (i == 0)
-				setSelectedModel("Gerd");
-			else if (i == 1)
-				setSelectedModel(null);
-			else if (i == 2) {
-				// do nothing
-			}
+		
+		AbstractACModel selectedACModel = SwatACModelChooserDialog.showDialog(SwingUtilities.getWindowAncestor(getEditor()));
+		if(selectedACModel != null){
+			setSelectedModel(selectedACModel.getName());
+		} else {
+			setSelectedModel(null);
+		}
+//		
+//		int i = JOptionPane.showConfirmDialog(getEditor().getGraphComponent(), "Is an AC Model selected?");
+//
+//			if (i == 0)
+//				setSelectedModel("Gerd");
+//			else if (i == 1)
+//				setSelectedModel(null);
+//			else if (i == 2) {
+//				// do nothing
+//			}
 
 
 		// Get ifNet

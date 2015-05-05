@@ -179,8 +179,9 @@ public class SwatComponents {
 					if (soaBase != null)
 						addContext(soaBase, false);
 				} catch (SwatComponentException e) {
-					MessageDialog.getInstance().addMessage("Exception: Cannot add access control model.\nReason:" + e.getMessage());
+					MessageDialog.getInstance().addMessage("Exception: Cannot add context.\nReason:" + e.getMessage());
 				}
+				MessageDialog.getInstance().addMessage("Successfully loaded context \"" + soaBase.getName() + "\"");
 			} catch(Exception e){
 				MessageDialog.getInstance().addMessage("Exception: Cannot create context from file\""+FileUtils.getName(contextFile)+"\".\nReason:" + e.getMessage());
 				return;

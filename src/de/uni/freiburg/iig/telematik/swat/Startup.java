@@ -1,52 +1,52 @@
-package de.uni.freiburg.iig.telematik.swat.workbench;
+package de.uni.freiburg.iig.telematik.swat;
 
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import de.invation.code.toval.graphic.misc.AbstractStartup;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class Startup {
-	
-	public static void main(String[] args) {
-		String osType = System.getProperty("os.name");
-		if(osType.equals("Mac OS") || osType.equals("Mac OS X")){
-			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Swat");
-			System.setProperty("com.apple.macos.useScreenMenuBar", "true");
-			System.setProperty("apple.laf.useScreenMenuBar", "true");
-			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Swat");
-		}
-		
-		//Check if there is a path to a simulation directory.
+public class Startup extends AbstractStartup {
+
+	private static final String TOOL_NAME = "SWAT";
+
+	@Override
+	protected String getToolName() {
+		return TOOL_NAME;
+	}
+
+	@Override
+	protected void startApplication() throws Exception {
+		// Check if there is a path to a simulation directory.
 		if (!checkWorkingDirectory()) {
 			// There is no path and it is either not possible to set a path or the user aborted the corresponding dialog.
-			System.exit(0);
+			return;
 		}
-				
 		MessageDialog.getInstance();
 		try {
-			SwingUtilities.invokeAndWait(new Runnable(){
-
+			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
 					SwatComponents.getInstance();
 				}
-				
 			});
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Cannot launch Swat", "Exception during startup:<br>Reason: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
+			throw new Exception("Exception during startup:<br>Reason: " + e.getMessage(), e);
 		}
-		//new Workbench();
+		// new Workbench();
 		Workbench.getInstance();
 	}
 	
-	private static boolean checkWorkingDirectory(){
+	private boolean checkWorkingDirectory() {
 		try {
 			SwatProperties.getInstance().getWorkingDirectory();
 			return true;
@@ -70,8 +70,8 @@ public class Startup {
 			return chooseWorkingDirectory();
 		}
 	}
-	
-	private static boolean chooseWorkingDirectory(){
+
+	private boolean chooseWorkingDirectory(){
 		String workingDirectory = null;
 		try {
 			workingDirectory = WorkingDirectoryDialog.showDialog(null);
@@ -91,6 +91,10 @@ public class Startup {
 			JOptionPane.showMessageDialog(null, e2.getMessage(), "Component Exception", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
+	}
+
+	public static void main(String[] args){
+		new Startup();
 	}
 
 }
