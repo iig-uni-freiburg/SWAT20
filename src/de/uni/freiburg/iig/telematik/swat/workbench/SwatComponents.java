@@ -518,7 +518,7 @@ public class SwatComponents {
 		}
 
 		if (!pathToAnalyses.exists()) {
-			MessageDialog.getInstance().addMessage("No analyses for net.");
+			MessageDialog.getInstance().addMessage("No analyses for log.");
 			return;
 		}
 
@@ -1000,9 +1000,11 @@ public class SwatComponents {
 	//---- Adding and removing analyses -------------------------------------------------------------------------------------
 	
 	public void addAnalysis(Analysis analysis, String netID, boolean storeToFile) throws SwatComponentException {
-		System.out.println("Adding " + analysis.getName());
-		if (!analyses.containsKey(netID) || analyses.get(netID) == null)
+
+		if (!analyses.containsKey(netID) || analyses.get(netID) == null) {
 			analyses.put(netID, new ArrayList<Analysis>());
+			System.out.println("Adding net analysis" + analysis.getName());
+		}
 
 		//test if this analysis is already present. Remove if so
 		for (Analysis availableAnalyses : getAnalyses(netID)) {
@@ -1020,20 +1022,20 @@ public class SwatComponents {
 	}
 	
 	public void addAnalysisForLog(Analysis analysis, String logID, boolean storeToFile) throws SwatComponentException {
-		System.out.println("Adding " + analysis.getName());
-		if (!analyses.containsKey(logID) || !containsLogWithID(logID))
+		System.out.println("Adding log analysis" + analysis.getName());
+		if (!analyses.containsKey(logID))
 			analyses.put(logID, new ArrayList<Analysis>()); //create new entry
 
 		//put analysis in HashMap
 		analyses.get(logID).add(analysis);
 
 		//test if this analysis is already present. Remove if so.
-		for (Analysis availableAnalyses : getAnalyses(logID)) {
-			if (availableAnalyses.getName().equalsIgnoreCase(analysis.getName())) {
-				getAnalyses(logID).remove(availableAnalyses);
-				break;
-			}
-		}
+		//		for (Analysis availableAnalyses : getAnalyses(logID)) {
+		//			if (availableAnalyses.getName().equalsIgnoreCase(analysis.getName())) {
+		//				getAnalyses(logID).remove(availableAnalyses);
+		//				break;
+		//			}
+		//		}
 
 		if (storeToFile) {
 			storeAnalysisForLog(analysis, logID);

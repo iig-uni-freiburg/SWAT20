@@ -66,8 +66,9 @@ public class FourEyes extends LogCompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		// TODO Auto-generated method stub
-		return null;
+		FourEyes duplicate = new FourEyes();
+		duplicate.acceptInfoProfider(mInfoProvider);
+		return duplicate;
 	}
 
 	@Override

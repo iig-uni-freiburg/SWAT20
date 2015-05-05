@@ -60,8 +60,9 @@ public class ExistenceN extends LogCompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		// TODO Auto-generated method stub
-		return null;
+		ExistenceN duplicate = new ExistenceN();
+		duplicate.acceptInfoProfider(mInfoProvider);
+		return duplicate;
 	}
 
 	@Override

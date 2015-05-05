@@ -63,8 +63,9 @@ public class BafterA extends LogCompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		// TODO Auto-generated method stub
-		return null;
+		BafterA duplicate = new BafterA();
+		duplicate.acceptInfoProfider(mInfoProvider);
+		return duplicate;
 	}
 
 	@Override

@@ -66,8 +66,9 @@ public class CbetweenAandB extends LogCompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		// TODO Auto-generated method stub
-		return null;
+		CbetweenAandB duplicate = new CbetweenAandB();
+		duplicate.acceptInfoProfider(mInfoProvider);
+		return duplicate;
 	}
 
 	@Override

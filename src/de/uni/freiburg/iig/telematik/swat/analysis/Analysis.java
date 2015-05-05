@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
-
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 
 public class Analysis implements Comparable {
 
 	private String name = null;
-	@XStreamImplicit(itemFieldName = "rule")
 	private List<CompliancePattern> patternSetting = new LinkedList<CompliancePattern>();
 	private int hashCode = 0;
 	

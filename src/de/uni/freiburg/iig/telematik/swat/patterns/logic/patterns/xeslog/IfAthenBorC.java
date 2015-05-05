@@ -61,8 +61,9 @@ public class IfAthenBorC extends LogCompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		// TODO Auto-generated method stub
-		return null;
+		IfAthenBorC duplicate = new IfAthenBorC();
+		duplicate.acceptInfoProfider(mInfoProvider);
+		return duplicate;
 	}
 
 	@Override
