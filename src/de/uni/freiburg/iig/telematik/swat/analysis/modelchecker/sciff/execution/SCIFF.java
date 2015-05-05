@@ -18,6 +18,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelChecker;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelCheckerResult;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
@@ -57,13 +58,15 @@ public class SCIFF extends ModelChecker {
 	@Override
 	public void run(ArrayList<CompliancePattern> patterns) throws Exception {
 		
+		CheckerReport report = null;
+
 		for (CompliancePattern pattern : patterns) {
 			if (!pattern.isInstantiated()) continue;
 			List<CompositeRule> rules = (List<CompositeRule>) pattern.getFormalization();
 			for (CompositeRule rule : rules) {
 				try{
 					SCIFFChecker checker = new SCIFFChecker();
-					CheckerReport report = checker.analyse(mLogReader, rule, TimeGranularity.MILLISECONDS);
+					report = checker.analyse(mLogReader, rule, TimeGranularity.MILLISECONDS);
 					double prob = report.correctInstances().size() / (
 							(double) (report.correctInstances().size() 
 									+ report.wrongInstances().size()));
@@ -80,6 +83,18 @@ public class SCIFF extends ModelChecker {
 				}
 			}
 		}
+		if(onlyOneInstantiatedPattern(patterns))
+			ModelCheckerResult.setResult(report);
+	}
+
+	private boolean onlyOneInstantiatedPattern(ArrayList<CompliancePattern> patterns) {
+		int i = 0;
+		for (CompliancePattern p : patterns) {
+			if (p.isInstantiated()) {
+				i++;
+			}
+		}
+		return i == 1;
 	}
 
 }

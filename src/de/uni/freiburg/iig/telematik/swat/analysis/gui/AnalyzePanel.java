@@ -25,8 +25,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
+
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelCheckerResult;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.presenter.SciffResultPresenter;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.presenter.SciffResultPresenter.resultType;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
@@ -131,8 +136,12 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			}
 		}
 		this.add(content);
+
+		addModelCheckerResult();
 	}
 	
+
+
 	private void invokeModelChecking() throws Exception {
 		if (Workbench.getInstance().getTypeOfCurrentComponent().equals(SwatComponentType.PETRI_NET)) {
 			if (!PrismFunctionValidator.checkPrism())
@@ -198,6 +207,35 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	}
 	
 	
+	private void addModelCheckerResult() {
+		if (ModelCheckerResult.hasAResult() && ModelCheckerResult.getResult() instanceof CheckerReport) {
+			final CheckerReport report = (CheckerReport) ModelCheckerResult.getResult();
+
+			JButton wrong = new JButton("violating (" + report.wrongInstances().size() + ")");
+			JButton correct = new JButton("correct (" + report.correctInstances().size() + ")");
+
+			ActionListener present = new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					SciffResultPresenter presenter = new SciffResultPresenter(report);
+					if (e.getActionCommand().contains("violating"))
+						presenter.show(resultType.WRONG);
+					else
+						presenter.show(resultType.CORRECT);
+				}
+			};
+
+			wrong.addActionListener(present);
+			correct.addActionListener(present);
+
+			this.add(wrong);
+			this.add(correct);
+
+		}
+
+	}
+
 	/*
 	public void updatePatternResults() {
 		

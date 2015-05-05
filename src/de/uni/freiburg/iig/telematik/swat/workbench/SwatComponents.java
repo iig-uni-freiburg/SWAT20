@@ -1002,6 +1002,8 @@ public class SwatComponents {
 	
 	public void addAnalysis(Analysis analysis, String netID, boolean storeToFile) throws SwatComponentException {
 
+		analysis.setLoadedFromDisk();
+
 		if (!analyses.containsKey(netID) || analyses.get(netID) == null) {
 			analyses.put(netID, new ArrayList<Analysis>());
 			System.out.println("Adding net analysis" + analysis.getName());
