@@ -61,7 +61,8 @@ public class Parameter {
 
 	public void setValue(String parameterTypeStr) {
 		ArrayList<String> range = mRangeMap.get(parameterTypeStr);
-		mValue.setValue((range.size() > 0)? range.get(0) : "-");
+		if (!parameterTypeStr.equals(mValue.getType()))
+			mValue.setValue((range.size() > 0) ? range.get(0) : "-"); //uncomment
 		mValue.setType(parameterTypeStr);
 		
 	}

@@ -88,6 +88,7 @@ public class PatternPanel extends JPanel {
 				System.out.println("Trying to set parameter: " + parameter.getValue().getType() + " Was found: "
 						+ mParaTypeBox.getSelectedItem());
 				final ParameterValuePanel paraValuePanel = ParaValuePanelFactory.createPanel(mParaTypeBox.getSelectedItem(), curParameter);
+				//paraValuePanel.setParameterAccordingToPattern(parameter);//new
 				mBottomPanel.add(new JLabel(parameter.getName() + ":"));
 				mBottomPanel.add(mParaTypeBox);
 				mBottomPanel.add(paraValuePanel);
@@ -103,12 +104,12 @@ public class PatternPanel extends JPanel {
 						mBottomPanel.remove(mParaValuePanel);
 						mParaValuePanel = ParaValuePanelFactory.createPanel(
 								mParaTypeBox.getSelectedItem(), curParameter);
+						//paraValuePanel.setParameterAccordingToPattern(parameter);//new
 						mBottomPanel.add(mParaValuePanel, index);
 						updateUI();
 					}
 					
 				});
-				
 							
 			}
 			

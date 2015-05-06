@@ -16,6 +16,7 @@ public class StandardParamValuePanel extends ParameterValuePanel {
 	
 	public StandardParamValuePanel(Parameter parameter) {
 		super();
+		//final String typeCopy = type;
 		final String type = parameter.getValue().getType();
 		final Parameter curParam = parameter;
 		mParaValueBox = new JComboBox((String[]) parameter.getParameterRange(

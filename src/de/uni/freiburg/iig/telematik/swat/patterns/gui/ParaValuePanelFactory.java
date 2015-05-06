@@ -8,7 +8,7 @@ public class ParaValuePanelFactory {
 	public static ParameterValuePanel createPanel(Object selectedItem, Parameter parameter) {
 		
 		String parameterTypeStr = (String) selectedItem;
-		parameter.setValue(parameterTypeStr);
+		parameter.setValue(parameterTypeStr); //TODO:comment to load parameter correctly. But: Breaks Dropdown listener
 		ParameterValuePanel panel = null;
 		
 		if (parameterTypeStr.equals(ParameterTypeNames.STATEPREDICATE)) {
@@ -16,6 +16,7 @@ public class ParaValuePanelFactory {
 		} else if (parameterTypeStr.equals(ParameterTypeNames.NUMBER)) {
 			panel = new NumberParamValuePanel(parameter);
 		} else {
+			//panel = new StandardParamValuePanel(parameter, parameterTypeStr);
 			panel = new StandardParamValuePanel(parameter);
 		} 
 		
