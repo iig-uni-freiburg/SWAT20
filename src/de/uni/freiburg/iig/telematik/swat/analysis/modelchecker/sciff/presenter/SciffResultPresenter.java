@@ -54,7 +54,7 @@ public class SciffResultPresenter {
 		for (int i : result) {
 			b.append(report.getLog().getInstances().get(i).getName());
 			try {
-				b.append("by: " + report.getLog().getInstances().get(i).get(0).getOriginator());
+				b.append(" by: " + report.getLog().getInstances().get(i).get(0).getOriginator());
 			} catch (Exception e) {
 			}
 

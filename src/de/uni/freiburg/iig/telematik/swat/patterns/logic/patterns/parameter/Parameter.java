@@ -51,7 +51,10 @@ public class Parameter {
 	}
 	
 	public ArrayList<String> getParameterRange(String type) {
-		return mRangeMap.get(type);
+		ArrayList<String> result = new ArrayList<String>(mRangeMap.get(type));
+		result.add(0, ""); //Because first, pattern parameter are not initialized
+		return result;
+		//return mRangeMap.get(type); //if initialized
 	}
 
 	
@@ -61,8 +64,8 @@ public class Parameter {
 
 	public void setValue(String parameterTypeStr) {
 		ArrayList<String> range = mRangeMap.get(parameterTypeStr);
-		if (!parameterTypeStr.equals(mValue.getType()))
-			mValue.setValue((range.size() > 0) ? range.get(0) : "-"); //uncomment
+		if (!parameterTypeStr.equals(mValue.getType())) //this if statement is the reason for new patterns to have empty parameters, however it fixes the load pattern problem
+			mValue.setValue((range.size() > 0) ? range.get(0) : "-");
 		mValue.setType(parameterTypeStr);
 		
 	}

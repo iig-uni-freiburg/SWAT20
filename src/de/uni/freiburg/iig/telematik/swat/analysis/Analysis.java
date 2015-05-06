@@ -31,6 +31,7 @@ public class Analysis implements Comparable {
 	}
 
 	public ArrayList<CompliancePattern> getPatternSetting() {
+		System.out.println("Returning pattern with: " + patternSetting.get(0).getParameters().get(0).getValue().getValue());
 		return new ArrayList<CompliancePattern>(patternSetting);
 	}
 	

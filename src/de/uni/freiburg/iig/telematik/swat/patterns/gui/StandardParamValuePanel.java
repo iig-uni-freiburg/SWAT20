@@ -32,6 +32,7 @@ public class StandardParamValuePanel extends ParameterValuePanel {
 			}
 			
 		});
+		curParam.setValue(type, parameter.getValue().getValue());//what to do with rules that do carry empty params?
 		this.add(mParaValueBox);
 
 	}

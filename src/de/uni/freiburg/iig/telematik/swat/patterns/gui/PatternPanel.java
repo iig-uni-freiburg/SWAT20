@@ -74,10 +74,10 @@ public class PatternPanel extends JPanel {
 			final JPanel mBottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 			int componentIndex = -1;
-			if (mPattern.isLoadedFromDisk())
-				System.out.println("Creating panel for LOADED PATTERN: " + mPattern.getName() + " With 1st parameter: "
-					+ mPattern.getParameters().get(0).getName() + " and " + mPattern.getParameters().get(0).getValue().getValue() + " and "
-					+ mPattern.getParameters().get(0).getValue().getType());
+			//			if (mPattern.isLoadedFromDisk())
+			//				System.out.println("Creating panel for LOADED PATTERN: " + mPattern.getName() + " With 1st parameter: "
+			//					+ mPattern.getParameters().get(0).getName() + " and " + mPattern.getParameters().get(0).getValue().getValue() + " and "
+			//					+ mPattern.getParameters().get(0).getValue().getType());
 			for (Parameter parameter : mPattern.getParameters()) {
 				componentIndex = componentIndex + 3;
 				final int i = componentIndex;

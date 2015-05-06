@@ -1122,16 +1122,27 @@ public class SwatComponents {
 
 	}
 	
-	private void removeAnalysis(String netID, String analysisName, boolean fromFileSystem) throws SwatComponentException {
-		// build path were it was stored
+	public void removeAnalysis(String netLogID, String analysisName, boolean fromFileSystem) throws SwatComponentException {
+		File analysisFile = null;
+		String analysisFolderName;
+		try {
+			analysisFolderName = SwatProperties.getInstance().getNetAnalysesDirectoryName();
+		} catch (IOException e) {
+			throw new SwatComponentException("Could not resolve analysisFolderName from SwatProperties");
+		}
+
+		if (containsLogWithID(netLogID))
+			analysisFile = new File(getLogModel(netLogID).getFileReference().getParentFile(), analysisFolderName + analysisName + ".xml");
+		else if (containsPetriNetWithID(netLogID))
+			analysisFile = new File(getPetriNetFile(netLogID).getParentFile(), analysisFolderName + analysisName + ".xml");
+
 		if (fromFileSystem) {
-			File analysisFile = new File(getPetriNetFile(netID).getParentFile(), analysisName + ".xml");
 			if (!analysisFile.exists())
 				throw new SwatComponentException("Could not resolve analysis file for " + analysisName);
 			FileUtils.removeLinkOnly(analysisFile);
 		}
 
-		analyses.remove(getAnalysis(netID, analysisName));
+		analyses.remove(getAnalysis(netLogID, analysisName));
 	}
 
 //	public void renameAnalysis(String netID, String oldName, String newName){

@@ -37,6 +37,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePatt
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.AnalysisHashErrorDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 /** Panel on right side of SWAT. Shows analysis results **/
@@ -177,21 +178,30 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		SwatComponents sc = SwatComponents.getInstance();
 		String analysisTargetName = Workbench.getInstance().getNameOfCurrentComponent();
 		try {
-			//AbstractGraphicalPN net = sc.getPetriNet(Workbench.getInstance().getNameOfCurrentComponent());
-			String name = JOptionPane.showInputDialog(this, "Please name analysis");
+			String name = JOptionPane.showInputDialog(this, "Please name analysis", dropDown.getSelectedItem().toString());
+			String oldName = getSelectedDropDownItemName();
+			if (name.equalsIgnoreCase(oldName)) {
+				dropDown.removeItemAt(dropDown.getSelectedIndex());
+				sc.removeAnalysis(analysisTargetName, oldName, true);
+			}
+
 			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
 			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
 			save.setLoadedFromDisk();
 			sc.addAnalysis(save, analysisTargetName, true);
+
 			dropDown.addItem(save);
+			dropDown.setSelectedItem(save);
 
 		} catch (SwatComponentException e) {
-			Workbench.errorMessage("Could not save analysis", e, true);
+			Workbench.errorMessage("Could process analysis", e, true);
 		}
 	}
 
 	public void setPatterns(Analysis analysis){
 		mAnalysisController.setPatterns(analysis.getPatternSetting());
+		updatePatternResults();
+		updateUI();
 	}
 
 	@Override
@@ -201,11 +211,28 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			Analysis a = (Analysis) dropDown.getSelectedItem();
 			System.out.println("Setting pattern...");
 			setPatterns(a);
-			updatePatternResults();
-			updateUI();
+			if (a.getHashCode() != Workbench.getInstance().getHashOfCurrentComponent()) {
+				boolean recompute = new AnalysisHashErrorDialog(Workbench.getInstance().getTypeOfCurrentComponent()).showUpdateDialog();
+				if (recompute) {
+					try {
+						invokeModelChecking();
+					} catch (Exception e1) {
+						Workbench.errorMessage("Could not invoke model checking", e1, true);
+					}
+				}
+
+			}
 		}
 	}
 	
+	private String getSelectedDropDownItemName() {
+		String name;
+		if (dropDown.getSelectedItem() instanceof Analysis)
+			name = ((Analysis) dropDown.getSelectedItem()).toString();
+		else
+			name = "";
+		return name;
+	}
 	
 	private void addModelCheckerResult() {
 		if (ModelCheckerResult.hasAResult() && ModelCheckerResult.getResult() instanceof CheckerReport) {
@@ -231,7 +258,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 
 			this.add(wrong);
 			this.add(correct);
-
+			ModelCheckerResult.removeResult();
 		}
 
 	}
