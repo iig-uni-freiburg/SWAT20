@@ -2,7 +2,14 @@ package de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JOptionPane;
+
+import com.mxgraph.model.mxGraphModel;
+
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.SwatIFNetGraph;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TransitionLabelingChange;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
@@ -17,31 +24,17 @@ public class TransitionLabelingAction extends AbstractPNEditorAction {
 		securityLevel = sl;
 	}
 
-
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		IFNetGraph graph = (IFNetGraph) getEditor().getGraphComponent().getGraph();
 		PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
-//TODO: Adapt to new ACStructure 
-//		AnalysisContext ac = graph.getCurrentAnalysisContext();
-//		if(ac != null){
-//		if (ac.getActivities().contains(cell.getId()))
-//			((mxGraphModel) graph.getModel()).execute(new TransitionLabelingChange(graph,cell.getId(),securityLevel));
-//		else {
-////			Labeling labeling = new Labeling(graph.getNetContainer().getPetriNet(), ac.getSubjects());
-//			 Labeling labeling = new Labeling();
-//
-//			for (String a : ac.getActivities())
-//				labeling.setActivityClassification(a, ac.getLabeling().getActivityClassification(a));
-//			ac.setLabeling(labeling);
-//			((mxGraphModel) graph.getModel()).execute(new TransitionLabelingChange(graph,cell.getId(),securityLevel));
-//		}
-//		graph.refresh();
-//
-//	}
-//	
-//	else {
-//		JOptionPane.showMessageDialog(null,"No Analysis Context defined","Analysis Context Missing", JOptionPane.WARNING_MESSAGE);
-//	}		
+
+		AnalysisContext ac = ((SwatIFNetGraph) graph).getCurrentAnalysisContext();
+		if (ac != null) {
+			((mxGraphModel) graph.getModel()).execute(new TransitionLabelingChange((SwatIFNetGraph) graph, cell.getId(), securityLevel));
+			graph.refresh();
+		} else {
+			JOptionPane.showMessageDialog(null, "No Analysis Context defined", "Analysis Context Missing", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 }

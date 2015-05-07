@@ -23,6 +23,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractCPNGraphi
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
+import de.uni.freiburg.iig.telematik.swat.editor.SwatIFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.TokenSecurityLevelChange;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
@@ -112,9 +113,9 @@ public class TokenlabelToolBar extends JToolBar {
 //						}
 					
 						if (itemEvent.getItem().equals(SecurityLevel.LOW.toString()))
-							((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenSecurityLevelChange(editor, tokenLabel, SecurityLevel.LOW));
+							((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenSecurityLevelChange((SwatIFNetEditorComponent) editor, tokenLabel, SecurityLevel.LOW));
 						if (itemEvent.getItem().equals(SecurityLevel.HIGH.toString()))
-							((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenSecurityLevelChange(editor, tokenLabel, SecurityLevel.HIGH));
+							((mxGraphModel) editor.getGraphComponent().getGraph().getModel()).execute(new TokenSecurityLevelChange((SwatIFNetEditorComponent) editor, tokenLabel, SecurityLevel.HIGH));
 						}
 					((mxGraphModel) graph.getModel()).endUpdate();
 						

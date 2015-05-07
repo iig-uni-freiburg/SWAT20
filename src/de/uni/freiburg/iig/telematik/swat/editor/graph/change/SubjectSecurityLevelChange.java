@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.editor.graph.change;
 import com.mxgraph.model.mxIGraphModel.mxAtomicGraphModelChange;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel;
+import de.uni.freiburg.iig.telematik.swat.editor.graph.SwatIFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
@@ -13,7 +14,7 @@ public class SubjectSecurityLevelChange extends mxAtomicGraphModelChange {
 	protected String name;
 	SecurityLevel value;
 	protected SecurityLevel previous;
-	private IFNetGraph graph;
+	private SwatIFNetGraph graph;
 	private IFNetEditorComponent editor;
 
 	public SubjectSecurityLevelChange() {
@@ -22,7 +23,7 @@ public class SubjectSecurityLevelChange extends mxAtomicGraphModelChange {
 
 	public SubjectSecurityLevelChange(PNEditorComponent editor2, String name, SecurityLevel sl) {
 		this.editor = (IFNetEditorComponent) editor2;
-		this.graph = (IFNetGraph) editor2.getGraphComponent().getGraph();
+		this.graph = (SwatIFNetGraph) editor2.getGraphComponent().getGraph();
 		this.name = name;
 		this.value = sl;
 		this.previous = this.value;
@@ -56,16 +57,12 @@ public class SubjectSecurityLevelChange extends mxAtomicGraphModelChange {
 		value = previous;
 		previous = valueForCellChanged(name, previous);
 		((IFNetToolBar)editor.getEditorToolbar()).updateSubjectClearanceConfigurer();
-
 	}
 
 	protected SecurityLevel valueForCellChanged(String label, SecurityLevel value) {
-		//TODO: Adapt to new ACStructure 
-//		SecurityLevel oldValue = graph.getSecurityLevelForSubject(label);
-//		graph.updateSecurityLevelForSubject(label, value);
-//
-//		return oldValue;
-		return null;
+		SecurityLevel oldValue = graph.getSecurityLevelForSubject(label);
+		graph.updateSecurityLevelForSubject(label, value);
+		return oldValue;
 	}
 
 }
