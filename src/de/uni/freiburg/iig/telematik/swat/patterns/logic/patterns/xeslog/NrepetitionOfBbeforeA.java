@@ -27,14 +27,14 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.PatternRequire
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class NrepediationOfBbeforeA extends LogCompliancePattern {
+public class NrepetitionOfBbeforeA extends LogCompliancePattern {
 
 	public static void main(String args[]) {
-		NrepediationOfBbeforeA test = new NrepediationOfBbeforeA();
+		NrepetitionOfBbeforeA test = new NrepetitionOfBbeforeA();
 		test.printRule();
 	}
 
-	public NrepediationOfBbeforeA() {
+	public NrepetitionOfBbeforeA() {
 		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		ArrayList<String> numberType = new ArrayList<String>(Arrays.asList(ParameterTypeNames.NUMBER));
 		mParameters.add(new Parameter(paramTypes, "B"));
@@ -61,7 +61,7 @@ public class NrepediationOfBbeforeA extends LogCompliancePattern {
 
 	@Override
 	public String getName() {
-		return "N repediations of B before A";
+		return "N repetition of B before A";
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class NrepediationOfBbeforeA extends LogCompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		NrepediationOfBbeforeA duplicate = new NrepediationOfBbeforeA();
+		NrepetitionOfBbeforeA duplicate = new NrepetitionOfBbeforeA();
 		duplicate.acceptInfoProfider(mInfoProvider);
 		return duplicate();
 	}
