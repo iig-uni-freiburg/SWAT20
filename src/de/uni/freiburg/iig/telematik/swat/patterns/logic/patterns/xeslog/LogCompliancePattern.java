@@ -32,4 +32,8 @@ public abstract class LogCompliancePattern extends CompliancePattern {
 		return result;
 	}
 
+	protected boolean paramIsEmpty(int i) {
+		return mParameters.get(0).getValue().getValue().isEmpty();
+	}
+
 }
