@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="SERAM.package" default="package" basedir=".">
+<project name="SWAT20.package" default="package" basedir=".">
 
 	<!--
-	Apache Ant build file for the SERAM project
+	Apache Ant build file for the SWAT20 project
 	
 	This build file generates three JAR-files from the project:
 	- swat-0.0.1.jar
 	- swat-0.0.1-sources.jar
 	- swat-0.0.1-javadoc.jar
-	- swat-0.0.1-consistent.jar
+	- swat-0.0.1-runnable.jar
 	
 	The building process starts with cleaning all target files including compiles
 	java classes, compiled tests, and test reports (see #clean). Afterwards a
@@ -16,16 +16,18 @@
 	Then the project gets compiled (see #compile) and all unit tests are performed
 	(see #test). If the compilation ran without errors, the JARs are packaged (see #package).
 	
-	SWAT20 depends on the projects TOVAL, JAGAL, JAWL and SEPIA, SCIFF and SwatPlugin_SCIFF which compiled classes must be
-	present under the specified paths.
+	SWAT20 depends on the projects TOVAL, JAGAL, SEWOL and SEPIA, SCIFF and SwatPlugin_SCIFF
+	which compiled classes must be present under the specified paths.
 	
 	author: Adrian Lange
 	 -->
 
 	<!-- Project details -->
+	<property name="project.description" value="The Security Workflow Analysis Tool (SWAT) is a framework for modelling and analyzing workflows." />
 	<property name="artifact.name" value="swat" />
 	<property name="version.name" value="0.0.1" />
-	<property name="main-class" value="de.uni.freiburg.iig.telematik.swat.workbench.Startup" />
+	<property name="main-class" value="de.uni.freiburg.iig.telematik.swat.Startup" />
+	<property name="main-class-uri" value="de/uni/freiburg/iig/telematik/swat/Startup" />
 
 	<!-- Names for generated files -->
 	<property name="jar.file.name" value="${artifact.name}-${version.name}" />
@@ -35,6 +37,7 @@
 	<!-- Source and destination directories -->
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="res.dir" value="${basedir}/res" />
+	<property name="build.dir" value="${basedir}/build" />
 	<property name="target.dir" value="${basedir}/bin" />
 	<property name="target.dir.jar" value="${target.dir}/${artifact.name}-${version.name}" />
 	<property name="libs.dir" value="${basedir}/lib" />
@@ -46,9 +49,9 @@
 	<!-- Define classpath -->
 	<property name="TOVAL.location" value="../TOVAL" />
 	<property name="JAGAL.location" value="../JAGAL" />
-	<property name="JAWL.location" value="../JAWL" />
+	<property name="SEWOL.location" value="../SEWOL" />
 	<property name="SEPIA.location" value="../SEPIA" />
-	<property name="SERAM.location" value="../SERAM" />
+	<property name="WOLFGANG.location" value="../WOLFGANG" />
 	<property name="SCIFF.location" value="../SCIFF" />
 	<property name="SCIFF_PLUGIN.location" value="../SWATPlugin_SCIFF" />
 
@@ -61,17 +64,24 @@
 		<path refid="TOVAL.classpath" />
 	</path>
 
-	<path id="JAWL.classpath">
-		<pathelement location="${JAWL.location}/bin/classes" />
-		<path refid="SEPIA.classpath" />
+	<path id="SEWOL.classpath">
+		<pathelement location="${SEWOL.location}/bin/classes" />
 		<path refid="TOVAL.classpath" />
-		<pathelement location="${JAWL.location}/lib/openxes/OpenXES.jar" />
+		<path refid="JAGAL.classpath" />
+		<pathelement location="${SEWOL.location}/lib/guava-16.0.1.jar" />
+		<pathelement location="${SEWOL.location}/lib/collections-generic-4.01.jar" />
+		<pathelement location="${SEWOL.location}/lib/jung-algorithms-2.0.1.jar" />
+		<pathelement location="${SEWOL.location}/lib/jung-api-2.0.1.jar" />
+		<pathelement location="${SEWOL.location}/lib/jung-graph-impl-2.0.1.jar" />
+		<pathelement location="${SEWOL.location}/lib/jung-visualization-2.0.1.jar" />
+		<pathelement location="${SEWOL.location}/lib/xstream-1.4.8.jar" />
 	</path>
 
 	<path id="SEPIA.classpath">
 		<pathelement location="${SEPIA.location}/bin/classes" />
 		<path refid="TOVAL.classpath" />
 		<path refid="JAGAL.classpath" />
+		<path refid="SEWOL.classpath" />
 		<pathelement location="${SEPIA.location}/lib/junit/junit-4.11.jar" />
 		<pathelement location="${SEPIA.location}/lib/hamcrest/hamcrest-core-1.3.jar" />
 		<pathelement location="${SEPIA.location}/lib/isorelax/isorelax.jar" />
@@ -81,21 +91,19 @@
 		<pathelement location="${SEPIA.location}/lib/xsom/xsom-20110101-SNAPSHOT.jar" />
 	</path>
 
-	<path id="SERAM.classpath">
-		<pathelement location="${SERAM.location}/bin/classes" />
+	<path id="WOLFGANG.classpath">
+		<pathelement location="${WOLFGANG.location}/bin/classes" />
+		<pathelement location="${WOLFGANG.location}/res" />
 		<path refid="TOVAL.classpath" />
 		<path refid="JAGAL.classpath" />
+		<path refid="SEWOL.classpath" />
 		<path refid="SEPIA.classpath" />
-		<path refid="JAWL.classpath" />
-		<pathelement location="${SERAM.location}/lib/collections-generic-4.01.jar" />
-		<pathelement location="${SERAM.location}/lib/jung-algorithms-2.0.1.jar" />
-		<pathelement location="${SERAM.location}/lib/jung-api-2.0.1.jar" />
-		<pathelement location="${SERAM.location}/lib/jung-graph-impl-2.0.1.jar" />
-		<pathelement location="${SERAM.location}/lib/jung-visualization-2.0.1.jar" />
+		<pathelement location="${WOLFGANG.location}/lib/itextpdf-5.5.0.jar" />
+		<pathelement location="${WOLFGANG.location}/lib/jgraphXwithsources.jar" />
 	</path>
 
 	<path id="SCIFF.classpath">
-		<pathelement location="${SCIFF.location}/bin" />
+		<pathelement location="${SCIFF.location}/bin/classes" />
 		<pathelement location="${SCIFF.location}/lib/2p.jar" />
 		<pathelement location="${SCIFF.location}/lib/jcalendar-1.4.jar" />
 		<pathelement location="${SCIFF.location}/lib/jcommon-1.0.6.jar" />
@@ -104,26 +112,36 @@
 	</path>
 
 	<path id="SCIFF_PLUGIN.classpath">
-		<pathelement location="${SCIFF_PLUGIN.location}/bin" />
+		<pathelement location="${SCIFF_PLUGIN.location}/bin/classes" />
 		<path refid="TOVAL.classpath" />
+		<path refid="JAGAL.classpath" />
+		<path refid="SEWOL.classpath" />
 		<path refid="SCIFF.classpath" />
-		<path refid="JAWL.classpath" />
-		<pathelement location="${SCIFF.location}/lib/jdom-1.1.3.jar" />
 	</path>
 
 	<path id="SWAT.classpath">
 		<pathelement location="${classes.target.dir}" />
 		<path refid="TOVAL.classpath" />
 		<path refid="JAGAL.classpath" />
+		<path refid="SEWOL.classpath" />
 		<path refid="SEPIA.classpath" />
-		<path refid="JAWL.classpath" />
-		<path refid="SERAM.classpath" />
+		<path refid="WOLFGANG.classpath" />
 		<path refid="SCIFF.classpath" />
 		<path refid="SCIFF_PLUGIN.classpath" />
+		<pathelement location="${libs.dir}/jfreechart/jcommon-1.0.23.jar" />
+		<pathelement location="${libs.dir}/jfreechart/jfreechart-1.0.19.jar" />
+		<pathelement location="${libs.dir}/commons-exec-1.2.jar" />
+		<pathelement location="${libs.dir}/commons-math3-3.2.jar" />
 		<pathelement location="${libs.dir}/itextpdf-5.5.0.jar" />
+		<pathelement location="${libs.dir}/javadocPanelMatic.jar" />
 		<pathelement location="${libs.dir}/jdom-1.1.3.jar" />
 		<pathelement location="${libs.dir}/jgraphXwithsources.jar" />
+		<pathelement location="${libs.dir}/junit-4.11.jar" />
+		<pathelement location="${libs.dir}/PanelMatic.jar" />
 		<pathelement location="${libs.dir}/postgresql-9.3-1101.jdbc4.jar" />
+		<pathelement location="${libs.dir}/xmlpull-1.1.3.1.jar" />
+		<pathelement location="${libs.dir}/xpp3_min-1.1.4c.jar" />
+		<pathelement location="${libs.dir}/xstream-1.4.7.jar" />
 	</path>
 
 	<mkdir dir="${target.dir.jar}"/>
@@ -141,15 +159,86 @@
 			<fileset dir="${src.dir}">
 				<include name="**/*.java" />
 			</fileset>
+			<fileset dir="${res.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${TOVAL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${TOVAL.location}/res">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${JAGAL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEWOL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEWOL.location}/ext">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEPIA.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${WOLFGANG.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SCIFF.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SCIFF_PLUGIN.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+		</javadoc>
+		<javadoc sourcepath="${res.dir}" destdir="${docs.temp.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${res.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${TOVAL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${TOVAL.location}/res">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${JAGAL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEWOL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEWOL.location}/ext">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEPIA.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${WOLFGANG.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SCIFF.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SCIFF_PLUGIN.location}/src">
+				<include name="**/*.java" />
+			</fileset>
 		</javadoc>
 
 		<echo>Creating new JARs...</echo>
-		<jar jarfile="${target.dir.jar}/${jar.file.name}.jar" basedir="${classes.target.dir}">
+		<jar jarfile="${target.dir.jar}/${jar.file.name}.jar">
+			<fileset dir="${classes.target.dir}" />
+			<fileset dir="${res.dir}" /> 
 			<manifest>
 				<attribute name="X-Date" value="${touch.time}" />
 			</manifest>
 		</jar>
-		<jar jarfile="${target.dir.jar}/${jar.sources.file.name}.jar" includes="**/*.java" basedir="${src.dir}">
+		<jar jarfile="${target.dir.jar}/${jar.sources.file.name}.jar">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${res.dir}" /> 
 			<manifest>
 				<attribute name="X-Date" value="${touch.time}" />
 			</manifest>
@@ -168,46 +257,9 @@
 	<target name="package-consistent" depends="compile" description="Packages the project to a consistent JAR file">
 		<echo message="${ant.project.name}: ${ant.file}" />
 		<echo>Deleting old JAR...</echo>
-		<delete file="${target.dir.jar}/${jar.file.name}-consistent.jar" />
 		<delete file="${target.dir.jar}/${jar.file.name}-runnable.jar" />
 
 		<echo>Creating new JAR...</echo>
-		<jar jarfile="${target.dir.jar}/${jar.file.name}-consistent.jar" basedir="${classes.target.dir}">
-			<manifest>
-				<attribute name="Class-Path" value="." />
-				<attribute name="X-Date" value="${touch.time}" />
-			</manifest>
-			<fileset dir="${classes.target.dir}" />
-			<fileset dir="${TOVAL.location}/bin/classes" />
-			<fileset dir="${JAGAL.location}/bin/classes" />
-			<fileset dir="${JAWL.location}/bin/classes" />
-			<fileset dir="${SEPIA.location}/bin/classes" />
-			<fileset dir="${SERAM.location}/bin/classes" />
-			<fileset dir="${SCIFF.location}/bin" />
-			<fileset dir="${SCIFF_PLUGIN.location}/bin" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/collections-generic-4.01.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/jung-algorithms-2.0.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/jung-api-2.0.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/jung-graph-impl-2.0.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/jung-visualization-2.0.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${JAWL.location}/lib/openxes/OpenXES.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/isorelax/isorelax.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/msv/msv-core-2013.6.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/relaxngDatatype/relaxngDatatype-20020414.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/xsdlib/xsdlib-2.2.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/hamcrest/hamcrest-core-1.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/xsom/xsom-20110101-SNAPSHOT.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/2p.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jcalendar-1.4.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jcommon-1.0.6.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jdom-1.1.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jfreechart-1.0.5.jar" />
-
-			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/itextpdf-5.5.0.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jdom-1.1.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jgraphXwithsources.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/postgresql-9.3-1101.jdbc4.jar" />
-		</jar>
 		<jar jarfile="${target.dir.jar}/${jar.file.name}-runnable.jar" basedir="${classes.target.dir}">
 			<manifest>
 				<attribute name="Class-Path" value="." />
@@ -217,43 +269,50 @@
 			<fileset dir="${classes.target.dir}" />
 			<fileset dir="${TOVAL.location}/bin/classes" />
 			<fileset dir="${JAGAL.location}/bin/classes" />
-			<fileset dir="${JAWL.location}/bin/classes" />
+			<fileset dir="${SEWOL.location}/bin/classes" />
 			<fileset dir="${SEPIA.location}/bin/classes" />
-			<fileset dir="${SERAM.location}/bin/classes" />
-			<fileset dir="${SCIFF.location}/bin" />
-			<fileset dir="${SCIFF_PLUGIN.location}/bin" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/collections-generic-4.01.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/jung-algorithms-2.0.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/jung-api-2.0.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/jung-graph-impl-2.0.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SERAM.location}/lib/jung-visualization-2.0.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${JAWL.location}/lib/openxes/OpenXES.jar" />
+			<fileset dir="${WOLFGANG.location}/bin/classes" />
+			<fileset dir="${WOLFGANG.location}/res" />
+			<fileset dir="${SCIFF.location}/bin/classes" />
+			<fileset dir="${SCIFF_PLUGIN.location}/bin/classes" />
+			<fileset dir="${res.dir}" />
+			<zipfileset excludes="META-INF/*.SF" src="${JAGAL.location}/lib/jgraphXwithsources.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/guava-16.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/collections-generic-4.01.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/jung-algorithms-2.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/jung-api-2.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/jung-graph-impl-2.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/jung-visualization-2.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/xstream-1.4.8.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/isorelax/isorelax.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/msv/msv-core-2013.6.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/relaxngDatatype/relaxngDatatype-20020414.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/xsdlib/xsdlib-2.2.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/hamcrest/hamcrest-core-1.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/xsom/xsom-20110101-SNAPSHOT.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${WOLFGANG.location}/lib/itextpdf-5.5.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${WOLFGANG.location}/lib/jgraphXwithsources.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/2p.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jcalendar-1.4.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jcommon-1.0.6.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jdom-1.1.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jfreechart-1.0.5.jar" />
 
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jfreechart/jcommon-1.0.23.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jfreechart/jfreechart-1.0.19.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/commons-exec-1.2.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/commons-math3-3.2.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/itextpdf-5.5.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jdom-1.1.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/junit-4.11.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jgraphXwithsources.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/PanelMatic.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/postgresql-9.3-1101.jdbc4.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/xmlpull-1.1.3.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/xpp3_min-1.1.4c.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/xstream-1.4.7.jar" />
 		</jar>
 	</target>
-
-	<jarbundler dir="${target.dir.jar}"
-	            name="Swat"
-	            mainclass="${main-class}"
-				jar="${target.dir.jar}/${jar.file.name}-runnable.jar"
-				jvmversion="1.6"
-				icon="${icon.file}"/>
-
 
 	<target name="compile" depends="init" description="Compiles the source and the test files">
 		<echo>Compile classes...</echo>
@@ -261,7 +320,7 @@
 			<src path="${src.dir}" />
 			<src path="${res.dir}" />
 			<classpath refid="SWAT.classpath" />
-			<compilerarg value="-Xlint"/>
+			<compilerarg value="-Xlint:-path"/>
 		</javac>
 	</target>
 
@@ -283,6 +342,45 @@
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
+	</target>
+
+	<target name="bundle-deb" depends="package" description="Creates a Debian package">
+		<property name="deb.installpath" value="/usr/share/swat" />
+		<property name="deb.execpath" value="/usr/local/bin" />
+		<!-- Copy control file -->
+		<copy todir="${classes.target.dir}/deb/control">
+			<fileset dir="${build.dir}/deb/control" />
+			<filterset begintoken="[[" endtoken="]]">
+				<filter token="version" value="${version.name}" />
+				<filter token="description" value="${project.description}" />
+				<filter token="name" value="${artifact.name}" />
+			</filterset>
+		</copy>
+		<!-- Copy starter file -->
+		<copy todir="${classes.target.dir}/deb/starter">
+			<fileset dir="${build.dir}/deb/starter" />
+			<filterset begintoken="[[" endtoken="]]">
+				<filter token="path" value="${deb.installpath}" />
+				<filter token="filename" value="${jar.file.name}-runnable.jar" />
+			</filterset>
+		</copy>
+		<!-- Create debian package -->
+		<deb destfile="${target.dir.jar}/${jar.file.name}.deb" control="${classes.target.dir}/deb/control" verbose="true">
+			<data src="${target.dir.jar}/${jar.file.name}-runnable.jar" type="file">
+				<mapper type="perm" prefix="${deb.installpath}" />
+			</data>
+			<data src="${classes.target.dir}/deb/starter/swat.sh" type="file">
+				<mapper type="perm" prefix="${deb.installpath}" />
+			</data>
+			<link name="${deb.execpath}/swat.sh" target="${deb.installpath}/swat.sh" symbolic="true" mode="777" />
+		</deb>
+	</target>
+
+	<target name="bundle-macosx" depends="package" description="Creates a Mac OS X application bundle">
+		<bundleapp outputdirectory="${target.dir.jar}" name="SWAT" displayname="SWAT" identifier="${main-class}" icon="${icon.file}" shortversion="${version.name}" applicationCategory="public.app-category.developer-tools" mainclassname="${main-class-uri}">
+			<classpath file="${target.dir.jar}/${jar.file.name}-runnable.jar" />
+			<option value="-Dapple.laf.useScreenMenuBar=true" />
+		</bundleapp>
 	</target>
 
 </project>

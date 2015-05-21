@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -28,6 +27,11 @@ import de.uni.freiburg.iig.telematik.sepia.event.TokenEvent;
 import de.uni.freiburg.iig.telematik.sepia.event.TokenListener;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractPNGraphics;
+import de.uni.freiburg.iig.telematik.sepia.mg.abstr.AbstractMarkingGraphRelation;
+import de.uni.freiburg.iig.telematik.sepia.mg.abstr.AbstractMarkingGraphState;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
@@ -179,19 +183,26 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 		return didFire;
 	}
 
-	@SuppressWarnings("unchecked")
-	private void setupDrainPlaceListener(AbstractGraphicalPN net) {
-		for (AbstractPlace p : (Collection<AbstractPlace>) net.getPetriNet().getDrainPlaces()) {
-			p.addTokenListener(new TokenListener<AbstractPlace>() {
+	private <	P extends AbstractPlace<F, S>, 
+				T extends AbstractTransition<F, S>, 
+				F extends AbstractFlowRelation<P, T, S>, 
+				M extends AbstractMarking<S>, 
+				S extends Object,
+				X extends AbstractMarkingGraphState<M, S>,
+				Y extends AbstractMarkingGraphRelation<M, X, S>,
+				N extends AbstractPetriNet<P,T,F,M,S,X,Y>,
+				G extends AbstractPNGraphics<P,T,F,M,S>> void setupDrainPlaceListener(AbstractGraphicalPN<P,T,F,M,S,X,Y,N,G> net) {
+		for (P p : net.getPetriNet().getDrainPlaces()) {
+			p.addTokenListener(new TokenListener<AbstractPlace<F,S>>() {
 
 				@Override
-				public void tokensAdded(TokenEvent<? extends AbstractPlace> o) {
+				public void tokensAdded(TokenEvent<? extends AbstractPlace<F,S>> o) {
 					//System.out.println("Reached " + o.getSource().getLabel());
 					drainPlaceReached = true;
 				}
 
 				@Override
-				public void tokensRemoved(TokenEvent<? extends AbstractPlace> o) {
+				public void tokensRemoved(TokenEvent<? extends AbstractPlace<F,S>> o) {
 				}
 			});
 
