@@ -8,18 +8,13 @@ import javax.swing.JToolBar;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CWNProperties;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.SwatIFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.menu.IFNetToolBar;
-import de.uni.freiburg.iig.telematik.wolfgang.actions.properties.AbstractPropertyCheckAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.exception.EditorToolbarException;
-import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraphComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.AbstractToolBar;
-import de.uni.freiburg.iig.telematik.wolfgang.menu.CPNToolBar;
-import de.uni.freiburg.iig.telematik.wolfgang.menu.popup.TransitionPopupMenu;
 
 public class SwatIFNetEditorComponent extends IFNetEditorComponent {
 

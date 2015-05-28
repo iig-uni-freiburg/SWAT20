@@ -23,14 +23,14 @@ import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
 import de.uni.freiburg.iig.telematik.wolfgang.properties.IFNetProperties;
 
 public class SwatIFNetGraph extends IFNetGraph {
-	
+
 	private AnalysisContext currentAnalysisContext;
 
 	public SwatIFNetGraph(GraphicalIFNet GraphicalIFNet, IFNetProperties IFNetProperties) throws ParameterException {
 		super(GraphicalIFNet, IFNetProperties);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	protected void drawAdditionalContextToTransition(mxGraphics2DCanvas canvas, mxCellState state) throws PropertyException, IOException {
 		PNGraphCell cell = (PNGraphCell) state.getCell();
@@ -44,7 +44,7 @@ public class SwatIFNetGraph extends IFNetGraph {
 		int k = 0;
 		int spacingY = 5;
 		int spacingX = 3;
-		
+
 		if (getCurrentAnalysisContext() != null) {
 
 			if (currentAnalysisContext != null) {
@@ -55,8 +55,7 @@ public class SwatIFNetGraph extends IFNetGraph {
 
 				ImageIcon img = null;
 
-					img = IconFactory.getIcon("user");
-
+				img = IconFactory.getIcon("user");
 
 				// ImageObserver observer;
 				int x = (int) state.getCenterX() + (int) (state.getWidth() / 6);
@@ -72,11 +71,10 @@ public class SwatIFNetGraph extends IFNetGraph {
 			}
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-
 		}
-		
+
 	}
-	
+
 	public void updateAnalysisContext(AnalysisContext ac) {
 		if (ac != null)
 			getNetContainer().getPetriNet().setAnalysisContext(ac);
@@ -86,7 +84,7 @@ public class SwatIFNetGraph extends IFNetGraph {
 		refresh();
 
 	}
-	
+
 	public AnalysisContext getCurrentAnalysisContext() {
 		return currentAnalysisContext;
 	}
@@ -94,30 +92,28 @@ public class SwatIFNetGraph extends IFNetGraph {
 	public void setCurrentAnalysisContext(AnalysisContext currentAnalysisContext) {
 		this.currentAnalysisContext = currentAnalysisContext;
 	}
-	
+
 	public SecurityLevel getCurrentTransitionLabeling(String name) {
 		return getCurrentAnalysisContext().getLabeling().getActivityClassification(name);
 	}
 
-	
 	public void updateTransitionLabeling(String name, SecurityLevel level) {
 		getCurrentAnalysisContext().getLabeling().setActivityClassification(name, level);
 	}
-	
+
 	public String getCurrentSubjectDescriptorForTransition(String name) {
 		return getCurrentAnalysisContext().getSubjectDescriptor(name);
 	}
 
-	
 	public void updateSubjectDescriptorForTransition(String activity, String subject) {
-		if(subject !=null)
-		getCurrentAnalysisContext().setSubjectDescriptor(activity, subject);
-		else{
+		if (subject != null)
+			getCurrentAnalysisContext().setSubjectDescriptor(activity, subject);
+		else {
 			AnalysisContext newAC = new AnalysisContext(getCurrentAnalysisContext().getACModel(), false);
 			newAC.setLabeling(getCurrentAnalysisContext().getLabeling());
-			for(String a:getCurrentAnalysisContext().getACModel().getContext().getActivities()){
-				if(!a.contentEquals(activity) && getCurrentAnalysisContext().getSubjectDescriptor(a) != null)
-				newAC.setSubjectDescriptor(activity, getCurrentAnalysisContext().getSubjectDescriptor(a));
+			for (String a : getCurrentAnalysisContext().getACModel().getContext().getActivities()) {
+				if (!a.contentEquals(activity) && getCurrentAnalysisContext().getSubjectDescriptor(a) != null)
+					newAC.setSubjectDescriptor(activity, getCurrentAnalysisContext().getSubjectDescriptor(a));
 			}
 			updateAnalysisContext(newAC);
 		}
@@ -128,25 +124,29 @@ public class SwatIFNetGraph extends IFNetGraph {
 	}
 
 	public void updateSecurityLabelForTokenlabel(String label, SecurityLevel level) {
-//		if(!getCurrentAnalysisContext().getAttributes().contains(label)){
-//			AnalysisContext ac = getCurrentAnalysisContext();
-//
-//			Set<String> attributes = getCurrentAnalysisContext().getAttributes();
-//			
-//			 HashMap<String, SecurityLevel> newAttributeMapping = new HashMap<String, SecurityLevel>();
-//			for(String a:attributes){
-//				newAttributeMapping.put(a, getCurrentAnalysisContext().getLabeling().getAttributeClassification(a));
-//			}
-//			newAttributeMapping.put(label, SecurityLevel.LOW);
-//			getCurrentAnalysisContext().getLabeling().addAttributes(attributes);
-//			Labeling labeling = new Labeling(ac.getLabeling().getActivities(), newAttributeMapping.keySet(), ac.getLabeling().getSubjects());
-//			for(String a:newAttributeMapping.keySet()){
-//				labeling.setAttributeClassification(a, newAttributeMapping.get(a));}
-//			ac.setLabeling(labeling);
-////			labeling.setAttributeClassification(tokenLabel, SecurityLevel.LOW);
-//		}
+		// if(!getCurrentAnalysisContext().getAttributes().contains(label)){
+		// AnalysisContext ac = getCurrentAnalysisContext();
+		//
+		// Set<String> attributes = getCurrentAnalysisContext().getAttributes();
+		//
+		// HashMap<String, SecurityLevel> newAttributeMapping = new
+		// HashMap<String, SecurityLevel>();
+		// for(String a:attributes){
+		// newAttributeMapping.put(a,
+		// getCurrentAnalysisContext().getLabeling().getAttributeClassification(a));
+		// }
+		// newAttributeMapping.put(label, SecurityLevel.LOW);
+		// getCurrentAnalysisContext().getLabeling().addAttributes(attributes);
+		// Labeling labeling = new Labeling(ac.getLabeling().getActivities(),
+		// newAttributeMapping.keySet(), ac.getLabeling().getSubjects());
+		// for(String a:newAttributeMapping.keySet()){
+		// labeling.setAttributeClassification(a, newAttributeMapping.get(a));}
+		// ac.setLabeling(labeling);
+		// // labeling.setAttributeClassification(tokenLabel,
+		// SecurityLevel.LOW);
+		// }
 		getCurrentAnalysisContext().getLabeling().setAttributeClassification(label, level);
-		
+
 	}
 
 	public SecurityLevel getSecurityLevelForSubject(String subjectDescriptor) {
@@ -154,8 +154,7 @@ public class SwatIFNetGraph extends IFNetGraph {
 	}
 
 	public void updateSecurityLevelForSubject(String subjectDescriptor, SecurityLevel level) {
-		getCurrentAnalysisContext().getLabeling().setSubjectClearance(subjectDescriptor, level);		
+		getCurrentAnalysisContext().getLabeling().setSubjectClearance(subjectDescriptor, level);
 	}
-
 
 }
