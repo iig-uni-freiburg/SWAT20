@@ -84,7 +84,7 @@ public class AristaFlowToPnmlConverter {
 		net.setInitialMarking(marking);
 	}
 
-	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getGraphicalPN() {
+	public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getGraphicalPN() {
 		GraphicalIFNet net = new GraphicalIFNet(new IFNet());
 		net.setPetriNet(getNet());
 		return net;

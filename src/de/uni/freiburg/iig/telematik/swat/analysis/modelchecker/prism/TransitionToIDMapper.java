@@ -3,14 +3,14 @@ package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism;
 import java.util.Collection;
 import java.util.HashMap;
 
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 
 public class TransitionToIDMapper {
 	
 	private static HashMap<String, Integer> mTransToIDMap = new HashMap<String, Integer>();
 	
-	public static void createMap(AbstractPetriNet<?,?,?,?,?,?,?> net) {
+	public static void createMap(AbstractPetriNet<?,?,?,?,?> net) {
 		
 			mTransToIDMap = new HashMap<String, Integer>();
 			Collection<AbstractTransition<?,?>> transitions = 

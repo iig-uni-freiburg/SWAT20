@@ -50,7 +50,7 @@ public class LolaTransformator {
 	 */
 	public static void main(String[] args) throws IOException, ParserException, ParameterException {
 		//_Currently:_ Instead of getName() getLabel() is used on places and transitions. This may cause problems as the user may enter illegal characters
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> loadedNet = null;
+		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> loadedNet = null;
 		loadedNet = new PNMLParser().parse(new File("/home/richard/richard.pnml"));
 		LolaTransformator trans = new LolaTransformator((PTNet) loadedNet.getPetriNet());
 		System.out.println(trans.getNetAsLolaFormat());

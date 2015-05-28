@@ -4,9 +4,9 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.DeclassificationTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.TransitionToIDMapper;
@@ -24,7 +24,7 @@ public abstract class PrismModelAdapter {
 	
 	private final String VERSION = "1.0";
 	
-	protected AbstractPetriNet<?,?,?,?,?,?,?> mAbstractNet;
+	protected AbstractPetriNet<?,?,?,?,?> mAbstractNet;
 	
 	protected boolean bounded = true;
 	
@@ -34,7 +34,7 @@ public abstract class PrismModelAdapter {
 		return bounded;
 	}
 	
-	protected PrismModelAdapter(AbstractPetriNet<?,?,?,?,?,?,?> net) {
+	protected PrismModelAdapter(AbstractPetriNet<?,?,?,?,?> net) {
 		mAbstractNet = net;
 		//bounded = net.isBounded();
 	}
@@ -47,7 +47,7 @@ public abstract class PrismModelAdapter {
 		return composeModel(transitionVars, placeVars, transitions);
 	}
 	
-	public AbstractPetriNet<?,?,?,?,?,?,?> getNet() {
+	public AbstractPetriNet<?,?,?,?,?> getNet() {
 		return mAbstractNet;
 	}
 	

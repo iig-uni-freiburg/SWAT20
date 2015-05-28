@@ -2,8 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltran
 
 import java.util.Iterator;
 
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTPlace;
@@ -12,7 +12,7 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.Transition
 
 public class PTNetConverter extends PrismModelAdapter {
 
-	public PTNetConverter(AbstractPTNet<?,?,?,?,?,?> net) {
+	public PTNetConverter(AbstractPTNet<?,?,?,?> net) {
 		super(net);
 	}
 

@@ -64,7 +64,7 @@ public class AFtemplateImportAction extends AbstractWorkbenchAction {
 			AristaFlowToPnmlConverter converter = new AristaFlowToPnmlConverter(file);
 			try {
 				converter.parse();
-				AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = converter.getGraphicalPN();
+				AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = converter.getGraphicalPN();
 				net.getPetriNet().setName(requestNetName("Please enter a name for the imported net", "Please enter a new name"));
 				SwatComponents.getInstance().addPetriNet(net);
 				Workbench.consoleMessage("Imported " + net.getPetriNet().getName());

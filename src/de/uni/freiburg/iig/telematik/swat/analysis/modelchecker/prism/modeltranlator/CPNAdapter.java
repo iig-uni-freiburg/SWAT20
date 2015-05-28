@@ -15,9 +15,9 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.Transition
 
 public class CPNAdapter extends PrismModelAdapter {
 
-	private AbstractCPN<?, ?, ?, ?, ?, ?> mNet;
+	private AbstractCPN<?, ?, ?, ?> mNet;
 
-	public CPNAdapter(AbstractCPN<?, ?, ?, ?, ?, ?> net) {
+	public CPNAdapter(AbstractCPN<?, ?, ?, ?> net) {
 		super(net);
 		mNet = net;
 	}

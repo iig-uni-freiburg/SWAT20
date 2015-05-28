@@ -384,7 +384,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 				try {
 					// Test new file name
 					//File file = getAbsolutePathToWorkingDir(netName);
-					AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = null;
+					AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = null;
 					switch (type) {
 					case NEW_CPN:
 						net = new GraphicalCPN();

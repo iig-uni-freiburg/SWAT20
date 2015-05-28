@@ -97,27 +97,27 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 		return results;
 	}
 
-	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> getNet() {
+	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNet() {
 		return ((PNEditorComponent) Workbench.getInstance().getTabView().getSelectedComponent()).getNetContainer();
 	}
 
-	private TimeMachine<?, ?, ?, ?, ?, ?, ?> getTimeMachine(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net) {
+	private TimeMachine<?, ?, ?, ?, ?> getTimeMachine(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net) {
 		return new TimeMachine(net.getPetriNet(), SwatComponents.getInstance().getTimeContexts(net.getPetriNet().getName()).get(0));
 	}
 
-	private PNTraverser<AbstractTransition<?, Object>> getTraverser(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net) {
-		return new RandomPNTraverser((AbstractPetriNet<?, ?, ?, ?, ?, ?, ?>) net.getPetriNet());
+	private PNTraverser<AbstractTransition<?, Object>> getTraverser(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net) {
+		return new RandomPNTraverser((AbstractPetriNet<?, ?, ?, ?, ?>) net.getPetriNet());
 	}
 
 	private AbstractTransition<?, Object> chooseTransition(PNTraverser<AbstractTransition<?, Object>> traverser,
-			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net) throws InconsistencyException {
+			AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net) throws InconsistencyException {
 		return traverser.chooseNextTransition((List<AbstractTransition<?, Object>>) net.getPetriNet().getEnabledTransitions());
 	}
 
 	private double getOneSimulationRun() {
 		double time = 0;
-		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?, ?, ?> net = getNet();
-		TimeMachine<?, ?, ?, ?, ?, ?, ?> timeMachine = getTimeMachine(net);
+		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = getNet();
+		TimeMachine<?, ?, ?, ?, ?> timeMachine = getTimeMachine(net);
 		PNTraverser<AbstractTransition<?, Object>> traverser = getTraverser(net);
 
 		//do at least the first Run
@@ -188,10 +188,8 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 				F extends AbstractFlowRelation<P, T, S>, 
 				M extends AbstractMarking<S>, 
 				S extends Object,
-				X extends AbstractMarkingGraphState<M, S>,
-				Y extends AbstractMarkingGraphRelation<M, X, S>,
-				N extends AbstractPetriNet<P,T,F,M,S,X,Y>,
-				G extends AbstractPNGraphics<P,T,F,M,S>> void setupDrainPlaceListener(AbstractGraphicalPN<P,T,F,M,S,X,Y,N,G> net) {
+				N extends AbstractPetriNet<P,T,F,M,S>,
+				G extends AbstractPNGraphics<P,T,F,M,S>> void setupDrainPlaceListener(AbstractGraphicalPN<P,T,F,M,S,N,G> net) {
 		for (P p : net.getPetriNet().getDrainPlaces()) {
 			p.addTokenListener(new TokenListener<AbstractPlace<F,S>>() {
 

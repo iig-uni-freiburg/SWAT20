@@ -11,7 +11,7 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 
 import com.thoughtworks.xstream.XStream;
 
-import de.uni.freiburg.iig.telematik.sepia.petrinet.PNTimeContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.PNTimeContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTNet;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.AbstractDistributionView;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionViewFactory;
@@ -48,7 +48,7 @@ public class TimeContext implements PNTimeContext {
 		//TimeMachine<?, ?, ?, ?, ?, ?, ?> timeMachine = new TimeMachine<AbstractPlace<F,S>, AbstractTransition<F,S>, AbstractFlowRelation<P,T,S>, AbstractMarking<S>, Object, AbstractMarkingGraphState<M,S>, AbstractMarkingGraphRelation<M,X,S>>(petriNet, timeContext)
 	}
 
-	public TimeContext(AbstractPTNet<?, ?, ?, ?, ?, ?> net, ISciffLogReader processLog) {
+	public TimeContext(AbstractPTNet<?, ?, ?, ?> net, ISciffLogReader processLog) {
 		TimeAwareAdapter adapter = new ISCIFFAdapter(processLog);
 		for (Object transition : net.getTransitions()) {
 			if (transition instanceof String) {

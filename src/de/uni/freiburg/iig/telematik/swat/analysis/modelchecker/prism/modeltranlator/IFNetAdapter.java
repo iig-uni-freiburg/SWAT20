@@ -13,7 +13,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetPla
 
 public class IFNetAdapter extends CPNAdapter {
 
-	private AbstractIFNet<?,?,?,?,?,?,?,?> mNet;
+	private AbstractIFNet<?,?,?,?,?,?> mNet;
 
 	public IFNetAdapter(IFNet net) {
 		super(net);

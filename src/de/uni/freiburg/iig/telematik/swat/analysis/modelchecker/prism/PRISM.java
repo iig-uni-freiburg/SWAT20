@@ -13,7 +13,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.AbstractPetriNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
@@ -41,7 +41,7 @@ private String mPrismPath;
 	
 	private final String mStatesFileName = "states";
 	
-	private PRISM(AbstractPetriNet<?,?,?,?,?,?,?> net) {
+	private PRISM(AbstractPetriNet<?,?,?,?,?> net) {
 		TransitionToIDMapper.createMap(net);
 		try {
 			mPrismPath = SwatProperties.getInstance().getPrismPath();
@@ -62,17 +62,17 @@ private String mPrismPath;
 	
 
 	public PRISM(PTNet petriNet) {
-		this((AbstractPetriNet<?,?,?,?,?,?,?>) petriNet);
+		this((AbstractPetriNet<?,?,?,?,?>) petriNet);
 		mConverter = new PTNetConverter(petriNet);
 	}
 
 	public PRISM(CPN petriNet) {
-		this((AbstractPetriNet<?,?,?,?,?,?,?>) petriNet);
+		this((AbstractPetriNet<?,?,?,?,?>) petriNet);
 		mConverter = new CPNAdapter(petriNet);
 	}
 
 	public PRISM(IFNet petriNet) {
-		this((AbstractPetriNet<?,?,?,?,?,?,?>) petriNet);
+		this((AbstractPetriNet<?,?,?,?,?>) petriNet);
 		mConverter = new IFNetAdapter(petriNet);
 	}
 
