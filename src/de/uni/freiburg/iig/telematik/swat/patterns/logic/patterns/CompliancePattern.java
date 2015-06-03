@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 
-public abstract class CompliancePattern {
+public abstract class CompliancePattern implements Comparable<CompliancePattern> {
 	
 	private enum State {
 		NOT_INSTANTIATED, INSTANTIATED
@@ -92,6 +92,11 @@ public abstract class CompliancePattern {
 	public void setCounterExample(ArrayList<String> path) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public int compareTo(CompliancePattern o) {
+		return getName().compareTo(o.getName());
 	}
 
 }

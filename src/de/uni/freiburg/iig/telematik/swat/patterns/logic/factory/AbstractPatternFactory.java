@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.patterns.logic.factory;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
 
 import de.invation.code.toval.reflect.ReflectionException;
@@ -41,6 +42,8 @@ public abstract class AbstractPatternFactory {
 		if(mSupportedPatterns.isEmpty())
 			throw new PatternException("Cannot load any analysis pattern");
 		
+		Collections.sort(mSupportedPatterns);
+
 		return mSupportedPatterns;
 	}
 	
