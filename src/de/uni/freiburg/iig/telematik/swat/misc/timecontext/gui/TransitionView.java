@@ -76,6 +76,7 @@ public class TransitionView extends JDialog {
 	}
 
 	private void initialize() {
+		setLocationByPlatform(true);
 		this.setSize(300, 400);
 		this.setResizable(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

@@ -8,6 +8,7 @@ public class StochasticTimeBehavior implements TimeBehavior {
 
 	AbstractRealDistribution distribution;
 	DistributionType type;
+	boolean isInUse = false;
 
 	public StochasticTimeBehavior(AbstractRealDistribution distribution) {
 		this.distribution = distribution;
@@ -28,6 +29,16 @@ public class StochasticTimeBehavior implements TimeBehavior {
 
 	public void setDistributionType(DistributionType type) {
 		this.type = type;
+	}
+
+	@Override
+	public boolean isInUse() {
+		return isInUse;
+	}
+
+	@Override
+	public void setIsInUse(boolean isInUse) {
+		this.isInUse = isInUse;
 	}
 
 }

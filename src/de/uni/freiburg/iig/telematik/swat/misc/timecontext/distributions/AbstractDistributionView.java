@@ -25,10 +25,24 @@ public abstract class AbstractDistributionView implements IDistributionView, Tim
 	@XStreamOmitField
 	protected String paramNames[];
 
+	@XStreamOmitField
+	boolean isInUse = false;
+
+	@Override
+	public boolean isInUse() {
+		return isInUse;
+	}
+
+	@Override
+	public void setIsInUse(boolean isInUse) {
+		this.isInUse = isInUse;
+
+	}
+
 	@Override
 	public double getNeededTime() {
 		if (distribution == null)
-			distribution = getDistribution();
+			distribution = getDistribution(); //works only for StochasticTimeBahaviour
 		return distribution.sample();
 	}
 
