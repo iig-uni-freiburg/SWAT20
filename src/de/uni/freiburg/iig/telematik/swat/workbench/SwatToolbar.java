@@ -48,7 +48,6 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.SimulateTimeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -157,7 +156,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		standardItems.add(new SwatToolbarButton(ToolbarButtonType.EDIT_PROPERTY));
 		//standardItems.add(getLolaButton());
 		//standardItems.add(getAristaFlowButton());
-		standardItems.add(new JButton(new SimulateTimeAction()));
+		//standardItems.add(new JButton(new SimulateTimeAction()));
 		//standardItems.add(new JButton(new SimulateInstanceAwareAction()));
 		//standardItems.add(new SwatToolbarButton(ToolbarButtonType.PRISM));
 		
