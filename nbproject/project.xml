@@ -5,6 +5,7 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>SWAT20</name>
             <source-roots>
+                <root id="src.plugins.dir"/>
                 <root id="src.dir"/>
                 <root id="src.res.dir"/>
             </source-roots>
@@ -22,14 +23,6 @@
                 <id>jar</id>
             </reference>
             <reference>
-                <foreign-project>SCIFF</foreign-project>
-                <artifact-type>jar</artifact-type>
-                <script>build.xml</script>
-                <target>jar</target>
-                <clean-target>clean</clean-target>
-                <id>jar</id>
-            </reference>
-            <reference>
                 <foreign-project>SEPIA</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
@@ -39,14 +32,6 @@
             </reference>
             <reference>
                 <foreign-project>SEWOL</foreign-project>
-                <artifact-type>jar</artifact-type>
-                <script>build.xml</script>
-                <target>jar</target>
-                <clean-target>clean</clean-target>
-                <id>jar</id>
-            </reference>
-            <reference>
-                <foreign-project>SWATPlugin_SCIFF</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>
