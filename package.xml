@@ -16,7 +16,7 @@
 	Then the project gets compiled (see #compile) and all unit tests are performed
 	(see #test). If the compilation ran without errors, the JARs are packaged (see #package).
 	
-	SWAT20 depends on the projects TOVAL, JAGAL, SEWOL and SEPIA, SCIFF and SwatPlugin_SCIFF
+	SWAT20 depends on the projects TOVAL, JAGAL, SEWOL and SEPIA
 	which compiled classes must be present under the specified paths.
 	
 	author: Adrian Lange
@@ -37,6 +37,7 @@
 	<!-- Source and destination directories -->
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="res.dir" value="${basedir}/res" />
+	<property name="plugins.dir" value="${basedir}/plugins" />
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="target.dir" value="${basedir}/bin" />
 	<property name="target.dir.jar" value="${target.dir}/${artifact.name}-${version.name}" />
@@ -52,8 +53,6 @@
 	<property name="SEWOL.location" value="../SEWOL" />
 	<property name="SEPIA.location" value="../SEPIA" />
 	<property name="WOLFGANG.location" value="../WOLFGANG" />
-	<property name="SCIFF.location" value="../SCIFF" />
-	<property name="SCIFF_PLUGIN.location" value="../SWATPlugin_SCIFF" />
 
 	<path id="TOVAL.classpath">
 		<pathelement location="${TOVAL.location}/bin/classes-ant" />
@@ -102,23 +101,6 @@
 		<pathelement location="${WOLFGANG.location}/lib/jgraphXwithsources.jar" />
 	</path>
 
-	<path id="SCIFF.classpath">
-		<pathelement location="${SCIFF.location}/bin/classes-ant" />
-		<pathelement location="${SCIFF.location}/lib/2p.jar" />
-		<pathelement location="${SCIFF.location}/lib/jcalendar-1.4.jar" />
-		<pathelement location="${SCIFF.location}/lib/jcommon-1.0.6.jar" />
-		<pathelement location="${SCIFF.location}/lib/jdom-1.1.3.jar" />
-		<pathelement location="${SCIFF.location}/lib/jfreechart-1.0.5.jar" />
-	</path>
-
-	<path id="SCIFF_PLUGIN.classpath">
-		<pathelement location="${SCIFF_PLUGIN.location}/bin/classes-ant" />
-		<path refid="TOVAL.classpath" />
-		<path refid="JAGAL.classpath" />
-		<path refid="SEWOL.classpath" />
-		<path refid="SCIFF.classpath" />
-	</path>
-
 	<path id="SWAT.classpath">
 		<pathelement location="${classes.target.dir}" />
 		<path refid="TOVAL.classpath" />
@@ -126,8 +108,6 @@
 		<path refid="SEWOL.classpath" />
 		<path refid="SEPIA.classpath" />
 		<path refid="WOLFGANG.classpath" />
-		<path refid="SCIFF.classpath" />
-		<path refid="SCIFF_PLUGIN.classpath" />
 		<pathelement location="${libs.dir}/jfreechart/jcommon-1.0.23.jar" />
 		<pathelement location="${libs.dir}/jfreechart/jfreechart-1.0.19.jar" />
 		<pathelement location="${libs.dir}/commons-exec-1.2.jar" />
@@ -142,6 +122,7 @@
 		<pathelement location="${libs.dir}/xmlpull-1.1.3.1.jar" />
 		<pathelement location="${libs.dir}/xpp3_min-1.1.4c.jar" />
 		<pathelement location="${libs.dir}/xstream-1.4.7.jar" />
+		<pathelement location="${libs.dir}/SCIFF.jar" />
 	</path>
 
 	<mkdir dir="${target.dir.jar}"/>
@@ -162,6 +143,9 @@
 			<fileset dir="${res.dir}">
 				<include name="**/*.java" />
 			</fileset>
+			<fileset dir="${plugins.dir}">
+				<include name="**/*.java" />
+			</fileset>
 			<fileset dir="${TOVAL.location}/src">
 				<include name="**/*.java" />
 			</fileset>
@@ -181,12 +165,6 @@
 				<include name="**/*.java" />
 			</fileset>
 			<fileset dir="${WOLFGANG.location}/src">
-				<include name="**/*.java" />
-			</fileset>
-			<fileset dir="${SCIFF.location}/src">
-				<include name="**/*.java" />
-			</fileset>
-			<fileset dir="${SCIFF_PLUGIN.location}/src">
 				<include name="**/*.java" />
 			</fileset>
 		</javadoc>
@@ -197,6 +175,9 @@
 			<fileset dir="${res.dir}">
 				<include name="**/*.java" />
 			</fileset>
+			<fileset dir="${plugins.dir}">
+				<include name="**/*.java" />
+			</fileset>
 			<fileset dir="${TOVAL.location}/src">
 				<include name="**/*.java" />
 			</fileset>
@@ -218,10 +199,36 @@
 			<fileset dir="${WOLFGANG.location}/src">
 				<include name="**/*.java" />
 			</fileset>
-			<fileset dir="${SCIFF.location}/src">
+		</javadoc>
+		<javadoc sourcepath="${plugins.dir}" destdir="${docs.temp.dir}">
+			<fileset dir="${src.dir}">
 				<include name="**/*.java" />
 			</fileset>
-			<fileset dir="${SCIFF_PLUGIN.location}/src">
+			<fileset dir="${res.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${plugins.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${TOVAL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${TOVAL.location}/res">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${JAGAL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEWOL.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEWOL.location}/ext">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${SEPIA.location}/src">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${WOLFGANG.location}/src">
 				<include name="**/*.java" />
 			</fileset>
 		</javadoc>
@@ -230,6 +237,7 @@
 		<jar jarfile="${target.dir.jar}/${jar.file.name}.jar">
 			<fileset dir="${classes.target.dir}" />
 			<fileset dir="${res.dir}" /> 
+			<fileset dir="${plugins.dir}" /> 
 			<manifest>
 				<attribute name="X-Date" value="${touch.time}" />
 			</manifest>
@@ -239,6 +247,7 @@
 				<include name="**/*.java" />
 			</fileset>
 			<fileset dir="${res.dir}" /> 
+			<fileset dir="${plugins.dir}" /> 
 			<manifest>
 				<attribute name="X-Date" value="${touch.time}" />
 			</manifest>
@@ -273,9 +282,8 @@
 			<fileset dir="${SEPIA.location}/bin/classes-ant" />
 			<fileset dir="${WOLFGANG.location}/bin/classes-ant" />
 			<fileset dir="${WOLFGANG.location}/res" />
-			<fileset dir="${SCIFF.location}/bin/classes-ant" />
-			<fileset dir="${SCIFF_PLUGIN.location}/bin/classes-ant" />
 			<fileset dir="${res.dir}" />
+			<fileset dir="${plugins.dir}" />
 			<zipfileset excludes="META-INF/*.SF" src="${JAGAL.location}/lib/jgraphXwithsources.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/guava-16.0.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/collections-generic-4.01.jar" />
@@ -292,11 +300,6 @@
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/xsom/xsom-20110101-SNAPSHOT.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${WOLFGANG.location}/lib/itextpdf-5.5.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${WOLFGANG.location}/lib/jgraphXwithsources.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/2p.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jcalendar-1.4.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jcommon-1.0.6.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jdom-1.1.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${SCIFF.location}/lib/jfreechart-1.0.5.jar" />
 
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jfreechart/jcommon-1.0.23.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jfreechart/jfreechart-1.0.19.jar" />
@@ -311,6 +314,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/xmlpull-1.1.3.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/xpp3_min-1.1.4c.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/xstream-1.4.7.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/SCIFF.jar" />
 		</jar>
 	</target>
 
@@ -319,6 +323,7 @@
 		<javac destdir="${classes.target.dir}" includeantruntime="false">
 			<src path="${src.dir}" />
 			<src path="${res.dir}" />
+			<src path="${plugins.dir}" />
 			<classpath refid="SWAT.classpath" />
 			<compilerarg value="-Xlint:-path"/>
 		</javac>
