@@ -20,7 +20,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.SecurityLevel
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
-import de.uni.freiburg.iig.telematik.wolfgang.properties.IFNetProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.properties.view.IFNetProperties;
 
 public class SwatIFNetGraph extends IFNetGraph {
 

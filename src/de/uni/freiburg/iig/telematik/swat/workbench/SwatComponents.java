@@ -19,11 +19,13 @@ import com.thoughtworks.xstream.XStream;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.soabase.SOABase;
+import de.invation.code.toval.misc.wd.AbstractProjectComponents;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPNNameComparator;
+import de.uni.freiburg.iig.telematik.sepia.graphic.container.AbstractGraphicalPNContainer;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.AnalysisContextParser;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.ifnet.LabelingParser;
@@ -54,12 +56,14 @@ import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentListen
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class SwatComponents {
+public class SwatComponents extends AbstractProjectComponents {
 	
 	private static final String CSVLogNameFormat = "%s%s.csv";
 	private static final String AnalysisNameFormat = "%s%s.xml";
 	
 	private static SwatComponents instance = null;
+        
+        private AbstractGraphicalPNContainer containerPetriNets;
 	
 	@SuppressWarnings("rawtypes")
 	private Map<String, AbstractGraphicalPN> nets = new HashMap<String, AbstractGraphicalPN>();

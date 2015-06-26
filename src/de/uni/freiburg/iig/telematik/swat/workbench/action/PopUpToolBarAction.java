@@ -54,8 +54,6 @@ public class PopUpToolBarAction extends AbstractAction {
 		    int size = 0;
 			try {
 				size = SwatProperties.getInstance().getIconSize().getSize();
-			} catch (PropertyException e1) {
-				e1.printStackTrace();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

@@ -16,7 +16,7 @@ public class LogModel {
 	public LogModel(File fileReference, SwatLog type) {
 		super();
 		setFileReference(fileReference);
-		setName(FileUtils.getName(fileReference));
+		setName(FileUtils.getFileWithoutEnding(fileReference));
 		this.type = type;
 	}
 
