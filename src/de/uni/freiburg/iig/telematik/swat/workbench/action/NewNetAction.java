@@ -9,7 +9,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.PNNameDialog;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar.ToolbarNewNetButtonType;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;

@@ -11,8 +11,8 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class LogImportAction extends AbstractWorkbenchAction {
@@ -43,7 +43,7 @@ public class LogImportAction extends AbstractWorkbenchAction {
 		File f = getFile();
 		if (f == null)
 			return;
-		SwatLog type = getType(f);
+		SwatLogType type = getType(f);
 		if (type == null) {
 			JOptionPane.showMessageDialog(Workbench.getInstance(), "Log of unknown format");
 			return;
@@ -66,14 +66,14 @@ public class LogImportAction extends AbstractWorkbenchAction {
 		return f;
 	}
 
-	protected SwatLog getType(File f) {
+	protected SwatLogType getType(File f) {
 		String fileName = f.getName().toLowerCase();
 		if (fileName.endsWith(".csv"))
-			return SwatLog.Aristaflow;
+			return SwatLogType.Aristaflow;
 		if (fileName.endsWith(".mxml"))
-			return SwatLog.MXML;
+			return SwatLogType.MXML;
 		if (fileName.endsWith(".xes"))
-			return SwatLog.XES;
+			return SwatLogType.XES;
 		else
 			return null;
 	}

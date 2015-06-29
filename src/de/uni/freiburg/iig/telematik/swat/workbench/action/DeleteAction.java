@@ -11,7 +11,7 @@ import javax.swing.KeyStroke;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;

@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;

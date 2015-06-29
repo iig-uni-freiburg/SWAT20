@@ -7,7 +7,7 @@ import javax.swing.JFileChooser;
 
 import de.invation.code.toval.file.FileUtils;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;

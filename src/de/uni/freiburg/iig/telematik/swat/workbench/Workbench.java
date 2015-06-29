@@ -1,5 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import de.invation.code.toval.graphic.dialog.MessageDialog;
+import de.invation.code.toval.misc.wd.ComponentListener;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,127 +34,124 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.patterns.PatternException;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
-import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
-public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener, SwatStateListener {
+public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener, SwatStateListener, ComponentListener {
 
-	private static final long serialVersionUID = 6109154620023481119L;
-	
+    private static final long serialVersionUID = 6109154620023481119L;
+
 //	public static final Dimension PREFERRED_SIZE_WORKBENCH = new Dimension(1024,768);
-	
-	private static final int MIN_WORKBENCH_HEIGHT = 700;
-	private static final int MIN_CONSOLE_PANEL_HEIGHT = 300;
-	
-	private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
-	private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
-	private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(400,40);
-	private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(600, MIN_WORKBENCH_HEIGHT-MIN_CONSOLE_PANEL_HEIGHT);
-	private static final boolean SHOW_STACK_TRACES = true;
-	
+    private static final int MIN_WORKBENCH_HEIGHT = 700;
+    private static final int MIN_CONSOLE_PANEL_HEIGHT = 300;
+
+    private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
+    private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
+    private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(400, 40);
+    private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(600, MIN_WORKBENCH_HEIGHT - MIN_CONSOLE_PANEL_HEIGHT);
+    private static final boolean SHOW_STACK_TRACES = true;
+
 //	private MultiSplitPane splitPane = null;
-	private SwatToolbar toolbar = null;
-	private SwatTreeView treeView = null;
-	private SwatTabView tabView = null;
-	private SwatMenuBar menuBar = null;
-	private static JTabbedPane messagePanel = null;
-	private JPanel properties = null;
-	private JPanel content = null;
-	private static JTextArea console = null;
-	private static JTextArea errors = null;
+    private SwatToolbar toolbar = null;
+    private SwatTreeView treeView = null;
+    private SwatTabView tabView = null;
+    private SwatMenuBar menuBar = null;
+    private static JTabbedPane messagePanel = null;
+    private JPanel properties = null;
+    private JPanel content = null;
+    private static JTextArea console = null;
+    private static JTextArea errors = null;
 
-	private static Workbench myWorkbench;
+    private static Workbench myWorkbench;
 
-	private Workbench() {
-		super();
-		setLookAndFeel();
-		setUpGUI();
-		pack();
-		Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
-		int wdwLeft = (int) ((screenSize.width/2.0) - ((getWidth() + MessageDialog.PREFERRED_SIZE.width + 10)/2.0));
-	    int wdwTop = screenSize.height / 2 - getHeight() / 2; 
-	    setLocation(wdwLeft, wdwTop);
-		SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
-		SwatState.getInstance().addListener(this);
-		SwatComponents.getInstance().addSwatComponentListener(treeView);
-	}
-	
-	public static Workbench getInstance() {
-		if (myWorkbench == null) {
-			myWorkbench = new Workbench();
-		}
-		return myWorkbench;
+    private Workbench() throws Exception {
+        super();
+        setLookAndFeel();
+        setUpGUI();
+        pack();
+        Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+        int wdwLeft = (int) ((screenSize.width / 2.0) - ((getWidth() + MessageDialog.PREFERRED_SIZE.width + 10) / 2.0));
+        int wdwTop = screenSize.height / 2 - getHeight() / 2;
+        setLocation(wdwLeft, wdwTop);
+        SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
+        SwatState.getInstance().addListener(this);
+        SwatComponents.getInstance().addComponentListener(treeView);
+    }
 
-	}
+    public static Workbench getInstance() throws Exception {
+        if (myWorkbench == null) {
+            myWorkbench = new Workbench();
+        }
+        return myWorkbench;
 
-	/** Changes Look and Feel if running on Linux **/
-	private void setLookAndFeel() {
-		if (System.getProperty("os.name").toLowerCase().contains("nux")) {
-			try {
-				setLocationByPlatform(true);
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-			} catch (Exception e) {
-				MessageDialog.getInstance().addMessage("Could not set Look and Feel. Using standard");
-			}
-		} else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-			try {
-				UIManager
-						.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private void setUpGUI(){
-		setTitle("SWAT 2.0");
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    /**
+     * Changes Look and Feel if running on Linux *
+     */
+    private void setLookAndFeel() {
+        if (System.getProperty("os.name").toLowerCase().contains("nux")) {
+            try {
+                setLocationByPlatform(true);
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+            } catch (Exception e) {
+                MessageDialog.getInstance().addMessage("Could not set Look and Feel. Using standard");
+            }
+        } else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            try {
+                UIManager
+                        .setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void setUpGUI() {
+        setTitle("SWAT 2.0");
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 //		setPreferredSize(PREFERRED_SIZE_WORKBENCH);
-		setResizable(true);
-		
-		setContentPane(getContent());
-		setJMenuBar(getSwatMenu());
-		pack();
-		setVisible(true);
-	}
-	
-	private JComponent getContent(){
-		if(content == null){
-			content = new JPanel(new BorderLayout());
-			
+        setResizable(true);
+
+        setContentPane(getContent());
+        setJMenuBar(getSwatMenu());
+        pack();
+        setVisible(true);
+    }
+
+    private JComponent getContent() throws Exception {
+        if (content == null) {
+            content = new JPanel(new BorderLayout());
+
 //			String layoutDef = "(COLUMN top (ROW left (COLUMN center center.bottom) right) bottom)";
 //			MultiSplitLayout.Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
-			
-			content.add(getSwatToolbar(), BorderLayout.PAGE_START);
-			
-			
+            content.add(getSwatToolbar(), BorderLayout.PAGE_START);
 
-			Leaf left = new Leaf("left");
-			left.setWeight(0.2);
-			Leaf right = new Leaf("right");
-			right.setWeight(0.2);
-			Leaf center = new Leaf("center");
-			center.setWeight(0.7);
-			Leaf centerBottom = new Leaf("center.bottom");
-			centerBottom.setWeight(0.3);
-			
-			MultiSplitLayout.Split centerCol = new Split();
-			centerCol.setRowLayout(false);
-			List centerColChildren = Arrays.asList(center, new Divider(), centerBottom);
-			centerCol.setChildren(centerColChildren);
-			centerCol.setWeight(0.6);
-			
-			MultiSplitLayout.Split centerRow = new Split();
-			centerRow.setRowLayout(true);
-			List centerRowChildren = Arrays.asList(left, new Divider(), centerCol, new Divider(), right);
-			centerRow.setChildren(centerRowChildren);
-			
-			MultiSplitPane multiSplitPane = new MultiSplitPane();
-			multiSplitPane.getMultiSplitLayout().setModel(centerRow);
+            Leaf left = new Leaf("left");
+            left.setWeight(0.2);
+            Leaf right = new Leaf("right");
+            right.setWeight(0.2);
+            Leaf center = new Leaf("center");
+            center.setWeight(0.7);
+            Leaf centerBottom = new Leaf("center.bottom");
+            centerBottom.setWeight(0.3);
+
+            MultiSplitLayout.Split centerCol = new Split();
+            centerCol.setRowLayout(false);
+            List centerColChildren = Arrays.asList(center, new Divider(), centerBottom);
+            centerCol.setChildren(centerColChildren);
+            centerCol.setWeight(0.6);
+
+            MultiSplitLayout.Split centerRow = new Split();
+            centerRow.setRowLayout(true);
+            List centerRowChildren = Arrays.asList(left, new Divider(), centerCol, new Divider(), right);
+            centerRow.setChildren(centerRowChildren);
+
+            MultiSplitPane multiSplitPane = new MultiSplitPane();
+            multiSplitPane.getMultiSplitLayout().setModel(centerRow);
 //			multiSplitPane.setDividerPainter(new DividerPainter() {
 //				
 //				@Override
@@ -158,21 +160,19 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //					g.drawRect(rect.x, rect.y, rect.width, rect.height);
 //				}
 //			});
-			
-			
-			multiSplitPane.add(getTreeView(), "left");
-			multiSplitPane.add(getPropertiesPanel(), "right");
-			multiSplitPane.add(getTabView(), "center");
-			multiSplitPane.add(getMessagePanel(), "center.bottom");
-			content.add(multiSplitPane, BorderLayout.CENTER);
-			
-			JPanel bottomPanel = new JPanel();
-			bottomPanel.setPreferredSize(new Dimension(500,40));
-			bottomPanel.setMinimumSize(new Dimension(500,40));
-			bottomPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
-			content.add(bottomPanel, BorderLayout.PAGE_END);
 
-			
+            multiSplitPane.add(getTreeView(), "left");
+            multiSplitPane.add(getPropertiesPanel(), "right");
+            multiSplitPane.add(getTabView(), "center");
+            multiSplitPane.add(getMessagePanel(), "center.bottom");
+            content.add(multiSplitPane, BorderLayout.CENTER);
+
+            JPanel bottomPanel = new JPanel();
+            bottomPanel.setPreferredSize(new Dimension(500, 40));
+            bottomPanel.setMinimumSize(new Dimension(500, 40));
+            bottomPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
+            content.add(bottomPanel, BorderLayout.PAGE_END);
+
 //			
 //			content.add(getSwatToolbar(), BorderLayout.NORTH);
 //
@@ -203,200 +203,205 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //			content.add(middlePanel, BorderLayout.CENTER);
 //			centerPanel.setDividerLocation(0.8);
 //			//content.add(thirdSplit, BorderLayout.CENTER);
-		}
-		return content;
-	}
-	
-	public SwatToolbar getSwatToolbar() {
-		if(toolbar == null){
-			toolbar = new SwatToolbar(getTabView(), getTreeView());
-		}
-		return toolbar;
-	}
-	
-	private JPanel getPropertiesPanel(){
-		if(properties == null){
-			properties = new JPanel(new BorderLayout());
-			properties.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
-			properties.setMinimumSize(PREFERRED_SIZE_PROPERTIES_PANEL);
+        }
+        return content;
+    }
+
+    public SwatToolbar getSwatToolbar() throws Exception {
+        if (toolbar == null) {
+            toolbar = new SwatToolbar(getTabView(), getTreeView());
+        }
+        return toolbar;
+    }
+
+    private JPanel getPropertiesPanel() {
+        if (properties == null) {
+            properties = new JPanel(new BorderLayout());
+            properties.setPreferredSize(PREFERRED_SIZE_PROPERTIES_PANEL);
+            properties.setMinimumSize(PREFERRED_SIZE_PROPERTIES_PANEL);
 //			properties.setSize(PREFERRED_SIZE_PROPERTIES_PANEL);
-		}
-		return properties;
-	}
-	
-	public SwatTabView getTabView() {
-		if(tabView == null){
-			tabView = SwatTabView.getInstance();
-			tabView.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
-			tabView.setPreferredSize(MINIMUM_SIZE_TAB_PANEL);
-			tabView.addTabViewListener(this);
-		}
-		return tabView;
-	}
-	
-	public SwatMenuBar getSwatMenu() {
-		if(menuBar == null){
-			menuBar = new SwatMenuBar();
-		}
-		return menuBar;
-	}
-	
-	public SwatTreeView getTreeView() {
-		 UIManager.put("Tree.rendererFillBackground", false);
-		if(treeView == null){
-			treeView = SwatTreeView.getInstance();
-			treeView.setPreferredSize(PREFERRED_SIZE_TREEVIEW_PANEL);
-			treeView.setMinimumSize(PREFERRED_SIZE_TREEVIEW_PANEL);
-			treeView.addTreeViewListener(this);
-		}
-		return treeView;
-	}
-	
-	public String getNameOfCurrentComponent() {
-		Object o = tabView.getSelectedComponent();
-		if (o instanceof PNEditorComponent)
-			return ((PNEditorComponent) o).getNetContainer().getPetriNet().getName();
-		if (o instanceof LogFileViewer)
-			return ((LogFileViewer) o).getName();
-		return "";
-	}
+        }
+        return properties;
+    }
 
-	public SwatComponentType getTypeOfCurrentComponent() {
-		Object o = tabView.getSelectedComponent();
-		if (o instanceof PNEditorComponent)
-			return SwatComponentType.PETRI_NET;
-		else if (o instanceof LogFileViewer)
-			return SwatComponentType.XES_LOG;
-		else
-			return null;
-	}
+    public SwatTabView getTabView() throws Exception {
+        if (tabView == null) {
+            tabView = SwatTabView.getInstance();
+            tabView.setMinimumSize(MINIMUM_SIZE_TAB_PANEL);
+            tabView.setPreferredSize(MINIMUM_SIZE_TAB_PANEL);
+            tabView.addTabViewListener(this);
+        }
+        return tabView;
+    }
 
-	public int getHashOfCurrentComponent() {
-		Object o = tabView.getSelectedComponent();
-		if (o instanceof PNEditorComponent)
-			return ((PNEditorComponent) o).getNetContainer().getPetriNet().hashCode();
-		if (o instanceof LogFileViewer)
-			return ((LogFileViewer) o).hashCode();
-		return -1;
-	}
+    public SwatMenuBar getSwatMenu() {
+        if (menuBar == null) {
+            menuBar = new SwatMenuBar();
+        }
+        return menuBar;
+    }
 
-	private static JComponent getMessagePanel() {
-		if(messagePanel == null){
-			messagePanel = new JTabbedPane();
-			messagePanel.add(getErrorArea(), "Errors");
-			messagePanel.add(getConsoleArea(), "Console");
-			messagePanel.setPreferredSize(PREFERRED_SIZE_CONSOLE_PANEL);
-			messagePanel.setMinimumSize(PREFERRED_SIZE_CONSOLE_PANEL);
+    public SwatTreeView getTreeView() throws Exception {
+        UIManager.put("Tree.rendererFillBackground", false);
+        if (treeView == null) {
+            treeView = SwatTreeView.getInstance();
+            treeView.setPreferredSize(PREFERRED_SIZE_TREEVIEW_PANEL);
+            treeView.setMinimumSize(PREFERRED_SIZE_TREEVIEW_PANEL);
+            treeView.addTreeViewListener(this);
+        }
+        return treeView;
+    }
+
+    public String getNameOfCurrentComponent() {
+        Object o = tabView.getSelectedComponent();
+        if (o instanceof PNEditorComponent) {
+            return ((PNEditorComponent) o).getNetContainer().getPetriNet().getName();
+        }
+        if (o instanceof LogFileViewer) {
+            return ((LogFileViewer) o).getName();
+        }
+        return "";
+    }
+
+    public SwatComponentType getTypeOfCurrentComponent() {
+        Object o = tabView.getSelectedComponent();
+        if (o instanceof PNEditorComponent) {
+            return SwatComponentType.PETRI_NET;
+        } else if (o instanceof LogFileViewer) {
+            return SwatComponentType.XES_LOG;
+        } else {
+            return null;
+        }
+    }
+
+    public int getHashOfCurrentComponent() {
+        Object o = tabView.getSelectedComponent();
+        if (o instanceof PNEditorComponent) {
+            return ((PNEditorComponent) o).getNetContainer().getPetriNet().hashCode();
+        }
+        if (o instanceof LogFileViewer) {
+            return ((LogFileViewer) o).hashCode();
+        }
+        return -1;
+    }
+
+    private static JComponent getMessagePanel() {
+        if (messagePanel == null) {
+            messagePanel = new JTabbedPane();
+            messagePanel.add(getErrorArea(), "Errors");
+            messagePanel.add(getConsoleArea(), "Console");
+            messagePanel.setPreferredSize(PREFERRED_SIZE_CONSOLE_PANEL);
+            messagePanel.setMinimumSize(PREFERRED_SIZE_CONSOLE_PANEL);
 //			messagePanel.setMaximumSize(PREFERRED_SIZE_CONSOLE_PANEL);
-		}
-		return messagePanel;
-	}
-	
-	private static JTextArea getConsoleArea() {
-		if(console == null){
-			console = new JTextArea();
-			console.setEditable(false);
-		}
-		return console;
-	}
-	
-	private static JTextArea getErrorArea() {
-		if(errors == null){
-			errors = new JTextArea();
-			errors.setEditable(false);
-		}
-		return errors;
-	}
-	
-	public static void consoleMessage(String message) {
-		getConsoleArea().append(
-				Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
-						+ Calendar.getInstance().get(Calendar.SECOND) + " - ");
-		getConsoleArea().append(message);
-		getConsoleArea().append("\n\r");
-		try {
-			messagePanel.setSelectedIndex(1);
-		} catch (ArrayIndexOutOfBoundsException e) {
-		}
-	}
+        }
+        return messagePanel;
+    }
 
-	public static void errorMessage(String message, Exception e, boolean showPopup) {
-		String messageToShow = "";
-		if (!message.isEmpty())
-			messageToShow = message + " ";
-		else if (e != null)
-			messageToShow += e.getMessage();
-		if (showPopup)
-			JOptionPane.showMessageDialog(myWorkbench, messageToShow);
-		errorMessage(messageToShow);
+    private static JTextArea getConsoleArea() {
+        if (console == null) {
+            console = new JTextArea();
+            console.setEditable(false);
+        }
+        return console;
+    }
 
-		ErrorStorage.getInstance().addMessage(message, e);
+    private static JTextArea getErrorArea() {
+        if (errors == null) {
+            errors = new JTextArea();
+            errors.setEditable(false);
+        }
+        return errors;
+    }
 
-		if (SHOW_STACK_TRACES)
-			e.printStackTrace();
+    public static void consoleMessage(String message) {
+        getConsoleArea().append(
+                Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
+                + Calendar.getInstance().get(Calendar.SECOND) + " - ");
+        getConsoleArea().append(message);
+        getConsoleArea().append("\n\r");
+        try {
+            messagePanel.setSelectedIndex(1);
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+    }
 
-	}
+    public static void errorMessage(String message, Exception e, boolean showPopup) {
+        String messageToShow = "";
+        if (!message.isEmpty()) {
+            messageToShow = message + " ";
+        } else if (e != null) {
+            messageToShow += e.getMessage();
+        }
+        if (showPopup) {
+            JOptionPane.showMessageDialog(myWorkbench, messageToShow);
+        }
+        errorMessage(messageToShow);
 
-	private static void errorMessage(String message) {
-		getConsoleArea().append(
-				Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
-						+ Calendar.getInstance().get(Calendar.SECOND) + " - ");
-		getConsoleArea().append(message);
-		getConsoleArea().append("\n\r");
-		try {
-			messagePanel.setSelectedIndex(0);
-		} catch (ArrayIndexOutOfBoundsException e) {
-			//only for message Panel
-		}
-	}
+        ErrorStorage.getInstance().addMessage(message, e);
 
-	@Override
-	public void componentSelected(SwatTreeNode node) {
-		//Information from TreeView: New node activated -> relay to TabView
-		getTabView().componentSelected(node);
+        if (SHOW_STACK_TRACES) {
+            e.printStackTrace();
+        }
 
-		//Update Toolbar
-		updateToolbar();
-	}
+    }
 
-	@Override
-	public void componentActivated(SwatTreeNode node) {
+    private static void errorMessage(String message) {
+        getConsoleArea().append(
+                Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
+                + Calendar.getInstance().get(Calendar.SECOND) + " - ");
+        getConsoleArea().append(message);
+        getConsoleArea().append("\n\r");
+        try {
+            messagePanel.setSelectedIndex(0);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //only for message Panel
+        }
+    }
 
-		if (getTabView().containsComponent(node))
-			return;
+    @Override
+    public void componentSelected(SwatTreeNode node) {
+        //Information from TreeView: New node activated -> relay to TabView
+        getTabView().componentSelected(node);
+        //Update Toolbar
+        updateToolbar();
+    }
 
-		ViewComponent swatComponent = null;
-		// add SwatTreeNode to tab and get its swatComponent to make its propertyView
-		swatComponent = getTabView().addNewTab(node);
-		getPropertiesPanel().removeAll();
+    @Override
+    public void componentActivated(SwatTreeNode node) {
+        if (getTabView().containsComponent(node)) {
+            return;
+        }
 
-		if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
-			getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
-		}
+        ViewComponent swatComponent = null;
+        // add SwatTreeNode to tab and get its swatComponent to make its propertyView
+        swatComponent = getTabView().addNewTab(node);
+        getPropertiesPanel().removeAll();
 
-		else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-			String name = node.getDisplayName();
-			if (swatComponent instanceof PNEditorComponent) {
-				if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
-					name = ((SwatTreeNode) node.getParent()).getDisplayName();
-				}
-			}
+        if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+            getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+        } else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+            String name = node.getDisplayName();
+            if (swatComponent instanceof PNEditorComponent) {
+                if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
+                    name = ((SwatTreeNode) node.getParent()).getDisplayName();
+                }
+            }
 			//Here: Analyze Panel is loaded
-			//getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
-			try {
-				getPropertiesPanel().add(getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel()));
-			} catch (PatternException e) {
-				errorMessage("Cannot load analysis panel", e, true);
-			}
-		}
-		getPropertiesPanel().validate();
-		getPropertiesPanel().repaint();
-		getPropertiesPanel().updateUI();
+            //getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
+            try {
+                getPropertiesPanel().add(getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel()));
+            } catch (PatternException e) {
+                errorMessage("Cannot load analysis panel", e, true);
+            }
+        }
+        getPropertiesPanel().validate();
+        getPropertiesPanel().repaint();
+        getPropertiesPanel().updateUI();
 
-		//Update Toolbar
-		updateToolbar();
-	}
-	
+        //Update Toolbar
+        updateToolbar();
+    }
+
 //	@SuppressWarnings("rawtypes")
 //	private WorkbenchComponent getWorkbenchComponent(SwatTreeNode node) {
 //		switch (node.getObjectType()) {
@@ -419,92 +424,113 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //		}
 //		return null;
 //	}
+    @Override
+    public void activeTabChanged(int index, ViewComponent component) {
+        if (index < 0) {
+            return; //no tabs inside
+        }		// Update Properties Panel & Toolbar according to active tab
+        getPropertiesPanel().removeAll();
 
+        //pack();
+        if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+            getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
+        } else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+            try {
+                getPropertiesPanel().add(AnalysisController.getInstance(component).getAnalyzePanel());
+            } catch (PatternException e) {
+                errorMessage("Cannot load analysis panel", e, true);
+            }
 
-	@Override
-	public void activeTabChanged(int index, ViewComponent component) {
-		if (index < 0)
-			return; //no tabs inside
-		// Update Properties Panel & Toolbar according to active tab
-		getPropertiesPanel().removeAll();
-		
-		//pack();
-		if(SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
-			getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
-		} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-			try {
-				getPropertiesPanel().add(AnalysisController.getInstance(component).getAnalyzePanel());
-			} catch (PatternException e) {
-				errorMessage("Cannot load analysis panel", e, true);
-			}
-				
-		}
-		getPropertiesPanel().repaint();
-		getPropertiesPanel().updateUI();
-		updateToolbar();
-	}
+        }
+        getPropertiesPanel().repaint();
+        getPropertiesPanel().updateUI();
+        updateToolbar();
+    }
 
-	@Override
-	public void operatingModeChanged() {
-		try {
-			// Update Properties View & Toolbar
-			ViewComponent swatComponent = (ViewComponent) getTabView().getSelectedComponent();
-			getPropertiesPanel().removeAll();
-			if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
-				getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
-			} else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-				if (swatComponent instanceof PNEditorComponent) {
-					try {
-						getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
-					} catch (PatternException e) {
-						errorMessage("Cannot load analysis panel", e, true);
-					}
-					// ((PNEditor)swatComponent).setEnabled(false);
-				}
-				if (swatComponent instanceof LogFileViewer)
-					try {
-						getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
-					} catch (PatternException e) {
-						errorMessage("Cannot load analysis panel", e, true);
-					}
-				// getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
-			}
+    @Override
+    public void operatingModeChanged() {
+        try {
+            // Update Properties View & Toolbar
+            ViewComponent swatComponent = (ViewComponent) getTabView().getSelectedComponent();
+            getPropertiesPanel().removeAll();
+            if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+                getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+            } else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+                if (swatComponent instanceof PNEditorComponent) {
+                    try {
+                        getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
+                    } catch (PatternException e) {
+                        errorMessage("Cannot load analysis panel", e, true);
+                    }
+                    // ((PNEditor)swatComponent).setEnabled(false);
+                }
+                if (swatComponent instanceof LogFileViewer) {
+                    try {
+                        getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
+                    } catch (PatternException e) {
+                        errorMessage("Cannot load analysis panel", e, true);
+                    }
+                }
+                // getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
+            }
 
-			// pack();
-			getPropertiesPanel().repaint();
-			getPropertiesPanel().updateUI();
-			// getPropertiesPanel().repaint();
-			updateToolbar();
-		} catch (NullPointerException e) {
-			// Can happens when Arista-Flow analysis is called with no active tabs
-			errorMessage("Nothing to display: No active tab", e, true);
+            // pack();
+            getPropertiesPanel().repaint();
+            getPropertiesPanel().updateUI();
+            // getPropertiesPanel().repaint();
+            updateToolbar();
+        } catch (NullPointerException e) {
+            // Can happens when Arista-Flow analysis is called with no active tabs
+            errorMessage("Nothing to display: No active tab", e, true);
 
-		}
-	}
+        }
+    }
 
-	/** check if a PNEditor got activated and update Toolbar if needed **/
-	private void updateToolbar() {
-		if (getTabView().getSelectedComponent() instanceof PNEditorComponent) {
-			try {
-				PNEditorComponent editor = (PNEditorComponent) getTabView().getSelectedComponent();
-				getSwatToolbar().clear();
-			
-				if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-					//getSwatToolbar().add(((AnalyzePanelPN)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), (ViewComponent) editor)).getToolBar());
-				} else {
-					getSwatToolbar().add(editor.getEditorToolbar());
-				}
-			} catch (Exception e) {
+    /**
+     * check if a PNEditor got activated and update Toolbar if needed *
+     */
+    private void updateToolbar() throws Exception {
+        if (getTabView().getSelectedComponent() instanceof PNEditorComponent) {
+            try {
+                PNEditorComponent editor = (PNEditorComponent) getTabView().getSelectedComponent();
+                getSwatToolbar().clear();
 
-			}
-		} else {
-			//remove Toolbar-Addons
-			getSwatToolbar().clear();
-		}
+                if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+                    //getSwatToolbar().add(((AnalyzePanelPN)AnalyzePanelController.getInstance().getAnalyzePanel(getTabView().getSelectedComponent().getName(), (ViewComponent) editor)).getToolBar());
+                } else {
+                    getSwatToolbar().add(editor.getEditorToolbar());
+                }
+            } catch (Exception e) {
 
-		getSwatToolbar().validate();
-		getSwatToolbar().repaint();
+            }
+        } else {
+            //remove Toolbar-Addons
+            getSwatToolbar().clear();
+        }
 
-	}
+        getSwatToolbar().validate();
+        getSwatToolbar().repaint();
+
+    }
+
+    @Override
+    public void componentAdded(Object component) throws ProjectComponentException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void componentRemoved(Object component) throws ProjectComponentException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void componentRenamed(Object component, String oldName, String newName) throws ProjectComponentException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void componentsChanged() throws ProjectComponentException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

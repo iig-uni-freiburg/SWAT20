@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,11 +56,11 @@ public class SwatState {
 		return activeFile;
 	}
 
-	public TimeContext getActiveContext(String netID) {
+	public TimeContext getActiveContext(String netID) throws Exception {
 		String timeContextName = activeContext.get(netID);
 		Validate.notNull(timeContextName);
 		Validate.notEmpty(timeContextName);
-		TimeContext result = SwatComponents.getInstance().getTimeContext(netID, timeContextName);
+		TimeContext result = SwatComponents.getInstance().getContainerPetriNets().getTimeContext(netID, timeContextName);
 		Validate.notNull(result);
 		return result;
 	}

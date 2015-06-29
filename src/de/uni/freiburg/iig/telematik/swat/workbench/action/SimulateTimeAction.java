@@ -39,7 +39,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.TimeMachine;
 import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 

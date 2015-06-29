@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;

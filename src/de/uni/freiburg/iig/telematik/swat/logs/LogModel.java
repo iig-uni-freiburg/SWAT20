@@ -6,14 +6,15 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 
 import de.invation.code.toval.file.FileUtils;
+import de.invation.code.toval.misc.NamedComponent;
 
-public class LogModel {
+public class LogModel implements NamedComponent{
 
 	private File fileReference;
 	private String name;
-	private SwatLog type = null;
+	private SwatLogType type = null;
 	
-	public LogModel(File fileReference, SwatLog type) {
+	public LogModel(File fileReference, SwatLogType type) {
 		super();
 		setFileReference(fileReference);
 		setName(FileUtils.getFileWithoutEnding(fileReference));
@@ -36,7 +37,7 @@ public class LogModel {
 		this.fileReference = fileReference;
 	}
 
-	public SwatLog getType() {
+	public SwatLogType getType() {
 		return type;
 	}
 

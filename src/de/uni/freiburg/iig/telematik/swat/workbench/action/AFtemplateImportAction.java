@@ -16,7 +16,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowToPnmlConverter;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;

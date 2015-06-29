@@ -14,7 +14,7 @@ import java.util.List;
 
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
+import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
@@ -160,7 +160,7 @@ public class AristaFlowSQLConnector {
 				writeLine(rs, fileWriter);
 			}
 			//LogFileViewer logFile = new LogFileViewer(file);
-			model = new LogModel(file, SwatLog.Aristaflow);
+			model = new LogModel(file, SwatLogType.Aristaflow);
 			model.setName(getAFLogName());
 			//SwatComponents.getInstance().putCsvIntoSwatComponent(log, log.getName());
 		}

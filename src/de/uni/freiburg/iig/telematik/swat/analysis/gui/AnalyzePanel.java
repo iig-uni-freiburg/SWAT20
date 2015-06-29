@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.analysis.gui;
 
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -10,9 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.swing.Box;
@@ -34,11 +33,12 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.presenter.
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.presenter.SciffResultPresenter.resultType;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentType;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.AnalysisHashErrorDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
+import java.util.Collection;
 
 /** Panel on right side of SWAT. Shows analysis results **/
 public class AnalyzePanel extends JPanel implements ItemListener {
@@ -55,7 +55,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	
 	private JComboBox dropDown;
 
-	public AnalyzePanel(AnalysisController analysisController) {	
+	public AnalyzePanel(AnalysisController analysisController) throws Exception {	
 		mAnalysisController = analysisController;
 		updatePatternResults();
 	
@@ -71,7 +71,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	}
 	
 	
-	public void updatePatternResults() {
+	public void updatePatternResults() throws Exception {
 		
 	this.removeAll();
 	JPanel content = new JPanel(new GridBagLayout());
@@ -154,8 +154,8 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 
 	private Component getAnalysisDropDown(String netID) {
 		if (dropDown == null) {
-			List<Analysis> analyses = SwatComponents.getInstance().getAnalyses(netID);
-			Collections.sort(analyses);
+			Collection<Analysis> analyses = SwatComponents.getInstance().getContainerPetriNets().getContainerAnalysis(netID).getComponents();
+//			Collections.sort(analyses);
 			dropDown = new JComboBox();
 			dropDown.addItem("New Analysis...");
 			for (Analysis a : analyses)
@@ -174,7 +174,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void saveRules() {
+	private void saveRules() throws Exception {
 		SwatComponents sc = SwatComponents.getInstance();
 		String analysisTargetName = Workbench.getInstance().getNameOfCurrentComponent();
 		try {
@@ -182,14 +182,13 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			String oldName = getSelectedDropDownItemName();
 			if (name.equalsIgnoreCase(oldName)) {
 				dropDown.removeItemAt(dropDown.getSelectedIndex());
-				sc.removeAnalysis(analysisTargetName, oldName, true);
+				sc.getContainerPetriNets().getContainerAnalysis(oldName).removeComponent(oldName, true);
 			}
 
 			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
 			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
 			save.setLoadedFromDisk();
-			sc.addAnalysis(save, analysisTargetName, true);
-
+			Store analysis somehow
 			dropDown.addItem(save);
 			dropDown.setSelectedItem(save);
 

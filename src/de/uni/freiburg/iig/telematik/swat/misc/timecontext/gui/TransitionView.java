@@ -21,7 +21,7 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.AbstractDistributionView;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.ExponentialDistributionView;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.IDistributionView;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 public class TransitionView extends JDialog {
@@ -135,10 +135,9 @@ public class TransitionView extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						SwatComponents.getInstance().storeTimeContext(timeContext, timeContext.getCorrespondingNet());
-					} catch (SwatComponentException e) {
-						JOptionPane.showMessageDialog(null, "Could not save time context:\nReason: " + e.getMessage());
-					} catch (NullPointerException e1) {
+                                            SwatComponents.getInstance().getContainerPetriNets().storeTimeContext(timeContext.getCorrespondingNet(), timeContext.getName());
+					
+					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(null, "Could not save time context:\nReason: " + e1.getMessage());
 						e1.printStackTrace();
 					}

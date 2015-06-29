@@ -11,7 +11,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.parser.graphic.PNParserDialog;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.PNNameDialog;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class PTImportAction extends AbstractWorkbenchAction {

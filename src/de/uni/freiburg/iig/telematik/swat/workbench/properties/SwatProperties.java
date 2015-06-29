@@ -12,8 +12,9 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcher;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory.IconSize;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatPropertyChangeListener;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.EditorProperties;
 
 public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatProperty> {
 
@@ -23,13 +24,15 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     protected static final String pathNets = "nets/";
     protected static final String pathLogs = "logs/";
-    protected static final String pathACModels = "acModel/";
+    protected static final String pathACModels = "acModels/";
     protected static final String pathContexts = "contexts/";
+    
     protected static final String pathNameAnalysisContext = "analysis-contexts/";
     protected static final String pathNameTimeContext = "time-contexts/";
     protected static final String pathNameNetAnalyses = "analysis/";
 
     protected static final Set<String> validationSubDirectories = new HashSet<>();
+
     static {
         validationSubDirectories.add(pathNets);
         validationSubDirectories.add(pathLogs);
@@ -42,9 +45,15 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     private String applicationPath = null;
 
     private Set<SwatPropertyChangeListener> listeners = new HashSet<SwatPropertyChangeListener>();
+    
+    private EditorProperties editorProperties = EditorProperties.getInstance();
 
     public SwatProperties() throws IOException {
         super();
+    }
+    
+    public EditorProperties getEditorProperties(){
+        return editorProperties;
     }
 
     @Override
@@ -75,7 +84,6 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     }
 
     //-- Simulation component paths (not stored in property file)
-    
     public String getPathForContexts() throws PropertyException {
         return getWorkingDirectory().concat(pathContexts);
     }
@@ -238,7 +246,7 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     }
 
     @Override
-    protected AbstractProjectComponents getProjectComponents() throws Exception{
+    protected AbstractProjectComponents getProjectComponents() throws Exception {
         return SwatComponents.getInstance();
     }
 

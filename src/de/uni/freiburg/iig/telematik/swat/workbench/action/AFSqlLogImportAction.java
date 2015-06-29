@@ -9,7 +9,7 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlow
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.DatabaseChooser;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
 public class AFSqlLogImportAction extends AbstractWorkbenchAction {
 

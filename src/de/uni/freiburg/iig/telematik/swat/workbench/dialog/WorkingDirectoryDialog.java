@@ -6,7 +6,6 @@ import java.beans.PropertyChangeListener;
 import de.invation.code.toval.misc.wd.AbstractWorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperty;
-import javax.swing.border.Border;
 
 
 public class WorkingDirectoryDialog extends AbstractWorkingDirectoryDialog<SwatProperty> implements PropertyChangeListener {

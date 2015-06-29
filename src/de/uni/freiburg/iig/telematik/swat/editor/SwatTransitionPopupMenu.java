@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import com.mxgraph.model.mxGraphModel;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -24,7 +25,7 @@ import de.uni.freiburg.iig.telematik.sewol.accesscontrol.rbac.RBACModel;
 import de.uni.freiburg.iig.telematik.swat.editor.actions.graphpopup.TransitionLabelingAction;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.SwatIFNetGraph;
 import de.uni.freiburg.iig.telematik.swat.editor.graph.change.SubjectDescriptorChange;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.graphpopup.TransitionSilentAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
@@ -45,7 +46,7 @@ public class SwatTransitionPopupMenu extends JPopupMenu {
 		super.show(invoker, x, y);
 	}
 
-	public SwatTransitionPopupMenu(PNEditorComponent pnEditor) throws ParameterException, PropertyException, IOException {
+	public SwatTransitionPopupMenu(PNEditorComponent pnEditor) throws Exception {
 		Validate.notNull(pnEditor);
 		JMenu submenu = (JMenu) add(new JMenu("Transition"));
 		submenu.add(new TransitionSilentAction(pnEditor, "silent", true));
@@ -77,7 +78,7 @@ public class SwatTransitionPopupMenu extends JPopupMenu {
 
 	}
 
-	private void updateSubjectDescriptorMenu() {
+	private void updateSubjectDescriptorMenu() throws Exception {
 		// submenu3.removeAll();
 		if (SwatComponents.getInstance().containsACModels()) {
 			if (graph instanceof SwatIFNetGraph) {

@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.analysis;
 
+import de.invation.code.toval.misc.NamedComponent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 
-public class Analysis implements Comparable {
+public class Analysis implements Comparable<Analysis>, NamedComponent {
 
 	private String name = null;
 	private List<CompliancePattern> patternSetting = new LinkedList<CompliancePattern>();
@@ -29,6 +30,11 @@ public class Analysis implements Comparable {
 	public String getName() {
 		return name;
 	}
+        
+        public void setName(String name){
+            Validate.notNull(name);
+            this.name = name;
+        }
 
 	public ArrayList<CompliancePattern> getPatternSetting() {
 		System.out.println("Returning pattern with: " + patternSetting.get(0).getParameters().get(0).getValue().getValue());
@@ -52,7 +58,7 @@ public class Analysis implements Comparable {
 	}
 
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(Analysis o) {
 		if (o instanceof Analysis)
 			return ((Analysis) o).getName().compareTo(getName());
 		return 0;

@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -14,23 +16,21 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import de.invation.code.toval.misc.soabase.SOABase;
+import de.invation.code.toval.misc.wd.ComponentListener;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.invation.code.toval.validate.ExceptionDialog;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
-import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.logs.SwatLog;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
+import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenu;
-import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatComponentsListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
+import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
-public class SwatTreeView extends JTree implements SwatStateListener, SwatComponentsListener {
+public class SwatTreeView extends JTree implements SwatStateListener, ComponentListener {
 	
 	private static final String PN_HEADING = "Petri nets";
 	private static final String LOGS_HEADING = "Process logs";
@@ -48,7 +48,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	
 	private Set<SwatTreeViewListener> listeners = new HashSet<SwatTreeViewListener>();
 	
-	private static SwatTreeView swatTreeInstance = new SwatTreeView();
+	private static SwatTreeView instance = null;
 	
 	private DefaultMutableTreeNode rootNode;
 	private DefaultMutableTreeNode petriNetNode = null;
@@ -59,7 +59,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	private DefaultMutableTreeNode acModelsNode = null;
 	private DefaultMutableTreeNode contextsNode = null;
 
-	private SwatTreeView() {
+	private SwatTreeView() throws Exception {
 		rootNode = new DefaultMutableTreeNode("Working Directory");
 		treeModel = new DefaultTreeModel(rootNode);
 		this.setBackground(DEFAULT_BG_COLOR);
@@ -74,11 +74,14 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		addMouseListener(new TreeViewMouseAdapter());
 	}
 
-	public static SwatTreeView getInstance() {
-		return swatTreeInstance;
+	public static SwatTreeView getInstance() throws Exception {
+            if(instance == null){
+                instance = new SwatTreeView();
+            }
+            return instance;
 	}
 
-	public void removeAndUpdateSwatComponents() {
+	public void removeAndUpdateSwatComponents() throws ProjectComponentException {
 		rootNode.removeAllChildren();
 		buildTree();
 		treeModel.reload();
@@ -87,7 +90,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void buildTree() {
+	private void buildTree() throws ProjectComponentException {
 		rootNode.removeAllChildren();
 		
 		// Petri Nets
@@ -95,9 +98,9 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 			petriNetNode = new DefaultMutableTreeNode(PN_HEADING);
 			rootNode.add(petriNetNode);
 			
-			for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getPetriNetsSorted()){
+			for(AbstractGraphicalPN petriNet: SwatComponents.getInstance().getContainerPetriNets().getComponentsSorted()){
 				SwatTreeNode node = new SwatTreeNode(petriNet, SwatComponentType.PETRI_NET);
-				for(Analysis analysis: SwatComponents.getInstance().getAnalyses(node.getDisplayName())){
+				for(Analysis analysis: SwatComponents.getInstance().getContainerPetriNets().getContainerAnalysis(node.getDisplayName()).getComponents()){
 					node.add(new SwatTreeNode(analysis, SwatComponentType.PETRI_NET_ANALYSIS));
 				}
 				petriNetNode.add(node);
@@ -116,22 +119,22 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 			rootNode.add(logsNode);
 			
 			// XES-Logs
-			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.XES)) {
+			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLogType.XES)) {
 				xesLogNode.add(new SwatTreeNode(logFile, SwatComponentType.XES_LOG));
 			}
 			
 			// MXML-Logs
-			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.MXML)) {
+			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLogType.MXML)) {
 				mxmlLogNode.add(new SwatTreeNode(logFile, SwatComponentType.MXML_LOG));
 			}
 			
 			// Aristaflow-Logs
-			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLog.Aristaflow)) {
+			for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLogType.Aristaflow)) {
 				aristaLogNode.add(new SwatTreeNode(logFile, SwatComponentType.ARISTAFLOW_LOG));
 			}
 		}
 		
-		if(SwatComponents.getInstance().containsContexts()){
+		if(SwatComponents.getInstance().containsProcessContexts()){
 			contextsNode = new DefaultMutableTreeNode(CONTEXTS_HEADING);
 			rootNode.add(contextsNode);
 		}
@@ -183,6 +186,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 		}
 		return null;
 	}
+
 
 
 
@@ -255,76 +259,30 @@ public class SwatTreeView extends JTree implements SwatStateListener, SwatCompon
 	}
 
 	@Override
-	public void petriNetAdded(AbstractGraphicalPN net) {}
-
-	@Override
-	public void petriNetRemoved(AbstractGraphicalPN net) {
-		//TODO
-	}
-
-	@Override
-	public void petriNetRenamed(AbstractGraphicalPN net) {}
-
-	@Override
-	public void acModelAdded(AbstractACModel acModel) {}
-
-	@Override
-	public void acModelRemoved(AbstractACModel acModel) {}
-
-	@Override
-	public void analysisContextAdded(String netID, AnalysisContext context) {}
-
-	@Override
-	public void analysisContextRemoved(String netID, AnalysisContext context) {}
-
-	@Override
-	public void analysisAdded(String netID, Analysis analysis) {}
-
-	@Override
-	public void analysisRemoved(String netID, Analysis analysis) {}
-
-	@Override
-	public void timeContextAdded(String netID, TimeContext context) {}
-
-	@Override
-	public void timeContextRemoved(String netID, TimeContext context) {}
-
-	@Override
-	public void logAdded(LogModel log) {}
-
-	@Override
-	public void logRemoved(LogModel log) {}
-
-	@Override
 	public void componentsChanged() {
+            try{
 		buildTree();
 		treeModel.reload();
 		expandAll();
 		repaint();
+            } catch(Exception e){
+                ExceptionDialog.showException(SwingUtilities.getWindowAncestor(SwatTreeView.this), "Tree View Exception", new Exception("Exception while building tree"), true, true);
+            }
 	}
+        
+        @Override
+    public void componentAdded(Object component) throws ProjectComponentException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-	@Override
-	public void contextAdded(SOABase soaBase) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void componentRemoved(Object component) throws ProjectComponentException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-	@Override
-	public void contextRemoved(SOABase soaBase) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void labelingAdded(String netID, String analysisContextName, Labeling labeling) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void labelingRemoved(String netID, String analysisContextName, Labeling labeling) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void componentRenamed(Object component, String oldName, String newName) throws ProjectComponentException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

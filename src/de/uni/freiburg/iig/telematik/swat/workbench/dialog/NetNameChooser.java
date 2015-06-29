@@ -3,7 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.dialog;
 import java.awt.Window;
 
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
-import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
 public class NetNameChooser extends FileNameDialog {
 	

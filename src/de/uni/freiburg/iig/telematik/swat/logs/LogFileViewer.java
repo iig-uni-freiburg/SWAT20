@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.logs;
 
+import de.invation.code.toval.file.FileUtils;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.File;
@@ -18,7 +19,6 @@ import javax.swing.JScrollPane;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.misc.FileHelper;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
@@ -103,13 +103,12 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 		return model.getFileReference();
 	}
 
-	private void createPropertiesView() {
+	private void createPropertiesView() throws IOException {
 		properties = new JPanel();
 		properties.setLayout(new FlowLayout());
 		properties.add(new JLabel("Textual file"));
 		properties.add(new JLabel("Size: " + model.getFileReference().length() / 1024 + "kB"));
-		properties.add(new JLabel("Lines: "
-				+ FileHelper.getLinesCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
+		properties.add(new JLabel("Lines: "+ FileUtils.getLineCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
 		properties.add(getSciffButton());
 		properties.validate();
 		properties.repaint();

@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.workbench;
+package de.uni.freiburg.iig.telematik.swat.workbench.components;
 
 public enum SwatComponentType {
 	
