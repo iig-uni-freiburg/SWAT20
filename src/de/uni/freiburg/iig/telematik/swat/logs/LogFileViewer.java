@@ -22,6 +22,8 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -83,7 +85,11 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 	@Override
 	public JComponent getPropertiesView() {
 		if (properties == null) {
-			createPropertiesView();
+                    try {
+                        createPropertiesView();
+                    } catch (IOException ex) {
+                        Workbench.errorMessage("Could not get properties", ex, true);
+                    }
 		}
 		return properties;
 	}

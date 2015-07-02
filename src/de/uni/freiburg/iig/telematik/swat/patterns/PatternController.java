@@ -26,6 +26,8 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.CPNEditorComponen
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Holds patterns **/
 public class PatternController {
@@ -35,7 +37,7 @@ public class PatternController {
 	private PatternDialog mPatternDialog;
 	private AnalysisController mAnalysisController;
 
-	public PatternController(AnalysisController anaController) throws PatternException {
+	public PatternController(AnalysisController anaController) throws PatternException, Exception {
 		AbstractPatternFactory mPatternFactory = null;
 		mAnalysisController = anaController;
 		ViewComponent component = (ViewComponent) Workbench.getInstance().getTabView().getSelectedComponent();
@@ -71,7 +73,7 @@ public class PatternController {
 		mPatternDialog.setVisible(true);
 	}
 
-	public void setPatterns(ArrayList<CompliancePattern> patterns) {
+	public void setPatterns(ArrayList<CompliancePattern> patterns) throws Exception {
 		mPatterns = patterns;
 		generatePatternDialog();//comment
 		//mPatternDialog.setPattern(mPatterns); //uncomment
@@ -102,7 +104,11 @@ public class PatternController {
 
 			@Override
 			public void componentHidden(ComponentEvent e) {
-				mAnalysisController.updateAnalysePanel();
+                            try {
+                                mAnalysisController.updateAnalysePanel();
+                            } catch (Exception ex) {
+                                Logger.getLogger(PatternController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 			}
 
 		});

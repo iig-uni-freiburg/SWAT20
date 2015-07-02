@@ -39,6 +39,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.AnalysisHashErrorDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Panel on right side of SWAT. Shows analysis results **/
 public class AnalyzePanel extends JPanel implements ItemListener {
@@ -125,7 +129,12 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveRules();
+                            try {
+                                saveRules();
+                            } catch (Exception ex) {
+                                Workbench.errorMessage("Cold not store analysis ", ex, true);
+                                Logger.getLogger(AnalyzePanel.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 
 			}
 		});
@@ -152,10 +161,11 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		mAnalysisController.runModelChecker();
 	}
 
-	private Component getAnalysisDropDown(String netID) {
+	private Component getAnalysisDropDown(String netID) throws ProjectComponentException {
 		if (dropDown == null) {
-			Collection<Analysis> analyses = SwatComponents.getInstance().getContainerPetriNets().getContainerAnalysis(netID).getComponents();
-//			Collections.sort(analyses);
+			Collection<Analysis> analyses;
+                    analyses = SwatComponents.getInstance().getContainerPetriNets().getContainerAnalysis(netID).getComponents();
+			//Collections.sort((List<T>) analyses);
 			dropDown = new JComboBox();
 			dropDown.addItem("New Analysis...");
 			for (Analysis a : analyses)
@@ -188,7 +198,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
 			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
 			save.setLoadedFromDisk();
-			Store analysis somehow
+			//TODO: Store analysis somehow
 			dropDown.addItem(save);
 			dropDown.setSelectedItem(save);
 
@@ -197,7 +207,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		}
 	}
 
-	public void setPatterns(Analysis analysis){
+	public void setPatterns(Analysis analysis) throws Exception{
 		mAnalysisController.setPatterns(analysis.getPatternSetting());
 		updatePatternResults();
 		updateUI();
@@ -207,20 +217,24 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	/**Listen to dropdown change**/
 	public void itemStateChanged(ItemEvent e) {
 		if (dropDown.getSelectedItem() instanceof Analysis) {
-			Analysis a = (Analysis) dropDown.getSelectedItem();
-			System.out.println("Setting pattern...");
-			setPatterns(a);
-			if (a.getHashCode() != Workbench.getInstance().getHashOfCurrentComponent()) {
-				boolean recompute = new AnalysisHashErrorDialog(Workbench.getInstance().getTypeOfCurrentComponent()).showUpdateDialog();
-				if (recompute) {
-					try {
-						invokeModelChecking();
-					} catch (Exception e1) {
-						Workbench.errorMessage("Could not invoke model checking", e1, true);
-					}
-				}
-
-			}
+                    try {
+                        Analysis a = (Analysis) dropDown.getSelectedItem();
+                        System.out.println("Setting pattern...");
+                        setPatterns(a);
+                        if (a.getHashCode() != Workbench.getInstance().getHashOfCurrentComponent()) {
+                            boolean recompute = new AnalysisHashErrorDialog(Workbench.getInstance().getTypeOfCurrentComponent()).showUpdateDialog();
+                            if (recompute) {
+                                try {
+                                    invokeModelChecking();
+                                } catch (Exception e1) {
+                                    Workbench.errorMessage("Could not invoke model checking", e1, true);
+                                }
+                            }
+                            
+                        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(AnalyzePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 		}
 	}
 	

@@ -9,7 +9,10 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelCheckerFact
 import de.uni.freiburg.iig.telematik.swat.patterns.PatternController;
 import de.uni.freiburg.iig.telematik.swat.patterns.PatternException;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AnalysisController {
 
@@ -25,7 +28,7 @@ public class AnalysisController {
 
 	private PatternController mPatternController;
 
-	public static AnalysisController getInstance(ViewComponent component) throws PatternException {
+	public static AnalysisController getInstance(ViewComponent component) throws PatternException, Exception {
 		if (mAnalysisController == null) {
 			mAnalysisController = new AnalysisController();
 		}
@@ -38,7 +41,7 @@ public class AnalysisController {
 		mComponentToAnalyzePanelMap = new HashMap<ViewComponent, AnalyzePanel>();
 	}
 
-	private void setComponent(ViewComponent component) throws PatternException {
+	private void setComponent(ViewComponent component) throws PatternException, Exception {
 		mComponent = component;
 		PatternController controller = mComponentToPatternControllerMap.get(mComponent);
 		if (controller == null) {
@@ -71,8 +74,13 @@ public class AnalysisController {
 	public void setPatterns(ArrayList<CompliancePattern> patterns) {
 		//mPatternController=new PatternController(this);
 		mPatternController.setPatterns(patterns);
-		updateAnalysePanel();
-		//mComponentToPatternControllerMap.put(m, value)
+            try {
+                updateAnalysePanel();
+                //mComponentToPatternControllerMap.put(m, value)
+            } catch (Exception ex) {
+                Workbench.errorMessage(null, ex, true);
+                //Logger.getLogger(AnalysisController.class.getName()).log(Level.SEVERE, null, ex);
+            }
 	}
 
 	public void runModelChecker() throws Exception {
@@ -81,7 +89,7 @@ public class AnalysisController {
 		updateAnalysePanel();
 	}
 
-	public void updateAnalysePanel() {
+	public void updateAnalysePanel() throws Exception {
 		mAnalyzePanel.updatePatternResults();
 		mAnalyzePanel.updateUI();
 	}
