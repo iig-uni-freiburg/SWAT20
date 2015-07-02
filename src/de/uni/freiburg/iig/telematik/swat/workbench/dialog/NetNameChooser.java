@@ -3,7 +3,10 @@ package de.uni.freiburg.iig.telematik.swat.workbench.dialog;
 import java.awt.Window;
 
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NetNameChooser extends FileNameDialog {
 	
@@ -16,11 +19,15 @@ public class NetNameChooser extends FileNameDialog {
 	@Override
 	protected boolean isValid(String input) {
 		if(super.isValid(input)){
-			if(SwatComponents.getInstance().containsPetriNetWithID(input)){
-				errorMessage = NET_NAME_ALREADY_IN_USE;
-				return false;
-			}
-			return true;
+                    try {
+                        if(SwatComponents.getInstance().getContainerPetriNets().containsComponent(input)){
+                            errorMessage = NET_NAME_ALREADY_IN_USE;
+                            return false;
+                        }
+                        return true;
+                    } catch (ProjectComponentException ex) {
+                        return true;
+                    }
 		}
 		return false;
 	}

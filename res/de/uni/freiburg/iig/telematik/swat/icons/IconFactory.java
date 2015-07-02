@@ -10,6 +10,7 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.EditorProperties;
 
 public class IconFactory {
 	
@@ -17,11 +18,11 @@ public class IconFactory {
 	private static final String imagePathFormatPressed = "%s/%s-%s-pressed.png";
 	
 	public static ImageIcon getIcon(String name) throws ParameterException, PropertyException, IOException{
-		return getIcon(name, SwatProperties.getInstance().getIconSize(), false);
+		return getIcon(name, EditorProperties.getInstance().getIconSize(), false);
 	}
 	
 	public static ImageIcon getIconPressed(String name) throws ParameterException, PropertyException, IOException {
-		return getIcon(name, SwatProperties.getInstance().getIconSize(), true);
+		return getIcon(name, EditorProperties.getInstance().getIconSize(), true);
 	}
 
 	private static ImageIcon getIcon(String name, de.uni.freiburg.iig.telematik.wolfgang.icons.IconFactory.IconSize size, boolean pressed) throws ParameterException {

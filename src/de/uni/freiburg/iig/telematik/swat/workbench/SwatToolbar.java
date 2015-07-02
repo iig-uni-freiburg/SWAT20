@@ -120,7 +120,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
         // try to get ICONSize
         try {
-            ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
+            //ICON_SIZE = SwatProperties.getInstance().getIconSize().getSize();
         } catch (Exception e) {
             // Cannot read property. Ignore and stay with default value (32)
         }

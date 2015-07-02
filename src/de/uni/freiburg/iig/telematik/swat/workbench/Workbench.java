@@ -39,6 +39,8 @@ import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener, SwatStateListener, ComponentListener {
 
@@ -116,7 +118,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //		setPreferredSize(PREFERRED_SIZE_WORKBENCH);
         setResizable(true);
 
-        setContentPane(getContent());
+        try {
+            setContentPane(getContent());
+        } catch (Exception ex) {
+            MessageDialog.getInstance().addMessage("Could not create GUI, reason "+ex.getMessage());
+        }
         setJMenuBar(getSwatMenu());
         pack();
         setVisible(true);
@@ -360,46 +366,54 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
     @Override
     public void componentSelected(SwatTreeNode node) {
-        //Information from TreeView: New node activated -> relay to TabView
-        getTabView().componentSelected(node);
-        //Update Toolbar
-        updateToolbar();
+        try {
+            //Information from TreeView: New node activated -> relay to TabView
+            getTabView().componentSelected(node);
+            //Update Toolbar
+            updateToolbar();
+        } catch (Exception ex) {
+            errorMessage("Could not select Component", ex, false);
+        }
     }
 
     @Override
     public void componentActivated(SwatTreeNode node) {
-        if (getTabView().containsComponent(node)) {
-            return;
-        }
-
-        ViewComponent swatComponent = null;
-        // add SwatTreeNode to tab and get its swatComponent to make its propertyView
-        swatComponent = getTabView().addNewTab(node);
-        getPropertiesPanel().removeAll();
-
-        if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
-            getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
-        } else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
-            String name = node.getDisplayName();
-            if (swatComponent instanceof PNEditorComponent) {
-                if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
-                    name = ((SwatTreeNode) node.getParent()).getDisplayName();
+        try {
+            if (getTabView().containsComponent(node)) {
+                return;
+            }
+            
+            ViewComponent swatComponent = null;
+            // add SwatTreeNode to tab and get its swatComponent to make its propertyView
+            swatComponent = getTabView().addNewTab(node);
+            getPropertiesPanel().removeAll();
+            
+            if (SwatState.getInstance().getOperatingMode() == OperatingMode.EDIT_MODE) {
+                getPropertiesPanel().add(new ScrollPane().add(swatComponent.getPropertiesView()));
+            } else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
+                String name = node.getDisplayName();
+                if (swatComponent instanceof PNEditorComponent) {
+                    if (node.getObjectType() == SwatComponentType.PETRI_NET_ANALYSIS) {
+                        name = ((SwatTreeNode) node.getParent()).getDisplayName();
+                    }
+                }
+                //Here: Analyze Panel is loaded
+                //getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
+                try {
+                    getPropertiesPanel().add(getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel()));
+                } catch (PatternException e) {
+                    errorMessage("Cannot load analysis panel", e, true);
                 }
             }
-			//Here: Analyze Panel is loaded
-            //getPropertiesPanel().add(AnalyzePanelController.getInstance().getAnalyzePanel(name, swatComponent).getContent());
-            try {
-                getPropertiesPanel().add(getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel()));
-            } catch (PatternException e) {
-                errorMessage("Cannot load analysis panel", e, true);
-            }
+            getPropertiesPanel().validate();
+            getPropertiesPanel().repaint();
+            getPropertiesPanel().updateUI();
+            
+            //Update Toolbar
+            updateToolbar();
+        } catch (Exception ex) {
+            errorMessage("Could not select Component", ex, false);
         }
-        getPropertiesPanel().validate();
-        getPropertiesPanel().repaint();
-        getPropertiesPanel().updateUI();
-
-        //Update Toolbar
-        updateToolbar();
     }
 
 //	@SuppressWarnings("rawtypes")
@@ -439,12 +453,18 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
                 getPropertiesPanel().add(AnalysisController.getInstance(component).getAnalyzePanel());
             } catch (PatternException e) {
                 errorMessage("Cannot load analysis panel", e, true);
+            } catch (Exception ex) {
+                errorMessage("Cannot load analysis panel", ex, true);
             }
 
         }
         getPropertiesPanel().repaint();
         getPropertiesPanel().updateUI();
-        updateToolbar();
+        try {
+            updateToolbar();
+        } catch (Exception ex) {
+            errorMessage("Could not update Toolbar", ex, false);
+        }
     }
 
     @Override
@@ -483,6 +503,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
             // Can happens when Arista-Flow analysis is called with no active tabs
             errorMessage("Nothing to display: No active tab", e, true);
 
+        } catch (Exception ex) {
+           errorMessage("could not change operating mode", ex, true);
         }
     }
 

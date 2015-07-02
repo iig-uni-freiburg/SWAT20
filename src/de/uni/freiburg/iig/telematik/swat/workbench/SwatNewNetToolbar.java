@@ -20,6 +20,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.NewNetAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.EditorProperties;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.WrapLayout;
 
 /**
@@ -64,7 +65,7 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 
 		// try to get ICONSize
 		try {
-			SwatProperties.getInstance().getIconSize().getSize();
+                    EditorProperties.getInstance().getIconSize().getSize();
 		} catch (Exception e) {
 			// Cannot read property. Ignore and stay with default value (32)
 		}
@@ -187,7 +188,7 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 		return this.popupFontToolBar;		
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		JPanel panel = new JPanel();
 		panel.add(new SwatNewNetToolbar(SwatTabView.getInstance(), SwatTreeView.getInstance()));
 		new DisplayFrame(panel, true);

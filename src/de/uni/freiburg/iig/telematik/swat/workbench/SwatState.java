@@ -66,9 +66,9 @@ public class SwatState {
 	}
 
 	public void setActiveContext(String netID, String activeContext) {
-		if (SwatComponents.getInstance().getTimeContext(netID, activeContext) == null)
-			throw new ParameterException(activeContext + " is not a valid timecontext");
-		this.activeContext.put(netID, activeContext);
+//		if (SwatComponents.getInstance().getTimeContext(netID, activeContext) == null)
+//			throw new ParameterException(activeContext + " is not a valid timecontext");
+//		this.activeContext.put(netID, activeContext);
 	}
 
 	public void addListener(SwatStateListener listener) throws ParameterException{
