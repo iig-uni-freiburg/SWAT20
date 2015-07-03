@@ -38,8 +38,10 @@ public class AFSqlLogImportAction extends AbstractWorkbenchAction {
 		AristaFlowSQLConnector connector = DatabaseChooser.DatabaseChooser();
 		//LogFileViewer viewer = con.dumpIntoWorkbench();
 		LogModel model = connector.getModel();
-		model = SwatComponents.getInstance().storeLogModelAs(model, model.getName());
-		SwatComponents.getInstance().addLogModel(model);
+                SwatComponents.getInstance().getContainerAristaflowLogs().addComponent(model);
+                SwatComponents.getInstance().getContainerAristaflowLogs().storeAnalyses();
+		//model = SwatComponents.getInstance().storeLogModelAs(model, model.getName());
+		//SwatComponents.getInstance().addLogModel(model);
 		//SwatComponents.getInstance().reload();
 		//connector.parse();
 		//SciffAnalyzeAction sciffAction = new SciffAnalyzeAction(connector.getTempFile());

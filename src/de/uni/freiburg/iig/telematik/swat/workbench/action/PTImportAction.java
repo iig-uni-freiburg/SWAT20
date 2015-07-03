@@ -42,15 +42,15 @@ public class PTImportAction extends AbstractWorkbenchAction {
 		AbstractGraphicalPN net = PNParserDialog.showPetriNetDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()));
 		if (net == null)
 			return;
-		if(net.getPetriNet().getName().isEmpty() || SwatComponents.getInstance().containsPetriNetWithID(net.getPetriNet().getName())){
+		if(net.getPetriNet().getName().isEmpty() || SwatComponents.getInstance().getContainerPetriNets().containsAnalysis((net.getPetriNet().getName()))){
 			String name = requestNetName("Name for imported net?", "New name?");
 			net.getPetriNet().setName(name);
 		}
-		SwatComponents.getInstance().addPetriNet(net);
-		Workbench.consoleMessage("Imported " + net.getPetriNet().getName());
+		SwatComponents.getInstance().getContainerPetriNets().addComponent(net, true);
+                Workbench.consoleMessage("Imported " + net.getPetriNet().getName());
 	}
 	
-	private String requestNetName(String message, String title) {
+	private String requestNetName(String message, String title) throws Exception {
 		return new PNNameDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false).requestInput();
 	}
 }

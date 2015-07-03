@@ -50,12 +50,25 @@ public class LogImportAction extends AbstractWorkbenchAction {
 		}
 		LogModel model = new LogModel(f, type);
 		String logName = f.getName().replaceFirst("[.][^.]+$", "");
-		SwatComponents.getInstance().storeLogModelAs(model, logName);
-		SwatComponents.getInstance().addLogModel(model);
+                switch(type){
+                    case Aristaflow:
+                        SwatComponents.getInstance().getContainerAristaflowLogs().addComponent(model);
+                        SwatComponents.getInstance().getContainerAristaflowLogs().storeComponents();
+                        break;
+                    case MXML:
+                        SwatComponents.getInstance().getContainerMXMLLogs().addComponent(model);
+                        SwatComponents.getInstance().getContainerMXMLLogs().storeComponents();
+                        break;
+                    case XES:
+                    default:
+                        SwatComponents.getInstance().getContainerXESLogs().addComponent(model);
+                        SwatComponents.getInstance().getContainerXESLogs().storeComponents();
+                        break;
+                }
 		Workbench.consoleMessage("Imported " + logName);
 	}
 
-	protected File getFile() {
+	protected File getFile() throws Exception {
 		File f = null;
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

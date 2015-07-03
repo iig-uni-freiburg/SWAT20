@@ -45,7 +45,7 @@ public class TransitionTimingInfoAction extends AbstractPNEditorAction {
 				newContext.setCorrespondingNet(netID);
 				TransitionView view = new TransitionView(cellName, newContext);
 				view.setVisible(true);
-				SwatComponents.getInstance().addTimeContext(newContext, netID, true);
+				//SwatComponents.getInstance().addTimeContext(newContext, netID, true);
 				SwatState.getInstance().setActiveContext(netID, newContextName);
 			}
 
@@ -53,7 +53,8 @@ public class TransitionTimingInfoAction extends AbstractPNEditorAction {
 	}
 
 	protected boolean hasTimingContext() {
-		return !SwatComponents.getInstance().getTimeContexts(editor.getNetContainer().getPetriNet().getName()).isEmpty();
+		//return !SwatComponents.getInstance().getTimeContexts(editor.getNetContainer().getPetriNet().getName()).isEmpty();
+            return false;
 	}
 
 	protected boolean hasActiveContext() {

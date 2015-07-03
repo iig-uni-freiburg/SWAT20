@@ -24,7 +24,7 @@ public class ClearTimeAction extends AbstractPNEditorAction {
 		TimeContext context = SwatState.getInstance().getActiveContext(editor.getNetContainer().getPetriNet().getName());
 		PNGraphCell cell = (PNGraphCell) editor.getGraphComponent().getGraph().getSelectionCell();
 		context.removeBehavior(cell.getId());
-		SwatComponents.getInstance().storeTimeContext(context, editor.getNetContainer().getPetriNet().getName());
+		//SwatComponents.getInstance().storeTimeContext(context, editor.getNetContainer().getPetriNet().getName());
 	}
 
 }

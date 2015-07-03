@@ -12,11 +12,14 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.dialog.MessageDialog;
+import de.invation.code.toval.graphic.dialog.MessageDialog;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.icons.IconFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 
@@ -44,24 +47,23 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 	private static final long serialVersionUID = 7231652730616663333L;
 
 	private void savePN(PNEditorComponent mainComponent) {
-		try {
-			SwatComponents.getInstance().storePetriNet(mainComponent.getNetContainer().getPetriNet().getName());
-			MessageDialog.getInstance().addMessage("Successfully saved Petri Net");
-			Workbench.consoleMessage("Successfully saved Petri Net");
-		} catch (SwatComponentException e) {
-			MessageDialog.getInstance().addMessage("ERROR: Could not save Petri Net: " + e.getMessage());
-			Workbench.errorMessage("Could not save Petri Net. ", e, true);
-		}
+            try {
+                SwatComponents.getInstance().getContainerPetriNets().storeAnalyses(mainComponent.getNetContainer().getPetriNet().getName());
+                MessageDialog.getInstance().addMessage("Successfully saved Petri Net");
+                Workbench.consoleMessage("Successfully saved Petri Net");
+            } catch (ProjectComponentException ex) {
+                Workbench.errorMessage("Could not save "+mainComponent.getNetContainer().getPetriNet().getName(), ex, enabled);
+            }
 		
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		try {
 			doFancyStuff(e);
 			SwatTabView.getInstance().unsetModifiedCurrent();
 		} catch (Exception e1) {
-			JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), e1.getMessage(), "Error",
-					JOptionPane.ERROR_MESSAGE);
+                    Workbench.errorMessage("Error saving...", e1, true);
 		}
 
 	}

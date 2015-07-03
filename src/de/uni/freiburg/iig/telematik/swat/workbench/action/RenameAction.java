@@ -70,10 +70,7 @@ public class RenameAction extends AbstractWorkbenchAction {
 				if (SwatTabView.getInstance().closeTabAndAskUser(oldName))
 					try {
 						SwatComponents.getInstance().renamePetriNet(oldName, newName);
-					} catch (SwatComponentException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					
 			}
 			break;
 		case PETRI_NET_ANALYSIS:

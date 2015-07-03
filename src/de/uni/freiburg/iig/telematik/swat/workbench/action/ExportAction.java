@@ -26,7 +26,9 @@ public class ExportAction extends AbstractWorkbenchAction {
 		Object current = SwatTabView.getInstance().getSelectedComponent();
 		File file = null;
 		if (current instanceof PNEditorComponent) {
-			file = SwatComponents.getInstance().getPetriNetFile(((PNEditorComponent) current).getNetContainer().getPetriNet().getName());
+                    //file = SwatComponents.getInstance().getContainerPetriNets().getComponent(((PNEditorComponent) current).getNetContainer().getPetriNet().getName());
+                    file = new File (SwatComponents.getInstance().getContainerPetriNets().getBasePath(),"((PNEditorComponent) current).getNetContainer().getPetriNet().getName()"+".pnml");
+			//file = SwatComponents.getInstance().getPetriNetFile(((PNEditorComponent) current).getNetContainer().getPetriNet().getName());
 		} else if (current instanceof LogModel) {
 			file = ((LogModel) current).getFileReference();
 		}

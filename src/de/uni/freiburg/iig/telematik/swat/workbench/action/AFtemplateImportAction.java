@@ -42,7 +42,7 @@ public class AFtemplateImportAction extends AbstractWorkbenchAction {
 
 	private static final long serialVersionUID = -33523248788649572L;
 
-	private String requestNetName(String message, String title) {
+	private String requestNetName(String message, String title) throws Exception {
 		String name = FileNameDialog.showDialog(SwingUtilities.getWindowAncestor(SwatTreeView.getInstance().getParent()), message, title, false);
 		return name;
 		//			if (name.endsWith(".pnml"))
@@ -66,7 +66,7 @@ public class AFtemplateImportAction extends AbstractWorkbenchAction {
 				converter.parse();
 				AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = converter.getGraphicalPN();
 				net.getPetriNet().setName(requestNetName("Please enter a name for the imported net", "Please enter a new name"));
-				SwatComponents.getInstance().addPetriNet(net);
+				SwatComponents.getInstance().getContainerPetriNets().addComponent(net);
 				Workbench.consoleMessage("Imported " + net.getPetriNet().getName());
 
 			} catch (ParserConfigurationException e1) {

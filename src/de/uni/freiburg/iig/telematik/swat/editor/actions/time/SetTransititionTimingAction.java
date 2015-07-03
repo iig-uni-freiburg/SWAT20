@@ -8,11 +8,14 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.Abstrac
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.gui.DistributionChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.AbstractPNEditorAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraph;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphCell;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SetTransititionTimingAction extends AbstractPNEditorAction {
 
@@ -30,26 +33,25 @@ public class SetTransititionTimingAction extends AbstractPNEditorAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		super.actionPerformed(e);
-		TimeContext context = SwatState.getInstance().getActiveContext(editor.getNetContainer().getPetriNet().getName());
-		IFNetGraph graph = (IFNetGraph) editor.getGraphComponent().getGraph();
-		PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
-		System.out.println("Time context for " + cell.getId() + " before: " + context.getTimeBehavior(cell.getId()));
-		AbstractDistributionView view = context.getTimeBehavior(cell.getId());
-		DistributionChooser chooser = new DistributionChooser(view);
-		chooser.setVisible(true);
-		if (chooser.userAbort())
-			System.out.println("User aborted");
-		if (!chooser.userAbort()) {
-			context.addTimeBehavior(cell.getId(), chooser.getDistribution());
-			try {
-				SwatComponents.getInstance().storeTimeContext(context, editor.getNetContainer().getPetriNet().getName());
-			} catch (SwatComponentException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		System.out.println("Time context for " + cell.getId() + " AFTER: " + context.getTimeBehavior(cell.getId()));
+            try {
+                super.actionPerformed(e);
+                TimeContext context = SwatState.getInstance().getActiveContext(editor.getNetContainer().getPetriNet().getName());
+                IFNetGraph graph = (IFNetGraph) editor.getGraphComponent().getGraph();
+                PNGraphCell cell = (PNGraphCell) graph.getSelectionCell();
+                System.out.println("Time context for " + cell.getId() + " before: " + context.getTimeBehavior(cell.getId()));
+                AbstractDistributionView view = context.getTimeBehavior(cell.getId());
+                DistributionChooser chooser = new DistributionChooser(view);
+                chooser.setVisible(true);
+                if (chooser.userAbort())
+                    System.out.println("User aborted");
+                if (!chooser.userAbort()) {
+                    context.addTimeBehavior(cell.getId(), chooser.getDistribution());
+                    //SwatComponents.getInstance().storeTimeContext(context, editor.getNetContainer().getPetriNet().getName());
+                }
+                System.out.println("Time context for " + cell.getId() + " AFTER: " + context.getTimeBehavior(cell.getId()));
+            } catch (Exception ex) {
+                Workbench.errorMessage("Could not get Time Context", ex, true);
+            }
 	}
 
 }

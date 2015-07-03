@@ -62,12 +62,13 @@ public class DeleteAction extends AbstractWorkbenchAction {
 
 		switch (selectedNode.getObjectType()) {
 		case PETRI_NET:
-			SwatComponents.getInstance().removePetriNet(selectedNode.getDisplayName(), true);
+                    SwatComponents.getInstance().getContainerPetriNets().removeComponent(selectedNode.getDisplayName(), true);
 			break;
 		case MXML_LOG:
 		case ARISTAFLOW_LOG:
+                    SwatComponents.getInstance().getContainerAristaflowLogs().removeComponent(selectedNode.getDisplayName(), true);
 		case XES_LOG:
-			SwatComponents.getInstance().removeLogFile(selectedNode.getDisplayName(), true);
+                    SwatComponents.getInstance().getContainerMXMLLogs().removeComponent(selectedNode.getDisplayName(), true);
 		default:
 			break;
 		}

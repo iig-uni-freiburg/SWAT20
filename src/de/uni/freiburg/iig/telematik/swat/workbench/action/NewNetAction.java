@@ -40,17 +40,18 @@ public class NewNetAction extends AbstractWorkbenchAction {
 			case NEW_CPN:
 				GraphicalCPN newCPN = new GraphicalCPN();
 				newCPN.getPetriNet().setName(netName);
-				SwatComponents.getInstance().addPetriNet(newCPN);
+                                SwatComponents.getInstance().getContainerPetriNets().addComponent(newCPN, true);
+				//SwatComponents.getInstance().addPetriNet(newCPN);
 				break;
 			case NEW_PT:
 				GraphicalPTNet newPTNet = new GraphicalPTNet();
 				newPTNet.getPetriNet().setName(netName);
-				SwatComponents.getInstance().addPetriNet(newPTNet);
+				SwatComponents.getInstance().getContainerPetriNets().addComponent(newPTNet, true);
 				break;
 			case NEW_IF:
 				GraphicalIFNet newIFNet = new GraphicalIFNet(new IFNet());
 				newIFNet.getPetriNet().setName(netName);
-				SwatComponents.getInstance().addPetriNet(newIFNet);
+				SwatComponents.getInstance().getContainerPetriNets().addComponent(newIFNet, true);
 				break;
 
 			default:
@@ -59,7 +60,7 @@ public class NewNetAction extends AbstractWorkbenchAction {
 		}
 	}
 
-	private String requestNetName(String message, String title) {
+	private String requestNetName(String message, String title) throws Exception {
 		return new PNNameDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false).requestInput();
 
 	}
