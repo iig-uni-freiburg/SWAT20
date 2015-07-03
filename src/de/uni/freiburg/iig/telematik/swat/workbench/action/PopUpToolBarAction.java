@@ -21,7 +21,10 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
 import de.uni.freiburg.iig.telematik.swat.workbench.WorkbenchPopupToolBar;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.EditorProperties;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.ToolBarDialog;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PopUpToolBarAction extends AbstractAction {
 
@@ -53,10 +56,12 @@ public class PopUpToolBarAction extends AbstractAction {
 
 		    int size = 0;
 			try {
-				size = SwatProperties.getInstance().getIconSize().getSize();
+				size = EditorProperties.getInstance().getIconSize().getSize();
 			} catch (IOException e1) {
 				e1.printStackTrace();
-			}
+			} catch (PropertyException ex) {
+                        Logger.getLogger(PopUpToolBarAction.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 			popupToolBar.show(getButton(), 0, size + size/2);
 				}
 	}
