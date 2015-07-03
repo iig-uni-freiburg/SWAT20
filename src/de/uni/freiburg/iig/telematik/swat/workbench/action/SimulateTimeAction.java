@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -35,6 +36,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.PNTimeContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.TimeMachine;
 import de.uni.freiburg.iig.telematik.sepia.traversal.PNTraverser;
 import de.uni.freiburg.iig.telematik.sepia.traversal.RandomPNTraverser;
@@ -42,6 +44,8 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SimulateTimeAction extends AbstractWorkbenchAction {
 
@@ -77,32 +81,37 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//		System.out.println("Drain-Place: " + getNet().getPetriNet().getDrainPlaces().toString());
-		//		System.out.println("Source-Place: " + getNet().getPetriNet().getSourcePlaces().toString());
-		results = new double[numberOfRuns];
-		setupDrainPlaceListener(getNet());
-		for (int i = 0; i < results.length; i++) {
-			results[i] = getOneSimulationRun();
-		}
-
-		//		System.out.println("Needed times:");
-		//		for (long l : results)
-		//			System.out.print(" " + l);
-		numberOfBins = (int) (Math.max(Math.sqrt(results.length) / 3, 5) + 1);
-		generateDiagram(results, numberOfBins);
-		System.out.println("Average time: " + getAverage(results));
+            try {
+                //		System.out.println("Drain-Place: " + getNet().getPetriNet().getDrainPlaces().toString());
+                //		System.out.println("Source-Place: " + getNet().getPetriNet().getSourcePlaces().toString());
+                results = new double[numberOfRuns];
+                setupDrainPlaceListener(getNet());
+                for (int i = 0; i < results.length; i++) {
+                    results[i] = getOneSimulationRun();
+                }
+                
+                //		System.out.println("Needed times:");
+                //		for (long l : results)
+                //			System.out.print(" " + l);
+                numberOfBins = (int) (Math.max(Math.sqrt(results.length) / 3, 5) + 1);
+                generateDiagram(results, numberOfBins);
+                System.out.println("Average time: " + getAverage(results));
+            } catch (Exception ex) {
+                Logger.getLogger(SimulateTimeAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
 	}
 
 	public double[] getSimulationResults() {
 		return results;
 	}
 
-	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNet() {
+	private AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getNet() throws Exception {
 		return ((PNEditorComponent) Workbench.getInstance().getTabView().getSelectedComponent()).getNetContainer();
 	}
 
-	private TimeMachine<?, ?, ?, ?, ?> getTimeMachine(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net) {
-		return new TimeMachine(net.getPetriNet(), SwatComponents.getInstance().getTimeContexts(net.getPetriNet().getName()).get(0));
+	private TimeMachine<?, ?, ?, ?, ?> getTimeMachine(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net) throws ProjectComponentException {
+            PNTimeContext bla = (PNTimeContext) SwatComponents.getInstance().getContainerPetriNets().getContainerTimeContexts(net.getPetriNet().getName()).getComponents().toArray()[0];
+            return new TimeMachine(net.getPetriNet(), bla);
 	}
 
 	private PNTraverser<AbstractTransition<?, Object>> getTraverser(AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net) {
@@ -114,7 +123,7 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 		return traverser.chooseNextTransition((List<AbstractTransition<?, Object>>) net.getPetriNet().getEnabledTransitions());
 	}
 
-	private double getOneSimulationRun() {
+	private double getOneSimulationRun() throws Exception {
 		double time = 0;
 		AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> net = getNet();
 		TimeMachine<?, ?, ?, ?, ?> timeMachine = getTimeMachine(net);
