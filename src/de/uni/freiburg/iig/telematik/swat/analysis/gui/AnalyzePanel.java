@@ -198,6 +198,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
 			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
 			save.setLoadedFromDisk();
+                        storeLogAnalysis(analysisTargetName, save);
 			//TODO: Store analysis somehow
 			dropDown.addItem(save);
 			dropDown.setSelectedItem(save);
@@ -319,4 +320,13 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		this.add(box);
 	}
 	*/
+
+    private void storeLogAnalysis(String logName, Analysis save) throws ProjectComponentException {
+        //which kind of log
+        SwatComponents comp = SwatComponents.getInstance();
+        if(comp.getContainerAristaflowLogs().containsComponent(logName)){
+            comp.getContainerAristaflowLogs().addComponent(save, true);
+        }
+        
+    }
 }

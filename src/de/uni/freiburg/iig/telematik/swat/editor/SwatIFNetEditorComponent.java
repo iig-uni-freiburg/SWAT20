@@ -15,6 +15,8 @@ import de.uni.freiburg.iig.telematik.wolfgang.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.IFNetGraphComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.graph.PNGraphComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.AbstractToolBar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SwatIFNetEditorComponent extends IFNetEditorComponent {
 
@@ -60,12 +62,13 @@ public class SwatIFNetEditorComponent extends IFNetEditorComponent {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} catch (Exception ex) {
+                Logger.getLogger(SwatIFNetEditorComponent.class.getName()).log(Level.SEVERE, null, ex);
+            }
 		return null;
 
 	}
 	
-	@Override
 	protected void setPropertyChecksUnknown() {
 		//Need to add Property Checks to IFNetEditorComponent
 //		((IFNetToolBar)getEditorToolbar()).getCheckValidityAction().setFillColor(AbstractPropertyCheckAction.PropertyUnknownColor );
