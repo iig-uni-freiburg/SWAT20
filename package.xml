@@ -56,6 +56,7 @@
 
         <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask"/>
         <taskdef name="deb" classname="org.vafer.jdeb.ant.DebAntTask"/>
+        <taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" />
 
 	<path id="TOVAL.classpath">
 		<pathelement location="${TOVAL.location}/bin/classes-ant" />
@@ -390,5 +391,18 @@
 			<option value="-Dapple.laf.useScreenMenuBar=true" />
 		</bundleapp>
 	</target>
+
+        <target name="bundle-win32" depends="package" description="Creates a Windows executable">
+            <launch4j>
+                <config headerType="gui" outfile="${target.dir.jar}/${jar.file.name}.exe" dontWrapJar="false" jarPath="${target.dir.jar}/${jar.file.name}-runnable.jar" icon="${basedir}/res/de/uni/freiburg/iig/telematik/swat/logo/swat.ico">
+                    <var>SETTINGS="%HomeDrive%%HomePath%\\swat-settings.ini"</var>
+                    <jre minVersion="1.8.0">
+                        <opt>-Dlaunch4j.exedir="%EXEDIR%"</opt>
+                        <opt>-Dlaunch4j.exefile="%EXEFILE%"</opt>
+                    </jre>
+                    <classPath mainClass="${main-class}" />
+                </config>
+            </launch4j>
+        </target>
 
 </project>
