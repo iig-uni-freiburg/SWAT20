@@ -393,7 +393,6 @@
                     name="SWAT"
                     displayname="SWAT"
                     identifier="de.uni.freiburg.iig.telematik.swat"
-                    identifier="${main-class}"
                     icon="${icon.mac.file}"
                     shortversion="${version.name}"
                     version="${version.name}"
