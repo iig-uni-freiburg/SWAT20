@@ -19,6 +19,7 @@ import javax.swing.WindowConstants;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.AboutAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ExportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
@@ -94,9 +95,10 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	}
 
 	private JMenu getHelpEntry() {
-		JMenu importEntry = new JMenu("Help");
-		importEntry.add(new SendExceptionsAsEmail("Send Bug Report...", null));
-		return importEntry;
+		JMenu helpEntry = new JMenu("Help");
+                helpEntry.add(new AboutAction("about..."));
+		helpEntry.add(new SendExceptionsAsEmail("Send Bug Report...", null));
+		return helpEntry;
 	}
 
 	private JMenuItem getImportEntry() {

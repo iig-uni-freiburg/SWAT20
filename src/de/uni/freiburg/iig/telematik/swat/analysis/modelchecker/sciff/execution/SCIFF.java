@@ -24,14 +24,28 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlow
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SCIFF extends ModelChecker {
 	
 	private ISciffLogReader mLogReader;
 
 	public SCIFF(File xesLogFile) {
+            
+            if(AristaFlowParser.canParse(xesLogFile)){
+                try {
+                    AristaFlowParser parser = new AristaFlowParser(xesLogFile);
+                    parser.parse(whichTimestamp.BOTH);
+                    mLogReader = parser;
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(SCIFF.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(SCIFF.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
 
-		if (new XESLogParser().canParse(xesLogFile)) {
+		else if(new XESLogParser().canParse(xesLogFile)) {
 			XESLogParser parser = new XESLogParser();
 			try {
 				parser.parse(xesLogFile, ParsingMode.COMPLETE);
@@ -41,17 +55,17 @@ public class SCIFF extends ModelChecker {
 			} catch (ParserException e) {
 				Workbench.errorMessage("Could not parse and analyze " + xesLogFile.getName(), e, true);
 			}
-		} else {
-			//try AristaFlowLogParser
-			try {
-				AristaFlowParser parser = new AristaFlowParser(xesLogFile);
-				parser.parse(whichTimestamp.BOTH);
-				mLogReader = parser;
-			} catch (FileNotFoundException e) {
-				Workbench.errorMessage("Could not parse " + xesLogFile.getName() + ". File not found", e, true);
-			} catch (Exception e) {
-				Workbench.errorMessage("Could not parse " + xesLogFile.getName() + ". parser error", e, true);
-			}
+//		} else {
+//			//try AristaFlowLogParser
+//			try {
+//				AristaFlowParser parser = new AristaFlowParser(xesLogFile);
+//				parser.parse(whichTimestamp.BOTH);
+//				mLogReader = parser;
+//			} catch (FileNotFoundException e) {
+//				Workbench.errorMessage("Could not parse " + xesLogFile.getName() + ". File not found", e, true);
+//			} catch (Exception e) {
+//				Workbench.errorMessage("Could not parse " + xesLogFile.getName() + ". parser error", e, true);
+//			}
 		}
 	}
 

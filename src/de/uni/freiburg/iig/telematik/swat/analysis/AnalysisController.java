@@ -71,7 +71,7 @@ public class AnalysisController {
 		return mPatternController.getPatterns();
 	}
 
-	public void setPatterns(ArrayList<CompliancePattern> patterns) {
+	public void setPatterns(ArrayList<CompliancePattern> patterns) throws Exception {
 		//mPatternController=new PatternController(this);
 		mPatternController.setPatterns(patterns);
             try {

@@ -10,6 +10,15 @@ class AristaFlowElement {
 	List<String> outgoingLinks = new ArrayList<String>();
 	String internalName;
 	String displayName;
+        String originator;
+
+    public String getOriginator() {
+        return originator;
+    }
+
+    public void setOriginator(String originator) {
+        this.originator = originator;
+    }
 
 	public AristaFlowElement(String internalName, String displayName) {
 		this.internalName = internalName;

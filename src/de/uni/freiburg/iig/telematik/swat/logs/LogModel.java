@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.NamedComponent;
+import java.util.Objects;
 
 public class LogModel implements NamedComponent{
 
@@ -46,10 +47,27 @@ public class LogModel implements NamedComponent{
 		try {
 			return getMD5Checksum(fileReference);
 		} catch (Exception e) {
-			//e.printStackTrace();
 			return -1;
 		}
 	}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final LogModel other = (LogModel) obj;
+        if (!Objects.equals(this.fileReference, other.fileReference)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        return true;
+    }
 
 	//from http://stackoverflow.com/questions/304268/getting-a-files-md5-checksum-in-java
 	public static byte[] createChecksum(File filename) throws Exception {

@@ -44,6 +44,10 @@ public class FourEyes extends LogCompliancePattern {
 		mParameters.add(new Parameter(paramTypes, "B"));
 		setFormalization();
 	}
+        
+        //public ArrayList<Parameter> getParameters(){
+        //    return mParameters;
+        //}
 
 	@Override
 	public void acceptInfoProfider(ModelInfoProvider provider) {

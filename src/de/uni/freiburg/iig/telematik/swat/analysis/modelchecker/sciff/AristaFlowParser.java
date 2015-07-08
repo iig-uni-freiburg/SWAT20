@@ -30,6 +30,8 @@ import de.uni.freiburg.iig.telematik.sewol.log.DataAttribute;
 import de.uni.freiburg.iig.telematik.sewol.log.LockingException;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AristaFlowParser implements ISciffLogReader, Serializable {
 	private static final long serialVersionUID = -420321215814744113L;
@@ -76,6 +78,15 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 	public Set<String> getUniqueTraceNames() {
 		return traces.keySet();
 	}
+        
+        public static boolean canParse(File file){
+            try {
+                new AristaFlowParser(file).parse(whichTimestamp.START);
+                return true;
+            } catch (Exception ex) {
+                return false;
+            }
+        }
 
 
 	public AristaFlowParser(File logFile) throws FileNotFoundException {

@@ -22,7 +22,12 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 	private ArrayList<String> mRoles;
 
 	public XESLogInfoProvider(File xesLogFile) {
-		if (isXESLogFile(xesLogFile)) {
+            boolean isXESLog = false;
+            try{
+                isXESLog=isXESLogFile(xesLogFile);
+            }
+            catch(Exception e){}
+		if (isXESLog) {
 		XESLogParser parser = new XESLogParser();
 		try {
 			parser.parse(xesLogFile, ParsingMode.COMPLETE);
@@ -78,7 +83,8 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 	}
 	
 	private boolean isXESLogFile(File log) {
-		XESLogParser parser = new XESLogParser();
+	try{	
+            XESLogParser parser = new XESLogParser();
 		if (parser.canParse(log)) {
 			try {
 				parser.parse(log, ParsingMode.COMPLETE);
@@ -88,6 +94,10 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 			}
 		}
 		return false;
+        }
+        catch (Exception ex){
+            return false;
+        }
 	}
 
 }

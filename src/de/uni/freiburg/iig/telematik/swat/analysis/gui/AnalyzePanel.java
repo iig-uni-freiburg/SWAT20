@@ -163,9 +163,13 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 
 	private Component getAnalysisDropDown(String netID) throws ProjectComponentException {
 		if (dropDown == null) {
+                    SwatComponents comp = SwatComponents.getInstance();
 			Collection<Analysis> analyses;
-                    analyses = SwatComponents.getInstance().getContainerPetriNets().getContainerAnalysis(netID).getComponents();
-			//Collections.sort((List<T>) analyses);
+                    analyses = comp.getContainerPetriNets().getContainerAnalysis(netID).getComponents();
+                    analyses.addAll(comp.getContainerAristaflowLogs().getContainerAnalysis(netID).getComponents());
+                    analyses.addAll(comp.getContainerMXMLLogs().getContainerAnalysis(netID).getComponents());
+                    analyses.addAll(comp.getContainerXESLogs().getContainerAnalysis(netID).getComponents());
+			Collections.sort((List) analyses);
 			dropDown = new JComboBox();
 			dropDown.addItem("New Analysis...");
 			for (Analysis a : analyses)
@@ -199,7 +203,6 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
 			save.setLoadedFromDisk();
                         storeLogAnalysis(analysisTargetName, save);
-			//TODO: Store analysis somehow
 			dropDown.addItem(save);
 			dropDown.setSelectedItem(save);
 
@@ -325,7 +328,13 @@ public class AnalyzePanel extends JPanel implements ItemListener {
         //which kind of log
         SwatComponents comp = SwatComponents.getInstance();
         if(comp.getContainerAristaflowLogs().containsComponent(logName)){
-            comp.getContainerAristaflowLogs().addComponent(save, true);
+            comp.getContainerAristaflowLogs().addAnalysis(save, save.getName(), true);
+        }
+        else if (comp.getContainerMXMLLogs().containsComponent(logName)){
+            comp.getContainerMXMLLogs().addAnalysis(save, save.getName(), true);
+        }
+        else if (comp.getContainerXESLogs().containsComponent(logName)){
+            comp.getContainerXESLogs().addAnalysis(save, save.getName(), true);
         }
         
     }
