@@ -45,7 +45,9 @@
 	<property name="docs.temp.dir" value="${target.dir}/docs" />
 	<property name="classes.target.dir" value="${target.dir}/classes-ant" />
 	<property name="docs.temp.dir" value="${target.dir}/docs" />
-	<property name="icon.file" value="${res.dir}/de/uni/freiburg/iig/telematik/swat/logo/appicon/launcher.icns" />
+        <property name="icons.path" value="${res.dir}/de/uni/freiburg/iig/telematik/swat/logo" />
+	<property name="icon.mac.file" value="${icons.path}/appicon/launcher.icns" />
+	<property name="icon.win.file" value="${icons.path}/swat.ico" />
 
 	<!-- Define classpath -->
 	<property name="TOVAL.location" value="../TOVAL" />
@@ -386,7 +388,18 @@
 	</target>
 
 	<target name="bundle-macosx" depends="package" description="Creates a Mac OS X application bundle">
-		<bundleapp outputdirectory="${target.dir.jar}" name="SWAT" displayname="SWAT" identifier="${main-class}" icon="${icon.file}" shortversion="${version.name}" applicationCategory="public.app-category.developer-tools" mainclassname="${main-class-uri}">
+		<bundleapp
+                    outputdirectory="${target.dir.jar}"
+                    name="SWAT"
+                    displayname="SWAT"
+                    identifier="de.uni.freiburg.iig.telematik.swat"
+                    identifier="${main-class}"
+                    icon="${icon.mac.file}"
+                    shortversion="${version.name}"
+                    version="${version.name}"
+                    applicationCategory="public.app-category.developer-tools"
+                    copyright="2015 IIG Telematics, University of Freiburg"
+                    mainclassname="${main-class-uri}">
 			<classpath file="${target.dir.jar}/${jar.file.name}-runnable.jar" />
 			<option value="-Dapple.laf.useScreenMenuBar=true" />
 		</bundleapp>
@@ -394,7 +407,7 @@
 
         <target name="bundle-win32" depends="package" description="Creates a Windows executable">
             <launch4j>
-                <config headerType="gui" outfile="${target.dir.jar}/${jar.file.name}.exe" dontWrapJar="false" jarPath="${target.dir.jar}/${jar.file.name}-runnable.jar" icon="${basedir}/res/de/uni/freiburg/iig/telematik/swat/logo/swat.ico">
+                <config headerType="gui" outfile="${target.dir.jar}/${jar.file.name}.exe" dontWrapJar="false" jarPath="${target.dir.jar}/${jar.file.name}-runnable.jar" icon="${icon.win.file}">
                     <var>SETTINGS="%HomeDrive%%HomePath%\\swat-settings.ini"</var>
                     <jre minVersion="1.8.0">
                         <opt>-Dlaunch4j.exedir="%EXEDIR%"</opt>
