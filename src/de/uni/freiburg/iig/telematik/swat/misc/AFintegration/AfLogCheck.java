@@ -37,6 +37,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.XES
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.Exists;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.xeslog.FourEyes;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.xeslog.XESLogExists;
 import java.io.File;
@@ -44,6 +45,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
+import org.processmining.analysis.sciffchecker.logic.xml.XMLRuleSerializer;
 
 /**
  *
@@ -56,7 +61,7 @@ public class AfLogCheck {
     
     public static void main (String args[]) throws Exception{
         AfLogCheck checker = new AfLogCheck(new File("/tmp/aflog.cvs"));
-        System.out.println("Activity exists: "+checker.activityExists("Freigabe GF erforderlich?"));
+        System.out.println("Activity exists: "+checker.activityExists("Freigabe"));
         
     }
     
@@ -97,14 +102,29 @@ public class AfLogCheck {
         //test.acceptInfoProfider(infoProvider);
         ArrayList<Parameter> params = test.getParameters();
         params.get(0).getValue().setValue(activity);
+        params.get(0).getValue().setType(ParameterTypeNames.ACTIVITY);
         test.setFormalization();
+        test.instantiate();
         ArrayList<CompliancePattern>pattern = new ArrayList<>();
         pattern.add(test);
         new SCIFF(file).run(pattern);
         if(test.getProbability()>=0.9999)return true;
+        printPattern(((ArrayList<CompositeRule>) test.getFormalization()).get(0));
         return false;
         
     }
     
+    private void printPattern(CompositeRule pattern){
+        try {
+			System.out.println("Rule: ");
+			Element output = XMLRuleSerializer.serialize(pattern, "test");
+			XMLOutputter outPutter = new XMLOutputter();
+			outPutter.output(output, System.out);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    }
     
-}
+    
+
