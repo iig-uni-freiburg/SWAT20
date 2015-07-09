@@ -172,6 +172,7 @@ public class AristaFlowToPnmlConverter {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
                 names.put(element.getAttribute("id"), getValue("name", element));
+                elements.get(element.getAttribute("id")).setDisplayName(getValue("name", element));
             }
         }
 

@@ -33,8 +33,6 @@ package de.uni.freiburg.iig.telematik.swat.misc.AFintegration;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowToPnmlConverter;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -46,12 +44,29 @@ public class AfTemplateCheck {
     
     AristaFlowToPnmlConverter parser;
     
+    public static void main(String[] args) throws Exception{
+        String[] args2={"/tmp/af.template","Input Customer Data","Sachliche Prüfung"};
+        args=args2;
+        if(args.length==0||args.length < 1|| args.length>3){
+            printhelp();
+            System.exit(0);
+        }
+        AfTemplateCheck checker = new AfTemplateCheck(new File(args[0]));
+        checker.printContainsActivityCheck(args[1]);
+        checker.print4EyesCheck(args[1], args[2]);
+    }
+    
+    private static void printhelp() {
+        System.out.println("usage: AfTemplateCheck file activity1 [activity2]");
+        System.out.println("Checks if activity1 is present and if activity1 and activity2 are done by different persons");
+    }
+    
     public AfTemplateCheck(File file) throws Exception {
         try {
             parser = new AristaFlowToPnmlConverter(file);
             parser.parseWithoutIfnet();
         } catch (ParserConfigurationException | SAXException | IOException ex) {
-            throw new Exception("Could not parse AristaFlowLog");
+            throw new Exception("Could not parse AristaFlow template");
         }
     }
     
@@ -65,6 +80,25 @@ public class AfTemplateCheck {
     
     public boolean bySamePerson(String activityName1, String activityName2){
         return parser.bySamePerson(activityName1, activityName2);
+    }
+    
+    public void printContainsActivityCheck(String activityName){
+        System.out.print("Activity "+activityName+" present: ");
+        String result ="no";
+        if (containsActivity(activityName))
+            result="yes";
+        System.out.println(result);
+    }
+    
+       public void print4EyesCheck(String activityName1, String activityName2){
+           if(containsActivity(activityName1)&&containsActivity(activityName2)){
+        System.out.print("Activity "+activityName1+" and "+activityName2+" by different persons:");
+        String result ="yes";
+        if (bySamePerson(activityName1, activityName2))
+            result="no";
+        System.out.println(result);}
+           else
+               System.out.println("Could not check 4 Eyes principle");
     }
     
     

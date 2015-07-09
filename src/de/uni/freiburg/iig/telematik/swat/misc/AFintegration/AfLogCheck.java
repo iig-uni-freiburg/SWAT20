@@ -30,12 +30,11 @@
  */
 package de.uni.freiburg.iig.telematik.swat.misc.AFintegration;
 
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelCheckerResult;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.execution.SCIFF;
-import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.XESLogInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
-import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.Exists;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.xeslog.FourEyes;
@@ -47,7 +46,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 import org.processmining.analysis.sciffchecker.logic.model.rule.CompositeRule;
+import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 import org.processmining.analysis.sciffchecker.logic.xml.XMLRuleSerializer;
 
 /**
@@ -55,76 +56,104 @@ import org.processmining.analysis.sciffchecker.logic.xml.XMLRuleSerializer;
  * @author richard
  */
 public class AfLogCheck {
+
     AristaFlowParser parser;
     XESLogInfoProvider infoProvider;
     File file;
-    
-    public static void main (String args[]) throws Exception{
-        AfLogCheck checker = new AfLogCheck(new File("/tmp/aflog.cvs"));
-        System.out.println("Activity exists: "+checker.activityExists("Freigabe"));
-        
+
+    private static void printhelp() {
+        System.out.println("usage: AfLogCheck file activity1 [activity2]");
+        System.out.println("Checks if activity1 is present and if activity1 and activity2 are done by different persons");
     }
-    
-    public AfLogCheck(File file){
+
+    public static void main(String args[]) throws Exception {
+        String[] args2={"/tmp/aflog.cvs","Freigabe","Sachliche Prüfung"};
+        args=args2;
+        if (args.length == 0 || args.length == 1 || args.length > 3) {
+            printhelp();
+            System.exit(0);
+        }
+
+        AfLogCheck checker = new AfLogCheck(new File(args[0]));
+        checker.activityExists(args[1]);
+        checker.fourEyes(args[1], args[2]);
+
+    }
+
+    public AfLogCheck(File file) {
         try {
             parser = new AristaFlowParser(file);
             parser.parse(AristaFlowParser.whichTimestamp.BOTH);
-           // infoProvider = new XESLogInfoProvider(file);
-            this.file=file;
-            
+            // infoProvider = new XESLogInfoProvider(file);
+            this.file = file;
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(AfLogCheck.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(AfLogCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
-    /**returns true if both activities are done by different person**/
-    public boolean checkFourEyes(String activity1, String activity2) throws Exception{
-        FourEyes test = new FourEyes();
-        test.acceptInfoProfider(infoProvider);
-        ArrayList<Parameter> params = test.getParameters();
-        params.get(0).getValue().setValue(activity1);
-        params.get(1).getValue().setValue(activity2);
-        test.setFormalization();
-        test.instantiate();
-        ArrayList<CompliancePattern> pattern=new ArrayList<>();
-        pattern.add(test);
-        SCIFF sciff = new SCIFF(file);
-        sciff.run(pattern);
-        if(test.getProbability()>=0.9999) return true;
-        return false;
-    }
-    
-    public boolean activityExists(String activity) throws Exception{
+
+    public void activityExists(String activity) throws Exception {
+        System.out.println("Activity " + activity + " exists:");
         XESLogExists test = new XESLogExists();
-        //test.acceptInfoProfider(infoProvider);
         ArrayList<Parameter> params = test.getParameters();
         params.get(0).getValue().setValue(activity);
         params.get(0).getValue().setType(ParameterTypeNames.ACTIVITY);
-        test.setFormalization();
-        test.instantiate();
-        ArrayList<CompliancePattern>pattern = new ArrayList<>();
-        pattern.add(test);
-        new SCIFF(file).run(pattern);
-        if(test.getProbability()>=0.9999)return true;
-        printPattern(((ArrayList<CompositeRule>) test.getFormalization()).get(0));
-        return false;
-        
-    }
-    
-    private void printPattern(CompositeRule pattern){
-        try {
-			System.out.println("Rule: ");
-			Element output = XMLRuleSerializer.serialize(pattern, "test");
-			XMLOutputter outPutter = new XMLOutputter();
-			outPutter.output(output, System.out);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-    }
-    
-    
+        invokeSciff(test);
+        printDetails();
 
+    }
+
+    /**
+     * returns true if both activities are done by different person*
+     */
+    public void fourEyes(String activity1, String activity2) throws Exception {
+        System.out.println("Four Eyes " + activity1 + " and " + activity2);
+        FourEyes test = new FourEyes();
+        ArrayList<Parameter> params = test.getParameters();
+        params.get(0).getValue().setValue(activity1);
+        params.get(1).getValue().setValue(activity2);
+        invokeSciff(test);
+        printDetails();
+    }
+
+    private void printPattern(CompositeRule pattern) {
+        try {
+            System.out.println("Rule: ");
+            Element output = XMLRuleSerializer.serialize(pattern, "test");
+            XMLOutputter outPutter = new XMLOutputter();
+            outPutter.output(output, System.out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void invokeSciff(CompliancePattern singlePattern) throws Exception {
+        singlePattern.setFormalization();
+        singlePattern.instantiate();
+        ArrayList<CompliancePattern> test = new ArrayList<>();
+        test.add(singlePattern);
+        SCIFF checker = new SCIFF(file);
+        checker.run(test);
+
+    }
+
+    private void printDetails() {
+        if (ModelCheckerResult.hasAResult()) {
+            CheckerReport report = (CheckerReport) ModelCheckerResult.getResult();
+            ISciffLogReader log = report.getLog();
+            System.out.println("Violating (" + report.wrongInstances().size() + ")");
+            for (int violating : report.wrongInstances()) {
+                System.out.println(log.getInstance(violating));
+            }
+            //System.out.println("");
+            System.out.println("Correct (" + report.correctInstances().size() + ")");
+            for (int correct : report.correctInstances()) {
+                System.out.println(log.getInstance(correct));
+            }
+            System.out.println("");
+        }
+    }
+}

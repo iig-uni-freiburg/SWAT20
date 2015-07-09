@@ -19,6 +19,10 @@ class AristaFlowElement {
     public void setOriginator(String originator) {
         this.originator = originator;
     }
+    
+    public void setDisplayName(String name){
+        displayName=name;
+    }
 
 	public AristaFlowElement(String internalName, String displayName) {
 		this.internalName = internalName;

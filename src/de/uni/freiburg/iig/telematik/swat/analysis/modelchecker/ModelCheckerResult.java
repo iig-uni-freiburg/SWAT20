@@ -10,8 +10,6 @@ public class ModelCheckerResult {
 	}
 
 	public static void setResult(Object modelCheckerResult) {
-		System.out.println();
-		System.out.println("setting result " + modelCheckerResult);
 		result = modelCheckerResult;
 		hasResult = true;
 	}
