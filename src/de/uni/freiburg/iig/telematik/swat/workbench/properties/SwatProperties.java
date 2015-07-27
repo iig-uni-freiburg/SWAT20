@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import de.invation.code.toval.misc.wd.AbstractWorkingDirectoryProperties;
+import de.invation.code.toval.os.OSUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -20,7 +21,7 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     public static final String WORKING_DIRECTORY_DESCRIPTOR = "Swat Working Directory";
     public static final String DEFAULT_WORKING_DIRECTORY_NAME = "SwatWorkingDirectory";
-    public static final String SWAT_PROPERTY_FILE_NAME = "SwatProperties";
+    public static final String SWAT_PROPERTY_FILE_NAME = OSUtils.getUserHomeDirectory() + "/.swatProperties";
 
     protected static final String pathNets = "nets/";
     protected static final String pathLogs = "logs/";
@@ -42,11 +43,11 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     private static SwatProperties instance = null;
 
-    private String applicationPath = null;
+    private final String applicationPath = null;
 
-    private Set<SwatPropertyChangeListener> listeners = new HashSet<SwatPropertyChangeListener>();
+    private final Set<SwatPropertyChangeListener> listeners = new HashSet<>();
     
-    private EditorProperties editorProperties = EditorProperties.getInstance();
+    private final EditorProperties editorProperties = EditorProperties.getInstance();
 
     public SwatProperties() throws IOException {
         super();
@@ -197,7 +198,7 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     //-------  SQL Properties --------------------------------------------------------------
     public String getAristaFlowURL() {
         String result = getProperty(SwatProperty.ARISTA_FLOW_URL);
-        if (result == null || result == "") {
+        if (result == null || "".equals(result)) {
             result = "jdbc:postgresql://127.0.0.1:5432/InvoiceLocal";
         }
         return result;
@@ -210,7 +211,7 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     public String getAristaFlowUser() {
         String result = getProperty(SwatProperty.ARISTA_FLOW_USER);
-        if (result == null || result == "") {
+        if (result == null || "".equals(result)) {
             result = "ADEPT2";
         }
         return result;
@@ -223,7 +224,7 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     public String getAristaFlowPass() {
         String result = getProperty(SwatProperty.ARISTA_FLOW_PASS);
-        if (result == null || result == "") {
+        if (result == null || "".equals(result)) {
             result = "ADEPT2DB";
         }
         return result;

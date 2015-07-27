@@ -375,15 +375,36 @@
 				<filter token="filename" value="${jar.file.name}-runnable.jar" />
 			</filterset>
 		</copy>
+		<!-- Copy icon file -->
+		<copy file="${icons.path}/swat_128.png" tofile="${classes.target.dir}/deb/swat.png" />
+		<!-- Copy desktop link file -->
+		<copy todir="${classes.target.dir}/deb/desktop">
+			<fileset dir="${build.dir}/deb/desktop" />
+			<filterset begintoken="[[" endtoken="]]">
+				<filter token="installpath" value="${deb.installpath}" />
+				<filter token="execpath" value="${deb.execpath}" />
+				<filter token="filename" value="${artifact.name}" />
+			</filterset>
+		</copy>
+                <chmod dir="${build.dir}/deb/starter" type="file" perm="755" >
+                    <filelist files="${build.dir}/deb/starter/${artifact.name}"/>
+                </chmod>
+
 		<!-- Create debian package -->
 		<deb destfile="${target.dir.jar}/${jar.file.name}.deb" control="${classes.target.dir}/deb/control" verbose="true">
 			<data src="${target.dir.jar}/${jar.file.name}-runnable.jar" type="file">
 				<mapper type="perm" prefix="${deb.installpath}" />
 			</data>
-			<data src="${classes.target.dir}/deb/starter/swat.sh" type="file">
+                        <tarfileset file="${build.dir}/deb/starter/${artifact.name}"
+                                    prefix="${deb.execpath}"
+                                    filemode="755" />
+			<data src="${classes.target.dir}/deb/swat.png" type="file">
 				<mapper type="perm" prefix="${deb.installpath}" />
 			</data>
-			<link name="${deb.execpath}/swat.sh" target="${deb.installpath}/swat.sh" symbolic="true" mode="777" />
+			<data src="${classes.target.dir}/deb/desktop/swat20.desktop" type="file">
+				<mapper type="perm" prefix="/usr/share/applications" />
+			</data>
+			<link name="${deb.installpath}/${artifact.name}.jar" target="${deb.installpath}/${jar.file.name}-runnable.jar" symbolic="true" mode="777" />
 		</deb>
 	</target>
 
@@ -415,6 +436,9 @@
                     <classPath mainClass="${main-class}" />
                 </config>
             </launch4j>
+        </target>
+
+        <target name="bundle-all" depends="bundle-deb,bundle-macosx,bundle-win32" description="Creates all bundles">
         </target>
 
 </project>
