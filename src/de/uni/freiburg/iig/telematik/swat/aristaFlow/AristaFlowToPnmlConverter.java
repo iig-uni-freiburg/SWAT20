@@ -71,7 +71,7 @@ public class AristaFlowToPnmlConverter {
         return "";
     }
     
-    public boolean bySamePerson(String activityName1, String activityName2){
+    public boolean bySamePerson(String activityName1, String activityName2) throws NullPointerException{
         AristaFlowElement element1=null;
         AristaFlowElement element2=null;
         for (Map.Entry<String, AristaFlowElement> element : elements.entrySet()) {
@@ -87,6 +87,13 @@ public class AristaFlowToPnmlConverter {
     }
         return false;
         
+    }
+    
+    public void printAllEntries(){
+        System.out.println("Entries in PNML-Converter:");
+        for(Map.Entry<String, AristaFlowElement> keys:elements.entrySet()){
+            System.out.println(keys.getKey()+" ("+keys.getValue().displayName+", "+keys.getValue().internalName+"), Originator: "+keys.getValue().getOriginator());
+        }
     }
 
     private void loadOriginators(Document doc) {

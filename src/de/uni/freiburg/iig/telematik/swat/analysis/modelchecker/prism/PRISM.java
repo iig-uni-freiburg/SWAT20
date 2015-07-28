@@ -75,6 +75,10 @@ private String mPrismPath;
 		this((AbstractPetriNet<?,?,?,?,?>) petriNet);
 		mConverter = new IFNetAdapter(petriNet);
 	}
+        
+        public PRISM(IFNet net, File PrismPath){
+            //TODO
+        }
 
 	@Override
 	public void run(ArrayList<CompliancePattern> patterns) throws PrismException {

@@ -11,6 +11,8 @@ import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem;
 import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem.OperatingSystems;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PrismFunctionValidator {
 
@@ -29,14 +31,27 @@ public class PrismFunctionValidator {
 		System.out.println(checkPrism());
 		FileChooserType type;
 	}
+        
+        public static boolean checkPrism() {
+            try {
+                File fullpath=new File(SwatProperties.getInstance().getPrismPath());
+                return checkPrism(fullpath);
+            } catch (PropertyException e) {
+			Workbench.errorMessage("Could not retrieve Prism Path. Please set prism path", null, true);
+		} catch (IOException e) {
+			Workbench.errorMessage("Could not ressolve Prism Model Checker", null, true);
+		}
+            return false;
+        }
 
-	public static boolean checkPrism() {
+	public static boolean checkPrism(File path) {
 		if (!generatePrismTestFiles())
 			return false; //could not generate files in temp dir
 
 		PrismRunner pr = new PrismRunner();
 		try {
-			File fullPrismPath = getFullPrismPath(SwatProperties.getInstance().getPrismPath());
+			//File fullPrismPath = getFullPrismPath(SwatProperties.getInstance().getPrismPath());
+                    File fullPrismPath=path;
 			pr.setPrismFile(fullPrismPath);
 			pr.setModelFile(tempModel);
 			pr.setPropertyFile(tempProperty);
@@ -45,10 +60,6 @@ public class PrismFunctionValidator {
 				return true; //all good
 		} catch (ParameterException e) {
 			Workbench.errorMessage("Error loading Prism", null, true);
-		} catch (PropertyException e) {
-			Workbench.errorMessage("Could not retrieve Prism Path. Please set prism path", null, true);
-		} catch (IOException e) {
-			Workbench.errorMessage("Could not ressolve Prism Model Checker", null, true);
 		}
 		return false;
 	}

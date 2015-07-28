@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.Mod
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 
 public abstract class CompliancePattern implements Comparable<CompliancePattern> {
+    private ArrayList<String> counterExample;
 	
 	private enum State {
 		NOT_INSTANTIATED, INSTANTIATED
@@ -90,9 +91,12 @@ public abstract class CompliancePattern implements Comparable<CompliancePattern>
 	public abstract boolean isAntiPattern();
 
 	public void setCounterExample(ArrayList<String> path) {
-		// TODO Auto-generated method stub
-		
+		this.counterExample=path;	
 	}
+        
+        public ArrayList<String> getCounterExample(){
+            return counterExample;
+        }
 
 	@Override
 	public int compareTo(CompliancePattern o) {

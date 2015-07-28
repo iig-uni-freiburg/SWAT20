@@ -79,6 +79,7 @@ public class AfLogCheck {
         checker.fourEyes(args[1], args[2]);
 
     }
+    private CompliancePattern test;
 
     public AfLogCheck(File file) {
         try {
@@ -96,7 +97,7 @@ public class AfLogCheck {
     }
 
     public void activityExists(String activity) throws Exception {
-        System.out.println("Activity " + activity + " exists:");
+        System.out.println("Check activity " + activity + " exists:");
         XESLogExists test = new XESLogExists();
         ArrayList<Parameter> params = test.getParameters();
         params.get(0).getValue().setValue(activity);
@@ -110,8 +111,7 @@ public class AfLogCheck {
      * returns true if both activities are done by different person*
      */
     public void fourEyes(String activity1, String activity2) throws Exception {
-        System.out.println("Four Eyes " + activity1 + " and " + activity2);
-        FourEyes test = new FourEyes();
+        System.out.println("Check Four Eyes " + activity1 + " and " + activity2);
         ArrayList<Parameter> params = test.getParameters();
         params.get(0).getValue().setValue(activity1);
         params.get(1).getValue().setValue(activity2);
@@ -137,7 +137,6 @@ public class AfLogCheck {
         test.add(singlePattern);
         SCIFF checker = new SCIFF(file);
         checker.run(test);
-
     }
 
     private void printDetails() {

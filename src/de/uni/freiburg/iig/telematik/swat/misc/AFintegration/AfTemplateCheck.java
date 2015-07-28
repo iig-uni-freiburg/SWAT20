@@ -30,9 +30,26 @@
  */
 package de.uni.freiburg.iig.telematik.swat.misc.AFintegration;
 
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.PRISM;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.PrismException;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowToPnmlConverter;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.IFNetInfoProvider;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.ifnet.IFNetLeadsTo;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.ptnet.PTNetLeadsTo;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -41,65 +58,136 @@ import org.xml.sax.SAXException;
  * @author richard
  */
 public class AfTemplateCheck {
-    
+
     AristaFlowToPnmlConverter parser;
-    
-    public static void main(String[] args) throws Exception{
-        String[] args2={"/tmp/af.template","Input Customer Data","Sachliche Prüfung"};
-        args=args2;
-        if(args.length==0||args.length < 1|| args.length>3){
+    IFNet net;
+
+    public static void main(String[] args) throws Exception {
+        String[] args2 = {"/tmp/af.template", "Input Customer Data", "Sign Form"};
+        args = args2;
+        if (args.length == 0 || args.length < 1 || args.length > 3) {
             printhelp();
             System.exit(0);
         }
         AfTemplateCheck checker = new AfTemplateCheck(new File(args[0]));
+        AristaFlowToPnmlConverter test = new AristaFlowToPnmlConverter(new File(args[0]));
+        test.printAllEntries();
         checker.printContainsActivityCheck(args[1]);
         checker.print4EyesCheck(args[1], args[2]);
+        checker.printLeadsTo(args[1], args[2]);
     }
-    
+
     private static void printhelp() {
         System.out.println("usage: AfTemplateCheck file activity1 [activity2]");
         System.out.println("Checks if activity1 is present and if activity1 and activity2 are done by different persons");
+        System.out.println("Checks if activity1 always leads to activity2");
     }
-    
+
     public AfTemplateCheck(File file) throws Exception {
         try {
             parser = new AristaFlowToPnmlConverter(file);
-            parser.parseWithoutIfnet();
+            //parser.parseWithoutIfnet();
+            net = parser.parse();
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             throw new Exception("Could not parse AristaFlow template");
         }
     }
-    
-    public boolean containsActivity (String ActivityName){
+
+    public boolean containsActivity(String ActivityName) {
         return parser.containsActivity(ActivityName);
     }
-    
-    public String getOriginator(String ActivityName){
+
+    public String getOriginator(String ActivityName) {
         return parser.getOriginator(ActivityName);
     }
-    
-    public boolean bySamePerson(String activityName1, String activityName2){
+
+    public boolean bySamePerson(String activityName1, String activityName2) {
         return parser.bySamePerson(activityName1, activityName2);
     }
-    
-    public void printContainsActivityCheck(String activityName){
-        System.out.print("Activity "+activityName+" present: ");
-        String result ="no";
-        if (containsActivity(activityName))
-            result="yes";
+
+    public void printContainsActivityCheck(String activityName) {
+        System.out.print("check activity " + activityName + " present: ");
+        String result = "no";
+        if (containsActivity(activityName)) {
+            result = "yes";
+        }
         System.out.println(result);
     }
-    
-       public void print4EyesCheck(String activityName1, String activityName2){
-           if(containsActivity(activityName1)&&containsActivity(activityName2)){
-        System.out.print("Activity "+activityName1+" and "+activityName2+" by different persons:");
-        String result ="yes";
-        if (bySamePerson(activityName1, activityName2))
-            result="no";
-        System.out.println(result);}
-           else
-               System.out.println("Could not check 4 Eyes principle");
+
+    public void print4EyesCheck(String activityName1, String activityName2) {
+        try {
+            if (containsActivity(activityName1) && containsActivity(activityName2)) {
+                System.out.print("Check activity " + activityName1 + " and " + activityName2 + " by different persons:");
+                String result = "yes";
+
+                if (bySamePerson(activityName1, activityName2)) {
+                    result = "no";
+                }
+                System.out.println(result);
+            } else {
+                System.out.println("Could not check 4 Eyes principle");
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Could not check 4 Eyes principle");
+        }
     }
-    
-    
+
+    public void printLeadsTo(String activiy1, String activiy2) {
+        try {
+            CompliancePattern rule = leadsTo(activiy1, activiy2);
+            System.out.println("Checking " + activiy1 + "leads to " + activiy2 + ":");
+            System.out.println(rule.getProbability());
+            if (!rule.getCounterExample().isEmpty()) {
+                System.out.println("Counterexample: ");
+            }
+            for (String s : rule.getCounterExample()) {
+                System.out.print(s + " ");
+            }
+        } catch (PrismException ex) {
+            System.out.println("Could not check leads-to");
+        }
+
+    }
+
+    private CompliancePattern leadsTo(String activity1, String activity2) throws PrismException {
+        IFNetLeadsTo rule = new IFNetLeadsTo();
+        rule.acceptInfoProfider(new IFNetInfoProvider(net));
+        ArrayList<Parameter> test = rule.getParameters();
+        test.get(0).setValue(ParameterTypeNames.TRANSITION);
+        test.get(1).setValue(ParameterTypeNames.TRANSITION);
+        test.get(0).getValue().setType(ParameterTypeNames.TRANSITION);
+        test.get(1).getValue().setType(ParameterTypeNames.TRANSITION);
+        test.get(0).getValue().setValue(enrichLabelInfo(activity1));
+        test.get(1).getValue().setValue(enrichLabelInfo(activity2));
+        rule.instantiate();
+        rule.setFormalization();
+        PRISM prism = new PRISM(net);
+        ArrayList<CompliancePattern> rules = new ArrayList<>();
+        rules.add(rule);
+        prism.run(rules);
+        return rule;
+    }
+
+    private String enrichLabelInfo(String activity) {
+        Object[] bla = net.getTransitions(activity).toArray();
+        System.out.println("Checking " + activity);
+        if (bla[0] instanceof RegularIFNetTransition) {
+            return ((AbstractIFNetTransition) bla[0]).getName() + "(" + activity + ")";
+        }
+        return activity + "()";
+    }
+
+    public void printAllTransitions() {
+        for (AbstractIFNetTransition<IFNetFlowRelation> transitions : net.getTransitions()) {
+            System.out.println(transitions.getLabel() + "(" + transitions.getName() + ")");
+        }
+    }
+
+    private File getSciffLocation() throws URISyntaxException {
+        CodeSource codeSource = AfTemplateCheck.class.getProtectionDomain().getCodeSource();
+        File jarFile = new File(codeSource.getLocation().toURI().getPath());
+        String jarDir = jarFile.getParentFile().getPath();
+        return new File(jarDir);
+    }
+
 }

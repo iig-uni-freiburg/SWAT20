@@ -1,6 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.patterns.logic;
 
 public class Helpers {
+    
+    public static void main (String args[]){
+        System.out.println(cutOffLabelInfo("t1(bla)"));
+    }
 
 	public static String cutOffLabelInfo(String str) {
 		
