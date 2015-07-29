@@ -22,7 +22,9 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowElement.PTequivalent;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.graphpopup.LayoutAction;
@@ -160,6 +162,10 @@ public class AristaFlowToPnmlConverter {
         initialSet.add("black");
         marking.set("n0", initialSet);
         net.setInitialMarking(marking);
+        for(IFNetPlace place: net.getPlaces()){
+            //place.setCapacity(1);
+            place.setColorCapacity("black", 1);
+        }
     }
 
     public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getGraphicalPN() {

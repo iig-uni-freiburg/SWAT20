@@ -33,7 +33,7 @@ private String mPrismPath;
 	
 	private PrismModelAdapter mConverter;
 	
-	private String mFilesPath = System.getProperty("user.dir");
+	private String mFilesPath = System.getProperty("user.home")+System.getProperty("file.separator");
 	
 	private final String mPropertiesFileName = "properties";
 	
@@ -41,8 +41,9 @@ private String mPrismPath;
 	
 	private final String mStatesFileName = "states";
 	
-	private PRISM(AbstractPetriNet<?,?,?,?,?> net) {
+	private PRISM(AbstractPetriNet<?,?,?,?,?> net, File prismPath) {
 		TransitionToIDMapper.createMap(net);
+                if(prismPath==null){
 		try {
 			mPrismPath = SwatProperties.getInstance().getPrismPath();
 			if (!mPrismPath.endsWith(File.separator)) {
@@ -58,26 +59,30 @@ private String mPrismPath;
 			Workbench.errorMessage("Could not load PRISM", e, true);
 			e.printStackTrace();
 		}
+                } else {
+                    mPrismPath=prismPath.getAbsolutePath()+System.getProperty("file.separator");
+                }
 	}
 	
 
 	public PRISM(PTNet petriNet) {
-		this((AbstractPetriNet<?,?,?,?,?>) petriNet);
+		this((AbstractPetriNet<?,?,?,?,?>) petriNet,null);
 		mConverter = new PTNetConverter(petriNet);
 	}
 
 	public PRISM(CPN petriNet) {
-		this((AbstractPetriNet<?,?,?,?,?>) petriNet);
+		this((AbstractPetriNet<?,?,?,?,?>) petriNet,null);
 		mConverter = new CPNAdapter(petriNet);
 	}
 
 	public PRISM(IFNet petriNet) {
-		this((AbstractPetriNet<?,?,?,?,?>) petriNet);
+		this((AbstractPetriNet<?,?,?,?,?>) petriNet,null);
 		mConverter = new IFNetAdapter(petriNet);
 	}
         
-        public PRISM(IFNet net, File PrismPath){
-            //TODO
+        public PRISM(IFNet petriNet, File prismPath){
+            this((AbstractPetriNet<?,?,?,?,?>) petriNet,prismPath);
+		mConverter = new IFNetAdapter(petriNet);
         }
 
 	@Override
@@ -138,7 +143,7 @@ private String mPrismPath;
 	    CommandLine commandline = CommandLine.parse(command);
 	    DefaultExecutor exec = new DefaultExecutor();
 	    PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
-		Workbench.consoleMessage("Executing: " + command);
+		//Workbench.consoleMessage("Executing: " + command);
 	    exec.setStreamHandler(streamHandler);
 	    exec.execute(commandline);
 	    return(outputStream.toString());
