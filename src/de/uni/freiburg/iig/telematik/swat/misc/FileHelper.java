@@ -1,6 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.misc;
 
 public class FileHelper {
+    
+    public static void main(String args[]){
+        System.out.println(runningFromJar());
+    }
 
 //		//command = "/bin/sh -c echo hallo > /tmp/test.txt";
 //		String readableCommand = "run command: " + " " + command[0] + " " + command[1] + " " + command[2];
@@ -15,4 +19,14 @@ public class FileHelper {
 //			return true;
 //		}
                 
+    public static boolean runningFromJar(){
+        
+   String className = FileHelper.class.getName().replace('.', '/');
+   String classJar =  
+     FileHelper.class.getResource("/" + className + ".class").toString();
+   if (classJar.startsWith("jar:")) {
+     return true;
+   }
+   return false;
+    }
 }

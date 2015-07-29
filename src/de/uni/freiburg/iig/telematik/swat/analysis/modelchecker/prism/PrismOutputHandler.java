@@ -51,6 +51,7 @@ public class PrismOutputHandler {
 				boolean isFulfilled = isFulfilled(res, cp.isAntiPattern());
 				cp.setProbability(probability);
 				cp.setSatisfied(isFulfilled);
+                                cp.setCounterExample(getViolatingPath(res, states));
 				mEvaluatedPatterns.add(cp);
 			} else {
 				ArrayList<String> path = getViolatingPath(res, states);
