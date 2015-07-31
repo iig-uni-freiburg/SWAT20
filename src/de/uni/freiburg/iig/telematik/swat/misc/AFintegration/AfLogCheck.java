@@ -67,31 +67,31 @@ public class AfLogCheck {
     }
 
     public static void main(String args[]) throws Exception {
-        String[] args2={"/tmp/aflog.cvs","Freigabe","Sachliche Prüfung"};
+        String[] args2={"/tmp/aflog.csv","Freigabe","Sachliche Prüfung"};
         args=args2;
         if (args.length == 0 || args.length == 1 || args.length > 3) {
             printhelp();
             System.exit(0);
         }
+        try{
 
         AfLogCheck checker = new AfLogCheck(new File(args[0]));
         checker.activityExists(args[1]);
         checker.fourEyes(args[1], args[2]);
+        }
+        catch(Exception e){
+        	System.err.println("Error "+e.getMessage());
+        }
 
     }
 
-    public AfLogCheck(File file) {
-        try {
+    public AfLogCheck(File file) throws Exception {
+
             parser = new AristaFlowParser(file);
             parser.parse(AristaFlowParser.whichTimestamp.BOTH);
             // infoProvider = new XESLogInfoProvider(file);
             this.file = file;
 
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AfLogCheck.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(AfLogCheck.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
     }
 

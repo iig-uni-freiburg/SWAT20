@@ -43,6 +43,7 @@ import de.uni.freiburg.iig.telematik.swat.misc.OperatingSystem.OperatingSystems;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.IFNetInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.ifnet.IFNetLeadsTo;
+
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.ptnet.PTNetLeadsTo;
@@ -69,6 +70,7 @@ public class AfTemplateCheck {
 
     public static void main(String[] args) throws Exception {
         String[] args2 = {"/tmp/af.template", "/home/richard/bin/prism-4.2.beta1-linux64/", "Input Customer Data", "Sign Form"};
+        //String[] args2 = {"/tmp/af.template", ".", "Input Customer Data"};
         args = args2;
         if (args.length == 0 || args.length < 1 || args.length > 4) {
             printhelp();
@@ -77,10 +79,12 @@ public class AfTemplateCheck {
         try {
             AfTemplateCheck checker = new AfTemplateCheck(new File(args[0]), new File(args[1]));
             checker.printContainsActivityCheck(args[2]);
+            if(args.length>3){
             checker.print4EyesCheck(args[2], args[3]);
             checker.printLeadsTo(args[2], args[3]);
+            }
         } catch (Exception e) {
-            System.err.println("Error while parsing arguments or checking properties");
+            System.err.println("Error "+e.getMessage());
             e.printStackTrace();
         }
         //AristaFlowToPnmlConverter test = new AristaFlowToPnmlConverter(new File(args[0]));
@@ -91,7 +95,8 @@ public class AfTemplateCheck {
     private static void printhelp() {
         System.out.println("usage: AfTemplateCheck template-file prism-executable activity1 [activity2]");
         System.out.println("Checks if activity1 is present and if activity1 and activity2 are done by different persons");
-        System.out.println("Checks if activity1 always leads to activity2");
+        System.out.println("Checks if activity1 always leads to activity2 (if prism path is valid");
+        System.out.println("prism-executable may be invalid (e.g. '.') - then leads-to check will not complete");
     }
 
     public AfTemplateCheck(File template, File prismPath) throws Exception {
@@ -129,7 +134,7 @@ public class AfTemplateCheck {
     public void print4EyesCheck(String activityName1, String activityName2) {
         try {
             if (containsActivity(activityName1) && containsActivity(activityName2)) {
-                System.out.print("Checking activity '" + activityName1 + "' and '" + activityName2 + "' by different persons:");
+                System.out.print("Checking activity '" + activityName1 + "' and '" + activityName2 + "' by different persons: ");
                 String result = "yes";
 
                 if (bySamePerson(activityName1, activityName2)) {
@@ -137,17 +142,18 @@ public class AfTemplateCheck {
                 }
                 System.out.println(result);
             } else {
-                System.out.println("Could not check 4 Eyes principle");
+                System.out.println("Could not check 4 Eyes principl: activities not present");
             }
         } catch (NullPointerException e) {
-            System.out.println("Could not check 4 Eyes principle");
+            System.out.println("Could not check 4 Eyes principle: originators not known");
         }
     }
 
     public void printLeadsTo(String activiy1, String activiy2) {
+
         try {
             CompliancePattern rule = leadsTo(activiy1, activiy2);
-            System.out.print("Checking '" + activiy1 + "' leads to '" + activiy2 + "': ");
+            System.out.print("Checking probability: '" + activiy1 + "' leads to '" + activiy2 + "': ");
             System.out.println(rule.getProbability());
             if (rule.getCounterExample() != null && !rule.getCounterExample().isEmpty()) {
                 System.out.println("Counterexample: ");
@@ -155,14 +161,13 @@ public class AfTemplateCheck {
                     System.out.print(s + " ");
                 }
             }
-
-        } catch (PrismException ex) {
-            System.out.println("Could not check leads-to. Reason: Prism reported exception");
-            ex.printStackTrace();
-        } catch (URISyntaxException ex) {
-            System.out.println("Could not check leads-to. Reason: Could not load prism");
-            ex.printStackTrace();
+        } catch (PrismException | URISyntaxException ex) {
+            //do nothing could not test prism
+            System.out.println("Could not execute PRISM model checker");
+            
         }
+
+
 
     }
 
