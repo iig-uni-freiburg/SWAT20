@@ -17,7 +17,6 @@ import de.uni.freiburg.iig.telematik.wolfgang.actions.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.AbstractToolBar;
-import de.uni.freiburg.iig.telematik.wolfgang.menu.toolbars.TokenToolBar;
 
 public class IFNetToolBar extends AbstractToolBar {
 
@@ -26,7 +25,7 @@ public class IFNetToolBar extends AbstractToolBar {
 	private PopUpToolBarAction editSubjectClearanceAction;
 	private JToggleButton editSubjectClearanceButton;
 	private SubjectClearanceToolBar editSubjectClearanceToolbar;
-	private TokenToolBar tokenToolbar;
+//	private TokenToolBar tokenToolbar;
 	private PopUpToolBarAction tokenAction;
 	private EditLabelingAction editLabelingAction;
 	private JToggleButton tokenButton;
@@ -40,8 +39,8 @@ public class IFNetToolBar extends AbstractToolBar {
 	@Override
 	protected void createAdditionalToolbarActions(PNEditorComponent pnEditor) throws ParameterException, PropertyException, IOException {
 
-		tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
-		tokenAction = new PopUpToolBarAction(pnEditor, "Token", IconFactory.getIcon("marking"), tokenToolbar);
+//		tokenToolbar = new TokenToolBar(pnEditor, JToolBar.HORIZONTAL);
+//		tokenAction = new PopUpToolBarAction(pnEditor, "Token", IconFactory.getIcon("marking"), tokenToolbar);
 
 		editAccessControlAction = new EditAccessControlAction(pnEditor);
 
@@ -92,6 +91,12 @@ public class IFNetToolBar extends AbstractToolBar {
 	@Override
 	protected void setNetSpecificButtonsVisible(boolean b) {
 
+	}
+
+	@Override
+	protected JToolBar createPropertyCheckToolbar() throws ParameterException, PropertyException, IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
