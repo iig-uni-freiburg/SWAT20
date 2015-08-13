@@ -52,7 +52,7 @@ public class LogImportAction extends AbstractWorkbenchAction {
 		String logName = f.getName().replaceFirst("[.][^.]+$", "");
                 switch(type){
                     case Aristaflow:
-                        SwatComponents.getInstance().getContainerAristaflowLogs().addComponent(model);
+                        SwatComponents.getInstance().getContainerAristaflowLogs().addComponent(f);
                         SwatComponents.getInstance().getContainerAristaflowLogs().storeComponents();
                         break;
                     case MXML:

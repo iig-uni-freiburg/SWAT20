@@ -7,6 +7,7 @@ import java.util.List;
 import de.invation.code.toval.graphic.dialog.MessageDialog;
 import de.invation.code.toval.misc.wd.AbstractProjectComponents;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.ACModelContainer;
 import de.uni.freiburg.iig.telematik.sewol.context.process.ProcessContextContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.AbstractLogModelContainer;
@@ -16,8 +17,12 @@ import de.uni.freiburg.iig.telematik.swat.logs.MxmlLogContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.logs.XesLogContainer;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.management.RuntimeErrorException;
 
 public class SwatComponents extends AbstractProjectComponents {
 
@@ -55,16 +60,38 @@ public class SwatComponents extends AbstractProjectComponents {
     }
     
     public XesLogContainer getContainerXESLogs(){
+    	if(logModelContainers.containsKey(SwatLogType.XES))
         return (XesLogContainer) logModelContainers.get(SwatLogType.XES);
+		else
+			try {
+				return new XesLogContainer(SwatProperties.getInstance().getPathForLogs(), MessageDialog.getInstance());
+			} catch (PropertyException | IOException e) {
+				throw new RuntimeException(e);
+			}
     }
     
     public MxmlLogContainer getContainerMXMLLogs(){
-        return (MxmlLogContainer) logModelContainers.get(SwatLogType.MXML);
+    	if(logModelContainers.containsKey(SwatLogType.MXML))
+    		return (MxmlLogContainer) logModelContainers.get(SwatLogType.MXML);
+		else
+			try {
+				return new MxmlLogContainer(SwatProperties.getInstance().getPathForLogs(), MessageDialog.getInstance());
+			} catch (PropertyException | IOException e) {
+				throw new RuntimeException(e);
+			}
     }
     
     public AristaflowLogContainer getContainerAristaflowLogs(){
+    	if(logModelContainers.containsKey(SwatLogType.Aristaflow))
         return (AristaflowLogContainer) logModelContainers.get(SwatLogType.Aristaflow);
+		else
+			try {
+				return new AristaflowLogContainer(SwatProperties.getInstance().getPathForLogs(), MessageDialog.getInstance());
+			} catch (PropertyException | IOException e) {
+				throw new RuntimeException(e);
+			}
     }
+    
     
     public boolean containsPetriNets(){
         return getContainerPetriNets().containsComponents();
@@ -81,6 +108,9 @@ public class SwatComponents extends AbstractProjectComponents {
 
     @Override
     protected void addComponentContainers() throws ProjectComponentException {
+    	if(logModelContainers == null )
+    		logModelContainers = new HashMap<>();
+    	
         try {
             containerProcessContexts = new ProcessContextContainer(SwatProperties.getInstance().getPathForContexts(), MessageDialog.getInstance());
             containerProcessContexts.setIgnoreIncompatibleFiles(true);
@@ -96,9 +126,9 @@ public class SwatComponents extends AbstractProjectComponents {
             // - Labelings
             // - TimeContexts
             // Log Files 
-            logModelContainers.put(SwatLogType.MXML, new MxmlLogContainer(SwatProperties.getInstance().getPathForLogs(), MessageDialog.getInstance()));
-            logModelContainers.put(SwatLogType.XES, new XesLogContainer(SwatProperties.getInstance().getPathForLogs(), MessageDialog.getInstance()));
-            logModelContainers.put(SwatLogType.Aristaflow, new AristaflowLogContainer(SwatProperties.getInstance().getPathForLogs(), MessageDialog.getInstance()));
+            logModelContainers.put(SwatLogType.MXML, getContainerMXMLLogs());
+            logModelContainers.put(SwatLogType.XES, getContainerXESLogs());
+            logModelContainers.put(SwatLogType.Aristaflow,getContainerAristaflowLogs());
 
             // Analyses
         } catch (Exception e) {

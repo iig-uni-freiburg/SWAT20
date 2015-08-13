@@ -5,7 +5,15 @@
  */
 package de.uni.freiburg.iig.telematik.swat.logs;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 import de.invation.code.toval.debug.SimpleDebugger;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.sewol.format.LogFormatType;
 
 /**
  *
@@ -25,6 +33,20 @@ public class AristaflowLogContainer extends AbstractLogModelContainer {
     protected SwatLogType getLogType() {
         return SwatLogType.Aristaflow;
     }
+
+	public void addComponent(File log) throws ProjectComponentException {
+		Validate.notNull(log);
+		Validate.fileName(log.getName());
+		try {
+			Files.copy(log.toPath(), new File(basePath,log.getName()).toPath(),StandardCopyOption.REPLACE_EXISTING);
+			super.addComponent(new LogModel(new File(basePath,log.getName()), SwatLogType.Aristaflow));
+		} catch (IOException e) {
+			throw new ProjectComponentException("Could not copy log", e);
+		}
+		
+	}
+    
+    
     
     
 }

@@ -69,9 +69,9 @@ public class AfTemplateCheck {
     File prismPath;
 
     public static void main(String[] args) throws Exception {
-        String[] args2 = {"/tmp/af.template", "/home/richard/bin/prism-4.2.beta1-linux64/", "Input Customer Data", "Sign Form"};
+        //String[] args2 = {"/tmp/af.template", "/home/richard/bin/prism-4.2.beta1-linux64/", "Input Customer Data", "Sign Form"};
         //String[] args2 = {"/tmp/af.template", ".", "Input Customer Data"};
-        args = args2;
+        //args = args2;
         if (args.length == 0 || args.length < 1 || args.length > 4) {
             printhelp();
             System.exit(0);
@@ -142,7 +142,7 @@ public class AfTemplateCheck {
                 }
                 System.out.println(result);
             } else {
-                System.out.println("Could not check 4 Eyes principl: activities not present");
+                System.out.println("Could not check 4 Eyes principle: activities not present");
             }
         } catch (NullPointerException e) {
             System.out.println("Could not check 4 Eyes principle: originators not known");
@@ -150,6 +150,7 @@ public class AfTemplateCheck {
     }
 
     public void printLeadsTo(String activiy1, String activiy2) {
+    	if(containsActivity(activiy1) && containsActivity(activiy2)){
 
         try {
             CompliancePattern rule = leadsTo(activiy1, activiy2);
@@ -166,6 +167,10 @@ public class AfTemplateCheck {
             System.out.println("Could not execute PRISM model checker");
             
         }
+    	}
+    	else {
+    		System.out.println("Could not check 'leads to': activities not present");
+    	}
 
 
 

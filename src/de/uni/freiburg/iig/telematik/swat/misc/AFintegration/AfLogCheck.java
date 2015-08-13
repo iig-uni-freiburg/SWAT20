@@ -67,8 +67,8 @@ public class AfLogCheck {
     }
 
     public static void main(String args[]) throws Exception {
-        String[] args2={"/tmp/aflog.csv","Freigabe","Sachliche Prüfung"};
-        args=args2;
+        //String[] args2={"/tmp/aflog.csv","Freigabe","Sachliche Prüfung"};
+        //args=args2;
         if (args.length == 0 || args.length == 1 || args.length > 3) {
             printhelp();
             System.exit(0);
@@ -76,8 +76,11 @@ public class AfLogCheck {
         try{
 
         AfLogCheck checker = new AfLogCheck(new File(args[0]));
-        checker.activityExists(args[1]);
+        boolean exists = checker.activityExists(args[1]);
+        if(exists)
         checker.fourEyes(args[1], args[2]);
+        else
+        	System.out.println("Could not check Four Eyes: "+args[1]+" does not exist");
         }
         catch(Exception e){
         	System.err.println("Error "+e.getMessage());
@@ -95,7 +98,7 @@ public class AfLogCheck {
 
     }
 
-    public void activityExists(String activity) throws Exception {
+    public boolean activityExists(String activity) throws Exception {
         System.out.println("Check activity '" + activity + "' exists:");
         XESLogExists test = new XESLogExists();
         ArrayList<Parameter> params = test.getParameters();
@@ -103,6 +106,12 @@ public class AfLogCheck {
         params.get(0).getValue().setType(ParameterTypeNames.ACTIVITY);
         invokeSciff(test);
         printDetails();
+        
+		// return report
+		CheckerReport report = (CheckerReport) ModelCheckerResult.getResult();
+		if (report.correctInstances() == null || report.correctInstances().isEmpty())
+			return false;
+		return true;
 
     }
 
@@ -112,6 +121,7 @@ public class AfLogCheck {
     public void fourEyes(String activity1, String activity2) throws Exception {
         CompliancePattern fourEyes = new FourEyes();
         System.out.println("Check Four Eyes '" + activity1 + "' and '" + activity2+"'");
+        
         ArrayList<Parameter> params = fourEyes.getParameters();
         params.get(0).getValue().setValue(activity1);
         params.get(1).getValue().setValue(activity2);

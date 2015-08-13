@@ -80,7 +80,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         setLocation(wdwLeft, wdwTop);
         SwatState.getInstance().setOperatingMode(Workbench.this, OperatingMode.EDIT_MODE);
         SwatState.getInstance().addListener(this);
-        SwatComponents.getInstance().addComponentListener(treeView);
+        SwatComponents.getInstance().addComponentListener(getTreeView());
     }
 
     public static Workbench getInstance() throws Exception {

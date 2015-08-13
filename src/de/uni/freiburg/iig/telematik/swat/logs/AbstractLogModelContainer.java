@@ -9,11 +9,17 @@ import de.invation.code.toval.debug.SimpleDebugger;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.invation.code.toval.validate.ExceptionDialog;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContextContainer;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisContainer;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContextContainer;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,6 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.postgresql.copy.CopyOperation;
 
 /**
  *
@@ -44,7 +52,8 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     public AnalysisContainer getContainerAnalysis(String logModelName) throws ProjectComponentException {
         validateComponent(logModelName);
         if (!containsAnalysisContainer(logModelName)) {
-            throw new ProjectComponentException("analysis container for log model \"" + logModelName + "\" is NULL");
+        	createNewAnalysisContainer(getComponent(logModelName));
+            //throw new ProjectComponentException("analysis container for log model \"" + logModelName + "\" is NULL");
         }
         return analysisContainers.get(logModelName);
     }
@@ -91,7 +100,10 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
 
     @Override
     protected void serializeComponent(LogModel component, String basePath, String fileName) throws Exception {
-        throw new ProjectComponentException("This operation is not supported by log models");
+    	System.out.println("");
+    	//actually nothing to do for logModels
+    	//Files.copy(component.getFileReference().toPath(), new File(basePath,fileName).toPath(),StandardCopyOption.REPLACE_EXISTING);
+    	//component.setFileReference(new File(basePath,fileName));
     }
 
     @Override
@@ -157,7 +169,7 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         }
         logPath = logPath.concat(logModelName);
         logPath = logPath.concat(System.getProperty("file.separator"));
-        return logModelName;
+        return logPath;
     }
     
     public void storeAnalyses(String logName) throws ProjectComponentException {
@@ -201,6 +213,9 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     @Override
     public void storeComponent(String componentName) throws ProjectComponentException {
         super.storeComponent(componentName);
+        //store analysis components, if any
+		AnalysisContainer analysisContainer = getContainerAnalysis(componentName);
+        if(analysisContainer!=null && getContainerAnalysis(componentName).containsComponents())
         getContainerAnalysis(componentName).storeComponents();
     }
     
@@ -211,5 +226,10 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
             analysisContainer.storeComponents();
         }
     }
+     
+//     @Override
+//     protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
+//         return new File(pathFile, componentName);
+//     }
 
 }
