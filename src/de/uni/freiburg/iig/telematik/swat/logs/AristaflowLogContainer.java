@@ -38,8 +38,8 @@ public class AristaflowLogContainer extends AbstractLogModelContainer {
 		Validate.notNull(log);
 		Validate.fileName(log.getName());
 		try {
-			Files.copy(log.toPath(), new File(basePath,log.getName()).toPath(),StandardCopyOption.REPLACE_EXISTING);
-			super.addComponent(new LogModel(new File(basePath,log.getName()), SwatLogType.Aristaflow));
+			Files.copy(log.toPath(), new File(getBasePath(),log.getName()).toPath(),StandardCopyOption.REPLACE_EXISTING);
+			super.addComponent(new LogModel(new File(getBasePath(),log.getName()), SwatLogType.Aristaflow));
 		} catch (IOException e) {
 			throw new ProjectComponentException("Could not copy log", e);
 		}

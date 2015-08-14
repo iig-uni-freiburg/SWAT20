@@ -21,6 +21,8 @@ import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisContainer;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContextContainer;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -266,7 +268,8 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
 
     @Override
     public void storeComponent(String componentName) throws ProjectComponentException {
-        super.storeComponent(componentName);
+    	super.storeComponent(componentName);
+    	componentAdded((AbstractGraphicalPN) this.getComponent(componentName));
         getContainerAnalysisContext(componentName).storeComponents();
         getContainerAnalysis(componentName).storeComponents();
         getContainerTimeContexts(componentName).storeComponents();
@@ -307,6 +310,7 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
     
     public void addAnalysisContext(AnalysisContext analysisContext, String netName, boolean storeToFile, boolean notifyListeners) throws ProjectComponentException {
         validateComponent(netName);
+        new File(getBasePath()).mkdirs();
         if(containsAnalysisContext(analysisContext.getName())){
             throw new ProjectComponentException("Container already contains an analysis context with name \"" + analysisContext.getName() + "\"");
         }
