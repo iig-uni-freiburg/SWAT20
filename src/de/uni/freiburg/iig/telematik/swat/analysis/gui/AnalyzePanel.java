@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Locale;
 
 import javax.swing.Box;
@@ -163,12 +164,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 
 	private Component getAnalysisDropDown(String netID) throws ProjectComponentException {
 		if (dropDown == null) {
-                    SwatComponents comp = SwatComponents.getInstance();
-			Collection<Analysis> analyses;
-                    analyses = comp.getContainerPetriNets().getContainerAnalysis(netID).getComponents();
-                    analyses.addAll(comp.getContainerAristaflowLogs().getContainerAnalysis(netID).getComponents());
-                    analyses.addAll(comp.getContainerMXMLLogs().getContainerAnalysis(netID).getComponents());
-                    analyses.addAll(comp.getContainerXESLogs().getContainerAnalysis(netID).getComponents());
+			Collection<Analysis> analyses = getAvailableAnalyses(netID);
 			Collections.sort((List) analyses);
 			dropDown = new JComboBox();
 			dropDown.addItem("New Analysis...");
@@ -179,6 +175,28 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		}
 
 		return dropDown;
+	}
+	
+	private Collection<Analysis>getAvailableAnalyses(String netID) throws ProjectComponentException{
+		LinkedList<Analysis> result = new LinkedList<>();
+		SwatComponents sc=SwatComponents.getInstance();
+		try{
+		result.addAll(sc.getContainerPetriNets().getContainerAnalysis(netID).getComponents());
+		} catch (ProjectComponentException e){}
+		
+		try{
+			result.addAll(sc.getContainerAristaflowLogs().getContainerAnalysis(netID).getComponents());
+		} catch (ProjectComponentException e){}
+		
+		try {
+			result.addAll(sc.getContainerMXMLLogs().getContainerAnalysis(netID).getComponents());
+		} catch (ProjectComponentException e){}
+		
+		try{
+			result.addAll(sc.getContainerXESLogs().getContainerAnalysis(netID).getComponents());
+		} catch (ProjectComponentException e){}
+		
+		return result;
 	}
 
 	private JPanel jPanelLeft(JComponent k) {

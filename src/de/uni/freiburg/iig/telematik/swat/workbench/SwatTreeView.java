@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.validate.ExceptionDialog;
@@ -72,6 +73,10 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 
 		// this.setSelectionInterval(0,0);
 		addMouseListener(new TreeViewMouseAdapter());
+		
+		SwatComponents.getInstance().addComponentListener(this);
+		SwatComponents.getInstance().getContainerAristaflowLogs().addComponentListener(this);
+		SwatComponents.getInstance().getContainerPetriNets().addComponentListener(this);
 	}
 
 	public static SwatTreeView getInstance() throws Exception {
@@ -260,6 +265,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 
 	@Override
 	public void componentsChanged() {
+		System.out.println("Components Changed");
             try{
 		buildTree();
 		treeModel.reload();
@@ -272,7 +278,15 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
         
         @Override
     public void componentAdded(Object component) throws ProjectComponentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        	//System.out.println("Component Added");
+//        	if(component instanceof NamedComponent){
+//        		SwatTreeNode node = new SwatTreeNode(component, SwatComponentType.PETRI_NET);
+//        		petriNetNode.add(node);
+//        	}
+        	buildTree();
+        	
+        	
+   
     }
 
     @Override

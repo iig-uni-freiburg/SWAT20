@@ -126,6 +126,7 @@ public class SwatComponents extends AbstractProjectComponents {
             // - Labelings
             // - TimeContexts
             // Log Files 
+            //AristaflowLogContainer aflogs=new AristaflowLogContainer(SwatProperties.getInstance().getPathForLogs(), MessageDialog.getInstance());
             logModelContainers.put(SwatLogType.MXML, getContainerMXMLLogs());
             logModelContainers.put(SwatLogType.XES, getContainerXESLogs());
             logModelContainers.put(SwatLogType.Aristaflow,getContainerAristaflowLogs());
