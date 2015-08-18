@@ -24,7 +24,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class IfAthenBorCorD extends LogCompliancePattern {
 
 	public IfAthenBorCorD() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(paramTypes, "B"));
 		mParameters.add(new Parameter(paramTypes, "C"));
@@ -64,7 +64,7 @@ public class IfAthenBorCorD extends LogCompliancePattern {
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 
 		//Empty Body
@@ -115,7 +115,7 @@ public class IfAthenBorCorD extends LogCompliancePattern {
 			new SimpleStringConstraint(atv4, StringOP.EQUAL, activity4Name);
 		}
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

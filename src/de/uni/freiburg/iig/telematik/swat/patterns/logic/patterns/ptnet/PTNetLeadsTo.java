@@ -15,7 +15,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class PTNetLeadsTo extends LeadsTo {
 	
 	public PTNetLeadsTo() {
-		ArrayList<String> paramTypes = new ArrayList<String>( 
+		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.STATEPREDICATE, ParameterTypeNames.TRANSITION));
 		mParameters.add(new Parameter(paramTypes, "P"));
 		mParameters.add(new Parameter(paramTypes, "Q"));
@@ -27,7 +27,7 @@ public class PTNetLeadsTo extends LeadsTo {
 		mInfoProvider = ifnetInfo;
 		for (Parameter p : mParameters) {
 			p.setTypeRange(ParameterTypeNames.TRANSITION, ifnetInfo.getTransitions());
-			ArrayList<String> range = new ArrayList<String>(); 
+			ArrayList<String> range = new ArrayList<>(); 
 			for (String place : ifnetInfo.getPlaces()) {
 				range.add(place);
 			}

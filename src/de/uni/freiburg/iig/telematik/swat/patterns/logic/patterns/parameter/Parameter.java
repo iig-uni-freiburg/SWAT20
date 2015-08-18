@@ -6,8 +6,8 @@ import java.util.Set;
 
 public class Parameter {
 
-	private String mName;
-	private HashMap<String, ArrayList<String>> mRangeMap;
+	private final String mName;
+	private final HashMap<String, ArrayList<String>> mRangeMap;
 	private ParameterValue mValue;
 	
 	/**
@@ -18,7 +18,7 @@ public class Parameter {
 	 */
 	public Parameter(ArrayList<String> types, String name) {
 		mName = name;
-		mRangeMap = new HashMap<String, ArrayList<String>>();
+		mRangeMap = new HashMap<>();
 		for (String type : types) {
 			mRangeMap.put(type, new ArrayList<String>());
 		}
@@ -36,7 +36,7 @@ public class Parameter {
 	    	try {
 				throw new InvalidTypeException(type + "is not a valid type for parameter " + getName());
 			} catch (InvalidTypeException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 	    }
 		mRangeMap.put(type, range);
@@ -51,7 +51,7 @@ public class Parameter {
 	}
 	
 	public ArrayList<String> getParameterRange(String type) {
-		ArrayList<String> result = new ArrayList<String>(mRangeMap.get(type));
+		ArrayList<String> result = new ArrayList<>(mRangeMap.get(type));
 		result.add(0, ""); //Because first, pattern parameter are not initialized
 		return result;
 		//return mRangeMap.get(type); //if initialized
@@ -59,7 +59,7 @@ public class Parameter {
 
 	
 	public ArrayList<String> getParameterDomain() {
-		return new ArrayList<String>(mRangeMap.keySet());
+		return new ArrayList<>(mRangeMap.keySet());
 	}
 
 	public void setValue(String parameterTypeStr) {

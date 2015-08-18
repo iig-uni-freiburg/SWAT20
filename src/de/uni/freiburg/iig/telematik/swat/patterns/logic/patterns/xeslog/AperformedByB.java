@@ -25,8 +25,8 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class AperformedByB extends LogCompliancePattern {
 
 	public AperformedByB() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
-		ArrayList<String> userType = new ArrayList<String>(Arrays.asList(ParameterTypeNames.USER));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> userType = new ArrayList<>(Arrays.asList(ParameterTypeNames.USER));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(userType, "B"));
 		setFormalization();
@@ -62,11 +62,11 @@ public class AperformedByB extends LogCompliancePattern {
 	public CompliancePattern duplicate() {
 		AperformedByB duplicate = new AperformedByB();
 		duplicate.acceptInfoProfider(mInfoProvider);
-		return duplicate();
+		return duplicate;
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 		//TODO
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
@@ -96,7 +96,7 @@ public class AperformedByB extends LogCompliancePattern {
 		SimpleStringConstraint const2 = new SimpleStringConstraint(o_a, StringOP.EQUAL, activityOperator);
 
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

@@ -3,9 +3,9 @@ package de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns;
 
 public abstract class MBounded extends OrganizationalPattern {
 
-	private String mName = "(T1, T2,...,Tn) MBounded S";
+	private final String mName = "(T1, T2,...,Tn) MBounded S";
 	
-	private String mDescription = "The same subject S must perform T1,...,Tn";
+	private final String mDescription = "The same subject S must perform T1,...,Tn";
 
 	@Override
 	public String getName() {

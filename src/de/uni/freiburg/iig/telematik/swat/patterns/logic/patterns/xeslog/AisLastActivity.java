@@ -24,7 +24,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class AisLastActivity extends LogCompliancePattern {
 
 	public AisLastActivity() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		setFormalization();
 	}
@@ -62,7 +62,7 @@ public class AisLastActivity extends LogCompliancePattern {
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
 		Conjunction body = new Conjunction(r);
@@ -82,7 +82,7 @@ public class AisLastActivity extends LogCompliancePattern {
 
 		SimpleActivityExecution activityExec2 = new SimpleActivityExecution(conj, "B", EventType.complete, true);
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

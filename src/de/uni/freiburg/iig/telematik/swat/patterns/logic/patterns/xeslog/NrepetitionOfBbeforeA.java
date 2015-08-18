@@ -35,8 +35,8 @@ public class NrepetitionOfBbeforeA extends LogCompliancePattern {
 	}
 
 	public NrepetitionOfBbeforeA() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
-		ArrayList<String> numberType = new ArrayList<String>(Arrays.asList(ParameterTypeNames.NUMBER));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> numberType = new ArrayList<>(Arrays.asList(ParameterTypeNames.NUMBER));
 		mParameters.add(new Parameter(paramTypes, "B"));
 		mParameters.add(new Parameter(numberType, "min"));
 		mParameters.add(new Parameter(paramTypes, "A"));
@@ -73,11 +73,11 @@ public class NrepetitionOfBbeforeA extends LogCompliancePattern {
 	public CompliancePattern duplicate() {
 		NrepetitionOfBbeforeA duplicate = new NrepetitionOfBbeforeA();
 		duplicate.acceptInfoProfider(mInfoProvider);
-		return duplicate();
+		return duplicate;
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 
 		CompositeRule cr = new CompositeRule();
 
@@ -116,7 +116,7 @@ public class NrepetitionOfBbeforeA extends LogCompliancePattern {
 
 		SimpleStringConstraint constr = new SimpleStringConstraint(atvB, StringOP.EQUAL, constB);
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

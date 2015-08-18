@@ -17,7 +17,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class IFNetAbsent extends Absent {
 
 	public IFNetAbsent() {
-		ArrayList<String> paramTypes = new ArrayList<String>( 
+		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.STATEPREDICATE, ParameterTypeNames.TRANSITION));
 		mParameters.add(new Parameter(paramTypes, "P"));
 	}
@@ -29,7 +29,7 @@ public class IFNetAbsent extends Absent {
 		mInfoProvider = ifnetInfo;
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ifnetInfo.getTransitions());
-		ArrayList<String> range = new ArrayList<String>(); 
+		ArrayList<String> range = new ArrayList<>(); 
 		for (String place : ifnetInfo.getPlaces()) {
 			ArrayList<String> colors = ifnetInfo.getTokenColors(place);
 			for (String color : colors) {

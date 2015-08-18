@@ -29,7 +29,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class BorCbeforeA extends LogCompliancePattern {
 
 	public BorCbeforeA() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(paramTypes, "B"));
 		mParameters.add(new Parameter(paramTypes, "C"));
@@ -73,7 +73,7 @@ public class BorCbeforeA extends LogCompliancePattern {
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 
 		CompositeRule cr = new CompositeRule();
 
@@ -121,7 +121,7 @@ public class BorCbeforeA extends LogCompliancePattern {
 
 		}
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

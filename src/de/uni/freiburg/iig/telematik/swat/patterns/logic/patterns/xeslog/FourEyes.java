@@ -39,7 +39,7 @@ public class FourEyes extends LogCompliancePattern {
 	}
 
 	public FourEyes() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(paramTypes, "B"));
 		setFormalization();
@@ -77,7 +77,7 @@ public class FourEyes extends LogCompliancePattern {
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
 		Conjunction body = new Conjunction(r);
@@ -117,7 +117,7 @@ public class FourEyes extends LogCompliancePattern {
 		
 		//		new RelativeTimeConstraint(new TimeVariable(activityExecution2), TimeOP.AFTER, 
 		//				new TimeVariable(activityExecution1), DisplacementOP.PLUS, new TimeDisplacement());
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 	}

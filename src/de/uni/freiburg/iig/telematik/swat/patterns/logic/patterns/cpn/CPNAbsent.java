@@ -17,7 +17,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class CPNAbsent extends Absent {
 	
 	public CPNAbsent() {
-		ArrayList<String> paramTypes = new ArrayList<String>( 
+		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.STATEPREDICATE, ParameterTypeNames.TRANSITION));
 		mParameters.add(new Parameter(paramTypes, "P"));
 	}
@@ -29,7 +29,7 @@ public class CPNAbsent extends Absent {
 		mInfoProvider = cwnInfo;
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, cwnInfo.getTransitions());
-		ArrayList<String> range = new ArrayList<String>(); 
+		ArrayList<String> range = new ArrayList<>(); 
 		for (String place : cwnInfo.getPlaces()) {
 			ArrayList<String> colors = cwnInfo.getTokenColors(place);
 			for (String color : colors) {

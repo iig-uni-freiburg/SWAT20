@@ -24,7 +24,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class IfAthenNotB extends LogCompliancePattern {
 
 	public IfAthenNotB() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(paramTypes, "B"));
 		setFormalization();
@@ -64,7 +64,7 @@ public class IfAthenNotB extends LogCompliancePattern {
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 
 		CompositeRule cr = new CompositeRule();
 
@@ -94,7 +94,7 @@ public class IfAthenNotB extends LogCompliancePattern {
 		StringConstantAttribute stringConstB = new StringConstantAttribute(activityB);
 		SimpleStringConstraint constB = new SimpleStringConstraint(atvB, StringOP.EQUAL, stringConstB);
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

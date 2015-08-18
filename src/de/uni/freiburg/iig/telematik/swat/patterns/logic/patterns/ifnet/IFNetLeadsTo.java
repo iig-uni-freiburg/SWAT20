@@ -25,7 +25,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class IFNetLeadsTo extends LeadsTo {
 	
 	public IFNetLeadsTo() {
-		ArrayList<String> paramTypes = new ArrayList<String>( 
+		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.STATEPREDICATE, ParameterTypeNames.TRANSITION));
 		
 		/* Each parameter of the LeadsTo pattern has to be added to the mParameters list. 
@@ -51,7 +51,7 @@ public class IFNetLeadsTo extends LeadsTo {
 		mInfoProvider = ifnetInfo;
 		for (Parameter p : mParameters) {
 			p.setTypeRange(ParameterTypeNames.TRANSITION, ifnetInfo.getTransitions());
-			ArrayList<String> range = new ArrayList<String>(); 
+			ArrayList<String> range = new ArrayList<>(); 
 			for (String place : ifnetInfo.getPlaces()) {
 				ArrayList<String> colors = ifnetInfo.getTokenColors(place);
 				for (String color : colors) {

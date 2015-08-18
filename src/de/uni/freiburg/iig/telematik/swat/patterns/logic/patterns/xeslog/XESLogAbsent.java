@@ -27,14 +27,15 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class XESLogAbsent extends Absent {
 
 	public XESLogAbsent() {
-		ArrayList<String> paramTypes = new ArrayList<String>( 
+		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.ACTIVITY, ParameterTypeNames.ROLE,
 						ParameterTypeNames.USER));
 		mParameters.add(new Parameter(paramTypes, "P"));
 		setFormalization();
 	}
 
-	public void setFormalization() {
+        @Override
+	public final void setFormalization() {
 		
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
@@ -48,33 +49,31 @@ public class XESLogAbsent extends Absent {
 		Disjunction head = new Disjunction(r);
 		r.setHead(head);
 		
-		if (mParameters.get(0).getValue().getType().equals(ParameterTypeNames.ACTIVITY)) {
-			
-			ActivityTypeVariable atv1 = new ActivityTypeVariable(activityExec1);
-			String actName = mParameters.get(0).getValue().getValue(); 
-			StringConstantAttribute activity1Name = new StringConstantAttribute(actName);
-			new SimpleStringConstraint(atv1, StringOP.DIFFERENT, activity1Name);
-			r.setBody(body);
-			
-		} else if (mParameters.get(0).getValue().getType().equals(ParameterTypeNames.USER)) {
-			
-			OriginatorVariable originator = new OriginatorVariable(activityExec1);
-			StringConstantAttribute userNameConst = new StringConstantAttribute(
-					mParameters.get(0).getValue().getValue());
-			new SimpleStringConstraint(originator, StringOP.DIFFERENT, userNameConst);
-			r.setBody(body);
-			
-		} else {
-			
-			RoleVariable role = new RoleVariable(activityExec1);
-			StringConstantAttribute roleNameConst = new StringConstantAttribute(
-					mParameters.get(0).getValue().getValue());
-			new SimpleStringConstraint(role, StringOP.DIFFERENT, roleNameConst);
-			r.setBody(body);
-			
-		}
+            switch (mParameters.get(0).getValue().getType()) {
+                case ParameterTypeNames.ACTIVITY:
+                    ActivityTypeVariable atv1 = new ActivityTypeVariable(activityExec1);
+                    String actName = mParameters.get(0).getValue().getValue();
+                    StringConstantAttribute activity1Name = new StringConstantAttribute(actName);
+                    new SimpleStringConstraint(atv1, StringOP.DIFFERENT, activity1Name);
+                    r.setBody(body);
+                    break;
+                case ParameterTypeNames.USER:
+                    OriginatorVariable originator = new OriginatorVariable(activityExec1);
+                    StringConstantAttribute userNameConst = new StringConstantAttribute(
+                            mParameters.get(0).getValue().getValue());
+                    new SimpleStringConstraint(originator, StringOP.DIFFERENT, userNameConst);
+                    r.setBody(body);
+                    break;
+                default:
+                    RoleVariable role = new RoleVariable(activityExec1);
+                    StringConstantAttribute roleNameConst = new StringConstantAttribute(
+                            mParameters.get(0).getValue().getValue());
+                    new SimpleStringConstraint(role, StringOP.DIFFERENT, roleNameConst);
+                    r.setBody(body);
+                    break;
+            }
 		
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules; 
 		

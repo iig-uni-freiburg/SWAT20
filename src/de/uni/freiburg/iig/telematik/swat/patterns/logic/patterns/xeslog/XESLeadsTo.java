@@ -31,7 +31,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class XESLeadsTo extends LeadsTo {
 
 	public XESLeadsTo() {
-		ArrayList<String> paramTypes = new ArrayList<String>( 
+		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.ACTIVITY, ParameterTypeNames.ROLE,
 						ParameterTypeNames.USER));
 		mParameters.add(new Parameter(paramTypes, "P"));
@@ -39,7 +39,8 @@ public class XESLeadsTo extends LeadsTo {
 		setFormalization();
 	}
 
-	public void setFormalization() {
+        @Override
+	public final void setFormalization() {
 		
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
@@ -108,7 +109,7 @@ public class XESLeadsTo extends LeadsTo {
 		
 		new RelativeTimeConstraint(new TimeVariable(activityExecution2), TimeOP.AFTER, 
 				new TimeVariable(activityExecution1), DisplacementOP.PLUS, new TimeDisplacement());
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules; 
 		

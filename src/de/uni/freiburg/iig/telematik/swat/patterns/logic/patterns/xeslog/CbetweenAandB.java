@@ -34,7 +34,7 @@ public class CbetweenAandB extends LogCompliancePattern {
 	}
 
 	public CbetweenAandB() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(paramTypes, "B"));
 		mParameters.add(new Parameter(paramTypes, "C"));
@@ -73,7 +73,7 @@ public class CbetweenAandB extends LogCompliancePattern {
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
 		Conjunction body = new Conjunction(r);
@@ -125,7 +125,7 @@ public class CbetweenAandB extends LogCompliancePattern {
 		//			new SimpleStringConstraint(atv3, StringOP.EQUAL, activityC);
 		//		}
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

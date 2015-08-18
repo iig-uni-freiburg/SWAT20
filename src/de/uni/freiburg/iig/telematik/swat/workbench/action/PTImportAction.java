@@ -24,12 +24,8 @@ public class PTImportAction extends AbstractWorkbenchAction {
 		super(name);
 		try {
 			setIcon(IconFactory.getIcon("import"));
-		} catch (ParameterException e) {
-			e.printStackTrace();
-		} catch (PropertyException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (ParameterException | PropertyException | IOException e) {
+			throw new RuntimeException(e);
 		}
 		setTooltip("Import PT-Net");
 	}

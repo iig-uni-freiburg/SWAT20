@@ -34,7 +34,7 @@ public class BafterA extends LogCompliancePattern {
 	}
 
 	public BafterA() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(paramTypes, "B"));
 		setFormalization();
@@ -70,7 +70,7 @@ public class BafterA extends LogCompliancePattern {
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
 		Conjunction body = new Conjunction(r);
@@ -103,7 +103,7 @@ public class BafterA extends LogCompliancePattern {
 
 		}
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 
@@ -115,6 +115,7 @@ public class BafterA extends LogCompliancePattern {
 		return false;
 	}
 
+        @Override
 	public PatternRequirements[] requires() {
 		PatternRequirements req[] = {PatternRequirements.COMPLETE};
 		return req;

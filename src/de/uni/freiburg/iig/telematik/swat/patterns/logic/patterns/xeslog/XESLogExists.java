@@ -24,81 +24,79 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
 public class XESLogExists extends Exists {
-	
-	public XESLogExists() {
-		ArrayList<String> paramTypes = new ArrayList<String>( 
-				Arrays.asList(ParameterTypeNames.ACTIVITY, ParameterTypeNames.ROLE,
-						ParameterTypeNames.USER));
-		mParameters.add(new Parameter(paramTypes, "P"));
-		setFormalization();
-	}
 
-	@Override
-	public void acceptInfoProfider(ModelInfoProvider provider) {
-		
-		XESLogInfoProvider xesInfo = (XESLogInfoProvider) provider;
-		mInfoProvider = xesInfo;
-		Parameter p = mParameters.get(0);
-		p.setTypeRange(ParameterTypeNames.ACTIVITY, xesInfo.getActivities());
-		p.setTypeRange(ParameterTypeNames.ROLE, xesInfo.getRoles());
-		p.setTypeRange(ParameterTypeNames.USER, xesInfo.getSubjects());
+    public XESLogExists() {
+        ArrayList<String> paramTypes = new ArrayList<>(
+                Arrays.asList(ParameterTypeNames.ACTIVITY, ParameterTypeNames.ROLE,
+                        ParameterTypeNames.USER));
+        mParameters.add(new Parameter(paramTypes, "P"));
+        setFormalization();
+    }
 
-	}
+    @Override
+    public void acceptInfoProfider(ModelInfoProvider provider) {
 
-	@Override
-	public CompliancePattern duplicate() {
-		XESLogExists duplicate = new XESLogExists();
-		duplicate.acceptInfoProfider(mInfoProvider);
-		return duplicate;
-	}
+        XESLogInfoProvider xesInfo = (XESLogInfoProvider) provider;
+        mInfoProvider = xesInfo;
+        Parameter p = mParameters.get(0);
+        p.setTypeRange(ParameterTypeNames.ACTIVITY, xesInfo.getActivities());
+        p.setTypeRange(ParameterTypeNames.ROLE, xesInfo.getRoles());
+        p.setTypeRange(ParameterTypeNames.USER, xesInfo.getSubjects());
 
-	@Override
-	public void setFormalization() {
-		
-		CompositeRule cr = new CompositeRule();
-		Rule r = new Rule(cr);
-		
-		// define head
-		Disjunction head = new Disjunction(r);
-		Conjunction c = new Conjunction(head);
-		SimpleActivityExecution activityExec1 = new SimpleActivityExecution(c, "A",
-				EventType.complete, false);
-		
-		if (mParameters.get(0).getValue().getType().equals(ParameterTypeNames.ACTIVITY)) {
-			
-			ActivityTypeVariable atv1 = new ActivityTypeVariable(activityExec1);
-			String actName = mParameters.get(0).getValue().getValue(); 
-			StringConstantAttribute activity1Name = new StringConstantAttribute(actName);
-			new SimpleStringConstraint(atv1, StringOP.EQUAL, activity1Name);
-			r.setHead(head);
-			
-		} else if (mParameters.get(0).getValue().getType().equals(ParameterTypeNames.USER)) {
-			
-			OriginatorVariable originator = new OriginatorVariable(activityExec1);
-			StringConstantAttribute userNameConst = new StringConstantAttribute(
-					mParameters.get(0).getValue().getValue());
-			new SimpleStringConstraint(originator, StringOP.DIFFERENT, userNameConst);
-			r.setHead(head);
-			
-		} else {
-			
-			RoleVariable role = new RoleVariable(activityExec1);
-			StringConstantAttribute roleNameConst = new StringConstantAttribute(
-					mParameters.get(0).getValue().getValue());
-			new SimpleStringConstraint(role, StringOP.DIFFERENT, roleNameConst);
-			r.setHead(head);
-			
-		}
-		
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
-		rules.add(cr);
-		mFormalization = rules;
-		
-	}
+    }
 
-	@Override
-	public boolean isAntiPattern() {
-		return false;
-	}
+    @Override
+    public CompliancePattern duplicate() {
+        XESLogExists duplicate = new XESLogExists();
+        duplicate.acceptInfoProfider(mInfoProvider);
+        return duplicate;
+    }
+
+    @Override
+    public final void setFormalization() {
+
+        CompositeRule cr = new CompositeRule();
+        Rule r = new Rule(cr);
+
+        // define head
+        Disjunction head = new Disjunction(r);
+        Conjunction c = new Conjunction(head);
+        SimpleActivityExecution activityExec1 = new SimpleActivityExecution(c, "A",
+                EventType.complete, false);
+
+        switch (mParameters.get(0).getValue().getType()) {
+            case ParameterTypeNames.ACTIVITY:
+                ActivityTypeVariable atv1 = new ActivityTypeVariable(activityExec1);
+                String actName = mParameters.get(0).getValue().getValue();
+                StringConstantAttribute activity1Name = new StringConstantAttribute(actName);
+                new SimpleStringConstraint(atv1, StringOP.EQUAL, activity1Name);
+                r.setHead(head);
+                break;
+            case ParameterTypeNames.USER:
+                OriginatorVariable originator = new OriginatorVariable(activityExec1);
+                StringConstantAttribute userNameConst = new StringConstantAttribute(
+                        mParameters.get(0).getValue().getValue());
+                new SimpleStringConstraint(originator, StringOP.DIFFERENT, userNameConst);
+                r.setHead(head);
+                break;
+            default:
+                RoleVariable role = new RoleVariable(activityExec1);
+                StringConstantAttribute roleNameConst = new StringConstantAttribute(
+                        mParameters.get(0).getValue().getValue());
+                new SimpleStringConstraint(role, StringOP.DIFFERENT, roleNameConst);
+                r.setHead(head);
+                break;
+        }
+
+        ArrayList<CompositeRule> rules = new ArrayList<>();
+        rules.add(cr);
+        mFormalization = rules;
+
+    }
+
+    @Override
+    public boolean isAntiPattern() {
+        return false;
+    }
 
 }

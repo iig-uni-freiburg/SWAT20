@@ -25,8 +25,8 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class IfAthenB_N_times extends LogCompliancePattern {
 
 	public IfAthenB_N_times() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
-		ArrayList<String> numberType = new ArrayList<String>(Arrays.asList(ParameterTypeNames.NUMBER));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> numberType = new ArrayList<>(Arrays.asList(ParameterTypeNames.NUMBER));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(numberType, "N"));
 		mParameters.add(new Parameter(paramTypes, "B"));
@@ -61,11 +61,11 @@ public class IfAthenB_N_times extends LogCompliancePattern {
 	public CompliancePattern duplicate() {
 		IfAthenB_N_times duplicate = new IfAthenB_N_times();
 		duplicate.acceptInfoProfider(mInfoProvider);
-		return duplicate();
+		return duplicate;
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
@@ -99,7 +99,7 @@ public class IfAthenB_N_times extends LogCompliancePattern {
 			new SimpleStringConstraint(atvB, StringOP.EQUAL, constB);
 		}
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

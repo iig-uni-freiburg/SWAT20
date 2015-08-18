@@ -21,7 +21,7 @@ public abstract class LogCompliancePattern extends CompliancePattern {
 			XMLOutputter outPutter = new XMLOutputter();
 			outPutter.output(output, System.out);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 

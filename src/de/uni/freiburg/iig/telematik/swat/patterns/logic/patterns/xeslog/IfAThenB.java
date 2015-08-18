@@ -30,7 +30,7 @@ public class IfAThenB extends LogCompliancePattern {
 	// <RuleEntry name="test"><Rule><Body><Conjunction><Activities><SimpleActivity name="A" forbidden="false" /></Activities></Conjunction></Body><Head><Disjunction><Conjunction><Activities><SimpleActivity name="B" forbidden="false" /></Activities></Conjunction></Disjunction></Head></Rule></RuleEntry>
 
 	public IfAThenB() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
 		mParameters.add(new Parameter(paramTypes, "A"));
 		mParameters.add(new Parameter(paramTypes, "B"));
 		//mPatternName = "If A then B";
@@ -57,11 +57,11 @@ public class IfAThenB extends LogCompliancePattern {
 	public CompliancePattern duplicate() {
 		IfAThenB duplicate = new IfAThenB();
 		duplicate.acceptInfoProfider(mInfoProvider);
-		return duplicate();
+		return duplicate;
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 		Rule r = new Rule(cr);
 		Conjunction body = new Conjunction(r);
@@ -90,7 +90,7 @@ public class IfAThenB extends LogCompliancePattern {
 
 		} 
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

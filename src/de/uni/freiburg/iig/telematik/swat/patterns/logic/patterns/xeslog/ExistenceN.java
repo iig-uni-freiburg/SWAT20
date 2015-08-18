@@ -30,8 +30,8 @@ public class ExistenceN extends LogCompliancePattern {
 	}
 
 	public ExistenceN() {
-		ArrayList<String> paramTypes = new ArrayList<String>(Arrays.asList(ParameterTypeNames.ACTIVITY));
-		ArrayList<String> numberType = new ArrayList<String>(Arrays.asList(ParameterTypeNames.NUMBER));
+		ArrayList<String> paramTypes = new ArrayList<>(Arrays.asList(ParameterTypeNames.ACTIVITY));
+		ArrayList<String> numberType = new ArrayList<>(Arrays.asList(ParameterTypeNames.NUMBER));
 		mParameters.add(new Parameter(paramTypes, "Activity"));
 		mParameters.add(new Parameter(numberType, "min"));
 		mParameters.add(new Parameter(numberType, "max"));
@@ -67,7 +67,7 @@ public class ExistenceN extends LogCompliancePattern {
 	}
 
 	@Override
-	public void setFormalization() {
+	public final void setFormalization() {
 		CompositeRule cr = new CompositeRule();
 
 		//Empty Body
@@ -97,7 +97,7 @@ public class ExistenceN extends LogCompliancePattern {
 		}
 
 
-		ArrayList<CompositeRule> rules = new ArrayList<CompositeRule>();
+		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules;
 

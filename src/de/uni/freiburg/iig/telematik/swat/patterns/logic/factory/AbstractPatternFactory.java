@@ -14,13 +14,12 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 public abstract class AbstractPatternFactory {
 
 	public ArrayList<CompliancePattern> loadPatterns() throws PatternException{
-		ArrayList<CompliancePattern> mSupportedPatterns = new ArrayList<CompliancePattern>();
+		ArrayList<CompliancePattern> mSupportedPatterns = new ArrayList<>();
 		
 		Set<Class<?>> classes;
 		try {
 			classes = ReflectionUtils.getClassesInPackage(getPatternPackage(), true);
 		} catch (ReflectionException e1) {
-			e1.printStackTrace();
 			throw new PatternException("Cannot load patterns", e1);
 		}
 		

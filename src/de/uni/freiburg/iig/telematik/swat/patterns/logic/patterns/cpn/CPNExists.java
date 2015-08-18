@@ -16,7 +16,7 @@ import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Para
 public class CPNExists extends Exists {
 	
 	public CPNExists() {
-		ArrayList<String> paramTypes = new ArrayList<String>( 
+		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.STATEPREDICATE, ParameterTypeNames.TRANSITION));
 		mParameters.add(new Parameter(paramTypes, "P"));
 	}
@@ -28,7 +28,7 @@ public class CPNExists extends Exists {
 		mInfoProvider = cwnInfo;
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, cwnInfo.getTransitions());
-		ArrayList<String> range = new ArrayList<String>(); 
+		ArrayList<String> range = new ArrayList<>(); 
 		for (String place : cwnInfo.getPlaces()) {
 			ArrayList<String> colors = cwnInfo.getTokenColors(place);
 			for (String color : colors) {

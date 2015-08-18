@@ -20,7 +20,7 @@ public abstract class CompliancePattern implements Comparable<CompliancePattern>
 	
 	private State mState = State.NOT_INSTANTIATED;
 	
-	protected ArrayList<Parameter> mParameters = new ArrayList<Parameter>();
+	protected ArrayList<Parameter> mParameters = new ArrayList<>();
 	
 	//@XStreamOmitField
 	protected ModelInfoProvider mInfoProvider;
@@ -54,7 +54,7 @@ public abstract class CompliancePattern implements Comparable<CompliancePattern>
 	}
 	
 	public boolean isInstantiated() {
-		return (mState == State.INSTANTIATED)? true : false;
+		return (mState == State.INSTANTIATED);
 	}
 
 	public abstract CompliancePattern duplicate();
