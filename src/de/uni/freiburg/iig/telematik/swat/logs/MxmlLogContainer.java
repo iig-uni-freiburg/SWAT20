@@ -25,5 +25,14 @@ public class MxmlLogContainer extends AbstractLogModelContainer{
     protected SwatLogType getLogType() {
         return SwatLogType.MXML;
     }
+
+	@Override
+	protected String getFileEndingForComponent(LogModel component) {
+		return "mxml";
+	}
+    
+    
+    
+    
     
 }

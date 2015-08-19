@@ -119,6 +119,7 @@ public class SwatComponents extends AbstractProjectComponents {
             addComponentContainer(containerACModels);
             containerProcessContexts.linkACModels(getContainerACModels(), true);
             containerPetriNets = new SwatPNContainer(SwatProperties.getInstance().getPathForNets(), getContainerACModels(), MessageDialog.getInstance());
+            containerPetriNets.loadComponents();
 
             //TODO: Create and add other containers
             // Petri nets

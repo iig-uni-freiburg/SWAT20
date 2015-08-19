@@ -25,5 +25,10 @@ public class XesLogContainer extends AbstractLogModelContainer {
     protected SwatLogType getLogType() {
         return SwatLogType.XES;
     }
+    
+	@Override
+	protected String getFileEndingForComponent(LogModel component) {
+		return "xes";
+	}
 
 }

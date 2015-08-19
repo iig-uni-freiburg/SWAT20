@@ -45,8 +45,11 @@ public class AristaflowLogContainer extends AbstractLogModelContainer {
 		}
 		
 	}
-    
-    
+	
+	@Override
+	protected String getFileEndingForComponent(LogModel component) {
+		return "csv";
+	}
     
     
 }

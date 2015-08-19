@@ -87,7 +87,7 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         super.loadComponents();
         // Petri nets have been added in super-method and reported to this class
         // -> Analysis containers have been created and put into the corresponding maps
-        debugMessage("Load analyses of loaded nets");
+        debugMessage("Load logd");
         for (AnalysisContainer analysisContainer : analysisContainers.values()) {
             analysisContainer.loadComponents();
         }
