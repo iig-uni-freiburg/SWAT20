@@ -17,6 +17,7 @@ import de.uni.freiburg.iig.telematik.swat.logs.MxmlLogContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.logs.XesLogContainer;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class SwatComponents extends AbstractProjectComponents {
     private ProcessContextContainer containerProcessContexts;
     private ACModelContainer containerACModels;
     private SwatPNContainer containerPetriNets;
-    private Map<SwatLogType, AbstractLogModelContainer> logModelContainers = new HashMap<>();
+    private Map<SwatLogType, AbstractLogModelContainer> logModelContainers;
 
     public SwatComponents() throws ProjectComponentException {
         super(MessageDialog.getInstance());
@@ -131,6 +132,9 @@ public class SwatComponents extends AbstractProjectComponents {
             logModelContainers.put(SwatLogType.MXML, getContainerMXMLLogs());
             logModelContainers.put(SwatLogType.XES, getContainerXESLogs());
             logModelContainers.put(SwatLogType.Aristaflow,getContainerAristaflowLogs());
+            getContainerMXMLLogs().loadComponents();
+            getContainerAristaflowLogs().loadComponents();
+            getContainerXESLogs().loadComponents();
 
             // Analyses
         } catch (Exception e) {

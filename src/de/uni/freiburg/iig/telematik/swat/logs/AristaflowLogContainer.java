@@ -23,10 +23,12 @@ public class AristaflowLogContainer extends AbstractLogModelContainer {
 
     public AristaflowLogContainer(String basePath) {
         super(basePath);
+        setUseSubdirectoriesForComponents(true);
     }
 
     public AristaflowLogContainer(String basePath, SimpleDebugger debugger) {
         super(basePath, debugger);
+        setUseSubdirectoriesForComponents(true);
     }
     
     @Override

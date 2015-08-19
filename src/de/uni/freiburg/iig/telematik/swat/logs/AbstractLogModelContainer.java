@@ -78,7 +78,24 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         return getContainerAnalysis(logName).getComponent(analysisName);
     }
     
-    public boolean containsContainerAnalysis(String netName) {
+    @Override
+	protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
+    	File log;
+    	try {
+			log = new File(pathFile.getCanonicalPath(), componentName+ ".csv");
+			if (log.exists())
+				return log; //AristaFlow
+			log = new File(pathFile.getCanonicalPath(), componentName+ ".xes");
+			if(log.exists())
+				return log; //xes
+			log = new File(pathFile.getCanonicalPath(), componentName+ ".mxml");
+			return log; //mxml
+		} catch (IOException e) {
+			throw new ProjectComponentException("could not compose log file for "+componentName+": "+e.getMessage());
+		}
+	}
+
+	public boolean containsContainerAnalysis(String netName) {
         return analysisContainers.containsKey(netName);
     }
     
@@ -87,7 +104,7 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         super.loadComponents();
         // Petri nets have been added in super-method and reported to this class
         // -> Analysis containers have been created and put into the corresponding maps
-        debugMessage("Load logd");
+        debugMessage("Load log");
         for (AnalysisContainer analysisContainer : analysisContainers.values()) {
             analysisContainer.loadComponents();
         }

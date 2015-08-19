@@ -107,7 +107,9 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
     }
 
     @Override
+    /**load petri nets and contexts**/
     public void loadComponents() throws ProjectComponentException {
+    	//super.setUseSubdirectoriesForComponents(true);
         super.loadComponents();
         // Petri nets have been added in super-method and reported to this class
         // -> Analysis context containers have been created and put into the corresponding maps
