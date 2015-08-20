@@ -9,17 +9,10 @@ import de.invation.code.toval.debug.SimpleDebugger;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
-import de.invation.code.toval.validate.ExceptionDialog;
-import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContextContainer;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisContainer;
-import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContextContainer;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,15 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.postgresql.copy.CopyOperation;
-
 /**
  *
  * @author stocker
  */
-public abstract class AbstractLogModelContainer extends AbstractComponentContainer<LogModel> implements ComponentListener<LogModel>{
-    
-    Map<String,AnalysisContainer> analysisContainers = new HashMap<>();
+public abstract class AbstractLogModelContainer extends AbstractComponentContainer<LogModel> implements ComponentListener<LogModel> {
+
+    Map<String, AnalysisContainer> analysisContainers = new HashMap<>();
 
     public AbstractLogModelContainer(String basePath) {
         super(basePath, null);
@@ -48,16 +39,16 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         setUseSubdirectoriesForComponents(true);
         this.addComponentListener(this);
     }
-    
+
     public AnalysisContainer getContainerAnalysis(String logModelName) throws ProjectComponentException {
         validateComponent(logModelName);
         if (!containsAnalysisContainer(logModelName)) {
-        	createNewAnalysisContainer(getComponent(logModelName));
+            createNewAnalysisContainer(getComponent(logModelName));
             //throw new ProjectComponentException("analysis container for log model \"" + logModelName + "\" is NULL");
         }
         return analysisContainers.get(logModelName);
     }
-    
+
     public boolean containsAnalysisContainer(String logModelName) {
         return analysisContainers.containsKey(logModelName);
     }
@@ -72,34 +63,36 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     public String getComponentDescriptor() {
         return getLogType().getDescription();
     }
-    
+
     public Analysis getAnalysis(String logName, String analysisName) throws ProjectComponentException {
         validateComponent(logName);
         return getContainerAnalysis(logName).getComponent(analysisName);
     }
-    
-    @Override
-	protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
-    	File log;
-    	try {
-			log = new File(pathFile.getCanonicalPath(), componentName+ ".csv");
-			if (log.exists())
-				return log; //AristaFlow
-			log = new File(pathFile.getCanonicalPath(), componentName+ ".xes");
-			if(log.exists())
-				return log; //xes
-			log = new File(pathFile.getCanonicalPath(), componentName+ ".mxml");
-			return log; //mxml
-		} catch (IOException e) {
-			throw new ProjectComponentException("could not compose log file for "+componentName+": "+e.getMessage());
-		}
-	}
 
-	public boolean containsContainerAnalysis(String netName) {
+    @Override
+    protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
+        File log;
+        try {
+            log = new File(pathFile.getCanonicalPath(), componentName + ".csv");
+            if (log.exists()) {
+                return log; //AristaFlow
+            }
+            log = new File(pathFile.getCanonicalPath(), componentName + ".xes");
+            if (log.exists()) {
+                return log; //xes
+            }
+            log = new File(pathFile.getCanonicalPath(), componentName + ".mxml");
+            return log; //mxml
+        } catch (IOException e) {
+            throw new ProjectComponentException("could not compose log file for " + componentName + ": " + e.getMessage());
+        }
+    }
+
+    public boolean containsContainerAnalysis(String netName) {
         return analysisContainers.containsKey(netName);
     }
-    
-     @Override
+
+    @Override
     public void loadComponents() throws ProjectComponentException {
         super.loadComponents();
         // Petri nets have been added in super-method and reported to this class
@@ -117,10 +110,10 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
 
     @Override
     protected void serializeComponent(LogModel component, String basePath, String fileName) throws Exception {
-    	System.out.println("");
-    	//actually nothing to do for logModels
-    	//Files.copy(component.getFileReference().toPath(), new File(basePath,fileName).toPath(),StandardCopyOption.REPLACE_EXISTING);
-    	//component.setFileReference(new File(basePath,fileName));
+        //System.out.println("");
+        //actually nothing to do for logModels
+        //Files.copy(component.getFileReference().toPath(), new File(basePath,fileName).toPath(),StandardCopyOption.REPLACE_EXISTING);
+        //component.setFileReference(new File(basePath,fileName));
     }
 
     @Override
@@ -135,21 +128,24 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     }
 
     @Override
-    public void componentsChanged() throws ProjectComponentException{};
+    public void componentsChanged() throws ProjectComponentException {
+    }
+
+    ;
 
     @Override
-    public void componentRenamed(LogModel component, String oldName, String newName) throws ProjectComponentException{
+    public void componentRenamed(LogModel component, String oldName, String newName) throws ProjectComponentException {
         if (analysisContainers.containsKey(oldName)) {
             Collection<Analysis> analyses = getContainerAnalysis(oldName).getComponents();
             getContainerAnalysis(oldName).removeComponents(true, false);
             analysisContainers.put(newName, createNewAnalysisContainer(component));
-            for(Analysis analysis: analyses){
+            for (Analysis analysis : analyses) {
                 getContainerAnalysis(newName).addComponent(analysis, true, false);
             }
         }
     }
-    
-    private AnalysisContainer createNewAnalysisContainer(LogModel component) throws ProjectComponentException{
+
+    private AnalysisContainer createNewAnalysisContainer(LogModel component) throws ProjectComponentException {
         debugMessage("Create analysis container for added log model \"" + component.getName() + "\"");
         try {
             return new AnalysisContainer(getAnalysisDirectory(component.getName()), getDebugger());
@@ -159,7 +155,7 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     }
 
     @Override
-    public void componentRemoved(LogModel component) throws ProjectComponentException{
+    public void componentRemoved(LogModel component) throws ProjectComponentException {
         //Try to remove all related analyses
         if (analysisContainers.containsKey(component.getName())) {
             debugMessage("Identify related analyses of removed log model");
@@ -174,11 +170,11 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     }
 
     @Override
-    public void componentAdded(LogModel component) throws ProjectComponentException{
+    public void componentAdded(LogModel component) throws ProjectComponentException {
         //Try to create and add containers for log model
         analysisContainers.put(component.getName(), createNewAnalysisContainer(component));
     }
-    
+
     private String getAnalysisDirectory(String logModelName) throws Exception {
         String logPath = getBasePath();
         if (!logPath.endsWith(System.getProperty("file.separator"))) {
@@ -188,7 +184,7 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         logPath = logPath.concat(System.getProperty("file.separator"));
         return logPath;
     }
-    
+
     public void storeAnalyses(String logName) throws ProjectComponentException {
         validateComponent(logName);
         getContainerAnalysis(logName).storeComponents();
@@ -199,14 +195,14 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         getContainerAnalysis(logName).validateComponent(analysisName);
         getContainerAnalysis(logName).storeComponent(analysisName);
     }
-    
+
     public void addAnalysis(Analysis analysis, String logName, boolean storeToFile) throws ProjectComponentException {
         addAnalysis(analysis, logName, storeToFile, true);
     }
-    
+
     public void addAnalysis(Analysis analysis, String logName, boolean storeToFile, boolean notifyListeners) throws ProjectComponentException {
         validateComponent(logName);
-        if(containsAnalysis(analysis.getName())){
+        if (containsAnalysis(analysis.getName())) {
             throw new ProjectComponentException("Container already contains an analysis with name \"" + analysis.getName() + "\"");
         }
         getContainerAnalysis(logName).addComponent(analysis, storeToFile, notifyListeners);
@@ -220,33 +216,33 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         }
         return false;
     }
-    
+
     public void storeAnalyses() throws ProjectComponentException {
         for (String logName : analysisContainers.keySet()) {
             analysisContainers.get(logName).storeComponents();
         }
     }
-    
+
     @Override
     public void storeComponent(String componentName) throws ProjectComponentException {
         super.storeComponent(componentName);
         //store analysis components, if any
-		AnalysisContainer analysisContainer = getContainerAnalysis(componentName);
-        if(analysisContainer!=null && getContainerAnalysis(componentName).containsComponents())
-        getContainerAnalysis(componentName).storeComponents();
+        AnalysisContainer analysisContainer = getContainerAnalysis(componentName);
+        if (analysisContainer != null && getContainerAnalysis(componentName).containsComponents()) {
+            getContainerAnalysis(componentName).storeComponents();
+        }
     }
-    
-     @Override
+
+    @Override
     public void storeComponents() throws ProjectComponentException {
         super.storeComponents();
-        for(AnalysisContainer analysisContainer: analysisContainers.values()){
+        for (AnalysisContainer analysisContainer : analysisContainers.values()) {
             analysisContainer.storeComponents();
         }
     }
-     
+
 //     @Override
 //     protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
 //         return new File(pathFile, componentName);
 //     }
-
 }
