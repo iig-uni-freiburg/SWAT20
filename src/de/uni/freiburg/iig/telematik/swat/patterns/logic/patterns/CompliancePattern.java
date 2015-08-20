@@ -22,10 +22,10 @@ public abstract class CompliancePattern implements Comparable<CompliancePattern>
 	
 	protected ArrayList<Parameter> mParameters = new ArrayList<>();
 	
-	//@XStreamOmitField
+	@XStreamOmitField
 	protected ModelInfoProvider mInfoProvider;
 
-	//@XStreamOmitField
+	@XStreamOmitField
 	protected Object mFormalization;
 	
 	public abstract void acceptInfoProfider(ModelInfoProvider provider);

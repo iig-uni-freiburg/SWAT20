@@ -346,13 +346,13 @@ public class AnalyzePanel extends JPanel implements ItemListener {
         //which kind of log
         SwatComponents comp = SwatComponents.getInstance();
         if(comp.getContainerAristaflowLogs().containsComponent(logName)){
-            comp.getContainerAristaflowLogs().addAnalysis(save, save.getName(), true);
+            comp.getContainerAristaflowLogs().addAnalysis(save, logName, true);
         }
         else if (comp.getContainerMXMLLogs().containsComponent(logName)){
-            comp.getContainerMXMLLogs().addAnalysis(save, save.getName(), true);
+            comp.getContainerMXMLLogs().addAnalysis(save, logName, true);
         }
         else if (comp.getContainerXESLogs().containsComponent(logName)){
-            comp.getContainerXESLogs().addAnalysis(save, save.getName(), true);
+            comp.getContainerXESLogs().addAnalysis(save, logName, true);
         }
         
     }

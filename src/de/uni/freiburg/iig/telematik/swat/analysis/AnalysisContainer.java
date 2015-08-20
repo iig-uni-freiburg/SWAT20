@@ -9,14 +9,15 @@ import com.thoughtworks.xstream.XStream;
 import de.invation.code.toval.debug.SimpleDebugger;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
- * @author stocker
+ * Container for pattern analysis report
+ * @author stocker, richard
  */
 public class AnalysisContainer extends AbstractComponentContainer<Analysis> {
 
@@ -41,11 +42,11 @@ public class AnalysisContainer extends AbstractComponentContainer<Analysis> {
         XStream xstream = new XStream();
         Analysis analysis = null;
         try {
-            analysis = (Analysis) xstream.fromXML(file);
+            analysis = (Analysis) xstream.fromXML(new FileInputStream(file));
             analysis.setFormalizationOnPatterns();
             analysis.setLoadedFromDisk();
         } catch (Exception e) {
-            throw new Exception("Exception while parsing analysis from XML file", e);
+            throw new Exception("Exception while parsing analysis from XML file "+file, e);
         }
         return analysis;
     }
