@@ -78,6 +78,7 @@ public class PatternPanel extends JPanel {
 			//				System.out.println("Creating panel for LOADED PATTERN: " + mPattern.getName() + " With 1st parameter: "
 			//					+ mPattern.getParameters().get(0).getName() + " and " + mPattern.getParameters().get(0).getValue().getValue() + " and "
 			//					+ mPattern.getParameters().get(0).getValue().getType());
+			//TODO: Timepoint dropdown for logs
 			for (Parameter parameter : mPattern.getParameters()) {
 				componentIndex = componentIndex + 3;
 				final int i = componentIndex;
@@ -85,8 +86,8 @@ public class PatternPanel extends JPanel {
 				final JComboBox mParaTypeBox = new JComboBox((String[])
 						parameter.getParameterDomain().toArray(new String[0]));
 				mParaTypeBox.setSelectedItem(parameter.getValue().getType());
-				System.out.println("Trying to set parameter: " + parameter.getValue().getType() + " Was found: "
-						+ mParaTypeBox.getSelectedItem());
+//				System.out.println("Trying to set parameter: " + parameter.getValue().getType() + " Was found: "
+//						+ mParaTypeBox.getSelectedItem());
 				final ParameterValuePanel paraValuePanel = ParaValuePanelFactory.createPanel(mParaTypeBox.getSelectedItem(), curParameter);
 				//paraValuePanel.setParameterAccordingToPattern(parameter);//new
 				mBottomPanel.add(new JLabel(parameter.getName() + ":"));

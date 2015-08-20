@@ -27,7 +27,7 @@ public class NumberParamValuePanel extends ParameterValuePanel {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				System.out.println("Setting value of parameter to: " + mParaValueBox.getModel().getValue());
+				//System.out.println("Setting value of parameter to: " + mParaValueBox.getModel().getValue());
 				curParam.setValue(type, Integer.toString((Integer) mParaValueBox.getModel().getValue()));
 
 			}

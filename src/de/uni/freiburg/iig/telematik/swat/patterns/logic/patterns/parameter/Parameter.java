@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 public class Parameter {
 
 	private final String mName;
 	private final HashMap<String, ArrayList<String>> mRangeMap;
 	private ParameterValue mValue;
+	private String[] mTimePoints={"start","end","complete"};
+	private String mSelectedTimePoint="complete";
 	
 	/**
 	 * Constructs a Parameter with a name and the parameter types.
@@ -55,6 +59,29 @@ public class Parameter {
 		result.add(0, ""); //Because first, pattern parameter are not initialized
 		return result;
 		//return mRangeMap.get(type); //if initialized
+	}
+	
+	public String[] getTimePoints(){
+		return mTimePoints;
+	}
+	
+	public void setTimePoints(String[] possibleTimePoints){
+		mTimePoints=possibleTimePoints;
+	}
+	
+	public void setSelectedTimePoint(String timePoint){
+		boolean contains = false;
+		for(String s:mTimePoints){
+			if(s.equalsIgnoreCase(timePoint)){ contains=true;break;}}
+		
+		if (!contains)
+			throw new RuntimeException("TimePoint "+timePoint+" is not available in process log!");
+		
+		mSelectedTimePoint=timePoint;
+	}
+	
+	public String getSelectedTimePoint(){
+		return mSelectedTimePoint;
 	}
 
 	

@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.patterns.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -19,6 +21,9 @@ public class StandardParamValuePanel extends ParameterValuePanel {
 		//final String typeCopy = type;
 		final String type = parameter.getValue().getType();
 		final Parameter curParam = parameter;
+		String[] timePoints = {"start","end","complete"};
+		JComboBox<String> timePoint = new JComboBox<>(parameter.getTimePoints());
+		timePoint.setSelectedItem(parameter.getSelectedTimePoint());
 		mParaValueBox = new JComboBox((String[]) parameter.getParameterRange(
 				type).toArray(new String[0]));
 		mParaValueBox.setSelectedItem(parameter.getValue().getValue());
@@ -32,7 +37,18 @@ public class StandardParamValuePanel extends ParameterValuePanel {
 			}
 			
 		});
+		
+		timePoint.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				curParam.setSelectedTimePoint((String) e.getItem());
+				
+			}
+		});
+		
 		curParam.setValue(type, parameter.getValue().getValue());//what to do with rules that do carry empty params?
+		this.add(timePoint);
 		this.add(mParaValueBox);
 
 	}
