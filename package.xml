@@ -26,8 +26,8 @@
 	<property name="project.description" value="The Security Workflow Analysis Tool (SWAT) is a framework for modelling and analyzing workflows." />
 	<property name="artifact.name" value="swat" />
 	<property name="version.name" value="0.0.1" />
-	<property name="main-class" value="de.uni.freiburg.iig.telematik.swat.Startup" />
-	<property name="main-class-uri" value="de/uni/freiburg/iig/telematik/swat/Startup" />
+	<property name="main-class" value="de.uni.freiburg.iig.telematik.swat.SwatStartup" />
+	<property name="main-class-uri" value="de/uni/freiburg/iig/telematik/swat/SwatStartup" />
 
 	<!-- Names for generated files -->
 	<property name="jar.file.name" value="${artifact.name}-${version.name}" />
@@ -67,6 +67,7 @@
 	<path id="JAGAL.classpath">
 		<pathelement location="${JAGAL.location}/bin/classes-ant" />
 		<path refid="TOVAL.classpath" />
+		<pathelement location="${JAGAL.location}/lib/jgraphx-3_1_2_1.jar" />
 	</path>
 
 	<path id="SEWOL.classpath">
@@ -104,7 +105,6 @@
 		<path refid="SEWOL.classpath" />
 		<path refid="SEPIA.classpath" />
 		<pathelement location="${WOLFGANG.location}/lib/itextpdf-5.5.0.jar" />
-		<pathelement location="${WOLFGANG.location}/lib/jgraphXwithsources.jar" />
 	</path>
 
 	<path id="SWAT.classpath">
@@ -121,7 +121,6 @@
 		<pathelement location="${libs.dir}/itextpdf-5.5.0.jar" />
 		<pathelement location="${libs.dir}/javadocPanelMatic.jar" />
 		<pathelement location="${libs.dir}/jdom-1.1.3.jar" />
-		<pathelement location="${libs.dir}/jgraphXwithsources.jar" />
 		<pathelement location="${libs.dir}/junit-4.11.jar" />
 		<pathelement location="${libs.dir}/PanelMatic.jar" />
 		<pathelement location="${libs.dir}/postgresql-9.3-1101.jdbc4.jar" />
@@ -290,7 +289,7 @@
 			<fileset dir="${WOLFGANG.location}/res" />
 			<fileset dir="${res.dir}" />
 			<fileset dir="${plugins.dir}" />
-			<zipfileset excludes="META-INF/*.SF" src="${JAGAL.location}/lib/jgraphXwithsources.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="${JAGAL.location}/lib/jgraphx-3_1_2_1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/guava-16.0.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/collections-generic-4.01.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEWOL.location}/lib/jung-algorithms-2.0.1.jar" />
@@ -305,7 +304,6 @@
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/hamcrest/hamcrest-core-1.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${SEPIA.location}/lib/xsom/xsom-20110101-SNAPSHOT.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${WOLFGANG.location}/lib/itextpdf-5.5.0.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${WOLFGANG.location}/lib/jgraphXwithsources.jar" />
 
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jfreechart/jcommon-1.0.23.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jfreechart/jfreechart-1.0.19.jar" />
@@ -314,7 +312,6 @@
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/itextpdf-5.5.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jdom-1.1.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/junit-4.11.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/jgraphXwithsources.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/PanelMatic.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/postgresql-9.3-1101.jdbc4.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="${libs.dir}/xmlpull-1.1.3.1.jar" />
@@ -355,7 +352,7 @@
 		</copy>
 	</target>
 
-	<target name="bundle-deb" depends="package" description="Creates a Debian package">
+	<target name="bundle-deb" depends="package-consistent" description="Creates a Debian package">
 		<property name="deb.installpath" value="/usr/share/swat" />
 		<property name="deb.execpath" value="/usr/local/bin" />
 		<!-- Copy control file -->
@@ -408,7 +405,7 @@
 		</deb>
 	</target>
 
-	<target name="bundle-macosx" depends="package" description="Creates a Mac OS X application bundle">
+	<target name="bundle-macosx" depends="package-consistent" description="Creates a Mac OS X application bundle">
 		<bundleapp
                     outputdirectory="${target.dir.jar}"
                     name="SWAT"
@@ -425,7 +422,7 @@
 		</bundleapp>
 	</target>
 
-        <target name="bundle-win32" depends="package" description="Creates a Windows executable">
+        <target name="bundle-win32" depends="package-consistent" description="Creates a Windows executable">
             <launch4j>
                 <config headerType="gui" outfile="${target.dir.jar}/${jar.file.name}.exe" dontWrapJar="false" jarPath="${target.dir.jar}/${jar.file.name}-runnable.jar" icon="${icon.win.file}">
                     <var>SETTINGS="%HomeDrive%%HomePath%\\swat-settings.ini"</var>
