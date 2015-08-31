@@ -9,14 +9,14 @@ import de.invation.code.toval.reflect.ReflectionUtils;
 import de.uni.freiburg.iig.telematik.swat.patterns.PatternException;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 public abstract class AbstractPatternFactory {
 
     public ArrayList<CompliancePattern> loadPatterns() throws PatternException {
         ArrayList<CompliancePattern> mSupportedPatterns = new ArrayList<>();
 
-        List<Class<?>> classes;
+        LinkedHashSet<Class<?>> classes;
         try {
             classes = ReflectionUtils.getClassesInPackage(getPatternPackage(), true);
         } catch (ReflectionException e1) {
