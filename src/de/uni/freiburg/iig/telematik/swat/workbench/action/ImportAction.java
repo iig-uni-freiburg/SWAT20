@@ -38,6 +38,7 @@ public class ImportAction extends AbstractWorkbenchAction {
 		menu.add(new LogImportAction());
 		menu.add(new AFtemplateImportAction());
 		menu.add(new AFSqlLogImportAction());
+		menu.add(new BpmnImportAction());
 		menu.setInvoker((Component) e.getSource());
 		menu.setLocation((int) source.getLocationOnScreen().getX(), (int) source.getLocationOnScreen().getY());
 		menu.setVisible(true);

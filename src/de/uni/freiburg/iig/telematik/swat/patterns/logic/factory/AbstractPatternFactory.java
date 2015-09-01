@@ -33,9 +33,9 @@ public abstract class AbstractPatternFactory {
                 mSupportedPatterns.add(cp);
                 Workbench.consoleMessage("Added pattern: " + cp.getName());
             } catch (InstantiationException e) {
-                Workbench.errorMessage("Cannot instantiate compliance pattern", e, false);
+                throw new PatternException("Cannot instantiate compliance pattern", e);
             } catch (IllegalAccessException e) {
-                Workbench.errorMessage("Cannot access class definition of compliance pattern", e, false);
+                throw new PatternException("Cannot access class definition of compliance pattern", e);
             }
         }
 
