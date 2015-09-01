@@ -27,14 +27,8 @@ public class LogImportAction extends AbstractWorkbenchAction {
 		try {
 			setIcon(IconFactory.getIcon("import"));
 		} catch (ParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (PropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
