@@ -9,10 +9,8 @@ import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.PTGraphics;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.bpmn2pn.BPMN2PNStartup;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
@@ -21,6 +19,8 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
 public class BpmnImportAction extends AbstractWorkbenchAction {
+
+	private static final long serialVersionUID = -1045319694736116999L;
 
 	public BpmnImportAction() {
 		super("Import BPMN");

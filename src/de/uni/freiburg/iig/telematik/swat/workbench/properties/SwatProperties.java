@@ -150,7 +150,7 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     //------- Prism Path -------------------------------------------------------------------
     public void setPrismPath(String directory) throws ParameterException, IOException, PropertyException {
-        PrismSearcher.validatePrismPath(directory);
+        //PrismSearcher.validatePrismPath(directory);
         setProperty(SwatProperty.PRISM_PATH, directory);
         store();
     }

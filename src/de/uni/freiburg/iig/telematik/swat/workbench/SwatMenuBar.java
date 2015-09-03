@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -18,6 +19,8 @@ import javax.swing.WindowConstants;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
+import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcher;
+import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcherFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AboutAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
@@ -172,7 +175,9 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 				String prismPath = chooser.chooseFile();
 				if (prismPath != null) {
 					try {
-						SwatProperties.getInstance().setPrismPath(prismPath);
+						PrismSearcher searcher = PrismSearcherFactory.getPrismSearcher();
+						File fullPath=searcher.validatePrismPath(prismPath);
+						SwatProperties.getInstance().setPrismPath(fullPath.getAbsolutePath());
 						if (!PrismFunctionValidator.checkPrism())
 							Workbench.errorMessage("Could not verify PRISM executable", null, true);
 					} catch (Exception e1) {

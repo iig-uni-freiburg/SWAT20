@@ -46,9 +46,9 @@ private String mPrismPath;
                 if(prismPath==null){
 		try {
 			mPrismPath = SwatProperties.getInstance().getPrismPath();
-			if (!mPrismPath.endsWith(File.separator)) {
-				mPrismPath += File.separator;
-			}
+//			if (!mPrismPath.endsWith(File.separator)) {
+//				mPrismPath += File.separator;
+//			}
 		} catch (ParameterException e) {
 			Workbench.errorMessage("Could not load PRISM", e, true);
 			e.printStackTrace();
@@ -130,12 +130,10 @@ private String mPrismPath;
 		String prism = (System.getProperty("os.name").contains("Windows"))? "prism.bat" : "prism";
 		
 		if (mConverter.isBoundedNet()) {
-			command = mPrismPath + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
- " " + properties.getAbsolutePath()
+			command = mPrismPath + " " + model.getAbsolutePath() +  " " + properties.getAbsolutePath()
 					+ " -exportstates " + mStatesFileName;
 		} else {
-			command = mPrismPath + "bin" + File.separator + prism + " " + model.getAbsolutePath() + 
-					" " + properties.getAbsolutePath() + " -ex";
+			command = mPrismPath + " " + model.getAbsolutePath() + " " + properties.getAbsolutePath() + " -ex";
 		}
 		
 	    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -145,6 +143,7 @@ private String mPrismPath;
 	    PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
 		//Workbench.consoleMessage("Executing: " + command);
 	    exec.setStreamHandler(streamHandler);
+	    System.out.println("Executing "+command);
 	    exec.execute(commandline);
 	    return(outputStream.toString());
 	    

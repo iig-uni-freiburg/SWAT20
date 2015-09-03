@@ -44,7 +44,7 @@ public class WindowsSearcher extends PrismSearcher {
 		return null;
 	}
 
-	public static void validatePrismPath(String directory) throws ParameterException {
+	public static File validatePrismPath(String directory) throws ParameterException {
 		Validate.directory(directory);
 
 		File testFile = new File(directory, "bin" + System.getProperty("file.separator") + "prism.bat");
@@ -57,6 +57,8 @@ public class WindowsSearcher extends PrismSearcher {
 
 		if (!testFile.canExecute())
 			throw new ParameterException("Cannot execute prism");
+		
+		return testFile;
 	}
 
 }

@@ -157,7 +157,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		if (Workbench.getInstance().getTypeOfCurrentComponent().equals(SwatComponentType.PETRI_NET)) {
 			if (!PrismFunctionValidator.checkPrism())
 				Workbench.errorMessage("PRISM is not correctly set-up", new Exception("Could not load Prism"), true);
-			return;
+			//return;
 		}
 		mAnalysisController.runModelChecker();
 	}

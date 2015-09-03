@@ -27,10 +27,10 @@ public class PrismPathChooser extends ConditionalFileDialog {
 	@Override
 	protected boolean isValid(File path){
 		try {
-			PrismSearcherFactory.getPrismSearcher().validatePrismPath(path.getAbsolutePath());
+			File prism = PrismSearcherFactory.getPrismSearcher().validatePrismPath(path.getAbsolutePath());
 
 			//check prism function
-			if (!PrismFunctionValidator.checkPrism(path))
+			if (!PrismFunctionValidator.checkPrism(prism))
 				Workbench
 						.errorMessage(
 								"Prism failed the execution test. this prism version might differ from prism-4.2.beta1.\br might cause trouble with SWAT",

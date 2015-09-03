@@ -49,6 +49,7 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 	private void savePN(PNEditorComponent mainComponent) {
             try {
                 SwatComponents.getInstance().getContainerPetriNets().storeAnalyses(mainComponent.getNetContainer().getPetriNet().getName());
+                SwatComponents.getInstance().getContainerPetriNets().storeComponent(mainComponent.getNetContainer().getPetriNet().getName());
                 MessageDialog.getInstance().addMessage("Successfully saved Petri Net");
                 Workbench.consoleMessage("Successfully saved Petri Net");
             } catch (ProjectComponentException ex) {

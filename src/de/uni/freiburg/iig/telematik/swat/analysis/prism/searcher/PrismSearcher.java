@@ -98,13 +98,18 @@ public abstract class PrismSearcher {
 					potentialPaths.add(potentialDir);
 			}	
 		} catch (Exception e) {
-			// Don't care about invalid paths.
+			// Don't care about invalid paths. Just ignore
 		}
 		return potentialPaths;
 	}
 
-	public static void validatePrismPath(String directory) throws ParameterException{
-		Validate.directory(directory);
+	public static File validatePrismPath(String directory) throws ParameterException{
+		File fullpath = new File(directory);
+		if(fullpath.isFile() && fullpath.canExecute()){
+			return fullpath;
+		}
+		
+		Validate.directory(directory);//directory may be full path to executable
 		// linux
 		String path="bin"+System.getProperty("file.separator")+"prism";
 		// windows
@@ -120,5 +125,7 @@ public abstract class PrismSearcher {
 		
 		if (!testFile.canExecute())
 			throw new ParameterException("Cannot execute prism");
+		
+		return new File(directory,path);
 	}
 }
