@@ -74,17 +74,17 @@ public class InclusiveGateway extends AbstractGateway implements BpmnElement {
 			outSet = new HashSet<String>();
 			for(String k : this.inBound) {
 				outSet.add(k);
-				ifnc.addPlace(name+"pre"+k+"["+i+"]");
-				start.put(k, name+"pre"+k+"["+i+"]");
+				ifnc.addPlace(name+"pre"+k+":"+i+":");
+				start.put(k, name+"pre"+k+":"+i+":");
 			}	
 			sssk = generateAllSubsets(outSet);
 			cnt=0;
 			for(Set<String> hhh : sssk) {
 				if(hhh.size()!=0) {
-					ifnc.addTransition(name+"["+cnt+"]-in");
-					ifnc.addFlowRelationTP(name+"["+cnt+"]-in", "helperP"+name);
+					ifnc.addTransition(name+":"+cnt+":-in");
+					ifnc.addFlowRelationTP(name+":"+cnt+":-in", "helperP"+name);
 					for(String inner : hhh) {
-						ifnc.addFlowRelationPT(name+"pre"+inner+"[0]", name+"["+cnt+"]-in");
+						ifnc.addFlowRelationPT(name+"pre"+inner+":0:", name+":"+cnt+":-in");
 					}
 				}
 				cnt++;

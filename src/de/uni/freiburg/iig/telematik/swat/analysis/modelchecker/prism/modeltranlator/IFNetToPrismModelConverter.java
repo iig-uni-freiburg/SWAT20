@@ -17,6 +17,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.DeclassificationTransi
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetTestUtil;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 
@@ -499,11 +500,11 @@ public class IFNetToPrismModelConverter {
 	public static void main(String[] args) throws ParameterException {
 		
 		//create a simple IFNet
-		//IFNet IFNet = IFNetTestUtil.createSimpleIFNetWithDeclassification();
+		IFNet IFNet = IFNetTestUtil.createSimpleIFNetWithDeclassification();
 		//Create convert to prism
-		//IFNetToPrismModelConverter converter = new IFNetToPrismModelConverter(IFNet);
-		//StringBuilder prismModel = converter.ConvertIFNetToPrism();
-		//System.out.println(prismModel);
+		IFNetToPrismModelConverter converter = new IFNetToPrismModelConverter(IFNet);
+		StringBuilder prismModel = converter.ConvertIFNetToPrism();
+		System.out.println(prismModel);
 						
 	}
 	

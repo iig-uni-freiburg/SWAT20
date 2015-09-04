@@ -61,9 +61,9 @@ public class TerminationEvent extends AbstractEvent implements BpmnElement {
 		int i;
 		i=0;
 		for(String k : this.inBound) {
-			ifnc.addPlace(name+"pre"+k+"["+i+"]");	
-			ifnc.addFlowRelationPT(name+"pre"+k+"["+i+"]", name);
-			start.put(k, name+"pre"+k+"["+i+"]");
+			ifnc.addPlace(name+"pre"+k+":"+i+":");	
+			ifnc.addFlowRelationPT(name+"pre"+k+":"+i+":", name);
+			start.put(k, name+"pre"+k+":"+i+":");
 		}
 		ifnc.addPlace(name+"post");
 		ifnc.addFlowRelationTP(name, name+"post");

@@ -42,6 +42,8 @@ public class BpmnParser {
 	private Document doc;
 	private XPath xpath;
 	private XMLParser xmlparser;
+	
+	
 	public HashMap<String, BpmnElement> getTasks() {
 		HashMap<String, BpmnElement> result = new HashMap<String, BpmnElement>();
 		for (Object s : this.tasksHM.values()) {
@@ -124,7 +126,7 @@ public class BpmnParser {
 		return (HashSet<ExclusiveGateway>) pg;
 	}
 
-	public BpmnParser(String pathToFile) {
+	public BpmnParser(String pathToFile) throws Exception {
 		this.xmlparser = new XMLParser(pathToFile);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(false);
@@ -136,7 +138,7 @@ public class BpmnParser {
 			XPathFactory xpathFactory = XPathFactory.newInstance();
 			this.xpath = xpathFactory.newXPath();
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
+			throw new Exception("Could not parse "+ pathToFile, e);
 		}   
 	}
 
@@ -202,6 +204,7 @@ public class BpmnParser {
 				.XPathHelper("//definitions/collaboration/messageFlow/@id");
 		if (resulta.size() > 0) {
 			for (String g : resulta) {
+				//g=sanitize(g);
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/collaboration/messageFlow[@id='"
 								+ g.toString() + "']/@sourceRef");
@@ -219,6 +222,7 @@ public class BpmnParser {
 		if (resulta.size() > 0) {
 			String  x="";
 			for (String g : resulta) {
+				//g=sanitize(g);
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//task[@id='"
 								+ g.toString() + "']/incoming/text()");
@@ -239,6 +243,7 @@ public class BpmnParser {
 		if (resulta.size() > 0) {
 			String  x="";
 			for (String g : resulta) {
+				//g=sanitize(g);
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//receiveTask[@id='"
 								+ g.toString() + "']/incoming/text()");
@@ -259,6 +264,7 @@ public class BpmnParser {
 		if (resulta.size() > 0) {
 			String  x="";
 			for (String g : resulta) {
+				//g=sanitize(g);
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//serviceTask[@id='"
 								+ g.toString() + "']/incoming/text()");
@@ -279,6 +285,7 @@ public class BpmnParser {
 				.XPathHelper("//definitions/process//exclusiveGateway/@id");
 		if (resulta.size() > 0) {
 			for (String g : resulta) {
+				//g=sanitize(g);
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//exclusiveGateway[@id='"
 								+ g.toString() + "']/incoming/text()");
@@ -298,6 +305,7 @@ public class BpmnParser {
 		if (resulta.size() > 0) {
 
 			for (String g : resulta) {
+				//g=sanitize(g);
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//inclusiveGateway[@id='"
 								+ g.toString() + "']/incoming/text()");
@@ -317,6 +325,7 @@ public class BpmnParser {
 				.XPathHelper("//definitions/process/parallelGateway/@id");
 		if (resulta.size() > 0) {
 			for (String g : resulta) {
+				//g=sanitize(g);
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process/parallelGateway[@id='"
 								+ g.toString() + "']/incoming/text()");
@@ -334,6 +343,7 @@ public class BpmnParser {
 		resulta = xmlparser.XPathHelper("//definitions/process/userTask/@id");
 		if (resulta.size() > 0) {
 			for (String g : resulta) {
+				//g=sanitize(g);
 				//System.out.println("> " + g.toString());
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process/userTask[@id='"
@@ -352,6 +362,7 @@ public class BpmnParser {
 				.XPathHelper("//definitions/process//sequenceFlow/@id");
 		if (resulta.size() > 0) {
 			for (String g : resulta) {
+				//g=sanitize(g);
 				//System.out.println(">>>> " + g.toString());
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//sequenceFlow[@id='"
@@ -369,6 +380,7 @@ public class BpmnParser {
 		resulta = xmlparser.XPathHelper("//definitions/process//startEvent/@id");
 		if (resulta.size() > 0) {
 			for (String g : resulta) {
+				//g=sanitize(g);
 				//System.out.println("> " + g.toString());
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//startEvent[@id='"
@@ -387,6 +399,7 @@ public class BpmnParser {
 		resulta = xmlparser.XPathHelper("//definitions/process//endEvent/@id");
 		if (resulta.size() > 0) {
 			for (String g : resulta) {
+				//g=sanitize(g);
 				//System.out.println("> " + g.toString());
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//endEvent[@id='"
@@ -406,6 +419,7 @@ public class BpmnParser {
 		resulta = xmlparser.XPathHelper("//definitions/process//subProcess/@id");
 		if (resulta.size() > 0) {
 			for (String g : resulta) {
+				//g=sanitize(g);
 				//System.out.println("> " + g.toString());
 				resultb1 = xmlparser
 						.XPathHelper("//definitions/process//subProcess[@id='"
@@ -467,6 +481,12 @@ public class BpmnParser {
 			messagesPairHM.put(s.getName().toString(), k);
 		}
 	}
+	private String sanitize(String g) {
+		if(g.startsWith("_")){
+			g="id"+g;
+		}
+		return g;
+	}
 	public String findStartEvent() {
 		String ha="";
 		List<String> resulta;
@@ -479,6 +499,7 @@ public class BpmnParser {
 			for (String g : resulta) {
 				out=g;
 				return out;
+				//return sanitize(out);
 			}
 		}
 		return "";

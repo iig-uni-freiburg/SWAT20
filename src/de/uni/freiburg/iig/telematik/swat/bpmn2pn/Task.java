@@ -62,12 +62,12 @@ public class Task extends AbstractTask {
 	public PTNet create(PTNet ifnc) {
 
 		// a task element directly corresponds to a single transition
-		ifnc.addTransition(name);
+		ifnc.addTransition(sanitize(name));
 
 		// there is exactly one preplace when there is at least one incoming sequence flow
 		if(this.inBound.size()!=0) {
 			ifnc.addPlace("helperP"+name);
-			ifnc.addFlowRelationPT("helperP"+name, name);
+			ifnc.addFlowRelationPT("helperP"+name, sanitize(name));
 		}
 
 		// therefore each ingoing sequence flow is mapped to the only existent preplace
@@ -78,9 +78,10 @@ public class Task extends AbstractTask {
 		// finally a postplace for each outgoing sequence flow is generated here (implicit parallel sequence flow)
 		int i=0;
 		for(String k : this.outBound) {
-			ifnc.addPlace(name+"post"+k+"["+i+"]");
-			ifnc.addFlowRelationTP(name, name+"post"+k+"["+i+"]");
-			end.put(k, name+"post"+k+"["+i+"]");
+			//ifnc.addPlace(name+"post"+k+"["+i+"]");
+			ifnc.addPlace(name+"post"+k+":"+i+":");
+			ifnc.addFlowRelationTP(name, name+"post"+k+":"+i+":");
+			end.put(k, name+"post"+k+":"+i+":");
 		}		
 
 		return ifnc;

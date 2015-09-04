@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.bpmn2pn;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,8 @@ import de.uni.freiburg.iig.telematik.swat.bpmn2pn.ifnet.ifNet;
 public class BPMN2PNStartup {
 	public static HashSet<String> elementsVisited = new HashSet<String>();
 	
-	public static PTNet generateIFnet(String filename){
+	public static PTNet generateIFnet(String filename) throws Exception{
+		filename = sanitizeFile(filename);
 		BpmnParser bpmnParser = new BpmnParser(filename);
 		bpmnParser.generate();
 		PTNet ifnet = new PTNet();
@@ -371,7 +373,14 @@ public class BPMN2PNStartup {
 		return ifnet;
 	}
 	
-	public static void main(String[] args) throws SerializationException, IOException {
+	private static String sanitizeFile(String filename) throws IOException {
+		File file = new File(filename);
+		File tempfile = File.createTempFile("bpmn", ".bpmn");
+		SanitizeBPMN.sanitize(file, tempfile);
+		return tempfile.getAbsolutePath();
+	}
+
+	public static void main(String[] args) throws Exception {
 		PTNet ifnet = new PTNet();
 		ifNet ifn = new ifNet();
 		IFNet ifnc = ifn.getNet();

@@ -81,9 +81,9 @@ public class StartEvent extends AbstractEvent implements BpmnElement {
 		// create a postplace for each outgoing sequence flow (parallel flow)
 		i=0;
 		for(String k : this.outBound) {
-			ifnc.addPlace(name+"post"+k+"["+i+"]");
-			ifnc.addFlowRelationTP(name, name+"post"+k+"["+i+"]");
-			end.put(k, name+"post"+k+"["+i+"]");
+			ifnc.addPlace(name+"post"+k+":"+i+":");
+			ifnc.addFlowRelationTP(name, name+"post"+k+":"+i+":");
+			end.put(k, name+"post"+k+":"+i+":");
 		}		
 
 		return ifnc;
