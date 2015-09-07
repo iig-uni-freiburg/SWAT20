@@ -79,9 +79,9 @@ public class Task extends AbstractTask {
 		int i=0;
 		for(String k : this.outBound) {
 			//ifnc.addPlace(name+"post"+k+"["+i+"]");
-			ifnc.addPlace(name+"post"+k+":"+i+":");
-			ifnc.addFlowRelationTP(name, name+"post"+k+":"+i+":");
-			end.put(k, name+"post"+k+":"+i+":");
+			ifnc.addPlace(name+"post"+k+"_"+i+"_");
+			ifnc.addFlowRelationTP(name, name+"post"+k+"_"+i+"_");
+			end.put(k, name+"post"+k+"_"+i+"_");
 		}		
 
 		return ifnc;

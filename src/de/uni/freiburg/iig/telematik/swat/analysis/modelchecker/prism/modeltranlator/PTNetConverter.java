@@ -128,6 +128,8 @@ public class PTNetConverter extends PrismModelAdapter {
 			transitionBuilder.append("\n\n");
 			completeTransitionBuilder.append(transitionBuilder);
 			
+			
+			
 		}
 				
 		return completeTransitionBuilder;

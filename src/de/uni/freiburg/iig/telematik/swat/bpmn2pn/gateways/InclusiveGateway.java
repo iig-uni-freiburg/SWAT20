@@ -74,17 +74,17 @@ public class InclusiveGateway extends AbstractGateway implements BpmnElement {
 			outSet = new HashSet<String>();
 			for(String k : this.inBound) {
 				outSet.add(k);
-				ifnc.addPlace(name+"pre"+k+":"+i+":");
-				start.put(k, name+"pre"+k+":"+i+":");
+				ifnc.addPlace(name+"pre"+k+"_"+i+"_");
+				start.put(k, name+"pre"+k+"_"+i+"_");
 			}	
 			sssk = generateAllSubsets(outSet);
 			cnt=0;
 			for(Set<String> hhh : sssk) {
 				if(hhh.size()!=0) {
-					ifnc.addTransition(name+":"+cnt+":-in");
-					ifnc.addFlowRelationTP(name+":"+cnt+":-in", "helperP"+name);
+					ifnc.addTransition(name+"_"+cnt+"_-in");
+					ifnc.addFlowRelationTP(name+"_"+cnt+"_-in", "helperP"+name);
 					for(String inner : hhh) {
-						ifnc.addFlowRelationPT(name+"pre"+inner+":0:", name+":"+cnt+":-in");
+						ifnc.addFlowRelationPT(name+"pre"+inner+"_0_", name+"_"+cnt+"_-in");
 					}
 				}
 				cnt++;
@@ -102,17 +102,17 @@ public class InclusiveGateway extends AbstractGateway implements BpmnElement {
 			inSet = new HashSet<String>();
 			for(String k : this.outBound) {
 				inSet.add(k);
-				ifnc.addPlace(name+"post"+k+"["+i+"]");
-				end.put(k, name+"post"+k+"["+i+"]");
+				ifnc.addPlace(name+"post"+k+"_"+i+"_");
+				end.put(k, name+"post"+k+"_"+i+"_");
 			}	
 			sssk = generateAllSubsets(inSet);
 			cnt=0;
 			for(Set<String> hhh : sssk) {
 				if(hhh.size()!=0) {
-					ifnc.addTransition(name+"["+cnt+"]-out");
-					ifnc.addFlowRelationPT("helperP"+name, name+"["+cnt+"]-out");
+					ifnc.addTransition(name+"_"+cnt+"_-out");
+					ifnc.addFlowRelationPT("helperP"+name, name+"_"+cnt+"_-out");
 					for(String inner : hhh) {
-						ifnc.addFlowRelationTP(name+"["+cnt+"]-out", name+"post"+inner+"[0]");
+						ifnc.addFlowRelationTP(name+"_"+cnt+"_-out", name+"post"+inner+"_0_");
 					}
 				}
 				cnt++;

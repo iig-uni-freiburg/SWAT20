@@ -67,6 +67,9 @@ public abstract class PrismModelAdapter {
 			
 			//transitionVarBuilder.append(t.getName() + " : [0..1] init 0;" + "\n");
 			transitionVarBuilder.append(t.getName() + "_fired"+" : [0..1] init 0;" + "\n"+ "\n");
+			
+			//remember last fired state
+			transitionVarBuilder.append(t.getName() + "_last"+" : [0..1] init 0;" + "\n"+ "\n");
 		}
 		int numberOfTransitions = TransitionToIDMapper.getTransitionCount();
 		transitionVarBuilder.append(transitionVarName + " : [0.." + numberOfTransitions + "] init 0;" + "\n");

@@ -72,11 +72,11 @@ public class ExclusiveGateway extends AbstractGateway implements BpmnElement {
 		if(this.outBound.size()>0) {
 			for(String k : this.outBound) {
 
-				ifnc.addPlace(name+"post"+k+":"+i+":");
+				ifnc.addPlace(name+"post"+k+"_"+i+"_");
 				ifnc.addTransition("posthelperT"+k);
 				ifnc.addFlowRelationPT("helperP"+name, "posthelperT"+k);
-				ifnc.addFlowRelationTP("posthelperT"+k, name+"post"+k+":"+i+":");
-				end.put(k, name+"post"+k+":"+i+":");
+				ifnc.addFlowRelationTP("posthelperT"+k, name+"post"+k+"_"+i+"_");
+				end.put(k, name+"post"+k+"_"+i+"_");
 			}
 		} else {
 			ifnc.addTransition(name);

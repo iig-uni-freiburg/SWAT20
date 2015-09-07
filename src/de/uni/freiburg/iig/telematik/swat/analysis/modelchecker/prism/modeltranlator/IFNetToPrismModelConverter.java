@@ -500,11 +500,11 @@ public class IFNetToPrismModelConverter {
 	public static void main(String[] args) throws ParameterException {
 		
 		//create a simple IFNet
-		IFNet IFNet = IFNetTestUtil.createSimpleIFNetWithDeclassification();
+//		IFNet IFNet = IFNetTestUtil.createSimpleIFNetWithDeclassification();
 		//Create convert to prism
-		IFNetToPrismModelConverter converter = new IFNetToPrismModelConverter(IFNet);
-		StringBuilder prismModel = converter.ConvertIFNetToPrism();
-		System.out.println(prismModel);
+//		IFNetToPrismModelConverter converter = new IFNetToPrismModelConverter(IFNet);
+//		StringBuilder prismModel = converter.ConvertIFNetToPrism();
+//		System.out.println(prismModel);
 						
 	}
 	
