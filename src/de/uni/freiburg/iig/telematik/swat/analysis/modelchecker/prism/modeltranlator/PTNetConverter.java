@@ -37,6 +37,7 @@ public class PTNetConverter extends PrismModelAdapter {
 				placeBuilder.append("[0.." + p.getCapacity() + "] ");
 			} else {
 				placeBuilder.append("int ");
+				//placeBuilder.append("[0..1024] ");
 				bounded = false;
 			}
 				

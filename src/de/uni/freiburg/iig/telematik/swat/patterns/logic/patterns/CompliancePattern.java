@@ -102,5 +102,10 @@ public abstract class CompliancePattern implements Comparable<CompliancePattern>
 	public int compareTo(CompliancePattern o) {
 		return getName().compareTo(o.getName());
 	}
+	
+	protected String stribStringForTransition(String paramValue){
+		String result = paramValue.split("(")[0];
+		return result;
+	}
 
 }

@@ -13,15 +13,26 @@ public class PrismOutputHandler {
 	public PrismOutputHandler(ArrayList<CompliancePattern> patterns, String resultStr) {
 		
 		ArrayList<String> resultStrs = getResultsStringForPattern(resultStr);
+		
+		ArrayList<CompliancePattern> instantiatedPatterns = new ArrayList<CompliancePattern>(); 
+		for (CompliancePattern p : patterns) {
+			if (p.isInstantiated()) {
+				instantiatedPatterns.add(p);
+			}
+		}
 
-		for (int i = 0; i < patterns.size(); i++) {
-			CompliancePattern cp = patterns.get(i);
+		for (int i = 0, ruleStringIndex = 0; i < instantiatedPatterns.size(); i++) {
+			String resString="";
+			CompliancePattern cp = instantiatedPatterns.get(i);
 			boolean isAntiPattern = cp.isAntiPattern();
-			String resString = resultStrs.get(i);
+			while ((resString = resultStrs.get(ruleStringIndex)).contains("CTL"))
+					ruleStringIndex++; //skip double evaluated rules (Exists P, Absent P...)
+			//String resString = resultStrs.get(ruleStringIndex);
 			double probability = getProb(resString);
 			boolean isFulfilled = isFulfilled(resString, isAntiPattern);
 			cp.setProbability(probability);
 			cp.setSatisfied(isFulfilled);
+			ruleStringIndex++;
 		}
 		
 	}
@@ -55,7 +66,8 @@ public class PrismOutputHandler {
 				mEvaluatedPatterns.add(cp);
 			} else {
 				ArrayList<String> path = getViolatingPath(res, states);
-				cp.setCounterExample(path);
+				if(path!=null && !path.isEmpty())
+					cp.setCounterExample(path);
 			}
 		}
 	}
@@ -139,7 +151,11 @@ public class PrismOutputHandler {
 				break;
 			}
 		}
+		try{
 		return Double.parseDouble(prob);
+		} catch (NumberFormatException e){
+			return Double.NaN;
+		}
 	}
 
 }
