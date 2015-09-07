@@ -17,7 +17,6 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.DeclassificationTransi
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetTestUtil;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.RegularIFNetTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 
