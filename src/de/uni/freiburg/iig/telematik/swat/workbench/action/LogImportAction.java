@@ -42,7 +42,7 @@ public class LogImportAction extends AbstractWorkbenchAction {
 			JOptionPane.showMessageDialog(Workbench.getInstance(), "Log of unknown format");
 			return;
 		}
-		LogModel model = new LogModel(f, type);
+		//LogModel model = new LogModel(f, type);
 		String logName = f.getName().replaceFirst("[.][^.]+$", "");
                 switch(type){
                     case Aristaflow:
@@ -50,12 +50,12 @@ public class LogImportAction extends AbstractWorkbenchAction {
                         SwatComponents.getInstance().getContainerAristaflowLogs().storeComponents();
                         break;
                     case MXML:
-                        SwatComponents.getInstance().getContainerMXMLLogs().addComponent(model);
+                        SwatComponents.getInstance().getContainerMXMLLogs().addComponent(f);
                         SwatComponents.getInstance().getContainerMXMLLogs().storeComponents();
                         break;
                     case XES:
                     default:
-                        SwatComponents.getInstance().getContainerXESLogs().addComponent(model);
+                        SwatComponents.getInstance().getContainerXESLogs().addComponent(f);
                         SwatComponents.getInstance().getContainerXESLogs().storeComponents();
                         break;
                 }

@@ -6,13 +6,17 @@
 package de.uni.freiburg.iig.telematik.swat.logs;
 
 import de.invation.code.toval.debug.SimpleDebugger;
+import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisContainer;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -129,9 +133,9 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
 
     @Override
     public void componentsChanged() throws ProjectComponentException {
+    	//listenerSupport.notifyComponentsChanged();
     }
 
-    ;
 
     @Override
     public void componentRenamed(LogModel component, String oldName, String newName) throws ProjectComponentException {
@@ -199,6 +203,24 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     public void addAnalysis(Analysis analysis, String logName, boolean storeToFile) throws ProjectComponentException {
         addAnalysis(analysis, logName, storeToFile, true);
     }
+    
+    public void addComponent(File logFile) throws ProjectComponentException{
+		Validate.notNull(logFile);
+		Validate.fileName(logFile.getName());
+		SwatLogType type = getType(logFile);
+		String logName = FileUtils.getFileWithoutEnding(logFile);
+		File logFolder=new File (getBasePath()+File.separator+logName+File.separator);
+		if(!logFolder.mkdirs()){
+			throw new ProjectComponentException("Could not create directory for logfile "+logName+ "in "+logFolder.getAbsolutePath());
+		}
+		try {
+			Files.copy(logFile.toPath(), new File(logFolder,logFile.getName()).toPath(),StandardCopyOption.REPLACE_EXISTING);
+			addComponent(new LogModel(new File(logFolder,logFile.getName()), type),true,true);
+		} catch (IOException e) {
+			throw new ProjectComponentException("Could not copy log", e);
+		}
+    	
+    }
 
     public void addAnalysis(Analysis analysis, String logName, boolean storeToFile, boolean notifyListeners) throws ProjectComponentException {
         validateComponent(logName);
@@ -240,6 +262,18 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
             analysisContainer.storeComponents();
         }
     }
+    
+	protected SwatLogType getType(File f) {
+		String fileName = f.getName().toLowerCase();
+		if (fileName.endsWith(".csv"))
+			return SwatLogType.Aristaflow;
+		if (fileName.endsWith(".mxml"))
+			return SwatLogType.MXML;
+		if (fileName.endsWith(".xes"))
+			return SwatLogType.XES;
+		else
+			return null;
+	}
 
 //     @Override
 //     protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {

@@ -76,6 +76,8 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 		
 		SwatComponents.getInstance().addComponentListener(this);
 		SwatComponents.getInstance().getContainerAristaflowLogs().addComponentListener(this);
+		SwatComponents.getInstance().getContainerMXMLLogs().addComponentListener(this);
+		SwatComponents.getInstance().getContainerXESLogs().addComponentListener(this);
 		SwatComponents.getInstance().getContainerPetriNets().addComponentListener(this);
 	}
 
