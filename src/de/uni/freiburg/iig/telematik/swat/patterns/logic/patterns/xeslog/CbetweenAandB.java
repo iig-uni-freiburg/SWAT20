@@ -61,7 +61,7 @@ public class CbetweenAandB extends LogCompliancePattern {
 
 	@Override
 	public String getDescription() {
-		return "Activity C must be completet between of Activity A and B";
+		return "Activity C must be directly between of Activity A and B";
 	}
 
 	@Override

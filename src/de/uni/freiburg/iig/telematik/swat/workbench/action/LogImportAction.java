@@ -16,6 +16,8 @@ import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class LogImportAction extends AbstractWorkbenchAction {
+	
+	static JFileChooser chooser;
 
 	public LogImportAction() {
 		this("Import Log");
@@ -64,8 +66,10 @@ public class LogImportAction extends AbstractWorkbenchAction {
 
 	protected File getFile() throws Exception {
 		File f = null;
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if(chooser==null){
+			chooser=new JFileChooser();
+			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		}
 		int returnVal = chooser.showOpenDialog(Workbench.getInstance());
 		if(returnVal == JFileChooser.APPROVE_OPTION){
 			f = chooser.getSelectedFile();

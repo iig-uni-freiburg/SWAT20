@@ -132,16 +132,22 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
     //	}
     @SuppressWarnings("rawtypes")
     private void addPNEditor(AbstractGraphicalPN petriNet, String tabName) throws SwatComponentException {
+    	boolean layout = false;
+    			try {
+					layout = SwatComponents.getInstance().getContainerPetriNets().needsLayout(petriNet.getPetriNet().getName());
+				} catch (ProjectComponentException e) {
+				}
+    			
         if (petriNet instanceof GraphicalPTNet) {
-            PTNetEditorComponent ptEditor = new PTNetEditorComponent((GraphicalPTNet) petriNet);
+            PTNetEditorComponent ptEditor = new PTNetEditorComponent((GraphicalPTNet) petriNet,layout);
             ptEditor.addEditorListener(this);
             addTab(tabName, ptEditor);
         } else if (petriNet instanceof GraphicalCPN) {
-            CPNEditorComponent cpnEditor = new CPNEditorComponent((GraphicalCPN) petriNet);
+            CPNEditorComponent cpnEditor = new CPNEditorComponent((GraphicalCPN) petriNet,layout);
             cpnEditor.addEditorListener(this);
             addTab(tabName, cpnEditor);
         } else if (petriNet instanceof GraphicalIFNet) {
-            IFNetEditorComponent ifEditor = new SwatIFNetEditorComponent((GraphicalIFNet) petriNet);
+            IFNetEditorComponent ifEditor = new SwatIFNetEditorComponent((GraphicalIFNet) petriNet,layout);
             ifEditor.addEditorListener(this);
             addTab(tabName, ifEditor);
         }
@@ -151,6 +157,12 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
         //openedSwatComponents.put(petriNet, getComponentAt(getComponentCount()-1));
         //openedSwatComponents.put(petriNet, getComponentAt(getTabCount() - 1));
         setSelectedIndex(getTabCount() - 1);
+        
+        try {
+			SwatComponents.getInstance().getContainerPetriNets().removeLayoutNeed(petriNet.getPetriNet().getName());
+		} catch (ProjectComponentException e) {
+			
+		}
     }
 
     // private void addSwatComponent(SwatComponent swatComponent, String
@@ -177,7 +189,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                 case LABELING:
                     // TODO:
                     break;
-                case PETRI_NET:
+                case PETRI_NET:        	
                     addPNEditor((AbstractGraphicalPN) node.getUserObject(), node.getDisplayName());
                     break;
                 case PETRI_NET_ANALYSIS:

@@ -39,6 +39,7 @@ public class BpmnImportAction extends AbstractWorkbenchAction {
 		net.setName(name);
 		GraphicalPTNet result = new GraphicalPTNet(net, new PTGraphics());
 		SwatComponents.getInstance().getContainerPetriNets().addComponent(result,true);
+		SwatComponents.getInstance().getContainerPetriNets().setAskForLayout(name);
 		Workbench.consoleMessage("Net Imported "+name);
 	}
 	

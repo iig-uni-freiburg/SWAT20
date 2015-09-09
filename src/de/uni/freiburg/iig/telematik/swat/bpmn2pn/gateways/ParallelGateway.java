@@ -65,9 +65,9 @@ public class ParallelGateway extends AbstractGateway implements BpmnElement {
 		// create a preplace for each ingoing sequence flow
 		int i=0;
 		for(String k : this.inBound) {
-			ifnc.addPlace(name+"pre"+k+":"+i+":");	
-			ifnc.addFlowRelationPT(name+"pre"+k+":"+i+":", name);
-			start.put(k, name+"pre"+k+":"+i+":");
+			ifnc.addPlace(name+"pre"+k+"_"+i+"_");	
+			ifnc.addFlowRelationPT(name+"pre"+k+"_"+i+"_", name);
+			start.put(k, name+"pre"+k+"_"+i+"_");
 		}
 
 

@@ -210,7 +210,8 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
 		SwatLogType type = getType(logFile);
 		String logName = FileUtils.getFileWithoutEnding(logFile);
 		File logFolder=new File (getBasePath()+File.separator+logName+File.separator);
-		if(!logFolder.mkdirs()){
+		logFolder.mkdirs();
+		if(!logFolder.exists()){
 			throw new ProjectComponentException("Could not create directory for logfile "+logName+ "in "+logFolder.getAbsolutePath());
 		}
 		try {

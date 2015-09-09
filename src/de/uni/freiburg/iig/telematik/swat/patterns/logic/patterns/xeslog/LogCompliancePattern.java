@@ -28,7 +28,7 @@ public abstract class LogCompliancePattern extends CompliancePattern {
 	@Override
 	public Object getFormalization() {
 		Object result = super.getFormalization();
-		//printRule();
+		printRule();
 		return result;
 	}
 

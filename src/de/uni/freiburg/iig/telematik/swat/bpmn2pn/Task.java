@@ -2,7 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.bpmn2pn;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.bpmn2pn.gateways.AbstractTask;
 public class Task extends AbstractTask {
@@ -12,8 +11,8 @@ public class Task extends AbstractTask {
 	private HashSet<String> outBound;
 	private HashSet<String> inMessages;
 	private HashSet<String> outMessages;
-	private HashMap<String, String> start = new HashMap();
-	private HashMap<String, String> end = new HashMap();
+	private HashMap<String, String> start = new HashMap<>();
+	private HashMap<String, String> end = new HashMap<>();
 	
 	public Task(String name, HashSet<String> inBound, HashSet<String> outBound, HashSet<String> inMessages, HashSet<String> outMessages) {
 		super(name, inBound, outBound, inMessages, outMessages);
@@ -78,9 +77,10 @@ public class Task extends AbstractTask {
 		// finally a postplace for each outgoing sequence flow is generated here (implicit parallel sequence flow)
 		int i=0;
 		for(String k : this.outBound) {
-			//ifnc.addPlace(name+"post"+k+"["+i+"]");
 			ifnc.addPlace(name+"post"+k+"_"+i+"_");
+			//ifnc.getPlace(name+"post"+k+"_"+i+"_").setCapacity(1);
 			ifnc.addFlowRelationTP(name, name+"post"+k+"_"+i+"_");
+			//ifnc.getFlowRelation(name).setConstraint(1);
 			end.put(k, name+"post"+k+"_"+i+"_");
 		}		
 

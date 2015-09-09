@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
     private final Map<String, AnalysisContextContainer> analysisContextContainers = new HashMap<>();
     private final Map<String, AnalysisContainer> analysisContainers = new HashMap<>();
     private final Map<String, TimeContextContainer> timeContextContainers = new HashMap<>();
+    private final HashSet<String> askForLayout = new HashSet<>();
 
     private ACModelContainer availableACModels = null;
 
@@ -56,6 +58,18 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
 
     public List<AbstractGraphicalPN> getComponentsSorted() {
         return getComponentsSorted(new GraphicalPNNameComparator());
+    }
+    
+    public void setAskForLayout(String net){
+    	askForLayout.add(net);
+    }
+    
+    public boolean needsLayout(String net){
+    	return askForLayout.contains(net);
+    }
+    
+    public boolean removeLayoutNeed(String net){
+    	return askForLayout.remove(net);
     }
 
     public AnalysisContextContainer getContainerAnalysisContext(String netName) throws ProjectComponentException {

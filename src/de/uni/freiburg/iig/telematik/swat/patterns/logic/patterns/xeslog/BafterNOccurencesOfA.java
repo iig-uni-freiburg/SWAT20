@@ -56,7 +56,7 @@ public class BafterNOccurencesOfA extends LogCompliancePattern {
 
 	@Override
 	public String getName() {
-		return "B after N occurences of A";
+		return "B sometime after N occurences of A";
 	}
 
 	@Override

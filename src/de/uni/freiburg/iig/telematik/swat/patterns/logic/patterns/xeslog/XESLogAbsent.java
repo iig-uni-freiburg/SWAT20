@@ -3,6 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.xeslog;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 import org.processmining.analysis.sciffchecker.logic.model.StringOP;
 import org.processmining.analysis.sciffchecker.logic.model.attribute.StringConstantAttribute;
 import org.processmining.analysis.sciffchecker.logic.model.constraint.SimpleStringConstraint;
@@ -15,6 +17,7 @@ import org.processmining.analysis.sciffchecker.logic.model.variable.ActivityType
 import org.processmining.analysis.sciffchecker.logic.model.variable.OriginatorVariable;
 import org.processmining.analysis.sciffchecker.logic.model.variable.RoleVariable;
 import org.processmining.analysis.sciffchecker.logic.util.EventType;
+import org.processmining.analysis.sciffchecker.logic.xml.XMLRuleSerializer;
 
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.XESLogInfoProvider;
@@ -54,21 +57,21 @@ public class XESLogAbsent extends Absent {
                     ActivityTypeVariable atv1 = new ActivityTypeVariable(activityExec1);
                     String actName = mParameters.get(0).getValue().getValue();
                     StringConstantAttribute activity1Name = new StringConstantAttribute(actName);
-                    new SimpleStringConstraint(atv1, StringOP.DIFFERENT, activity1Name);
+                    new SimpleStringConstraint(atv1, StringOP.EQUAL, activity1Name);
                     r.setBody(body);
                     break;
                 case ParameterTypeNames.USER:
                     OriginatorVariable originator = new OriginatorVariable(activityExec1);
                     StringConstantAttribute userNameConst = new StringConstantAttribute(
                             mParameters.get(0).getValue().getValue());
-                    new SimpleStringConstraint(originator, StringOP.DIFFERENT, userNameConst);
+                    new SimpleStringConstraint(originator, StringOP.EQUAL, userNameConst);
                     r.setBody(body);
                     break;
                 default:
                     RoleVariable role = new RoleVariable(activityExec1);
                     StringConstantAttribute roleNameConst = new StringConstantAttribute(
                             mParameters.get(0).getValue().getValue());
-                    new SimpleStringConstraint(role, StringOP.DIFFERENT, roleNameConst);
+                    new SimpleStringConstraint(role, StringOP.EQUAL, roleNameConst);
                     r.setBody(body);
                     break;
             }
@@ -76,6 +79,7 @@ public class XESLogAbsent extends Absent {
 		ArrayList<CompositeRule> rules = new ArrayList<>();
 		rules.add(cr);
 		mFormalization = rules; 
+		//printRule();
 		
 	}
 
@@ -101,6 +105,17 @@ public class XESLogAbsent extends Absent {
 	@Override
 	public boolean isAntiPattern() {
 		return false;
+	}
+	
+	public void printRule() {
+		try {
+			System.out.println("Rule: ");
+			Element output = XMLRuleSerializer.serialize(((ArrayList<CompositeRule>) mFormalization).get(0), "test");
+			XMLOutputter outPutter = new XMLOutputter();
+			outPutter.output(output, System.out);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
