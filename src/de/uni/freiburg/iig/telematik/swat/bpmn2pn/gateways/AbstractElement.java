@@ -74,9 +74,9 @@ public abstract class AbstractElement implements BpmnElement { // @DOC without
 	}
 	
 	protected String sanitize(String g) {
-		if(g.startsWith("_")){
-			g="id"+g;
-		}
+//		if(g.startsWith("_")){
+//			g="id"+g;
+//		}
 		return g;
 	}
 }

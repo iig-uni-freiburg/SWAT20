@@ -16,6 +16,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTTransition;
 import de.uni.freiburg.iig.telematik.sepia.serialize.PNSerialization;
 import de.uni.freiburg.iig.telematik.sepia.serialize.SerializationException;
 import de.uni.freiburg.iig.telematik.sepia.serialize.formats.PNSerializationFormat;
@@ -370,9 +372,22 @@ public class BPMN2PNStartup {
 			}
 		}
 		
+		setCapacities(ifnet);
+		
 		return ifnet;
 	}
 	
+	private static void setCapacities(PTNet ifnet) {
+		for(PTPlace place:ifnet.getPlaces()){
+			place.setCapacity(1);
+		}
+		
+		for(PTFlowRelation flow:ifnet.getFlowRelations()){
+			flow.setConstraint(1);
+		}
+		
+	}
+
 	private static String sanitizeFile(String filename) throws IOException {
 		File file = new File(filename);
 		File tempfile = File.createTempFile("bpmn", ".bpmn");
