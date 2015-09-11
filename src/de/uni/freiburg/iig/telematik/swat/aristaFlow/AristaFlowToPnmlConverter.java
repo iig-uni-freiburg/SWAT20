@@ -109,7 +109,7 @@ public class AristaFlowToPnmlConverter {
                 String originator = element.getElementsByTagName("staffAssignmentRule").item(0).getTextContent();
                 //format this string
                 try{
-                originator=originator.split("\\'")[1];
+                //originator=originator.split("\\'")[1];
                 elements.get(id).setOriginator(originator);
                 }
                 catch(IndexOutOfBoundsException ex){
