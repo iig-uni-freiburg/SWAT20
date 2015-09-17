@@ -19,6 +19,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
@@ -167,7 +168,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //				}
 //			});
 
-            multiSplitPane.add(getTreeView(), "left");
+            multiSplitPane.add(new JScrollPane(getTreeView()), "left");
             multiSplitPane.add(getPropertiesPanel(), "right");
             multiSplitPane.add(getTabView(), "center");
             multiSplitPane.add(getMessagePanel(), "center.bottom");
