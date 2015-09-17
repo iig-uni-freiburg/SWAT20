@@ -335,8 +335,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
     public static void errorMessage(String message, Exception e, boolean showPopup) {
         String messageToShow = "";
         if (!message.isEmpty()) {
-            messageToShow = message + " ";
-        } else if (e != null) {
+            messageToShow = message + ": ";
+        } if (e != null) {
             messageToShow += e.getMessage();
         }
         if (showPopup) {

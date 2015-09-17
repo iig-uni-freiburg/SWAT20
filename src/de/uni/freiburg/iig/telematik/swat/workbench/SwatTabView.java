@@ -131,7 +131,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
     //		return newArea;
     //	}
     @SuppressWarnings("rawtypes")
-    private void addPNEditor(AbstractGraphicalPN petriNet, String tabName) throws SwatComponentException {
+    private synchronized void addPNEditor(AbstractGraphicalPN petriNet, String tabName) throws SwatComponentException {
     	boolean layout = false;
     			try {
 					layout = SwatComponents.getInstance().getContainerPetriNets().needsLayout(petriNet.getPetriNet().getName());

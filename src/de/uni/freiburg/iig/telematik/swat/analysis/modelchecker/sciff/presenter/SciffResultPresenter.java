@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.presenter;
 
 import java.awt.Dimension;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
@@ -8,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 
+import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogTrace;
 import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 
 public class SciffResultPresenter {
@@ -52,16 +54,25 @@ public class SciffResultPresenter {
 		}
 		b.append(type.toString() + " examples: <br>");
 		for (int i : result) {
-			b.append(report.getLog().getInstances().get(i).getName());
+			ISciffLogTrace trace = report.getLog().getInstance(i);
+			//b.append(report.getLog().getInstances().get(i).getName());
+			b.append("<b>");
+			for (int entry=0;entry<trace.size();entry++){
+				try {
+					b.append(trace.get(entry).getElement());
+				} catch (IndexOutOfBoundsException | IOException e) {
+				}
+			}
+			b.append("</b>");
 			try {
-				b.append(" by: " + report.getLog().getInstances().get(i).get(0).getOriginator());
+				b.append(" from: " + trace.get(0).getTimestamp()+" to "+trace.get(trace.size()-1).getTimestamp());
 			} catch (Exception e) {
 			}
 
 			b.append("<br>");
 		}
 		
-		System.out.println("ResultText: " + b.toString());
+		//System.out.println("ResultText: " + b.toString());
 
 		return b.toString();
 	}

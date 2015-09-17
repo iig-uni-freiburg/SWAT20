@@ -16,6 +16,8 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister.Pack;
+
 import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
@@ -151,6 +153,8 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 			rootNode.add(acModelsNode);
 		}
 		expandAll();
+		validate();
+		repaint();
 	}
 	
 	public void expandAll() {

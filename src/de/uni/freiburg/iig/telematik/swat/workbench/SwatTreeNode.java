@@ -27,7 +27,7 @@ public class SwatTreeNode extends DefaultMutableTreeNode {
 //		return fileReference;
 //	}
 
-	//TODO: Display name f�r AC, etc.
+	//TODO: Display name for AC, etc.
 	@SuppressWarnings("rawtypes")
 	private void setDisplayName() {
 		switch (objectType) {
