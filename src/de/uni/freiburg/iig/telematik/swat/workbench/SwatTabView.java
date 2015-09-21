@@ -36,6 +36,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalTimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.AbstractACModel;
@@ -52,6 +53,7 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.CPNEditorComponen
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.RTPNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.event.PNEditorListener;
 import javax.swing.SwingUtilities;
@@ -151,6 +153,12 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
             ifEditor.addEditorListener(this);
             addTab(tabName, ifEditor);
         }
+            else if (petriNet instanceof GraphicalTimedNet ) {
+            	RTPNEditorComponent ptEditor = new RTPNEditorComponent((GraphicalTimedNet) petriNet,layout);
+            	ptEditor.addEditorListener(this);
+            	addTab(tabName, ptEditor);
+            }
+        
 
 //		Misses: , SwatComponents.getInstance().getPetriNetFile(
 //				petriNet.getPetriNet().getName())?
