@@ -297,7 +297,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 
     @Override
     public void componentRemoved(Object component) throws ProjectComponentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	buildTree();
     }
 
     @Override
