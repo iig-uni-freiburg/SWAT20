@@ -28,6 +28,9 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     protected static final String pathACModels = "acModels/";
     protected static final String pathContexts = "contexts/";
     
+    protected static final String timeContexts = "contexts/time/";
+    protected static final String resourceContexts = "contexts/resources";
+    
     protected static final String pathNameAnalysisContext = "analysis-contexts/";
     protected static final String pathNameTimeContext = "time-contexts/";
     protected static final String pathNameNetAnalyses = "analysis/";
@@ -99,6 +102,14 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     public String getPathForACModels() throws PropertyException {
         return getWorkingDirectory().concat(pathACModels);
+    }
+    
+    public String getPathForTimeContexts() throws PropertyException {
+    	return getWorkingDirectory().concat(timeContexts);
+    }
+    
+    public String getPathForResourceContexts() throws PropertyException {
+    	return getWorkingDirectory().concat(resourceContexts);
     }
 
     public String getNetAnalysesDirectoryName() {
