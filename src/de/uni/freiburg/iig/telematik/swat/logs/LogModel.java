@@ -97,5 +97,10 @@ public class LogModel implements NamedComponent{
 		}
 		return result;
 	}
+	
+	@Override
+	public LogModel clone(){
+		return new LogModel(new File(getFileReference().getAbsolutePath()), type);
+	}
 
 }

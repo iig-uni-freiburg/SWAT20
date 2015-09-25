@@ -302,7 +302,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 
     @Override
     public void componentRenamed(Object component, String oldName, String newName) throws ProjectComponentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        buildTree();
     }
 
 }

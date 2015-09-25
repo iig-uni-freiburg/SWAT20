@@ -4,6 +4,7 @@ import javax.swing.JPopupMenu;
 
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.DuplicateAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 
 public class SwatTreePopupMenu extends JPopupMenu {
@@ -18,6 +19,7 @@ public class SwatTreePopupMenu extends JPopupMenu {
 	private void generateEntries() {
 		add(new DeleteAction("Delete " + node.getDisplayName()));
 		add(new RenameAction("Rename " + node.getDisplayName()));
+		add(new DuplicateAction("Duplicate "+node.getDisplayName()));
 	}
 
 }

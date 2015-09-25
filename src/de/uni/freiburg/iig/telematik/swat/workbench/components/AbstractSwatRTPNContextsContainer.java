@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 
 import com.thoughtworks.xstream.XStream;
 
+import de.invation.code.toval.debug.SimpleDebugger;
 import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
 
@@ -15,6 +16,11 @@ public abstract class AbstractSwatRTPNContextsContainer<X extends NamedComponent
 
 	public AbstractSwatRTPNContextsContainer(String basePath) {
 		super(basePath);
+		setUseSubdirectoriesForComponents(true);
+	}
+	
+	public AbstractSwatRTPNContextsContainer(String basePath,SimpleDebugger debugger) {
+		super(basePath, debugger);
 		setUseSubdirectoriesForComponents(true);
 	}
 

@@ -25,7 +25,7 @@ public class RenameAction extends AbstractWorkbenchAction {
 
 	public RenameAction() {
 		super("Rename");
-		setTooltip("rename current PT-Net");
+		setTooltip("rename current entry");
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 		try {
 			setIcon(IconFactory.getIcon("rename"));
