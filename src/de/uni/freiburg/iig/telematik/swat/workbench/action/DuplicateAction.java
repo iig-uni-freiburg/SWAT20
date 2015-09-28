@@ -18,8 +18,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.PNNameDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentNameDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatPNContainer;
 
@@ -65,7 +67,7 @@ public class DuplicateAction extends AbstractWorkbenchAction {
 		File netFile = container.getComponentFile(node.getDisplayName());
 		PNMLParser parser = new PNMLParser<>();
 		AbstractGraphicalPN newNet = parser.parse(netFile);
-		newNet.setName(requestNewName("New name for net", "new name"));
+		newNet.setName(requestNewName("New name for net", "new name",node.getObjectType()));
 		container.addComponent(newNet, true);
 		
 //		AbstractGraphicalPN net = (AbstractGraphicalPN) container.getComponent(node.getDisplayName());
@@ -77,7 +79,7 @@ public class DuplicateAction extends AbstractWorkbenchAction {
 	private void duplicateLog(SwatTreeNode node) throws Exception {
 		SwatComponents component = SwatComponents.getInstance();
 		LogModel element;
-		String name = requestNewName("New name for log", "new name");
+		String name = requestNewName("New name for log", "new name",node.getObjectType());
 		switch (node.getObjectType()) {
 		case ARISTAFLOW_LOG:
 			element = component.getContainerAristaflowLogs().getComponent(node.getDisplayName()).clone();
@@ -88,10 +90,12 @@ public class DuplicateAction extends AbstractWorkbenchAction {
 			element=component.getContainerMXMLLogs().getComponent(node.getDisplayName()).clone();
 			element.setName(name);
 			component.getContainerMXMLLogs().addComponent(element, true);
+			break;
 		case XES_LOG:
 			element=component.getContainerXESLogs().getComponent(node.getDisplayName()).clone();
 			element.setName(name);
 			component.getContainerXESLogs().addComponent(element, true);
+			break;
 		default:
 			break;
 		}
@@ -102,12 +106,12 @@ public class DuplicateAction extends AbstractWorkbenchAction {
 		try {
 			setIcon(IconFactory.getIcon("data"));
 		} catch (ParameterException | PropertyException | IOException e) {
-			e.printStackTrace();
+			Workbench.errorMessage("Could not load logo 'data'", e, false);
 		}
 	}
 	
-	private String requestNewName(String message, String title) throws Exception {
-		return new PNNameDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false).requestInput();
+	private String requestNewName(String message, String title, SwatComponentType type) throws Exception {
+		return new SwatComponentNameDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false,type).requestInput();
 	}
 
 }
