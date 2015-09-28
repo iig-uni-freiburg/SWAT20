@@ -1,9 +1,13 @@
 package de.uni.freiburg.iig.telematik.swat.misc.aboutDialog;
 
 import java.awt.Font;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -14,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+
 
 
 public class SwatAboutDialog extends JDialog{
@@ -37,15 +42,22 @@ public class SwatAboutDialog extends JDialog{
 		Box box = new Box(BoxLayout.Y_AXIS);
 		box.add(getSWAT20Label());
 		box.add(new JLabel("Version: "+version));
-		box.add(new JLabel("developed by: "));
+		box.add(new JLabel("developed by (in shuffled order): "));
 		Arrays.sort(devs);
-		addLabelsToComponent(devs, box);
+		//addLabelsToComponent(devs, box);
+		addLabelsToComponent(getDevelopersShuffled(), box);
 		getContentPane().add(box, "Center");
 		addLicenseButton(box);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	
 	private void addLabelsToComponent(String[] array, Box box){
+		for (String s: array){
+			box.add(getCenteredLabel(s));
+		}
+	}
+	
+	private void addLabelsToComponent(Iterable<String> array, Box box){
 		for (String s: array){
 			box.add(getCenteredLabel(s));
 		}
@@ -67,11 +79,24 @@ public class SwatAboutDialog extends JDialog{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new LicenceDialog().setVisible(true);
+				try {
+					new LicenceDialog(getOwner()).setVisible(true);
+				} catch (Exception e1) {
+				}
 				
 			}
 		});
 		box.add(result);
+	}
+	
+	private List <String>getDevelopersShuffled(){
+		List<String> shuffle = new ArrayList<>();
+		for(String s:devs){
+			shuffle.add(s);
+		}
+		Collections.shuffle(shuffle);
+		return shuffle;
+
 	}
 
 }
@@ -82,7 +107,8 @@ public class SwatAboutDialog extends JDialog{
 */
 class LicenceDialog extends JDialog{
    
-   private static String license="SWAT is licensed under the BSD 3-Clause license.\n" +
+	private static final long serialVersionUID = 279623309525164006L;
+	private static String license="SWAT is licensed under the BSD 3-Clause license.\n" +
 "\n" +
 "It is based on software from the Department of Telematics of the\n" +
 "Institute of Computer Science and Social Studies, University of\n" +
@@ -151,8 +177,9 @@ class LicenceDialog extends JDialog{
    
 
    
-   LicenceDialog (){
-       setSize(550, 500);
+   LicenceDialog (Window parent){
+	   super(parent);
+       setSize(600, 500);
        setLocationByPlatform(true);
        JTextArea text = new JTextArea(license);
        JScrollPane scrollPane = new JScrollPane(text);

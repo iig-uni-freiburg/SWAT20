@@ -67,6 +67,7 @@ public class AboutAction extends AbstractWorkbenchAction{
     @Override
     protected void doFancyStuff(ActionEvent e) throws Exception {
     	SwatAboutDialog dialog = new SwatAboutDialog(Workbench.getInstance());
+    	dialog.setLocationByPlatform(true);
     	dialog.setVisible(true);
     }
     
