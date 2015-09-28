@@ -78,23 +78,25 @@ public class DuplicateAction extends AbstractWorkbenchAction {
 
 	private void duplicateLog(SwatTreeNode node) throws Exception {
 		SwatComponents component = SwatComponents.getInstance();
+		File logFile = ((LogModel)node.getUserObject()).getFileReference();
 		LogModel element;
 		String name = requestNewName("New name for log", "new name",node.getObjectType());
+		
 		switch (node.getObjectType()) {
 		case ARISTAFLOW_LOG:
-			element = component.getContainerAristaflowLogs().getComponent(node.getDisplayName()).clone();
-			element.setName(name);
-			component.getContainerAristaflowLogs().addComponent(element,true);
+//			element = component.getContainerAristaflowLogs().getComponent(node.getDisplayName()).clone();
+//			element.setName(name);
+			component.getContainerAristaflowLogs().addComponent(logFile,name);
 			break;
 		case MXML_LOG:
-			element=component.getContainerMXMLLogs().getComponent(node.getDisplayName()).clone();
-			element.setName(name);
-			component.getContainerMXMLLogs().addComponent(element, true);
+//			element=component.getContainerMXMLLogs().getComponent(node.getDisplayName()).clone();
+//			element.setName(name);
+			component.getContainerAristaflowLogs().addComponent(logFile,name);
 			break;
 		case XES_LOG:
-			element=component.getContainerXESLogs().getComponent(node.getDisplayName()).clone();
-			element.setName(name);
-			component.getContainerXESLogs().addComponent(element, true);
+//			element=component.getContainerXESLogs().getComponent(node.getDisplayName()).clone();
+//			element.setName(name);
+			component.getContainerAristaflowLogs().addComponent(logFile,name);
 			break;
 		default:
 			break;

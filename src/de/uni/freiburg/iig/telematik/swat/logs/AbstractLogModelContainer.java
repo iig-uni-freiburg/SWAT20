@@ -205,22 +205,56 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     }
     
     public void addComponent(File logFile) throws ProjectComponentException{
+//		Validate.notNull(logFile);
+//		Validate.fileName(logFile.getName());
+//		SwatLogType type = getType(logFile);
+//		String logName = FileUtils.getFileWithoutEnding(logFile);
+//		File logFolder=new File (getBasePath()+File.separator+logName+File.separator);
+//		logFolder.mkdirs();
+//		if(!logFolder.exists()){
+//			throw new ProjectComponentException("Could not create directory for logfile "+logName+ "in "+logFolder.getAbsolutePath());
+//		}
+//		try {
+//			Files.copy(logFile.toPath(), new File(logFolder,logFile.getName()).toPath(),StandardCopyOption.REPLACE_EXISTING);
+//			addComponent(new LogModel(new File(logFolder,logFile.getName()), type),true,true);
+//		} catch (IOException e) {
+//			throw new ProjectComponentException("Could not copy log", e);
+//		}
+    	addComponent(logFile, FileUtils.getFileWithoutEnding(logFile));
+    }
+    
+    public void addComponent(File logFile, String name) throws ProjectComponentException{
 		Validate.notNull(logFile);
 		Validate.fileName(logFile.getName());
 		SwatLogType type = getType(logFile);
-		String logName = FileUtils.getFileWithoutEnding(logFile);
-		File logFolder=new File (getBasePath()+File.separator+logName+File.separator);
+		File logFolder=new File(getBasePath()+File.separator+name+File.separator);
+		String newLogFilename=name;
+		switch (type) {
+		case Aristaflow:
+			newLogFilename+=".csv";
+			break;
+		case MXML:
+			newLogFilename+=".mxml";
+			break;
+		case XES:
+			newLogFilename+=".xes";
+			break;
+		default:
+			throw new ProjectComponentException("Could not verify log-type");
+		}
 		logFolder.mkdirs();
-		if(!logFolder.exists()){
-			throw new ProjectComponentException("Could not create directory for logfile "+logName+ "in "+logFolder.getAbsolutePath());
+		if(!logFile.exists()){
+			throw new ProjectComponentException("Could not create directory for logfile "+name+ "in "+logFolder.getAbsolutePath());
 		}
 		try {
-			Files.copy(logFile.toPath(), new File(logFolder,logFile.getName()).toPath(),StandardCopyOption.REPLACE_EXISTING);
-			addComponent(new LogModel(new File(logFolder,logFile.getName()), type),true,true);
-		} catch (IOException e) {
-			throw new ProjectComponentException("Could not copy log", e);
+			Files.copy(logFile.toPath(), new File(logFolder,newLogFilename).toPath(),StandardCopyOption.REPLACE_EXISTING);
+			LogModel newModel = new LogModel(new File(logFolder,newLogFilename), type);
+			addComponent(newModel,true,true);
+		} catch (IOException e){
+			throw new ProjectComponentException("could not copy log "+name, e);
 		}
-    	
+		
+		
     }
 
     public void addAnalysis(Analysis analysis, String logName, boolean storeToFile, boolean notifyListeners) throws ProjectComponentException {
