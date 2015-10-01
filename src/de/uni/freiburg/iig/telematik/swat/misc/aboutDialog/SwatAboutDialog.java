@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.misc.aboutDialog;
 
+import de.uni.freiburg.iig.telematik.swat.SwatStartup;
 import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -24,9 +25,8 @@ import javax.swing.SwingConstants;
 public class SwatAboutDialog extends JDialog{
 	
 	private static final long serialVersionUID = -4406207910205498068L;
-	private static String version="2.0.1";
-	private static String[] devs={"Lange, Adrian","Holderer, Julius","Stocker, Thomas","Zahoransky, Richard"};
-	private static String centerFormatString="<html><div style=\"text-align: center;\">%s</html>";
+	private static final String[] devs={"Lange, Adrian","Holderer, Julius","Stocker, Thomas","Zahoransky, Richard"};
+	private static final String centerFormatString="<html><div style=\"text-align: center;\">%s</html>";
 	
 	public static void main(String args[]){
 		SwatAboutDialog dialog = new SwatAboutDialog(null);
@@ -41,7 +41,7 @@ public class SwatAboutDialog extends JDialog{
 		
 		Box box = new Box(BoxLayout.Y_AXIS);
 		box.add(getSWAT20Label());
-		box.add(new JLabel("Version: "+version));
+		box.add(new JLabel("Version: "+SwatStartup.VERSION_NUMBER));
 		box.add(new JLabel("developed by (in shuffled order): "));
 		Arrays.sort(devs);
 		//addLabelsToComponent(devs, box);
@@ -91,9 +91,7 @@ public class SwatAboutDialog extends JDialog{
 	
 	private List <String>getDevelopersShuffled(){
 		List<String> shuffle = new ArrayList<>();
-		for(String s:devs){
-			shuffle.add(s);
-		}
+                shuffle.addAll(Arrays.asList(devs));
 		Collections.shuffle(shuffle);
 		return shuffle;
 
@@ -108,7 +106,7 @@ public class SwatAboutDialog extends JDialog{
 class LicenceDialog extends JDialog{
    
 	private static final long serialVersionUID = 279623309525164006L;
-	private static String license="SWAT is licensed under the BSD 3-Clause license.\n" +
+	private static final String license="SWAT is licensed under the BSD 3-Clause license.\n" +
 "\n" +
 "It is based on software from the Department of Telematics of the\n" +
 "Institute of Computer Science and Social Studies, University of\n" +
