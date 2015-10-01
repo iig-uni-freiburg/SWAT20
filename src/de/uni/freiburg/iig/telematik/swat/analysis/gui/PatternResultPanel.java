@@ -1,11 +1,15 @@
 package de.uni.freiburg.iig.telematik.swat.analysis.gui;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -14,7 +18,10 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 public class PatternResultPanel extends JPanel {
 	
@@ -57,11 +64,35 @@ public class PatternResultPanel extends JPanel {
 				Workbench.errorMessage("Could not load icon for result panel", e, false);
 				e.printStackTrace();
 			}
+			if(pattern.getCounterExample()!=null && !pattern.getCounterExample().isEmpty())
+				this.add(getCounterexampleButton(pattern));
 		} else {
 			this.add(new JLabel("Satisfied: ?"));
 			this.add(new JLabel("Prob: ?"));
 		}
 		
+	}
+
+	private Component getCounterexampleButton(CompliancePattern pattern) {
+		JButton btnCounterexample = new JButton("Ex");
+		btnCounterexample.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (Workbench.getInstance().getTypeOfCurrentComponent() == SwatComponentType.PETRI_NET){
+						PNEditorComponent editor = (PNEditorComponent) SwatTabView.getInstance().getSelectedComponent();
+						editor.getGraphComponent().markPath(pattern.getCounterExample(), Color.RED);
+						//((JButton)e.getSource()).setEnabled(true);
+					}
+				} catch (Exception e1) {
+					Workbench.errorMessage("Could not present counterexample.", e1, true);
+				}
+				
+			}
+		});
+		
+		return btnCounterexample;
 	}
 
 }

@@ -86,7 +86,8 @@ public class PrismOutputHandler {
 		String[] variableNames = variablesStr.split(",");
 		
 		for (int i=0; i<variableNames.length; i++) {
-			if (variableNames[i].contains("_last")) {
+//			if (variableNames[i].contains("_last")) { //original lukas
+			if (variableNames[i].contains("fired")) { //will also do
 				indexTransitionMap.put(i, variableNames[i]);
 			}
 		}
@@ -104,15 +105,21 @@ public class PrismOutputHandler {
 			String node = nodes[j];
 			node = node.substring(1, node.length() - 1);
 			String[] variableValues = node.split(",");
+			transitionPath.add(getLastWitnessLine(variableValues));
 			for (int i=0; i<variableValues.length; i++) {
 				String transitionName = indexTransitionMap.get(i);
 				if (transitionName != null && variableValues[i].equals("1")) {
-					transitionPath.add(transitionName);
+					//transitionPath.add(transitionName);
 				}
 			}
 		}
-		
+		//return first null-Entry
+		transitionPath.remove(0);
 		return transitionPath;
+	}
+	
+	private String getLastWitnessLine(String[] variableValues){
+		return TransitionToIDMapper.getTransitionNameFromID(Integer.parseInt(variableValues[variableValues.length-1]));
 	}
 
 	private ArrayList<String> getResultsStringForPattern(String resultStr) {

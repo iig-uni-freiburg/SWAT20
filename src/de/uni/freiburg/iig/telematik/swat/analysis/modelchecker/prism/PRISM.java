@@ -145,6 +145,7 @@ private String mPrismPath;
 	    exec.setStreamHandler(streamHandler);
 	    System.out.println("Executing "+command);
 	    exec.execute(commandline);
+	    System.out.println("ID-Mapping: "+TransitionToIDMapper.getMapping());
 	    return(outputStream.toString());
 	    
 	}

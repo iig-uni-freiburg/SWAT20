@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
@@ -18,8 +19,6 @@ public class TransitionToIDMapper {
 					(Collection<AbstractTransition<?, ?>>) net.getTransitions();
 			int counter = 0;
 			for (AbstractTransition<?,?> transition : transitions) {
-				if(transition.getName().equals("id4")) 
-					System.out.println("found");
 				mTransToIDMap.put(transition.getName(), ++counter);
 			}
 		
@@ -47,6 +46,15 @@ public class TransitionToIDMapper {
 		return mTransToIDMap.size();
 	}; 
 	
+	public static String getMapping(){
+		return mTransToIDMap.toString();
+	}
 	
+	public static String getTransitionNameFromID(int id){
+		for(Entry<String, Integer> res:mTransToIDMap.entrySet()){
+			if (res.getValue() == id) return res.getKey();
+		}
+		return null;
+	}
 
 }

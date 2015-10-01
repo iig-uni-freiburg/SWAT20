@@ -30,36 +30,6 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 	public AbstractWorkbenchAction(String name, Icon icon) {
 		super(name, icon);
 	}
-
-	//	public AbstractWorkbenchAction(SwatTreeView treeView, SwatTabView tabView) {
-	//		super();
-	//		this.treeView = treeView;
-	//		this.tabView = tabView;
-	//	}
-
-	
-	//	public AbstractWorkbenchAction(SwatTreeView treeView, String name) throws ParameterException {
-	//		super(name);
-	//		setTreeView(treeView);
-	//	}
-	//	public AbstractWorkbenchAction(SwatTreeView treeView, SwatTabView tabView, String name) throws ParameterException {
-	//		super(name);
-	//		setTreeView(treeView);
-	//		setTabView(tabView);
-	//	}
-	
-	//	public AbstractWorkbenchAction(SwatTreeView treeView, String name, Icon icon) throws ParameterException {
-	//		super(name, icon);
-	//		setTreeView(treeView);
-	//		setIcon(icon);
-	//	}
-	
-	//	public AbstractWorkbenchAction(SwatTreeView treeView, SwatTabView tabView, String name, Icon icon) throws ParameterException {
-	//		super(name, icon);
-	//		setTreeView(treeView);
-	//		setTabView(tabView);
-	//		setIcon(icon);
-	//	}
 	
 	protected void setIcon(Icon icon) throws ParameterException {
 		Validate.notNull(icon);
@@ -95,29 +65,10 @@ public abstract class AbstractWorkbenchAction extends AbstractAction {
 		putValue(ACCELERATOR_KEY, key);
 	}
 
-	//	protected SwatTreeView getTreeView() {
-	//		return treeView;
-	//	}
-	//	
-	//	public SwatTabView getTabView() {
-	//		return tabView;
-	//	}
-	//
-	//	public void setTabView(SwatTabView tabView) {
-	//		this.tabView = tabView;
-	//	}
-	//
-	//	public void setTreeView(SwatTreeView treeView) {
-	//		Validate.notNull(treeView);
-	//		this.treeView = treeView;
-	//	}
 	protected Window getTreeViewParent() throws Exception {
                 return SwingUtilities.getWindowAncestor(SwatTreeView.getInstance().getParent());
              
 	}
-//	protected Window getTabViewParent() {
-//		return SwingUtilities.getWindowAncestor(SwatTabView.getInstance().getParent());
-//	}
 	
 
 	@Override
