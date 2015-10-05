@@ -6,18 +6,12 @@ import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
-import de.invation.code.toval.misc.NamedComponent;
-import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.parser.pnml.PNMLParser;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractPetriNet;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.workbench.PNNameDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatComponentNameDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -42,7 +36,11 @@ public class DuplicateAction extends AbstractWorkbenchAction {
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		SwatTreeNode node = (SwatTreeNode) Workbench.getInstance().getTreeView().getSelectionPath().getLastPathComponent();
+		try{
 		duplicateNode(node);
+		} catch (Exception e1){
+			throw new Exception("Could not duplicate",e1);
+		}
 
 	}
 	
@@ -79,7 +77,6 @@ public class DuplicateAction extends AbstractWorkbenchAction {
 	private void duplicateLog(SwatTreeNode node) throws Exception {
 		SwatComponents component = SwatComponents.getInstance();
 		File logFile = ((LogModel)node.getUserObject()).getFileReference();
-		LogModel element;
 		String name = requestNewName("New name for log", "new name",node.getObjectType());
 		
 		switch (node.getObjectType()) {

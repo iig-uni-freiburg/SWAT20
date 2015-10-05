@@ -223,6 +223,7 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     	addComponent(logFile, FileUtils.getFileWithoutEnding(logFile));
     }
     
+    /**Add log file, copy file reference into new file, store new file under given name**/
     public void addComponent(File logFile, String name) throws ProjectComponentException{
 		Validate.notNull(logFile);
 		Validate.fileName(logFile.getName());
