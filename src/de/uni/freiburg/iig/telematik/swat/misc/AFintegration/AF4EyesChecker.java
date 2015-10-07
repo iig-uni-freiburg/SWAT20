@@ -58,12 +58,13 @@ public class AF4EyesChecker {
 		
 	}
 	
+	/**checks 4 Eyes prinicple for given AF template and user mapping. Returns false if FourEyes priniciple is violated. That is, if at least one person is allowed to execute both activities**/
 	public boolean check(File templateFile, String activity1, String activity2, Map<String, List<String>> globalSARUsersMapping) throws Exception {
 		parser = new AristaFlowToPnmlConverter(templateFile);
 		try {
 			parser.parse();
-			checkContains(activity1);
-			checkContains(activity2);
+			checkContainsWithException(activity1);
+			checkContainsWithException(activity2);
 			List<String> activity1users = getUsersFor(activity1, globalSARUsersMapping);
 			List<String> activity2users = getUsersFor(activity2, globalSARUsersMapping);
 			return checkLists(activity1users, activity2users);
@@ -72,6 +73,7 @@ public class AF4EyesChecker {
 		}
 	}
 	
+	/**returns a list of users that may execute both activitites**/
 	public List<String> getViolatingUsers (File templateFile, String activity1, String activity2, Map<String, List<String>> globalSARUsersMapping) throws Exception {
 		
 		try {
@@ -124,8 +126,12 @@ public class AF4EyesChecker {
 		return result;
 	}
 	
-	public void checkContains(String activityName) throws Exception{
+	private void checkContainsWithException(String activityName) throws Exception{
 		if(!parser.containsActivity(activityName)) throw new Exception("template does not contain acitivity "+activityName);
+	}
+	
+	public boolean checkContainsActivitiy(String activityName) {
+		return parser.containsActivity(activityName);
 	}
 	
 	private static Map<String, List<String>> getOriginatorMapping(){
