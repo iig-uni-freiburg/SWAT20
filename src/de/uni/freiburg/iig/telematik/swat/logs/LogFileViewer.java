@@ -1,6 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.logs;
 
 import de.invation.code.toval.file.FileUtils;
+
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.File;
@@ -52,17 +54,29 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 	@Override
 	public JComponent getMainComponent() {
 		try {
-			JPanel pane = new JPanel();
-			pane.setLayout(new GridLayout());
-			JEditorPane editor = new JEditorPane(model.getFileReference().toURI().toURL());
-			editor.setEditable(false);
-			getViewport().add(editor);
+//			JPanel pane = new JPanel();
+//			pane.setLayout(new GridLayout());
+			
+			getViewport().add(getEditorField());
 		} catch (MalformedURLException e) {
 			Workbench.errorMessage("Could not generate Log viewer, URL malformed", e, true);
 		} catch (IOException e) {
 			Workbench.errorMessage("Could not generate Log viewer, I/O Error", e, true);
 		}
 		return this;
+	}
+	
+
+	private Component getEditorField() throws MalformedURLException, IOException {
+		if(model.getFileReference().length()>2097152l){
+			//do not show editor
+			JLabel label=new JLabel("file too big to dislpay - analysis is possible but might run into performance problems");
+			return label;
+		} else {
+			JEditorPane editor = new JEditorPane(model.getFileReference().toURI().toURL());
+			editor.setEditable(false);
+			return editor;
+		}
 	}
 
 	public JButton getSciffButton() {
