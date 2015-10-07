@@ -154,7 +154,15 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 		if (file.getName().endsWith("mxml"))
 			return createMxmlParser();
+		if(file.getName().endsWith("xes"))
+				return createXesParser();
 		return createAristaFlowParser();
+	}
+
+	private ISciffLogReader createXesParser() throws ParserException, IOException {
+		LogParserInterface parser = LogParser.getParser(file, LogParsingFormat.XES);
+		parser.parse(file, ParsingMode.COMPLETE);
+		return new LogParserAdapter(parser);
 	}
 
 	private ISciffLogReader createAristaFlowParser() throws Exception {
