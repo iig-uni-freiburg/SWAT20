@@ -16,6 +16,7 @@ import org.processmining.analysis.sciffchecker.logic.util.TimeGranularity;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
+import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelChecker;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelCheckerResult;
@@ -33,7 +34,7 @@ public class SCIFF extends ModelChecker {
 
 	public SCIFF(File xesLogFile) {
             
-            if(AristaFlowParser.canParse(xesLogFile)){
+       if(AristaFlowParser.canParse(xesLogFile)){
                 try {
                     AristaFlowParser parser = new AristaFlowParser(xesLogFile);
                     parser.parse(whichTimestamp.BOTH);
@@ -44,6 +45,15 @@ public class SCIFF extends ModelChecker {
                     Logger.getLogger(SCIFF.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+       else if (xesLogFile.toString().endsWith("mxml")){
+    	   MXMLLogParser parser = new MXMLLogParser();
+    	   try {
+			parser.parse(xesLogFile, ParsingMode.COMPLETE);
+			mLogReader = new LogParserAdapter(parser);
+		} catch (ParameterException | ParserException e) {
+			Workbench.errorMessage("Could not parse and analyze " + xesLogFile.getName(), e, true);
+		}
+       }
 
 		else if(new XESLogParser().canParse(xesLogFile)) {
 			XESLogParser parser = new XESLogParser();

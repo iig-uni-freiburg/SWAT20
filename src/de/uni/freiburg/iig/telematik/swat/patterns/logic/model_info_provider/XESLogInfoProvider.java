@@ -10,9 +10,11 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogSummary
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
+import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 
 public class XESLogInfoProvider implements ModelInfoProvider {
@@ -20,17 +22,26 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 	private ArrayList<String> mSubjects;
 	private ArrayList<String> mActivities;
 	private ArrayList<String> mRoles;
+	
+	public XESLogInfoProvider (LogFileViewer viewer){
+		switch (viewer.getModel().getType()) {
+		case Aristaflow:
+			parseAsAFLog(viewer.getModel().getFileReference());
+			break;
+		case MXML:
+			parseAsMxml(viewer.getModel().getFileReference());
+			break;
+		case XES:
+			parseAsXes(viewer.getModel().getFileReference());
+		default:
+			break;
+		}
+	}
 
-	public XESLogInfoProvider(File xesLogFile) {
-            boolean isXESLog = false;
-            try{
-                isXESLog=isXESLogFile(xesLogFile);
-            }
-            catch(Exception e){}
-		if (isXESLog) {
+	private void parseAsXes(File fileReference) {
 		XESLogParser parser = new XESLogParser();
 		try {
-			parser.parse(xesLogFile, ParsingMode.COMPLETE);
+			parser.parse(fileReference, ParsingMode.COMPLETE);
 			LogParserAdapter adapter = new LogParserAdapter(parser);
 			ISciffLogSummary summary = adapter.getSummary();
 			mActivities = new ArrayList<String>(Arrays.asList(summary.getModelElements()));
@@ -41,29 +52,60 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 		} catch (ParserException e) {
 			e.printStackTrace();
 		}
-		} else if (isAFlog(xesLogFile)) {
-			try {
-				AristaFlowParser parser = new AristaFlowParser(xesLogFile);
-				parser.parse(whichTimestamp.BOTH);
-				mActivities = new ArrayList<String>(parser.getActivityCandidates());
-				mSubjects = new ArrayList<String>(parser.getOriginatorCandidates());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		
+	}
 
+	private void parseAsMxml(File fileReference) {
+		MXMLLogParser mxmlParser = new MXMLLogParser();
+		try {
+			mxmlParser.parse(fileReference, ParsingMode.COMPLETE);
+			LogParserAdapter adapter = new LogParserAdapter(mxmlParser);
+			ISciffLogSummary summary = adapter.getSummary();
+			mActivities = new ArrayList<String>(Arrays.asList(summary.getModelElements()));
+			mSubjects = new ArrayList<String>(Arrays.asList(summary.getOriginators()));
+			mRoles = new ArrayList<String>(Arrays.asList(summary.getRoles()));
+		} catch (ParameterException | ParserException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private void parseAsAFLog(File fileReference) {
+		try {
+			AristaFlowParser parser = new AristaFlowParser(fileReference);
+			parser.parse(whichTimestamp.BOTH);
+			mActivities = new ArrayList<String>(parser.getActivityCandidates());
+			mSubjects = new ArrayList<String>(parser.getOriginatorCandidates());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public XESLogInfoProvider(File xesLogFile) {
+            boolean isXESLog = false;
+                isXESLog=isXESLogFile(xesLogFile);
+		if (isXESLog) {
+			parseAsXes(xesLogFile);
+
+		} else if (isAFlog(xesLogFile)) {
+			parseAsAFLog(xesLogFile);
+		}
+		else if(isMXMLlog(xesLogFile)){
+			parseAsMxml(xesLogFile);	
 		}
 	}
 	
+	private boolean isMXMLlog(File xesLogFile) {
+		return xesLogFile.toString().endsWith("mxml");
+	}
+
 	private boolean isAFlog(File xesLogFile) {
 		try {
-			AristaFlowParser parser = new AristaFlowParser(xesLogFile);
-			parser.parse(whichTimestamp.BOTH);
-			return true;
+			return new AristaFlowParser(xesLogFile).canParse(xesLogFile);
 		} catch (FileNotFoundException e) {
-			return false;
-		} catch (Exception e) {
 			return false;
 		}
 	}
@@ -83,21 +125,22 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 	}
 	
 	private boolean isXESLogFile(File log) {
-	try{	
-            XESLogParser parser = new XESLogParser();
-		if (parser.canParse(log)) {
-			try {
-				parser.parse(log, ParsingMode.COMPLETE);
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		}
-		return false;
-        }
-        catch (Exception ex){
-            return false;
-        }
+//	try{	
+//            XESLogParser parser = new XESLogParser();
+//		if (parser.canParse(log)) {
+//			try {
+//				parser.parse(log, ParsingMode.COMPLETE);
+//				return true;
+//			} catch (Exception e) {
+//				return false;
+//			}
+//		}
+//		return false;
+//        }
+//        catch (Exception ex){
+//            return false;
+//        }
+		return log.toString().endsWith("xes");
 	}
 
 }

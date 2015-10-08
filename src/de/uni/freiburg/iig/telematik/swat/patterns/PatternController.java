@@ -54,7 +54,8 @@ public class PatternController {
 			mModelInformationProvider = new IFNetInfoProvider((IFNet) ((IFNetEditorComponent) component).netContainer.getPetriNet());
 		} else if (component instanceof LogFileViewer) {
 			mPatternFactory = new XESLogPatternFactory();
-			mModelInformationProvider = new XESLogInfoProvider(((LogFileViewer) component).getFile());
+			//mModelInformationProvider = new XESLogInfoProvider(((LogFileViewer) component).getFile());
+			mModelInformationProvider = new XESLogInfoProvider((LogFileViewer) component);
 		}
 
 		mPatterns = mPatternFactory.loadPatterns();

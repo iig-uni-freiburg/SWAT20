@@ -42,8 +42,8 @@ public class AF4EyesChecker {
 		AF4EyesChecker test2= new AF4EyesChecker();
 		try {
 			System.out.println("----- template check ------");
-			boolean checkResult = test2.check(new File("/tmp/af.template"), "Sign Form", "Open Account", getOriginatorMapping());
-			System.out.println("Should be false: "+checkResult);		
+			boolean checkResult = test2.check(new File("af.template"), "Sign Form", "Open Account", getOriginatorMapping());
+			System.out.println("Should be false: "+checkResult);
 			List<String> violatingUsers = test2.getViolatingUsers(new File("/tmp/af.template"), "Sign Form", "Open Account", getOriginatorMapping());
 			System.out.println(printList(violatingUsers));
 		} catch (Exception e) {
