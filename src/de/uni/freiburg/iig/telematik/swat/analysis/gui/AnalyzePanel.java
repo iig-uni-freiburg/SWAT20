@@ -293,6 +293,8 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 
 			this.add(wrong);
 			this.add(correct);
+			
+			//remove result out of storage
 			ModelCheckerResult.removeResult();
 		}
 

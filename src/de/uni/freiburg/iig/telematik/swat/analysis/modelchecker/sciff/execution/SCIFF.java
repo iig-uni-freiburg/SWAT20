@@ -23,7 +23,6 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelCheckerResu
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
-import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -106,7 +105,7 @@ public class SCIFF extends ModelChecker {
 			}
 		}
 		if (onlyOneInstantiatedPattern(patterns))
-			ModelCheckerResult.setResult(report);
+			ModelCheckerResult.setResult(report); //store this result in the result storage
 	}
 
 	private boolean onlyOneInstantiatedPattern(ArrayList<CompliancePattern> patterns) {

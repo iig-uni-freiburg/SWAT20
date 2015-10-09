@@ -23,6 +23,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
+/**single entries of the anaylsis result**/
 public class PatternResultPanel extends JPanel {
 	
 	private static final long serialVersionUID = -2236168943120437184L;

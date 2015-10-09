@@ -55,24 +55,24 @@ public class SciffResultPresenter {
 		b.append(type.toString() + " examples: <br>");
 		for (int i : result) {
 			ISciffLogTrace trace = report.getLog().getInstance(i);
-			//b.append(report.getLog().getInstances().get(i).getName());
-			b.append("<b>");
-			for (int entry=0;entry<trace.size();entry++){
+//			b.append(i+": ");
+//			b.append(report.getLog().getInstances().get(i).getName());
+			for (int entry = 0; entry < trace.size(); entry++) {
 				try {
-					b.append(trace.get(entry).getElement());
+					b.append("<b>");
+					b.append(" "+trace.get(entry).getElement());
+					b.append("</b>");
+					if(trace.get(entry).getOriginator()!=null) b.append("(" + trace.get(entry).getOriginator()+") ");
 				} catch (IndexOutOfBoundsException | IOException e) {
 				}
 			}
-			b.append("</b>");
 			try {
-				b.append(" from: " + trace.get(0).getTimestamp()+" to "+trace.get(trace.size()-1).getTimestamp());
+				b.append(" from: " + trace.get(0).getTimestamp() + " to " + trace.get(trace.size() - 1).getTimestamp());
+				b.append("<br><br>");
 			} catch (Exception e) {
 			}
 
-			b.append("<br>");
 		}
-		
-		//System.out.println("ResultText: " + b.toString());
 
 		return b.toString();
 	}
