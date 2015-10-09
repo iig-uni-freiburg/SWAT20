@@ -24,15 +24,28 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 	private ArrayList<String> mRoles;
 	
 	public XESLogInfoProvider (LogFileViewer viewer){
+		
 		switch (viewer.getModel().getType()) {
 		case Aristaflow:
-			parseAsAFLog(viewer.getModel().getFileReference());
+			try {
+				AristaFlowParser parser = (AristaFlowParser) viewer.getModel().getLogReader();
+				mActivities = new ArrayList<String>(parser.getActivityCandidates());
+				mSubjects = new ArrayList<String>(parser.getOriginatorCandidates());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			break;
+			
 		case MXML:
-			parseAsMxml(viewer.getModel().getFileReference());
-			break;
 		case XES:
-			parseAsXes(viewer.getModel().getFileReference());
+			try {
+				ISciffLogSummary summary = viewer.getModel().getLogReader().getSummary();
+				mActivities = new ArrayList<String>(Arrays.asList(summary.getModelElements()));
+				mSubjects = new ArrayList<String>(Arrays.asList(summary.getOriginators()));
+				mRoles = new ArrayList<String>(Arrays.asList(summary.getRoles()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		default:
 			break;
 		}
@@ -125,21 +138,6 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 	}
 	
 	private boolean isXESLogFile(File log) {
-//	try{	
-//            XESLogParser parser = new XESLogParser();
-//		if (parser.canParse(log)) {
-//			try {
-//				parser.parse(log, ParsingMode.COMPLETE);
-//				return true;
-//			} catch (Exception e) {
-//				return false;
-//			}
-//		}
-//		return false;
-//        }
-//        catch (Exception ex){
-//            return false;
-//        }
 		return log.toString().endsWith("xes");
 	}
 

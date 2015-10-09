@@ -24,7 +24,7 @@ public class ModelCheckerFactory {
 		} else if (comp instanceof IFNetEditorComponent) {
 			mc = new PRISM((IFNet) ((IFNetEditorComponent) comp).netContainer.getPetriNet());
 		} else if (comp instanceof LogFileViewer) {
-			mc = new SCIFF(((LogFileViewer) comp).getFile());
+			mc = new SCIFF(((LogFileViewer) comp));
 		}
 		
 		return mc;

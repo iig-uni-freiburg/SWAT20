@@ -2,18 +2,29 @@ package de.uni.freiburg.iig.telematik.swat.logs;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.NamedComponent;
+import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
+import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
+import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
+import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
+
 import java.util.Objects;
+
+import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 
 public class LogModel implements NamedComponent{
 
 	private File fileReference;
 	private String name;
 	private SwatLogType type = null;
+	private ISciffLogReader logReader;
 	
 	public LogModel(File fileReference, SwatLogType type) {
 		super();
@@ -101,6 +112,30 @@ public class LogModel implements NamedComponent{
 	@Override
 	public LogModel clone(){
 		return new LogModel(new File(getFileReference().getAbsolutePath()), type);
+	}
+	
+	public ISciffLogReader getLogReader() throws Exception{
+		if(logReader==null){
+			switch (getType()) {
+			case Aristaflow:
+				logReader = new AristaFlowParser(getFileReference());
+				((AristaFlowParser)logReader).parse(whichTimestamp.BOTH);
+				break;
+			case MXML:
+				MXMLLogParser mxmlParser = new MXMLLogParser();
+				mxmlParser.parse(fileReference, ParsingMode.COMPLETE);
+				logReader=new LogParserAdapter(mxmlParser);
+				break;
+			case XES:
+				XESLogParser xesParser= new XESLogParser();
+				xesParser.parse(getFileReference(), ParsingMode.COMPLETE);
+				logReader=new LogParserAdapter(xesParser);
+				break;
+			default:
+				break;
+			}
+		}
+		return logReader;
 	}
 
 }
