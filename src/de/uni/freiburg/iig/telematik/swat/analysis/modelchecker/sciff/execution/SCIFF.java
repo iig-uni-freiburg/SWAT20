@@ -70,7 +70,7 @@ public class SCIFF extends ModelChecker {
 
 	public SCIFF(LogFileViewer logFileViewer) {
 		try {
-			mLogReader = logFileViewer.getModel().getLogReader();
+			mLogReader = logFileViewer.loadLogReader();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

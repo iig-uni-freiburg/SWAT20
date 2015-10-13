@@ -137,5 +137,13 @@ public class LogModel implements NamedComponent{
 		}
 		return logReader;
 	}
+	
+	public void setLogReader(ISciffLogReader reader){
+		this.logReader=reader;
+	}
+	
+	public boolean hasLogReaderSet(){
+		return logReader!=null;
+	}
 
 }

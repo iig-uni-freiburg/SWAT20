@@ -28,7 +28,7 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 		switch (viewer.getModel().getType()) {
 		case Aristaflow:
 			try {
-				AristaFlowParser parser = (AristaFlowParser) viewer.getModel().getLogReader();
+				AristaFlowParser parser = (AristaFlowParser) viewer.loadLogReader();
 				mActivities = new ArrayList<String>(parser.getActivityCandidates());
 				mSubjects = new ArrayList<String>(parser.getOriginatorCandidates());
 			} catch (Exception e) {
@@ -39,7 +39,7 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 		case MXML:
 		case XES:
 			try {
-				ISciffLogSummary summary = viewer.getModel().getLogReader().getSummary();
+				ISciffLogSummary summary = viewer.loadLogReader().getSummary();
 				mActivities = new ArrayList<String>(Arrays.asList(summary.getModelElements()));
 				mSubjects = new ArrayList<String>(Arrays.asList(summary.getOriginators()));
 				mRoles = new ArrayList<String>(Arrays.asList(summary.getRoles()));
