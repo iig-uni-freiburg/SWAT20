@@ -49,6 +49,9 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.AbstractWolfgang;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.WolfgangCPN;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.WolfgangPT;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.CPNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
@@ -409,15 +412,37 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
 
         @Override
         public void stateChanged(ChangeEvent arg0) {
-            if (((SwatTabView) arg0.getSource()).getSelectedComponent() instanceof ViewComponent) {
+        	SwatTabView view =(SwatTabView) arg0.getSource();
+        	
+            if (view.getSelectedComponent() instanceof ViewComponent) {
                 for (SwatTabViewListener listener : listeners) {
-                    listener.activeTabChanged(((SwatTabView) arg0.getSource()).getSelectedIndex(),
-                            (ViewComponent) ((SwatTabView) arg0.getSource()).getSelectedComponent());
+                    listener.activeTabChanged(view.getSelectedIndex(),
+                            (ViewComponent) (view.getSelectedComponent()));       
                 }
-            }
-
+            }          
+            
+            if (view.getSelectedComponent() instanceof PNEditorComponent) {
+	            AbstractWolfgang wolfgang = null;
+	            PNEditorComponent pnEditor = (PNEditorComponent) view.getSelectedComponent();
+	            try {
+	                if (pnEditor instanceof PTNetEditorComponent)
+						wolfgang = new WolfgangPT();				
+					else if (pnEditor instanceof CPNEditorComponent)
+	                	wolfgang = new WolfgangCPN();
+	                /*
+	                 * WolfgangIF() do not exist at the moment
+	                 * 
+	                else if (pnEditor instanceof IFNetEditorComponent)	
+	                	wolfgang = new WolfgangIF();
+	                */
+	            } catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            wolfgang.setEditorComponent(pnEditor);
+	            wolfgang.installShortcuts(pnEditor.getGraphComponent());
+            }     
         }
-
     }
 
     /*
