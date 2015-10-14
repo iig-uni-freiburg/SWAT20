@@ -440,8 +440,8 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
 					e.printStackTrace();
 				}
 	            wolfgang.setEditorComponent(pnEditor);
-	            wolfgang.installShortcuts(pnEditor.getGraphComponent());
-            }     
+	            wolfgang.installShortcuts(pnEditor.getGraphComponent());            
+            }    
         }
     }
 
