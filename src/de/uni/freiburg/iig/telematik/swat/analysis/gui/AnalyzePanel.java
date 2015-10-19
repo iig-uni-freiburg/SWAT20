@@ -152,7 +152,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	}
 	
 
-
+	/** start the model checking with SCIFF or PRISM **/
 	private void invokeModelChecking() throws Exception {
 		if (Workbench.getInstance().getTypeOfCurrentComponent().equals(SwatComponentType.PETRI_NET)) {
 			if (!PrismFunctionValidator.checkPrism())
@@ -220,7 +220,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			Analysis save = new Analysis(name, mAnalysisController.getPatterns());
 			save.setHashCode(Workbench.getInstance().getHashOfCurrentComponent());
 			save.setLoadedFromDisk();
-                        storeLogAnalysis(analysisTargetName, save);
+            storeAnalysis(analysisTargetName, save);
 			dropDown.addItem(save);
 			dropDown.setSelectedItem(save);
 
@@ -344,18 +344,26 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	}
 	*/
 
-    private void storeLogAnalysis(String logName, Analysis save) throws ProjectComponentException {
+    private void storeAnalysis(String componentName, Analysis save) throws ProjectComponentException {
         //which kind of log
         SwatComponents comp = SwatComponents.getInstance();
-        if(comp.getContainerAristaflowLogs().containsComponent(logName)){
-            comp.getContainerAristaflowLogs().addAnalysis(save, logName, true);
+        if(comp.getContainerAristaflowLogs().containsComponent(componentName)){
+            comp.getContainerAristaflowLogs().addAnalysis(save, componentName, true);
+            return;
         }
-        else if (comp.getContainerMXMLLogs().containsComponent(logName)){
-            comp.getContainerMXMLLogs().addAnalysis(save, logName, true);
+        else if (comp.getContainerMXMLLogs().containsComponent(componentName)){
+            comp.getContainerMXMLLogs().addAnalysis(save, componentName, true);
+            return;
         }
-        else if (comp.getContainerXESLogs().containsComponent(logName)){
-            comp.getContainerXESLogs().addAnalysis(save, logName, true);
+        else if (comp.getContainerXESLogs().containsComponent(componentName)){
+            comp.getContainerXESLogs().addAnalysis(save, componentName, true);
+            return;
         }
+        else if (comp.getContainerPetriNets().containsComponent(componentName)){
+        	comp.getContainerPetriNets().addAnalysis(save, componentName, true);
+        	return;
+        }
+        throw new ProjectComponentException("Could not store analysis for "+componentName+": Could not find component");
         
     }
 }
