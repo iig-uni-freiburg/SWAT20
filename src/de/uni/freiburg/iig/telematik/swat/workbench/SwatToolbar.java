@@ -456,6 +456,14 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         }
 
     }
+    
+    public void setEditMode(boolean editMode){
+            getAnalysisRadioButton().setSelected(!editMode);
+            getEditRadioButton().setSelected(editMode);
+            repaint();
+            SwatState.getInstance().setOperatingMode(this, editMode?OperatingMode.EDIT_MODE:OperatingMode.ANALYSIS_MODE);
+    }
+
 
     public static void main(String[] args) throws Exception {
         JPanel panel = new JPanel();

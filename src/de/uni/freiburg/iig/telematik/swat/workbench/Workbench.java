@@ -479,7 +479,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
             	if(!(getCurrentComponentNeedsParsing() && getCurrentComponentsSourceSizeTooBig()))
                 getPropertiesPanel().add(AnalysisController.getInstance(component).getAnalyzePanel());
             	else {
-            		//set Edit Radio Button
+            		//set Edit Radio Button to edit
+            		getSwatToolbar().setEditMode(true);
             	}
 
             		
