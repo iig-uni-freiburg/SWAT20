@@ -38,7 +38,6 @@ import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
-import de.uni.freiburg.iig.telematik.swat.gui.GuiExecutor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -134,7 +133,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 						} catch (ParserException e) {
 							e.printStackTrace();
 						} finally {
-							GuiExecutor.instance().execute(new Runnable() {
+							LogGUIThreading.instance().execute(new Runnable() {
 								public void run() {
 									bar.setValue(100);
 									logReader=new LogParserAdapter(p);
