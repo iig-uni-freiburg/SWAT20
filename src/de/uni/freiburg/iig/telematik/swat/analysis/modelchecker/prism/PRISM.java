@@ -119,7 +119,7 @@ private String mPrismPath;
 		} catch (ExecuteException e) {
 			throw new PrismException("Prism execution exception", e);
 		} catch (IOException e) {
-			throw new PrismException("Net might not be bounded - Prism I/O exception, File: " + mFilesPath + File.separator
+			throw new PrismException("Net might not be bounded.\n\r Could not read PRISM states file - Prism I/O exception, File: " + mFilesPath
 					+ mStatesFileName, e);
 		}
 
@@ -131,7 +131,7 @@ private String mPrismPath;
 		
 		if (mConverter.isBoundedNet()) {
 			command = mPrismPath + " " + model.getAbsolutePath() +  " " + properties.getAbsolutePath()
-					+ " -exportstates " + mStatesFileName;
+					+ " -exportstates " + mFilesPath+mStatesFileName;
 		} else {
 			command = mPrismPath + " " + model.getAbsolutePath() + " " + properties.getAbsolutePath() + " -ex";
 		}

@@ -24,6 +24,7 @@ public class AnalysisHashErrorDialog {
                 break;
             case PETRI_NET:
                 message = "The petri net has changed since the last analysis. Update results?";
+                break;
             default:
                 throw new ParameterException("Dialog not possible for " + type);
         }
