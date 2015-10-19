@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -51,7 +52,7 @@ public class PatternResultPanel extends JPanel {
 				satPanel.add(new JLabel(satIcon));
 				satPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 				this.add(satPanel);
-				JLabel probLabel = new JLabel("Prob: " + pattern.getProbability());
+				JLabel probLabel = new JLabel("Prob: " +String.format("%.2f", pattern.getProbability()) );
 				probLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 				this.add(probLabel);
 			} catch (ParameterException e) {
