@@ -259,6 +259,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         return treeView;
     }
 
+    /** return the name of the currently active component**/
     public String getNameOfCurrentComponent() {
         Object o = tabView.getSelectedComponent();
         if (o instanceof PNEditorComponent) {
@@ -269,7 +270,19 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         }
         return "";
     }
+    
+    /** return true if current viewed component is a LogFileViewer and the corresponding log is not yet parsed**/
+    public boolean getCurrentComponentNeedsParsing(){
+    	Object o = tabView.getSelectedComponent();
+    	if(o instanceof PNEditorComponent)
+    		return false;
+    	else if (o instanceof LogFileViewer) {
+    		return !((LogFileViewer)o).getModel().hasLogReaderSet();
+    	}
+    	return false;
+    }
 
+    /** get the type of the currently active component**/
     public SwatComponentType getTypeOfCurrentComponent() {
         Object o = tabView.getSelectedComponent();
         if (o instanceof PNEditorComponent) {
@@ -281,6 +294,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         }
     }
 
+    /** return the hash code of the currently active component**/
     public int getHashOfCurrentComponent() {
         Object o = tabView.getSelectedComponent();
         if (o instanceof PNEditorComponent) {
