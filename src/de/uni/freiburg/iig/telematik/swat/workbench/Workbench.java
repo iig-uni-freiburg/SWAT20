@@ -281,6 +281,17 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
     	}
     	return false;
     }
+    
+    /** return true if current viewed component is a LogFileViewer and the corresponding log is bigger than 2 MB**/
+    public boolean getCurrentComponentsSourceSizeTooBig(){
+    	Object o = tabView.getSelectedComponent();
+    	if(o instanceof PNEditorComponent)
+    		return false;
+    	else if (o instanceof LogFileViewer) {
+    		return ((LogFileViewer)o).getModel().getFileReference().length()>2097152l;
+    	}
+    	return false;
+    }
 
     /** get the type of the currently active component**/
     public SwatComponentType getTypeOfCurrentComponent() {
@@ -465,7 +476,13 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
             getPropertiesPanel().add(new ScrollPane().add(component.getPropertiesView()));
         } else if (SwatState.getInstance().getOperatingMode() == OperatingMode.ANALYSIS_MODE) {
             try {
+            	if(!(getCurrentComponentNeedsParsing() && getCurrentComponentsSourceSizeTooBig()))
                 getPropertiesPanel().add(AnalysisController.getInstance(component).getAnalyzePanel());
+            	else {
+            		//set Edit Radio Button
+            	}
+
+            		
             } catch (PatternException e) {
                 errorMessage("Cannot load analysis panel", e, true);
             } catch (Exception ex) {

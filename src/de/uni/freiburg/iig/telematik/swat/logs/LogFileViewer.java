@@ -1,13 +1,16 @@
 package de.uni.freiburg.iig.telematik.swat.logs;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -25,6 +29,8 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.file.MonitoredInputStream;
+import de.invation.code.toval.graphic.util.SpringUtilities;
+import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
@@ -32,6 +38,7 @@ import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.gui.GuiExecutor;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -51,6 +58,8 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 	private JProgressBar bar = new JProgressBar();
 
 	private LogModel model;
+	private ISciffLogReader  logReader = null;
+	private MXMLLogParser p;
 
 	public LogFileViewer(LogModel model) throws Exception {
 		setModel(model);
@@ -83,16 +92,66 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 	private JComponent getEditorField() throws MalformedURLException, IOException {
 		if(model.getFileReference().length()>2097152l){
 			//do not show editor
-			JLabel label=new JLabel("file too big to dislpay - analysis is possible but might run into performance problems");
-			label.setPreferredSize(new Dimension(200, 100));
-			label.setSize(200, 100);
-			return label;
+//			JLabel label=new JLabel("file too big to dislpay - analysis is possible but might run into performance problems");
+//			label.setPreferredSize(new Dimension(200, 100));
+//			label.setSize(200, 100);
+//			return label;
+			p = new MXMLLogParser();
+			return getParserPanel(p,getFileReference(), getFileReference().length());
 		} else {
 			JEditorPane editor = new JEditorPane(model.getFileReference().toURI().toURL());
 			editor.setEditable(false);
 			return editor;
 		}
 		
+	}
+	
+	private JPanel getParserPanel(MXMLLogParser p, File file, long max) throws FileNotFoundException {
+		logReader = null;
+		JPanel panel = new JPanel(new SpringLayout());
+		JButton button = new JButton("parse file for analysis (may take some seconds)");
+		panel.add(new JLabel("...file too big to display - analysis is possible but might run into performance issues"));
+		panel.add(bar);
+		panel.add(button);
+		MonitoredInputStream mis = new MonitoredInputStream(new FileInputStream(file), max, 1024 * 1024 * 5);
+		mis.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				bar.setValue(mis.getProgress());
+			}
+		});
+		ExecutorService backgroundExec = Executors.newCachedThreadPool();
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				button.setEnabled(false);
+				backgroundExec.execute(new Runnable() {
+
+					public void run() {
+						try {
+							p.parse(mis, ParsingMode.COMPLETE);
+						} catch (ParameterException e) {
+							e.printStackTrace();
+						} catch (ParserException e) {
+							e.printStackTrace();
+						} finally {
+							GuiExecutor.instance().execute(new Runnable() {
+								public void run() {
+									bar.setValue(100);
+									logReader=new LogParserAdapter(p);
+									getModel().setLogReader(logReader);	
+									button.setText("file parsed");
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+		SpringUtilities.makeCompactGrid(panel, 3, 1, 0,200,0,0);
+		
+
+//		logReader=new LogParserAdapter(p);
+		return panel;
 	}
 
 	public JButton getSciffButton() throws ParameterException, PropertyException, IOException {
@@ -150,7 +209,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 	}
 	
 	public ISciffLogReader loadLogReader() throws Exception{
-		ISciffLogReader logReader = null;
+//		logReader = null;
 		
 		//remove MainComponent, add ProgressBar
 		getViewport().removeAll();
@@ -160,7 +219,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 		getViewport().repaint();
 		revalidate();
 		repaint();
-		
+		if(logReader == null){
 		MonitoredInputStream mis = getInputStream();
 		
 		if(!getModel().hasLogReaderSet()){
@@ -182,11 +241,12 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 			default:
 				break;
 			}
-			
 			if(logReader!=null)
 				getModel().setLogReader(logReader);	
+			
 		}
-		
+		}
+	
 		//remove progress bar, add main Component
 		getViewport().removeAll();
 		getViewport().add(mainComponent);

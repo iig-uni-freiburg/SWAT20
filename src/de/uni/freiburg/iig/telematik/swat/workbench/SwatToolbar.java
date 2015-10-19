@@ -28,6 +28,8 @@ import javax.swing.border.Border;
 
 import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
+import de.invation.code.toval.graphic.dialog.MessageDialog;
+import de.invation.code.toval.graphic.dialog.StringDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.ParameterException;
@@ -237,12 +239,19 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
+        	
             if (e.getActionCommand().equals(ACTION_COMMAND_ANALYSIS_MODE)) {
-                SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.ANALYSIS_MODE);
+					if(Workbench.getInstance().getCurrentComponentNeedsParsing() && Workbench.getInstance().getCurrentComponentsSourceSizeTooBig()){
+					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), "Entering analysis Mode requires parsing first");	
+	                SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.EDIT_MODE);
+	                getEditRadioButton().setSelected(true);
+					}
+					else 
+						SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.ANALYSIS_MODE);
             } else if (e.getActionCommand().equals(ACTION_COMMAND_EDIT_MODE)) {
                 SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.EDIT_MODE);
             }
-        } catch (ParameterException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
