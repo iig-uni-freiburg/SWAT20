@@ -17,13 +17,11 @@ import de.uni.freiburg.iig.telematik.swat.logs.MxmlLogContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.logs.XesLogContainer;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.management.RuntimeErrorException;
 
 public class SwatComponents extends AbstractProjectComponents {
 

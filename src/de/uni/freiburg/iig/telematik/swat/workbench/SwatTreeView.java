@@ -16,9 +16,6 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister.Pack;
-
-import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.validate.ExceptionDialog;
@@ -47,13 +44,13 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 	private static final Color BORDER_COLOR = new Color(237,237,237);
 
 
-	private DefaultTreeModel treeModel;
+	private final DefaultTreeModel treeModel;
 	
-	private Set<SwatTreeViewListener> listeners = new HashSet<SwatTreeViewListener>();
+	private final Set<SwatTreeViewListener> listeners = new HashSet<>();
 	
 	private static SwatTreeView instance = null;
 	
-	private DefaultMutableTreeNode rootNode;
+	private final DefaultMutableTreeNode rootNode;
 	private DefaultMutableTreeNode petriNetNode = null;
 	private DefaultMutableTreeNode logsNode = null;
 	private DefaultMutableTreeNode xesLogNode = null;

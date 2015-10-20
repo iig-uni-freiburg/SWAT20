@@ -22,22 +22,18 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetFlowRelation;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetMarking;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetTransition;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowElement.PTequivalent;
 import de.uni.freiburg.iig.telematik.wolfgang.actions.graphpopup.LayoutAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
-import java.time.Clock;
-import jdk.nashorn.internal.runtime.regexp.RegExp;
-import sun.misc.Regexp;
 
 public class AristaFlowToPnmlConverter {
 
-    private File aristaFlowTemplate;
+    private final File aristaFlowTemplate;
     private IFNet net;
-    private Map<String, AristaFlowElement> elements = new HashMap<String, AristaFlowElement>();
+    private final Map<String, AristaFlowElement> elements = new HashMap<>();
 
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
         AristaFlowToPnmlConverter converter = new AristaFlowToPnmlConverter(new File("/tmp/af.template"));
@@ -158,7 +154,7 @@ public class AristaFlowToPnmlConverter {
 
     private void setInitialMarking() {
         IFNetMarking marking = new IFNetMarking();
-        Multiset<String> initialSet = new Multiset<String>();
+        Multiset<String> initialSet = new Multiset<>();
         initialSet.add("black");
         marking.set("n0", initialSet);
         net.setInitialMarking(marking);
@@ -169,16 +165,16 @@ public class AristaFlowToPnmlConverter {
     }
 
     public AbstractGraphicalPN<?, ?, ?, ?, ?, ?, ?> getGraphicalPN() {
-        GraphicalIFNet net = new GraphicalIFNet(new IFNet());
-        net.setPetriNet(getNet());
-        return net;
+        GraphicalIFNet n = new GraphicalIFNet(new IFNet());
+        n.setPetriNet(getNet());
+        return n;
     }
 
     /**
      * get all Names from AristaFlow Template and put inside IFnet*
      */
     private void loadNames(Document doc) {
-        Map<String, String> names = new HashMap<String, String>();
+        Map<String, String> names = new HashMap<>();
         NodeList nodes = doc.getElementsByTagName("node");
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
