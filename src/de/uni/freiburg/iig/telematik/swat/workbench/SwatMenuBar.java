@@ -1,18 +1,22 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.io.File;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -21,10 +25,12 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcher;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcherFactory;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar.ToolbarNewNetButtonType;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AboutAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ExportAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.NewNetAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
@@ -45,6 +51,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
  * 
  */
 public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateListener {
+	
+	int commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+    int commandAndShift = commandKey | InputEvent.SHIFT_DOWN_MASK;
+    int altKey = InputEvent.ALT_DOWN_MASK;
 
 	private static final long serialVersionUID = 4130953102523669184L;
 
@@ -75,14 +85,18 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 	private JMenu getFileMenu() {
 		JMenu fileMenu = new JMenu("File");
-
 		JMenuItem saveAll = getSaveAllEntry();
 		JMenuItem save = getSaveEntry();
-
-		JMenuItem exit = getExitEntry();
-
+		JMenuItem quit = getExitEntry();
 		JMenuItem importEntry = getImportEntry();
+		JMenuItem newMenu = getNewMenu();		
+		
+		saveAll.setAccelerator(KeyStroke.getKeyStroke('S', commandAndShift));
+		save.setAccelerator(KeyStroke.getKeyStroke('S', commandKey));
+		importEntry.setAccelerator(KeyStroke.getKeyStroke('I', commandKey));
+		quit.setAccelerator(KeyStroke.getKeyStroke('Q', commandKey));
 
+		fileMenu.add(newMenu);
 		fileMenu.add(new SwitchWorkingDirectoryAction(UIManager.getIcon("FileView.directoryIcon")));
 		fileMenu.add(saveAll);
 		fileMenu.add(save);
@@ -91,12 +105,42 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		fileMenu.add(new ExportAction("Export active tab"));
 		fileMenu.add(importEntry);
 		fileMenu.addSeparator();
-		fileMenu.add(exit);
+		fileMenu.add(quit);
 		fileMenu.addSeparator();
 
 		return fileMenu;
 	}
 
+	
+	private JMenuItem getNewPTNEntry() {
+		JMenuItem ptEntry = new JMenuItem("PT-Net");
+		ptEntry.setAccelerator(KeyStroke.getKeyStroke('N', commandKey));
+		ptEntry.addActionListener(new NewNetAction(ToolbarNewNetButtonType.NEW_PT));
+		return ptEntry;
+	}
+	
+	private JMenuItem getNewCPNEntry() {
+		JMenuItem cpEntry = new JMenuItem("CP-Net");
+		cpEntry.setAccelerator(KeyStroke.getKeyStroke('N', commandAndShift));
+		cpEntry.addActionListener(new NewNetAction(ToolbarNewNetButtonType.NEW_CPN));
+		return cpEntry;
+	}
+	
+	private JMenuItem getNewIFNEntry() {
+		JMenuItem ifEntry = new JMenuItem("IF-Net");
+		ifEntry.setAccelerator(KeyStroke.getKeyStroke('N', altKey));
+		ifEntry.addActionListener(new NewNetAction(ToolbarNewNetButtonType.NEW_IF));
+		return ifEntry;
+	}
+	
+	private JMenu getNewMenu() {
+		JMenu newMenu = new JMenu("New");
+		newMenu.add(getNewPTNEntry());
+		newMenu.add(getNewCPNEntry());
+		newMenu.add(getNewIFNEntry());
+		return newMenu;
+	}
+	
 	private JMenu getHelpEntry() {
 		JMenu helpEntry = new JMenu("Help");
                 helpEntry.add(new AboutAction("about..."));
@@ -118,7 +162,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	}
 
 	private JMenuItem getExitEntry() {
-		JMenuItem exit = new JMenuItem("Exit");
+		JMenuItem exit = new JMenuItem("Quit");
 
 		try {
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(String.format(iconNameFormat, ICON_SIZE, "close_window", ICON_SIZE)));
@@ -152,11 +196,14 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		editModeButton = new JRadioButtonMenuItem("Edit Mode");
 		editModeButton.setActionCommand(ACTION_COMMAND_EDIT_MODE);
 		editModeButton.addActionListener(this);
+		editModeButton.setAccelerator(KeyStroke.getKeyStroke('E', altKey));
 		editMenu.add(editModeButton);
+		
 
 		analysisModeButton = new JRadioButtonMenuItem("Analyse Mode");
 		analysisModeButton.setActionCommand(ACTION_COMMAND_ANALYSIS_MODE);
 		analysisModeButton.addActionListener(this);
+		analysisModeButton.setAccelerator(KeyStroke.getKeyStroke('A', altKey));
 		editMenu.add(analysisModeButton);
 
 		ButtonGroup editOrAnalyseGroup = new ButtonGroup();
@@ -168,6 +215,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 	private JMenuItem getPrismPathSettingEntry() {
 		JMenuItem prismPathSetting = new JMenuItem("Set Prism Model Checker Path...");
+		prismPathSetting.setAccelerator(KeyStroke.getKeyStroke('J', commandKey));
 		prismPathSetting.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -193,12 +241,21 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		JMenu settings = new JMenu("Settings");
 		settings.add(getPrismPathSettingEntry());
 		settings.add(getLolaPathSettingEntry());
+		settings.add(getProperties());
 
 		return settings;
 	}
 
+	private JMenuItem getProperties() {
+		JMenuItem propertiesSettingEntry = new JMenuItem("Properties");
+		propertiesSettingEntry.setAccelerator(KeyStroke.getKeyStroke('M', commandKey));
+		return propertiesSettingEntry;
+		
+	}
+	
 	private JMenuItem getLolaPathSettingEntry() {
 		JMenuItem lolaPathSetting = new JMenuItem("Set LoLA Model Checker Path...");
+		lolaPathSetting.setAccelerator(KeyStroke.getKeyStroke('J', commandAndShift));
 		lolaPathSetting.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

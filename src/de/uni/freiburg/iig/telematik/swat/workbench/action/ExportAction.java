@@ -1,9 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
 
 import de.invation.code.toval.file.FileUtils;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
@@ -14,8 +17,11 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent
 
 public class ExportAction extends AbstractWorkbenchAction {
 
+	int commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	
 	public ExportAction(String name) {
 		super(name);
+		setAcceleratorKey(KeyStroke.getKeyStroke('E', commandKey));
 	}
 
 	private static final long serialVersionUID = -6290002178847609267L;

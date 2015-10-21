@@ -46,7 +46,7 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 
 	public SwatNewNetToolbar(SwatTabView tabView, SwatTreeView treeView) {
 		this.treeView = treeView;
-
+		
 		setFloatable(false);
 		setRollover(true);
 
@@ -178,11 +178,11 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 	public enum ToolbarNewNetButtonType {
 		NEW_PT, NEW_CPN, NEW_IF
 	}
-
+	
 	public void setToolbar(WorkbenchPopupToolBar popupFontToolBar) {
 		this.popupFontToolBar = popupFontToolBar;
-
 	}
+	
 	
 	public WorkbenchPopupToolBar getToolBar() {
 		return this.popupFontToolBar;		

@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -17,7 +18,9 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class DeleteAction extends AbstractWorkbenchAction {
-
+	
+	int commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	
 	private static final long serialVersionUID = 2735994196284600328L;
 
 	public DeleteAction(String name) {

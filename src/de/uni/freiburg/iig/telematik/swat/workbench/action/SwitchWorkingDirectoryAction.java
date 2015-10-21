@@ -1,9 +1,11 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 import javax.swing.Icon;
+import javax.swing.KeyStroke;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -14,6 +16,8 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class SwitchWorkingDirectoryAction extends AbstractWorkbenchAction {
 
+	int commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	
 	private static final long serialVersionUID = 4540373111307405160L;
 
 	public SwitchWorkingDirectoryAction() {
@@ -35,6 +39,7 @@ public class SwitchWorkingDirectoryAction extends AbstractWorkbenchAction {
 
 	public SwitchWorkingDirectoryAction(Icon icon) {
 		super("Switch Working Directory", icon);
+		setAcceleratorKey(KeyStroke.getKeyStroke('W', commandKey));
 	}
 
 	@Override

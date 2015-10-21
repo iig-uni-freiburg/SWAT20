@@ -29,11 +29,17 @@ public class NewNetAction extends AbstractWorkbenchAction {
 		this.type = type;
 		this.swatNewNetToolbar = swatNewNetToolbar;
 	}
+	
+	public NewNetAction(SwatNewNetToolbar.ToolbarNewNetButtonType type) {
+		super("Create new net");
+		this.type = type;
+	}
 
 	@Override
 	public void doFancyStuff(ActionEvent e) throws Exception{
 		String netName = requestNetName("Please choose a name for the new net:", "New Petri-Net");
-		swatNewNetToolbar.getToolBar().disposeAllWindows();
+		if (swatNewNetToolbar != null)
+			swatNewNetToolbar.getToolBar().disposeAllWindows();
 		if (netName != null) {
 			// Test new file name
 			switch (type) {
