@@ -76,13 +76,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
     private static final String ACTION_COMMAND_EDIT_MODE = "editMode";
     private static final String ACTION_COMMAND_ANALYSIS_MODE = "analysisMode";
-    private static int ICON_SIZE = 32;
     private static final int ICON_SPACING = 5;
 
     private JRadioButton rdbtnEdit = null;
     private JRadioButton rdbtnAnalysis = null;
 
-    private JButton openButton = null;
 
     private SwatTabView tabView = null;
     private SwatTreeView treeView = null;
@@ -100,24 +98,20 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
         setLayout(new WrapLayout(3));
 
+
         try {
-            createButtons();
-        } catch (ParameterException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (PropertyException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        addStandardButtons();
+			createButtons();
+		} catch (ParameterException | PropertyException | IOException e1) {
+			Workbench.errorMessage("Could not load Toolbar-Icons", e1, true);
+		}
+       
+        addDefaultItems();
 
         try {
             SwatState.getInstance().addListener(this);
         } catch (ParameterException e) {
             // Cannot happen, since this is never null.
+        	Workbench.errorMessage("Could not register SwatToolbar", e, true);
         }
 
         // try to get ICONSize
@@ -129,7 +123,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
     }
 
-    private void addStandardButtons() {
+    /**add default items to toolbar**/
+    private void addDefaultItems() {
         for (JComponent button : standardItems) {
             add(button);
             button.setFocusable(false);
@@ -138,7 +133,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
     }
 
     /**
-     * Putstart Buttons into linkedList {@link #standardItems} for later use
+     * Put default buttons into linkedList {@link #standardItems} for later use
      *
      * @throws IOException
      * @throws PropertyException
@@ -278,7 +273,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
     public void clear() {
         this.removeAll();
         //createButtons();
-        addStandardButtons();
+        addDefaultItems();
     }
 
     private class SwatToolbarButton extends JButton {
@@ -341,24 +336,16 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
                     //addActionListener(new LolaTransformAction());
                     addActionListener(new LolaAnalyzeAction());
                     break;
-			//			case DELETE:
-                //				setToolTipText("Remove from Workbench");
-                //				addActionListener(new DeleteAction());
-                //				//addKeyListener(new DeleteAction());
-                //				setMnemonic(KeyEvent.VK_DELETE);
-                //				//set
-                //				break;
             }
         }
 
         private void tryToSetPressedButton(ToolbarButtonType type) {
-            try {
-                setPressedIcon(IconFactory.getIconPressed(type.toString().toLowerCase()));
+                try {
+					setPressedIcon(IconFactory.getIconPressed(type.toString().toLowerCase()));
+				} catch (ParameterException | PropertyException | IOException e) {
+					//Workbench.errorMessage("Could not load icon for pressed button", e, false);
+				}
                 //setOpaque(false);
-            } catch (ParameterException e) {
-            } catch (PropertyException e) {
-            } catch (IOException e) {
-            }
 
         }
 
@@ -443,7 +430,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
                     System.out.println(result);
                     b.append("\r\n");
                 }
-                //				System.out.println("result from lola: " + b.toString());
+                //System.out.println("result from lola: " + b.toString());
                 LolaPresenter outcome = new LolaPresenter(b.toString());
                 outcome.show();
 
@@ -457,12 +444,12 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
     }
     
-    public void setEditMode(boolean editMode){
-            getAnalysisRadioButton().setSelected(!editMode);
-            getEditRadioButton().setSelected(editMode);
-            repaint();
-            SwatState.getInstance().setOperatingMode(this, editMode?OperatingMode.EDIT_MODE:OperatingMode.ANALYSIS_MODE);
-    }
+//    public void setEditMode(boolean editMode){
+//            getAnalysisRadioButton().setSelected(!editMode);
+//            getEditRadioButton().setSelected(editMode);
+//            repaint();
+//            SwatState.getInstance().setOperatingMode(this, editMode?OperatingMode.EDIT_MODE:OperatingMode.ANALYSIS_MODE);
+//    }
 
 
     public static void main(String[] args) throws Exception {
