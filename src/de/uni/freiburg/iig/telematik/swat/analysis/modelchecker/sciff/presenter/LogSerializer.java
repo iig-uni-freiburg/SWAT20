@@ -20,8 +20,8 @@ import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParserInterface;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
-import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
-import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 
 public class LogSerializer {

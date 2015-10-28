@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowSQLConnector;
 
 public class DatabaseChooser {
 

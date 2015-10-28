@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff;
+package de.uni.freiburg.iig.telematik.swat.aristaFlow;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;

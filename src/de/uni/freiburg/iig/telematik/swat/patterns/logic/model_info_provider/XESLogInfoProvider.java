@@ -12,8 +12,8 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
-import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
-import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser.whichTimestamp;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 

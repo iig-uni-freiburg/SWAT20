@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff;
+package de.uni.freiburg.iig.telematik.swat.aristaFlow;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -492,5 +492,10 @@ enum AristaFlowTokens implements Serializable {
 
 enum EventType implements Serializable {
 	COMPLETE, START, END;
+	
+	@Override
+	public String toString(){
+		return this.name().toLowerCase();
+	}
 }
 

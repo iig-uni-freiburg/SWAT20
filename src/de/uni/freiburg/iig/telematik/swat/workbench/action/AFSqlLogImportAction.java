@@ -5,8 +5,8 @@ import java.io.IOException;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.DatabaseChooser;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowSQLConnector;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;

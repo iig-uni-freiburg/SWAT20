@@ -31,8 +31,8 @@
 package de.uni.freiburg.iig.telematik.swat.misc.AFintegration;
 
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.ModelCheckerResult;
-import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.sciff.execution.SCIFF;
+import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.XESLogInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
