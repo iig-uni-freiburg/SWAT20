@@ -14,13 +14,55 @@ public class AwesomeTimeContext implements TimeRessourceContext<ITimeBehaviour>{
 	}
 
 	@Override
+	public ITimeBehaviour getTimeFor(String activity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeTimeBehaviourFor(String activity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addTimeBehaviourFor(String activity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addResource(String activity, List<String> resources) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void blockResources(List<String> resources) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<List<String>> getAllowedResourcesFor(String activity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getRandomAllowedResourcesFor(String activity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public boolean isAvailable(String ressourceName) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean behaviorIsKnown(String activity, String... ressource) {
+	public boolean behaviorIsKnown(String activity, List<String> resources) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -32,25 +74,19 @@ public class AwesomeTimeContext implements TimeRessourceContext<ITimeBehaviour>{
 	}
 
 	@Override
-	public void addRessource(String activity, String... ressources) {
+	public void removeResourceUsage(String activity, List<String> resources) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public List<List<String>> getAllowedRessourcesFor(String activity) {
+	public void addTimeBehaviourFor(String activity, List<String> resources, ITimeBehaviour behaviour) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public List<String> getRandomAllowedRessourcesFor(String activity, boolean blockRessources) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void removeRessourceUsage(String activity, String... ressources) {
+	public void removeTimeBehaviourFor(String activity, List<String> resource) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -60,5 +96,6 @@ public class AwesomeTimeContext implements TimeRessourceContext<ITimeBehaviour>{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }
