@@ -25,6 +25,7 @@ public class LogModel implements NamedComponent{
 	private String name;
 	private SwatLogType type = null;
 	private ISciffLogReader logReader;
+	private int hash=-1;
 	
 	public LogModel(File fileReference, SwatLogType type) {
 		super();
@@ -44,6 +45,10 @@ public class LogModel implements NamedComponent{
 	public File getFileReference() {
 		return fileReference;
 	}
+	
+	public void clearLogParser(){
+		logReader=null;//so CC can free up memory
+	}
 
 	public void setFileReference(File fileReference) {
 		this.fileReference = fileReference;
@@ -55,11 +60,14 @@ public class LogModel implements NamedComponent{
 
 	@Override
 	public int hashCode() {
+		if (hash==-1){
 		try {
-			return getMD5Checksum(fileReference);
+			hash= getMD5Checksum(fileReference);
 		} catch (Exception e) {
-			return -1;
+			hash= -1;
 		}
+		}
+		return hash;
 	}
 
     @Override
