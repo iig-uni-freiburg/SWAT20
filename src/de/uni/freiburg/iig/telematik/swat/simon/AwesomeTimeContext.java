@@ -1,11 +1,16 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
+import java.util.HashMap;
 import java.util.List;
+
+import com.sun.javafx.collections.MappingChange.Map;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.TimeRessourceContext;
 
 public class AwesomeTimeContext implements TimeRessourceContext<ITimeBehaviour>{
+	
+	private HashMap<String, ITimeBehaviour> timeBehaviour = new HashMap<>(); //hier alles rein, was von ITimeBehaviour (bzw. AbstractTimeBehaviour ableitet
 
 	@Override
 	public void setName(String name) {
@@ -15,13 +20,16 @@ public class AwesomeTimeContext implements TimeRessourceContext<ITimeBehaviour>{
 
 	@Override
 	public ITimeBehaviour getTimeFor(String activity) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		ITimeBehaviour behave = timeBehaviour.get(activity);
+		behave.getNeededTime();
+		
+		return timeBehaviour.get(activity);
 	}
 
 	@Override
 	public void removeTimeBehaviourFor(String activity) {
-		// TODO Auto-generated method stub
+		timeBehaviour.remove(activity);
 		
 	}
 
