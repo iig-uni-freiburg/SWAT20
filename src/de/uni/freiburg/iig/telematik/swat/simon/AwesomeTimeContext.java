@@ -35,5 +35,9 @@ public class AwesomeTimeContext implements ITimeContext {
 	public ITimeBehaviour getTimeObjectFor(String activity) {
 		return timeBehaviour.get(activity);
 	}
+	
+	public void addBehaviour(String name, ITimeBehaviour behaveiour){
+		timeBehaviour.put(name, behaveiour);
+	}
 
 }

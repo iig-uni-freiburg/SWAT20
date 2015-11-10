@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public List<String> getRandomAllowedResourcesFor(String activity, boolean blockResources) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stubüü
 		return null;
 	}
 
@@ -63,6 +64,27 @@ public class AwesomeResourceContext implements IResourceContext{
 	public IResource getResourceObject(String resourceName) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void addResourceUsage(String activity, IResource resource){
+		if(resources.containsKey(activity)){
+			resources.get(activity).add(resource);
+		} else {
+			ArrayList<IResource> list = new ArrayList<>();
+			list.add(resource);
+			resources.put(activity, list);
+		}
+	}
+
+	@Override
+	public boolean containsBlockedResources() {
+		for(List<IResource> resourceList:resources.values()){
+			for(IResource resource:resourceList){
+				if(!resource.isAvailable())
+					return true;
+			}
+		}
+		return false;
 	}
 
 }
