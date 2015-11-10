@@ -1,10 +1,10 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
-public abstract class Resource {
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
+
+public abstract class Resource implements IResource {
 	
 	protected String name;
-	
-	public abstract boolean isAvailable(); // muss implementiert werden
 	
 	public String getName(){
 		return name; //gilt nun für alle, die von Resource erben

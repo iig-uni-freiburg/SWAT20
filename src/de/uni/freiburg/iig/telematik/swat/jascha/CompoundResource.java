@@ -3,24 +3,41 @@ package de.uni.freiburg.iig.telematik.swat.jascha;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompoundResource extends Resource{
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
-	public CompoundResource(String name) {
-		super(name);
-		// Name in Über-Klasse speichern lassen.
+public class CompoundResource extends Resource {
+
+	List<IResource> resources = new ArrayList<>();
+
+	public CompoundResource() {
+		super("Compound");
 	}
-
-	List<Resource> resources = new ArrayList<>();
+	
+	public CompoundResource(String name){
+		super(name);
+	}
 
 	@Override
 	public boolean isAvailable() {
-		for (Resource o:resources){
-			if (!o.isAvailable()) return false;
+		for (IResource r : resources) {
+			if (!r.isAvailable())
+				return false;
 		}
 		return true;
 	}
 	
-	
-	
-	
+	public List<IResource> getConsistingResources(){
+		return resources;
+	}
+
+	public String getName() {
+		StringBuilder b = new StringBuilder();
+		for (IResource r : resources) {
+			b.append(r.getName());
+			b.append(", ");
+		}
+		String result = b.toString();
+		return super.getName()+": "+result.substring(0, result.length()-1); //remove ", "
+	}
+
 }
