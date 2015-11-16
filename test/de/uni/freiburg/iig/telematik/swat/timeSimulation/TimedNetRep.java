@@ -8,6 +8,7 @@ public class TimedNetRep {
 	
 	public static TimedNet getSimpleLinearTimedNet(IResourceContext resContext, ITimeContext timeContext){
 		TimedNet net = new TimedNet();
+		net.setName("LinearTimed-Net");
 		net.addTransition("test");
 		net.addTransition("test2");
 		net.addPlace("start");
@@ -26,6 +27,7 @@ public class TimedNetRep {
 	
 	public static TimedNet getSimpleORTimedNet(IResourceContext resContext, ITimeContext timeContext){
 		TimedNet net = new TimedNet();
+		net.setName("OR-net");
 		net.addTransition("test");
 		net.addTransition("test2");
 		net.addPlace("start");
@@ -43,6 +45,7 @@ public class TimedNetRep {
 	
 	public static TimedNet getSimpleANDTimedNet(IResourceContext resContext, ITimeContext timeContext){
 		TimedNet net = new TimedNet();
+		net.setName("AND-net");
 		net.addTransition("test");
 		net.addTransition("test2");
 		net.addTransition("silent");

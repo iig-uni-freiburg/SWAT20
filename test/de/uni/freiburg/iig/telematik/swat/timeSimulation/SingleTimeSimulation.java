@@ -26,6 +26,7 @@ import org.jfree.data.statistics.HistogramType;
 
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 
 public class SingleTimeSimulation {
 	
@@ -33,9 +34,21 @@ public class SingleTimeSimulation {
 
 	public static void main(String args[]) {
 		
-		nets.put("linear", TimedNetRep.getSimpleLinearTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		nets.put("Parallel AND",TimedNetRep.getSimpleANDTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		nets.put("OR", TimedNetRep.getSimpleORTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		WorkflowTimeMachine timeMachine = WorkflowTimeMachine.getInstance();
+		
+		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		
+		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(123456);
+		
+		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
+			generateDiagram(entry.getValue(), 100, entry.getKey());
+		}
+		
+		//nets.put("linear", TimedNetRep.getSimpleLinearTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//nets.put("Parallel AND",TimedNetRep.getSimpleANDTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//nets.put("OR", TimedNetRep.getSimpleORTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 
 		//TimedNet net = TimedNetRep.getSimpleORTimedNet(getResourceContext(), getTimeContext());
 		//TimedNet net = TimedNetRep.getSimpleANDTimedNet(getResourceContext(), getTimeContext());
@@ -51,10 +64,10 @@ public class SingleTimeSimulation {
 		// fireNet(net);
 		// getCurrentTimeOfNet(net);
 
-		for(Entry<String, TimedNet> e:nets.entrySet()){
-			ArrayList<Double> results = simulateNet(e.getValue());
-			generateDiagram(results, 75,e.getKey());
-		}
+//		for(Entry<String, TimedNet> e:nets.entrySet()){
+//			ArrayList<Double> results = simulateNet(e.getValue());
+//			generateDiagram(results, 100 ,e.getKey());
+//		}
 		
 		
 	}

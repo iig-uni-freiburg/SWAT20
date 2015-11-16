@@ -40,4 +40,18 @@ public class CompoundResource extends Resource {
 		return super.getName()+": "+result.substring(0, result.length()-1); //remove ", "
 	}
 
+	@Override
+	public void use() {
+		throw new RuntimeException("Not yet implemented");
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unUse() {
+		throw new RuntimeException("Not yet implemented");
+		// TODO Auto-generated method stub
+		
+	}
+
 }

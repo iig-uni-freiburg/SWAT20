@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.jascha;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,14 +39,38 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public void blockResources(List<String> resources) {
-		// TODO Auto-generated method stub
+		//System.out.println("Blocking "+printList(resources));
+		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
+			getResource(resource).use();
+		}
 		
+	}
+
+	private String printList(List<String> resources2) {
+		String result ="";
+		for(String s:resources2)
+			result+=s+" ";
+		return result;
 	}
 
 	@Override
 	public void unBlockResources(List<String> resources) {
-		// TODO Auto-generated method stub
+		//System.out.println("Freeing "+printList(resources));
+		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
+			getResource(resource).unUse();
+		}
 		
+	}
+	
+	protected IResource getResource(String resource){
+		//this can be done way faster by holding a seperate hashmap of resources!
+		for(List<IResource> res:resources.values()){
+			for(IResource r:res){
+				if(r.getName().equals(resource))
+					return r;
+			}
+		}
+		return new SimpleResource("dummy");
 	}
 
 	@Override
@@ -56,7 +81,23 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public List<String> getRandomAllowedResourcesFor(String activity, boolean blockResources) {
-		// TODO Auto-generated method stubüü
+		if(!resources.containsKey(activity)) {
+			//return dummy resource
+			ArrayList<String> dummy = new ArrayList<>(1);
+			dummy.add("dummy");
+			return dummy;
+		}
+		List<IResource> possibleResources = resources.get(activity);
+		LinkedList<String> result = new LinkedList<>();
+		for (IResource possibleResource : possibleResources) {
+			if (possibleResource.isAvailable()) {
+				result.add(possibleResource.getName());
+				if(blockResources)
+					possibleResource.use();
+				//System.out.println("Blocking "+printList(result));
+				return result;
+			}
+		}
 		return null;
 	}
 
@@ -68,7 +109,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	
 	public void addResourceUsage(String activity, IResource resource){
 		if(resources.containsKey(activity)){
-			resources.get(activity).add(resource);
+			resources.get(activity).add(resource); //TODO: check if resource is already inside the list!
 		} else {
 			ArrayList<IResource> list = new ArrayList<>();
 			list.add(resource);
