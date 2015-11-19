@@ -36,6 +36,12 @@ public class SharedResource extends Resource {
 	public void unUse() {
 		decrementUsage();
 	}
+
+	@Override
+	public void reset() {
+		usage=0f;
+		
+	}
 	
 	
 

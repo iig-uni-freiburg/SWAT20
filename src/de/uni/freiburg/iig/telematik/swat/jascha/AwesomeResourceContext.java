@@ -41,6 +41,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	public void blockResources(List<String> resources) {
 		//System.out.println("Blocking "+printList(resources));
 		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
+			System.out.println("Setting: Blocking "+resource);
 			getResource(resource).use();
 		}
 		
@@ -55,8 +56,10 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public void unBlockResources(List<String> resources) {
+		if(resources==null||resources.isEmpty()) return;
 		//System.out.println("Freeing "+printList(resources));
 		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
+			System.out.println("Unblocking "+resource);
 			getResource(resource).unUse();
 		}
 		
@@ -92,8 +95,10 @@ public class AwesomeResourceContext implements IResourceContext{
 		for (IResource possibleResource : possibleResources) {
 			if (possibleResource.isAvailable()) {
 				result.add(possibleResource.getName());
-				if(blockResources)
+				if(blockResources){
+					System.out.println("Blocking "+possibleResource.getName());
 					possibleResource.use();
+				}
 				//System.out.println("Blocking "+printList(result));
 				return result;
 			}
@@ -126,6 +131,13 @@ public class AwesomeResourceContext implements IResourceContext{
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void reset() {
+		for(List<IResource> resourceList:resources.values())
+			for(IResource res:resourceList)
+				res.reset();
 	}
 
 }

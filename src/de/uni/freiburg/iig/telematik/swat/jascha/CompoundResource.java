@@ -54,4 +54,10 @@ public class CompoundResource extends Resource {
 		
 	}
 
+	@Override
+	public void reset() {
+		for(IResource r:resources)
+			r.reset();
+	}
+
 }

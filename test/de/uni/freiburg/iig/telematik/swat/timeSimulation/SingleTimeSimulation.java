@@ -40,7 +40,7 @@ public class SingleTimeSimulation {
 		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
-		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(123456);
+		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(2);
 		
 		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
 			generateDiagram(entry.getValue(), 100, entry.getKey());

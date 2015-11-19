@@ -22,6 +22,11 @@ public class SimpleResource extends Resource {
 	@Override
 	public void unUse() {
 		isAvailable=true;
+	}
+
+	@Override
+	public void reset() {
+		isAvailable=true;
 		
 	}
 
