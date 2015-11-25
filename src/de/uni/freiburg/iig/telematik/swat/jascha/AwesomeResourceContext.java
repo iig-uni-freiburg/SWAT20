@@ -15,7 +15,11 @@ public class AwesomeResourceContext implements IResourceContext{
 	
 	//beinhaltet Liste mit Ressourcen-Objekten. Ressourcen-Objekt kann entweder selbst eine Liste haben oder eine einzelne Resource darstellen
 	Map<String,List<IResource>> resources = new HashMap<>();
-
+	
+	
+	public AwesomeResourceContext() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public boolean isAvailable(String ressourceName) {
@@ -37,16 +41,29 @@ public class AwesomeResourceContext implements IResourceContext{
 		
 	}
 
+	// Sollte man hier noch überprüfen, ob Ressourcen überhaupt geblockt werden können? Also if (resource.isAvailable() == true) ?
 	@Override
 	public void blockResources(List<String> resources) {
 		//System.out.println("Blocking "+printList(resources));
 		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
+			
+			if (!isAvailable(resource)){
+			}
 			System.out.println("Setting: Blocking "+resource);
+			
+			/**IResource r = getResource(resource);
+			if (r.isAvailable()){
+				r.use();
+			}
+			else {
+				//Throw error that r can't be blocked because it's already in use
+			} */
+			
 			getResource(resource).use();
 		}
 		
 	}
-
+	// Wofür ist das gedacht?
 	private String printList(List<String> resources2) {
 		String result ="";
 		for(String s:resources2)
@@ -64,7 +81,6 @@ public class AwesomeResourceContext implements IResourceContext{
 		}
 		
 	}
-	
 	protected IResource getResource(String resource){
 		//this can be done way faster by holding a seperate hashmap of resources!
 		for(List<IResource> res:resources.values()){
@@ -108,8 +124,7 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public IResource getResourceObject(String resourceName) {
-		// TODO Auto-generated method stub
-		return null;
+		return getResource(resourceName);
 	}
 	
 	public void addResourceUsage(String activity, IResource resource){

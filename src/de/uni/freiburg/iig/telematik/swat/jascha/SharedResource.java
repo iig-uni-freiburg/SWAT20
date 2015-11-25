@@ -18,6 +18,16 @@ public class SharedResource extends Resource {
 		this.usage+=increment;
 	}
 	
+	// Benutzung um bestimmten Anteil erhöhen, nicht nur um feste 10%
+	public void incrementUsageBy(float f){
+		if (usage + f <= 1.0){
+			this.usage+= f;
+		}
+		else {
+			//Error: not enough free usage available.		
+		}
+	}
+	
 	public void decrementUsage() {
 		usage = (usage > increment) ? usage - increment : 0.0f;
 	}
@@ -30,6 +40,11 @@ public class SharedResource extends Resource {
 	public void use() {
 		incrementUsage();
 		
+	}
+	
+	//Override?
+	public void use(float f){
+		incrementUsageBy(f);
 	}
 
 	@Override

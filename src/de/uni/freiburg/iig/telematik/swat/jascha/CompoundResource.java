@@ -16,6 +16,13 @@ public class CompoundResource extends Resource {
 	public CompoundResource(String name){
 		super(name);
 	}
+	
+	public CompoundResource(List<IResource> inputResources){
+		for (IResource r: inputResources){
+			addResource(r);
+		}
+		
+	}
 
 	@Override
 	public boolean isAvailable() {
@@ -39,19 +46,26 @@ public class CompoundResource extends Resource {
 		String result = b.toString();
 		return super.getName()+": "+result.substring(0, result.length()-1); //remove ", "
 	}
+	
+	
+	public void addResource(IResource r){
+		resources.add(r);
+	}
 
 	@Override
 	public void use() {
-		throw new RuntimeException("Not yet implemented");
-		// TODO Auto-generated method stub
-		
+		//throw new RuntimeException("Not yet implemented");		
+		for (IResource r: resources){
+			r.use();
+		}
 	}
 
 	@Override
 	public void unUse() {
-		throw new RuntimeException("Not yet implemented");
-		// TODO Auto-generated method stub
-		
+		//throw new RuntimeException("Not yet implemented");		
+		for (IResource r: resources){
+			r.unUse();
+		}		
 	}
 
 	@Override

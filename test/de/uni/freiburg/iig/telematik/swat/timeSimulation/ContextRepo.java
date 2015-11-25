@@ -1,11 +1,13 @@
 package de.uni.freiburg.iig.telematik.swat.timeSimulation;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.SimpleResource;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
@@ -38,6 +40,17 @@ public class ContextRepo {
 			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher2"));
 			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher1"));
 			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher2"));
+			
+			//Jascha
+			resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker"));
+			List<IResource> werkzeuge = new LinkedList<IResource>();
+			werkzeuge.add(new SimpleResource("Hammer"));
+			werkzeuge.add(new SimpleResource("Kreuzschlitz_klein"));
+			werkzeuge.add(new SimpleResource("Kreuzschlitz_groﬂ"));
+			IResource schraubenset = new CompoundResource("Schraubenset");
+			werkzeuge.add(schraubenset);
+			IResource werkzeugkasten = new CompoundResource(werkzeuge);
+			resourceContext.addResourceUsage("Handwerkerarbeit", werkzeugkasten);
 		}
 		return resourceContext;
 	}
