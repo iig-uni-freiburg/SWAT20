@@ -23,6 +23,7 @@ public class ITimeBehaviourFactory {
 		case NORMAL:
 			return new NormalDistributedBehaviour(params.get(0), params.get(1));
 		case LOG_NORMAL:
+
 			return new LogNormalDistributedBehaviour(params.get(0), params.get(1));
 		case "cauchyDistributed":
 			return new CauchyDistributedBehaviour(params.get(0), params.get(1));
@@ -38,6 +39,10 @@ public class ITimeBehaviourFactory {
 			return new BetaDistributedBehaviour(params.get(0), params.get(1));
 		case "fDistributed":
 			return new FDistributedBehaviour(params.get(0), params.get(1));
+
+			return new LogNormalDistributedBavahiour(params.get(0), params.get(1));
+
+
 		default:
 			break;
 		}

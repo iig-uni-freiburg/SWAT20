@@ -1,21 +1,33 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
-public class SimpleResource extends Resource{
+public class SimpleResource extends Resource {
+
+	protected boolean isAvailable;
+
 	public SimpleResource(String name) {
-		super(name);
-		// Um den Namen soll sich die Über-Klasse kümmern
+		super(name); // Um den Namen soll sich die Über-Klasse kümmern
+		isAvailable=true;
 	}
 
-	boolean isAvailable;
-	String name;
-	boolean isSharedResource;
-	int destroyCounter;
-	
-	//Alternativ: ResourcenObjekt hat eine Liste von Resourcen
-	
-	
-	public boolean isAvailable(){
-		return destroyCounter>0 && isAvailable;
+	public boolean isAvailable() {
+		return isAvailable;
+	}
+
+	@Override
+	public void use() {
+		isAvailable=false;
+		
+	}
+
+	@Override
+	public void unUse() {
+		isAvailable=true;
+	}
+
+	@Override
+	public void reset() {
+		isAvailable=true;
+		
 	}
 
 }

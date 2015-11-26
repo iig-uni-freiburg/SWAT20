@@ -32,6 +32,9 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 	public DistributionType getType(){
 		return type;
 	}
+
 	}
+
+
 
 
