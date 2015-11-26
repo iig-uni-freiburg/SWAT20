@@ -269,6 +269,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		return name;
 	}
 	
+	/**display examples when usign SCIFF**/
 	private void addModelCheckerResult() {
 		if (ModelCheckerResult.hasAResult() && ModelCheckerResult.getResult() instanceof CheckerReport) {
 			final CheckerReport report = (CheckerReport) ModelCheckerResult.getResult();

@@ -26,9 +26,19 @@ public class SciffResultPresenter {
 
 	public void show(resultType resulttype) {
 		JFrame result = new JFrame();
+		switch (resulttype) {
+		case CORRECT:
+			result.setTitle("Correct Log Examples");
+			break;
+		case WRONG:
+			result.setTitle("Wrong Log Examples");
+			break;
+		default:
+			break;
+		}
 		result.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		result.setSize(new Dimension(600, 600));
-		String resultText = getResultString(resulttype);
+		String resultText = getResultString(resulttype, 100);
 		JTextPane textArea = new JTextPane();
 		textArea.setContentType("text/html");
 		textArea.setText(resultText);
@@ -41,7 +51,7 @@ public class SciffResultPresenter {
 
 	}
 
-	public String getResultString(resultType type) {
+	public String getResultString(resultType type, int maxLength) {
 		LinkedList<Integer> result = new LinkedList<Integer>();
 		StringBuilder b = new StringBuilder();
 		switch (type) {
@@ -52,8 +62,12 @@ public class SciffResultPresenter {
 			result.addAll(report.wrongInstances());
 			break;
 		}
+		System.out.println("Traversing");
 		b.append(type.toString() + " examples: <br>");
+		int currentIndex=0;
 		for (int i : result) {
+			currentIndex++;
+			if(currentIndex>maxLength) break;
 			ISciffLogTrace trace = report.getLog().getInstance(i);
 //			b.append(i+": ");
 //			b.append(report.getLog().getInstances().get(i).getName());
