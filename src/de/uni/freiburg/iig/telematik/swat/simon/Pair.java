@@ -1,19 +1,21 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
+import java.util.Date;
+
 public class Pair {
-	private double mStart;
-	private double mEnd;
+	private Date mStart;
+	private Date mEnd;
 	
-	public Pair(double start, double end) {
+	public Pair(Date start, Date end) {
 		mStart = start;
 		mEnd = end;
 	}
 	
-	public double getStart() {
+	public Date getStart() {
 		return mStart;
 	}
 	
-	public double getEnd() {
+	public Date getEnd() {
 		return mEnd;
 	}
 	
