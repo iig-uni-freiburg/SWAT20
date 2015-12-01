@@ -1,6 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Pair {
 	private Date mStart;
@@ -11,13 +13,13 @@ public class Pair {
 		mEnd = end;
 	}
 	
-	public Date getStart() {
+	public Date getStartTime() {
 		return mStart;
 	}
 	
-	public Date getEnd() {
+	public Date getEndTime() {
 		return mEnd;
 	}
 	
-	
+
 }

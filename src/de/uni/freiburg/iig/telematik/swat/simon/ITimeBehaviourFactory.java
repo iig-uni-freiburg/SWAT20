@@ -17,7 +17,8 @@ public class ITimeBehaviourFactory {
 		for (int i = 0; i < 10; i++)
 			System.out.println("Get needed time: " + test.getNeededTime());
 		LogReader reader = new LogReader();
-		reader.searchDistributionOfActivity("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A");
+		reader.createHistogram("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A");
+		
 		//reader.parseLog("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml");
 	}
 

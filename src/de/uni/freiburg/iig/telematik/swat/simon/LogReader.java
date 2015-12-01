@@ -2,7 +2,9 @@ package de.uni.freiburg.iig.telematik.swat.simon;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.invation.code.toval.parser.ParserException;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
@@ -36,7 +38,29 @@ public class LogReader {
 			return null;
 		}
 	}
-	public void searchDistributionOfActivity(String logPath, String activity) {
+	/*
+	 * Get time difference between start and endtime of an activity
+	 * 
+	 */
+	public void createHistogram(String logPath, String activity) {
+		ArrayList<Pair> timePairs = getTimeofActivity(logPath, activity);
+		for(int i = 0; i< timePairs.size(); i++) {
+			System.out.println(getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES));
+			long timeDiff = getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES);
+		}
+	}
+	
+
+	public static long getDateDiff(Date endTime, Date startTime, TimeUnit timeUnit) {
+	    long diffInMillies = endTime.getTime() - startTime.getTime();
+	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+	}
+	
+	
+	/*
+	 * Get List of Pairs with start and end times of an activity
+	 */
+	public ArrayList<Pair> getTimeofActivity(String logPath, String activity) {
 		ArrayList<Pair> startEndTime = new ArrayList<>();
 		List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);
 		int counter = 0;
@@ -54,8 +78,9 @@ public class LogReader {
 					}}}
 	}
 		for(int i = 0; i< startEndTime.size(); i++) {
-		System.out.println("Startzeitpunkt:" + startEndTime.get(i).getStart() +  ", Endzeitpunkt:" + startEndTime.get(i).getEnd() + ", Anzahl: " + i ); 
+		System.out.println("Startzeitpunkt:" + startEndTime.get(i).getStartTime() +  ", Endzeitpunkt:" + startEndTime.get(i).getEndTime() + ", Anzahl: " + i ); 
 		}
 		System.out.println(counter);
+		return startEndTime;
 	}}
 
