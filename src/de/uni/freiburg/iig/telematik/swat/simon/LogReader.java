@@ -2,7 +2,9 @@ package de.uni.freiburg.iig.telematik.swat.simon;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,19 +40,33 @@ public class LogReader {
 			return null;
 		}
 	}
+	
+	public void createHistogram(String logPath, String activity) {
+		ArrayList<Pair> timePairs = getTimeofActivity(logPath, activity);
+		ArrayList<Long> duration = new ArrayList<Long>();
+		for(int i = 0; i< timePairs.size(); i++) {
+			System.out.println(getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES));
+			duration.add(getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES));	
+		}
+		HashMap<Long, Integer> map = new HashMap<>();
+		Collections.sort(duration);
+		// counting number of occurrences of each Integers in the Arraylist
+		for(int i = 0; i< timePairs.size(); i++) {
+			if (!map.containsKey(duration.get(i))) {
+			map.put(duration.get(i), 1);}
+			else if (map.containsKey(duration.get(i))) {
+				map.put(duration.get(i), map.get(duration.get(i)) + 1);
+			}
+			
+		}
+		
+		System.out.println(map.values().toString());
+	}
+	
 	/*
 	 * Get time difference between start and endtime of an activity
 	 * 
 	 */
-	public void createHistogram(String logPath, String activity) {
-		ArrayList<Pair> timePairs = getTimeofActivity(logPath, activity);
-		for(int i = 0; i< timePairs.size(); i++) {
-			System.out.println(getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES));
-			long timeDiff = getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES);
-		}
-	}
-	
-
 	public static long getDateDiff(Date endTime, Date startTime, TimeUnit timeUnit) {
 	    long diffInMillies = endTime.getTime() - startTime.getTime();
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
