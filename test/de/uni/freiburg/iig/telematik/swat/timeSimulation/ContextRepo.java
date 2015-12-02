@@ -34,10 +34,12 @@ public class ContextRepo {
 	public static IResourceContext getResourceContext() {
 		if (resourceContext == null) {
 			 resourceContext = new AwesomeResourceContext();
-			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher1"));
-			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher2"));
-			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher1"));
-			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher2"));
+			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1");
+			 IResource schrauebzieher2 = new SimpleResource("Schraubenzieher2");
+			resourceContext.addResourceUsage("test", schrauebzieher1);
+			resourceContext.addResourceUsage("test", schrauebzieher2);
+			resourceContext.addResourceUsage("test2", schrauebzieher1);
+			resourceContext.addResourceUsage("test2", schrauebzieher2);
 		}
 		return resourceContext;
 	}
