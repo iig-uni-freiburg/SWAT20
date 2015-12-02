@@ -145,9 +145,9 @@ public class AwesomeResourceContext implements IResourceContext{
 		for(String s:resources.keySet()){
 			b.append(s+": ");
 			for(IResource res: resources.get(s)){
-				b.append(res.isAvailable()+" ");
+				b.append(res.getName()+"("+res.isAvailable()+")");
 			}
-			b.append("\n\r");
+			b.append("\r\n");
 		}
 		return b.toString();
 	}

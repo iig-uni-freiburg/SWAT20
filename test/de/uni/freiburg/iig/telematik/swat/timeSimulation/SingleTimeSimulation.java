@@ -27,6 +27,8 @@ import org.jfree.data.statistics.HistogramType;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
+import de.uni.freiburg.iig.telematik.swat.misc.plots.CumulativeHistrogram;
+import de.uni.freiburg.iig.telematik.swat.misc.plots.SimulationHistogram;
 
 public class SingleTimeSimulation {
 	
@@ -36,14 +38,30 @@ public class SingleTimeSimulation {
 		
 		WorkflowTimeMachine timeMachine = WorkflowTimeMachine.getInstance();
 		
-		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-1",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-1",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-1",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
-		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(223456);
+		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		
+		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		
+		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(12345);
 		
 		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
-			generateDiagram(entry.getValue(), 100, entry.getKey());
+			//generateDiagram(entry.getValue(), 100, entry.getKey());
+			new SimulationHistogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
+			new CumulativeHistrogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
 		}
 		
 		//nets.put("linear", TimedNetRep.getSimpleLinearTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
@@ -99,52 +117,6 @@ public class SingleTimeSimulation {
 
 	public static void getCurrentTimeOfNet(TimedNet net) {
 		System.out.println("Current net-time is: " + net.getCurrentTime());
-	}
-	
-	private static void generateDiagram(List<Double> results_list, int bins, String title) {
-		double[] buffer = new double[results_list.size()];
-		for (int i = 0; i < buffer.length; i++)
-			buffer[i] = results_list.get(i);
-		// The histogram takes an array
-		HistogramDataset histo = new HistogramDataset();
-		histo.addSeries(title+" Relative Occurence of Duration", buffer, bins);
-		histo.setType(HistogramType.RELATIVE_FREQUENCY);
-		//histo.setType(HistogramType.SCALE_AREA_TO_1);
-
-		JFrame aFrame = new JFrame("Time analysis");
-		//ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
-		JFreeChart chart = ChartFactory.createHistogram("Distribution of simulated workflow duration",
-				"Duration of Workflow execution in ms", "Relative occurence", histo, PlotOrientation.VERTICAL, true, true, false);
-
-		// to save as JPG
-		XYPlot plot = (XYPlot) chart.getPlot();
-		XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
-
-		renderer.setDrawBarOutline(false);
-
-		renderer.setSeriesOutlinePaint(0, Color.red);
-
-		//plot.getRangeAxis().setRange(0, 0.2);
-		//plot.getDomainAxis().setRange(0, 30);
-		plot.getRangeAxis().setTickLabelFont(new Font("Arial", 0, 30));
-		plot.getDomainAxis().setTickLabelFont(new Font("Arial", 0, 30));
-		plot.getRangeAxis().setLabelFont(new Font("Arial", 1, 28));
-		plot.getDomainAxis().setLabelFont(new Font("Arial", 1, 28));
-		//plot.getLegendItems().get(0).set(new Font("Arial", 1, 26));
-		//plot.getLegendItems().get(1).setLabelFont(new Font("Arial", 1, 24));
-		LegendTitle legend = chart.getLegend();
-		Font nwfont = new Font("Arial", 0, 26);
-		legend.setItemFont(nwfont);
-		//chart.setLegend(legend);
-
-		ChartPanel panel = new ChartPanel(chart);
-		panel.setPreferredSize(new java.awt.Dimension(900, 600));
-		aFrame.setContentPane(panel);
-		aFrame.setPreferredSize(new java.awt.Dimension(900, 600));
-		aFrame.setSize(new Dimension(900, 600));
-		//aFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		aFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		aFrame.setVisible(true);
 	}
 
 }

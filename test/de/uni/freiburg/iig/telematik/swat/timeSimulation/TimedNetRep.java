@@ -6,9 +6,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeConte
 
 public class TimedNetRep {
 	
-	public static TimedNet getSimpleLinearTimedNet(IResourceContext resContext, ITimeContext timeContext){
+	public static TimedNet getSimpleLinearTimedNet(String name, IResourceContext resContext, ITimeContext timeContext){
 		TimedNet net = new TimedNet();
-		net.setName("LinearTimed-Net");
+		if(name==null)net.setName("LinearTimed-Net");
+		else net.setName(name);
 		net.addTransition("test");
 		net.addTransition("test2");
 		net.addPlace("start");
@@ -25,9 +26,10 @@ public class TimedNetRep {
 		return net;
 	}
 	
-	public static TimedNet getSimpleORTimedNet(IResourceContext resContext, ITimeContext timeContext){
+	public static TimedNet getSimpleORTimedNet(String name, IResourceContext resContext, ITimeContext timeContext){
 		TimedNet net = new TimedNet();
-		net.setName("OR-net");
+		if(name==null) net.setName("OR-net");
+		else net.setName(name);
 		net.addTransition("test");
 		net.addTransition("test2");
 		net.addPlace("start");
@@ -43,11 +45,14 @@ public class TimedNetRep {
 		return net;
 	}
 	
-	public static TimedNet getSimpleANDTimedNet(IResourceContext resContext, ITimeContext timeContext){
+	public static TimedNet getSimpleANDTimedNet(String name, IResourceContext resContext, ITimeContext timeContext){
+		String transition1 ="test3";
+		String transition2 ="test4";
 		TimedNet net = new TimedNet();
-		net.setName("AND-net");
-		net.addTransition("test");
-		net.addTransition("test2");
+		if(name==null) net.setName("AND-net");
+		else net.setName(name);
+		net.addTransition(transition1);
+		net.addTransition(transition2);
 		net.addTransition("silent");
 		net.addTransition("silent2");
 		net.addPlace("start");
@@ -60,10 +65,10 @@ public class TimedNetRep {
 		net.addFlowRelationPT("start", "silent");
 		net.addFlowRelationTP("silent", "p1");
 		net.addFlowRelationTP("silent", "p2");
-		net.addFlowRelationPT("p1", "test");
-		net.addFlowRelationPT("p2", "test2");
-		net.addFlowRelationTP("test", "p3");
-		net.addFlowRelationTP("test2", "p4");
+		net.addFlowRelationPT("p1", transition1);
+		net.addFlowRelationPT("p2", transition2);
+		net.addFlowRelationTP("test3", "p3");
+		net.addFlowRelationTP("test4", "p4");
 		net.addFlowRelationPT("p3", "silent2");
 		net.addFlowRelationPT("p4", "silent2");
 		net.addFlowRelationTP("silent2", "end");
