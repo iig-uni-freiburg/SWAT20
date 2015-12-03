@@ -41,7 +41,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	public void blockResources(List<String> resources) {
 		//System.out.println("Blocking "+printList(resources));
 		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
-			System.out.println("Setting: Blocking "+resource);
+			//System.out.println("Setting: Blocking "+resource);
 			getResource(resource).use();
 		}
 		
@@ -59,7 +59,7 @@ public class AwesomeResourceContext implements IResourceContext{
 		if(resources==null||resources.isEmpty()) return;
 		//System.out.println("Freeing "+printList(resources));
 		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
-			System.out.println("Unblocking "+resource);
+			//System.out.println("Unblocking "+resource);
 			getResource(resource).unUse();
 		}
 		
@@ -96,7 +96,7 @@ public class AwesomeResourceContext implements IResourceContext{
 			if (possibleResource.isAvailable()) {
 				result.add(possibleResource.getName());
 				if(blockResources){
-					System.out.println("Blocking "+possibleResource.getName());
+					//System.out.println("Blocking "+possibleResource.getName());
 					possibleResource.use();
 				}
 				//System.out.println("Blocking "+printList(result));
@@ -138,6 +138,18 @@ public class AwesomeResourceContext implements IResourceContext{
 		for(List<IResource> resourceList:resources.values())
 			for(IResource res:resourceList)
 				res.reset();
+	}
+	
+	public String toString(){
+		StringBuilder b= new StringBuilder();
+		for(String s:resources.keySet()){
+			b.append(s+": ");
+			for(IResource res: resources.get(s)){
+				b.append(res.getName()+"("+res.isAvailable()+")");
+			}
+			b.append("\r\n");
+		}
+		return b.toString();
 	}
 
 }

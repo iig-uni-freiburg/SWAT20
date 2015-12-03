@@ -27,6 +27,8 @@ public class ContextRepo {
 			params2.add(0.3);
 			timeContext.addBehaviour("test", ITimeBehaviourFactory.getBahaviour(DistributionType.NORMAL, params1));
 			timeContext.addBehaviour("test2", ITimeBehaviourFactory.getBahaviour(DistributionType.LOG_NORMAL, params2));
+			timeContext.addBehaviour("test3", ITimeBehaviourFactory.getBahaviour(DistributionType.NORMAL, params1));
+			timeContext.addBehaviour("test4", ITimeBehaviourFactory.getBahaviour(DistributionType.LOG_NORMAL, params2));
 		}
 		return timeContext;
 	}
@@ -34,10 +36,24 @@ public class ContextRepo {
 	public static IResourceContext getResourceContext() {
 		if (resourceContext == null) {
 			 resourceContext = new AwesomeResourceContext();
-			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher1"));
-			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher2"));
-			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher1"));
-			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher2"));
+			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1");
+			 IResource schrauebzieher2 = new SimpleResource("Schraubenzieher2");
+			 IResource schrauebzieher3 = new SimpleResource("Schraubenzieher3");
+			 IResource schrauebzieher4 = new SimpleResource("Schraubenzieher4");
+			 IResource schrauebzieher5 = new SimpleResource("Schraubenzieher5");
+			 IResource schrauebzieher6 = new SimpleResource("Schraubenzieher6");
+			resourceContext.addResourceUsage("test", schrauebzieher1);
+			resourceContext.addResourceUsage("test", schrauebzieher2);
+			resourceContext.addResourceUsage("test", schrauebzieher3);
+			//resourceContext.addResourceUsage("test2", schrauebzieher1);
+			resourceContext.addResourceUsage("test2", schrauebzieher2);
+			//resourceContext.addResourceUsage("test2", schrauebzieher3);
+			resourceContext.addResourceUsage("test3", schrauebzieher1);
+			resourceContext.addResourceUsage("test3", schrauebzieher2);
+			//resourceContext.addResourceUsage("test3", schrauebzieher3);
+			//resourceContext.addResourceUsage("test3", schrauebzieher6);
+			resourceContext.addResourceUsage("test4", schrauebzieher4);
+			resourceContext.addResourceUsage("test4", schrauebzieher5);
 		}
 		return resourceContext;
 	}
