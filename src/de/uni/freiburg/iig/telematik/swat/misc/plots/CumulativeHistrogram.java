@@ -29,7 +29,7 @@ public class CumulativeHistrogram {
 			buffer[i] = values.get(i);
 		Arrays.sort(buffer);
 		
-		int[] bin = initializeBins(buffer, bins);
+		double[] bin = initializeBins(buffer, bins);
 		
 		double[] frequency = fillBins(buffer, bin);
 		
@@ -54,14 +54,14 @@ public class CumulativeHistrogram {
 	
 	
 
-	public int[] initializeBins(double[] occurences, int numberOfBins) {
-		int[] bins = new int[numberOfBins];
+	public double[] initializeBins(double[] occurences, int numberOfBins) {
+		double[] bins = new double[numberOfBins];
 		double min = occurences[0]; //value for first bin
 		double max = occurences[occurences.length - 1]; //value for last bin
 		double step = (max - min) / (((double) numberOfBins - 1)); //width of each bin
 		bins[0] = (int) min;
 		for (int i = 1; i < numberOfBins; i++) {
-			bins[i] = (int) (bins[i - 1] + step); //value for each bin
+			bins[i] = (bins[i - 1] + step); //value for each bin
 		}
 		
 		return bins;
@@ -82,14 +82,14 @@ public class CumulativeHistrogram {
 	 * create histogram out of occurences with given bins. occurences must be
 	 * sorted
 	 **/
-	private double[] fillBins(double[] occurences, int[] bins) {
-		double[] frequency = new double[bins.length];
+	private double[] fillBins(double[] occurences, double[] bin) {
+		double[] frequency = new double[bin.length];
 		int startFrom = 0;
 		//sweep through bins
-		for (int i = 0; i < bins.length; i++) {
+		for (int i = 0; i < bin.length; i++) {
 			int count = 0;
 			while (startFrom < occurences.length) { //sweep through measeaured occurences
-				if (occurences[startFrom] <= bins[i]) {
+				if (occurences[startFrom] < bin[i]) {
 					count++; //add occurence into current bin
 					startFrom++; //go on with next occurence
 				} else
@@ -112,11 +112,11 @@ public class CumulativeHistrogram {
 		}
 	}
 	
-	private ChartPanel createPlotFrame(int[] bins, double[] cumulate, String legend){
+	private ChartPanel createPlotFrame(double[] bin, double[] cumulate, String legend){
 		ApplicationFrame aFrame = new ApplicationFrame("Cumulative Histogram");
 		XYSeries series = new XYSeries(legend);
-		for(int i = 0;i<bins.length;i++){
-			series.add(bins[i], cumulate[i]);
+		for(int i = 0;i<bin.length;i++){
+			series.add(bin[i], cumulate[i]);
 		}
 		
          XYSeriesCollection data = new XYSeriesCollection(series);
