@@ -13,6 +13,11 @@ public class CompoundResource extends Resource {
 		super("Compound");
 	}
 	
+	public CompoundResource(String name, List<IResource> resources){
+		super(name);
+		this.resources=resources;
+	}
+	
 	public CompoundResource(String name){
 		super(name);
 	}

@@ -1,11 +1,13 @@
 package de.uni.freiburg.iig.telematik.swat.timeSimulation;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.SimpleResource;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
@@ -36,6 +38,23 @@ public class ContextRepo {
 	public static IResourceContext getResourceContext() {
 		if (resourceContext == null) {
 			 resourceContext = new AwesomeResourceContext();
+			 
+			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher1"));
+			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher2"));
+			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher1"));
+			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher2"));
+			
+			//Jascha
+			resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker"));
+			List<IResource> werkzeuge = new LinkedList<IResource>();
+			werkzeuge.add(new SimpleResource("Hammer"));
+			werkzeuge.add(new SimpleResource("Kreuzschlitz_klein"));
+			werkzeuge.add(new SimpleResource("Kreuzschlitz_gro�"));
+			IResource schraubenset = new CompoundResource("Schraubenset");
+			werkzeuge.add(schraubenset);
+			IResource werkzeugkasten = new CompoundResource("werkzeuge",werkzeuge);
+			resourceContext.addResourceUsage("Handwerkerarbeit", werkzeugkasten);
+
 			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1");
 			 IResource schrauebzieher2 = new SimpleResource("Schraubenzieher2");
 			 IResource schrauebzieher3 = new SimpleResource("Schraubenzieher3");
@@ -44,16 +63,17 @@ public class ContextRepo {
 			 IResource schrauebzieher6 = new SimpleResource("Schraubenzieher6");
 			resourceContext.addResourceUsage("test", schrauebzieher1);
 			resourceContext.addResourceUsage("test", schrauebzieher2);
-			resourceContext.addResourceUsage("test", schrauebzieher3);
+			//resourceContext.addResourceUsage("test", schrauebzieher3);
 			//resourceContext.addResourceUsage("test2", schrauebzieher1);
-			resourceContext.addResourceUsage("test2", schrauebzieher2);
-			//resourceContext.addResourceUsage("test2", schrauebzieher3);
+			resourceContext.addResourceUsage("test2", schrauebzieher3);
+			resourceContext.addResourceUsage("test2", schrauebzieher4);
 			resourceContext.addResourceUsage("test3", schrauebzieher1);
 			resourceContext.addResourceUsage("test3", schrauebzieher2);
 			//resourceContext.addResourceUsage("test3", schrauebzieher3);
 			//resourceContext.addResourceUsage("test3", schrauebzieher6);
 			resourceContext.addResourceUsage("test4", schrauebzieher4);
 			resourceContext.addResourceUsage("test4", schrauebzieher5);
+
 		}
 		return resourceContext;
 	}
