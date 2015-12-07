@@ -49,7 +49,7 @@ public class ContextRepo {
 			List<IResource> werkzeuge = new LinkedList<IResource>();
 			werkzeuge.add(new SimpleResource("Hammer"));
 			werkzeuge.add(new SimpleResource("Kreuzschlitz_klein"));
-			werkzeuge.add(new SimpleResource("Kreuzschlitz_groß"));
+			werkzeuge.add(new SimpleResource("Kreuzschlitz_gross"));
 			IResource schraubenset = new CompoundResource("Schraubenset");
 			werkzeuge.add(schraubenset);
 			IResource werkzeugkasten = new CompoundResource("werkzeuge",werkzeuge);
