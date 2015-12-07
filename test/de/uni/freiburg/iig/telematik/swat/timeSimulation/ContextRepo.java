@@ -49,7 +49,7 @@ public class ContextRepo {
 			List<IResource> werkzeuge = new LinkedList<IResource>();
 			werkzeuge.add(new SimpleResource("Hammer"));
 			werkzeuge.add(new SimpleResource("Kreuzschlitz_klein"));
-			werkzeuge.add(new SimpleResource("Kreuzschlitz_gro�"));
+			werkzeuge.add(new SimpleResource("Kreuzschlitz_groß"));
 			IResource schraubenset = new CompoundResource("Schraubenset");
 			werkzeuge.add(schraubenset);
 			IResource werkzeugkasten = new CompoundResource("werkzeuge",werkzeuge);
@@ -63,17 +63,16 @@ public class ContextRepo {
 			 IResource schrauebzieher6 = new SimpleResource("Schraubenzieher6");
 			resourceContext.addResourceUsage("test", schrauebzieher1);
 			resourceContext.addResourceUsage("test", schrauebzieher2);
-			//resourceContext.addResourceUsage("test", schrauebzieher3);
+			resourceContext.addResourceUsage("test", schrauebzieher3);
 			//resourceContext.addResourceUsage("test2", schrauebzieher1);
-			resourceContext.addResourceUsage("test2", schrauebzieher3);
-			resourceContext.addResourceUsage("test2", schrauebzieher4);
+			resourceContext.addResourceUsage("test2", schrauebzieher2);
+			//resourceContext.addResourceUsage("test2", schrauebzieher3);
 			resourceContext.addResourceUsage("test3", schrauebzieher1);
 			resourceContext.addResourceUsage("test3", schrauebzieher2);
 			//resourceContext.addResourceUsage("test3", schrauebzieher3);
 			//resourceContext.addResourceUsage("test3", schrauebzieher6);
 			resourceContext.addResourceUsage("test4", schrauebzieher4);
 			resourceContext.addResourceUsage("test4", schrauebzieher5);
-
 		}
 		return resourceContext;
 	}
