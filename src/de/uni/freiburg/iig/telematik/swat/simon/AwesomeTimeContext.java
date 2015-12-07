@@ -2,6 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.simon;
 
 import java.util.HashMap;
 
+
+
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 
@@ -12,27 +14,44 @@ public class AwesomeTimeContext implements ITimeContext {
 	private HashMap<String, ITimeBehaviour> timeBehaviour = new HashMap<>();
 	
 	double time;
+
+	private String name;
+
+
 	
 
 	@Override
 	public void setName(String name) {
 		// TODO Auto-generated method stub
-	}
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		this.name = name;
 	}
 
 	@Override
 	public double getTimeFor(String activity) {
-
-		ITimeBehaviour behave = timeBehaviour.get(activity);
-		behave.getNeededTime();
-
 		return timeBehaviour.get(activity).getNeededTime();
 	}
+
+
+
+	
+
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return this.name;
+	}
+	
+
+	@Override
+
+	public boolean containsActivity(String activity) {
+		return timeBehaviour.containsKey(activity);
+	}
+
+
+	
 
 	@Override
 	public ITimeBehaviour getTimeObjectFor(String activity) {
@@ -43,10 +62,7 @@ public class AwesomeTimeContext implements ITimeContext {
 		timeBehaviour.put(name, behaveiour);
 	}
 
-	@Override
-	public boolean containsActivity(String activity) {
-		return timeBehaviour.containsKey(activity);
-	}
+	
 
 	@Override
 	public void reset() {
@@ -65,5 +81,6 @@ public class AwesomeTimeContext implements ITimeContext {
 	public double getTime() {
 		return time;
 	}
+
 
 }
