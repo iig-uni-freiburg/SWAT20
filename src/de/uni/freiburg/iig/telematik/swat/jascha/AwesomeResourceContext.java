@@ -16,9 +16,16 @@ public class AwesomeResourceContext implements IResourceContext{
 	//beinhaltet Liste mit Ressourcen-Objekten. Ressourcen-Objekt kann entweder selbst eine Liste haben oder eine einzelne Resource darstellen
 	Map<String,List<IResource>> resources = new HashMap<>();
 	
+	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enthält.
+	ResourceStore resourceStore = new ResourceStore();
+	
 	
 	public AwesomeResourceContext() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public ResourceStore getResourceStore(){
+		return resourceStore;
 	}
 
 	@Override
@@ -57,6 +64,18 @@ public class AwesomeResourceContext implements IResourceContext{
 			} 
 		}
 		
+		/* Alternative mit ResourceStore
+		 * for(String resource:resources){
+			IResource r = resourceStore.getResource(resource);
+			if (r.isAvailable()){
+				r.use();
+			}
+			else {
+				//Throw error that r can't be blocked because it's already in use
+			}
+		} */
+		
+		
 	}
 	// Wofür ist das gedacht?
 	private String printList(List<String> resources2) {
@@ -75,6 +94,12 @@ public class AwesomeResourceContext implements IResourceContext{
 			getResource(resource).unUse();
 		}
 		
+		/* Alternative mit ResourceStore
+		for(String resource:resources){
+			resourceStore.getResource(resource).unUse();
+		}
+		*/
+		
 	}
 	
 	protected IResource getResource(String resource){
@@ -85,7 +110,15 @@ public class AwesomeResourceContext implements IResourceContext{
 					return r;
 			}
 		}
+		
 		return new SimpleResource("dummy");
+		
+		/* Alternative mit Liste aller Ressourcen im ResourceStore
+		 *  
+		 * return resourceStore.getResource(resource);
+		 */
+		
+
 	}
 
 	@Override
@@ -126,7 +159,8 @@ public class AwesomeResourceContext implements IResourceContext{
 	public void addResourceUsage(String activity, IResource resource){
 		if(resources.containsKey(activity)){
 			resources.get(activity).add(resource); //TODO: check if resource is already inside the list!
-		} else {
+		} 
+		else {
 			ArrayList<IResource> list = new ArrayList<>();
 			list.add(resource);
 			resources.put(activity, list);

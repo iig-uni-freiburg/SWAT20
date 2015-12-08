@@ -54,6 +54,11 @@ public class ContextRepo {
 			werkzeuge.add(schraubenset);
 			IResource werkzeugkasten = new CompoundResource(werkzeuge);
 			resourceContext.addResourceUsage("Handwerkerarbeit", werkzeugkasten);
+			
+			// Neue Ressource Waschmaschine wird gleichzeitig dem ResourceStore hinzugefügt.
+			resourceContext.addResourceUsage("Waschen", new SimpleResource("Waschmaschine", resourceContext.getResourceStore()));
+			// Zählen der verfügbaren Hämmer
+			resourceContext.getResourceStore().countAvailable("Hammer");
 
 			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1");
 			 IResource schrauebzieher2 = new SimpleResource("Schraubenzieher2");

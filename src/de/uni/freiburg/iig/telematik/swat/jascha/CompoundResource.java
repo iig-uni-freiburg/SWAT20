@@ -6,6 +6,8 @@ import java.util.List;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
 public class CompoundResource extends Resource {
+	
+	private static String type = "compound";
 
 	List<IResource> resources = new ArrayList<>();
 
@@ -22,6 +24,12 @@ public class CompoundResource extends Resource {
 			addResource(r);
 		}
 		
+	}
+	
+	//Konstruktor, bei dem die Ressource gleich in ein ResourceStore eingetragen wird.
+	public CompoundResource(String name, ResourceStore resourceStore){
+		super(name);
+		resourceStore.addResource(this);
 	}
 
 	@Override
@@ -51,6 +59,10 @@ public class CompoundResource extends Resource {
 	public void addResource(IResource r){
 		resources.add(r);
 	}
+	
+	public void removeResource(IResource r){
+		resources.remove(r);
+	}
 
 	@Override
 	public void use() {
@@ -72,6 +84,10 @@ public class CompoundResource extends Resource {
 	public void reset() {
 		for(IResource r:resources)
 			r.reset();
+	}
+	
+	public String getType(){
+		return type;
 	}
 
 }
