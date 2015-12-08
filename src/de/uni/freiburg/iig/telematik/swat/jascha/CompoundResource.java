@@ -49,7 +49,8 @@ public class CompoundResource extends Resource {
 			b.append(", ");
 		}
 		String result = b.toString();
-		return super.getName()+": "+result.substring(0, result.length()-1); //remove ", "
+		if(result!=null && result.length()>1)result = result.substring(0, result.length()-1); //remove ", ";
+		return super.getName()+": "+result;
 	}
 	
 	
