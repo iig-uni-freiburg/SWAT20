@@ -14,9 +14,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.TimeRessou
 public class AwesomeResourceContext implements IResourceContext{
 	
 	//beinhaltet Liste mit Ressourcen-Objekten. Ressourcen-Objekt kann entweder selbst eine Liste haben oder eine einzelne Resource darstellen
-	Map<String,List<IResource>> resources = new HashMap<>();
+	Map<String,List<IResource>> resources = new HashMap<>(); //<Aktivity,Resources>
 	
-	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enthält.
+	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enthï¿½lt.
 	ResourceStore resourceStore = new ResourceStore();
 	
 	
@@ -48,7 +48,7 @@ public class AwesomeResourceContext implements IResourceContext{
 		
 	}
 
-	// Sollte man hier noch überprüfen, ob Ressourcen überhaupt geblockt werden können? Also if (resource.isAvailable() == true) ?
+	// Sollte man hier noch ï¿½berprï¿½fen, ob Ressourcen ï¿½berhaupt geblockt werden kï¿½nnen? Also if (resource.isAvailable() == true) ?
 	@Override
 	public void blockResources(List<String> resources) {
 		//System.out.println("Blocking "+printList(resources));
@@ -77,7 +77,7 @@ public class AwesomeResourceContext implements IResourceContext{
 		
 		
 	}
-	// Wofür ist das gedacht?
+	// Wofï¿½r ist das gedacht?
 	private String printList(List<String> resources2) {
 		String result ="";
 		for(String s:resources2)

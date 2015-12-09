@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
 public class ResourceStore {
@@ -25,8 +26,19 @@ public class ResourceStore {
 	public IResource getResource(String name){
 		return resources.get(name);
 	}
+	
+	public IResource instantiateResource(String type, String name, int amount){
+		if(!type.equals("resourceSet"))
+			throw new ParameterException("can only instantiate Resource Set with amount");
+		ResourceSet rs = new ResourceSet(name, amount);
+		resources.put(name, rs);
 		
-	//Die Idee ist, anhand eines Präfixes die Anzahl der verfügbaren Ressourcen zu erfahren. 
+		for(IResource res:rs.getRes()) resources.put(res.getName(), res);
+		return rs;
+	}
+	
+		
+	//Die Idee ist, anhand eines Prï¿½fixes die Anzahl der verfï¿½gbaren Ressourcen zu erfahren. 
 	//Bisher haben Ressourcen eindeutige Namen nach dem Muster Hammer1, Hammer2, Hammer3 usw, deswegen sollte das funktionieren.
 	public int countAvailable(String prefix){
 		int result = 0;
