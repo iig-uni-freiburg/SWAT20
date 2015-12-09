@@ -38,11 +38,6 @@ public class ContextRepo {
 	public static IResourceContext getResourceContext() {
 		if (resourceContext == null) {
 			 resourceContext = new AwesomeResourceContext();
-			 
-			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher1"));
-			resourceContext.addResourceUsage("test", new SimpleResource("Schraubenzieher2"));
-			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher1"));
-			resourceContext.addResourceUsage("test2", new SimpleResource("Schraubenzieher2"));
 			
 			//Jascha
 			resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker"));
@@ -55,17 +50,17 @@ public class ContextRepo {
 			IResource werkzeugkasten = new CompoundResource("werkzeuge",werkzeuge);
 			resourceContext.addResourceUsage("Handwerkerarbeit", werkzeugkasten);
 			
-			// Neue Ressource Waschmaschine wird gleichzeitig dem ResourceStore hinzugefügt.
+			// Neue Ressource Waschmaschine wird gleichzeitig dem ResourceStore hinzugefï¿½gt.
 			resourceContext.addResourceUsage("Waschen", new SimpleResource("Waschmaschine", resourceContext.getResourceStore()));
-			// Zählen der verfügbaren Hämmer
+			// Zï¿½hlen der verfï¿½gbaren Hï¿½mmer
 			resourceContext.getResourceStore().countAvailable("Hammer");
 
-			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1");
-			 IResource schrauebzieher2 = new SimpleResource("Schraubenzieher2");
-			 IResource schrauebzieher3 = new SimpleResource("Schraubenzieher3");
-			 IResource schrauebzieher4 = new SimpleResource("Schraubenzieher4");
-			 IResource schrauebzieher5 = new SimpleResource("Schraubenzieher5");
-			 IResource schrauebzieher6 = new SimpleResource("Schraubenzieher6");
+			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1", resourceContext.getResourceStore());
+			 IResource schrauebzieher2 = new SimpleResource("Schraubenzieher2", resourceContext.getResourceStore());
+			 IResource schrauebzieher3 = new SimpleResource("Schraubenzieher3", resourceContext.getResourceStore());
+			 IResource schrauebzieher4 = new SimpleResource("Schraubenzieher4", resourceContext.getResourceStore());
+			 IResource schrauebzieher5 = new SimpleResource("Schraubenzieher5", resourceContext.getResourceStore());
+			 IResource schrauebzieher6 = new SimpleResource("Schraubenzieher6", resourceContext.getResourceStore());
 			resourceContext.addResourceUsage("test", schrauebzieher1);
 			resourceContext.addResourceUsage("test", schrauebzieher2);
 			resourceContext.addResourceUsage("test", schrauebzieher3);

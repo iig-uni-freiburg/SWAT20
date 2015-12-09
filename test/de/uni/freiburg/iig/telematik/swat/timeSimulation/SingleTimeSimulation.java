@@ -49,7 +49,7 @@ public class SingleTimeSimulation {
 		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-6",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
 		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
 		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
@@ -59,7 +59,7 @@ public class SingleTimeSimulation {
 		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
-		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(12345);
+		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(1234);
 		StatisticListener listener=StatisticListener.getInstance();
 		
 		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
