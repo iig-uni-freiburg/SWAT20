@@ -237,12 +237,10 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
             return (ViewComponent) getComponentAt(getTabCount() - 1);
         } catch (ParameterException e) {
             Workbench.errorMessage("Cannot display component", e, false);
-            e.printStackTrace();
             //JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
             return null;
         } catch (Exception e) {
             Workbench.errorMessage("Cannot display component", e, false);
-            e.printStackTrace();
             return null;
         }
     }
@@ -432,6 +430,10 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
 						wolfgang = new WolfgangPT();				
 					else if (pnEditor instanceof CPNEditorComponent)
 	                	wolfgang = new WolfgangCPN();
+					else if (pnEditor instanceof RTPNEditorComponent)
+						wolfgang = new WolfgangPT();
+					else
+						wolfgang = new WolfgangPT();
 	                /*
 	                 * WolfgangIF() do not exist at the moment
 	                 * 
