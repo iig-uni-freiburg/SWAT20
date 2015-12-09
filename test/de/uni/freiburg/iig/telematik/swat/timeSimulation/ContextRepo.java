@@ -49,10 +49,10 @@ public class ContextRepo {
 			List<IResource> werkzeuge = new LinkedList<IResource>();
 			werkzeuge.add(new SimpleResource("Hammer"));
 			werkzeuge.add(new SimpleResource("Kreuzschlitz_klein"));
-			werkzeuge.add(new SimpleResource("Kreuzschlitz_groß"));
+			werkzeuge.add(new SimpleResource("Kreuzschlitz_gross"));
 			IResource schraubenset = new CompoundResource("Schraubenset");
 			werkzeuge.add(schraubenset);
-			IResource werkzeugkasten = new CompoundResource(werkzeuge);
+			IResource werkzeugkasten = new CompoundResource("werkzeuge",werkzeuge);
 			resourceContext.addResourceUsage("Handwerkerarbeit", werkzeugkasten);
 			
 			// Neue Ressource Waschmaschine wird gleichzeitig dem ResourceStore hinzugefügt.
@@ -78,7 +78,6 @@ public class ContextRepo {
 			//resourceContext.addResourceUsage("test3", schrauebzieher6);
 			resourceContext.addResourceUsage("test4", schrauebzieher4);
 			resourceContext.addResourceUsage("test4", schrauebzieher5);
-
 		}
 		return resourceContext;
 	}

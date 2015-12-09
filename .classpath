@@ -39,6 +39,6 @@
 	<classpathentry kind="lib" path="lib/jfreechart/jfreechart-1.0.19.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/WOLFGANG"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SEWOL"/>
-	<classpathentry kind="lib" path="lib/SCIFF.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SCIFF"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
