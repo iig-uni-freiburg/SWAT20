@@ -3,11 +3,12 @@ package de.uni.freiburg.iig.telematik.swat.jascha;
 public class SimpleResource extends Resource {
 
 	protected boolean isAvailable;
-	private static String type = "simple";
+	//private static String type = "simple";
 
 	public SimpleResource(String name) {
 		super(name); // Um den Namen soll sich die Über-Klasse kümmern
 		isAvailable=true;
+		type=ResourceType.SIMPLE;
 	}
 	
 	//Konstruktor, bei dem die Ressource gleich in ein ResourceStore eingetragen wird.
@@ -35,11 +36,6 @@ public class SimpleResource extends Resource {
 	@Override
 	public void reset() {
 		isAvailable=true;
-		
-	}
-	
-	public String getType(){
-		return type;
 	}
 
 }

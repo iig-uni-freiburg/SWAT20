@@ -6,8 +6,6 @@ import java.util.List;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
 public class CompoundResource extends Resource {
-	
-	private static String type = "compound";
 
 	List<IResource> resources = new ArrayList<>();
 
@@ -90,10 +88,6 @@ public class CompoundResource extends Resource {
 	public void reset() {
 		for(IResource r:resources)
 			r.reset();
-	}
-	
-	public String getType(){
-		return type;
 	}
 
 }

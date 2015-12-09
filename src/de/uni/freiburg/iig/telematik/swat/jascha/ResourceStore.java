@@ -27,8 +27,8 @@ public class ResourceStore {
 		return resources.get(name);
 	}
 	
-	public IResource instantiateResource(String type, String name, int amount){
-		if(!type.equals("resourceSet"))
+	public IResource instantiateResource(ResourceType type, String name, int amount){
+		if(!type.equals(ResourceType.SET))
 			throw new ParameterException("can only instantiate Resource Set with amount");
 		ResourceSet rs = new ResourceSet(name, amount);
 		resources.put(name, rs);

@@ -4,16 +4,17 @@ public class SharedResource extends Resource {
 	
 	protected float usage=0.0f;
 	protected float increment=0.1f; //increment usage by x percent
-	private static String type = "shared";
 
 	public SharedResource(String name) {
 		super(name);
+		type=ResourceType.SHARED;
 	}
 	
 	//Konstruktor, bei dem die Ressource gleich in ein ResourceStore eingetragen wird.
 	public SharedResource(String name, ResourceStore resourceStore){
 		super(name);
 		resourceStore.addResource(this);
+		type=ResourceType.SHARED;
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class SharedResource extends Resource {
 		this.usage+=increment;
 	}
 	
-	// Benutzung um bestimmten Anteil erhöhen, nicht nur um feste 10%
+	// Benutzung um bestimmten Anteil erhï¿½hen, nicht nur um feste 10%
 	public void incrementUsageBy(float f){
 		if (usage + f <= 1.0){
 			this.usage+= f;
@@ -63,12 +64,6 @@ public class SharedResource extends Resource {
 	public void reset() {
 		usage=0f;
 		
-	}
-	
-	public String getType(){
-		return type;
-	}
-	
-	
+	}	
 
 }
