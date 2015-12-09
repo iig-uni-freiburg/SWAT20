@@ -52,11 +52,13 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SimulateTimeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.RTPNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.WrapLayout;
 
 /**
@@ -168,9 +170,32 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
         standardItems.add(getAnalysisRadioButton());
         standardItems.add(getEditRadioButton());
+        standardItems.add(getTimeSimulationButton());
     }
 
-    private void removeBorder() {
+    private JComponent getTimeSimulationButton() {
+    	JButton simulateTime = new JButton(new SimulateTimeAction());
+		//Test if timedPetriNets exist
+    	boolean showTheButton = false;
+		int length;
+		try {
+			length = SwatTabView.getInstance().getTabCount();
+			for(int i = 0;i<length;i++){
+				Object o = SwatTabView.getInstance().getTabComponentAt(i);
+				if(o instanceof RTPNEditorComponent){
+					showTheButton=true;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			Workbench.errorMessage("Could not traverse TabView", e, false);
+		}
+		if(!showTheButton)
+			simulateTime.setEnabled(false);
+		return simulateTime;
+	}
+
+	private void removeBorder() {
         Border emptyBorder = BorderFactory.createEmptyBorder();
         for (JComponent button : standardItems) {
             button.setBorder(emptyBorder);
