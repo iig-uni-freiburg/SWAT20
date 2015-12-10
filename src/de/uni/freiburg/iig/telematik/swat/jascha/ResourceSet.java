@@ -3,44 +3,73 @@ package de.uni.freiburg.iig.telematik.swat.jascha;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.invation.code.toval.validate.ParameterException;
+
 public class ResourceSet extends Resource {
 	
-	List<Resource> res = new LinkedList<>();
-	String type ="resourceSet";
+	List<Resource> resources = new LinkedList<>();
 	
 	public List<Resource> getRes() {
-		return res;
+		return resources;
 	}
 
 	public ResourceSet(String name, int amount) {
 		this.name = name;
 		for (int i = 0;i<amount;i++){
-			res.add(new SimpleResource(name+"-"+i));
+			resources.add(new SimpleResource(name+"-"+i));
 		}
 	}
 
 	@Override
 	public boolean isAvailable() {
-		// TODO Auto-generated method stub
-		return false;
+		for (Resource r:resources){
+			if (!r.isAvailable()){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public void use() {
-		// TODO Auto-generated method stub
+		for (Resource r:resources){
+			r.use();
+		}
 
 	}
 
 	@Override
 	public void unUse() {
-		// TODO Auto-generated method stub
+		for (Resource r:resources){
+			r.unUse();
+		}
 
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
+		for (Resource r:resources){
+			r.reset();
+		}
 
+	}
+	
+	public boolean isOneAvailable() {
+		for(Resource r:resources){
+			if (r.isAvailable()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Resource getRandomAvailable(){
+		for(Resource r:resources){
+			if(r.isAvailable()){
+				return r;
+			}
+		}
+		throw new ParameterException("There is no resource available in this ResourceSet!");
 	}
 
 }

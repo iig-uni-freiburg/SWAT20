@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceC
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
+import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 import de.uni.freiburg.iig.telematik.swat.jascha.SimpleResource;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
@@ -52,12 +53,11 @@ public class ContextRepo {
 			IResource schraubenset = new CompoundResource("Schraubenset");
 			werkzeuge.add(schraubenset);
 			IResource werkzeugkasten = new CompoundResource("werkzeuge",werkzeuge);
-			resourceContext.addResourceUsage("Handwerkerarbeit", werkzeugkasten);
+			resourceContext.addResourceUsage("Handwerkerarbeit", werkzeugkasten);			
+			IResource rsTest1 = resourceContext.getResourceStore().instantiateResource(ResourceType.SIMPLE, "Zange");
+			IResource rsTest2 = resourceContext.getResourceStore().instantiateResource(ResourceType.SHARED, "Waschbecken");
+			IResource rsTest3 = resourceContext.getResourceStore().instantiateResource(ResourceType.SIMPLE, "Wasserhahn");
 			
-			// Neue Ressource Waschmaschine wird gleichzeitig dem ResourceStore hinzugef�gt.
-			resourceContext.addResourceUsage("Waschen", new SimpleResource("Waschmaschine", resourceContext.getResourceStore()));
-			// Z�hlen der verf�gbaren H�mmer
-			resourceContext.getResourceStore().countAvailable("Hammer");
 
 			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1", resourceContext.getResourceStore());
 			 IResource schrauebzieher2 = new SimpleResource("Schraubenzieher2", resourceContext.getResourceStore());

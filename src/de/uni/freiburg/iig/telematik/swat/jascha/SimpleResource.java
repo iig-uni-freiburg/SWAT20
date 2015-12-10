@@ -3,7 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.jascha;
 public class SimpleResource extends Resource {
 
 	protected boolean isAvailable;
-	//private static String type = "simple";
 
 	public SimpleResource(String name) {
 		super(name); // Um den Namen soll sich die Über-Klasse kümmern

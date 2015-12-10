@@ -8,25 +8,14 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 public class CompoundResource extends Resource {
 
 	List<IResource> resources = new ArrayList<>();
-
-	public CompoundResource() {
-		super("Compound");
-	}
 	
-	public CompoundResource(String name, List<IResource> resources){
+	public CompoundResource(String name, List<IResource> elements){
 		super(name);
-		this.resources=resources;
+		this.resources=elements;
 	}
 	
 	public CompoundResource(String name){
 		super(name);
-	}
-	
-	public CompoundResource(List<IResource> inputResources){
-		for (IResource r: inputResources){
-			addResource(r);
-		}
-		
 	}
 	
 	//Konstruktor, bei dem die Ressource gleich in ein ResourceStore eingetragen wird.
