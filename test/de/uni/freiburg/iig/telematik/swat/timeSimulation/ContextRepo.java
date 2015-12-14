@@ -43,6 +43,7 @@ public class ContextRepo {
 	public static IResourceContext getResourceContext() {
 		if (resourceContext == null) {
 			 resourceContext = new AwesomeResourceContext();
+			 resourceContext.setName("TestRepoContext");
 			
 			//Jascha
 			resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker"));

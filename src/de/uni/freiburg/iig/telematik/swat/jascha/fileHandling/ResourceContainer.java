@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.fileHandling;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +25,7 @@ public class ResourceContainer extends AbstractComponentContainer<IResourceConte
         setIgnoreIncompatibleFiles(true);
         setUseSubdirectoriesForComponents(true);
         this.addComponentListener(this);
+        setUseSubdirectoriesForComponents(false);
 	}
 
 	@Override
@@ -68,7 +70,11 @@ public class ResourceContainer extends AbstractComponentContainer<IResourceConte
 	}
 	
     public Set<String> getAcceptedFileEndings() {
-        return new HashSet<>(Arrays.asList(".xml"));
+        return new HashSet<>(Arrays.asList("xml"));
+    }
+    
+    protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
+            return new File(pathFile,componentName+ ".xml");
     }
 
 }

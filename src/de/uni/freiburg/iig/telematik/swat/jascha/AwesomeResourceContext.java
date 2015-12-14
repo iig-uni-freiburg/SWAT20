@@ -194,7 +194,7 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
+		this.name=name;
 		
 	}
 
