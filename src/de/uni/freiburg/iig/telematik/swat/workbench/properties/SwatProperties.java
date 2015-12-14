@@ -29,7 +29,7 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     protected static final String pathContexts = "contexts/";
     
     protected static final String timeContexts = "contexts/time/";
-    protected static final String resourceContexts = "contexts/resources";
+    protected static final String resourceContexts = "contexts/resources/";
     
     protected static final String pathNameAnalysisContext = "analysis-contexts/";
     protected static final String pathNameTimeContext = "time-contexts/";

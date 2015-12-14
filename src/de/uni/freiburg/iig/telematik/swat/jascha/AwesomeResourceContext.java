@@ -13,6 +13,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.TimeRessou
 
 public class AwesomeResourceContext implements IResourceContext{
 	
+	String name;
+	
 	//beinhaltet Liste mit Ressourcen-Objekten. Ressourcen-Objekt kann entweder selbst eine Liste haben oder eine einzelne Resource darstellen
 	Map<String,List<IResource>> resources = new HashMap<>(); //<Aktivity,Resources>
 	
@@ -38,14 +40,7 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setName() {
-		// TODO Auto-generated method stub
-		
+		return name;
 	}
 
 	// Sollte man hier noch �berpr�fen, ob Ressourcen �berhaupt geblockt werden k�nnen? Also if (resource.isAvailable() == true) ?
@@ -195,6 +190,12 @@ public class AwesomeResourceContext implements IResourceContext{
 			b.append("\r\n");
 		}
 		return b.toString();
+	}
+
+	@Override
+	public void setName(String name) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

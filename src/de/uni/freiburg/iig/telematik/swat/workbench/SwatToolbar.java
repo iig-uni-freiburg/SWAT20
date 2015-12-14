@@ -190,8 +190,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 		} catch (Exception e) {
 			Workbench.errorMessage("Could not traverse TabView", e, false);
 		}
-		if(!showTheButton)
-			simulateTime.setEnabled(false);
+//		if(!showTheButton)
+//			simulateTime.setEnabled(false);
 		return simulateTime;
 	}
 
