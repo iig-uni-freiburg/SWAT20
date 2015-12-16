@@ -1,16 +1,20 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceStoreListener;
 
 public class ResourceStore {
 	
 	protected static Map<String,IResource> resources;
+	
+	private LinkedList<ResourceStoreListener> listeners= new LinkedList<>();
 	
 	public ResourceStore(){
 		resources = new HashMap<>();
@@ -18,10 +22,12 @@ public class ResourceStore {
 	
 	public void addResource(IResource item){
 		resources.put(item.getName(), item);
+		informListenersOfResourceChange(item);
 	}
 	
 	public void removeResource(IResource item){
 		resources.remove(item.getName());
+		informListenersOfResourceRemoval(item);
 	}
 
 	public IResource getResource(String name){
@@ -38,6 +44,7 @@ public class ResourceStore {
 		ResourceSet rs = new ResourceSet(name, amount);
 		resources.put(name, rs);		
 		for(IResource res:rs.getRes()) resources.put(res.getName(), res);
+		informListenersOfResourceChange(rs);
 		return rs;
 	}
 	
@@ -69,7 +76,7 @@ public class ResourceStore {
 			resources.put(name, result);
 			break;
 		}
-		
+		informListenersOfResourceChange(result);
 		return result;
 	}
 	// Compound Resource with List of IResource Objects as content
@@ -118,6 +125,10 @@ public class ResourceStore {
 		return false;
 	}
 	
+	/**
+	 * Return all IResources in this store
+	 * @return array of all resources
+	 */
 	public IResource[] getAllResources(){
 		IResource[] result = new IResource[resources.values().size()];
 		int i = 0;
@@ -126,5 +137,21 @@ public class ResourceStore {
 			i++;
 		}
 		return result;
+	}
+	
+	public void addResourceStoreListener(ResourceStoreListener listener){
+		listeners.add(listener);
+	}
+	
+	private void informListenersOfResourceChange(IResource res){
+		//Info Jascha: Methode informiert die grafische Oberfläche, falls eine Resource hinzugefügt wurde. Siehe gui/ResourceStoreGUI
+		for (ResourceStoreListener listener:listeners)
+			listener.resourceStoreElementAdded(res);
+	}
+	
+	private void informListenersOfResourceRemoval(IResource res){
+		//Info Jascha: Methode informiert die grafische Oberfläche, falls eine Resource entfernt wurde
+		for (ResourceStoreListener listener:listeners)
+			listener.informStoreElementRemoved(res);
 	}
 }

@@ -1,10 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.gui;
 
 import java.awt.Dimension;
-import java.awt.LayoutManager;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,36 +11,35 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 
-public class ResourceManaging extends JFrame{
-	
+public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
+
+	private static final long serialVersionUID = 1L;
 	ResourceStore resourceStore;
 	JList<IResource> list;
+	DefaultListModel<IResource> model = new javax.swing.DefaultListModel<>();
 	
 	public static void main (String args[]){
 		ResourceStore store = new ResourceStore();
-		store.instantiateResource(ResourceType.SIMPLE, "bla 1");
-		store.instantiateResource(ResourceType.SIMPLE, "Werkzeug2");
-		store.instantiateResource(ResourceType.SIMPLE, "Hammer3");
-		store.instantiateResource(ResourceType.SIMPLE, "bla 2");
-		store.instantiateResource(ResourceType.SIMPLE, "Werkzeug 3");
-		store.instantiateResource(ResourceType.SIMPLE, "Hammer 5");
-		ResourceManaging manager = new ResourceManaging(store);
+		store.instantiateResource(ResourceType.SET, "Hammer",4);
+		store.instantiateResource(ResourceType.SIMPLE, "Säge");
+		store.instantiateResource(ResourceType.SIMPLE, "Holzbrett");
+		ResourceStoreGUI manager = new ResourceStoreGUI(store);
 		manager.setVisible(true);
 	}
 	
-	public ResourceManaging(){
+	public ResourceStoreGUI(){
 		resourceStore=new ResourceStore(); 
+		resourceStore.addResourceStoreListener(this);
 		setUpFrame();
 	}
 	
-	public ResourceManaging(ResourceStore store){
+	public ResourceStoreGUI(ResourceStore store){
 		resourceStore=store;
+		resourceStore.addResourceStoreListener(this);
 		setUpFrame();
 	}
 	
@@ -65,7 +63,10 @@ public class ResourceManaging extends JFrame{
 	}
 	
 	private JScrollPane updateList(){
-		list = new JList<>(resourceStore.getAllResources());
+		list = new JList<>();
+		list.setModel(model);
+		for(IResource res:resourceStore.getAllResources())
+			model.addElement(res);
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -79,6 +80,7 @@ public class ResourceManaging extends JFrame{
 		JButton plus = new JButton("t");
 		plus.setText("+");
 		plus.setSize(new Dimension(50, 50));
+		plus.addActionListener(new addResourceAction(resourceStore));
 		//plus.setPreferredSize(new Dimension(10, 10));
 		return plus;
 	}
@@ -89,6 +91,16 @@ public class ResourceManaging extends JFrame{
 		another.setSize(new Dimension(50, 50));
 		//plus.setPreferredSize(new Dimension(10, 10));
 		return another;
+	}
+
+	@Override
+	public void resourceStoreElementAdded(IResource res) {
+		model.addElement(res);
+	}
+
+	@Override
+	public void informStoreElementRemoved(IResource resource) {
+		model.removeElement(resource);
 	}
 
 }
