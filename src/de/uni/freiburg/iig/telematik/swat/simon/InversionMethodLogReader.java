@@ -69,6 +69,7 @@ public class InversionMethodLogReader {
 	}
 	
 	public Long inversionMethod(HashMap<Long, Double> map) {
+
 		long a = 0;
 		double random = Math.random();
 		double sum = 0;

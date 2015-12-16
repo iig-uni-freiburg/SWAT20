@@ -4,12 +4,13 @@ import java.util.HashMap;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 
-public class MeasuredTimeBahviour implements ITimeBehaviour {
+public class MeasuredTimeBehaviour implements ITimeBehaviour {
 	
 	HashMap<Long, Double> map = new HashMap<>();
 	
-	public MeasuredTimeBahviour(HashMap<Long, Double> map){
+	public MeasuredTimeBehaviour(HashMap<Long, Double> map){
 		this.map=map;
+		//hier inversions-array erstellen, dann muss bei getNeededTime nicht ständig die Summe neu berechnet werden.
 	}
 
 	public HashMap<Long, Double> getMap() {
