@@ -13,9 +13,22 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.TimeRessou
 
 public class AwesomeResourceContext implements IResourceContext{
 	
+	String name;
+	
 	//beinhaltet Liste mit Ressourcen-Objekten. Ressourcen-Objekt kann entweder selbst eine Liste haben oder eine einzelne Resource darstellen
-	Map<String,List<IResource>> resources = new HashMap<>();
-
+	Map<String,List<IResource>> resources = new HashMap<>(); //<Aktivity,Resources>
+	
+	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enth�lt.
+	ResourceStore resourceStore = new ResourceStore();
+	
+	
+	public AwesomeResourceContext() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public ResourceStore getResourceStore(){
+		return resourceStore;
+	}
 
 	@Override
 	public boolean isAvailable(String ressourceName) {
@@ -27,26 +40,39 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
-	@Override
-	public void setName() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	// Sollte man hier noch �berpr�fen, ob Ressourcen �berhaupt geblockt werden k�nnen? Also if (resource.isAvailable() == true) ?
 	@Override
 	public void blockResources(List<String> resources) {
 		//System.out.println("Blocking "+printList(resources));
 		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
-			//System.out.println("Setting: Blocking "+resource);
-			getResource(resource).use();
+						
+			IResource r = getResource(resource);
+			if (r.isAvailable()){
+				//System.out.println("Setting: Blocking "+resource);
+				r.use();
+			}
+			else {
+				//Throw error that r can't be blocked because it's already in use
+			} 
 		}
 		
+		/* Alternative mit ResourceStore
+		 * for(String resource:resources){
+			IResource r = resourceStore.getResource(resource);
+			if (r.isAvailable()){
+				r.use();
+			}
+			else {
+				//Throw error that r can't be blocked because it's already in use
+			}
+		} */
+		
+		
 	}
-
+	// Wof�r ist das gedacht?
 	private String printList(List<String> resources2) {
 		String result ="";
 		for(String s:resources2)
@@ -63,6 +89,12 @@ public class AwesomeResourceContext implements IResourceContext{
 			getResource(resource).unUse();
 		}
 		
+		/* Alternative mit ResourceStore
+		for(String resource:resources){
+			resourceStore.getResource(resource).unUse();
+		}
+		*/
+		
 	}
 	
 	protected IResource getResource(String resource){
@@ -73,7 +105,15 @@ public class AwesomeResourceContext implements IResourceContext{
 					return r;
 			}
 		}
+		
 		return new SimpleResource("dummy");
+		
+		/* Alternative mit Liste aller Ressourcen im ResourceStore
+		 *  
+		 * return resourceStore.getResource(resource);
+		 */
+		
+
 	}
 
 	@Override
@@ -108,14 +148,14 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public IResource getResourceObject(String resourceName) {
-		// TODO Auto-generated method stub
-		return null;
+		return getResource(resourceName);
 	}
 	
 	public void addResourceUsage(String activity, IResource resource){
 		if(resources.containsKey(activity)){
 			resources.get(activity).add(resource); //TODO: check if resource is already inside the list!
-		} else {
+		} 
+		else {
 			ArrayList<IResource> list = new ArrayList<>();
 			list.add(resource);
 			resources.put(activity, list);
@@ -150,6 +190,12 @@ public class AwesomeResourceContext implements IResourceContext{
 			b.append("\r\n");
 		}
 		return b.toString();
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name=name;
+		
 	}
 
 }

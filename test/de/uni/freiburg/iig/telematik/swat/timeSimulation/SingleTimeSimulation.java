@@ -26,6 +26,7 @@ import org.jfree.data.statistics.HistogramType;
 
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.abstr.StatisticListener;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.misc.plots.CumulativeHistrogram;
 import de.uni.freiburg.iig.telematik.swat.misc.plots.SimulationHistogram;
@@ -38,85 +39,44 @@ public class SingleTimeSimulation {
 		
 		WorkflowTimeMachine timeMachine = WorkflowTimeMachine.getInstance();
 		
-		//timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-1",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-1",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-1",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-1",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-6",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
-		//timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
-		//timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
-		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		
+		timeMachine.addNet(TimedNetRep.getComplexNet("complex-1", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getComplexNet("complex-2", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getComplexNet("complex-3", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		timeMachine.addNet(TimedNetRep.getComplexNet("complex-4", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
 		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(12345);
+		StatisticListener listener=StatisticListener.getInstance();
 		
-		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
-			//generateDiagram(entry.getValue(), 100, entry.getKey());
-			new SimulationHistogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
-			new CumulativeHistrogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
-		}
+		new SimulationHistogram(result.get("linear-1"), 100, "simulation results", "linear-1").setVisible(true);
+		new SimulationHistogram(result.get("and-1"), 100, "simulation results", "and-1").setVisible(true);
+		new SimulationHistogram(result.get("or-1"), 100, "simulation results", "or-1").setVisible(true);
+		new SimulationHistogram(result.get("complex-1"), 100, "simulation results", "complex-1").setVisible(true);
 		
-		//nets.put("linear", TimedNetRep.getSimpleLinearTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//nets.put("Parallel AND",TimedNetRep.getSimpleANDTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		//nets.put("OR", TimedNetRep.getSimpleORTimedNet(ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-
-		//TimedNet net = TimedNetRep.getSimpleORTimedNet(getResourceContext(), getTimeContext());
-		//TimedNet net = TimedNetRep.getSimpleANDTimedNet(getResourceContext(), getTimeContext());
-		//TimedNet net = TimedNetRep.getSimpleLinearTimedNet(getResourceContext(), getTimeContext());
-		
-		// getCurrentTimeOfNet(net);
-		// fireNet(net);
-		// getCurrentTimeOfNet(net);
-		// fireNet(net);
-		// getCurrentTimeOfNet(net);
-		// fireNet(net);
-		// getCurrentTimeOfNet(net);
-		// fireNet(net);
-		// getCurrentTimeOfNet(net);
-
-//		for(Entry<String, TimedNet> e:nets.entrySet()){
-//			ArrayList<Double> results = simulateNet(e.getValue());
-//			generateDiagram(results, 100 ,e.getKey());
+//		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
+//			//generateDiagram(entry.getValue(), 100, entry.getKey());
+//			new SimulationHistogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
+//			new CumulativeHistrogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
 //		}
-		
-		
-	}
-	
-	public static ArrayList<Double> simulateNet(TimedNet net){
-		ArrayList<Double> results = new ArrayList<>();
-		for (int i = 0; i<123456; i++) {
-			try {
-				while (!net.isFinished()) {
-					net.fire();
-					//getCurrentTimeOfNet(net);
-				}
-			} catch (PNException e) {
-				
-				//System.out.println("Net finished with time " + net.getCurrentTime());
-			}
-			results.add(net.getCurrentTime());
-			net.reset();
-		}
-		return results;
-	}
-
-	public static void fireNet(TimedNet net) {
-		try {
-			net.fire();
-		} catch (PNException e) {
-		}
-	}
-
-	public static void getCurrentTimeOfNet(TimedNet net) {
-		System.out.println("Current net-time is: " + net.getCurrentTime());
 	}
 
 }

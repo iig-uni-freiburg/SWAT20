@@ -12,16 +12,17 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import de.invation.code.toval.parser.ParserException;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
 
 
-public class LogReader {
+public class InversionMethodLogReader {
 
 	
 	
-	public LogReader() {
+	public InversionMethodLogReader() {
 		
 	}
 	
@@ -68,10 +69,6 @@ public class LogReader {
 	}
 	
 	public Long inversionMethod(HashMap<Long, Double> map) {
-		//map beinhaltet Dauer und Auftrittswahrscheinlichkeit der Dauer
-		//Es soll je nach gewichtung der Haufigkeiten der entsprechende Wert zuruckgegeben werden
-		//Zufallsvariable wird gebildet, sum wird mit Haufigkeiten der einzelnen Dauern summiert
-		//wenn random <= sum wird die zum key gehorende Dauer zuruckgeliefert
 		long a = 0;
 		double random = Math.random();
 		double sum = 0;
@@ -80,7 +77,6 @@ public class LogReader {
 			sum += map.get(key);
 			System.out.println("sum " + sum);
 		if(random <= sum) {
-			// key ist zeitdauer
 			a=  key;
 			System.out.println(a);
 			break;
@@ -107,19 +103,19 @@ public class LogReader {
 	   System.out.println(map.values().toString());
 	    return map;
 	}
-	/*
+	/**
 	 * Get time difference between start and endtime of an activity
 	 * 
-	 */
+	 **/
 	public static long getDateDiff(Date endTime, Date startTime, TimeUnit timeUnit) {
 	    long diffInMillies = endTime.getTime() - startTime.getTime();
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 	
 	
-	/*
+	/**
 	 * Get List of Pairs with start and end times of an activity
-	 */
+	 **/
 	public ArrayList<Pair> getTimeofActivity(String logPath, String activity) {
 		ArrayList<Pair> startEndTime = new ArrayList<>();
 		List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);

@@ -7,8 +7,16 @@ public class SimpleResource extends Resource {
 	public SimpleResource(String name) {
 		super(name); // Um den Namen soll sich die Über-Klasse kümmern
 		isAvailable=true;
+		type=ResourceType.SIMPLE;
 	}
-
+	
+	//Konstruktor, bei dem die Ressource gleich in ein ResourceStore eingetragen wird.
+	public SimpleResource(String name, ResourceStore resourceStore){
+		super(name);
+		isAvailable=true;
+		resourceStore.addResource(this);
+	}
+	
 	public boolean isAvailable() {
 		return isAvailable;
 	}
@@ -27,7 +35,6 @@ public class SimpleResource extends Resource {
 	@Override
 	public void reset() {
 		isAvailable=true;
-		
 	}
 
 }

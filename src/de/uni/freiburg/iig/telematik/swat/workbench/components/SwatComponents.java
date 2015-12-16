@@ -8,8 +8,10 @@ import de.invation.code.toval.graphic.dialog.MessageDialog;
 import de.invation.code.toval.misc.wd.AbstractProjectComponents;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.properties.PropertyException;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.ACModelContainer;
 import de.uni.freiburg.iig.telematik.sewol.context.process.ProcessContextContainer;
+import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.AbstractLogModelContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.AristaflowLogContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
@@ -34,6 +36,7 @@ public class SwatComponents extends AbstractProjectComponents {
     private ACModelContainer containerACModels;
     private SwatPNContainer containerPetriNets;
     private Map<SwatLogType, AbstractLogModelContainer> logModelContainers;
+    private ResourceContainer resourceContainer;
 
     public SwatComponents() throws ProjectComponentException {
         super(MessageDialog.getInstance());
@@ -56,6 +59,10 @@ public class SwatComponents extends AbstractProjectComponents {
 
     public SwatPNContainer getContainerPetriNets() {
         return containerPetriNets;
+    }
+    
+    public ResourceContainer getResourceContainer(){
+    	return resourceContainer;
     }
     
     public XesLogContainer getContainerXESLogs(){
@@ -133,6 +140,9 @@ public class SwatComponents extends AbstractProjectComponents {
             getContainerMXMLLogs().loadComponents();
             getContainerAristaflowLogs().loadComponents();
             getContainerXESLogs().loadComponents();
+            
+            resourceContainer = new ResourceContainer(SwatProperties.getInstance().getPathForResourceContexts(),MessageDialog.getInstance());
+            resourceContainer.loadComponents();
 
             // Analyses
         } catch (Exception e) {

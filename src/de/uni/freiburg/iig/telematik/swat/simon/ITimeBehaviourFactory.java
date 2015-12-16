@@ -17,7 +17,7 @@ public class ITimeBehaviourFactory {
 		for (int i = 0; i < 10; i++)
 			System.out.println("Get needed time: " + test.getNeededTime());
 		LogReader reader = new LogReader();
-		reader.inversionMethod(reader.probabilityTimeDiagram(reader.createHistogram("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/02_B after N occurences of A.mxml", "A")));
+		reader.inversionMethod(reader.probabilityTimeDiagram(reader.createHistogram("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A")));
 		
 		//reader.parseLog("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml");
 	}
