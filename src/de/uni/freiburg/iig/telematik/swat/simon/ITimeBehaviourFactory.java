@@ -17,9 +17,13 @@ public class ITimeBehaviourFactory {
 		for (int i = 0; i < 10; i++)
 			System.out.println("Get needed time: " + test.getNeededTime());
 
-		
 		InversionMethodLogReader reader = new InversionMethodLogReader();
 		reader.inversionMethod(reader.probabilityTimeDiagram(reader.createHistogram("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A")));
+
+		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A");
+		for (int i = 0; i<100;i++){
+			System.out.println(measuredBehaviour.getNeededTime());
+		}
 
 		
 		//reader.parseLog("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml");
@@ -51,9 +55,13 @@ public class ITimeBehaviourFactory {
 		return null;
 	}
 	
-	public static ITimeBehaviour getBehaviour(String path, String activity) {
-		InversionMethodLogReader log = new InversionMethodLogReader();
-		return new MeasuredTimeBahviour(log.probabilityTimeDiagram(log.createHistogram(path, activity)));
+
+	
+
+	public static ITimeBehaviour getBehaviour(String path, String activity){
+		InversionMethodLogReader reader = new InversionMethodLogReader();
+		return new MeasuredTimeBahviour(reader.probabilityTimeDiagram(reader.createHistogram(path, activity)));
+
 	}
 
 }

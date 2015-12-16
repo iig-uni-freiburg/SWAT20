@@ -72,6 +72,8 @@ public class SingleTimeSimulation {
 		new SimulationHistogram(result.get("or-1"), 100, "simulation results", "or-1").setVisible(true);
 		new SimulationHistogram(result.get("complex-1"), 100, "simulation results", "complex-1").setVisible(true);
 		
+		new CumulativeHistrogram(result.get("linear-1"), 100, "simulation results", "linear-1").setVisible(true);
+		
 //		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
 //			//generateDiagram(entry.getValue(), 100, entry.getKey());
 //			new SimulationHistogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
