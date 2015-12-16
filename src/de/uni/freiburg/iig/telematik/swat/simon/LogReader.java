@@ -68,6 +68,10 @@ public class LogReader {
 	}
 	
 	public Long inversionMethod(HashMap<Long, Double> map) {
+		//map beinhaltet Dauer und Auftrittswahrscheinlichkeit der Dauer
+		//Es soll je nach gewichtung der Haufigkeiten der entsprechende Wert zuruckgegeben werden
+		//Zufallsvariable wird gebildet, sum wird mit Haufigkeiten der einzelnen Dauern summiert
+		//wenn random <= sum wird die zum key gehorende Dauer zuruckgeliefert
 		long a = 0;
 		double random = Math.random();
 		double sum = 0;
@@ -76,6 +80,7 @@ public class LogReader {
 			sum += map.get(key);
 			System.out.println("sum " + sum);
 		if(random <= sum) {
+			// key ist zeitdauer
 			a=  key;
 			System.out.println(a);
 			break;
