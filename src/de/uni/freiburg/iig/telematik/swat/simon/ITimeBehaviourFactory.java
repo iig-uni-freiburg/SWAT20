@@ -16,7 +16,7 @@ public class ITimeBehaviourFactory {
 		ITimeBehaviour test = ITimeBehaviourFactory.getBahaviour(DistributionType.NORMAL, parameter);
 		for (int i = 0; i < 10; i++)
 			System.out.println("Get needed time: " + test.getNeededTime());
-		InversionMethodLogReader reader = new InversionMethodLogReader();
+		LogReader reader = new LogReader();
 		reader.inversionMethod(reader.probabilityTimeDiagram(reader.createHistogram("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A")));
 		
 		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A");
@@ -33,6 +33,7 @@ public class ITimeBehaviourFactory {
 			return new NormalDistributedBehaviour(params.get(0), params.get(1));
 		case LOG_NORMAL:
 			return new LogNormalDistributedBavahiour(params.get(0), params.get(1));
+			
 		case CAUCHY:
 			return new CauchyDistributedBehaviour(params.get(0), params.get(1));
 		case EXPONENTIAL:
@@ -47,15 +48,14 @@ public class ITimeBehaviourFactory {
 			return new BetaDistributedBehaviour(params.get(0), params.get(1));
 		case F:
 			return new FDistributedBehaviour(params.get(0), params.get(1));
+
+		
+
+
 		default:
 			break;
 		}
 		return null;
-	}
-	
-	public static ITimeBehaviour getBehaviour(String path, String activity) {
-		InversionMethodLogReader log = new InversionMethodLogReader();
-		return new MeasuredTimeBahviour(log.probabilityTimeDiagram(log.createHistogram(path, activity)));
 	}
 
 }
