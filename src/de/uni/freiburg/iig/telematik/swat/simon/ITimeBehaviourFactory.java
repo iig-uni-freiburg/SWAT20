@@ -19,6 +19,11 @@ public class ITimeBehaviourFactory {
 		InversionMethodLogReader reader = new InversionMethodLogReader();
 		reader.inversionMethod(reader.probabilityTimeDiagram(reader.createHistogram("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A")));
 		
+		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A");
+		for (int i = 0; i<100;i++){
+			System.out.println(measuredBehaviour.getNeededTime());
+		}
+		
 		//reader.parseLog("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml");
 	}
 
