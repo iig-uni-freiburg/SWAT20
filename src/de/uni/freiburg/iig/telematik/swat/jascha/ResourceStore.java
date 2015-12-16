@@ -117,4 +117,14 @@ public class ResourceStore {
 		
 		return false;
 	}
+	
+	public IResource[] getAllResources(){
+		IResource[] result = new IResource[resources.values().size()];
+		int i = 0;
+		for(IResource res:resources.values()){
+			result[i]=res;
+			i++;
+		}
+		return result;
+	}
 }
