@@ -60,7 +60,7 @@ public class ITimeBehaviourFactory {
 
 	public static ITimeBehaviour getBehaviour(String path, String activity){
 		InversionMethodLogReader reader = new InversionMethodLogReader();
-		return new MeasuredTimeBahviour(reader.probabilityTimeDiagram(reader.createHistogram(path, activity)));
+		return new MeasuredTimeBehaviour(reader.probabilityTimeDiagram(reader.createHistogram(path, activity)));
 
 	}
 
