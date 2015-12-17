@@ -26,8 +26,12 @@ public class ResourceStore {
 	}
 	
 	public void removeResource(IResource item){
+		try{
 		resources.remove(item.getName());
 		informListenersOfResourceRemoval(item);
+		} catch (NullPointerException e){
+			//no element was selected!
+		}
 	}
 
 	public IResource getResource(String name){

@@ -4,10 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.JOptionPaneMultiInput;
 
 public class addDefinedResourceAction extends AbstractAction {
 	
@@ -24,10 +29,25 @@ public class addDefinedResourceAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String s = (String)JOptionPane.showInputDialog(null,"Enter name of new Resource:","Resource name", JOptionPane.PLAIN_MESSAGE);
-		store.instantiateResource(type, s);
+		switch (type) {
+		case SIMPLE:
+			String s = (String)JOptionPane.showInputDialog(null,"Enter name of new Resource:","Resource name", JOptionPane.PLAIN_MESSAGE);
+			store.instantiateResource(type, s);
+			break;
+		case SET:
+			String[] params = {"name","number"};
+			JOptionPaneMultiInput test = new JOptionPaneMultiInput(params);
+			break;
+
+		default:
+			break;
+		}
+		
 
 
 	}
+	
+
+
 
 }
