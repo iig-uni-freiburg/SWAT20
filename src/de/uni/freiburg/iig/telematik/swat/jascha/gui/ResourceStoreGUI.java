@@ -14,6 +14,8 @@ import javax.swing.ListSelectionModel;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.addResourceAction;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.removeResourceAction;
 
 public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 
@@ -57,8 +59,8 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	private void setUpElements(){
 		add(new JLabel("available resources: "));
 		add(updateList());
-		add(getAnotherButton());
 		add(getPlusButton());
+		add(getRemoveButton());
 		
 	}
 	
@@ -77,7 +79,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	}
 	
 	private JButton getPlusButton(){
-		JButton plus = new JButton("t");
+		JButton plus = new JButton("+");
 		plus.setText("+");
 		plus.setSize(new Dimension(50, 50));
 		plus.addActionListener(new addResourceAction(resourceStore));
@@ -85,12 +87,12 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		return plus;
 	}
 	
-	private JButton getAnotherButton(){
-		JButton another = new JButton("tgg");
-		another.setText("+++");
-		another.setSize(new Dimension(50, 50));
-		//plus.setPreferredSize(new Dimension(10, 10));
-		return another;
+	private JButton getRemoveButton(){
+		JButton minus = new JButton("-");
+		minus.setText("-");
+		minus.setSize(new Dimension(50, 50));
+		minus.addActionListener(new removeResourceAction(resourceStore, list));
+		return minus;
 	}
 
 	@Override

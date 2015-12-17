@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.jascha.gui;
+package de.uni.freiburg.iig.telematik.swat.jascha.gui.actions;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.BpmnImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.LogImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
 
+/** shows menu pop-up with all available resource types**/
 public class addResourceAction implements ActionListener {
 	
 	private ResourceStore store;

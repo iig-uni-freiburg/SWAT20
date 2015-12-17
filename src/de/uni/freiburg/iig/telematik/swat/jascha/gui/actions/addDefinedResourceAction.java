@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.jascha.gui;
+package de.uni.freiburg.iig.telematik.swat.jascha.gui.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
