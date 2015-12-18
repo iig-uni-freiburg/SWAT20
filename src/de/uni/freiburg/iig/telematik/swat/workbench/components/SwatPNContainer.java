@@ -10,14 +10,18 @@ import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalTimedNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPNNameComparator;
 import de.uni.freiburg.iig.telematik.sepia.graphic.container.AbstractGraphicalPNContainer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContextContainer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.abstr.AbstractTimedNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.ACModelContainer;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisContainer;
+import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceContainer;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContextContainer;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -418,6 +422,26 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
         for(TimeContextContainer timeContextContainer: timeContextContainers.values()){
             timeContextContainer.storeComponents();
         }
+    }
+    
+    public void linkResourceContexts(ResourceContainer resourceContainer){
+    	for (Object net: getComponents()){
+    		if (net instanceof AbstractGraphicalTimedNet){
+    			AbstractTimedNet timedNet = (AbstractTimedNet) ((AbstractGraphicalTimedNet)net).getPetriNet();
+    			try {
+					linkResourceContextToNet(timedNet, resourceContainer);
+				} catch (ProjectComponentException e) {
+					System.out.println("Could not find/link: "+timedNet.getResourceContextName());
+				}
+    		}
+    	}
+    }
+    
+    private void linkResourceContextToNet(AbstractTimedNet net, ResourceContainer container) throws ProjectComponentException{
+    	if(net.getResourceContextName()!=null && !net.getResourceContextName().isEmpty()){
+    		IResourceContext context = container.getComponent(net.getResourceContextName());
+    		net.setResourceContext(context);
+    	}
     }
 
 }

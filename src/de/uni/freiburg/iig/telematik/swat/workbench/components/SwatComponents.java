@@ -143,6 +143,8 @@ public class SwatComponents extends AbstractProjectComponents {
             
             resourceContainer = new ResourceContainer(SwatProperties.getInstance().getPathForResourceContexts(),MessageDialog.getInstance());
             resourceContainer.loadComponents();
+            
+            containerPetriNets.linkResourceContexts(getResourceContainer());
 
             // Analyses
         } catch (Exception e) {
