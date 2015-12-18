@@ -73,5 +73,11 @@ public class SharedResource extends Resource {
 		usage=0f;
 		
 	}
+	
+	public String getDetailString(){
+		String result = super.getDetailString();
+		result+=" max. simultaneous usage: "+1/increment;
+		return result;
+	}
 
 }

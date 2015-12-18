@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 public class JOptionPaneMultiInput {
 	
 	String[] results;
+	boolean hasUserInput=false;
 	
 	public static void main (String args[]){
 		
@@ -26,7 +27,7 @@ public class JOptionPaneMultiInput {
 		   
 		   for (int i = 0;i<fieldNames.length;i++){
 			   dialogPanel.add(new JLabel(fieldNames[i]+": "));
-			   fields[i]=new JTextField(5);
+			   fields[i]=new JTextField(6);
 			   dialogPanel.add(fields[i]);
 			   dialogPanel.add(Box.createHorizontalStrut(5));
 		   }
@@ -35,6 +36,7 @@ public class JOptionPaneMultiInput {
 	      int result = JOptionPane.showConfirmDialog(null, dialogPanel, 
 	               "New Resource", JOptionPane.OK_CANCEL_OPTION);
 	      if (result == JOptionPane.OK_OPTION) {
+	    	  hasUserInput=true;
 	         results= new String[fieldNames.length];
 	         for (int i = 0;i<fieldNames.length;i++){
 	        	 results[i]=fields[i].getText();
@@ -44,5 +46,9 @@ public class JOptionPaneMultiInput {
 	   
 	   public String getResult(int index){
 		   return results[index];
+	   }
+	   
+	   public boolean hasUserInput(){
+		   return hasUserInput;
 	   }
 	}

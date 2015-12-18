@@ -30,30 +30,31 @@ public class addDefinedResourceAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JOptionPaneMultiInput dialog; 
+		JOptionPaneMultiInput dialog;
 		switch (type) {
 		case SIMPLE:
-			String s = (String)JOptionPane.showInputDialog(null,"Enter name of new Resource:","Resource name", JOptionPane.PLAIN_MESSAGE);
+			String s = (String) JOptionPane.showInputDialog(null, "Enter name of new Resource:", "Resource name",JOptionPane.PLAIN_MESSAGE);
 			store.instantiateResource(type, s);
 			break;
 		case SET:
-			dialog = new JOptionPaneMultiInput("name","number");
-			store.instantiateResource(type, dialog.getResult(0), Integer.parseInt(dialog.getResult(1)));
+			dialog = new JOptionPaneMultiInput("name", "number");
+			if (dialog.hasUserInput())
+				store.instantiateResource(type, dialog.getResult(0), Integer.parseInt(dialog.getResult(1)));
 			break;
 		case SHARED:
 			dialog = new JOptionPaneMultiInput("name", "max. capacity");
-			SharedResource res = (SharedResource) store.instantiateResource(type, dialog.getResult(0));
-			int maxCapacity = Integer.parseInt(dialog.getResult(1));
-			res.setIncrement(1f/maxCapacity);
+			if (dialog.hasUserInput()) {
+				SharedResource res = (SharedResource) store.instantiateResource(type, dialog.getResult(0));
+				int maxCapacity = Integer.parseInt(dialog.getResult(1));
+				res.setIncrement(1f / maxCapacity);
+			}
 			break;
 		case COMPOUND:
-			//TODO
-			
+			// TODO
+
 		default:
 			break;
 		}
-		
-
 
 	}
 	

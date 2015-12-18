@@ -26,5 +26,9 @@ public abstract class Resource implements IResource {
 	public String toString(){
 		return name;
 	}
+	
+	public String getDetailString(){
+		return "Name: "+name+", Type: "+type;
+	}
 
 }

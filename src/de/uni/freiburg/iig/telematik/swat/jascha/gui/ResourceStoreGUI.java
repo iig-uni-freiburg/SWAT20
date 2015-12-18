@@ -14,6 +14,7 @@ import javax.swing.ListSelectionModel;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailListener;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.addResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.removeResourceAction;
 
@@ -31,6 +32,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		store.instantiateResource(ResourceType.SIMPLE, "Holzbrett");
 		ResourceStoreGUI manager = new ResourceStoreGUI(store);
 		manager.setVisible(true);
+		
 	}
 	
 	public ResourceStoreGUI(){
@@ -67,6 +69,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	private JScrollPane updateList(){
 		list = new JList<>();
 		list.setModel(model);
+		list.addMouseListener(new ResourceDetailListener());
 		for(IResource res:resourceStore.getAllResources())
 			model.addElement(res);
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);

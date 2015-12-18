@@ -141,6 +141,7 @@ public class SwatComponents extends AbstractProjectComponents {
             getContainerAristaflowLogs().loadComponents();
             getContainerXESLogs().loadComponents();
             
+            //Resource Context
             resourceContainer = new ResourceContainer(SwatProperties.getInstance().getPathForResourceContexts(),MessageDialog.getInstance());
             resourceContainer.loadComponents();
             

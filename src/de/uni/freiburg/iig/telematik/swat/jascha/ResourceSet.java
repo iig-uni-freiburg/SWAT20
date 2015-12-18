@@ -15,6 +15,7 @@ public class ResourceSet extends Resource {
 
 	public ResourceSet(String name, int amount) {
 		this.name = name;
+		this.type=ResourceType.SET;
 		for (int i = 0;i<amount;i++){
 			resources.add(new SimpleResource(name+"-"+i));
 		}
