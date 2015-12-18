@@ -37,7 +37,9 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalTimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
@@ -378,7 +380,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
 
     private enum ToolbarButtonType {
 
-        NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE, TIME, EDIT_PROPERTY;
+        NEW, SAVE, SAVE_ALL, OPEN, IMPORT, SWITCH_DIRECTORY, NEW_PT, NEW_CPN, NEW_IF, NEW_RTPN, RENAME, DETECTIVE, ARISTAFLOW, PRISM, DELETE, AF_TEMPLATE, TIME, EDIT_PROPERTY;
     }
 
     class createNewAction implements ActionListener {
@@ -411,6 +413,8 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
                             net = new GraphicalIFNet(new IFNet());
                             //newNet = new GraphicalIFNet();
                             break;
+                        case NEW_RTPN:
+                        	net = new GraphicalTimedNet(new TimedNet());
                         default:
                             break;
                     }

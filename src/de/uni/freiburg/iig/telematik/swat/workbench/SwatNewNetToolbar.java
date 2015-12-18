@@ -92,6 +92,7 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 			standardItems.add(getNewPTNetButton());
 			standardItems.add(getNewCPNButton());
 			standardItems.add(getNewIFNetButton());
+			standardItems.add(getNewRTPNButton());
 		} catch (ParameterException e) {
 			e.printStackTrace();
 		} catch (PropertyException e) {
@@ -101,6 +102,11 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 		}
 
 
+	}
+
+	private Component getNewRTPNButton() throws ParameterException, PropertyException, IOException {
+		JButton newButton = new SwatToolbarButton(ToolbarNewNetButtonType.NEW_RTPN, this);
+		return newButton;
 	}
 
 	private JButton getNewPTNetButton() throws ParameterException, PropertyException, IOException {
@@ -170,13 +176,17 @@ public class SwatNewNetToolbar extends JToolBar implements ActionListener, SwatS
 				setToolTipText("Create new IFnet");
 				addActionListener(new NewNetAction(type, swatNewNetToolbar));
 				break;
+			case NEW_RTPN:
+				setToolTipText("Create new Resource Timed Petri Net");
+				addActionListener(new NewNetAction(type,swatNewNetToolbar));
+				break;
 			}
 		}
 
 	}
 
 	public enum ToolbarNewNetButtonType {
-		NEW_PT, NEW_CPN, NEW_IF
+		NEW_PT, NEW_CPN, NEW_IF, NEW_RTPN
 	}
 	
 	public void setToolbar(WorkbenchPopupToolBar popupFontToolBar) {

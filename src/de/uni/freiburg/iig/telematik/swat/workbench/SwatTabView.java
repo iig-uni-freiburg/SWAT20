@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -26,6 +27,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
+
+import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 
 import de.invation.code.toval.misc.soabase.SOABase;
 import de.invation.code.toval.misc.wd.ComponentListener;
@@ -191,7 +194,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
      */
     @SuppressWarnings("rawtypes")
     public ViewComponent addNewTab(SwatTreeNode node) {
-        System.out.println("Adding " + node.getDisplayName());
+       // System.out.println("Adding " + node.getDisplayName());
         if (alreadyOpen(node.getDisplayName())) {
             return null;
         }
@@ -560,7 +563,33 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                 if (!checkClose()) {
                     return; //user aborted
                 }
+                clearLogParserOfCurrentComponent();
                 SwatTabView.this.remove(i); //remove current
+                
+            }
+            
+            private void clearLogParserOfCurrentComponent(){
+            	try {
+					String name = Workbench.getInstance().getNameOfCurrentComponent();
+					SwatComponentType type = Workbench.getInstance().getTypeOfCurrentComponent();
+					switch (type) {
+					case MXML_LOG:
+						SwatComponents.getInstance().getContainerMXMLLogs().getComponent(name).clearLogParser();
+						break;
+					case ARISTAFLOW_LOG:
+						SwatComponents.getInstance().getContainerAristaflowLogs().getComponent(name).clearLogParser();
+						break;
+					case XES_LOG:
+						SwatComponents.getInstance().getContainerXESLogs().getComponent(name).clearLogParser();
+						break;
+					default:
+						break;
+					}
+				} catch (Exception e) {
+					Workbench.errorMessage("Could not remove component", e, true);
+				}
+            	
+            	
             }
 
             //we don't want to update UI for this button

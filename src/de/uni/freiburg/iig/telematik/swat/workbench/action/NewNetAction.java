@@ -7,7 +7,9 @@ import javax.swing.SwingUtilities;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalTimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.PNNameDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
@@ -58,6 +60,11 @@ public class NewNetAction extends AbstractWorkbenchAction {
 				GraphicalIFNet newIFNet = new GraphicalIFNet(new IFNet());
 				newIFNet.getPetriNet().setName(netName);
 				SwatComponents.getInstance().getContainerPetriNets().addComponent(newIFNet, true);
+				break;
+			case NEW_RTPN:
+				GraphicalTimedNet newRTPNet = new GraphicalTimedNet(new TimedNet());
+				newRTPNet.getPetriNet().setName(netName);
+				SwatComponents.getInstance().getContainerPetriNets().addComponent(newRTPNet,true);
 				break;
 
 			default:
