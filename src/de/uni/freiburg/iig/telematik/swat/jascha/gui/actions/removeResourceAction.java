@@ -10,17 +10,17 @@ import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 
 public class removeResourceAction implements ActionListener {
 	
-	private ResourceStore sore;
+	private ResourceStore store;
 	private JList<IResource> list;
 
 	public removeResourceAction(ResourceStore store, JList<IResource> list) {
-		this.sore=store;
+		this.store=store;
 		this.list=list;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		sore.removeResource(list.getSelectedValue());
+		store.removeResource(list.getSelectedValue());
 	}
 
 }

@@ -54,14 +54,7 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		//Get all TimedNets from Workbench
 		LinkedList<TimedNet> nets = loadNets();
-		int length = SwatTabView.getInstance().getTabCount();
-		for(int i = 0;i<length;i++){
-			Object o = SwatTabView.getInstance().getComponentAt(i);
-			if(o instanceof RTPNEditorComponent){
-				RTPNEditorComponent component = (RTPNEditorComponent) o;
-				nets.add(component.getNetContainer().getPetriNet());
-			}
-		}
+
 		if(!nets.isEmpty()){
 			WorkflowTimeMachine timeMachine = WorkflowTimeMachine.getInstance();
 			timeMachine.addAllNets(nets);
@@ -71,9 +64,17 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 		
 	}
 	
-	private LinkedList<TimedNet> loadNets() {
-		// TODO Auto-generated method stub
-		return null;
+	private LinkedList<TimedNet> loadNets() throws Exception {
+		LinkedList<TimedNet> nets = new LinkedList<>();
+		int length = SwatTabView.getInstance().getTabCount();
+		for(int i = 0;i<length;i++){
+			Object o = SwatTabView.getInstance().getComponentAt(i);
+			if(o instanceof RTPNEditorComponent){
+				RTPNEditorComponent component = (RTPNEditorComponent) o;
+				nets.add(component.getNetContainer().getPetriNet());
+			}
+		}
+		return nets;
 	}
 
 	protected void displayResults(){

@@ -5,6 +5,14 @@ public class SharedResource extends Resource {
 	protected float usage=0.0f;
 	protected float increment=0.1f; //increment usage by x percent
 
+	public float getIncrement() {
+		return increment;
+	}
+
+	public void setIncrement(float increment) {
+		this.increment = increment;
+	}
+
 	public SharedResource(String name) {
 		super(name);
 		type=ResourceType.SHARED;
@@ -64,6 +72,6 @@ public class SharedResource extends Resource {
 	public void reset() {
 		usage=0f;
 		
-	}	
+	}
 
 }

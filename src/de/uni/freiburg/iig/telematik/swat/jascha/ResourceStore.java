@@ -25,12 +25,18 @@ public class ResourceStore {
 		informListenersOfResourceChange(item);
 	}
 	
-	public void removeResource(IResource item){
-		try{
-		resources.remove(item.getName());
-		informListenersOfResourceRemoval(item);
-		} catch (NullPointerException e){
-			//no element was selected!
+	public void removeResource(IResource item) {
+		// TODO: hier fehlt noch: Wenn ein Resource-Set gelöscht wird
+		// eine neue Methode, dass die dazugehoerigen Resourcen geloescht werden
+
+		// TODO: zusatzlich, wenn eine Ressource geloescht wurde, die zu einem
+		// Resource-Set gehoert, muss das entsprechende
+		// set aktualisiert werden
+		try {
+			resources.remove(item.getName());
+			informListenersOfResourceRemoval(item);
+		} catch (NullPointerException e) {
+			// no element was selected!Item is null
 		}
 	}
 
@@ -47,8 +53,12 @@ public class ResourceStore {
 		}
 		ResourceSet rs = new ResourceSet(name, amount);
 		resources.put(name, rs);		
-		for(IResource res:rs.getRes()) resources.put(res.getName(), res);
 		informListenersOfResourceChange(rs);
+		for(IResource res:rs.getRes()) {
+			resources.put(res.getName(), res);
+			informListenersOfResourceChange(res);
+		}
+		
 		return rs;
 	}
 	

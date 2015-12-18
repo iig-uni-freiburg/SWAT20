@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
+import de.uni.freiburg.iig.telematik.swat.jascha.SharedResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.JOptionPaneMultiInput;
 
 public class addDefinedResourceAction extends AbstractAction {
@@ -29,16 +30,25 @@ public class addDefinedResourceAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		JOptionPaneMultiInput dialog; 
 		switch (type) {
 		case SIMPLE:
 			String s = (String)JOptionPane.showInputDialog(null,"Enter name of new Resource:","Resource name", JOptionPane.PLAIN_MESSAGE);
 			store.instantiateResource(type, s);
 			break;
 		case SET:
-			String[] params = {"name","number"};
-			JOptionPaneMultiInput test = new JOptionPaneMultiInput(params);
+			dialog = new JOptionPaneMultiInput("name","number");
+			store.instantiateResource(type, dialog.getResult(0), Integer.parseInt(dialog.getResult(1)));
 			break;
-
+		case SHARED:
+			dialog = new JOptionPaneMultiInput("name", "max. capacity");
+			SharedResource res = (SharedResource) store.instantiateResource(type, dialog.getResult(0));
+			int maxCapacity = Integer.parseInt(dialog.getResult(1));
+			res.setIncrement(1f/maxCapacity);
+			break;
+		case COMPOUND:
+			//TODO
+			
 		default:
 			break;
 		}
