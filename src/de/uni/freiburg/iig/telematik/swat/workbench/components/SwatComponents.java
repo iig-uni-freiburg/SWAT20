@@ -12,6 +12,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceC
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.ACModelContainer;
 import de.uni.freiburg.iig.telematik.sewol.context.process.ProcessContextContainer;
 import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceContainer;
+import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceStoreContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.AbstractLogModelContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.AristaflowLogContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
@@ -37,6 +38,7 @@ public class SwatComponents extends AbstractProjectComponents {
     private SwatPNContainer containerPetriNets;
     private Map<SwatLogType, AbstractLogModelContainer> logModelContainers;
     private ResourceContainer resourceContainer;
+    private ResourceStoreContainer resourceStoreContainer;
 
     public SwatComponents() throws ProjectComponentException {
         super(MessageDialog.getInstance());
@@ -144,6 +146,8 @@ public class SwatComponents extends AbstractProjectComponents {
             //Resource Context
             resourceContainer = new ResourceContainer(SwatProperties.getInstance().getPathForResourceContexts(),MessageDialog.getInstance());
             resourceContainer.loadComponents();
+            resourceStoreContainer = new ResourceStoreContainer(SwatProperties.getInstance().getPathForResourceContexts(),MessageDialog.getInstance());
+            resourceStoreContainer.loadComponents();
             
             containerPetriNets.linkResourceContexts(getResourceContainer());
 
