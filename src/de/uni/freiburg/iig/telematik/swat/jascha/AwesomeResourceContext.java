@@ -118,8 +118,25 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public List<List<String>> getAllowedResourcesFor(String activity) {
-		// TODO Auto-generated method stub
+		//TODO: diese Methode
 		return null;
+
+	}
+	
+	public List<IResource> getManagedResourcesFor(String activity) {
+		List<IResource> possibleResources = resources.get(activity);
+		if (possibleResources == null)
+			return new LinkedList<>();
+		LinkedList<IResource> result = new LinkedList<>();
+		for (IResource res : possibleResources) {
+			result.add(res);
+			if (res instanceof ResourceSet) {
+				for (IResource resSet : ((ResourceSet) res).resources) {
+					result.add(res);
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -152,6 +169,8 @@ public class AwesomeResourceContext implements IResourceContext{
 	}
 	
 	public void addResourceUsage(String activity, IResource resource){
+		//TODO: nur Resourcen aus dem ResourceStore nutzen
+		//Prüfen, ob Resourcen im ResourceStore vorhanden
 		if(resources.containsKey(activity)){
 			resources.get(activity).add(resource); //TODO: check if resource is already inside the list!
 		} 
@@ -195,6 +214,15 @@ public class AwesomeResourceContext implements IResourceContext{
 	@Override
 	public void setName(String name) {
 		this.name=name;
+		
+	}
+	
+	public void clearUsageFor(String activity){
+		if(resources.containsKey(activity)){
+			if(resources.get(activity)!=null){
+				resources.get(activity).clear();
+			}
+		}
 		
 	}
 

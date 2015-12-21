@@ -1,8 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 
 import javax.swing.Box;
@@ -19,7 +19,7 @@ import javax.swing.ListSelectionModel;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
-import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeResourceStoreNameAction;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeNamedComponentAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.addResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.removeResourceAction;
@@ -73,6 +73,15 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		pack();
 	}
 	
+	public JPanel getAsPanel(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout());
+		panel.add(getNameLabel(),BorderLayout.PAGE_START);
+		panel.add(getList(),BorderLayout.CENTER);
+		panel.add(getPlusMinusButtons(),BorderLayout.PAGE_END);
+		return panel;
+	}
+	
 	private Box getNameLabel(){
 		Box horizontal = Box.createHorizontalBox();
 		if(nameOfStore==null){
@@ -81,7 +90,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		}
 		horizontal.add(nameOfStore);
 		horizontal.add(Box.createHorizontalGlue());
-		horizontal.add(new JButton(new ChangeResourceStoreNameAction(resourceStore)));
+		horizontal.add(new JButton(new ChangeNamedComponentAction(resourceStore)));
 		return horizontal;
 	}
 	
