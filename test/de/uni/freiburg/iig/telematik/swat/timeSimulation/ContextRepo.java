@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceC
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
+import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 import de.uni.freiburg.iig.telematik.swat.jascha.SimpleResource;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
@@ -44,20 +45,24 @@ public class ContextRepo {
 		if (resourceContext == null) {
 			 resourceContext = new AwesomeResourceContext();
 			 resourceContext.setName("TestRepoContext");
+			 
+			 ResourceStore store = resourceContext.getResourceStore();
 			
 			//Jascha
-			resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker"));
+			resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker",store));
 			List<IResource> werkzeuge = new LinkedList<IResource>();
-			werkzeuge.add(new SimpleResource("Hammer"));
-			werkzeuge.add(new SimpleResource("Kreuzschlitz_klein"));
-			werkzeuge.add(new SimpleResource("Kreuzschlitz_gross"));
-			IResource schraubenset = new CompoundResource("Schraubenset");
+			werkzeuge.add(store.instantiateResource(ResourceType.SIMPLE, "Hammer"));
+			werkzeuge.add(store.instantiateResource(ResourceType.SIMPLE, "KreuzschlitzKL"));
+			werkzeuge.add(store.instantiateResource(ResourceType.SIMPLE, "KreuzschlitzGR"));
+			IResource schraubenset = store.instantiateResource(ResourceType.COMPOUND, "Werkzeuge", werkzeuge);
 			werkzeuge.add(schraubenset);
-			IResource werkzeugkasten = new CompoundResource("werkzeuge",werkzeuge);
-			resourceContext.addResourceUsage("Handwerkerarbeit", werkzeugkasten);			
+			//IResource werkzeugkasten = new CompoundResource("werkzeuge",werkzeuge);
+			IResource hammer = werkzeuge.get(0);
+			resourceContext.addResourceUsage("Handwerkerarbeit", hammer);			
 			IResource rsTest1 = resourceContext.getResourceStore().instantiateResource(ResourceType.SIMPLE, "Zange");
 			IResource rsTest2 = resourceContext.getResourceStore().instantiateResource(ResourceType.SHARED, "Waschbecken");
 			IResource rsTest3 = resourceContext.getResourceStore().instantiateResource(ResourceType.SIMPLE, "Wasserhahn");
+			resourceContext.getResourceStore().instantiateResource(ResourceType.COMPOUND,"werzeuge",werkzeuge);
 			
 
 			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1", resourceContext.getResourceStore());

@@ -4,7 +4,7 @@ public class SimpleResource extends Resource {
 
 	protected boolean isAvailable;
 
-	public SimpleResource(String name) {
+	protected SimpleResource(String name) {
 		super(name); // Um den Namen soll sich die Über-Klasse kümmern
 		isAvailable=true;
 		type=ResourceType.SIMPLE;
@@ -15,6 +15,7 @@ public class SimpleResource extends Resource {
 		super(name);
 		isAvailable=true;
 		resourceStore.addResource(this);
+		type=ResourceType.SIMPLE;
 	}
 	
 	public boolean isAvailable() {

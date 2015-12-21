@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
@@ -223,7 +224,10 @@ public class AwesomeResourceContext implements IResourceContext{
 				resources.get(activity).clear();
 			}
 		}
-		
+	}
+	
+	public Set<String> getContainingActivities(){
+		return resources.keySet();
 	}
 
 }

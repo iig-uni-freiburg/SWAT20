@@ -8,6 +8,7 @@ public interface ResourceStoreListener {
 	
 	public void informStoreElementRemoved(IResource resource);
 	
+	/**inform name of ResourceStore changed**/
 	public void nameChanged(String newName);
 
 }

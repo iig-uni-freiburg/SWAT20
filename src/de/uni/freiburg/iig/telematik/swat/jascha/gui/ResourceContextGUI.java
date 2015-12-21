@@ -1,10 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.gui;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,8 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import com.itextpdf.text.Jpeg;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
@@ -50,6 +46,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		hints.add("test2");
 		hints.add("test3");
 		hints.add("test4");
+		hints.add("neu");
 		gui.setActivitiesHints(hints);
 	}
 
@@ -63,17 +60,25 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		super(title);
 		this.context = (AwesomeResourceContext) context;
 		setup();
+		for(String s:this.context.getContainingActivities()){
+			activities.addElement(s);
+		}
+		
 	}
 
 	private void setup() {
 		setupResourceList();
-		activitiesList.addListSelectionListener(this);
+		setupActivitiesList();
 		context.getResourceStore().addResourceStoreListener(this);
 		this.setSize(width, height);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		add(getTopPanel(), BorderLayout.PAGE_START);
 		add(getCenterPanel(), BorderLayout.CENTER);
 		add(getBottomButtons(), BorderLayout.PAGE_END);
+	}
+
+	private void setupActivitiesList() {
+		activitiesList.addListSelectionListener(this);
 	}
 
 	private void setupResourceList() {
@@ -110,9 +115,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 	}
 
 	public void setActivitiesHints(List<String> activitesHints) {
-		for (String s:activitesHints){
-			activities.addElement(s);
-		}
+		this.activitesHints=activitesHints;
 	}
 
 	private JPanel getCenterPanel() {
@@ -130,21 +133,12 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		JScrollPane listScroller = new JScrollPane(activitiesList);
 		panel.add(listScroller);
 
-		// JPanel buttons = new JPanel(new FlowLayout());
-		// JButton addActivity=new JButton("add");
-		// JButton removeActivity=new JButton("remove");
-		// buttons.add(addActivity);
-		// buttons.add(removeActivity);
-
-		// panel.add(buttons);
-
 		return panel;
 	}
 
 	private JPanel getResourcePanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		// resourceList=new JList<>();
 		resourceList.setModel(resources);
 
 		for (IResource res : context.getResourceStore().getAllResources())
@@ -153,19 +147,24 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		JScrollPane listScroller = new JScrollPane(resourceList);
 		panel.add(listScroller);
 
-		// JPanel buttons = new JPanel(new FlowLayout());
-		// JButton edit=new JButton("Edit resources");
-		// buttons.add(edit);
-
-		// panel.add(buttons);
-
 		return panel;
 	}
 
 	private JPanel getBottomButtons() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-		panel.add(new JButton("add Activity"));
+		
+		JButton addActivity = new JButton("add Activity");
+		addActivity.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(context.toString());
+				
+			}
+		});
+		
+		panel.add(addActivity);
 		panel.add(new JButton("remove Activity"));
 		panel.add(Box.createHorizontalGlue());
 

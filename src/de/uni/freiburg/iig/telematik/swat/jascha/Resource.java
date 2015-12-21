@@ -21,7 +21,7 @@ public abstract class Resource implements IResource {
 		return type;
 	}
 	
-	public Resource(){}
+	protected Resource(){}
 	
 	public String toString(){
 		return name;
