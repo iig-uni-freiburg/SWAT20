@@ -129,13 +129,7 @@ public class ResourceStore implements NamedComponent{
 	
 	// Method for checking if a resource object with this name already exists
 	public boolean alreadyExists(String name){		
-		for(String key:resources.keySet()){
-			if (key.equals(name)){				
-				return true;
-			}
-		}
-		
-		return false;
+		return resources.containsKey(name);
 	}
 	
 	/**
@@ -176,6 +170,13 @@ public class ResourceStore implements NamedComponent{
 	@Override
 	public void setName(String name) {
 		this.name=name;
+		informListenerOfNameChange(name);
+		
+	}
+
+	private void informListenerOfNameChange(String name2) {
+		for (ResourceStoreListener listener:listeners)
+			listener.nameChanged(name2);
 		
 	}
 }

@@ -28,7 +28,7 @@ public abstract class Resource implements IResource {
 	}
 	
 	public String getDetailString(){
-		return "Name: "+name+", Type: "+type;
+		return "Name: "+name+" ["+type+"]";
 	}
 
 }

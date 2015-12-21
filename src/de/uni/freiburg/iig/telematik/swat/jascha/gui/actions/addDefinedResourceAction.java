@@ -34,7 +34,8 @@ public class addDefinedResourceAction extends AbstractAction {
 		switch (type) {
 		case SIMPLE:
 			String s = (String) JOptionPane.showInputDialog(null, "Enter name of new Resource:", "Resource name",JOptionPane.PLAIN_MESSAGE);
-			store.instantiateResource(type, s);
+			if(s!=null && !s.isEmpty())
+				store.instantiateResource(type, s);
 			break;
 		case SET:
 			dialog = new JOptionPaneMultiInput("name", "number");

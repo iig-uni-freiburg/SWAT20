@@ -19,6 +19,7 @@ import javax.swing.ListSelectionModel;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeResourceStoreNameAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.addResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.removeResourceAction;
@@ -39,7 +40,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		store.instantiateResource(ResourceType.SIMPLE, "Säge");
 		store.instantiateResource(ResourceType.SIMPLE, "Holzbrett");
 		store.setName("Test-Store");
-		ResourceStoreGUI manager = new ResourceStoreGUI(store);
+		ResourceStoreGUI manager = new ResourceStoreGUI();
 		manager.setVisible(true);
 		
 	}
@@ -58,34 +59,30 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	
 	private void setUpFrame(){
 		setSize(width, height);
+		setPreferredSize(new Dimension(width, height));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setTitle("Resource Manager");
 		setUpElements();
 	}
 	
 	private void setUpElements(){
-		add(getTopPanel(),BorderLayout.CENTER);
+		add(getNameLabel(),BorderLayout.PAGE_START);
+		add(getList(),BorderLayout.CENTER);
 		add(getPlusMinusButtons(),BorderLayout.PAGE_END);
 		revalidate();
 		pack();
 	}
 	
-	private JPanel getTopPanel(){
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
-		topPanel.setPreferredSize(new Dimension(width, height));
-		topPanel.add(getNameLabel());
-		topPanel.add(new JLabel("available resources: "));
-		topPanel.add(getList());
-		return topPanel;
-	}
-	
-	private JLabel getNameLabel(){
+	private Box getNameLabel(){
+		Box horizontal = Box.createHorizontalBox();
 		if(nameOfStore==null){
 			nameOfStore=new JLabel("<html>Resource-Store: <b>"+resourceStore.getName()+"</b></html>");
 			nameOfStore.setFont(new Font(nameOfStore.getFont().getFontName(), Font.PLAIN, nameOfStore.getFont().getSize()));
 		}
-		return nameOfStore;
+		horizontal.add(nameOfStore);
+		horizontal.add(Box.createHorizontalGlue());
+		horizontal.add(new JButton(new ChangeResourceStoreNameAction(resourceStore)));
+		return horizontal;
 	}
 	
 	private JScrollPane getList(){
@@ -136,6 +133,15 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	@Override
 	public void informStoreElementRemoved(IResource resource) {
 		model.removeElement(resource);
+	}
+	
+	public ResourceStore getResourceStore(){
+		return resourceStore;
+	}
+
+	@Override
+	public void nameChanged(String newName) {
+		nameOfStore.setText("<html>Resource-Store: <b>"+newName+"</b></html>");
 	}
 
 }

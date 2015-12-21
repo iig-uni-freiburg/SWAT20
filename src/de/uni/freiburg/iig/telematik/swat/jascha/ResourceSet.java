@@ -48,6 +48,20 @@ public class ResourceSet extends Resource {
 	}
 
 	@Override
+	public String getDetailString() {
+		String s= super.getDetailString()+" (";
+		int count=0;
+		for(Resource res:resources){
+			s=s+" "+res.getName();
+			if (count%10==0)
+				s+="\r\n";
+			count++;
+		}
+		s+=" )";
+		return s;
+	}
+
+	@Override
 	public void reset() {
 		for (Resource r:resources){
 			r.reset();
