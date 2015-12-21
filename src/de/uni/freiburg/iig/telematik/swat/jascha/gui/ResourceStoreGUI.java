@@ -19,7 +19,7 @@ import javax.swing.ListSelectionModel;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
-import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailListener;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.addResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.removeResourceAction;
 
@@ -91,7 +91,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	private JScrollPane getList(){
 		list = new JList<>();
 		list.setModel(model);
-		list.addMouseListener(new ResourceDetailListener());
+		list.addMouseListener(new ResourceDetailAction());
 		for(IResource res:resourceStore.getAllResources())
 			model.addElement(res);
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -108,7 +108,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		panel.add(Box.createHorizontalGlue());
 		panel.add(new JLabel("add or remove: "));
 		panel.add(getPlusButton());
-		panel.add(getRemoveButton());
+		panel.add(getMinusButton());
 		return panel;
 	}
 	
@@ -120,7 +120,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		return plus;
 	}
 	
-	private JButton getRemoveButton(){
+	private JButton getMinusButton(){
 		JButton minus = new JButton("-");
 		minus.setText("-");
 		minus.setSize(new Dimension(50, 50));

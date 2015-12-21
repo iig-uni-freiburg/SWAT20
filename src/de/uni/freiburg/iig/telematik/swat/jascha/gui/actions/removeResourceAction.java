@@ -20,6 +20,9 @@ public class removeResourceAction implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(list.getSelectedValue()==null)
+			return;
+		
 		store.removeResource(list.getSelectedValue());
 	}
 

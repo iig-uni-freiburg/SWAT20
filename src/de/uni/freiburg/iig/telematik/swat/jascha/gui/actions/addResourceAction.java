@@ -28,8 +28,8 @@ public class addResourceAction implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton source = (JButton) e.getSource();
 		final JPopupMenu menu = new JPopupMenu("Menu");
-		for(ResourceType item:ResourceType.values()){
-			menu.add(new addDefinedResourceAction(item, store));
+		for(ResourceType type:ResourceType.values()){
+			menu.add(new addDefinedResourceAction(type, store));
 		}
 		menu.setInvoker((Component) e.getSource());
 		menu.setLocation((int) source.getLocationOnScreen().getX(), (int) source.getLocationOnScreen().getY());

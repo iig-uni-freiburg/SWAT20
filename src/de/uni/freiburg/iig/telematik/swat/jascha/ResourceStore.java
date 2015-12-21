@@ -35,12 +35,8 @@ public class ResourceStore implements NamedComponent{
 		// TODO: zusatzlich, wenn eine Ressource geloescht wurde, die zu einem
 		// Resource-Set gehoert, muss das entsprechende
 		// set aktualisiert werden
-		try {
-			resources.remove(item.getName());
-			informListenersOfResourceRemoval(item);
-		} catch (NullPointerException e) {
-			// no element was selected!Item is null
-		}
+		resources.remove(item.getName());
+		informListenersOfResourceRemoval(item);
 	}
 
 	public IResource getResource(String name){

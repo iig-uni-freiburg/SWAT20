@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.Resource;
 
-public class ResourceDetailListener implements MouseListener {
+public class ResourceDetailAction implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

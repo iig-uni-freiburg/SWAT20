@@ -50,7 +50,7 @@ public class addDefinedResourceAction extends AbstractAction {
 			}
 			break;
 		case COMPOUND:
-			// TODO
+			// TODO: Compound dialog for many resources
 
 		default:
 			break;
