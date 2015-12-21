@@ -1,13 +1,18 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
@@ -24,12 +29,16 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	ResourceStore resourceStore;
 	JList<IResource> list;
 	DefaultListModel<IResource> model = new javax.swing.DefaultListModel<>();
+	JLabel nameOfStore;
+	private final int width=600;
+	private final int height=400;
 	
 	public static void main (String args[]){
 		ResourceStore store = new ResourceStore();
 		store.instantiateResource(ResourceType.SET, "Hammer",4);
 		store.instantiateResource(ResourceType.SIMPLE, "Säge");
 		store.instantiateResource(ResourceType.SIMPLE, "Holzbrett");
+		store.setName("Test-Store");
 		ResourceStoreGUI manager = new ResourceStoreGUI(store);
 		manager.setVisible(true);
 		
@@ -48,25 +57,38 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	}
 	
 	private void setUpFrame(){
-		int width=600;
-		int height=400;
-		setPreferredSize(new Dimension(width, height));
 		setSize(width, height);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setTitle("Resource Manager");
-		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		setUpElements();
 	}
 	
 	private void setUpElements(){
-		add(new JLabel("available resources: "));
-		add(updateList());
-		add(getPlusButton());
-		add(getRemoveButton());
-		
+		add(getTopPanel(),BorderLayout.CENTER);
+		add(getPlusMinusButtons(),BorderLayout.PAGE_END);
+		revalidate();
+		pack();
 	}
 	
-	private JScrollPane updateList(){
+	private JPanel getTopPanel(){
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
+		topPanel.setPreferredSize(new Dimension(width, height));
+		topPanel.add(getNameLabel());
+		topPanel.add(new JLabel("available resources: "));
+		topPanel.add(getList());
+		return topPanel;
+	}
+	
+	private JLabel getNameLabel(){
+		if(nameOfStore==null){
+			nameOfStore=new JLabel("<html>Resource-Store: <b>"+resourceStore.getName()+"</b></html>");
+			nameOfStore.setFont(new Font(nameOfStore.getFont().getFontName(), Font.PLAIN, nameOfStore.getFont().getSize()));
+		}
+		return nameOfStore;
+	}
+	
+	private JScrollPane getList(){
 		list = new JList<>();
 		list.setModel(model);
 		list.addMouseListener(new ResourceDetailListener());
@@ -76,9 +98,18 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
         list.setVisibleRowCount(-1);
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         JScrollPane listScroller = new JScrollPane(list);
-        listScroller.setPreferredSize(new Dimension(250, 80));
         listScroller.setAlignmentX(LEFT_ALIGNMENT);
         return listScroller;
+	}
+	
+	private JPanel getPlusMinusButtons(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+		panel.add(Box.createHorizontalGlue());
+		panel.add(new JLabel("add or remove: "));
+		panel.add(getPlusButton());
+		panel.add(getRemoveButton());
+		return panel;
 	}
 	
 	private JButton getPlusButton(){
@@ -86,7 +117,6 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		plus.setText("+");
 		plus.setSize(new Dimension(50, 50));
 		plus.addActionListener(new addResourceAction(resourceStore));
-		//plus.setPreferredSize(new Dimension(10, 10));
 		return plus;
 	}
 	

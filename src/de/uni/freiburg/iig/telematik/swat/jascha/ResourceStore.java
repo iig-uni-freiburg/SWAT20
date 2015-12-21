@@ -6,15 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceStoreListener;
 
-public class ResourceStore {
+public class ResourceStore implements NamedComponent{
 	
 	protected static Map<String,IResource> resources;
 	
 	private LinkedList<ResourceStoreListener> listeners= new LinkedList<>();
+
+	private String name;
 	
 	public ResourceStore(){
 		resources = new HashMap<>();
@@ -167,5 +170,16 @@ public class ResourceStore {
 		//Info Jascha: Methode informiert die grafische Oberfläche, falls eine Resource entfernt wurde
 		for (ResourceStoreListener listener:listeners)
 			listener.informStoreElementRemoved(res);
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name=name;
+		
 	}
 }
