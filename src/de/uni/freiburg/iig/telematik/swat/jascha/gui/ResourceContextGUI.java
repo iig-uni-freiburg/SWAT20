@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionListener;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.AddActivityAction;
 import de.uni.freiburg.iig.telematik.swat.timeSimulation.ContextRepo;
 
 public class ResourceContextGUI extends JFrame implements ResourceStoreListener, ListSelectionListener {
@@ -30,13 +31,14 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 	private static final long serialVersionUID = -5550468723771850810L;
 	AwesomeResourceContext context;
 	private final static String title = "Resource Context Editor";
-	private final static int width = 500;
-	private final static int height = 400;
+	private final static int width = 550;
+	private final static int height = 450;
 	private DefaultListModel<String> activities = new DefaultListModel<>();
 	private DefaultListModel<IResource> resources = new DefaultListModel<>();
 	List<String> activitesHints;
 	private JList<String> activitiesList = new JList<>();
 	private JList<IResource> resourceList = new JList<>();
+	private JLabel resourceStoreName = new JLabel();
 
 	public static void main(String args[]) {
 		ResourceContextGUI gui = new ResourceContextGUI(ContextRepo.getResourceContext());
@@ -70,6 +72,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		setupResourceList();
 		setupActivitiesList();
 		context.getResourceStore().addResourceStoreListener(this);
+		setLocationByPlatform(true);
 		this.setSize(width, height);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		add(getTopPanel(), BorderLayout.PAGE_START);
@@ -154,18 +157,11 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 		
-		JButton addActivity = new JButton("add Activity");
-		addActivity.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(context.toString());
-				
-			}
-		});
+		JButton addActivity = new JButton(new AddActivityAction(activities, activitesHints));
+
 		
 		panel.add(addActivity);
-		panel.add(new JButton("remove Activity"));
+		panel.add(getRemoveButton());
 		panel.add(Box.createHorizontalGlue());
 
 		JButton resources = new JButton("Edit resources");
@@ -180,13 +176,29 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 
 		return panel;
 	}
+	
+	private JButton getRemoveButton(){
+		JButton remove = new JButton("remove activity");
+		remove.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String activity=activitiesList.getSelectedValue();
+				activities.removeElement(activity);
+				context.clearUsageFor(activity);
+				
+			}
+		});
+		return remove;
+	}
 
 	private JPanel getTopPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 		panel.add(new JLabel("Activities"));
 		panel.add(Box.createHorizontalGlue());
-		panel.add(new JLabel("Allowed Resources"));
+		resourceStoreName.setText("Resources (using Resource Store "+context.getResourceStore().getName()+")");
+		panel.add(resourceStoreName);
 
 		return panel;
 	}
@@ -205,7 +217,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 
 	@Override
 	public void nameChanged(String newName) {
-		// TODO Auto-generated method stub
+		resourceStoreName.setText("Resources (using Resource Store "+context.getResourceStore().getName()+")");
 
 	}
 
@@ -214,7 +226,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		ListSelectionModel lsm = ((JList) e.getSource()).getSelectionModel();
 		
 		if (e.getSource().equals(resourceList) && !e.getValueIsAdjusting()) {
-			//clear usage, build new
+			//a resource was selected clear usage, build new
 			String activity = activitiesList.getSelectedValue();
 			context.clearUsageFor(activity);
 			for (int i = lsm.getMinSelectionIndex(); i <= lsm.getMaxSelectionIndex(); i++) {
@@ -225,7 +237,6 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 			}
 		} else if(e.getSource().equals(activitiesList)&& !e.getValueIsAdjusting()){
 			//new activity got selected.
-			System.out.println("loading");
 			String activity = activitiesList.getSelectedValue();
 			resourceList.removeListSelectionListener(this); //do not inform of list change
 			resourceList.clearSelection();

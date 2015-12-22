@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.TimeRessou
 public class AwesomeResourceContext implements IResourceContext{
 	
 	String name;
+	String resourceStoreName;
 	
 	//beinhaltet Liste mit Ressourcen-Objekten. Ressourcen-Objekt kann entweder selbst eine Liste haben oder eine einzelne Resource darstellen
 	Map<String,List<IResource>> resources = new HashMap<>(); //<Aktivity,Resources>
@@ -29,6 +30,15 @@ public class AwesomeResourceContext implements IResourceContext{
 	
 	public ResourceStore getResourceStore(){
 		return resourceStore;
+	}
+	
+	public void setResourceStore(ResourceStore resourceStore) {
+		this.resourceStore = resourceStore;
+		resourceStoreName=resourceStore.getName();
+	}
+	
+	public String getResourceStoreName(){
+		return resourceStoreName;
 	}
 
 	@Override

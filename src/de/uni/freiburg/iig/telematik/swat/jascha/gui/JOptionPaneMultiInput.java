@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**Joption pane with multiple input fields determined by stringarray**/
 public class JOptionPaneMultiInput {
 	
 	String[] results;

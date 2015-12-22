@@ -22,9 +22,11 @@ import javax.swing.ListSelectionModel;
 import com.thoughtworks.xstream.XStream;
 
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
+import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceStoreContainer;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeNamedComponentAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.SaveResourceStoreAction;
@@ -121,6 +123,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 		panel.add(getSaveButton());
+		panel.add(getSaveAsButton());
 		panel.add(Box.createHorizontalGlue());
 		panel.add(new JLabel("add or remove: "));
 		panel.add(getPlusButton());
@@ -128,8 +131,29 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		return panel;
 	}
 	
-	private JButton getSaveButton(){
+	private JButton getSaveAsButton(){
 		JButton save = new JButton(new SaveResourceStoreAction(resourceStore));
+		return save;
+	}
+	
+	private JButton getSaveButton(){
+		JButton save = new JButton("save");
+		save.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ResourceStoreContainer container = SwatComponents.getInstance().getResourceStoreContainer();
+					if(container.containsComponent(resourceStore.getName()))
+						container.storeComponents();
+					else
+						container.addComponent(resourceStore,true,true);
+				} catch (ProjectComponentException | ParameterException e1) {
+					Workbench.errorMessage("could not save ResourceStore "+resourceStore.getName(), e1, true);
+				}
+				
+			}
+		});
 		return save;
 	}
 	

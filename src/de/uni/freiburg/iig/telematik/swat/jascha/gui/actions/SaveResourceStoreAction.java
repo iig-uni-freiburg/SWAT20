@@ -15,7 +15,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 public class SaveResourceStoreAction extends AbstractAction {
 	ResourceStore resourceStore;
 	 public SaveResourceStoreAction(ResourceStore store) {
-		super("save...");
+		super("save as...");
 		this.resourceStore=store;
 	}
 
