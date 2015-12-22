@@ -58,6 +58,17 @@ public class SwatComponents extends AbstractProjectComponents {
         return containerPetriNets;
     }
     
+<<<<<<< HEAD
+=======
+    public ResourceContainer getResourceContainer(){
+    	return resourceContainer;
+    }
+    
+    public ResourceStoreContainer getResourceStoreContainer(){
+    	return resourceStoreContainer;
+    }
+    
+>>>>>>> e6a74c7... correct file handling for resourcestore
     public XesLogContainer getContainerXESLogs(){
     	if(logModelContainers.containsKey(SwatLogType.XES))
         return (XesLogContainer) logModelContainers.get(SwatLogType.XES);
