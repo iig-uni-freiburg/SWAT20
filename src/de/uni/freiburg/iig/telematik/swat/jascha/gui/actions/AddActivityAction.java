@@ -30,7 +30,10 @@ public class AddActivityAction extends AbstractAction {
 		int result = JOptionPane.showConfirmDialog((Component) e.getSource(), getDialogPanel(), "Add activity...",
 				JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION && comboBox.getSelectedItem()!=null) {
-			activities.addElement((String) comboBox.getSelectedItem());
+			if(!activities.contains(comboBox.getSelectedItem()))
+				activities.addElement((String) comboBox.getSelectedItem());
+			else
+				JOptionPane.showMessageDialog((Component) e.getSource(), "activity already present");
 		}
 
 	}
