@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.invation.code.toval.debug.SimpleDebugger;
-import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
@@ -75,5 +74,11 @@ public class ResourceStoreContainer extends AbstractComponentContainer<ResourceS
     protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
             return new File(pathFile,componentName+ ".rs");
     }
+    
+    protected String getFileEndingForComponent(ResourceStore component) {
+        return "rs";
+    }
+    
+    
 
 }

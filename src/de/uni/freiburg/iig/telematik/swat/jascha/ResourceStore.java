@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
@@ -13,9 +16,10 @@ import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceStoreListener;
 
 public class ResourceStore implements NamedComponent{
 	
-	protected static Map<String,IResource> resources;
+	protected Map<String,IResource> resources;
 	
-	private LinkedList<ResourceStoreListener> listeners= new LinkedList<>();
+	@XStreamOmitField
+	private LinkedList<ResourceStoreListener> listeners;
 
 	private String name;
 	
@@ -147,17 +151,20 @@ public class ResourceStore implements NamedComponent{
 	}
 	
 	public void addResourceStoreListener(ResourceStoreListener listener){
+		testListenersList();
 		listeners.add(listener);
 	}
 	
 	private void informListenersOfResourceChange(IResource res){
 		//Info Jascha: Methode informiert die grafische Oberfläche, falls eine Resource hinzugefügt wurde. Siehe gui/ResourceStoreGUI
+		testListenersList();
 		for (ResourceStoreListener listener:listeners)
 			listener.resourceStoreElementAdded(res);
 	}
 	
 	private void informListenersOfResourceRemoval(IResource res){
 		//Info Jascha: Methode informiert die grafische Oberfläche, falls eine Resource entfernt wurde
+		testListenersList();
 		for (ResourceStoreListener listener:listeners)
 			listener.informStoreElementRemoved(res);
 	}
@@ -178,5 +185,14 @@ public class ResourceStore implements NamedComponent{
 		for (ResourceStoreListener listener:listeners)
 			listener.nameChanged(name2);
 		
+	}
+	
+	public ResourceStore clone(){
+		return (ResourceStore) new XStream().fromXML(new XStream().toXML(this));
+	}
+	
+	private void testListenersList(){
+		if(listeners==null)
+			listeners=new LinkedList<>();
 	}
 }

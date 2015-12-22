@@ -67,6 +67,10 @@ public class SwatComponents extends AbstractProjectComponents {
     	return resourceContainer;
     }
     
+    public ResourceStoreContainer getResourceStoreContainer(){
+    	return resourceStoreContainer;
+    }
+    
     public XesLogContainer getContainerXESLogs(){
     	if(logModelContainers.containsKey(SwatLogType.XES))
         return (XesLogContainer) logModelContainers.get(SwatLogType.XES);

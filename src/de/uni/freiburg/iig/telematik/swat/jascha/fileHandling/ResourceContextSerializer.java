@@ -12,6 +12,7 @@ public class ResourceContextSerializer {
 	
 	public static void serialize(IResourceContext context, File file) throws FileNotFoundException{
 		XStream xstream = new XStream();
+		xstream.autodetectAnnotations(true);
 		String contextStream=xstream.toXML(context);
 		PrintWriter out = new PrintWriter(file);
 		out.println(contextStream);

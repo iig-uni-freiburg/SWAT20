@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,17 +14,24 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import com.thoughtworks.xstream.XStream;
+
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeNamedComponentAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailAction;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.SaveResourceStoreAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.addResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.removeResourceAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
 public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 
@@ -61,7 +70,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		setSize(width, height);
 		setPreferredSize(new Dimension(width, height));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setTitle("Resource Manager");
+		setTitle("Resource Store Editor");
 		setUpElements();
 	}
 	
@@ -111,11 +120,17 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	private JPanel getPlusMinusButtons(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+		panel.add(getSaveButton());
 		panel.add(Box.createHorizontalGlue());
 		panel.add(new JLabel("add or remove: "));
 		panel.add(getPlusButton());
 		panel.add(getMinusButton());
 		return panel;
+	}
+	
+	private JButton getSaveButton(){
+		JButton save = new JButton(new SaveResourceStoreAction(resourceStore));
+		return save;
 	}
 	
 	private JButton getPlusButton(){
