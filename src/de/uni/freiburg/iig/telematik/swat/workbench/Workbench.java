@@ -345,17 +345,19 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         return errors;
     }
 
-    public static void consoleMessage(String message) {
-        getConsoleArea().append(
-                Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
-                + Calendar.getInstance().get(Calendar.SECOND) + " - ");
-        getConsoleArea().append(message);
-        getConsoleArea().append("\n\r");
-        try {
-            messagePanel.setSelectedIndex(1);
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-    }
+	public static void consoleMessage(String message) {
+		if (myWorkbench != null) {
+			getConsoleArea().append(
+					Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE)
+							+ ":" + Calendar.getInstance().get(Calendar.SECOND) + " - ");
+			getConsoleArea().append(message);
+			getConsoleArea().append("\n\r");
+			try {
+				messagePanel.setSelectedIndex(1);
+			} catch (ArrayIndexOutOfBoundsException e) {
+			}
+		} // else: do not instantiate SWAT
+	}
 
     public static void errorMessage(String message, Exception e, boolean showPopup) {
         String messageToShow = "";
@@ -377,18 +379,20 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 
     }
 
-    private static void errorMessage(String message) {
-        getConsoleArea().append(
-                Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":"
-                + Calendar.getInstance().get(Calendar.SECOND) + " - ");
-        getConsoleArea().append(message);
-        getConsoleArea().append("\n\r");
-        try {
-            messagePanel.setSelectedIndex(0);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //only for message Panel
-        }
-    }
+	private static void errorMessage(String message) {
+		if (myWorkbench != null) {
+			getConsoleArea().append(
+					Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE)
+							+ ":" + Calendar.getInstance().get(Calendar.SECOND) + " - ");
+			getConsoleArea().append(message);
+			getConsoleArea().append("\n\r");
+			try {
+				messagePanel.setSelectedIndex(0);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				// only for message Panel
+			}
+		} // else: do not instantiate SWAT
+	}
 
     @Override
     public void componentSelected(SwatTreeNode node) {
