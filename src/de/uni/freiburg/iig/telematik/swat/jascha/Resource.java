@@ -31,5 +31,9 @@ public abstract class Resource implements IResource {
 	public String getDetailString(){
 		return "Name: "+name+" ["+type+"]";
 	}
+	
+	public void disable(boolean setDisable){
+		isDisabled=setDisable;
+	}
 
 }
