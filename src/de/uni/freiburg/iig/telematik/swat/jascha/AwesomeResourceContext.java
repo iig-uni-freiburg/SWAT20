@@ -24,7 +24,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	
 	//TODO: Die Map darf keine Iresource Objekte haben. Beim Speichern und Laden, geht sonst die Zuweisung der Objekte zwischen 
 	//Resource-Store und der resources-Liste verloren. Stattdesssen: Mit <String> arbeiten. GetResourceMethode in ResourceStore
-	Map<String,List<IResource>> resources = new HashMap<>(); //<Aktivity,Resources>
+	Map<String,List<IResource>> resources = new HashMap<>(); //<Activity,Resources>
 	
 	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enth�lt.
 	@XStreamOmitField
@@ -158,7 +158,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	}
 
 	@Override
-	public List<String> getRandomAllowedResourcesFor(String activity, boolean blockResources) {
+	public List<String> getRandomAvailableResourceSetFor(String activity, boolean blockResources) {
 		if(!resources.containsKey(activity)) {
 			//return dummy resource
 			ArrayList<String> dummy = new ArrayList<>(1);
