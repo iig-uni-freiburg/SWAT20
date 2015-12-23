@@ -23,6 +23,10 @@ public class ResourceSet extends Resource {
 
 	@Override
 	public boolean isAvailable() {
+		
+		if(isDisabled)
+			return false;
+		
 		for (Resource r:resources){
 			if (!r.isAvailable()){
 				return false;

@@ -8,6 +8,7 @@ public abstract class Resource implements IResource {
 	
 	protected String name;
 	protected ResourceType type;
+	protected boolean isDisabled=false;
 	
 	public String getName(){
 		return name; //gilt nun für alle, die von Resource erben

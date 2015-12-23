@@ -27,6 +27,10 @@ public class SharedResource extends Resource {
 
 	@Override
 	public boolean isAvailable() {
+		
+		if(isDisabled)
+			return false;
+		
 		return usage<1.0f;
 	}
 	

@@ -19,6 +19,10 @@ public class SimpleResource extends Resource {
 	}
 	
 	public boolean isAvailable() {
+		
+		if(isDisabled)
+			return false;
+		
 		return isAvailable;
 	}
 

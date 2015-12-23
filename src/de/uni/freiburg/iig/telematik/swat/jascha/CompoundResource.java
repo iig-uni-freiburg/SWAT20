@@ -26,6 +26,10 @@ public class CompoundResource extends Resource {
 
 	@Override
 	public boolean isAvailable() {
+		
+		if(isDisabled)
+			return false;
+		
 		for (IResource r : resources) {
 			if (!r.isAvailable())
 				return false;

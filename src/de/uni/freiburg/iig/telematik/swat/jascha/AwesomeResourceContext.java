@@ -21,6 +21,9 @@ public class AwesomeResourceContext implements IResourceContext{
 	String resourceStoreName;
 	
 	//beinhaltet Liste mit Ressourcen-Objekten. Ressourcen-Objekt kann entweder selbst eine Liste haben oder eine einzelne Resource darstellen
+	
+	//TODO: Die Map darf keine Iresource Objekte haben. Beim Speichern und Laden, geht sonst die Zuweisung der Objekte zwischen 
+	//Resource-Store und der resources-Liste verloren. Stattdesssen: Mit <String> arbeiten. GetResourceMethode in ResourceStore
 	Map<String,List<IResource>> resources = new HashMap<>(); //<Aktivity,Resources>
 	
 	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enth�lt.
