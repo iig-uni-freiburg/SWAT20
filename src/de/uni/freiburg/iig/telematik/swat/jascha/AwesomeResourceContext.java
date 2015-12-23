@@ -22,9 +22,9 @@ public class AwesomeResourceContext implements IResourceContext{
 	
 	//beinhaltet Liste mit Ressourcen-Objekten. Ressourcen-Objekt kann entweder selbst eine Liste haben oder eine einzelne Resource darstellen
 	
-	//TODO: Die Map darf keine Iresource Objekte haben. Beim Speichern und Laden, geht sonst die Zuweisung der Objekte zwischen 
+	//AENDERUNG: Die Map darf keine Iresource Objekte haben. Beim Speichern und Laden, geht sonst die Zuweisung der Objekte zwischen 
 	//Resource-Store und der resources-Liste verloren. Stattdesssen: Mit <String> arbeiten. GetResourceMethode in ResourceStore
-	Map<String,List<IResource>> resources = new HashMap<>(); //<Activity,Resources>
+	Map<String,List<String>> resources = new HashMap<>(); //<Activity,Resources>
 	
 	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enth�lt.
 	@XStreamOmitField
@@ -48,12 +48,14 @@ public class AwesomeResourceContext implements IResourceContext{
 		return resourceStoreName;
 	}
 
+
 	@Override
 	public boolean isAvailable(String ressourceName) {
-		for (IResource o:resources.get(ressourceName)){
-			if(!o.isAvailable()) return false;
-		}
-		return true;
+//		for (IResource o:resources.get(ressourceName)){
+//			if(!o.isAvailable()) return false;
+//		}
+//		return true;
+		return resourceStore.getResource(ressourceName).isAvailable();
 	}
 
 	@Override
@@ -104,7 +106,8 @@ public class AwesomeResourceContext implements IResourceContext{
 		//System.out.println("Freeing "+printList(resources));
 		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
 			//System.out.println("Unblocking "+resource);
-			getResource(resource).unUse();
+			if(resourceStore.getResource(resource)!=null)
+				getResource(resource).unUse();
 		}
 		
 		/* Alternative mit ResourceStore
@@ -115,22 +118,9 @@ public class AwesomeResourceContext implements IResourceContext{
 		
 	}
 	
-	protected IResource getResource(String resource){
-		//this can be done way faster by holding a seperate hashmap of resources!
-		for(List<IResource> res:resources.values()){
-			for(IResource r:res){
-				if(r.getName().equals(resource))
-					return r;
-			}
-		}
-		
-		return new SimpleResource("dummy");
-		
-		/* Alternative mit Liste aller Ressourcen im ResourceStore
-		 *  
-		 * return resourceStore.getResource(resource);
-		 */
-		
+	protected IResource getResource(String resource) {
+
+		return resourceStore.getResource(resource);
 
 	}
 
@@ -142,15 +132,16 @@ public class AwesomeResourceContext implements IResourceContext{
 	}
 	
 	public List<IResource> getKnownResourcesFor(String activity) {
-		List<IResource> possibleResources = resources.get(activity);
+		List<String> possibleResources = resources.get(activity);
 		if (possibleResources == null)
 			return new LinkedList<>();
 		LinkedList<IResource> result = new LinkedList<>();
-		for (IResource res : possibleResources) {
+		for (String s : possibleResources) {
+			IResource res = getResource(s);
 			result.add(res);
 			if (res instanceof ResourceSet) {
 				for (IResource resSet : ((ResourceSet) res).resources) {
-					result.add(res);
+					result.add(resSet);
 				}
 			}
 		}
@@ -165,7 +156,7 @@ public class AwesomeResourceContext implements IResourceContext{
 			dummy.add("dummy");
 			return dummy;
 		}
-		List<IResource> possibleResources = resources.get(activity);
+		List<IResource> possibleResources = getResourceList(activity);
 		LinkedList<String> result = new LinkedList<>();
 		for (IResource possibleResource : possibleResources) {
 			if (possibleResource.isAvailable()) {
@@ -180,6 +171,15 @@ public class AwesomeResourceContext implements IResourceContext{
 		}
 		return null;
 	}
+	
+	private List<IResource> getResourceList(String activity){
+		List<String> resourceList = resources.get(activity);
+		ArrayList<IResource> result= new ArrayList<>();
+		for(String resourceString:resourceList){
+			result.add(getResource(resourceString));
+		}
+		return result;
+	}
 
 	@Override
 	public IResource getResourceObject(String resourceName) {
@@ -190,20 +190,20 @@ public class AwesomeResourceContext implements IResourceContext{
 		//TODO: nur Resourcen aus dem ResourceStore nutzen
 		//Prüfen, ob Resourcen im ResourceStore vorhanden
 		if(resources.containsKey(activity)){
-			resources.get(activity).add(resource); //TODO: check if resource is already inside the list!
+			resources.get(activity).add(resource.getName()); //TODO: check if resource is already inside the list!
 		} 
 		else {
-			ArrayList<IResource> list = new ArrayList<>();
-			list.add(resource);
+			ArrayList<String> list = new ArrayList<>();
+			list.add(resource.getName());
 			resources.put(activity, list);
 		}
 	}
 
 	@Override
 	public boolean containsBlockedResources() {
-		for(List<IResource> resourceList:resources.values()){
-			for(IResource resource:resourceList){
-				if(!resource.isAvailable())
+		for(List<String> resourceList:resources.values()){
+			for(String resource:resourceList){
+				if(!isAvailable(resource))
 					return true;
 			}
 		}
@@ -212,17 +212,17 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public void reset() {
-		for(List<IResource> resourceList:resources.values())
-			for(IResource res:resourceList)
-				res.reset();
+		for(List<String> resourceList:resources.values())
+			for(String res:resourceList)
+				getResource(res).reset();
 	}
 	
 	public String toString(){
 		StringBuilder b= new StringBuilder();
 		for(String s:resources.keySet()){
 			b.append(s+": ");
-			for(IResource res: resources.get(s)){
-				b.append(res.getName()+"("+res.isAvailable()+")");
+			for(String res: resources.get(s)){
+				b.append(res+"("+isAvailable(res)+")");
 			}
 			b.append("\r\n");
 		}

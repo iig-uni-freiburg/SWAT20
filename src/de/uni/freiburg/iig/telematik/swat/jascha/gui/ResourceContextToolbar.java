@@ -90,7 +90,7 @@ public class ResourceContextToolbar extends JToolBar {
 	}
 	
 	private JButton getSetStoreButton() {
-		JButton setStore = new JButton("set reource store");
+		JButton setStore = new JButton("set resource store");
 		setStore.addActionListener(new ActionListener() {
 
 			@Override

@@ -16,7 +16,7 @@ import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceStoreListener;
 
 public class ResourceStore implements NamedComponent{
 	
-	protected Map<String,IResource> resources;
+	protected Map<String,IResource> resources; //Resourcename, Resource
 	
 	@XStreamOmitField
 	private LinkedList<ResourceStoreListener> listeners;
