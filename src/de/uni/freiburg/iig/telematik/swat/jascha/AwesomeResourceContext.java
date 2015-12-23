@@ -141,7 +141,7 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	}
 	
-	public List<IResource> getManagedResourcesFor(String activity) {
+	public List<IResource> getKnownResourcesFor(String activity) {
 		List<IResource> possibleResources = resources.get(activity);
 		if (possibleResources == null)
 			return new LinkedList<>();

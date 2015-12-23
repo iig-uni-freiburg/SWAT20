@@ -1,7 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.gui;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -24,6 +23,7 @@ import javax.swing.event.ListSelectionListener;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.AddActivityAction;
 import de.uni.freiburg.iig.telematik.swat.timeSimulation.ContextRepo;
 
@@ -94,7 +94,12 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		this.context.getResourceStore().removeResourceStoreListener(this);
 		
 		this.context=context;
-		//resources.clear();
+		updateLists();
+		
+		this.context.getResourceStore().addResourceStoreListener(this);
+	}
+	
+	private void updateLists(){
 		activities.clear();
 		for(String activites: context.getContainingActivities())
 			activities.addElement(activites);
@@ -103,8 +108,8 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		for(IResource res:context.getResourceStore().getAllResources())
 			resources.addElement(res);
 		
-		this.context.getResourceStore().addResourceStoreListener(this);
-		
+		activitiesList.repaint();
+		resourceList.repaint();
 	}
 
 	private void setupResourceList() {
@@ -245,7 +250,6 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 	@Override
 	public void nameChanged(String newName) {
 		resourceStoreName.setText("Resources (using Resource Store "+context.getResourceStore().getName()+")");
-
 	}
 
 	@Override
@@ -267,12 +271,21 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 			String activity = activitiesList.getSelectedValue();
 			resourceList.removeListSelectionListener(this); //do not inform of list change
 			resourceList.clearSelection();
-			for(IResource res:context.getManagedResourcesFor(activity)){
+			for(IResource res:context.getKnownResourcesFor(activity)){
 				resourceList.setSelectedValue(res, false);
 			}
 			resourceList.addListSelectionListener(this);
 		}
 
+	}
+	
+	public void setResourceStoreForResourceContext(ResourceStore store){
+		context.getResourceStore().removeResourceStoreListener(this);
+		context.setResourceStore(store);
+		store.addResourceStoreListener(this);
+		nameChanged(store.getName());
+		updateLists();
+		
 	}
 
 }

@@ -15,7 +15,9 @@ import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceContainer;
+import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceStoreContainer;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
@@ -26,6 +28,7 @@ public class ResourceContextToolbar extends JToolBar {
 		this.gui=gui;
 		add(getSaveButton());
 		add(getRenameButton());
+		add(getSetStoreButton());
 	}
 	
 	private JButton getSaveButton(){
@@ -60,7 +63,7 @@ public class ResourceContextToolbar extends JToolBar {
 		try {
 			rename = new JButton(IconFactory.getIcon("save as..."));
 		} catch (ParameterException | PropertyException | IOException e) {
-			rename=new JButton("rename");
+			rename=new JButton("save as...");
 		}
 		rename.setToolTipText("save as...");
 		rename.addActionListener(new ActionListener() {
@@ -84,6 +87,38 @@ public class ResourceContextToolbar extends JToolBar {
 		});
 		
 		return rename;
+	}
+	
+	private JButton getSetStoreButton() {
+		JButton setStore = new JButton("set reource store");
+		setStore.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ResourceStoreContainer stores = SwatComponents.getInstance().getResourceStoreContainer();
+
+					String[] storeNames = new String[stores.getComponents().size()];
+					int i = 0;
+					for (ResourceStore store : stores.getComponents()) {
+						storeNames[i] = store.getName();
+						i++;
+					}
+
+					
+					String newStore = (String) JOptionPane.showInputDialog(setStore,"choose new resource store for " + gui.getContext().getName(),"set resource store",JOptionPane.PLAIN_MESSAGE,null,storeNames,null);
+					if (newStore != null && !newStore.isEmpty()){
+						gui.setResourceStoreForResourceContext(stores.getComponent(newStore));
+					}
+				} catch (ProjectComponentException e1) {
+					Workbench.errorMessage("Could not get or set resource store", e1, true);
+				}
+
+			}
+		});
+
+		
+		return setStore;
 	}
 
 }
