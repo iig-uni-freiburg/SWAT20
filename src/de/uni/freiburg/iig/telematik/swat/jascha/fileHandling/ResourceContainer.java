@@ -11,6 +11,8 @@ import de.invation.code.toval.misc.wd.AbstractComponentContainer;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 
 public class ResourceContainer extends AbstractComponentContainer<IResourceContext> implements ComponentListener<IResourceContext>{
 	
@@ -70,11 +72,28 @@ public class ResourceContainer extends AbstractComponentContainer<IResourceConte
 	}
 	
     public Set<String> getAcceptedFileEndings() {
-        return new HashSet<>(Arrays.asList("xml"));
+        return new HashSet<>(Arrays.asList("rc"));
     }
     
     protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
-            return new File(pathFile,componentName+ ".xml");
+            return new File(pathFile,componentName+ ".rc");
     }
+    
+    protected String getFileEndingForComponent(IResourceContext component) {
+        return "rc";
+    }
+
+	public void linkResourceStores(ResourceStoreContainer resourceStoreContainer) {
+		for(IResourceContext context: getComponents()){
+			String storeName=((AwesomeResourceContext) context).getResourceStoreName();
+			if(resourceStoreContainer.containsComponent(storeName))
+				try {
+					((AwesomeResourceContext)context).setResourceStore(resourceStoreContainer.getComponent(storeName));
+				} catch (ProjectComponentException e) {
+					System.out.println("Could not find/link ResourceStore: "+storeName);
+				}
+		}
+		
+	}
 
 }

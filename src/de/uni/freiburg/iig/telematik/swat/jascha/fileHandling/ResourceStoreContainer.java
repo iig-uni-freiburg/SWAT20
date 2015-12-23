@@ -13,6 +13,8 @@ import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 
 public class ResourceStoreContainer extends AbstractComponentContainer<ResourceStore> implements ComponentListener<ResourceStore>{
 
+	protected final String CONTAINER_DESCRIPTOR="Resource Store";
+	
 	public ResourceStoreContainer(String basePath){
 		this(basePath,null);
 	}
@@ -27,8 +29,7 @@ public class ResourceStoreContainer extends AbstractComponentContainer<ResourceS
 
 	@Override
 	public String getComponentDescriptor() {
-		// TODO Auto-generated method stub
-		return null;
+		return CONTAINER_DESCRIPTOR;
 	}
 
 	@Override

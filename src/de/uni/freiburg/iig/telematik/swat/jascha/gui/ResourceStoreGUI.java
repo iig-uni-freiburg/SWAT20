@@ -186,10 +186,15 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	public ResourceStore getResourceStore(){
 		return resourceStore;
 	}
+	
 
 	@Override
 	public void nameChanged(String newName) {
-		nameOfStore.setText("<html>Resource-Store: <b>"+newName+"</b></html>");
+		setNewContextName(newName);
+	}
+	
+	public void setNewContextName(String name){
+		nameOfStore.setText("<html>Resource-Store: <b>"+name+"</b></html>");
 	}
 
 }

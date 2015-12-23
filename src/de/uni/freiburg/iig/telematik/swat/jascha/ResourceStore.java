@@ -155,6 +155,11 @@ public class ResourceStore implements NamedComponent{
 		listeners.add(listener);
 	}
 	
+	public void removeResourceStoreListener(ResourceStoreListener listener){
+		testListenersList();
+		listeners.remove(listener);
+	}
+	
 	private void informListenersOfResourceChange(IResource res){
 		//Info Jascha: Methode informiert die grafische Oberfläche, falls eine Resource hinzugefügt wurde. Siehe gui/ResourceStoreGUI
 		testListenersList();

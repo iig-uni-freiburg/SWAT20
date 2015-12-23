@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
@@ -21,6 +24,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	Map<String,List<IResource>> resources = new HashMap<>(); //<Aktivity,Resources>
 	
 	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enth�lt.
+	@XStreamOmitField
 	ResourceStore resourceStore = new ResourceStore();
 	
 	
@@ -238,6 +242,12 @@ public class AwesomeResourceContext implements IResourceContext{
 	
 	public Set<String> getContainingActivities(){
 		return resources.keySet();
+	}
+	
+	public AwesomeResourceContext clone(){
+		AwesomeResourceContext clone = (AwesomeResourceContext) new XStream().fromXML(new XStream().toXML(this));
+		clone.setResourceStore(getResourceStore());
+		return clone;
 	}
 
 }

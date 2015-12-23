@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.gui;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -30,6 +31,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 
 	private static final long serialVersionUID = -5550468723771850810L;
 	AwesomeResourceContext context;
+	
 	private final static String title = "Resource Context Editor";
 	private final static int width = 550;
 	private final static int height = 450;
@@ -82,6 +84,27 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 
 	private void setupActivitiesList() {
 		activitiesList.addListSelectionListener(this);
+	}
+	
+	public AwesomeResourceContext getContext() {
+		return context;
+	}
+	
+	public void setContext(AwesomeResourceContext context){
+		this.context.getResourceStore().removeResourceStoreListener(this);
+		
+		this.context=context;
+		//resources.clear();
+		activities.clear();
+		for(String activites: context.getContainingActivities())
+			activities.addElement(activites);
+		
+		resources.clear();
+		for(IResource res:context.getResourceStore().getAllResources())
+			resources.addElement(res);
+		
+		this.context.getResourceStore().addResourceStoreListener(this);
+		
 	}
 
 	private void setupResourceList() {
@@ -194,11 +217,15 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 
 	private JPanel getTopPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-		panel.add(new JLabel("Activities"));
-		panel.add(Box.createHorizontalGlue());
+		JPanel bottom = new JPanel();
+		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
+		panel.setLayout(new BorderLayout());
+		panel.add(new ResourceContextToolbar(this),BorderLayout.PAGE_START);
+		bottom.add(new JLabel("Activities"));
+		bottom.add(Box.createHorizontalGlue());
 		resourceStoreName.setText("Resources (using Resource Store "+context.getResourceStore().getName()+")");
-		panel.add(resourceStoreName);
+		bottom.add(resourceStoreName);
+		panel.add(bottom, BorderLayout.PAGE_END);
 
 		return panel;
 	}
