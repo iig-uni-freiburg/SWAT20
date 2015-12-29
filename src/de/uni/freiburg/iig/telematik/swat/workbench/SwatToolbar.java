@@ -54,6 +54,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SelectResourceContextEditAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SimulateTimeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
@@ -173,9 +174,15 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         standardItems.add(getAnalysisRadioButton());
         standardItems.add(getEditRadioButton());
         standardItems.add(getTimeSimulationButton());
+        standardItems.add(getEditResourceContext());
     }
 
-    private JComponent getTimeSimulationButton() {
+    private JComponent getEditResourceContext() {
+		JButton resourceEdit = new JButton(new SelectResourceContextEditAction());
+		return resourceEdit;
+	}
+
+	private JComponent getTimeSimulationButton() {
     	JButton simulateTime = new JButton(new SimulateTimeAction());
 		//Test if timedPetriNets exist
     	boolean showTheButton = false;

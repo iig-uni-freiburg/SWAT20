@@ -41,6 +41,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 	private JList<String> activitiesList = new JList<>();
 	private JList<IResource> resourceList = new JList<>();
 	private JLabel resourceStoreName = new JLabel();
+	private JButton addActivity;
 
 	public static void main(String args[]) {
 		ResourceContextGUI gui = new ResourceContextGUI(ContextRepo.getResourceContext());
@@ -61,7 +62,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 	}
 
 	public ResourceContextGUI(IResourceContext context) {
-		super(title);
+		super(title+": "+context.getName());
 		this.context = (AwesomeResourceContext) context;
 		setup();
 		for(String s:this.context.getContainingActivities()){
@@ -147,6 +148,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 
 	public void setActivitiesHints(List<String> activitesHints) {
 		this.activitesHints=activitesHints;
+		addActivity.setAction(new AddActivityAction(activities, activitesHints) );
 	}
 
 	private JPanel getCenterPanel() {
@@ -185,7 +187,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 		
-		JButton addActivity = new JButton(new AddActivityAction(activities, activitesHints));
+		addActivity = new JButton(new AddActivityAction(activities, activitesHints));
 
 		
 		panel.add(addActivity);
