@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
@@ -7,9 +8,18 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehav
 public class MeasuredTimeBehaviour implements ITimeBehaviour {
 	
 	HashMap<Long, Double> map = new HashMap<>();
+	// This ArrayList is finally the chart of the inversion method with on one axis the Probability 
+	//and on the other axis the Value
+	private ArrayList<Tuple> inversionArray = new ArrayList<Tuple>();
 	
 	public MeasuredTimeBehaviour(HashMap<Long, Double> map){
 		this.map=map;
+		double sum = 0;
+		for ( Long key : map.keySet() ) {
+			sum += map.get(key);
+			System.out.println("sum " + sum);
+			inversionArray.add(new Tuple(sum, key));
+		}
 		//hier inversions-array erstellen, dann muss bei getNeededTime nicht ständig die Summe neu berechnet werden.
 	}
 
@@ -35,21 +45,18 @@ public class MeasuredTimeBehaviour implements ITimeBehaviour {
 
 	@Override
 	public double getNeededTime() {
-		long a = 0;
+		long result = 0;
 		double random = Math.random();
-		double sum = 0;
 		System.out.println("random " + random);
-		for ( Long key : map.keySet() ) {
-			sum += map.get(key);
-			System.out.println("sum " + sum);
-		if(random <= sum) {
-			a=  key;
-			System.out.println(a);
+		for ( int i = 0; i< inversionArray.size(); i++ ) {
+			if(random <= inversionArray.get(i).getSum()) {
+			result=  inversionArray.get(i).getKey();
+			System.out.println(result);
 			break;
 		}
 		
 	}
-		return a;
+		return result;
 	}
 
 }
