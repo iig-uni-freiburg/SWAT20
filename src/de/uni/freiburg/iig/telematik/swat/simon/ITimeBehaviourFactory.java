@@ -16,14 +16,13 @@ public class ITimeBehaviourFactory {
 		ITimeBehaviour test = ITimeBehaviourFactory.getBahaviour(DistributionType.NORMAL, parameter);
 		for (int i = 0; i < 10; i++)
 			System.out.println("Get needed time: " + test.getNeededTime());
-
-		InversionMethodLogReader reader = new InversionMethodLogReader();
-		reader.inversionMethod(reader.probabilityTimeDiagram(reader.createHistogram("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A")));
+		//"C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A"
 
 		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/reallog.mxml", "Purchasing document");
 		for (int i = 0; i<100;i++){
 			System.out.println(measuredBehaviour.getNeededTime());
 		}
+		
 
 		
 		//reader.parseLog("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml");

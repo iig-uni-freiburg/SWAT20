@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 
@@ -28,7 +29,9 @@ public class InversionMethod implements ITimeBehaviour{
 
 	@Override
 	public double getNeededTime() {
-		// TODO Auto-generated method stub
+		
+
+		
 		return 0;
 	}
 }
