@@ -16,8 +16,8 @@ public class PTNetPLeadsTo extends CompliancePattern {
 	public PTNetPLeadsTo() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.TRANSITION));
-		mParameters.add(new Parameter(paramTypes, "T1"));
-		mParameters.add(new Parameter(paramTypes, "T2")); 
+		mParameters.add(new Parameter(paramTypes, "P"));
+		mParameters.add(new Parameter(paramTypes, "Q")); 
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class PTNetPLeadsTo extends CompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		PTNetExclusive duplicate = new PTNetExclusive();
+		PTNetPLeadsTo duplicate = new PTNetPLeadsTo();
 		duplicate.acceptInfoProfider(mInfoProvider);
 		return duplicate;
 	}

@@ -16,8 +16,8 @@ public class PTNetExclusive extends CompliancePattern {
 	public PTNetExclusive() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.TRANSITION)); //Wir wollen, dass der Benutzer nur Transitionen auswählen kann
-		mParameters.add(new Parameter(paramTypes, "T1")); //Erster Satz an Drop-Down Felder
-		mParameters.add(new Parameter(paramTypes, "T2")); //Zweiter Satz an Drop-Down Felder
+		mParameters.add(new Parameter(paramTypes, "P")); //Erster Satz an Drop-Down Felder
+		mParameters.add(new Parameter(paramTypes, "Q")); //Zweiter Satz an Drop-Down Felder
 	}
 
 	@Override

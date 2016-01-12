@@ -16,23 +16,18 @@ public class PTNetLeadsTo extends LeadsTo {
 	
 	public PTNetLeadsTo() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
-				Arrays.asList(ParameterTypeNames.STATEPREDICATE, ParameterTypeNames.TRANSITION));
+				Arrays.asList(ParameterTypeNames.TRANSITION));
 		mParameters.add(new Parameter(paramTypes, "P"));
 		mParameters.add(new Parameter(paramTypes, "Q"));
 	}
 
 	@Override
 	public void acceptInfoProfider(ModelInfoProvider provider) {
-		PTNetInfoProvider ifnetInfo = (PTNetInfoProvider) provider;
-		mInfoProvider = ifnetInfo;
-		for (Parameter p : mParameters) {
-			p.setTypeRange(ParameterTypeNames.TRANSITION, ifnetInfo.getTransitions());
-			ArrayList<String> range = new ArrayList<>(); 
-			for (String place : ifnetInfo.getPlaces()) {
-				range.add(place);
-			}
-			p.setTypeRange(ParameterTypeNames.STATEPREDICATE, range);
-		}
+		PTNetInfoProvider ptnetInfo = (PTNetInfoProvider) provider;
+		mInfoProvider = ptnetInfo;
+		Parameter p = mParameters.get(0);
+		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
+		mParameters.get(1).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 	}
 
 	@Override
