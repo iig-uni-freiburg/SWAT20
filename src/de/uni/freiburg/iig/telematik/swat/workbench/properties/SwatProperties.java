@@ -245,6 +245,24 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
         Validate.notNull(pass);
         setProperty(SwatProperty.ARISTA_FLOW_PASS, pass);
     }
+    
+    //---------------------------RTPN Context Properties-----------------------------
+    
+    public String getActiveResourceContext(){
+    	return getProperty(SwatProperty.DEFAULT_RES_CONTEXT);
+    }
+    
+    public void setActiveResouceContext(String resContextName){
+    	setProperty(SwatProperty.DEFAULT_RES_CONTEXT, resContextName);
+    }
+    
+    public String getActiveTimeContext(){
+    	return getProperty(SwatProperty.DEFAULT_TIME_CONTEXT);
+    }
+    
+    public void setActiveTimeContext(String timeContextName){
+    	setProperty(SwatProperty.DEFAULT_TIME_CONTEXT, timeContextName);
+    }
 
     @Override
     protected Properties getDefaultProperties() {

@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.misc.plots;
 
+import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
@@ -132,6 +133,8 @@ public class CumulativeHistrogram {
         );
          
         ChartPanel chartPanel = new ChartPanel(chart);
+        
+        chartPanel.getChart().getXYPlot().getRenderer().setSeriesStroke(0, new BasicStroke(2.0f));
 		
 		return chartPanel;
 	}

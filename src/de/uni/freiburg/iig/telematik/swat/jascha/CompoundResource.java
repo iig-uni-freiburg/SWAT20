@@ -42,14 +42,17 @@ public class CompoundResource extends Resource {
 	}
 
 	public String getName() {
-		StringBuilder b = new StringBuilder();
-		for (IResource r : resources) {
-			b.append(r.getName());
-			b.append(", ");
-		}
-		String result = b.toString();
-		if(result!=null && result.length()>1)result = result.substring(0, result.length()-1); //remove ", ";
-		return super.getName()+": "+result;
+//		StringBuilder b = new StringBuilder();
+//		for (IResource r : resources) {
+//			b.append(r.getName());
+//			b.append(", ");
+//		}
+//		String result = b.toString();
+//		if(result!=null && result.length()>1)result = result.substring(0, result.length()-1); //remove ", ";
+//		if(result==null || result.isEmpty())
+//			return super.getName();
+//		return super.getName()+": "+result;
+		return super.getName();
 	}
 	
 	

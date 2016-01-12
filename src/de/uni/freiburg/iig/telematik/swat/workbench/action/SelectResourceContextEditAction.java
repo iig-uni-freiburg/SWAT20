@@ -2,9 +2,11 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -12,6 +14,7 @@ import javax.swing.JPanel;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceContainer;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceContextGUI;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
@@ -30,9 +33,8 @@ public class SelectResourceContextEditAction extends AbstractWorkbenchAction {
 
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
-		System.out.println("fire");
 		
-		int result = JOptionPane.showConfirmDialog((Component) e.getSource(), getDialogPanel(), "Add activity...",
+		int result = JOptionPane.showConfirmDialog((Component) e.getSource(), getDialogPanel(), "Select Context...",
 				JOptionPane.OK_CANCEL_OPTION);
 		
 		if (result == JOptionPane.OK_OPTION && comboBox.getSelectedItem()!=null) {
@@ -56,9 +58,32 @@ public class SelectResourceContextEditAction extends AbstractWorkbenchAction {
 			comboBox = new JComboBox<>();
 		//comboBox.setEditable(true);
 		panel.add(comboBox);
+		JButton bTnnew = new JButton("new...");
+		bTnnew.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String newName=JOptionPane.showInputDialog(panel,"Enter new name for resource context");
+				if(newName!=null && !newName.isEmpty()){
+					IResourceContext context = new AwesomeResourceContext();
+					context.setName(newName);
+					try {
+						SwatComponents.getInstance().getResourceContainer().addComponent(context,true,true);
+						comboBox.insertItemAt(context.getName(), 0);
+						comboBox.setSelectedItem(context.getName());
+						comboBox.repaint();
+					} catch (ProjectComponentException e1) {
+						Workbench.errorMessage("Could not insert Resource Context "+newName, e1, true);
+					}
+				}
+				
+			}
+		});
+		panel.add(bTnnew);
 		return panel;
 	}
 	
+	/** return names of loaded resource contexts**/
 	public String[] getHints(){
 		LinkedList<String> list= new LinkedList<>();
 		try {
@@ -67,8 +92,7 @@ public class SelectResourceContextEditAction extends AbstractWorkbenchAction {
 				list.add(resContext.getName());
 			}
 		} catch (ProjectComponentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Workbench.errorMessage("Could not load resource contexts", e, true);
 		}
 		
 		String result[] = new String[list.size()];

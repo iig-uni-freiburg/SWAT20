@@ -44,25 +44,25 @@ public class SingleTimeSimulation {
 		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-1",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-6",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-6",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
 		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-2",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
-		timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleLinearTimedNet("linear-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleORTimedNet("or-3",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
-		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-4",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getSimpleANDTimedNet("and-5",ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
 		timeMachine.addNet(TimedNetRep.getComplexNet("complex-1", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getComplexNet("complex-2", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getComplexNet("complex-3", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
-		timeMachine.addNet(TimedNetRep.getComplexNet("complex-4", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getComplexNet("complex-2", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getComplexNet("complex-3", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
+		//timeMachine.addNet(TimedNetRep.getComplexNet("complex-4", ContextRepo.getResourceContext(), ContextRepo.getTimeContext()));
 		
 		HashMap<String, ArrayList<Double>> result = timeMachine.simulateAll(12345);
 		StatisticListener listener=StatisticListener.getInstance();
@@ -73,6 +73,9 @@ public class SingleTimeSimulation {
 		new SimulationHistogram(result.get("complex-1"), 100, "simulation results", "complex-1").setVisible(true);
 		
 		new CumulativeHistrogram(result.get("linear-1"), 100, "simulation results", "linear-1").setVisible(true);
+		new CumulativeHistrogram(result.get("and-1"), 100, "simulation results", "and-1").setVisible(true);
+		new CumulativeHistrogram(result.get("or-1"), 100, "simulation results", "or-1").setVisible(true);
+		new CumulativeHistrogram(result.get("complex-1"), 100, "simulation results", "complex-1").setVisible(true);
 		
 //		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
 //			//generateDiagram(entry.getValue(), 100, entry.getKey());
