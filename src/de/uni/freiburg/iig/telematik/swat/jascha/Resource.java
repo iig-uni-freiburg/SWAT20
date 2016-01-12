@@ -11,11 +11,11 @@ public abstract class Resource implements IResource {
 	protected boolean isDisabled=false;
 	
 	public String getName(){
-		return name; //gilt nun für alle, die von Resource erben
+		return name; //gilt nun fuer alle, die von Resource erben
 	}
 	
 	public Resource(String name){
-		this.name=name; //ebenfalls für alle, die von Resource erben. Um Namen muss man sich also nicht mehr kümmern.
+		this.name=name; //ebenfalls fuer alle, die von Resource erben. Um Namen muss man sich also nicht mehr kuemmern.
 	}
 	
 	public ResourceType getType(){

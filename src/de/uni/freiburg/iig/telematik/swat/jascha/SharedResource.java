@@ -38,7 +38,7 @@ public class SharedResource extends Resource {
 		this.usage+=increment;
 	}
 	
-	// Benutzung um bestimmten Anteil erh�hen, nicht nur um feste 10%
+	// Benutzung um bestimmten Anteil erhoehen, nicht nur um feste 10%
 	public void incrementUsageBy(float f){
 		if (usage + f <= 1.0){
 			this.usage+= f;

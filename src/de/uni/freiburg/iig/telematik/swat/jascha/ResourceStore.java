@@ -27,20 +27,65 @@ public class ResourceStore implements NamedComponent{
 		resources = new HashMap<>();
 	}
 	
-	public void addResource(IResource item){
+	public void addResource(Resource item){
 		resources.put(item.getName(), item);
 		informListenersOfResourceChange(item);
 	}
 	
-	public void removeResource(IResource item) {
-		// TODO: hier fehlt noch: Wenn ein Resource-Set gelöscht wird
+	public void removeResource(IResource input) {
+		//Workaround wegen IResoucre/Resource Problemen
+		Resource item = (Resource) input;
+		// TODO: hier fehlt noch: Wenn ein Resource-Set geloescht wird
 		// eine neue Methode, dass die dazugehoerigen Resourcen geloescht werden
+		if (item.getType().equals(ResourceType.SET)){
+			removeResourceSet(item);			
+		}
 
 		// TODO: zusatzlich, wenn eine Ressource geloescht wurde, die zu einem
 		// Resource-Set gehoert, muss das entsprechende
-		// set aktualisiert werden
+		// set aktualisiert werden		
+		if(item.getType().equals(ResourceType.SIMPLE)){
+			SimpleResource simpleResource = (SimpleResource) item;
+			if(simpleResource.isPartOfResourceSet){
+				removeResourceFromResourceSets(item);				
+			}			
+		}		
 		resources.remove(item.getName());
 		informListenersOfResourceRemoval(item);
+	}
+
+	private void removeResourceSet(IResource item) {
+		ResourceSet rs = (ResourceSet) item;
+		for (Resource res:rs.resources){
+			removeResource(res);			
+		}
+	}
+	
+	private void removeResourceFromResourceSets(IResource input){
+		Resource item = (Resource) input;		
+		// Falls SimpleResources Teil von mehreren Sets sein k�nnen, muessen mehrere ResourceSets geupdatet werden. Wenn nicht kann man das Ganze auch einfacher machen.
+		// setList enthaelt die ResourceSets, zu denen die SimpleResource item gehoert
+		List<IResource> setList = new LinkedList<IResource>();
+		for(IResource storeResourceList:resources.values()){
+			Resource storeResource = (Resource) storeResourceList;
+			if(storeResource.getType().equals(ResourceType.SET)){	
+				ResourceSet resourceSet = (ResourceSet) storeResource;
+				List<Resource> list = resourceSet.getRes();
+				for(IResource sr:list){
+					if(sr.getName().equals(item.getName())){
+						setList.add(storeResource);
+						break;
+					}
+					
+				}//end of inner for loop
+			}
+		} //end of outer for loop
+		
+		for (IResource res:setList){
+			//entfernen der Ressource aus allen ResourceSets
+			ResourceSet resSet = (ResourceSet) res;					
+			resSet.removeResourceFromSet(item);
+		}
 	}
 
 	public IResource getResource(String name){
@@ -50,7 +95,7 @@ public class ResourceStore implements NamedComponent{
 	// Instantiation of resources of type ResourceSet with a given amount
 	public IResource instantiateResource(ResourceType type, String name, int amount){
 		if(!type.equals(ResourceType.SET))
-			throw new ParameterException("can only instantiate Resource Set with amount");
+			throw new ParameterException("Can only instantiate a Resource Set with amount");
 		if (alreadyExists(name)){
 			throw new ParameterException("A resource with this name already exists!");
 		}
@@ -127,7 +172,7 @@ public class ResourceStore implements NamedComponent{
 				}
 			}
 		}
-		//System.out.println("There are " + result + " resources with prefix " + prefix + " available.");
+		//System.out.println("There are " + result + " resources with prefix \"" + prefix + "\" available.");
 		return result;
 	}
 	
@@ -161,14 +206,14 @@ public class ResourceStore implements NamedComponent{
 	}
 	
 	private void informListenersOfResourceChange(IResource res){
-		//Info Jascha: Methode informiert die grafische Oberfläche, falls eine Resource hinzugefügt wurde. Siehe gui/ResourceStoreGUI
+		//Info Jascha: Methode informiert die grafische Oberflaeche, falls eine Resource hinzugefuegt wurde. Siehe gui/ResourceStoreGUI
 		testListenersList();
 		for (ResourceStoreListener listener:listeners)
 			listener.resourceStoreElementAdded(res);
 	}
 	
 	private void informListenersOfResourceRemoval(IResource res){
-		//Info Jascha: Methode informiert die grafische Oberfläche, falls eine Resource entfernt wurde
+		//Info Jascha: Methode informiert die grafische Oberflaeche, falls eine Resource entfernt wurde
 		testListenersList();
 		for (ResourceStoreListener listener:listeners)
 			listener.informStoreElementRemoved(res);

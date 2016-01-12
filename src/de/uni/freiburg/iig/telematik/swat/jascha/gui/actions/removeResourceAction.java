@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JList;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
+import de.uni.freiburg.iig.telematik.swat.jascha.Resource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 
 public class removeResourceAction implements ActionListener {

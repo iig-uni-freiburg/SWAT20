@@ -10,6 +10,7 @@ import java.util.Set;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
@@ -26,7 +27,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	//Resource-Store und der resources-Liste verloren. Stattdesssen: Mit <String> arbeiten. GetResourceMethode in ResourceStore
 	Map<String,List<String>> resources = new HashMap<>(); //<Activity,Resources>
 	
-	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enth�lt.
+	//Objekt, das eine Hashmap mit allen existierenden Ressourcen enthaelt.
 	@XStreamOmitField
 	ResourceStore resourceStore = new ResourceStore();
 	
@@ -51,10 +52,6 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	@Override
 	public boolean isAvailable(String ressourceName) {
-//		for (IResource o:resources.get(ressourceName)){
-//			if(!o.isAvailable()) return false;
-//		}
-//		return true;
 		return resourceStore.getResource(ressourceName).isAvailable();
 	}
 
@@ -63,11 +60,10 @@ public class AwesomeResourceContext implements IResourceContext{
 		return name;
 	}
 
-	// Sollte man hier noch �berpr�fen, ob Ressourcen �berhaupt geblockt werden k�nnen? Also if (resource.isAvailable() == true) ?
 	@Override
 	public void blockResources(List<String> resources) {
 		//System.out.println("Blocking "+printList(resources));
-		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
+		for(String resource:resources){
 						
 			IResource r = getResource(resource);
 			if (r.isAvailable()){
@@ -76,23 +72,12 @@ public class AwesomeResourceContext implements IResourceContext{
 			}
 			else {
 				//Throw error that r can't be blocked because it's already in use
+				throw new ParameterException("The resource "+r.getName()+" can't be blocked because it's already in use");
 			} 
-		}
-		
-		/* Alternative mit ResourceStore
-		 * for(String resource:resources){
-			IResource r = resourceStore.getResource(resource);
-			if (r.isAvailable()){
-				r.use();
-			}
-			else {
-				//Throw error that r can't be blocked because it's already in use
-			}
-		} */
-		
+		}		
 		
 	}
-	// Wof�r ist das gedacht?
+	
 	private String printList(List<String> resources2) {
 		String result ="";
 		for(String s:resources2)
@@ -104,17 +89,11 @@ public class AwesomeResourceContext implements IResourceContext{
 	public void unBlockResources(List<String> resources) {
 		if(resources==null||resources.isEmpty()) return;
 		//System.out.println("Freeing "+printList(resources));
-		for(String resource:resources){ //this can be done way faster by holding a seperate hashmap of resources!
+		for(String resource:resources){
 			//System.out.println("Unblocking "+resource);
 			if(resourceStore.getResource(resource)!=null)
 				getResource(resource).unUse();
 		}
-		
-		/* Alternative mit ResourceStore
-		for(String resource:resources){
-			resourceStore.getResource(resource).unUse();
-		}
-		*/
 		
 	}
 	
@@ -187,18 +166,27 @@ public class AwesomeResourceContext implements IResourceContext{
 	}
 	
 	public void addResourceUsage(String activity, IResource resource){
+		String resourceName = resource.getName();
+		if(resourceStore.resources.containsKey(resourceName)){
 		//TODO: nur Resourcen aus dem ResourceStore nutzen
-		//Prüfen, ob Resourcen im ResourceStore vorhanden
+		//Pruefen, ob Resourcen im ResourceStore vorhanden
+				
 		if(resources.containsKey(activity)){
-			resources.get(activity).add(resource.getName()); //TODO: check if resource is already inside the list!
+			if(resources.get(activity).contains(resourceName)){
+				throw new ParameterException("Can't add " + resourceName + " because it's already inside the list");
+			} else {
+				resources.get(activity).add(resourceName); //TODO: check if resource is already inside the list!
+			}
+			
 		} 
 		else {
 			ArrayList<String> list = new ArrayList<>();
-			list.add(resource.getName());
+			list.add(resourceName);
 			resources.put(activity, list);
+			}
 		}
+		else throw new ParameterException("The resource "+resource.getName()+" can't be added because it's not in the store");
 	}
-
 	@Override
 	public boolean containsBlockedResources() {
 		for(List<String> resourceList:resources.values()){

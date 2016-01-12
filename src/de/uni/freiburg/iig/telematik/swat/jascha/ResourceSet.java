@@ -17,8 +17,18 @@ public class ResourceSet extends Resource {
 		this.name = name;
 		this.type=ResourceType.SET;
 		for (int i = 0;i<amount;i++){
-			resources.add(new SimpleResource(name+"-"+i));
+			resources.add(new SimpleResource(name+"-"+i, true));
 		}
+	}
+	
+	public void addResource(SimpleResource sr){
+		sr.isPartOfResourceSet=true;
+		resources.add(sr);
+	}
+	
+	public void removeResourceFromSet(Resource sr){
+		//TODO: Testen, ob Ressource Teil von anderen ResourceSets ist. Wenn nicht: isPartOfResourceSet = false setzen.
+		resources.remove(sr);
 	}
 
 	@Override
