@@ -27,6 +27,11 @@ public class ResourceStore implements NamedComponent{
 		resources = new HashMap<>();
 	}
 	
+	public ResourceStore(String name){
+		this();
+		setName(name);
+	}
+	
 	public void addResource(Resource item){
 		resources.put(item.getName(), item);
 		informListenersOfResourceChange(item);
@@ -63,7 +68,7 @@ public class ResourceStore implements NamedComponent{
 	
 	private void removeResourceFromResourceSets(IResource input){
 		Resource item = (Resource) input;		
-		// Falls SimpleResources Teil von mehreren Sets sein können, muessen mehrere ResourceSets geupdatet werden. Wenn nicht kann man das Ganze auch einfacher machen.
+		// Falls SimpleResources Teil von mehreren Sets sein kï¿½nnen, muessen mehrere ResourceSets geupdatet werden. Wenn nicht kann man das Ganze auch einfacher machen.
 		// setList enthaelt die ResourceSets, zu denen die SimpleResource item gehoert
 		List<IResource> setList = new LinkedList<IResource>();
 		for(IResource storeResourceList:resources.values()){
@@ -232,6 +237,7 @@ public class ResourceStore implements NamedComponent{
 	}
 
 	private void informListenerOfNameChange(String name2) {
+		testListenersList();
 		for (ResourceStoreListener listener:listeners)
 			listener.nameChanged(name2);
 		

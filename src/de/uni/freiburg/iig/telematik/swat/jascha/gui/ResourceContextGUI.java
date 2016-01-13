@@ -74,6 +74,8 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 	private void setup() {
 		setupResourceList();
 		setupActivitiesList();
+		if(context.getResourceStore()==null)
+			context.setResourceStore(new ResourceStore("Default-Store"));
 		context.getResourceStore().addResourceStoreListener(this);
 		setLocationByPlatform(true);
 		this.setSize(width, height);
