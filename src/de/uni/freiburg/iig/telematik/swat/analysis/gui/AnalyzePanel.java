@@ -77,37 +77,34 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	
 	
 	public void updatePatternResults() throws Exception {
-		
-	this.removeAll();
-	JPanel content = new JPanel(new GridBagLayout());
-	JLabel analysisName = new JLabel("Analysis from " + getDateShort());
-	JButton editButton = new JButton("Edit");
-	JButton runButton = new JButton("Run");
-	JButton saveButton = new JButton("Save");
-	JPanel propertyPanel = new JPanel();
-	propertyPanel.setLayout(new BoxLayout(propertyPanel, BoxLayout.Y_AXIS));
-	Box box = Box.createVerticalBox();
-
+		this.removeAll();
+		JPanel content = new JPanel(new GridBagLayout());
+		JLabel analysisName = new JLabel("Analysis from " + getDateShort());
+		JButton editButton = new JButton("Edit");
+		JButton runButton = new JButton("Run");
+		JButton saveButton = new JButton("Save");
+		JPanel propertyPanel = new JPanel();
+		propertyPanel.setLayout(new BoxLayout(propertyPanel, BoxLayout.Y_AXIS));
+		Box box = Box.createVerticalBox();
 		box.add(getAnalysisDropDown(Workbench.getInstance().getNameOfCurrentComponent()));
 
-	JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	buttonPanel.add(editButton);
-	buttonPanel.add(runButton);
-	buttonPanel.add(saveButton);
-	box.add(jPanelLeft(analysisName));
-	box.add(buttonPanel);
-
-	box.add(jPanelLeft(new JLabel("Patterns to Check: ")));
-	JPanel northPanel = new JPanel(new BorderLayout());
-	northPanel.add(propertyPanel, BorderLayout.NORTH);
-	JScrollPane jsp = new JScrollPane(northPanel);
-	jsp.setVisible(true);
-	content.setLayout(new BorderLayout());
-	content.add(box, BorderLayout.NORTH);
-	content.add(jsp, BorderLayout.CENTER);
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		buttonPanel.add(editButton);
+		buttonPanel.add(runButton);
+		buttonPanel.add(saveButton);
+		box.add(jPanelLeft(analysisName));
+		box.add(buttonPanel);
 	
+		box.add(jPanelLeft(new JLabel("Patterns to Check: ")));
+		JPanel northPanel = new JPanel(new BorderLayout());
+		northPanel.add(propertyPanel, BorderLayout.NORTH);
+		JScrollPane jsp = new JScrollPane(northPanel);
+		jsp.setVisible(true);
+		content.setLayout(new BorderLayout());
+		content.add(box, BorderLayout.NORTH);
+		content.add(jsp, BorderLayout.CENTER);
+		
 		editButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				mAnalysisController.openPatternDialog();
@@ -115,7 +112,6 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		});
 		
 		runButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -125,21 +121,19 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 				}
 			}
 		});
-		
+			
 		saveButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-                            try {
-                                saveRules();
-                            } catch (Exception ex) {
-                                Workbench.errorMessage("Cold not store analysis ", ex, true);
-                                Logger.getLogger(AnalyzePanel.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-
+	                        try {
+	                            saveRules();
+	                        } catch (Exception ex) {
+	                            Workbench.errorMessage("Cold not store analysis ", ex, true);
+	                            Logger.getLogger(AnalyzePanel.class.getName()).log(Level.SEVERE, null, ex);
+	                        }
 			}
 		});
-
+	
 		ArrayList<CompliancePattern> patterns = mAnalysisController.getPatterns();
 		for (CompliancePattern pattern : patterns) {
 			if (pattern.isInstantiated()) {
@@ -147,7 +141,6 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 			}
 		}
 		this.add(content);
-
 		addModelCheckerResult();
 	}
 	
@@ -181,7 +174,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		LinkedList<Analysis> result = new LinkedList<>();
 		SwatComponents sc=SwatComponents.getInstance();
 		try{
-		result.addAll(sc.getContainerPetriNets().getContainerAnalysis(netID).getComponents());
+			result.addAll(sc.getContainerPetriNets().getContainerAnalysis(netID).getComponents());
 		} catch (ProjectComponentException e){}
 		
 		try{
