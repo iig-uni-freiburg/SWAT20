@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.analysis.gui;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -24,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import org.processmining.analysis.sciffchecker.logic.reasoning.CheckerReport;
 
@@ -99,6 +101,9 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		JPanel northPanel = new JPanel(new BorderLayout());
 		northPanel.add(propertyPanel, BorderLayout.NORTH);
 		JScrollPane jsp = new JScrollPane(northPanel);
+		// TODO make height dynamic, when the whole window is resized
+		jsp.setPreferredSize(new Dimension(50, 550));
+		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jsp.setVisible(true);
 		content.setLayout(new BorderLayout());
 		content.add(box, BorderLayout.NORTH);
