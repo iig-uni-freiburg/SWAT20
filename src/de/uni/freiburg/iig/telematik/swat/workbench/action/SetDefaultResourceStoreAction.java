@@ -13,18 +13,20 @@ import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class SetDefaultResourceContextAction extends AbstractWorkbenchAction {
+public class SetDefaultResourceStoreAction extends AbstractWorkbenchAction {
 
-	public SetDefaultResourceContextAction(String name) {
+	public SetDefaultResourceStoreAction(String name) {
 		super(name);
 	}
 	
-	public SetDefaultResourceContextAction(){
-		super("set default Res-Context");
+	public SetDefaultResourceStoreAction(){
+		super("set default Res-Store");
 	}
 
 	private static final long serialVersionUID = 8026496158703419449L;
@@ -40,11 +42,11 @@ public class SetDefaultResourceContextAction extends AbstractWorkbenchAction {
 		JPopupMenu menu = new JPopupMenu();
 		
 		try {
-			for(IResourceContext context: SwatComponents.getInstance().getResourceContainer().getComponents()){
-				menu.add(new JMenuItem(new SetSpecificContext(context.getName())));
+			for(ResourceStore store: SwatComponents.getInstance().getResourceStoreContainer().getComponents()){
+				menu.add(new JMenuItem(new SetSpecificStore(store.getName())));
 			}
 		} catch (ProjectComponentException e) {
-			Workbench.errorMessage("Could not load Resource context", e, false);
+			Workbench.errorMessage("Could not load Resource store", e, false);
 		}
 		
 		menu.setInvoker((Component) source);
@@ -52,33 +54,40 @@ public class SetDefaultResourceContextAction extends AbstractWorkbenchAction {
 		return menu;
 	}
 	
-	class SetSpecificContext extends AbstractAction {
+	class SetSpecificStore extends AbstractAction {
 		
 		private String name;
 		
-		public SetSpecificContext(String contextName) {
-			super(contextName);
-			this.name=contextName;
+		public SetSpecificStore(String resourceStoreName) {
+			super(resourceStoreName);
+			this.name=resourceStoreName;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				SwatProperties.getInstance().setActiveResouceContext(name);
-				SwatProperties.getInstance().store();
+				//SwatProperties.getInstance().setActiveResouceContext(name);
+				//SwatProperties.getInstance().store();
 				updateNets();
+			} 
+			 catch (ProjectComponentException e1) {
+				Workbench.errorMessage("Could not link Resource Store "+name, e1, true);
 			} catch (IOException e1) {
-				Workbench.errorMessage("Could not set Resource Context "+name, e1, true);
-			} catch (ProjectComponentException e1) {
-				Workbench.errorMessage("Could not link Resource Context "+name, e1, true);
+				Workbench.errorMessage("I/O Error", e1, true);
 			}
 			
 		}
 		
-		private void updateNets() throws ProjectComponentException{
+		private void updateNets() throws ProjectComponentException, IOException{
 			for (AbstractGraphicalPN net: SwatComponents.getInstance().getContainerPetriNets().getComponentsSorted()){
 				if (net.getPetriNet() instanceof TimedNet){
-					((TimedNet)net.getPetriNet()).setResourceContext(SwatComponents.getInstance().getResourceContainer().getComponent(name));
+					TimedNet castedNet = (TimedNet) net.getPetriNet();
+					ResourceStore store = SwatComponents.getInstance().getResourceStoreContainer().getComponent(name);
+					if(castedNet.getResourceContext()==null){
+						IResourceContext defaultContext = SwatComponents.getInstance().getResourceContainer().getComponent(SwatProperties.getInstance().getActiveResourceContext());
+						castedNet.setResourceContext(defaultContext);
+					}
+					((AwesomeResourceContext)((TimedNet)net.getPetriNet()).getResourceContext()).setResourceStore(store);
 				}
 			}
 		}
