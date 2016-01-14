@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -84,13 +83,12 @@ public class PatternDialog extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				JPopupMenu popup = new JPopupMenu();
-
 				for (CompliancePattern pattern : mPatterns) {
-					
 					final CompliancePattern patternForPanel = pattern;
 					String patternName = pattern.getName();
+
 					JMenuItem patternItem = new JMenuItem(patternName);
-					
+
 					patternItem.addActionListener(new ActionListener() {
 
 						@Override
@@ -107,6 +105,7 @@ public class PatternDialog extends JFrame {
 							
 							if (pattern.isInstantiated()) {
 								pattern = pattern.duplicate();
+								pattern.unmakeMenuItem();
 								mPatterns.add(pattern);
 							}
 							mDialogPanel.add(new PatternPanel(pattern));
@@ -115,8 +114,9 @@ public class PatternDialog extends JFrame {
 
 						
 					});
-					
-					popup.add(patternItem);
+					if (pattern.isMenuItem()) {
+						popup.add(patternItem);
+					}
 				}
 				
 				popup.show(mAddPatternButton, mAddPatternButton.getWidth() * 4 / 5,
