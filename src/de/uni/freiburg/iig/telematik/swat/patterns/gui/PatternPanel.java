@@ -14,6 +14,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -59,6 +60,7 @@ public class PatternPanel extends JPanel {
 						Container parent = pp.getParent();
 						parent.remove(pp);
 						parent.repaint();
+						((JComponent) parent).updateUI();
 					} catch (Throwable e) {
 						e.printStackTrace();
 					}
