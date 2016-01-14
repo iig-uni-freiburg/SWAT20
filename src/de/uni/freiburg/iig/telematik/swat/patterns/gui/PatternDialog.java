@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
+import com.sun.prism.paint.Color;
+
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 
@@ -115,6 +117,7 @@ public class PatternDialog extends JFrame {
 						
 					});
 					if (pattern.isMenuItem()) {
+						patternItem.setToolTipText(pattern.getDescription());
 						popup.add(patternItem);
 					}
 				}
