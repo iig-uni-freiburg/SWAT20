@@ -168,24 +168,22 @@ public class AwesomeResourceContext implements IResourceContext{
 	public void addResourceUsage(String activity, IResource resource){
 		String resourceName = resource.getName();
 		if(resourceStore.resources.containsKey(resourceName)){
-		//TODO: nur Resourcen aus dem ResourceStore nutzen
-		//Pruefen, ob Resourcen im ResourceStore vorhanden
 				
-		if(resources.containsKey(activity)){
-			if(resources.get(activity).contains(resourceName)){
-				throw new ParameterException("Can't add " + resourceName + " because it's already inside the list");
-			} else {
-				resources.get(activity).add(resourceName); //TODO: check if resource is already inside the list!
-			}
+			if(resources.containsKey(activity)){
+				if(resources.get(activity).contains(resourceName)){
+					throw new ParameterException("Can't add " + resourceName + " because it's already inside the list");
+				} 	else {
+					resources.get(activity).add(resourceName);
+				}
 			
-		} 
+			} 
 		else {
 			ArrayList<String> list = new ArrayList<>();
 			list.add(resourceName);
 			resources.put(activity, list);
 			}
 		}
-		else throw new ParameterException("The resource "+resource.getName()+" can't be added because it's not in the store");
+		else throw new ParameterException("The resource "+resourceName+" can't be added to the activity because it's not in the store");
 	}
 	@Override
 	public boolean containsBlockedResources() {

@@ -38,23 +38,27 @@ public class ResourceStore implements NamedComponent{
 	}
 	
 	public void removeResource(IResource input) {
-		//Workaround wegen IResoucre/Resource Problemen
 		Resource item = (Resource) input;
-		// TODO: hier fehlt noch: Wenn ein Resource-Set geloescht wird
-		// eine neue Methode, dass die dazugehoerigen Resourcen geloescht werden
-		if (item.getType().equals(ResourceType.SET)){
-			removeResourceSet(item);			
-		}
-
-		// TODO: zusatzlich, wenn eine Ressource geloescht wurde, die zu einem
-		// Resource-Set gehoert, muss das entsprechende
-		// set aktualisiert werden		
-		if(item.getType().equals(ResourceType.SIMPLE)){
+		ResourceType type = item.getType();
+		switch (type) {
+		case SET:
+			removeResourceSet(item);
+			break;
+			
+		case SIMPLE:
 			SimpleResource simpleResource = (SimpleResource) item;
-			if(simpleResource.isPartOfResourceSet){
-				removeResourceFromResourceSets(item);				
-			}			
-		}		
+			if(simpleResource.getAssociatedResourceSets() > 0){
+				removeResourceFromResourceSets(item);
+				}
+			break;
+
+		default:
+			break;
+		}
+		
+		//TODO: Was tun bei compound resources? Sollten deren Einzelteile auch entfernt werden - und andersrum,
+		//muessen dann nicht alle Ressourcen überprüft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
+		
 		resources.remove(item.getName());
 		informListenersOfResourceRemoval(item);
 	}
@@ -62,31 +66,50 @@ public class ResourceStore implements NamedComponent{
 	private void removeResourceSet(IResource item) {
 		ResourceSet rs = (ResourceSet) item;
 		for (Resource res:rs.resources){
-			removeResource(res);			
+			SimpleResource sr = (SimpleResource)res;
+			
+			// If the simpleResource is associated with only this set it is be removed
+			if (sr.getAssociatedResourceSets() == 1){
+				resources.remove(sr.getName());
+				informListenersOfResourceRemoval(sr);
+			}
+			// If the simpleResource is part of more sets than just the one to be removed, then the number of associated ResourceSets is decreased,
+			//but the SimpleResource stays registered with the ResourceStore 
+			if(sr.getAssociatedResourceSets() > 1){
+				sr.updateAssociatedSets(UpdateType.DECREASE);
+			}
+			if (sr.getAssociatedResourceSets() < 1){
+				//Error
+			}
 		}
 	}
 	
 	private void removeResourceFromResourceSets(IResource input){
-		Resource item = (Resource) input;		
-		// Falls SimpleResources Teil von mehreren Sets sein kï¿½nnen, muessen mehrere ResourceSets geupdatet werden. Wenn nicht kann man das Ganze auch einfacher machen.
-		// setList enthaelt die ResourceSets, zu denen die SimpleResource item gehoert
-		List<IResource> setList = new LinkedList<IResource>();
-		for(IResource storeResourceList:resources.values()){
-			Resource storeResource = (Resource) storeResourceList;
-			if(storeResource.getType().equals(ResourceType.SET)){	
-				ResourceSet resourceSet = (ResourceSet) storeResource;
-				List<Resource> list = resourceSet.getRes();
-				for(IResource sr:list){
-					if(sr.getName().equals(item.getName())){
-						setList.add(storeResource);
-						break;
-					}
-					
-				}//end of inner for loop
-			}
-		} //end of outer for loop
 		
-		for (IResource res:setList){
+		SimpleResource item = (SimpleResource) input;
+		int associatedSets = item.getAssociatedResourceSets();
+		
+		// Falls SimpleResources Teil von mehreren Sets sein koennen, muessen mehrere ResourceSets geupdatet werden.
+		List<IResource> listOfSets = new LinkedList<IResource>();
+		
+		for (int i = associatedSets; i > 0; i--) {
+			for(IResource storeResourceList:resources.values()){
+				Resource storeResource = (Resource) storeResourceList;
+				if(storeResource.getType().equals(ResourceType.SET)){	
+					ResourceSet resourceSet = (ResourceSet) storeResource;
+					List<Resource> list = resourceSet.getRes();
+					for(IResource sr:list){
+						if(sr.getName().equals(item.getName())){
+							listOfSets.add(storeResource);
+							break;
+						}
+						
+					}
+				}
+			} 
+			
+		}		
+		for (IResource res:listOfSets){
 			//entfernen der Ressource aus allen ResourceSets
 			ResourceSet resSet = (ResourceSet) res;					
 			resSet.removeResourceFromSet(item);

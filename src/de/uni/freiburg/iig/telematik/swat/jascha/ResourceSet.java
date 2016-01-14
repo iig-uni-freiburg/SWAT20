@@ -22,14 +22,23 @@ public class ResourceSet extends Resource {
 	}
 	
 	public void addResource(SimpleResource sr){
-		sr.isPartOfResourceSet=true;
+		//sr.isPartOfResourceSet=true;
+		sr.updateAssociatedSets(UpdateType.INCREASE);
 		resources.add(sr);
 	}
 	
-	public void removeResourceFromSet(Resource sr){
-		//TODO: Testen, ob Ressource Teil von anderen ResourceSets ist. Wenn nicht: isPartOfResourceSet = false setzen.
-		resources.remove(sr);
-	}
+	public void removeResourceFromSet(Resource item){
+		SimpleResource sr = (SimpleResource)item;
+		if (sr.getAssociatedResourceSets() >= 1)
+			{
+				sr.updateAssociatedSets(UpdateType.DECREASE);
+				resources.remove(item);
+			}
+		if (sr.getAssociatedResourceSets() < 1){
+				throw new ParameterException("Can't remove resource from set because it's not part of one");
+			}
+		
+		}
 
 	@Override
 	public boolean isAvailable() {
