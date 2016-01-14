@@ -56,6 +56,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAc
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SelectResourceContextEditAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceContextAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceStoreAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SimulateTimeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
@@ -177,6 +178,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         standardItems.add(getTimeSimulationButton());
         standardItems.add(getEditResourceContext());
         standardItems.add(getSetDefaultResourceContextBtn());
+        standardItems.add(getSetDefaultResourceStoreBtn());
     }
 
     private JComponent getEditResourceContext() {
@@ -187,6 +189,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
     private JButton getSetDefaultResourceContextBtn(){
     	JButton defResContext = new JButton(new SetDefaultResourceContextAction());
     	return defResContext;
+    }
+    
+    private JButton getSetDefaultResourceStoreBtn(){
+    	JButton button = new JButton(new SetDefaultResourceStoreAction());
+    	return button;
     }
 
 	private JComponent getTimeSimulationButton() {
