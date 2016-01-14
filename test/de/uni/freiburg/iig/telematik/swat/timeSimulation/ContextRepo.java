@@ -62,7 +62,7 @@ public class ContextRepo {
 			IResource rsTest1 = resourceContext.getResourceStore().instantiateResource(ResourceType.SIMPLE, "Zange");
 			IResource rsTest2 = resourceContext.getResourceStore().instantiateResource(ResourceType.SHARED, "Waschbecken");
 			IResource rsTest3 = resourceContext.getResourceStore().instantiateResource(ResourceType.SIMPLE, "Wasserhahn");
-			resourceContext.getResourceStore().instantiateResource(ResourceType.COMPOUND,"werzeuge",werkzeuge);
+			resourceContext.getResourceStore().instantiateResource(ResourceType.COMPOUND,"werkzeuge",werkzeuge);
 			
 
 			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1", resourceContext.getResourceStore());

@@ -22,8 +22,9 @@ public class SimpleResource extends Resource {
 		isAvailable=true;
 		type=ResourceType.SIMPLE;
 		if(fromSet){
-			//isPartOfResourceSet = true;
-			updateAssociatedSets(UpdateType.INCREASE);
+			//isPartOfResourceSet = true;			
+			associatedSets = 1;
+			System.out.println("SimpleKonstruktor: associatedSets = " + associatedSets);
 		}
 		else {
 			//isPartOfResourceSet = false;
@@ -73,16 +74,12 @@ public class SimpleResource extends Resource {
 	public void updateAssociatedSets(UpdateType type){
 		switch (type) {
 		case DECREASE:
-			if(associatedSets >= 1){
-				associatedSets--;
-			} 
-			/*if(associatedSets == 1){
-				associatedSets --;
-				isPartOfResourceSet = false;			
-			}*/
 			if (associatedSets < 1){
 				throw new ParameterException("Can't decrease because the SimpleResource is not part of a ResourceSet");
 			}
+			if(associatedSets >= 1){
+				associatedSets--;
+			} 
 			break;
 
 		case INCREASE:

@@ -14,7 +14,7 @@ public class ResourceSet extends Resource {
 	}
 
 	public ResourceSet(String name, int amount) {
-		this.name = name;
+		this.name = name+"-Set";
 		this.type=ResourceType.SET;
 		for (int i = 0;i<amount;i++){
 			resources.add(new SimpleResource(name+"-"+i, true));
@@ -29,15 +29,16 @@ public class ResourceSet extends Resource {
 	
 	public void removeResourceFromSet(Resource item){
 		SimpleResource sr = (SimpleResource)item;
+		
+		if (sr.getAssociatedResourceSets() < 1){
+			throw new ParameterException("Can't remove resource from set because it's not part of one");
+		}
+		
 		if (sr.getAssociatedResourceSets() >= 1)
 			{
 				sr.updateAssociatedSets(UpdateType.DECREASE);
 				resources.remove(item);
-			}
-		if (sr.getAssociatedResourceSets() < 1){
-				throw new ParameterException("Can't remove resource from set because it's not part of one");
-			}
-		
+			}		
 		}
 
 	@Override

@@ -52,12 +52,17 @@ public class ResourceStore implements NamedComponent{
 				}
 			break;
 
-		default:
+		case COMPOUND:
+			//TODO: Was tun bei compound resources? Sollten deren Einzelteile auch entfernt werden - und andersrum,
+			//muessen dann nicht alle Ressourcen überprüft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
+			System.out.println("Trying to remove compound ...");
+			break;
+			
+		case SHARED:
+			//do nothing
+			System.out.println("Trying to remove shared...");
 			break;
 		}
-		
-		//TODO: Was tun bei compound resources? Sollten deren Einzelteile auch entfernt werden - und andersrum,
-		//muessen dann nicht alle Ressourcen überprüft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
 		
 		resources.remove(item.getName());
 		informListenersOfResourceRemoval(item);
@@ -68,6 +73,9 @@ public class ResourceStore implements NamedComponent{
 		for (Resource res:rs.resources){
 			SimpleResource sr = (SimpleResource)res;
 			
+			if (sr.getAssociatedResourceSets() < 1){
+				//Error
+			}
 			// If the simpleResource is associated with only this set it is be removed
 			if (sr.getAssociatedResourceSets() == 1){
 				resources.remove(sr.getName());
@@ -78,9 +86,7 @@ public class ResourceStore implements NamedComponent{
 			if(sr.getAssociatedResourceSets() > 1){
 				sr.updateAssociatedSets(UpdateType.DECREASE);
 			}
-			if (sr.getAssociatedResourceSets() < 1){
-				//Error
-			}
+
 		}
 	}
 	

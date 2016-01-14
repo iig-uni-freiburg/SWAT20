@@ -12,16 +12,19 @@ public class CompoundResource extends Resource {
 	public CompoundResource(String name, List<IResource> elements){
 		super(name);
 		this.resources=elements;
+		type = ResourceType.COMPOUND;
 	}
 	
 	public CompoundResource(String name){
 		super(name);
+		type = ResourceType.COMPOUND;
 	}
 	
 	//Konstruktor, bei dem die Ressource gleich in ein ResourceStore eingetragen wird.
 	public CompoundResource(String name, ResourceStore resourceStore){
 		super(name);
 		resourceStore.addResource(this);
+		type = ResourceType.COMPOUND;
 	}
 
 	@Override
