@@ -76,7 +76,7 @@ public class ResourceStore implements NamedComponent{
 			if (sr.getAssociatedResourceSets() < 1){
 				//Error
 			}
-			// If the simpleResource is associated with only this set it is be removed
+			// If the simpleResource is associated with only this set it is removed
 			if (sr.getAssociatedResourceSets() == 1){
 				resources.remove(sr.getName());
 				informListenersOfResourceRemoval(sr);

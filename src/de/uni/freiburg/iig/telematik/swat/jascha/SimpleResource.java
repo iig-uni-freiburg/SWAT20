@@ -5,13 +5,11 @@ import de.invation.code.toval.validate.ParameterException;
 public class SimpleResource extends Resource {
 
 	protected boolean isAvailable;
-	//public boolean isPartOfResourceSet;
 	protected int associatedSets;
 
 	protected SimpleResource(String name) {
 		super(name); // Um den Namen soll sich die Ueber-Klasse kuemmern
 		isAvailable=true;
-		//isPartOfResourceSet = false;
 		associatedSets = 0;
 		type=ResourceType.SIMPLE;
 	}
@@ -21,13 +19,11 @@ public class SimpleResource extends Resource {
 		super(name);
 		isAvailable=true;
 		type=ResourceType.SIMPLE;
-		if(fromSet){
-			//isPartOfResourceSet = true;			
+		if(fromSet){			
 			associatedSets = 1;
-			System.out.println("SimpleKonstruktor: associatedSets = " + associatedSets);
+			//System.out.println("SimpleKonstruktor: associatedSets = " + associatedSets);
 		}
 		else {
-			//isPartOfResourceSet = false;
 			associatedSets = 0;
 		}		
 	}	
@@ -36,7 +32,6 @@ public class SimpleResource extends Resource {
 	public SimpleResource(String name, ResourceStore resourceStore){
 		super(name);
 		isAvailable=true;
-		//isPartOfResourceSet = false;
 		associatedSets = 0;
 		resourceStore.addResource(this);
 		type=ResourceType.SIMPLE;
@@ -72,22 +67,23 @@ public class SimpleResource extends Resource {
 	}
 	
 	public void updateAssociatedSets(UpdateType type){
+		int nr = associatedSets;
 		switch (type) {
 		case DECREASE:
 			if (associatedSets < 1){
 				throw new ParameterException("Can't decrease because the SimpleResource is not part of a ResourceSet");
 			}
 			if(associatedSets >= 1){
-				associatedSets--;
+				nr--;
 			} 
 			break;
 
 		case INCREASE:
-			associatedSets++;
-			//isPartOfResourceSet = true;
+			nr++;
 			
 			break;
 		}
+		associatedSets = nr;
 	}
 
 }
