@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
 public class ResourceSet extends Resource {
 	
@@ -21,10 +22,17 @@ public class ResourceSet extends Resource {
 		}
 	}
 	
-	public void addResource(SimpleResource sr){
-		//sr.isPartOfResourceSet=true;
-		sr.updateAssociatedSets(UpdateType.INCREASE);
-		resources.add(sr);
+	public void addResource(IResource input){
+		if (((Resource)input).type == ResourceType.SIMPLE || ((Resource)input).type == ResourceType.HUMAN)
+		{
+			SimpleResource sr = (SimpleResource)input;
+			sr.updateAssociatedSets(UpdateType.INCREASE);
+			resources.add(sr);
+		}
+		else {
+			throw new ParameterException("Can only put resources of type SIMPLE and HUMAN into resource sets");
+		}
+
 	}
 	
 	public void removeResourceFromSet(Resource item){

@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceC
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
+import de.uni.freiburg.iig.telematik.swat.jascha.ResourceSet;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 import de.uni.freiburg.iig.telematik.swat.jascha.SimpleResource;
@@ -49,7 +50,7 @@ public class ContextRepo {
 			 ResourceStore store = resourceContext.getResourceStore();
 			
 			//Jascha
-			resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker",store));
+			//resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker",store));
 			List<IResource> werkzeuge = new LinkedList<IResource>();
 			werkzeuge.add(store.instantiateResource(ResourceType.SIMPLE, "Hammer"));
 			werkzeuge.add(store.instantiateResource(ResourceType.SIMPLE, "KreuzschlitzKL"));
@@ -63,6 +64,18 @@ public class ContextRepo {
 			IResource rsTest2 = resourceContext.getResourceStore().instantiateResource(ResourceType.SHARED, "Waschbecken");
 			IResource rsTest3 = resourceContext.getResourceStore().instantiateResource(ResourceType.SIMPLE, "Wasserhahn");
 			resourceContext.getResourceStore().instantiateResource(ResourceType.COMPOUND,"werkzeuge",werkzeuge);
+			
+			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Flaschner-1");
+			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Maurer-1");
+			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Kassierer-1");
+			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Hausmeister");
+			
+			//Test für ResourceSets und SimpleResources. Hausmeister kommt in zwei Sets vor, Loeschverhalten wie gewuenscht.
+			IResource handerwerkerSet = resourceContext.getResourceStore().instantiateResource(ResourceType.SET, "Handwerker", 5);
+			((ResourceSet)handerwerkerSet).addResource(resourceContext.getResourceStore().getResource("Flaschner-1"));
+			((ResourceSet)handerwerkerSet).addResource(resourceContext.getResourceStore().getResource("Hausmeister"));			
+			IResource mechanikerSet = resourceContext.getResourceStore().instantiateResource(ResourceType.SET, "Mechaniker", 5);
+			((ResourceSet)mechanikerSet).addResource(resourceContext.getResourceStore().getResource("Hausmeister"));
 			
 
 			 IResource schrauebzieher1 = new SimpleResource("Schraubenzieher1", resourceContext.getResourceStore());
