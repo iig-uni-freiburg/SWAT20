@@ -2,7 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.patterns.gui;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
@@ -11,10 +10,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -68,10 +66,14 @@ public class PatternPanel extends JPanel {
 					}
 				}
 			});
+			//Icon icon = UIManager.getIcon("OptionPane.informationIcon");
 			
-			JButton mHelpButton = new JButton(IconFactory.getIcon("help", de.uni.freiburg.iig.telematik.wolfgang.icons.IconFactory.IconSize.SMALL));
+			ImageIcon icon = IconFactory.getIcon("help", de.uni.freiburg.iig.telematik.wolfgang.icons.IconFactory.IconSize.SMALL);
+			Image image = icon.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(11, 11,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			JButton mHelpButton = new JButton(new ImageIcon(newimg));
 			mHelpButton.setToolTipText(mPattern.getDescription());
-
+			
 			JPanel mTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			mTopPanel.add(label);
 			mTopPanel.add(Box.createHorizontalStrut(10));

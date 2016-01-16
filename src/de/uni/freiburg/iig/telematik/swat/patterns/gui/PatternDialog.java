@@ -117,7 +117,6 @@ public class PatternDialog extends JFrame {
 						
 					});
 					if (pattern.isMenuItem()) {
-						patternItem.setToolTipText(pattern.getDescription());
 						popup.add(patternItem);
 					}
 				}
