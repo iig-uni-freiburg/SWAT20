@@ -12,6 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -20,6 +21,7 @@ import com.sun.prism.paint.Color;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 
 
 public class PatternDialog extends JFrame {
@@ -51,6 +53,16 @@ public class PatternDialog extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				for (CompliancePattern pattern : mPatterns) {
+					if (pattern.isInstantiated()) {
+						for (Parameter para : pattern.getParameters()) {
+							if (para.getValue().getValue().isEmpty()) {
+								JOptionPane.showMessageDialog(mDialogPanel, "Please dont leave empty fields!", "Error", JOptionPane.PLAIN_MESSAGE);
+								return;
+							}
+						}
+					}
+				}
 				setVisible(false);
 			}
 		});
