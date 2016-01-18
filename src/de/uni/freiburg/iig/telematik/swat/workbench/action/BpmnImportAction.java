@@ -34,6 +34,7 @@ public class BpmnImportAction extends AbstractWorkbenchAction {
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		File f = getFile();
+		if (f == null) return;
 		PTNet net = BPMN2PNStartup.generateIFnet(f.getAbsolutePath());
 		
 		String name = requestNetName("Please enter name for net", "Net-Name");
