@@ -2,32 +2,38 @@ package de.uni.freiburg.iig.telematik.swat.simon.gui;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
-import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import de.invation.code.toval.misc.wd.ProjectComponentException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
+import de.uni.freiburg.iig.telematik.swat.simon.AbstractTimeBehaviour;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.simon.gui.actions.CreateTimeBehaviourAction;
 import de.uni.freiburg.iig.telematik.swat.timeSimulation.ContextRepo;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
-import javafx.scene.control.SelectionMode;
 
-public class TimeContextGui extends JFrame{
+public class TimeContextGui extends JFrame implements ListSelectionListener{
 	
 	private final static int width = 550;
 	private final static int height = 450;
 	
 	private DefaultListModel<String> activities = new DefaultListModel<>();
 	private JList<String> activitiesList = new JList<>();
+	private DefaultListModel<ITimeBehaviour> behaviors = new DefaultListModel<>();
+	private JList<ITimeBehaviour> behaviorList = new JList<>();
 
 	private static final long serialVersionUID = -6663206637927584579L;
 	
@@ -52,6 +58,7 @@ public class TimeContextGui extends JFrame{
 	
 	private void setup() {
 		activitiesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		activitiesList.addListSelectionListener(this);
 		setLocationByPlatform(true);
 		this.setSize(width, height);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -64,6 +71,7 @@ public class TimeContextGui extends JFrame{
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 		panel.add(getActivitiesPanel());
+		panel.add(getBehaviorPanel());
 		return panel;
 	}
 	
@@ -80,6 +88,38 @@ public class TimeContextGui extends JFrame{
 		panel.add(listScroller);
 
 		return panel;
+	}
+	
+	private JPanel getBehaviorPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+		behaviorList.setModel(behaviors);
+		JScrollPane listScroller = new JScrollPane(behaviorList);
+		panel.add(listScroller);
+		panel.add(getBehaviourButtons());
+		return panel;
+		
+	}
+	
+	private JPanel getBehaviourButtons(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+		panel.add(Box.createHorizontalGlue());
+		panel.add(new JButton(new CreateTimeBehaviourAction()));
+		return panel;
+		
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		if(e.getValueIsAdjusting()) return;
+		String selectedItem = activitiesList.getSelectedValue();
+		ITimeBehaviour behaviour = context.getTimeObjectFor(selectedItem);
+		if (behaviour!=null){
+			behaviors.clear();
+			behaviors.addElement(behaviour);
+		}
+		
 	}
 
 }
