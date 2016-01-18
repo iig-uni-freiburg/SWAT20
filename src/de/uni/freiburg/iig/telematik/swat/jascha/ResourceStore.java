@@ -54,13 +54,21 @@ public class ResourceStore implements NamedComponent{
 
 		case COMPOUND:
 			//TODO: Was tun bei compound resources? Sollten deren Einzelteile auch entfernt werden - und andersrum,
-			//muessen dann nicht alle Ressourcen überprüft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
+			//muessen dann nicht alle Ressourcen ï¿½berprï¿½ft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
 			System.out.println("Trying to remove compound ...");
 			break;
 			
 		case SHARED:
 			//do nothing
 			System.out.println("Trying to remove shared...");
+			break;
+			
+		case HUMAN:
+			//TODO
+			break;
+			
+		default:
+			System.out.println("Missing method to remove resources of type: "+type.toString());
 			break;
 		}
 		
@@ -123,7 +131,12 @@ public class ResourceStore implements NamedComponent{
 	}
 
 	public IResource getResource(String name){
-		return resources.get(name);
+		if (resources.containsKey(name)){
+			return resources.get(name);
+		}
+		else {
+			throw new ParameterException("There is no resource with the name " + name + " in this ResourceStore");
+		}
 	}
 	
 	// Instantiation of resources of type ResourceSet with a given amount
@@ -161,7 +174,7 @@ public class ResourceStore implements NamedComponent{
 			result = new ResourceSet(name, 1);
 			resources.put(name, result);
 			break;
-			
+		case HUMAN:	
 		case SIMPLE:
 			result = new SimpleResource(name);
 			resources.put(name, result);
@@ -170,6 +183,10 @@ public class ResourceStore implements NamedComponent{
 		case SHARED:	
 			result = new SharedResource(name);
 			resources.put(name, result);
+			break;
+			
+		default:
+			System.out.println("Missing constructor for this type: " + type.toString());
 			break;
 		}
 		informListenersOfResourceChange(result);
@@ -213,6 +230,7 @@ public class ResourceStore implements NamedComponent{
 	// Method for checking if a resource object with this name already exists
 	public boolean alreadyExists(String name){		
 		return resources.containsKey(name);
+		//TODO: Maybe test if the resources have the same name AND the same type.
 	}
 	
 	/**
