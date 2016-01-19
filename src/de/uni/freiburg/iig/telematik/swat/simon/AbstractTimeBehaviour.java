@@ -62,6 +62,10 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 	public String getParameter(int index){
 		return parameterNames[index];
 	}
+	
+	public String[] getParameters(){
+		return parameterNames;
+	}
 
 	}
 
