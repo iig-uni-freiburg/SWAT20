@@ -8,6 +8,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceC
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
+import de.uni.freiburg.iig.telematik.swat.jascha.HumanResourceExtractor;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceSet;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
@@ -48,6 +49,23 @@ public class ContextRepo {
 			 resourceContext.setName("TestRepoContext");
 			 
 			 ResourceStore store = resourceContext.getResourceStore();
+			 
+			 /**
+			  * LogfileResourceExtractor-Test
+			  * Hier den Dateipfad anpassen
+			  */
+			 
+			 HumanResourceExtractor extractor = new HumanResourceExtractor("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml");
+			//LogfileResourceExtractor extractor = new LogfileResourceExtractor("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml");
+			 
+			 List<String> humanResources = extractor.getHumanResources();
+			 System.out.println(humanResources.toString());
+			 ResourceStore resourceStore = resourceContext.getResourceStore();
+			 for (String name:humanResources){
+				 System.out.println("Creating HumanResource named " + name + "...");
+				 resourceStore.instantiateResource(ResourceType.HUMAN, name);				 
+			 }
+			 
 			
 			//Jascha
 			//resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker",store));
