@@ -6,6 +6,7 @@ import org.apache.commons.math3.distribution.AbstractRealDistribution;
 
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 
 public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
@@ -14,6 +15,7 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 	boolean available =true;
 	DistributionType type;
 	DecimalFormat format = new DecimalFormat("##.##");
+	String[] parameterNames;
 
 	@Override
 	public boolean isAvailable() {
@@ -47,6 +49,22 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 		}
 		
 		return sb.toString();
+	}
+	
+	protected void setParameterNames(String... names){
+		parameterNames=names;
+	}
+	
+	public int getNumberOfParameters(){
+		return parameterNames.length;
+	}
+	
+	public String getParameter(int index){
+		return parameterNames[index];
+	}
+	
+	public String[] getParameters(){
+		return parameterNames;
 	}
 
 	}

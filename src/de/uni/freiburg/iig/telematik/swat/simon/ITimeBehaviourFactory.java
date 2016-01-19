@@ -1,14 +1,16 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.invation.code.toval.parser.ParserException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 
 public class ITimeBehaviourFactory {
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException, ParserException {
 		// Nutzung:
 		LinkedList<Double> parameter = new LinkedList<>();
 		parameter.add(70.0);
@@ -57,8 +59,8 @@ public class ITimeBehaviourFactory {
 
 	
 
-	public static ITimeBehaviour getBehaviour(String path, String activity){
-		InversionMethodLogReader reader = new InversionMethodLogReader();
+	public static ITimeBehaviour getBehaviour(String path, String activity) throws IOException, ParserException{
+		InversionMethodLogReader reader = new InversionMethodLogReader(path);
 		return new MeasuredTimeBehaviour(reader.probabilityTimeDiagram(reader.createHistogram(path, activity)));
 
 	}
