@@ -20,30 +20,32 @@ import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
 
 public class InversionMethodLogReader {
 
+	List<List<LogTrace<LogEntry>>> logs;
 	
-	
-	public InversionMethodLogReader() {
+	public InversionMethodLogReader(String pathToLogFile) throws IOException, ParserException {
+		logs = LogParser.parse(pathToLogFile);
+		
 		
 	}
 	
-	public  List<List<LogTrace<LogEntry>>>  parseLog(String path) {
-		try {
-			List<List<LogTrace<LogEntry>>> logs = LogParser.parse(path);
-			for(int i = 0; i<logs.size(); i++) {
-				for(int z = 0; z<logs.get(i).size(); z++) {
-			System.out.println(logs.get(i).get(z).toString());}}
-			return logs;
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (ParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
+//	public  List<List<LogTrace<LogEntry>>>  parseLog(String path) {
+//		try {
+//			logs = LogParser.parse(path);
+//			for(int i = 0; i<logs.size(); i++) {
+//				for(int z = 0; z<logs.get(i).size(); z++) {
+//			System.out.println(logs.get(i).get(z).toString());}}
+//			return logs;
+//			
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return null;
+//		} catch (ParserException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 	
 	public HashMap<Long, Double> createHistogram(String logPath, String activity) {
 		ArrayList<Pair> timePairs = getTimeofActivity(logPath, activity);
@@ -119,7 +121,7 @@ public class InversionMethodLogReader {
 	 **/
 	public ArrayList<Pair> getTimeofActivity(String logPath, String activity) {
 		ArrayList<Pair> startEndTime = new ArrayList<>();
-		List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);
+		//List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);
 		int counter = 0;
 		if(logs != null) {
 			for(int i = 0; i<logs.size(); i++) {

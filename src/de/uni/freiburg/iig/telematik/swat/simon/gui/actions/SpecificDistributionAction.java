@@ -19,7 +19,15 @@ public class SpecificDistributionAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		switch (type) {
+		case LOG_NORMAL:
+		case NORMAL:
+			//2-Parameters
+			break;
+
+		default:
+			break;
+		}
 		
 	}
 	

@@ -12,6 +12,8 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.Distrib
 
 public class CreateTimeBehaviourAction extends AbstractAction {
 
+	private static final long serialVersionUID = -1117202365016832417L;
+
 	public CreateTimeBehaviourAction() {
 		super("change");
 	}
