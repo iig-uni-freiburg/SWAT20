@@ -1,8 +1,11 @@
 package de.uni.freiburg.iig.telematik.swat.simon.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -10,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -18,9 +22,10 @@ import javax.swing.event.ListSelectionListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.simon.AbstractTimeBehaviour;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
-import de.uni.freiburg.iig.telematik.swat.simon.gui.actions.CreateTimeBehaviourAction;
+import de.uni.freiburg.iig.telematik.swat.simon.gui.actions.SpecificDistributionAction;
 import de.uni.freiburg.iig.telematik.swat.timeSimulation.ContextRepo;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -120,6 +125,31 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 			behaviors.addElement(behaviour);
 		}
 		
+	}
+	
+	public class CreateTimeBehaviourAction extends AbstractAction {
+
+		private static final long serialVersionUID = -1117202365016832417L;
+
+
+		public CreateTimeBehaviourAction() {
+			super("change");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JPopupMenu menu = new JPopupMenu();
+			for (DistributionType type:DistributionType.values()){
+				if(!type.equals(DistributionType.UNKNOWN))
+					menu.add(new SpecificDistributionAction(type, context, activitiesList.getSelectedValue()));
+			}
+			
+			JButton source = (JButton) e.getSource();
+			menu.setInvoker((Component) e.getSource());
+			menu.setLocation((int) source.getLocationOnScreen().getX(), (int) source.getLocationOnScreen().getY());
+			menu.setVisible(true);
+		}
+
 	}
 
 }

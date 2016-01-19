@@ -14,6 +14,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehav
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.JOptionPaneMultiInput;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.simon.AbstractTimeBehaviour;
+import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
 import de.uni.freiburg.iig.telematik.swat.simon.ITimeBehaviourFactory;
 
 public class SpecificDistributionAction extends AbstractAction {
@@ -21,10 +22,15 @@ public class SpecificDistributionAction extends AbstractAction {
 	private static final long serialVersionUID = 2692756060636577888L;
 	
 	private DistributionType type;
+	private String activityName;
 
-	public SpecificDistributionAction(DistributionType type) {
+	private AwesomeTimeContext context;
+
+	public SpecificDistributionAction(DistributionType type, AwesomeTimeContext context, String activityName) {
 		super(type.toString());
 		this.type=type;
+		this.context = context;
+		this.activityName=activityName;
 	}
 
 	@Override
@@ -35,6 +41,7 @@ public class SpecificDistributionAction extends AbstractAction {
 		AbstractTimeBehaviour template = (AbstractTimeBehaviour) ITimeBehaviourFactory.getBahaviour(type, list);
 		JOptionPaneMultiInput input = new JOptionPaneMultiInput(template.getParameters());
 		ITimeBehaviour behaviour = ITimeBehaviourFactory.getBahaviour(type, input.getResultAsDouble());
+		context.addBehaviour(activityName, behaviour);
 		
 		switch (type) {
 		case LOG_NORMAL:
