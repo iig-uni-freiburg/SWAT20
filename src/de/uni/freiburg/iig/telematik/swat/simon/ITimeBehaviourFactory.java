@@ -1,14 +1,16 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.invation.code.toval.parser.ParserException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 
 public class ITimeBehaviourFactory {
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException, ParserException {
 		// Nutzung:
 		LinkedList<Double> parameter = new LinkedList<>();
 		parameter.add(70.0);
@@ -17,10 +19,10 @@ public class ITimeBehaviourFactory {
 		for (int i = 0; i < 10; i++)
 			System.out.println("Get needed time: " + test.getNeededTime());
 		//"C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A"
-
-		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/reallog.mxml", "Purchasing document");
+		//ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A");//Purchasing document
+		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/reallog.mxml", "Invoice Receipt ");
 		for (int i = 0; i<100;i++){
-			System.out.println(measuredBehaviour.getNeededTime());
+			System.out.println("time: " + measuredBehaviour.getNeededTime());
 		}
 		
 
@@ -57,8 +59,8 @@ public class ITimeBehaviourFactory {
 
 	
 
-	public static ITimeBehaviour getBehaviour(String path, String activity){
-		InversionMethodLogReader reader = new InversionMethodLogReader();
+	public static ITimeBehaviour getBehaviour(String path, String activity) throws IOException, ParserException{
+		InversionMethodLogReader reader = new InversionMethodLogReader(path);
 		return new MeasuredTimeBehaviour(reader.probabilityTimeDiagram(reader.createHistogram(path, activity)));
 
 	}
