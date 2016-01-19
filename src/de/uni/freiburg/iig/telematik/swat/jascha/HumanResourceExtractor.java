@@ -26,6 +26,12 @@ public class HumanResourceExtractor {
 		return humanResources;
 	}
 	
+	public void createResources(ResourceStore store){
+		for(String name: humanResources){
+			store.instantiateResource(ResourceType.HUMAN, name);
+		}		
+	}
+	
 	public void extractResources(String filepath){
 		
 		LogParser parser = new LogParser();

@@ -55,16 +55,20 @@ public class ContextRepo {
 			  * Hier den Dateipfad anpassen
 			  */
 			 
-			 HumanResourceExtractor extractor = new HumanResourceExtractor("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml");
-			//LogfileResourceExtractor extractor = new LogfileResourceExtractor("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml");
-			 
-			 List<String> humanResources = extractor.getHumanResources();
+			HumanResourceExtractor extractor = new HumanResourceExtractor("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml");
+			//HumanResourceExtractor extractor = new HumanResourceExtractor("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml");
+			extractor.createResources(store);
+			
+			 /**
+			  * Alte Version
+			  * 
+			  * List<String> humanResources = extractor.getHumanResources();
 			 System.out.println(humanResources.toString());
-			 ResourceStore resourceStore = resourceContext.getResourceStore();
 			 for (String name:humanResources){
 				 System.out.println("Creating HumanResource named " + name + "...");
-				 resourceStore.instantiateResource(ResourceType.HUMAN, name);				 
-			 }
+				 store.instantiateResource(ResourceType.HUMAN, name);				 
+			 }*/
+			 
 			 
 			
 			//Jascha
