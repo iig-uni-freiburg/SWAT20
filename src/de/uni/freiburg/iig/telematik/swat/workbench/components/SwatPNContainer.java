@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni.freiburg.iig.telematik.swat.workbench.components;
 
 import de.invation.code.toval.debug.SimpleDebugger;
@@ -219,7 +214,7 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
             Collection<AnalysisContext> analysisContexts = getContainerAnalysisContext(oldName).getComponents();
             Map<String,Collection<Labeling>> contextLabelings = new HashMap<>();
             for(AnalysisContext analysisContext: analysisContexts){
-                contextLabelings.put(analysisContext.getName(), new ArrayList<Labeling>());
+                contextLabelings.put(analysisContext.getName(), new ArrayList<>());
                 for(Labeling labeling: getContainerAnalysisContext(oldName).getLabelings(analysisContext.getName())){
                     contextLabelings.get(analysisContext.getName()).add(labeling);
                 }
@@ -419,5 +414,4 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
             timeContextContainer.storeComponents();
         }
     }
-
 }

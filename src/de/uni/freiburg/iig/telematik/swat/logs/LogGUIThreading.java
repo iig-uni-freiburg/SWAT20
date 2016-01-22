@@ -16,6 +16,7 @@ public class LogGUIThreading extends AbstractExecutorService {
 		return instance;
 	}
 
+        @Override
 	public void execute(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread())
 			r.run();

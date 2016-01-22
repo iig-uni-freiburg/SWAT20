@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni.freiburg.iig.telematik.swat.logs;
 
 import de.invation.code.toval.debug.SimpleDebugger;
@@ -223,7 +218,10 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     	addComponent(logFile, FileUtils.getFileWithoutEnding(logFile));
     }
     
-    /**Add log file, copy file reference into new file, store new file under given name**/
+    /**Add log file, copy file reference into new file, store new file under given nam
+         * @param logFile
+         * @param name
+         * @throws de.invation.code.toval.misc.wd.ProjectComponentException*/
     public void addComponent(File logFile, String name) throws ProjectComponentException{
 		Validate.notNull(logFile);
 		Validate.fileName(logFile.getName());
