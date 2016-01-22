@@ -154,36 +154,57 @@ public class InversionMethodLogReader {
 
 	
 	
-//	public ArrayList<Pair> newGetTimeofActivity( String activity) {
-//		ArrayList<Long> time = new ArrayList<Long>();
-//		ArrayList<Pair> startEndTime = new ArrayList<>();
-//		List<LogEntry> list = new ArrayList<LogEntry>();
-//		//List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);
-//		int counter = 0;
-//		if(logs != null) {
-//			for(int i = 0; i<logs.size(); i++) {
-//				for(int z = 0; z<logs.get(i).size(); z++) {
-//					for(int t = 0; t<logs.get(i).get(z).getEntriesForActivity(activity).size(); t++) {
-//					list.add(logs.get(i).get(z).getEntriesForActivity(activity).get(t));
-//					
-//				}
-//			}
-//		}
-//			for(int l = 0; l < list.size(); l++) {
-//				if(list.get(l).getEventType().equals(EventType.start)) {
-//					for(int u = l+1; u < list.size(); u++) {
-//						if(list.get(u).getEventType().equals(EventType.complete)) {
-//							time.add(getDateDiff(list.get(l).getTimestamp(), list.get(u).getTimestamp(), TimeUnit.MINUTES));
-//							}
-//						if(list.get(u).getEventType().equals(EventType.suspend)) {
-//							
-//						}
-//						
-//					}
-//				}
-//			}
+	public ArrayList<Long> newGetTimeofActivity( String activity) {
+		ArrayList<Long> time = new ArrayList<Long>();
+		ArrayList<Pair> suspendResume = new ArrayList<>();
+		List<LogEntry> list = new ArrayList<LogEntry>();
+		
+		Date suspend = null;
+		Date resume = null;
+		
+		if(logs != null) {
+			for(int i = 0; i<logs.size(); i++) {
+				for(int z = 0; z<logs.get(i).size(); z++) {
+					for(int t = 0; t<logs.get(i).get(z).getEntriesForActivity(activity).size(); t++) {
+					list.add(logs.get(i).get(z).getEntriesForActivity(activity).get(t));
+					
+					
+				}
+			}
+		}
+			long difference = 0;
+			for(int l = 0; l < list.size(); l++) {
+				if(list.get(l).getEventType().equals(EventType.start)) {
+					for(int u = l+1; u < list.size(); u++) {
+						if(list.get(u).getEventType().equals(EventType.complete)) {
+							if(suspendResume != null) {
+								for(int i = 0; i < suspendResume.size();i++) {
+									difference += getDateDiff(suspendResume.get(i).getEndTime(), suspendResume.get(i).getStartTime(), TimeUnit.MINUTES);
+								}
+							time.add((getDateDiff(list.get(l).getTimestamp(), list.get(u).getTimestamp(), TimeUnit.MINUTES))- difference);
+							difference = 0;
+							suspendResume = null;
+							
+							}
+							
+							else {time.add(getDateDiff(list.get(u).getTimestamp(), list.get(l).getTimestamp(), TimeUnit.MINUTES));}
+						l = u+1;
+							}
+						if(list.get(u).getEventType().equals(EventType.suspend)) {
+							suspend = list.get(u).getTimestamp();
+						
+						if(list.get(u).getEventType().equals(EventType.resume)) {
+							resume = list.get(u).getTimestamp();
+							suspendResume.add(new Pair(suspend, resume));
+						}
+						
+						}
+						
+					}
+				}
+			}
 
-//	}
-
+	}
+		return time;
 }
-//}
+}
