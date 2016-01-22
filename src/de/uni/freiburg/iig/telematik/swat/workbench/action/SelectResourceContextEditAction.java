@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceContextGUI;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
@@ -57,6 +59,11 @@ public class SelectResourceContextEditAction extends AbstractWorkbenchAction {
 		else
 			comboBox = new JComboBox<>();
 		//comboBox.setEditable(true);
+		try {
+			comboBox.setSelectedItem(SwatProperties.getInstance().getActiveResourceContext());
+		} catch (IOException e2) {
+			Workbench.errorMessage("Could not get active context", e2, false);
+		}
 		panel.add(comboBox);
 		JButton bTnnew = new JButton("new...");
 		bTnnew.addActionListener(new ActionListener() {

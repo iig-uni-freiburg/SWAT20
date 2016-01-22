@@ -54,7 +54,7 @@ public class ResourceStore implements NamedComponent{
 
 		case COMPOUND:
 			//TODO: Was tun bei compound resources? Sollten deren Einzelteile auch entfernt werden - und andersrum,
-			//muessen dann nicht alle Ressourcen überprüft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
+			//muessen dann nicht alle Ressourcen ï¿½berprï¿½ft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
 			System.out.println("Trying to remove compound ...");
 			break;
 			

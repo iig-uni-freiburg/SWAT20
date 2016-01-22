@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.invation.code.toval.parser.ParserException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
+import de.uni.freiburg.iig.telematik.sewol.log.EventType;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
@@ -22,9 +23,13 @@ public class InversionMethodLogReader {
 
 	List<List<LogTrace<LogEntry>>> logs;
 	
+
 	
+
 	public InversionMethodLogReader(String pathToLogFile) throws IOException, ParserException {
 		logs = LogParser.parse(pathToLogFile);
+		
+
 	}
 	
 //	public  List<List<LogTrace<LogEntry>>>  parseLog(String path) {
@@ -46,8 +51,8 @@ public class InversionMethodLogReader {
 //		}
 //	}
 
-	public HashMap<Long, Double> createHistogram(String logPath, String activity) {
-		ArrayList<Pair> timePairs = getTimeofActivity(logPath, activity);
+	public HashMap<Long, Double> createHistogram( String activity) {
+		ArrayList<Pair> timePairs = getTimeofActivity( activity);
 		ArrayList<Long> duration = new ArrayList<Long>();
 		for(int i = 0; i< timePairs.size(); i++) {
 			System.out.println(getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES));
@@ -121,15 +126,16 @@ public class InversionMethodLogReader {
 	/**
 	 * Get List of Pairs with start and end times of an activity
 	 **/
-	public ArrayList<Pair> getTimeofActivity(String logPath, String activity) {
+	public ArrayList<Pair> getTimeofActivity( String activity) {
 		ArrayList<Pair> startEndTime = new ArrayList<>();
 		//List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);
 		int counter = 0;
 		if(logs != null) {
 			for(int i = 0; i<logs.size(); i++) {
 				for(int z = 0; z<logs.get(i).size(); z++) {
+					System.out.println(logs.get(i).get(z).getEntriesForActivity(activity));
 					for(int t = 0; t<logs.get(i).get(z).getEntriesForActivity(activity).size(); t++) {
-						System.out.println(logs.get(i).get(z).getEntriesForActivity(activity) + "Anzahl: " + t);
+						//System.out.println(logs.get(i).get(z).getEntriesForActivity(activity) + "Anzahl: " + t);
 						System.out.println(logs.get(i).get(z).getEntriesForActivity(activity).get(t).getTimestamp());
 						counter++;
 						if(t % 2 == 0) {
@@ -139,9 +145,45 @@ public class InversionMethodLogReader {
 					}}}
 	}
 		for(int i = 0; i< startEndTime.size(); i++) {
-		System.out.println("getTimeofActivity:  Startzeitpunkt:" + startEndTime.get(i).getStartTime() +  ", Endzeitpunkt:" + startEndTime.get(i).getEndTime() + ", Anzahl: " + i ); 
+		System.out.println(" Startzeitpunkt:" + startEndTime.get(i).getStartTime() +  ", Endzeitpunkt:" + startEndTime.get(i).getEndTime() + ", Anzahl: " + i ); 
 		}
-		System.out.println("getTimeofActivity() " + counter);
+		System.out.println(counter);
 		return startEndTime;
-	}}
+	}
 
+
+	
+	
+//	public ArrayList<Pair> newGetTimeofActivity( String activity) {
+//		ArrayList<Long> time = new ArrayList<Long>();
+//		ArrayList<Pair> startEndTime = new ArrayList<>();
+//		List<LogEntry> list = new ArrayList<LogEntry>();
+//		//List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);
+//		int counter = 0;
+//		if(logs != null) {
+//			for(int i = 0; i<logs.size(); i++) {
+//				for(int z = 0; z<logs.get(i).size(); z++) {
+//					for(int t = 0; t<logs.get(i).get(z).getEntriesForActivity(activity).size(); t++) {
+//					list.add(logs.get(i).get(z).getEntriesForActivity(activity).get(t));
+//					
+//				}
+//			}
+//		}
+//			for(int l = 0; l < list.size(); l++) {
+//				if(list.get(l).getEventType().equals(EventType.start)) {
+//					for(int u = l+1; u < list.size(); u++) {
+//						if(list.get(u).getEventType().equals(EventType.complete)) {
+//							time.add(getDateDiff(list.get(l).getTimestamp(), list.get(u).getTimestamp(), TimeUnit.MINUTES));
+//							}
+//						if(list.get(u).getEventType().equals(EventType.suspend)) {
+//							
+//						}
+//						
+//					}
+//				}
+//			}
+
+//	}
+
+}
+//}

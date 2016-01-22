@@ -17,14 +17,16 @@ import de.uni.freiburg.iig.telematik.swat.jascha.gui.JOptionPaneMultiInput;
 
 public class addDefinedResourceAction extends AbstractAction {
 	
+	private static final long serialVersionUID = -1299110255599903016L;
+	
 	private ResourceType type;
 	private ResourceStore store;
 	
 	public addDefinedResourceAction(ResourceType type, ResourceStore store) {
 		super(type.toString());
 		this.type=type;
-		putValue(SHORT_DESCRIPTION, type.toString());
-		putValue(LONG_DESCRIPTION, type.toString());
+		putValue(SHORT_DESCRIPTION, "add "+type.toString());
+		putValue(LONG_DESCRIPTION, "add "+type.toString()+" resource");
 		this.store=store;
 	}
 
@@ -33,6 +35,7 @@ public class addDefinedResourceAction extends AbstractAction {
 		JOptionPaneMultiInput dialog;
 		switch (type) {
 		case SIMPLE:
+		case HUMAN:
 			String s = (String) JOptionPane.showInputDialog(null, "Enter name of new Resource:", "Resource name",JOptionPane.PLAIN_MESSAGE);
 			if(s!=null && !s.isEmpty())
 				store.instantiateResource(type, s);

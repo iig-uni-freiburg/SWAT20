@@ -1,5 +1,8 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.gui;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -47,6 +50,15 @@ public class JOptionPaneMultiInput {
 	   
 	   public String getResult(int index){
 		   return results[index];
+	   }
+	   
+	   /**Asume inputs are double values**/
+	   public List<Double> getResultAsDouble(){
+		   LinkedList<Double> result = new LinkedList<>();
+		   for (int i = 0;i<results.length;i++){
+			   result.add(Double.parseDouble(results[i]));
+		   }
+		   return result;
 	   }
 	   
 	   public boolean hasUserInput(){

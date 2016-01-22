@@ -19,8 +19,8 @@ public class ITimeBehaviourFactory {
 		for (int i = 0; i < 10; i++)
 			System.out.println("Get needed time: " + test.getNeededTime());
 		//"C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A"
-		//ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A");//Purchasing document
-		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/reallog.mxml", "Invoice Receipt ");
+		
+		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/reallog.mxml", "Invoice Receipt (1)");
 		for (int i = 0; i<100;i++){
 			System.out.println("time: " + measuredBehaviour.getNeededTime());
 		}
@@ -61,7 +61,7 @@ public class ITimeBehaviourFactory {
 
 	public static ITimeBehaviour getBehaviour(String path, String activity) throws IOException, ParserException{
 		InversionMethodLogReader reader = new InversionMethodLogReader(path);
-		return new MeasuredTimeBehaviour(reader.probabilityTimeDiagram(reader.createHistogram(path, activity)));
+		return new MeasuredTimeBehaviour(reader.probabilityTimeDiagram(reader.createHistogram(activity)));
 
 	}
 

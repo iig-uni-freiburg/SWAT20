@@ -14,7 +14,8 @@ public class NormalDistributedBehaviour extends AbstractTimeBehaviour{
 	
 	public NormalDistributedBehaviour(double mean, double sd){
 		distribution=new NormalDistribution(mean, sd);
-		type=DistributionType.LOG_NORMAL;
+		type=DistributionType.NORMAL;
+		setParameterNames("mean","deviation");
 	}
 
 }

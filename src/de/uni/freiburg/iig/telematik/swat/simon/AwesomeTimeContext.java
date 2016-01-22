@@ -1,8 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
 import java.util.HashMap;
-
-
+import java.util.Set;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
@@ -80,6 +79,10 @@ public class AwesomeTimeContext implements ITimeContext {
 	@Override
 	public double getTime() {
 		return time;
+	}
+	
+	public Set<String> getKnownActivities(){
+		return timeBehaviour.keySet();
 	}
 
 
