@@ -7,19 +7,39 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
+
 import de.invation.code.toval.parser.ParserException;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
+import de.uni.freiburg.iig.telematik.sewol.parser.AbstractLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
+import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
+import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 
 public class HumanResourceExtractor {
 
 	//The list contains the HumanResources extracted from the given logfile
 	List<String> humanResources;
+	List<LogTrace<LogEntry>> log;
 	
 	public HumanResourceExtractor(String filepath) {
 		humanResources = new LinkedList<String>();
 		extractResources(filepath);
+	}
+	
+	public HumanResourceExtractor(LogModel model) throws Exception {
+		switch (model.getType()) {
+		case MXML:
+			log = ((MXMLLogParser) model.getLogReader()).getFirstParsedLog();
+			break;
+		case XES:
+			log = ((XESLogParser) model.getLogReader()).getFirstParsedLog();
+			break;
+		default:
+			throw new Exception("Can only parse XES or MXML logs");
+		}
 	}
 	
 	public List<String> getHumanResources(){
