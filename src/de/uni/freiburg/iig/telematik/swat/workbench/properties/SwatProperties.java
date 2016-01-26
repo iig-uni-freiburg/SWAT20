@@ -32,7 +32,6 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     protected static final String resourceContexts = "contexts/resources/";
     
     protected static final String pathNameAnalysisContext = "analysis-contexts/";
-    protected static final String pathNameTimeContext = "time-contexts/";
     protected static final String pathNameNetAnalyses = "analysis/";
 
     protected static final Set<String> validationSubDirectories = new HashSet<>();
@@ -118,10 +117,6 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     public String getAnalysisContextDirectoryName() {
         return pathNameAnalysisContext;
-    }
-
-    public String getTimeContextDirectoryName() {
-        return pathNameTimeContext;
     }
 
     //------- PNML Parser properties -------------------------------------------------------

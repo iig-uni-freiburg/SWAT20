@@ -166,7 +166,7 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
     }
     
     private String getDirectoryTimeContexts(String netName) throws Exception {
-        return getConceptDirectory(netName, SwatProperties.getInstance().getTimeContextDirectoryName());
+        return getConceptDirectory(netName, SwatProperties.getInstance().getPathForTimeContexts());
     }
     
     private String getConceptDirectory(String netName, String conceptDirectoryName) throws Exception {

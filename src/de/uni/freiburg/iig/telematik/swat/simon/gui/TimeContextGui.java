@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -20,15 +22,19 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.AddActivityAction;
+import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContextContainer;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
-import de.uni.freiburg.iig.telematik.swat.simon.AbstractTimeBehaviour;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
 import de.uni.freiburg.iig.telematik.swat.simon.gui.actions.SpecificDistributionAction;
 import de.uni.freiburg.iig.telematik.swat.timeSimulation.ContextRepo;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 
 public class TimeContextGui extends JFrame implements ListSelectionListener{
 	
@@ -70,6 +76,7 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 		//add(getTopPanel(), BorderLayout.PAGE_START);
 		add(getCenterPanel(), BorderLayout.CENTER);
 		//add(getBottomButtons(), BorderLayout.PAGE_END);
+		add(new TimeContextToolbar(this),BorderLayout.PAGE_START);
 	}
 	
 	private JPanel getCenterPanel(){
@@ -91,6 +98,12 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 		activitiesList.setModel(activities);
 		JScrollPane listScroller = new JScrollPane(activitiesList);
 		panel.add(listScroller);
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
+		buttonPanel.add(new JButton(new AddActivityAction(activities, null)));
+		//buttonPanel.add(new JButton(new AddActivityAction(activities, getActivitieHints())));
+		buttonPanel.add(Box.createHorizontalGlue());
+		panel.add(buttonPanel);
 
 		return panel;
 	}
@@ -117,20 +130,56 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		if(e.getValueIsAdjusting()) return;
+		if (e.getValueIsAdjusting())
+			return;
 		String selectedItem = activitiesList.getSelectedValue();
 		ITimeBehaviour behaviour = context.getTimeObjectFor(selectedItem);
-		if (behaviour!=null){
-			behaviors.clear();
+
+		behaviors.clear();
+		if (behaviour != null) {
 			behaviors.addElement(behaviour);
 		}
-		
+
 	}
 	
+	public List<String> getActivitieHints() {
+		LinkedList<AbstractTransition> hints = new LinkedList<>();
+		LinkedList<String> result = new LinkedList<>();
+		try {
+			for (int i = 0; i < SwatTabView.getInstance().getComponentCount(); i++) {
+				if (SwatTabView.getInstance().getComponent(i) instanceof PNEditorComponent) {
+					PNEditorComponent comp = (PNEditorComponent) SwatTabView.getInstance().getComponent(i);
+					hints.addAll(comp.getNetContainer().getPetriNet().getTransitions());
+
+					for (AbstractTransition t : hints) {
+						result.add(t.getLabel());
+
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+		}
+		return result;
+	}
+	
+	public void save() throws ProjectComponentException {
+		if (context == null || context.getName() == null || context.getName().isEmpty())
+			return;
+		
+		de.uni.freiburg.iig.telematik.swat.simon.fileHandling.ITimeContextContainer timeStore = SwatComponents.getInstance().getTimeContextContainer();
+		
+		if(!timeStore.containsComponent(context.getName())){
+			timeStore.addComponent(context);
+		}
+		
+		SwatComponents.getInstance().getTimeContextContainer().storeComponent(context.getName());
+	}
+
 	public class CreateTimeBehaviourAction extends AbstractAction {
 
 		private static final long serialVersionUID = -1117202365016832417L;
-
 
 		public CreateTimeBehaviourAction() {
 			super("change");

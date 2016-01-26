@@ -19,6 +19,7 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.MxmlLogContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.logs.XesLogContainer;
+import de.uni.freiburg.iig.telematik.swat.simon.fileHandling.ITimeContextContainer;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class SwatComponents extends AbstractProjectComponents {
     private Map<SwatLogType, AbstractLogModelContainer> logModelContainers;
     private ResourceContainer resourceContainer;
     private ResourceStoreContainer resourceStoreContainer;
+    private ITimeContextContainer timeContextContainer;
 
     public SwatComponents() throws ProjectComponentException {
         super(MessageDialog.getInstance());
@@ -69,6 +71,10 @@ public class SwatComponents extends AbstractProjectComponents {
     
     public ResourceStoreContainer getResourceStoreContainer(){
     	return resourceStoreContainer;
+    }
+    
+    public ITimeContextContainer getTimeContextContainer(){
+    	return timeContextContainer;
     }
     
     public XesLogContainer getContainerXESLogs(){
@@ -155,6 +161,10 @@ public class SwatComponents extends AbstractProjectComponents {
             
             resourceContainer.linkResourceStores(getResourceStoreContainer());
             containerPetriNets.linkResourceContexts(getResourceContainer());
+            
+            //TimeContexts
+            timeContextContainer = new ITimeContextContainer(SwatProperties.getInstance().getPathForTimeContexts());
+            timeContextContainer.loadComponents();
 
             // Analyses
         } catch (Exception e) {

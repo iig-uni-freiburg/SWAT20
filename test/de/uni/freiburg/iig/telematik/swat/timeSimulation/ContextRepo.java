@@ -25,6 +25,7 @@ public class ContextRepo {
 	public static ITimeContext getTimeContext() {
 		if (timeContext == null) {
 			timeContext = new AwesomeTimeContext();
+			timeContext.setName("Example Time Context");
 			LinkedList<Double> params1 = new LinkedList<>();
 			params1.add(50.0);
 			params1.add(2.0);
@@ -92,7 +93,7 @@ public class ContextRepo {
 			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Kassierer-1");
 			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Hausmeister");
 			
-			//Test für ResourceSets und SimpleResources. Hausmeister kommt in zwei Sets vor, Loeschverhalten wie gewuenscht.
+			//Test fï¿½r ResourceSets und SimpleResources. Hausmeister kommt in zwei Sets vor, Loeschverhalten wie gewuenscht.
 			IResource handerwerkerSet = resourceContext.getResourceStore().instantiateResource(ResourceType.SET, "Handwerker", 5);
 			((ResourceSet)handerwerkerSet).addResource(resourceContext.getResourceStore().getResource("Flaschner-1"));
 			((ResourceSet)handerwerkerSet).addResource(resourceContext.getResourceStore().getResource("Hausmeister"));			
