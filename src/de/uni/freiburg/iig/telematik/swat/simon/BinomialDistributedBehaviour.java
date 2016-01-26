@@ -9,6 +9,7 @@ public class BinomialDistributedBehaviour extends AbstractTimeBehaviour{
 	public BinomialDistributedBehaviour(int trials, double p) {
 		distribution = new BinomialDistribution(trials, p);
 		type=DistributionType.BINOMIAL;
+		setParameterNames("trials","p");
 	}
 	
 	public double getNeededTime() {

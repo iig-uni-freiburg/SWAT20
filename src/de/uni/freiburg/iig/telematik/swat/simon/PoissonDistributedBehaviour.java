@@ -10,10 +10,11 @@ public class PoissonDistributedBehaviour extends AbstractTimeBehaviour {
 	
 	
 	//lambda is the expected value
-	public PoissonDistributedBehaviour(double lambda) {
+	public PoissonDistributedBehaviour(double mean) {
 		
-		distribution = new PoissonDistribution(lambda);
+		distribution = new PoissonDistribution(mean);
 		type=DistributionType.POISSON;
+		setParameterNames("mean");
 	}
 	
 	public double getNeededTime() {

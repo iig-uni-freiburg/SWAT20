@@ -10,6 +10,7 @@ public class LogNormalDistributedBavahiour extends AbstractTimeBehaviour {
 	public LogNormalDistributedBavahiour (double scale, double shape){
 		distribution=new LogNormalDistribution(scale, shape);
 		type = DistributionType.LOG_NORMAL;
+		setParameterNames("scale","shape");
 	}
 
 }

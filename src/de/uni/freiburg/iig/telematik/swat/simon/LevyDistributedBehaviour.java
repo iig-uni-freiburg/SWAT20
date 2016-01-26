@@ -9,6 +9,7 @@ public class LevyDistributedBehaviour extends AbstractTimeBehaviour {
 	public LevyDistributedBehaviour(double mean, double scale) {
 		distribution = new LevyDistribution(null, mean, scale);
 		type=DistributionType.LEVY;
+		setParameterNames("mean","scale");
 	}
 
 }

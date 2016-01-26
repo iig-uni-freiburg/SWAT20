@@ -12,8 +12,8 @@ import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.Distrib
 
 public class NormalDistributedBehaviour extends AbstractTimeBehaviour{
 	
-	public NormalDistributedBehaviour(double mean, double sd){
-		distribution=new NormalDistribution(mean, sd);
+	public NormalDistributedBehaviour(double mean, double deviation){
+		distribution=new NormalDistribution(mean, deviation);
 		type=DistributionType.NORMAL;
 		setParameterNames("mean","deviation");
 	}

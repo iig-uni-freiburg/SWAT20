@@ -9,5 +9,6 @@ public class GammaDistributedBehaviour extends AbstractTimeBehaviour{
 	public GammaDistributedBehaviour (double shape, double scale) {
 		distribution = new GammaDistribution(shape, scale);
 		type=DistributionType.GAMMA;
+		setParameterNames("shape","scale");
 	}
 }
