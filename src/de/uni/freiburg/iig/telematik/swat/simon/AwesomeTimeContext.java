@@ -3,8 +3,11 @@ package de.uni.freiburg.iig.telematik.swat.simon;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.thoughtworks.xstream.XStream;
+
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
 
 public class AwesomeTimeContext implements ITimeContext {
 
@@ -83,6 +86,11 @@ public class AwesomeTimeContext implements ITimeContext {
 	
 	public Set<String> getKnownActivities(){
 		return timeBehaviour.keySet();
+	}
+	
+	public AwesomeTimeContext clone(){
+		AwesomeTimeContext clone = (AwesomeTimeContext) new XStream().fromXML(new XStream().toXML(this));
+		return clone;
 	}
 
 

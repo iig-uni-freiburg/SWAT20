@@ -25,6 +25,7 @@ import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.AddActivityAction;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContextContainer;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
@@ -162,6 +163,10 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 			// TODO Auto-generated catch block
 		}
 		return result;
+	}
+	
+	public ITimeContext getContext(){
+		return context;
 	}
 	
 	public void save() throws ProjectComponentException {
