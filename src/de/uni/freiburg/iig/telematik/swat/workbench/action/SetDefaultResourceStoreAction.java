@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.Component;
+import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
@@ -33,12 +34,11 @@ public class SetDefaultResourceStoreAction extends AbstractWorkbenchAction {
 
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
-		JButton source = (JButton) e.getSource();
-		JPopupMenu menu = getPopup(source);
+		JPopupMenu menu = getPopup(e.getSource());
 		menu.setVisible(true);
 	}
 	
-	private JPopupMenu getPopup(JButton source){
+	private JPopupMenu getPopup(Object object){
 		JPopupMenu menu = new JPopupMenu();
 		
 		try {
@@ -49,8 +49,8 @@ public class SetDefaultResourceStoreAction extends AbstractWorkbenchAction {
 			Workbench.errorMessage("Could not load Resource store", e, false);
 		}
 		
-		menu.setInvoker((Component) source);
-		menu.setLocation((int) source.getLocationOnScreen().getX(), (int) source.getLocationOnScreen().getY());
+		menu.setInvoker((Component) object);
+		menu.setLocation((int) MouseInfo.getPointerInfo().getLocation().getX(), (int) MouseInfo.getPointerInfo().getLocation().getY());
 		return menu;
 	}
 	

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -14,21 +15,25 @@ import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceContextAction.SetSpecificContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class SetDefaultResourceContextAction extends AbstractWorkbenchAction {
+public class SetDefaultTimeContextAction extends AbstractWorkbenchAction {
+	
+	private static final long serialVersionUID = 1L;
 
-	public SetDefaultResourceContextAction(String name) {
+	public SetDefaultTimeContextAction(String name) {
 		super(name);
 	}
 	
-	public SetDefaultResourceContextAction(){
-		super("set default Res-Context");
+	public SetDefaultTimeContextAction() {
+		super("set def timecontext");
 	}
 
-	private static final long serialVersionUID = 8026496158703419449L;
+
 
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
@@ -36,27 +41,28 @@ public class SetDefaultResourceContextAction extends AbstractWorkbenchAction {
 		menu.setVisible(true);
 	}
 	
-	private JPopupMenu getPopup(Object object){
+	JPopupMenu getPopup(Object object){
 		JPopupMenu menu = new JPopupMenu();
 		
 		try {
-			for(IResourceContext context: SwatComponents.getInstance().getResourceContainer().getComponents()){
-				menu.add(new JMenuItem(new SetSpecificContext(context.getName())));
+			for(ITimeContext context: SwatComponents.getInstance().getTimeContextContainer().getComponents()){
+				menu.add(new JMenuItem(new SetSpecificTimeContext(context.getName())));
 			}
 		} catch (ProjectComponentException e) {
-			Workbench.errorMessage("Could not load Resource context", e, false);
+			Workbench.errorMessage("Could not load time context", e, false);
 		}
 		
 		menu.setInvoker((Component) object);
 		menu.setLocation((int) MouseInfo.getPointerInfo().getLocation().getX(), (int) MouseInfo.getPointerInfo().getLocation().getY());
 		return menu;
+
 	}
 	
-	class SetSpecificContext extends AbstractAction {
+	class SetSpecificTimeContext extends AbstractAction {
 		
 		private String name;
 		
-		public SetSpecificContext(String contextName) {
+		public SetSpecificTimeContext(String contextName) {
 			super(contextName);
 			this.name=contextName;
 		}
@@ -64,7 +70,7 @@ public class SetDefaultResourceContextAction extends AbstractWorkbenchAction {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				SwatProperties.getInstance().setActiveResouceContext(name);
+				SwatProperties.getInstance().setActiveTimeContext(name);
 				SwatProperties.getInstance().store();
 				updateNets();
 			} catch (IOException e1) {
@@ -78,14 +84,12 @@ public class SetDefaultResourceContextAction extends AbstractWorkbenchAction {
 		private void updateNets() throws ProjectComponentException{
 			for (AbstractGraphicalPN net: SwatComponents.getInstance().getContainerPetriNets().getComponentsSorted()){
 				if (net.getPetriNet() instanceof TimedNet){
-					((TimedNet)net.getPetriNet()).setResourceContext(SwatComponents.getInstance().getResourceContainer().getComponent(name));
+					((TimedNet)net.getPetriNet()).setTimeContext(SwatComponents.getInstance().getTimeContextContainer().getComponent(name));
 				}
 			}
 			SwatComponents.getInstance().getContainerPetriNets().storeComponents();
 		}
 		
 	}
-	
-	
 
 }

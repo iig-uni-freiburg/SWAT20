@@ -29,13 +29,17 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar.ToolbarNew
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AboutAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.EditTimeContextAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ExportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.NewNetAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.PTImportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SelectResourceContextEditAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SendExceptionsAsEmail;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceContextAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultTimeContextAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.LolaPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.PrismPathChooser;
@@ -77,10 +81,20 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 		add(getFileMenu());
 		add(getEditMenu());
+		add(getSimulationMenu());
 		add(getSettingsMenu());
 		add(Box.createHorizontalGlue());
 		add(getHelpEntry());
 
+	}
+
+	private JMenu getSimulationMenu() {
+		JMenu simulationMenu = new JMenu("Simulation");
+		simulationMenu.add(new SelectResourceContextEditAction());
+		simulationMenu.add(new SetDefaultResourceContextAction());
+		simulationMenu.add(new EditTimeContextAction());
+		simulationMenu.add(new SetDefaultTimeContextAction());
+		return simulationMenu;
 	}
 
 	private JMenu getFileMenu() {

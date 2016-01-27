@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.abstr.AbstractTransition;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
+import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceContainer;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceContextGUI;
@@ -54,6 +55,7 @@ public class SelectResourceContextEditAction extends AbstractWorkbenchAction {
 	
 	public JPanel getDialogPanel() {
 		JPanel panel = new JPanel();
+		//ComboBox
 		if (getHints() != null)
 			comboBox = new JComboBox<>(getHints());
 		else
@@ -65,6 +67,8 @@ public class SelectResourceContextEditAction extends AbstractWorkbenchAction {
 			Workbench.errorMessage("Could not get active context", e2, false);
 		}
 		panel.add(comboBox);
+		
+		//new Button
 		JButton bTnnew = new JButton("new...");
 		bTnnew.addActionListener(new ActionListener() {
 			
@@ -72,6 +76,7 @@ public class SelectResourceContextEditAction extends AbstractWorkbenchAction {
 			public void actionPerformed(ActionEvent e) {
 				String newName=JOptionPane.showInputDialog(panel,"Enter new name for resource context");
 				if(newName!=null && !newName.isEmpty()){
+					newName = PNUtils.sanitizeElementName(newName, "r");
 					IResourceContext context = new AwesomeResourceContext();
 					context.setName(newName);
 					try {
@@ -79,6 +84,8 @@ public class SelectResourceContextEditAction extends AbstractWorkbenchAction {
 						comboBox.insertItemAt(context.getName(), 0);
 						comboBox.setSelectedItem(context.getName());
 						comboBox.repaint();
+						panel.revalidate();
+						panel.repaint();
 					} catch (ProjectComponentException e1) {
 						Workbench.errorMessage("Could not insert Resource Context "+newName, e1, true);
 					}

@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceStoreGUI;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -25,6 +26,7 @@ public class ChangeNamedComponentAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		String result = JOptionPane.showInputDialog("name");
 		if(result!=null && !result.isEmpty()) {
+			result = PNUtils.sanitizeElementName(result, "r");
 			//test if ResourceStore is in SwatComponents.
 			try {
 				if(SwatComponents.getInstance().getResourceStoreContainer().containsComponent(store.getName())){
