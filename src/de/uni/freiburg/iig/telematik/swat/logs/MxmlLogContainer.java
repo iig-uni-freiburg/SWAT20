@@ -30,9 +30,4 @@ public class MxmlLogContainer extends AbstractLogModelContainer{
 	protected String getFileEndingForComponent(LogModel component) {
 		return "mxml";
 	}
-    
-    
-    
-    
-    
 }

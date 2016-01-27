@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -66,9 +67,11 @@ public class LogImportAction extends AbstractWorkbenchAction {
 
 	protected File getFile() throws Exception {
 		File f = null;
-		if(chooser==null){
-			chooser=new JFileChooser();
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if(chooser == null){
+			chooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("mxml, xes, csv", "mxml", "xes", "csv");
+			chooser.setFileFilter(filter);
+			chooser.setAcceptAllFileFilterUsed(false);
 		}
 		int returnVal = chooser.showOpenDialog(Workbench.getInstance());
 		if(returnVal == JFileChooser.APPROVE_OPTION){

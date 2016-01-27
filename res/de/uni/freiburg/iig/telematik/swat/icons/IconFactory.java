@@ -20,6 +20,10 @@ public class IconFactory {
         return getIcon(name, EditorProperties.getInstance().getIconSize(), false);
     }
 
+    public static ImageIcon getIcon(String name, de.uni.freiburg.iig.telematik.wolfgang.icons.IconFactory.IconSize size) throws ParameterException, PropertyException, IOException {
+        return getIcon(name, size, false);
+    }
+    
     public static ImageIcon getIconPressed(String name) throws ParameterException, PropertyException, IOException {
         return getIcon(name, EditorProperties.getInstance().getIconSize(), true);
     }

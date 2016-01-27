@@ -29,10 +29,10 @@ import java.util.Map;
 
 public class SwatComponents extends AbstractProjectComponents {
 
-    private static final String CSVLogNameFormat = "%s%s.csv";
-    private static final String AnalysisNameFormat = "%s%s.xml";
+        private static final String CSVLogNameFormat = "%s%s.csv";
+        private static final String AnalysisNameFormat = "%s%s.xml";
 
-    private static SwatComponents instance = null;
+        private static SwatComponents instance = null;
 
     private ProcessContextContainer containerProcessContexts;
     private ACModelContainer containerACModels;
@@ -46,12 +46,12 @@ public class SwatComponents extends AbstractProjectComponents {
         super(MessageDialog.getInstance());
     }
 
-    public static SwatComponents getInstance() throws ProjectComponentException {
-        if (instance == null) {
-            instance = new SwatComponents();
+        public static SwatComponents getInstance() throws ProjectComponentException {
+                if (instance == null) {
+                        instance = new SwatComponents();
+                }
+                return instance;
         }
-        return instance;
-    }
 
     public ProcessContextContainer getContainerProcessContexts() {
         return containerProcessContexts;

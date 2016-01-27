@@ -16,8 +16,8 @@ public class PTNetMutexChoice extends CompliancePattern {
 	public PTNetMutexChoice() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.TRANSITION));
-		mParameters.add(new Parameter(paramTypes, "T1"));
-		mParameters.add(new Parameter(paramTypes, "T2")); 
+		mParameters.add(new Parameter(paramTypes, "P"));
+		mParameters.add(new Parameter(paramTypes, "Q")); 
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class PTNetMutexChoice extends CompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		PTNetExclusive duplicate = new PTNetExclusive();
+		PTNetMutexChoice duplicate = new PTNetMutexChoice();
 		duplicate.acceptInfoProfider(mInfoProvider);
 		return duplicate;
 	}

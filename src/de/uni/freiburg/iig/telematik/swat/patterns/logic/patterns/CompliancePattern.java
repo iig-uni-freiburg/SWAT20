@@ -16,6 +16,8 @@ public abstract class CompliancePattern implements Comparable<CompliancePattern>
 	
 	protected boolean mSatisfied;
 	
+	protected boolean mIsMenuItem = true;
+	
 	protected double mProb = -1;
 	
 	private State mState = State.NOT_INSTANTIATED;
@@ -56,7 +58,15 @@ public abstract class CompliancePattern implements Comparable<CompliancePattern>
 	public boolean isInstantiated() {
 		return (mState == State.INSTANTIATED);
 	}
-
+	
+	public void unmakeMenuItem() {
+		mIsMenuItem = false;
+	}
+	
+	public boolean isMenuItem() {
+		return (mIsMenuItem == true);
+	}
+	
 	public abstract CompliancePattern duplicate();
 
 	public void notInstantiated() {
@@ -84,7 +94,6 @@ public abstract class CompliancePattern implements Comparable<CompliancePattern>
 		setFormalization();
 		return mFormalization;
 	}
-
 
 	public abstract void setFormalization();
 

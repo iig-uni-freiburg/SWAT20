@@ -16,8 +16,8 @@ public class PTNetCorequisite extends CompliancePattern {
 	public PTNetCorequisite() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.TRANSITION));
-		mParameters.add(new Parameter(paramTypes, "T1"));
-		mParameters.add(new Parameter(paramTypes, "T2")); 
+		mParameters.add(new Parameter(paramTypes, "P"));
+		mParameters.add(new Parameter(paramTypes, "Q")); 
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class PTNetCorequisite extends CompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		PTNetExclusive duplicate = new PTNetExclusive();
+		PTNetCorequisite duplicate = new PTNetCorequisite();
 		duplicate.acceptInfoProfider(mInfoProvider);
 		return duplicate;
 	}

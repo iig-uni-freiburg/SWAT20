@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
@@ -55,6 +56,9 @@ public class AFtemplateImportAction extends AbstractWorkbenchAction {
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		JFileChooser fc = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("template", "template");
+		fc.setFileFilter(filter);
+		fc.setAcceptAllFileFilterUsed(false);
 		int returnVal = fc.showOpenDialog(Workbench.getInstance());
 		String errorMessage = "";
 

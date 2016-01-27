@@ -4,16 +4,18 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -42,7 +44,6 @@ public class PatternPanel extends JPanel {
 	}
 	
 	private void initGui() {
-		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JLabel label = new JLabel(mPattern.getName());
 		Font font = label.getFont();
@@ -59,20 +60,29 @@ public class PatternPanel extends JPanel {
 						Container parent = pp.getParent();
 						parent.remove(pp);
 						parent.repaint();
+						((JComponent) parent).updateUI();
 					} catch (Throwable e) {
 						e.printStackTrace();
 					}
 				}
 			});
-
+			//Icon icon = UIManager.getIcon("OptionPane.informationIcon");
+			
+			ImageIcon icon = IconFactory.getIcon("help", de.uni.freiburg.iig.telematik.wolfgang.icons.IconFactory.IconSize.SMALL);
+			Image image = icon.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(11, 11,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			JButton mHelpButton = new JButton(new ImageIcon(newimg));
+			mHelpButton.setToolTipText(mPattern.getDescription());
+			
 			JPanel mTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			mTopPanel.add(label);
 			mTopPanel.add(Box.createHorizontalStrut(10));
 			mTopPanel.add(mRemoveButton);
+			mTopPanel.add(mHelpButton);
 			this.add(mTopPanel);
 			
 			final JPanel mBottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
+	
 			int componentIndex = -1;
 			//			if (mPattern.isLoadedFromDisk())
 			//				System.out.println("Creating panel for LOADED PATTERN: " + mPattern.getName() + " With 1st parameter: "
@@ -86,8 +96,8 @@ public class PatternPanel extends JPanel {
 				final JComboBox mParaTypeBox = new JComboBox((String[])
 						parameter.getParameterDomain().toArray(new String[0]));
 				mParaTypeBox.setSelectedItem(parameter.getValue().getType());
-//				System.out.println("Trying to set parameter: " + parameter.getValue().getType() + " Was found: "
-//						+ mParaTypeBox.getSelectedItem());
+				//	System.out.println("Trying to set parameter: " + parameter.getValue().getType() + " Was found: "
+				//						+ mParaTypeBox.getSelectedItem());
 				final ParameterValuePanel paraValuePanel = ParaValuePanelFactory.createPanel(mParaTypeBox.getSelectedItem(), curParameter);
 				//paraValuePanel.setParameterAccordingToPattern(parameter);//new
 				mBottomPanel.add(new JLabel(parameter.getName() + ":"));
@@ -95,11 +105,9 @@ public class PatternPanel extends JPanel {
 				mBottomPanel.add(paraValuePanel);
 				
 				mParaTypeBox.addItemListener(new ItemListener() {
-
 					private Component mParaValuePanel = paraValuePanel;
-					
 					private int index = i;
-
+	
 					@Override
 					public void itemStateChanged(ItemEvent e) {
 						mBottomPanel.remove(mParaValuePanel);
@@ -109,13 +117,11 @@ public class PatternPanel extends JPanel {
 						mBottomPanel.add(mParaValuePanel, index);
 						updateUI();
 					}
-					
-				});
-							
+				});				
 			}
 			
-			this.add(mBottomPanel);
-			mBottomPanel.validate();
+		this.add(mBottomPanel);
+		mBottomPanel.validate();
 			
 		} catch (ParameterException e) {
 			// TODO Auto-generated catch block
@@ -126,9 +132,6 @@ public class PatternPanel extends JPanel {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-				
+		} 		
 	}
-
-
 }

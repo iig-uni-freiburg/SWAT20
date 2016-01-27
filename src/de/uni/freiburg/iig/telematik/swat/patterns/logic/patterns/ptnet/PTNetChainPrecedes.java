@@ -16,9 +16,9 @@ public class PTNetChainPrecedes extends CompliancePattern {
 	public PTNetChainPrecedes() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.TRANSITION));
-		mParameters.add(new Parameter(paramTypes, "T1"));
-		mParameters.add(new Parameter(paramTypes, "T2"));
-		mParameters.add(new Parameter(paramTypes, "T3")); 
+		mParameters.add(new Parameter(paramTypes, "P"));
+		mParameters.add(new Parameter(paramTypes, "Q"));
+		mParameters.add(new Parameter(paramTypes, "R")); 
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class PTNetChainPrecedes extends CompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		PTNetExclusive duplicate = new PTNetExclusive();
+		PTNetChainPrecedes duplicate = new PTNetChainPrecedes();
 		duplicate.acceptInfoProfider(mInfoProvider);
 		return duplicate;
 	}

@@ -223,7 +223,7 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
             Collection<AnalysisContext> analysisContexts = getContainerAnalysisContext(oldName).getComponents();
             Map<String,Collection<Labeling>> contextLabelings = new HashMap<>();
             for(AnalysisContext analysisContext: analysisContexts){
-                contextLabelings.put(analysisContext.getName(), new ArrayList<Labeling>());
+                contextLabelings.put(analysisContext.getName(), new ArrayList<>());
                 for(Labeling labeling: getContainerAnalysisContext(oldName).getLabelings(analysisContext.getName())){
                     contextLabelings.get(analysisContext.getName()).add(labeling);
                 }

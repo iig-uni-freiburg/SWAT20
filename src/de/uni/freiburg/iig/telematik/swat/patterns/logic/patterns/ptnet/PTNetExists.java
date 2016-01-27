@@ -16,23 +16,16 @@ public class PTNetExists extends Exists {
 	
 	public PTNetExists() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
-				Arrays.asList(ParameterTypeNames.STATEPREDICATE, ParameterTypeNames.TRANSITION));
+				Arrays.asList(ParameterTypeNames.TRANSITION));
 		mParameters.add(new Parameter(paramTypes, "P"));
 	}
 
 	@Override
 	public void acceptInfoProfider(ModelInfoProvider provider) {
-		
-		PTNetInfoProvider ptInfo = (PTNetInfoProvider) provider;
-		mInfoProvider = ptInfo;
+		PTNetInfoProvider ptnetInfo = (PTNetInfoProvider) provider;
+		mInfoProvider = ptnetInfo;
 		Parameter p = mParameters.get(0);
-		p.setTypeRange(ParameterTypeNames.TRANSITION, ptInfo.getTransitions());
-		ArrayList<String> range = new ArrayList<>(); 
-		for (String place : ptInfo.getPlaces()) {
-			range.add(place);
-		}
-		p.setTypeRange(ParameterTypeNames.STATEPREDICATE, range);
-
+		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class PTNetUniversal extends CompliancePattern {
 	public PTNetUniversal() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
 				Arrays.asList(ParameterTypeNames.TRANSITION));
-		mParameters.add(new Parameter(paramTypes, "T1"));
+		mParameters.add(new Parameter(paramTypes, "P"));
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class PTNetUniversal extends CompliancePattern {
 
 	@Override
 	public CompliancePattern duplicate() {
-		PTNetExclusive duplicate = new PTNetExclusive();
+		PTNetUniversal duplicate = new PTNetUniversal();
 		duplicate.acceptInfoProfider(mInfoProvider);
 		return duplicate;
 	}

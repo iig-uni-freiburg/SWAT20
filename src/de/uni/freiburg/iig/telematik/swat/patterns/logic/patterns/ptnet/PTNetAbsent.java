@@ -17,19 +17,16 @@ public class PTNetAbsent extends Absent {
 
 	public PTNetAbsent() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
-				Arrays.asList(ParameterTypeNames.STATEPREDICATE, ParameterTypeNames.TRANSITION));
+				Arrays.asList(ParameterTypeNames.TRANSITION));
 		mParameters.add(new Parameter(paramTypes, "P"));
 	}
 
 	@Override
-	public void acceptInfoProfider(ModelInfoProvider provider) {
-		
+	public void acceptInfoProfider(ModelInfoProvider provider) {	
 		PTNetInfoProvider ptnetInfo = (PTNetInfoProvider) provider;
 		mInfoProvider = ptnetInfo;
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
-		p.setTypeRange(ParameterTypeNames.STATEPREDICATE, ptnetInfo.getPlaces());
-		
 	}
 
 	@Override

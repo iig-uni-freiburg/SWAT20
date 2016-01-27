@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -33,6 +34,7 @@ public class BpmnImportAction extends AbstractWorkbenchAction {
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		File f = getFile();
+		if (f == null) return;
 		PTNet net = BPMN2PNStartup.generateIFnet(f.getAbsolutePath());
 		
 		String name = requestNetName("Please enter name for net", "Net-Name");
@@ -46,7 +48,9 @@ public class BpmnImportAction extends AbstractWorkbenchAction {
 	protected File getFile() throws Exception {
 		File f = null;
 		JFileChooser chooser = new JFileChooser();
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("bpmn", "bpmn");
+		chooser.setFileFilter(filter);
+		chooser.setAcceptAllFileFilterUsed(false);
 		int returnVal = chooser.showOpenDialog(Workbench.getInstance());
 		if(returnVal == JFileChooser.APPROVE_OPTION){
 			f = chooser.getSelectedFile();

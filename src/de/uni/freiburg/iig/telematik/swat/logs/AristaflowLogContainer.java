@@ -1,19 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni.freiburg.iig.telematik.swat.logs;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-
 import de.invation.code.toval.debug.SimpleDebugger;
-import de.invation.code.toval.misc.wd.ProjectComponentException;
-import de.invation.code.toval.validate.Validate;
-import de.uni.freiburg.iig.telematik.sewol.format.LogFormatType;
 
 /**
  *
@@ -51,6 +38,4 @@ public class AristaflowLogContainer extends AbstractLogModelContainer {
 	protected String getFileEndingForComponent(LogModel component) {
 		return "csv";
 	}
-    
-    
 }
