@@ -13,17 +13,20 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalTimedNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPNNameComparator;
 import de.uni.freiburg.iig.telematik.sepia.graphic.container.AbstractGraphicalPNContainer;
+import de.uni.freiburg.iig.telematik.sepia.graphic.netgraphics.AbstractPNGraphics;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.AnalysisContextContainer;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.concepts.Labeling;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.abstr.AbstractTimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.ACModelContainer;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisContainer;
 import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceContainer;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContext;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContextContainer;
+import de.uni.freiburg.iig.telematik.swat.simon.fileHandling.ITimeContextContainer;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 import java.io.File;
@@ -443,5 +446,20 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
     		net.setResourceContext(context);
     	}
     }
+
+	public void linkTimeContext(ITimeContextContainer timeContextContainer) {
+		for(Object net:getComponents()){
+			if(net instanceof AbstractGraphicalTimedNet) {
+				AbstractTimedNet timedNet = (AbstractTimedNet) ((AbstractGraphicalTimedNet)net).getPetriNet();;
+				try{
+					ITimeContext context = timeContextContainer.getComponent(timedNet.getTimeContextName());
+					timedNet.setTimeContext(context);
+				} catch (Exception e){
+					System.out.println("Could not link "+timedNet.getName()+" to: "+timedNet.getTimeContextName());
+				}
+			}
+		}
+		
+	}
 
 }

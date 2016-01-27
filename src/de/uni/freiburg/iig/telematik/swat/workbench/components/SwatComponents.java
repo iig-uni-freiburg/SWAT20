@@ -165,6 +165,7 @@ public class SwatComponents extends AbstractProjectComponents {
             //TimeContexts
             timeContextContainer = new ITimeContextContainer(SwatProperties.getInstance().getPathForTimeContexts());
             timeContextContainer.loadComponents();
+            containerPetriNets.linkTimeContext(getTimeContextContainer());
 
             // Analyses
         } catch (Exception e) {

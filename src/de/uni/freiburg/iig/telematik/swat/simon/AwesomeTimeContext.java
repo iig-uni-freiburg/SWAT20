@@ -31,7 +31,9 @@ public class AwesomeTimeContext implements ITimeContext {
 
 	@Override
 	public double getTimeFor(String activity) {
-		return timeBehaviour.get(activity).getNeededTime();
+		double neededTime = timeBehaviour.get(activity).getNeededTime();
+		if(neededTime<0) neededTime=0;
+		return neededTime;
 	}
 
 
