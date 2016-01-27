@@ -46,7 +46,8 @@ public class SwatTreeNode extends DefaultMutableTreeNode {
 		case ARISTAFLOW_LOG:
 		case MXML_LOG:
 		case XES_LOG:
-			displayName = ((LogModel) getUserObject()).getName();
+                        LogModel logModel = (LogModel) getUserObject();
+			displayName = logModel.getName() + " (" + logModel.getType() + ")";
 			break;
 		default: displayName = "GERD";
 		}

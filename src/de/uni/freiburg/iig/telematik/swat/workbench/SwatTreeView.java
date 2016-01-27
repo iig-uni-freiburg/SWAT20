@@ -27,6 +27,8 @@ import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenu;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.SwingUtilities;
 
 public class SwatTreeView extends JTree implements SwatStateListener, ComponentListener {
@@ -114,27 +116,26 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                 // Logs
                 if (SwatComponents.getInstance().containsLogs()) {
                         logsNode = new DefaultMutableTreeNode(LOGS_HEADING);
-                        xesLogNode = new DefaultMutableTreeNode(XES_LOGS_HEADING);
-                        logsNode.add(xesLogNode);
-                        mxmlLogNode = new DefaultMutableTreeNode(MXML_LOGS_HEADING);
-                        logsNode.add(mxmlLogNode);
-                        aristaLogNode = new DefaultMutableTreeNode(ARISTA_LOGS_HEADING);
-                        logsNode.add(aristaLogNode);
                         rootNode.add(logsNode);
 
-                        // XES-Logs
-                        for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLogType.XES)) {
-                                xesLogNode.add(new SwatTreeNode(logFile, SwatComponentType.XES_LOG));
-                        }
-
-                        // MXML-Logs
-                        for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLogType.MXML)) {
-                                mxmlLogNode.add(new SwatTreeNode(logFile, SwatComponentType.MXML_LOG));
-                        }
-
-                        // Aristaflow-Logs
-                        for (LogModel logFile : SwatComponents.getInstance().getLogs(SwatLogType.Aristaflow)) {
-                                aristaLogNode.add(new SwatTreeNode(logFile, SwatComponentType.ARISTAFLOW_LOG));
+                        // Logs
+                        List<LogModel> logFiles = SwatComponents.getInstance().getLogs();
+                        Collections.sort(logFiles);
+                        for (LogModel logFile : logFiles) {
+                                SwatComponentType logType = null;
+                                switch (logFile.getType()) {
+                                        case Aristaflow:
+                                                logType = SwatComponentType.ARISTAFLOW_LOG;
+                                                break;
+                                        case MXML:
+                                                logType = SwatComponentType.MXML_LOG;
+                                                break;
+                                        case XES:
+                                                logType = SwatComponentType.XES_LOG;
+                                                break;
+                                }
+                                logsNode.add(new SwatTreeNode(logFile, logType));
+                                // TODO list views
                         }
                 }
 

@@ -18,7 +18,7 @@ import java.util.Objects;
 
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 
-public class LogModel implements NamedComponent {
+public class LogModel implements NamedComponent, Comparable<LogModel> {
 
         private File fileReference;
         private String name;
@@ -148,5 +148,10 @@ public class LogModel implements NamedComponent {
 
         public boolean hasLogReaderSet() {
                 return logReader != null;
+        }
+
+        @Override
+        public int compareTo(LogModel m) {
+                return getName().compareTo(m.getName());
         }
 }
