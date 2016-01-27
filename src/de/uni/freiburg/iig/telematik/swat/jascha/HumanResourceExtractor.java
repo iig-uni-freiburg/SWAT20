@@ -24,22 +24,25 @@ public class HumanResourceExtractor {
 	List<String> humanResources;
 	List<LogTrace<LogEntry>> log;
 	
-	public HumanResourceExtractor(String filepath) {
-		humanResources = new LinkedList<String>();
-		extractResources(filepath);
-	}
-	
 	public HumanResourceExtractor(LogModel model) throws Exception {
+		humanResources = new LinkedList<String>();
 		switch (model.getType()) {
 		case MXML:
 			log = ((MXMLLogParser) model.getLogReader()).getFirstParsedLog();
+			extractResources();
 			break;
 		case XES:
 			log = ((XESLogParser) model.getLogReader()).getFirstParsedLog();
+			extractResources();
 			break;
 		default:
 			throw new Exception("Can only parse XES or MXML logs");
 		}
+	}
+	
+	public HumanResourceExtractor(String filepath) {
+		humanResources = new LinkedList<String>();
+		extractResourcesOld(filepath);
 	}
 	
 	public List<String> getHumanResources(){
@@ -52,32 +55,40 @@ public class HumanResourceExtractor {
 		}		
 	}
 	
-	public void extractResources(String filepath){
-		
+	public void extractResources(){	
+        HashSet<String> hashSet = new HashSet<String>();
+        
+			for (LogTrace<LogEntry> trace : log) {
+				Set<String> set = trace.getDistinctOriginators();
+				for(String entry:set){
+					hashSet.add(entry);
+					}
+		}
+        for(String human: hashSet){
+        	humanResources.add(human);
+        }
+	}
+	
+	public void extractResourcesOld(String filepath){		
 		LogParser parser = new LogParser();
-
 		try {
-	        List<List<LogTrace<LogEntry>>> log;
-	        List<String> HumanResources = new LinkedList<>();
+	        List<List<LogTrace<LogEntry>>> localLog;
 	        HashSet<String> hashSet = new HashSet<String>();	        
 			//log = parser.parse(new File(filepath));
-			log = parser.parse(filepath);
+			localLog = parser.parse(filepath);
 	        
 	        //Outer list is always of size 1 but it also works if it's of greater size
-	        for (int i = 0; i < log.size(); i++) {
+	        for (int i = 0; i < localLog.size(); i++) {
 				//System.out.println(i);
 				//Inner list holds LogTraces which in turn hold LogEntries but we don't need to look at the LogEntries.
-				for (LogTrace trace : log.get(i)) {
+				for (LogTrace<LogEntry> trace : localLog.get(i)) {
 					//String test = trace.getDistinctOriginators().toString();
 					Set<String> set = trace.getDistinctOriginators();
 					for(String entry:set){
 						hashSet.add(entry);
-					}
-					
+					}					
 					//System.out.println(hashSet);
-				}
-				
-				
+				}				
 				//System.out.println(hashSet);
 			}
 	        //System.out.println(hashSet);
@@ -92,8 +103,5 @@ public class HumanResourceExtractor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
-	}
-
+	}	
 }

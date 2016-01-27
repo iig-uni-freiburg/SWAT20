@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.timeSimulation;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import de.uni.freiburg.iig.telematik.swat.jascha.ResourceSet;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 import de.uni.freiburg.iig.telematik.swat.jascha.SimpleResource;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
 import de.uni.freiburg.iig.telematik.swat.simon.ITimeBehaviourFactory;
@@ -55,24 +58,11 @@ public class ContextRepo {
 			  * LogfileResourceExtractor-Test
 			  * Hier den Dateipfad anpassen
 			  */
-			 
-			HumanResourceExtractor extractor = new HumanResourceExtractor("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml");
-			//HumanResourceExtractor extractor = new HumanResourceExtractor("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml");
-			extractor.createResources(store);
 			
-			 /**
-			  * Alte Version
-			  * 
-			  * List<String> humanResources = extractor.getHumanResources();
-			 System.out.println(humanResources.toString());
-			 for (String name:humanResources){
-				 System.out.println("Creating HumanResource named " + name + "...");
-				 store.instantiateResource(ResourceType.HUMAN, name);				 
-			 }*/
-			 
-			 
+			LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml"), SwatLogType.MXML);
+			//LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml"), SwatLogType.MXML);
+			store.addHumanResourcesFromFile(testModel);
 			
-			//Jascha
 			//resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker",store));
 			List<IResource> werkzeuge = new LinkedList<IResource>();
 			werkzeuge.add(store.instantiateResource(ResourceType.SIMPLE, "Hammer"));

@@ -13,6 +13,7 @@ import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceStoreListener;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 
 public class ResourceStore implements NamedComponent{
 	
@@ -35,6 +36,20 @@ public class ResourceStore implements NamedComponent{
 	public void addResource(Resource item){
 		resources.put(item.getName(), item);
 		informListenersOfResourceChange(item);
+	}
+		
+	public void addHumanResourcesFromFile(LogModel model){
+		HumanResourceExtractor extractor;
+		try {
+			extractor = new HumanResourceExtractor(model);
+			List<String> humanResources = extractor.getHumanResources();
+			for (String name: humanResources){
+				instantiateResource(ResourceType.HUMAN, name);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void removeResource(IResource input) {
