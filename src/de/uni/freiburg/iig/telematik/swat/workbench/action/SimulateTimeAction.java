@@ -57,6 +57,8 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 
 		if(!nets.isEmpty()){
 			WorkflowTimeMachine timeMachine = WorkflowTimeMachine.getInstance();
+			timeMachine.resetAll();
+			timeMachine.clearAllNets();
 			timeMachine.addAllNets(nets);
 			result = timeMachine.simulateAll(numberOfRuns);
 			displayResults();

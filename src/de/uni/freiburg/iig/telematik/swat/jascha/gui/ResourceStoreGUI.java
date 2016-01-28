@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.jascha.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -28,6 +29,7 @@ import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceStoreContainer;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeNamedComponentAction;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ExtractResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.SaveResourceStoreAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.addResourceAction;
@@ -51,7 +53,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		store.instantiateResource(ResourceType.SIMPLE, "Säge");
 		store.instantiateResource(ResourceType.SIMPLE, "Holzbrett");
 		store.setName("Test-Store");
-		ResourceStoreGUI manager = new ResourceStoreGUI();
+		ResourceStoreGUI manager = new ResourceStoreGUI(store);
 		manager.setVisible(true);
 		
 	}
@@ -128,9 +130,17 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		panel.add(new JLabel("add or remove: "));
 		panel.add(getPlusButton());
 		panel.add(getMinusButton());
+		panel.add(Box.createHorizontalStrut(5));
+		panel.add(getLogExtractButton());
+		
 		return panel;
 	}
 	
+	private Component getLogExtractButton() {
+		JButton btn = new JButton(new ExtractResourceAction(getResourceStore()));
+		return btn;
+	}
+
 	private JButton getSaveAsButton(){
 		JButton save = new JButton(new SaveResourceStoreAction(resourceStore));
 		return save;
