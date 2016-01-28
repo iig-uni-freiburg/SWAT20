@@ -70,7 +70,7 @@ public class EditTimeContextAction extends AbstractWorkbenchAction {
 			comboBox = new JComboBox<>();
 		//comboBox.setEditable(true);
 		try {
-			comboBox.setSelectedItem(SwatProperties.getInstance().getActiveResourceContext());
+			comboBox.setSelectedItem(SwatProperties.getInstance().getActiveTimeContext());
 		} catch (IOException e2) {
 			Workbench.errorMessage("Could not get active context", e2, false);
 		}

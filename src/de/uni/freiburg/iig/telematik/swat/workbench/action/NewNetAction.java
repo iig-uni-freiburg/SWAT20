@@ -1,9 +1,11 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
@@ -12,6 +14,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.swat.workbench.PNNameDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar.ToolbarNewNetButtonType;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -64,6 +67,7 @@ public class NewNetAction extends AbstractWorkbenchAction {
 			case NEW_RTPN:
 				GraphicalTimedNet newRTPNet = new GraphicalTimedNet(new TimedNet());
 				newRTPNet.getPetriNet().setName(netName);
+				linkContexts(newRTPNet.getPetriNet());
 				SwatComponents.getInstance().getContainerPetriNets().addComponent(newRTPNet,true);
 				break;
 
@@ -71,6 +75,19 @@ public class NewNetAction extends AbstractWorkbenchAction {
 				break;
 			}
 		}
+	}
+
+	private void linkContexts(TimedNet petriNet) {
+		try {
+			SwatProperties properties = SwatProperties.getInstance();
+			SwatComponents component = SwatComponents.getInstance();
+			petriNet.setTimeContext(component.getTimeContextContainer().getComponent(properties.getActiveTimeContext()));
+			petriNet.setResourceContext(component.getResourceContainer().getComponent(properties.getActiveResourceContext()));
+			
+		} catch (IOException | ProjectComponentException e) {
+			Workbench.errorMessage("Could not configure time or resource context", e, true);
+		}
+		
 	}
 
 	private String requestNetName(String message, String title) throws Exception {

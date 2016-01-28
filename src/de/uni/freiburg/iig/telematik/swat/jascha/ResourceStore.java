@@ -150,7 +150,7 @@ public class ResourceStore implements NamedComponent{
 			return resources.get(name);
 		}
 		else {
-			throw new ParameterException("There is no resource with the name " + name + " in this ResourceStore");
+			return null;
 		}
 	}
 	

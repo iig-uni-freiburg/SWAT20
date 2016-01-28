@@ -55,7 +55,7 @@ public class SimulationHistogram {
 		frame.setPreferredSize(new java.awt.Dimension(900, 600));
 		frame.setSize(new Dimension(900, 600));
 		//aFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
 	}
 	
