@@ -29,6 +29,7 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.TreePath;
 
 public class SwatTreeView extends JTree implements SwatStateListener, ComponentListener {
 
@@ -203,6 +204,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                         if (getSelectionPath() == null) {
                                 return;
                         }
+                        
                         Object selectedNode = getSelectionPath().getLastPathComponent();
                         if (selectedNode == null) {
                                 return;
@@ -241,6 +243,13 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                 }
 
                 private void showPopup(MouseEvent e) {
+                        int selRow = getRowForLocation(e.getX(), e.getY());
+                        TreePath selPath = getPathForLocation(e.getX(), e.getY());
+                        setSelectionPath(selPath);
+                        if (selRow > -1) {
+                                setSelectionRow(selRow);
+                        }
+                                
                         if (getSelectionPath() == null) {
                                 return;
                         }
