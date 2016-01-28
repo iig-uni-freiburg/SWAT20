@@ -16,10 +16,16 @@ public class LogParserAdapter implements ISciffLogReader {
 	
 	private List<ISciffLogTrace> logTraces = null;
 	private ISciffLogSummary logSummary = null;
+	private LogParserInterface logParser;
 	
 	public LogParserAdapter(LogParserInterface logParser) throws ParameterException{
+		this.logParser = logParser;
 		getSciffTraceList(logParser.getFirstParsedLog());
 		logSummary = new LogSummaryAdapter(logParser.getSummary(0));
+	}
+	
+	public LogParserInterface getOriginalLog(){
+		return logParser;
 	}
 
 	@Override

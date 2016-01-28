@@ -17,6 +17,7 @@ import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 
 public class HumanResourceExtractor {
 
@@ -28,11 +29,9 @@ public class HumanResourceExtractor {
 		humanResources = new LinkedList<String>();
 		switch (model.getType()) {
 		case MXML:
-			log = ((MXMLLogParser) model.getLogReader()).getFirstParsedLog();
-			extractResources();
-			break;
 		case XES:
-			log = ((XESLogParser) model.getLogReader()).getFirstParsedLog();
+			LogParserAdapter adapter = (LogParserAdapter) model.getLogReader();
+			log = adapter.getOriginalLog().getFirstParsedLog();
 			extractResources();
 			break;
 		default:

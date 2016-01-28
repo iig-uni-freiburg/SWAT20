@@ -30,6 +30,7 @@ import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.file.MonitoredInputStream;
 import de.invation.code.toval.graphic.util.SpringUtilities;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -39,9 +40,13 @@ import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 
 /**
@@ -202,8 +207,33 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                 properties.add(new JLabel("Size: " + model.getFileReference().length() / 1024 + "kB"));
                 properties.add(new JLabel("Lines: " + FileUtils.getLineCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
                 properties.add(getSciffButton());
+                properties.add(getResourceImportBtn());
                 properties.validate();
                 properties.repaint();
+        }
+        
+        private JButton getResourceImportBtn(){
+        	JButton resimport = new JButton("import resources");
+        	resimport.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String resContextName;
+					try {
+						resContextName = SwatProperties.getInstance().getActiveResourceContext();
+						AwesomeResourceContext context = (AwesomeResourceContext) SwatComponents.getInstance().getResourceContainer().getComponent(resContextName);
+						ResourceStore store = context.getResourceStore();
+						store.addHumanResourcesFromFile(getModel());
+					} catch (IOException e1) {
+						Workbench.errorMessage("Could not retrieve active resource context name", e1, true);
+					} catch (ProjectComponentException e1) {
+						Workbench.errorMessage("Could not retrieve active resource context", e1, true);
+					}
+					
+					
+				}
+			});
+        	return resimport;
         }
 
         @Override

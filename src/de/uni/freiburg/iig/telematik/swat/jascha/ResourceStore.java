@@ -189,7 +189,10 @@ public class ResourceStore implements NamedComponent{
 			result = new ResourceSet(name, 1);
 			resources.put(name, result);
 			break;
-		case HUMAN:	
+		case HUMAN:
+			result = new HumanResource(name);
+			resources.put(name, result);
+			break;
 		case SIMPLE:
 			result = new SimpleResource(name);
 			resources.put(name, result);
