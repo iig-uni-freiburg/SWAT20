@@ -22,7 +22,6 @@ import de.invation.code.toval.validate.ExceptionDialog;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
-import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenu;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
@@ -37,9 +36,9 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
         private static final String LOGS_HEADING = "Process Logs";
         private static final String CONTEXTS_HEADING = "Execution Contexts";
         private static final String ACMODELS_HEADING = "Access Control Models";
-        private static final String XES_LOGS_HEADING = "XES Logs";
-        private static final String MXML_LOGS_HEADING = "MXML Logs";
-        private static final String ARISTA_LOGS_HEADING = "AristaFlow Logs";
+//        private static final String XES_LOGS_HEADING = "XES Logs";
+//        private static final String MXML_LOGS_HEADING = "MXML Logs";
+//        private static final String ARISTA_LOGS_HEADING = "AristaFlow Logs";
         private static final Color DEFAULT_BG_COLOR = UIManager.getColor("Panel.background");
 //        private static final Color BG_COLOR = Color.white;
 //        private static final Color BORDER_COLOR = new Color(237, 237, 237);
@@ -53,9 +52,6 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
         private final DefaultMutableTreeNode rootNode;
         private DefaultMutableTreeNode petriNetNode = null;
         private DefaultMutableTreeNode logsNode = null;
-        private DefaultMutableTreeNode xesLogNode = null;
-        private DefaultMutableTreeNode mxmlLogNode = null;
-        private DefaultMutableTreeNode aristaLogNode = null;
         private DefaultMutableTreeNode acModelsNode = null;
         private DefaultMutableTreeNode contextsNode = null;
 
@@ -135,6 +131,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                                                 break;
                                 }
                                 logsNode.add(new SwatTreeNode(logFile, logType));
+                                
                                 // TODO list views
                         }
                 }
@@ -244,6 +241,10 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                 }
 
                 private void showPopup(MouseEvent e) {
+                        if (getSelectionPath() == null) {
+                                return;
+                        }
+
                         Object selectedNode = getSelectionPath().getLastPathComponent();
                         if (selectedNode instanceof SwatTreeNode) {
                                 SwatTreeNode swatNode = (SwatTreeNode) selectedNode;
@@ -267,7 +268,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 
         @Override
         public void componentsChanged() {
-                System.out.println("Components Changed");
+//                System.out.println("Components Changed");
                 try {
                         buildTree();
                         defaultTreeModel.reload();
