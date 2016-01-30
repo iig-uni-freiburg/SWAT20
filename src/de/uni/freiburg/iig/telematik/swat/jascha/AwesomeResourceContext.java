@@ -85,7 +85,7 @@ public class AwesomeResourceContext implements IResourceContext{
 			//get an Object with all distinct originators (= human resources)
 			extractor = new HumanResourceExtractor(model);
 			// create HumanResource objects in the resource store
-			resourceStore.addMyHumanResourcesFromExtractor(extractor);
+			resourceStore.addHumanResourcesFromExtractor(extractor);
 			//add activity/resource pairs to the context
 			extractor.addActivities(this, resourceStore);
 		} catch (Exception e) {
