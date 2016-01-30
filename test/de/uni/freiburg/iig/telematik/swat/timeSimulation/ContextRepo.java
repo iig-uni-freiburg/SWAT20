@@ -59,9 +59,10 @@ public class ContextRepo {
 			  * Hier den Dateipfad anpassen
 			  */
 			
-			LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml"), SwatLogType.MXML);
-			//LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml"), SwatLogType.MXML);
-			store.addHumanResourcesFromFile(testModel);
+			//LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml"), SwatLogType.MXML);
+			LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml"), SwatLogType.MXML);
+			//store.addHumanResourcesFromFile(testModel);
+			resourceContext.getResourcesFromFile(testModel);			
 			
 			//resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker",store));
 			List<IResource> werkzeuge = new LinkedList<IResource>();
@@ -112,6 +113,11 @@ public class ContextRepo {
 			resourceContext.addResourceUsage("test5", schrauebzieher5);
 			resourceContext.addResourceUsage("test5", schrauebzieher1);
 			resourceContext.addResourceUsage("test5", schrauebzieher3);
+			
+			for (String activity: resourceContext.getAllActivities()){
+				System.out.println(activity);
+				System.out.println(resourceContext.getMyAllowedResourcesFor(activity));
+			}
 		}
 		return resourceContext;
 	}

@@ -223,7 +223,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 						resContextName = SwatProperties.getInstance().getActiveResourceContext();
 						AwesomeResourceContext context = (AwesomeResourceContext) SwatComponents.getInstance().getResourceContainer().getComponent(resContextName);
 						ResourceStore store = context.getResourceStore();
-						store.addHumanResourcesFromFile(getModel());
+						store.addHumanResourcesFromExtractor(getModel());
 					} catch (IOException e1) {
 						Workbench.errorMessage("Could not retrieve active resource context name", e1, true);
 					} catch (ProjectComponentException e1) {

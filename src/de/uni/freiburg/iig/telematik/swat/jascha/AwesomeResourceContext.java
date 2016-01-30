@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.TimeRessourceContext;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 
 public class AwesomeResourceContext implements IResourceContext{
 	
@@ -78,6 +79,23 @@ public class AwesomeResourceContext implements IResourceContext{
 		
 	}
 	
+	public void getResourcesFromFile(LogModel model){
+		HumanResourceExtractor extractor;
+		try {
+			//get an Object with all distinct originators (= human resources)
+			extractor = new HumanResourceExtractor(model);
+			// create HumanResource objects in the resource store
+			resourceStore.addMyHumanResourcesFromExtractor(extractor);
+			//add activity/resource pairs to the context
+			extractor.addActivities(this, resourceStore);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 	private String printList(List<String> resources2) {
 		String result ="";
 		for(String s:resources2)
@@ -103,11 +121,19 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	}
 
+	//Not sure why it has to be a List<List<String>> output.
 	@Override
 	public List<List<String>> getAllowedResourcesFor(String activity) {
-		//TODO: diese Methode
+		List<String> result = new ArrayList<String>();
+		result.addAll(resources.get(activity));
 		return null;
 
+	}
+	
+	public List<String> getMyAllowedResourcesFor(String activity) {
+		List<String> result = new ArrayList<String>();
+		result.addAll(resources.get(activity));
+		return result;
 	}
 	
 	public List<IResource> getKnownResourcesFor(String activity) {
@@ -171,7 +197,7 @@ public class AwesomeResourceContext implements IResourceContext{
 				
 			if(resources.containsKey(activity)){
 				if(resources.get(activity).contains(resourceName)){
-					throw new ParameterException("Can't add " + resourceName + " because it's already inside the list");
+					//throw new ParameterException("Can't add " + resourceName + " because it's already inside the list");
 				} 	else {
 					resources.get(activity).add(resourceName);
 				}
@@ -185,6 +211,7 @@ public class AwesomeResourceContext implements IResourceContext{
 		}
 		else throw new ParameterException("The resource "+resourceName+" can't be added to the activity because it's not in the store");
 	}
+	
 	@Override
 	public boolean containsBlockedResources() {
 		for(List<String> resourceList:resources.values()){
@@ -237,6 +264,11 @@ public class AwesomeResourceContext implements IResourceContext{
 		AwesomeResourceContext clone = (AwesomeResourceContext) new XStream().fromXML(new XStream().toXML(this));
 		clone.setResourceStore(getResourceStore());
 		return clone;
+	}
+	
+	public Set<String> getAllActivities(){
+		Set<String> result = resources.keySet();
+		return result;
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.Set;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 
 import de.invation.code.toval.parser.ParserException;
+import de.uni.freiburg.iig.telematik.sewol.log.Log;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 import de.uni.freiburg.iig.telematik.sewol.parser.AbstractLogParser;
@@ -52,6 +53,21 @@ public class HumanResourceExtractor {
 		for(String name: humanResources){
 			store.instantiateResource(ResourceType.HUMAN, name);
 		}		
+	}
+	
+	//Adds the activities from the log and the corresponding resources to a resoucreContext
+	public void addActivities(AwesomeResourceContext context, ResourceStore store){
+		for (String originator:humanResources){
+			for (LogTrace<LogEntry> trace : log){
+				for (LogEntry logEntry: trace.getEntries()){
+					if (originator.equals(logEntry.getOriginator())){
+						context.addResourceUsage(logEntry.getActivity(), store.getResource(originator));
+					}
+					
+				}
+			}
+			
+		}
 	}
 	
 	public void extractResources(){	
@@ -102,5 +118,11 @@ public class HumanResourceExtractor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}	
+	}
+	
+	public void testMe(){
+		for (LogTrace<LogEntry> trace:log){
+			System.out.println(trace.getActivities());
+		}
+	}
 }
