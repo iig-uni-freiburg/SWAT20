@@ -83,6 +83,23 @@ public class AwesomeResourceContext implements IResourceContext{
 		
 	}
 	
+	public void getResourcesFromFile(LogModel model){
+		HumanResourceExtractor extractor;
+		try {
+			//get an Object with all distinct originators (= human resources)
+			extractor = new HumanResourceExtractor(model);
+			// create HumanResource objects in the resource store
+			resourceStore.addHumanResourcesFromExtractor(extractor);
+			//add activity/resource pairs to the context
+			extractor.addActivities(this, resourceStore);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 	private String printList(List<String> resources2) {
 		String result ="";
 		for(String s:resources2)
@@ -105,13 +122,21 @@ public class AwesomeResourceContext implements IResourceContext{
 	protected IResource getResource(String resource) {
 
 		return resourceStore.getResource(resource);
+
 	}
 
+	//Not sure why it has to be a List<List<String>> output.
 	@Override
 	public List<List<String>> getAllowedResourcesFor(String activity) {
 		//TODO: diese Methode
 		return null;
 
+	}
+	
+	public List<String> getMyAllowedResourcesFor(String activity) {
+		List<String> result = new ArrayList<String>();
+		result.addAll(resources.get(activity));
+		return result;
 	}
 	
 	public List<IResource> getKnownResourcesFor(String activity) {
@@ -175,7 +200,7 @@ public class AwesomeResourceContext implements IResourceContext{
 				
 			if(resources.containsKey(activity)){
 				if(resources.get(activity).contains(resourceName)){
-					throw new ParameterException("Can't add " + resourceName + " because it's already inside the list");
+					//throw new ParameterException("Can't add " + resourceName + " because it's already inside the list");
 				} 	else {
 					resources.get(activity).add(resourceName);
 				}
@@ -243,19 +268,9 @@ public class AwesomeResourceContext implements IResourceContext{
 		return clone;
 	}
 	
-	public void linkResourcesFrom(LogModel model) throws Exception {
-		List<LogTrace<LogEntry>> log;
-		switch (model.getType()) {
-		case XES:
-		case MXML:
-			LogParserAdapter adapter = (LogParserAdapter) model.getLogReader();
-			log = adapter.getOriginalLog().getFirstParsedLog();
-			//TODO: Aktivitaeten einlesen und den Ressourcen zuweisen
-			break;
-
-		default:
-			throw new ParserException("can only use XES or MXML");
-		}
+	public Set<String> getAllActivities(){
+		Set<String> result = resources.keySet();
+		return result;
 	}
 
 }

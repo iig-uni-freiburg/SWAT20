@@ -38,7 +38,15 @@ public class ResourceStore implements NamedComponent{
 		informListenersOfResourceChange(item);
 	}
 		
-	public void addHumanResourcesFromFile(LogModel model){
+	public void addHumanResourcesFromExtractor(HumanResourceExtractor extractor){
+		
+			List<String> humanResources = extractor.getHumanResources();
+			for (String name: humanResources){
+				instantiateResource(ResourceType.HUMAN, name);
+			}
+	}
+	
+	public void addHumanResourcesFromModel(LogModel model){
 		HumanResourceExtractor extractor;
 		try {
 			extractor = new HumanResourceExtractor(model);
