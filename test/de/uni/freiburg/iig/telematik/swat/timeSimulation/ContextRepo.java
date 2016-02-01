@@ -62,7 +62,12 @@ public class ContextRepo {
 			//LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml"), SwatLogType.MXML);
 			LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml"), SwatLogType.MXML);
 			//store.addHumanResourcesFromFile(testModel);
-			resourceContext.getResourcesFromFile(testModel);			
+			try {
+				resourceContext.getResourcesFromFile(testModel);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 			
 			//resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker",store));
 			List<IResource> werkzeuge = new LinkedList<IResource>();

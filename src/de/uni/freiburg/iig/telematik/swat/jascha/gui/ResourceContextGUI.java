@@ -102,7 +102,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		this.context.getResourceStore().addResourceStoreListener(this);
 	}
 	
-	private void updateLists(){
+	public void updateLists(){
 		activities.clear();
 		for(String activites: context.getContainingActivities())
 			activities.addElement(activites);

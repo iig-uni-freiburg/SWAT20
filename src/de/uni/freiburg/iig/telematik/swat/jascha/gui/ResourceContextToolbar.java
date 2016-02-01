@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
@@ -29,6 +30,7 @@ public class ResourceContextToolbar extends JToolBar {
 		add(getSaveButton());
 		add(getRenameButton());
 		add(getSetStoreButton());
+		add(getLoadFromLogBtn());
 	}
 	
 	private JButton getSaveButton(){
@@ -119,6 +121,28 @@ public class ResourceContextToolbar extends JToolBar {
 
 		
 		return setStore;
+	}
+	
+	private JButton getLoadFromLogBtn(){
+		JButton load = new JButton("extract from log");
+		load.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int result = chooser.showSaveDialog(load);
+				if(result == JFileChooser.APPROVE_OPTION){
+					try {
+						gui.getContext().getResourcesFromFile(chooser.getSelectedFile());
+						gui.updateLists();
+					} catch (Exception e1) {
+						Workbench.errorMessage("Could not load log", e1, true);
+					}
+				}
+			}
+		});
+		return load;
 	}
 
 }

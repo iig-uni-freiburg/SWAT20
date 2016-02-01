@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,7 +19,10 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehav
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.TimeRessourceContext;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
+import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
+import de.uni.freiburg.iig.telematik.sewol.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 
 public class AwesomeResourceContext implements IResourceContext{
@@ -83,21 +87,56 @@ public class AwesomeResourceContext implements IResourceContext{
 		
 	}
 	
-	public void getResourcesFromFile(LogModel model){
+	public void getResourcesFromFile(File logFile) throws ParserException, Exception{
+
+		getResourcesFromFile(new LogModel(logFile, getFileType(logFile)));
+	}
+	
+	public void getResourcesFromFile(LogModel model) throws Exception {
 		HumanResourceExtractor extractor;
-		try {
-			//get an Object with all distinct originators (= human resources)
-			extractor = new HumanResourceExtractor(model);
-			// create HumanResource objects in the resource store
-			resourceStore.addHumanResourcesFromExtractor(extractor);
-			//add activity/resource pairs to the context
-			extractor.addActivities(this, resourceStore);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// get an Object with all distinct originators (= human resources)
+		extractor = new HumanResourceExtractor(model);
+		// create HumanResource objects in the resource store
+		resourceStore.addHumanResourcesFromExtractor(extractor);
+		// add activity/resource pairs to the context
+		// extractor.addActivities(this, resourceStore);
+
+		List<LogTrace<LogEntry>> log = getLog(model);
+
+		for (LogTrace<LogEntry> trace : log) {
+			for (LogEntry logEntry : trace.getEntries()) {
+				try {
+					addResourceUsage(logEntry.getActivity(), resourceStore.getResource(logEntry.getOriginator()));
+				} catch (ParameterException e) {
+					// Could not find resource. Go to next resource
+				}
+
+			}
 		}
-		
-		
+
+	}
+
+	private SwatLogType getFileType(File file) throws ParserException{
+		LogParsingFormat type = LogParser.guessFormat(file);
+		switch (type) {
+		case XES:
+			return SwatLogType.XES;
+		case MXML:
+			return SwatLogType.MXML;
+		default:
+			throw new ParserException("Can only use XES or MXML logs");
+		}
+	}
+	
+	private List<LogTrace<LogEntry>> getLog(LogModel model) throws Exception{
+		switch (model.getType()) {
+		case MXML:
+		case XES:
+			LogParserAdapter adapter = (LogParserAdapter) model.getLogReader();
+			return adapter.getOriginalLog().getFirstParsedLog();
+		default:
+			throw new Exception("Can only parse XES or MXML logs");
+		}
 	}
 	
 	private String printList(List<String> resources2) {
