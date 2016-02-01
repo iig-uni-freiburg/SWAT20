@@ -40,6 +40,7 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalTimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNetPlace;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola.LolaPresenter;
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.lola.LolaTransformator;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
@@ -178,12 +179,29 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         standardItems.add(getEditRadioButton());
         standardItems.add(getTimeSimulationButton());
         standardItems.add(getEditResourceContext());
-        standardItems.add(getSetDefaultResourceContextBtn());
-        standardItems.add(getSetDefaultResourceStoreBtn());
-        standardItems.add(getSetDefaultTimeContextBtn());
+        //standardItems.add(getSetDefaultResourceContextBtn());
+        //standardItems.add(getSetDefaultResourceStoreBtn());
+        //standardItems.add(getSetDefaultTimeContextBtn());
+        standardItems.add(getDebugButton());
     }
 
-    private JComponent getEditResourceContext() {
+    private JComponent getDebugButton() {
+		JButton debugBtn = new JButton("what is this?");
+		debugBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				RTPNEditorComponent component = (RTPNEditorComponent) tabView.getSelectedComponent();
+				System.out.println("Drain Place: ");
+				for (TimedNetPlace p: component.getNetContainer().getPetriNet().getDrainPlaces())
+					System.out.print(" "+p.getName());
+				
+			}
+		});
+		return debugBtn;
+	}
+
+	private JComponent getEditResourceContext() {
 		JButton resourceEdit = new JButton(new SelectResourceContextEditAction());
 		return resourceEdit;
 	}

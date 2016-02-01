@@ -29,8 +29,11 @@ public abstract class Resource implements IResource {
 	}
 	
 	public String getDetailString(){
-		return "Name: "+name+" ["+type+"]";
+		String available = "(UNavailable)";
+		if(isAvailable()) available ="(available)";
+		return "Name: "+name+" ["+type+"] "+available;
 	}
+
 	
 	public void disable(boolean setDisable){
 		isDisabled=setDisable;

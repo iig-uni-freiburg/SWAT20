@@ -10,11 +10,16 @@ import java.util.Set;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
+import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.TimeRessourceContext;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
+import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 
 public class AwesomeResourceContext implements IResourceContext{
 	
@@ -100,7 +105,6 @@ public class AwesomeResourceContext implements IResourceContext{
 	protected IResource getResource(String resource) {
 
 		return resourceStore.getResource(resource);
-
 	}
 
 	@Override
@@ -237,6 +241,21 @@ public class AwesomeResourceContext implements IResourceContext{
 		AwesomeResourceContext clone = (AwesomeResourceContext) new XStream().fromXML(new XStream().toXML(this));
 		clone.setResourceStore(getResourceStore());
 		return clone;
+	}
+	
+	public void linkResourcesFrom(LogModel model) throws Exception {
+		List<LogTrace<LogEntry>> log;
+		switch (model.getType()) {
+		case XES:
+		case MXML:
+			LogParserAdapter adapter = (LogParserAdapter) model.getLogReader();
+			log = adapter.getOriginalLog().getFirstParsedLog();
+			//TODO: Aktivitaeten einlesen und den Ressourcen zuweisen
+			break;
+
+		default:
+			throw new ParserException("can only use XES or MXML");
+		}
 	}
 
 }

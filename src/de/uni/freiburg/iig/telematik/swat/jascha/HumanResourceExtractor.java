@@ -10,6 +10,7 @@ import java.util.Set;
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 
 import de.invation.code.toval.parser.ParserException;
+import de.uni.freiburg.iig.telematik.sewol.log.DataAttribute;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 import de.uni.freiburg.iig.telematik.sewol.parser.AbstractLogParser;
@@ -24,8 +25,10 @@ public class HumanResourceExtractor {
 	//The list contains the HumanResources extracted from the given logfile
 	List<String> humanResources;
 	List<LogTrace<LogEntry>> log;
+
 	
 	public HumanResourceExtractor(LogModel model) throws Exception {
+		
 		humanResources = new LinkedList<String>();
 		switch (model.getType()) {
 		case MXML:
