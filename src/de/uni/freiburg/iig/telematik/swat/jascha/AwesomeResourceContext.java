@@ -89,7 +89,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	
 	public void getResourcesFromFile(File logFile) throws ParserException, Exception{
 
-		getResourcesFromFile(new LogModel(logFile, getFileType(logFile)));
+		getResourcesFromFile(new LogModel(logFile));
 	}
 	
 	public void getResourcesFromFile(LogModel model) throws Exception {
@@ -114,18 +114,6 @@ public class AwesomeResourceContext implements IResourceContext{
 			}
 		}
 
-	}
-
-	private SwatLogType getFileType(File file) throws ParserException{
-		LogParsingFormat type = LogParser.guessFormat(file);
-		switch (type) {
-		case XES:
-			return SwatLogType.XES;
-		case MXML:
-			return SwatLogType.MXML;
-		default:
-			throw new ParserException("Can only use XES or MXML logs");
-		}
 	}
 	
 	private List<LogTrace<LogEntry>> getLog(LogModel model) throws Exception{
