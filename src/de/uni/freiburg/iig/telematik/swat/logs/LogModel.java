@@ -7,6 +7,9 @@ import java.security.MessageDigest;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.NamedComponent;
+import de.invation.code.toval.parser.ParserException;
+import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
+import de.uni.freiburg.iig.telematik.sewol.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
@@ -32,20 +35,38 @@ public class LogModel implements NamedComponent {
                 setName(FileUtils.getFileWithoutEnding(fileReference));
                 this.type = type;
         }
+        
+        public LogModel(File fileReference) throws ParserException {
+			this(fileReference,getFileType(fileReference));
+		}
 
         @Override
         public final String getName() {
                 return name;
         }
 
-        @Override
-        public final void setName(String name) {
-                this.name = name;
-        }
+	@Override
+	public final void setName(String name) {
+		this.name = name;
+	}
 
-        public File getFileReference() {
-                return fileReference;
-        }
+	private static SwatLogType getFileType(File file) throws ParserException {
+		LogParsingFormat type = LogParser.guessFormat(file);
+		switch (type) {
+		case XES:
+			return SwatLogType.XES;
+		case MXML:
+			return SwatLogType.MXML;
+		default:
+			if (file.getName().endsWith(".csv"))
+				return SwatLogType.Aristaflow;
+			throw new ParserException("Can only use XES or MXML logs");
+		}
+	}
+
+	public File getFileReference() {
+		return fileReference;
+	}
 
         public void clearLogParser() {
                 logReader = null;//so CC can free up memory
