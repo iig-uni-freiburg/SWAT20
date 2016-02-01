@@ -116,7 +116,7 @@ public class ContextRepo {
 			
 			for (String activity: resourceContext.getAllActivities()){
 				System.out.println(activity);
-				System.out.println(resourceContext.getMyAllowedResourcesFor(activity));
+				System.out.println(resourceContext.getAllowedResourcesFor(activity));
 			}
 		}
 		return resourceContext;

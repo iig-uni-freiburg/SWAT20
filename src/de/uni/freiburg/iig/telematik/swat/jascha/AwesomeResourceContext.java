@@ -125,15 +125,8 @@ public class AwesomeResourceContext implements IResourceContext{
 
 	}
 
-	//Not sure why it has to be a List<List<String>> output.
-	@Override
-	public List<List<String>> getAllowedResourcesFor(String activity) {
-		//TODO: diese Methode
-		return null;
-
-	}
 	
-	public List<String> getMyAllowedResourcesFor(String activity) {
+	public List<String> getAllowedResourcesFor(String activity) {
 		List<String> result = new ArrayList<String>();
 		result.addAll(resources.get(activity));
 		return result;
