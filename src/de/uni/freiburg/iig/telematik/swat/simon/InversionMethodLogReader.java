@@ -96,8 +96,8 @@ public class InversionMethodLogReader {
 	 * @return
 	 */
 	public HashMap<Long, Double> probabilityTimeDiagram(HashMap<Long, Double> map) {
-		Collection c = map.values();
-	    Iterator itr = c.iterator();
+		Collection<Double> c = map.values();
+	    Iterator<Double> itr = c.iterator();
 	    double sum = 0;
 	    while (itr.hasNext()) {
 	      sum +=  (double)itr.next();
@@ -146,6 +146,11 @@ public class InversionMethodLogReader {
 		System.out.println(counter);
 		return startEndTime;
 	}
+	
+	public ITimeBehaviour getTimeBehaviourOfActivity(String name){
+		//TODO: was erwartet MeasuredTimeBehaviour?
+		return new MeasuredTimeBehaviour(probabilityTimeDiagram(createHistogram(name)));
+	}
 
 
 	
@@ -173,13 +178,13 @@ public class InversionMethodLogReader {
 				if(list.get(l).getEventType().equals(EventType.start)) {
 					for(int u = l+1; u < list.size(); u++) {
 						if(list.get(u).getEventType().equals(EventType.complete)) {
-							if(suspendResume != null) {
+							if(!suspendResume.isEmpty()) {
 								for(int i = 0; i < suspendResume.size();i++) {
 									difference += getDateDiff(suspendResume.get(i).getEndTime(), suspendResume.get(i).getStartTime(), TimeUnit.MINUTES);
 								}
 							time.add((getDateDiff(list.get(l).getTimestamp(), list.get(u).getTimestamp(), TimeUnit.MINUTES))- difference);
 							difference = 0;
-							suspendResume = null;
+							suspendResume.clear();
 							
 							}
 							

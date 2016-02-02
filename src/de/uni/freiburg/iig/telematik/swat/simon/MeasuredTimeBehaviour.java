@@ -17,7 +17,7 @@ public class MeasuredTimeBehaviour implements ITimeBehaviour {
 		double sum = 0;
 		for ( Long key : map.keySet() ) {
 			sum += map.get(key);
-			System.out.println("sum " + sum);
+			//System.out.println("sum " + sum);
 			inversionArray.add(new Tuple(sum, key));
 		}
 		//hier inversions-array erstellen, dann muss bei getNeededTime nicht ständig die Summe neu berechnet werden.
