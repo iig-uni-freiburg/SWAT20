@@ -52,16 +52,12 @@ public class InversionMethodLogReader {
 //	}
 
 	public HashMap<Long, Double> createHistogram( String activity) {
-		ArrayList<Pair> timePairs = getTimeofActivity( activity);
-		ArrayList<Long> duration = new ArrayList<Long>();
-		for(int i = 0; i< timePairs.size(); i++) {
-			System.out.println(getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES));
-			duration.add(getDateDiff(timePairs.get(i).getEndTime(), timePairs.get(i).getStartTime(), TimeUnit.MINUTES));	
-		}
+		ArrayList<Long> duration = getTimeofActivity( activity);
+		
 		HashMap<Long, Double> map = new HashMap<>();
 		Collections.sort(duration);
 		// counting number of occurrences of each Integers in the Arraylist
-		for(int i = 0; i< timePairs.size(); i++) {
+		for(int i = 0; i< duration.size(); i++) {
 			if (!map.containsKey(duration.get(i))) {
 			map.put(duration.get(i), (double) 1);}
 			else if (map.containsKey(duration.get(i))) {
@@ -126,7 +122,7 @@ public class InversionMethodLogReader {
 	/**
 	 * Get List of Pairs with start and end times of an activity
 	 **/
-	public ArrayList<Pair> getTimeofActivity( String activity) {
+	public ArrayList<Pair> getTimeofActivity2( String activity) {
 		ArrayList<Pair> startEndTime = new ArrayList<>();
 		//List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);
 		int counter = 0;
@@ -154,7 +150,7 @@ public class InversionMethodLogReader {
 
 	
 	
-	public ArrayList<Long> newGetTimeofActivity( String activity) {
+	public ArrayList<Long> getTimeofActivity( String activity) {
 		ArrayList<Long> time = new ArrayList<Long>();
 		ArrayList<Pair> suspendResume = new ArrayList<>();
 		List<LogEntry> list = new ArrayList<LogEntry>();

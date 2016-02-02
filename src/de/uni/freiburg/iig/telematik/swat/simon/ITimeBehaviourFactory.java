@@ -20,7 +20,7 @@ public class ITimeBehaviourFactory {
 			System.out.println("Get needed time: " + test.getNeededTime());
 		//"C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A"
 		
-		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/reallog.mxml", "Invoice Receipt (1)");
+		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/reallog.mxml", "Invoice Receipt (2)");
 		for (int i = 0; i<100;i++){
 			System.out.println("time: " + measuredBehaviour.getNeededTime());
 		}
