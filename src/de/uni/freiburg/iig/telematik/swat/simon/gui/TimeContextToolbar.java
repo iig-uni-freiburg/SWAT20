@@ -2,14 +2,23 @@ package de.uni.freiburg.iig.telematik.swat.simon.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.invation.code.toval.parser.ParserException;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.simon.InversionMethodLogReader;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
@@ -28,6 +37,7 @@ public class TimeContextToolbar extends JToolBar {
 		add(getSaveButton());
 		add(getSaveAsButton());
 		add(getRenameButton());
+		add(getLoadFromLogBtn());
 		
 	}
 	
@@ -100,6 +110,42 @@ public class TimeContextToolbar extends JToolBar {
 			}
 		});
 		return rename;
+	}
+	
+	private JButton getLoadFromLogBtn(){
+		JButton load = new JButton("load from log");
+		load.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int res = chooser.showOpenDialog(load);
+				if(res==JFileChooser.APPROVE_OPTION){
+					try {
+						InversionMethodLogReader reader = new InversionMethodLogReader(chooser.getSelectedFile().toString());
+						List<LogTrace<LogEntry>> log = reader.getLog();
+						for(String activity:getActivites(log)){
+							gui.getContext().addBehaviour(activity, reader.getTimeBehaviourOfActivity(activity));
+						}
+					} catch (IOException e1) {
+						Workbench.errorMessage("Could not load log", e1, true);
+					} catch (ParserException e1) {
+						Workbench.errorMessage("Could not parse log", e1, true);
+					}
+				}
+				gui.updateActivities();
+			}
+		});
+		return load;
+	}
+	
+	private Set<String> getActivites(List<LogTrace<LogEntry>> log){
+		HashSet<String> result = new HashSet<>();
+		for(LogTrace<LogEntry> trace:log){
+			result.addAll(trace.getActivities());
+		}
+		return result;
 	}
 
 }

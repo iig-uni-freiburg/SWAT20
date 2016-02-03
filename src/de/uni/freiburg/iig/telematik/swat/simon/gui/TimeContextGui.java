@@ -68,6 +68,13 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 			activities.addElement(s);
 	}
 	
+	public void updateActivities(){
+		activities.clear();
+		for(String s:context.getKnownActivities())
+			activities.addElement(s);
+		
+	}
+	
 	private void setup() {
 		activitiesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		activitiesList.addListSelectionListener(this);
@@ -165,7 +172,7 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 		return result;
 	}
 	
-	public ITimeContext getContext(){
+	public AwesomeTimeContext getContext(){
 		return context;
 	}
 	

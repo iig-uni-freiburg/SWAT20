@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -34,7 +35,13 @@ public class ResourceContextToolbar extends JToolBar {
 	}
 	
 	private JButton getSaveButton(){
-		JButton save = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
+		Icon icon = UIManager.getIcon("FileView.floppyDriveIcon");
+		JButton save;
+		if (icon != null && icon.getIconWidth()!=0)
+			save = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
+		else 
+			save = new JButton("save");
+		
 		save.setToolTipText("save this context");
 		save.addActionListener(new ActionListener() {
 			
@@ -131,7 +138,7 @@ public class ResourceContextToolbar extends JToolBar {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int result = chooser.showSaveDialog(load);
+				int result = chooser.showOpenDialog(load);
 				if(result == JFileChooser.APPROVE_OPTION){
 					try {
 						gui.getContext().getResourcesFromFile(chooser.getSelectedFile());
