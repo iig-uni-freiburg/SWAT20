@@ -59,7 +59,7 @@ public class MeasuredTimeBehaviour implements ITimeBehaviour {
 		return result;
 	}
 	
-	public String toStrin(){
+	public String toString(){
 		return "measured "+inversionArray.size()+" entries";
 	}
 
