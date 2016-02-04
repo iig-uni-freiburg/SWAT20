@@ -47,8 +47,7 @@ public class SwatTreeNode extends DefaultMutableTreeNode {
 		case MXML_LOG:
 		case XES_LOG:
                         LogModel logModel = (LogModel) getUserObject();
-//			displayName = logModel.getName();
-			displayName = logModel.getName() + " (" + logModel.getType() + ")";
+			displayName = logModel.getName();
 			break;
 		default: displayName = "GERD";
 		}

@@ -68,6 +68,11 @@ public class LogViewContainer extends AbstractComponentContainer<LogView> implem
         }
 
         @Override
+        public void renameComponent(String oldName, String newName) throws ProjectComponentException {
+                renameComponent(oldName, newName, DEFAULT_NOTIFY_LISTENERS);
+        }
+
+        @Override
         public void renameComponent(String oldName, String newName, boolean notifyListeners) throws ProjectComponentException {
                 super.renameComponent(oldName, newName, notifyListeners);
                 getComponent(newName).setFileReference(getComponentFile(newName));

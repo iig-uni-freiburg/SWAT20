@@ -54,7 +54,7 @@ public class LogModel implements NamedComponent, Comparable<LogModel> {
         }
 
         public void clearLogParser() {
-                logReader = null;//so CC can free up memory
+                logReader = null;//so GC can free up memory
         }
 
         public final void setFileReference(File fileReference) {
