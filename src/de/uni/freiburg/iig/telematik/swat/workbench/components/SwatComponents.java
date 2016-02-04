@@ -9,9 +9,11 @@ import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.properties.PropertyException;
 import de.uni.freiburg.iig.telematik.sewol.accesscontrol.ACModelContainer;
 import de.uni.freiburg.iig.telematik.sewol.context.process.ProcessContextContainer;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.swat.logs.AbstractLogModelContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.AristaflowLogContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.logs.LogViewContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.MxmlLogContainer;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.logs.XesLogContainer;
@@ -23,15 +25,13 @@ import java.util.Map;
 
 public class SwatComponents extends AbstractProjectComponents {
 
-        private static final String CSVLogNameFormat = "%s%s.csv";
-        private static final String AnalysisNameFormat = "%s%s.xml";
-
         private static SwatComponents instance = null;
 
         private ProcessContextContainer containerProcessContexts;
         private ACModelContainer containerACModels;
         private SwatPNContainer containerPetriNets;
         private Map<SwatLogType, AbstractLogModelContainer> logModelContainers;
+        private LogViewContainer logViewContainers;
 
         public SwatComponents() throws ProjectComponentException {
                 super(MessageDialog.getInstance());
@@ -42,6 +42,10 @@ public class SwatComponents extends AbstractProjectComponents {
                         instance = new SwatComponents();
                 }
                 return instance;
+        }
+
+        public LogViewContainer getContainerLogViews() {
+                return logViewContainers;
         }
 
         public ProcessContextContainer getContainerProcessContexts() {
@@ -120,19 +124,23 @@ public class SwatComponents extends AbstractProjectComponents {
                         containerPetriNets = new SwatPNContainer(SwatProperties.getInstance().getPathForNets(), getContainerACModels(), MessageDialog.getInstance());
                         containerPetriNets.loadComponents();
 
-            //TODO: Create and add other containers
+                        //TODO: Create and add other containers
                         // Petri nets
                         // - AnalysisContexts
                         // - Labelings
                         // - TimeContexts
                         // Log Files 
                         //AristaflowLogContainer aflogs=new AristaflowLogContainer(SwatProperties.getInstance().getPathForLogs(), MessageDialog.getInstance());
+                        logViewContainers = new LogViewContainer(SwatProperties.getInstance().getPathForViews());
+                        logViewContainers.loadComponents();
                         logModelContainers.put(SwatLogType.MXML, getContainerMXMLLogs());
                         logModelContainers.put(SwatLogType.XES, getContainerXESLogs());
                         logModelContainers.put(SwatLogType.Aristaflow, getContainerAristaflowLogs());
                         getContainerMXMLLogs().loadComponents();
                         getContainerAristaflowLogs().loadComponents();
                         getContainerXESLogs().loadComponents();
+
+                        linkLogViews();
 
                         // Analyses
                 } catch (Exception e) {
@@ -164,6 +172,16 @@ public class SwatComponents extends AbstractProjectComponents {
                 return result;
         }
 
+        public LogModel getLog(String logName) {
+                List<LogModel> logs = getLogs();
+                for (LogModel l : logs) {
+                        if (l.getName().equals(logName)) {
+                                return l;
+                        }
+                }
+                return null;
+        }
+
         public boolean containsLog(String logName) {
                 if (getContainerXESLogs().containsComponent(logName)) {
                         return true;
@@ -176,5 +194,16 @@ public class SwatComponents extends AbstractProjectComponents {
 
         public static void main(String[] args) throws Exception {
                 SwatComponents.getInstance();
+        }
+
+        private void linkLogViews() {
+                List<LogModel> allMyBase = getLogs();
+
+                for (LogView v : logViewContainers.getComponents()) {
+                        LogModel logModel = getLog(v.getParentLogName());
+                        if (logModel != null) {
+                                logModel.addLogView(v);
+                        }
+                }
         }
 }

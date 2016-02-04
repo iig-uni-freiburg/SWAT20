@@ -36,7 +36,7 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
         super(basePath, debugger);
         setIgnoreIncompatibleFiles(true);
         setUseSubdirectoriesForComponents(true);
-        this.addComponentListener(this);
+        addComponentListener(this);
     }
 
     public AnalysisContainer getContainerAnalysis(String logModelName) throws ProjectComponentException {
@@ -124,6 +124,7 @@ public abstract class AbstractLogModelContainer extends AbstractComponentContain
     public void renameComponent(String oldName, String newName, boolean notifyListeners) throws ProjectComponentException {
         super.renameComponent(oldName, newName, notifyListeners);
         getComponent(newName).setFileReference(getComponentFile(newName));
+        // TODO rename reference in all views of this log
     }
 
     @Override

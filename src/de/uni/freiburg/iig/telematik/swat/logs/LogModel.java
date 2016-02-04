@@ -7,12 +7,16 @@ import java.security.MessageDigest;
 
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.NamedComponent;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import java.util.Objects;
 
@@ -25,6 +29,8 @@ public class LogModel implements NamedComponent, Comparable<LogModel> {
         private SwatLogType type = null;
         private ISciffLogReader logReader;
         private int hash = -1;
+
+        private final List<LogView> views = new ArrayList<>();
 
         public LogModel(File fileReference, SwatLogType type) {
                 super();
@@ -57,6 +63,14 @@ public class LogModel implements NamedComponent, Comparable<LogModel> {
 
         public SwatLogType getType() {
                 return type;
+        }
+
+        public void addLogView(LogView view) {
+                views.add(view);
+        }
+
+        public List<LogView> getLogViews() {
+                return Collections.unmodifiableList(views);
         }
 
         @Override

@@ -14,17 +14,17 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcher;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory.IconSize;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
-import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatPropertyChangeListener;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.EditorProperties;
 
 public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatProperty> {
 
     public static final String WORKING_DIRECTORY_DESCRIPTOR = "Swat Working Directory";
-    public static final String DEFAULT_WORKING_DIRECTORY_NAME = "SwatWorkingDirectory";
+    public static final String DEFAULT_SWAT_WORKING_DIRECTORY_NAME = "SwatWorkingDirectory";
     public static final String SWAT_PROPERTY_FILE_NAME = OSUtils.getUserHomeDirectory() + "/.swatProperties";
 
     protected static final String pathNets = "nets/";
     protected static final String pathLogs = "logs/";
+    protected static final String pathViews = "views/";
     protected static final String pathACModels = "acModels/";
     protected static final String pathContexts = "contexts/";
     
@@ -40,15 +40,12 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     static {
         validationSubDirectories.add(pathNets);
         validationSubDirectories.add(pathLogs);
+        validationSubDirectories.add(pathViews);
         validationSubDirectories.add(pathContexts);
         validationSubDirectories.add(pathACModels);
     }
 
     private static SwatProperties instance = null;
-
-    private final String applicationPath = null;
-
-    private final Set<SwatPropertyChangeListener> listeners = new HashSet<>();
     
     private final EditorProperties editorProperties = EditorProperties.getInstance();
 
@@ -62,7 +59,7 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     @Override
     public String getDefaultWorkingDirectoryName() {
-        return DEFAULT_WORKING_DIRECTORY_NAME;
+        return DEFAULT_SWAT_WORKING_DIRECTORY_NAME;
     }
 
     @Override
@@ -98,6 +95,10 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     public String getPathForLogs() throws PropertyException {
         return getWorkingDirectory().concat(pathLogs);
+    }
+
+    public String getPathForViews() throws PropertyException {
+        return getWorkingDirectory().concat(pathViews);
     }
 
     public String getPathForACModels() throws PropertyException {

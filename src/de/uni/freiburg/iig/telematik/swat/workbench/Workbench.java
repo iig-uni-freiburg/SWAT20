@@ -299,7 +299,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         if (o instanceof PNEditorComponent) {
             return SwatComponentType.PETRI_NET;
         } else if (o instanceof LogFileViewer) {
-                // FIX what about MXML and AristaFlow?
                 LogFileViewer lfv = (LogFileViewer) o;
                 switch (lfv.getModel().getType()) {
                         case Aristaflow:

@@ -232,9 +232,9 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                                                 ((AristaFlowParser) logReader).parse(whichTimestamp.BOTH);
                                                 break;
                                         case MXML:
-                                                MXMLLogParser mxmlParser = new MXMLLogParser();
-                                                mxmlParser.parse(mis, ParsingMode.COMPLETE);
-                                                logReader = new LogParserAdapter(mxmlParser);
+//                                                MXMLLogParser mxmlParser = new MXMLLogParser();
+                                                p.parse(mis, ParsingMode.COMPLETE);
+                                                logReader = new LogParserAdapter(p);
                                                 break;
                                         case XES:
                                                 XESLogParser xesParser = new XESLogParser();
