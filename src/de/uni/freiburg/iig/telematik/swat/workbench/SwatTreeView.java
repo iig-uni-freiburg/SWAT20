@@ -20,6 +20,7 @@ import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.validate.ExceptionDialog;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenu;
@@ -37,9 +38,6 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
         private static final String LOGS_HEADING = "Process Logs";
         private static final String CONTEXTS_HEADING = "Execution Contexts";
         private static final String ACMODELS_HEADING = "Access Control Models";
-//        private static final String XES_LOGS_HEADING = "XES Logs";
-//        private static final String MXML_LOGS_HEADING = "MXML Logs";
-//        private static final String ARISTA_LOGS_HEADING = "AristaFlow Logs";
         private static final Color DEFAULT_BG_COLOR = UIManager.getColor("Panel.background");
 //        private static final Color BG_COLOR = Color.white;
 //        private static final Color BORDER_COLOR = new Color(237, 237, 237);
@@ -75,6 +73,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                 SwatComponents.getInstance().getContainerMXMLLogs().addComponentListener(this);
                 SwatComponents.getInstance().getContainerXESLogs().addComponentListener(this);
                 SwatComponents.getInstance().getContainerPetriNets().addComponentListener(this);
+                SwatComponents.getInstance().getContainerLogViews().addComponentListener(this);
         }
 
         public static SwatTreeView getInstance() throws Exception {
@@ -118,9 +117,9 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                         // Logs
                         List<LogModel> logFiles = SwatComponents.getInstance().getLogs();
                         Collections.sort(logFiles);
-                        for (LogModel logFile : logFiles) {
+                        for (LogModel logModel : logFiles) {
                                 SwatComponentType logType = null;
-                                switch (logFile.getType()) {
+                                switch (logModel.getType()) {
                                         case Aristaflow:
                                                 logType = SwatComponentType.ARISTAFLOW_LOG;
                                                 break;
@@ -131,9 +130,14 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                                                 logType = SwatComponentType.XES_LOG;
                                                 break;
                                 }
-                                logsNode.add(new SwatTreeNode(logFile, logType));
-                                
-                                // TODO list views
+
+                                final DefaultMutableTreeNode logNode = new SwatTreeNode(logModel, logType);
+
+                                for (LogView view : logModel.getLogViews()) {
+                                        logNode.add(new DefaultMutableTreeNode(view.getName()));
+                                }
+
+                                logsNode.add(logNode);
                         }
                 }
 
@@ -204,7 +208,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                         if (getSelectionPath() == null) {
                                 return;
                         }
-                        
+
                         Object selectedNode = getSelectionPath().getLastPathComponent();
                         if (selectedNode == null) {
                                 return;
@@ -249,7 +253,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                         if (selRow > -1) {
                                 setSelectionRow(selRow);
                         }
-                                
+
                         if (getSelectionPath() == null) {
                                 return;
                         }

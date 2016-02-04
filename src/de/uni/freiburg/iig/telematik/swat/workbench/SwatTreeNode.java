@@ -4,6 +4,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 
@@ -48,6 +49,10 @@ public class SwatTreeNode extends DefaultMutableTreeNode {
 		case XES_LOG:
                         LogModel logModel = (LogModel) getUserObject();
 			displayName = logModel.getName();
+			break;
+                case LOG_VIEW:
+                        LogView logView = (LogView) getUserObject();
+			displayName = logView.getName();
 			break;
 		default: displayName = "GERD";
 		}
