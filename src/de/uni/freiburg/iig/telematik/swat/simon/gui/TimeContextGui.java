@@ -30,6 +30,7 @@ import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.AddActivityAction;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.TimeContextContainer;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.simon.gui.actions.BehaviorDetailListener;
 import de.uni.freiburg.iig.telematik.swat.simon.gui.actions.SpecificDistributionAction;
 import de.uni.freiburg.iig.telematik.swat.timeSimulation.ContextRepo;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
@@ -120,6 +121,8 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		behaviorList.setModel(behaviors);
+		//behaviorList.addListSelectionListener(new BehaviorDetailListener());
+		behaviorList.addMouseListener(new BehaviorDetailListener());
 		JScrollPane listScroller = new JScrollPane(behaviorList);
 		panel.add(listScroller);
 		panel.add(getBehaviourButtons());
