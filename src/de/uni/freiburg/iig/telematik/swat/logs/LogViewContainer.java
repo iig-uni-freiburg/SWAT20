@@ -54,7 +54,9 @@ public class LogViewContainer extends AbstractComponentContainer<LogView> implem
 
         @Override
         protected LogView loadComponentFromFile(String file) throws Exception {
-                return LogViewSerialization.parse(file);
+                LogView view = LogViewSerialization.parse(file);
+                view.setFileReference(new File(file));
+                return view;
         }
 
         @Override

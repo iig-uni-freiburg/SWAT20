@@ -134,7 +134,8 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                                 final DefaultMutableTreeNode logNode = new SwatTreeNode(logModel, logType);
 
                                 for (LogView view : logModel.getLogViews()) {
-                                        logNode.add(new DefaultMutableTreeNode(view.getName()));
+//                                        logNode.add(new DefaultMutableTreeNode(view.getName()));
+                                        logNode.add(new SwatTreeNode(view, SwatComponentType.LOG_VIEW));
                                 }
 
                                 logsNode.add(logNode);

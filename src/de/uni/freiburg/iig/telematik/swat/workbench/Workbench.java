@@ -3,6 +3,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import de.invation.code.toval.graphic.dialog.MessageDialog;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.awt.BorderLayout;
@@ -32,6 +33,7 @@ import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitLayout.Leaf;
 import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitLayout.Split;
 import de.uni.freiburg.iig.telematik.swat.ext.MultiSplitPane;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.logs.LogViewViewer;
 import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.patterns.PatternException;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
@@ -40,8 +42,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabViewListener, SwatStateListener, ComponentListener {
 
@@ -100,15 +101,15 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
             try {
                 setLocationByPlatform(true);
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-            } catch (Exception e) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
                 MessageDialog.getInstance().addMessage("Could not set Look and Feel. Using standard");
             }
         } else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             try {
                 UIManager
                         .setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -248,7 +249,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         return menuBar;
     }
 
-    public SwatTreeView getTreeView() throws Exception {
+    public final SwatTreeView getTreeView() throws Exception {
         UIManager.put("Tree.rendererFillBackground", false);
         if (treeView == null) {
             treeView = SwatTreeView.getInstance();
@@ -259,41 +260,50 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         return treeView;
     }
 
-    /** return the name of the currently active component**/
+    /** return the name of the currently active componen
+         * @return t**/
     public String getNameOfCurrentComponent() {
         Object o = tabView.getSelectedComponent();
         if (o instanceof PNEditorComponent) {
             return ((PNEditorComponent) o).getNetContainer().getPetriNet().getName();
-        }
-        if (o instanceof LogFileViewer) {
+        } else if (o instanceof LogFileViewer) {
             return ((LogFileViewer) o).getName();
+        } else if (o instanceof LogViewViewer) {
+            return ((LogViewViewer) o).getName();
         }
         return "";
     }
     
-    /** return true if current viewed component is a LogFileViewer and the corresponding log is not yet parsed**/
+    /** return true if current viewed component is a LogFileViewer and the corresponding log is not yet parse
+         * @return d**/
     public boolean getCurrentComponentNeedsParsing(){
     	Object o = tabView.getSelectedComponent();
-    	if(o instanceof PNEditorComponent)
+    	if(o instanceof PNEditorComponent) {
     		return false;
-    	else if (o instanceof LogFileViewer) {
+        } else if (o instanceof LogFileViewer) {
     		return !((LogFileViewer)o).getModel().hasLogReaderSet();
+    	} else if (o instanceof LogViewViewer) {
+    		return !((LogViewViewer)o).getModel().hasLogReaderSet();
     	}
     	return false;
     }
     
-    /** return true if current viewed component is a LogFileViewer and the corresponding log is bigger than 2 MB**/
+    /** return true if current viewed component is a LogFileViewer and the corresponding log is bigger than 2 M
+         * @return B**/
     public boolean getCurrentComponentsSourceSizeTooBig(){
     	Object o = tabView.getSelectedComponent();
-    	if(o instanceof PNEditorComponent)
+    	if(o instanceof PNEditorComponent) {
     		return false;
-    	else if (o instanceof LogFileViewer) {
+        } else if (o instanceof LogFileViewer) {
     		return ((LogFileViewer)o).getModel().getFileReference().length()>2097152l;
+    	} else if (o instanceof LogViewViewer) {
+    		return ((LogViewViewer)o).getModel().getFileReference().length()>2097152l;
     	}
     	return false;
     }
 
-    /** get the type of the currently active component**/
+    /** get the type of the currently active componen
+         * @return t**/
     public SwatComponentType getTypeOfCurrentComponent() {
         Object o = tabView.getSelectedComponent();
         if (o instanceof PNEditorComponent) {
@@ -308,19 +318,23 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
                         default:
                                 return SwatComponentType.XES_LOG;
                 }
+        }  else if (o instanceof LogViewViewer) {
+                return SwatComponentType.LOG_VIEW;
         } else {
             return null;
         }
     }
 
-    /** return the hash code of the currently active component**/
+    /** return the hash code of the currently active componen
+         * @return t**/
     public int getHashOfCurrentComponent() {
         Object o = tabView.getSelectedComponent();
         if (o instanceof PNEditorComponent) {
             return ((PNEditorComponent) o).getNetContainer().getPetriNet().hashCode();
-        }
-        if (o instanceof LogFileViewer) {
+        } else if (o instanceof LogFileViewer) {
             return ((LogFileViewer) o).hashCode();
+        } else if (o instanceof LogViewViewer) {
+            return ((LogViewViewer) o).hashCode();
         }
         return -1;
     }
@@ -529,8 +543,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
                         errorMessage("Cannot load analysis panel", e, true);
                     }
                     // ((PNEditor)swatComponent).setEnabled(false);
-                }
-                if (swatComponent instanceof LogFileViewer) {
+                } else if ((swatComponent instanceof LogFileViewer) || (swatComponent instanceof LogViewViewer)) {
                     try {
                         getPropertiesPanel().add(AnalysisController.getInstance(swatComponent).getAnalyzePanel());
                     } catch (PatternException e) {

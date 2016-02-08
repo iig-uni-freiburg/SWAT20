@@ -102,7 +102,6 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                         editor.setEditable(false);
                         return editor;
                 }
-
         }
 
         private JPanel getParserPanel(MXMLLogParser p, File file, long max) throws FileNotFoundException {

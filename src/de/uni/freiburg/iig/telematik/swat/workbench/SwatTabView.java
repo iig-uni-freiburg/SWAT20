@@ -37,11 +37,13 @@ import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalTimedNet;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.editor.SwatIFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.logs.LogViewViewer;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
@@ -221,6 +223,9 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                                 case XES_LOG:
                                         addLogFile(node);
                                         break;
+                                case LOG_VIEW:
+                                        addLogView(node);
+                                        break;
                         }
                         return (ViewComponent) getComponentAt(getTabCount() - 1);
                 } catch (ParameterException e) {
@@ -228,8 +233,9 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                         //JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(getParent()), "Cannot display component in new tab.\nReason: "+e.getMessage(), "SWAT Exception", JOptionPane.ERROR_MESSAGE);
                         return null;
                 } catch (Exception e) {
-                        Workbench.errorMessage("Cannot display component", e, false);
-                        return null;
+                        throw new RuntimeException(e);
+//                        Workbench.errorMessage("Cannot display component", e, false);
+//                        return null;
                 }
         }
 
@@ -266,13 +272,20 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
         //
         //	}
         private void addLogFile(SwatTreeNode node) throws Exception {
-        // addTab(((LogFileViewer) node.getUserObject()).getName(),
+                // addTab(((LogFileViewer) node.getUserObject()).getName(),
                 // ((LogFileViewer) node.getUserObject()).getMainComponent());
                 LogFileViewer viewer = new LogFileViewer((LogModel) node.getUserObject());
                 addTab(node.getDisplayName(), viewer.getMainComponent());
                 setSelectedIndex(getTabCount() - 1);
-        //openedSwatComponents.put((LogFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
+                //openedSwatComponents.put((LogFileViewer) node.getUserObject(), getComponentAt(getComponentCount() - 1));
                 //openedSwatComponents.put((LogModel) node.getUserObject(), viewer);
+        }
+
+        private void addLogView(SwatTreeNode node) throws Exception {
+                final LogView view = (LogView) node.getUserObject();
+                LogViewViewer viewer = new LogViewViewer(view);
+                addTab(node.getDisplayName(), viewer.getMainComponent());
+                setSelectedIndex(getTabCount() - 1);
         }
 
         @Override
