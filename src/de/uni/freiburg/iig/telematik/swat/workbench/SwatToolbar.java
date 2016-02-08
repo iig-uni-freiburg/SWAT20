@@ -178,11 +178,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         standardItems.add(getAnalysisRadioButton());
         standardItems.add(getEditRadioButton());
         standardItems.add(getTimeSimulationButton());
-        standardItems.add(getEditResourceContext());
+        //standardItems.add(getEditResourceContext());
         //standardItems.add(getSetDefaultResourceContextBtn());
         //standardItems.add(getSetDefaultResourceStoreBtn());
         //standardItems.add(getSetDefaultTimeContextBtn());
-        standardItems.add(getDebugButton());
+        //standardItems.add(getDebugButton());
     }
 
     private JComponent getDebugButton() {
