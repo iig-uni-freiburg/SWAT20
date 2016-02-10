@@ -24,10 +24,15 @@ public class InversionMethodLogReader {
 
 	public InversionMethodLogReader(String pathToLogFile) throws IOException, ParserException {
 		logs = LogParser.parse(pathToLogFile);
+		
+		 for(int i = 0; i<logs.size(); i++) {
+		 for(int z = 0; z<logs.get(i).size(); z++) {
+		 System.out.println(logs.get(i).get(z).toString());}}
 	}
 
 	public List<LogTrace<LogEntry>> getLog() {
 		return logs.get(0);
+		
 	}
 
 	// public List<List<LogTrace<LogEntry>>> parseLog(String path) {
@@ -89,7 +94,7 @@ public class InversionMethodLogReader {
 	//
 	// }
 	/**
-	 * compute proportion of duration occurence in ratio to 1
+	 * compute proportion of duration occurence 
 	 * 
 	 * @param map
 	 * @return
@@ -117,39 +122,6 @@ public class InversionMethodLogReader {
 		return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
 	}
 
-	/**
-	 * Get List of Pairs with start and end times of an activity
-	 **/
-	public ArrayList<Pair> getTimeofActivity2(String activity) {
-		ArrayList<Pair> startEndTime = new ArrayList<>();
-		// List<List<LogTrace<LogEntry>>> logs = parseLog(logPath);
-		int counter = 0;
-		if (logs != null) {
-			for (int i = 0; i < logs.size(); i++) {
-				for (int z = 0; z < logs.get(i).size(); z++) {
-					System.out.println(logs.get(i).get(z).getEntriesForActivity(activity));
-					for (int t = 0; t < logs.get(i).get(z).getEntriesForActivity(activity).size(); t++) {
-						// System.out.println(logs.get(i).get(z).getEntriesForActivity(activity)
-						// + "Anzahl: " + t);
-						System.out.println(logs.get(i).get(z).getEntriesForActivity(activity).get(t).getTimestamp());
-						counter++;
-						if (t % 2 == 0) {
-							Pair pair = new Pair(
-									logs.get(i).get(z).getEntriesForActivity(activity).get(t).getTimestamp(),
-									logs.get(i).get(z).getEntriesForActivity(activity).get(t + 1).getTimestamp());
-							startEndTime.add(pair);
-						}
-					}
-				}
-			}
-		}
-		for (int i = 0; i < startEndTime.size(); i++) {
-			System.out.println(" Startzeitpunkt:" + startEndTime.get(i).getStartTime() + ", Endzeitpunkt:"
-					+ startEndTime.get(i).getEndTime() + ", Anzahl: " + i);
-		}
-		System.out.println(counter);
-		return startEndTime;
-	}
 
 	public ITimeBehaviour getTimeBehaviourOfActivity(String name) {
 		// TODO: was erwartet MeasuredTimeBehaviour?
@@ -182,10 +154,12 @@ public class InversionMethodLogReader {
 								for (int i = 0; i < suspendResume.size(); i++) {
 									difference += getDateDiff(suspendResume.get(i).getEndTime(), suspendResume.get(i).getStartTime(), TimeUnit.MINUTES);
 								}
-								time.add((getDateDiff(list.get(l).getTimestamp(), list.get(u).getTimestamp(), TimeUnit.MINUTES)) - difference);
+								time.add((getDateDiff(list.get(u).getTimestamp(), list.get(l).getTimestamp(), TimeUnit.MINUTES)) - difference);
+								System.out.println(getDateDiff(list.get(u).getTimestamp(), list.get(l).getTimestamp(), TimeUnit.MINUTES) - difference);
+								System.out.println(difference);
+								System.out.println(getDateDiff(list.get(u).getTimestamp(), list.get(l).getTimestamp(), TimeUnit.MINUTES));
 								difference = 0;
 								suspendResume.clear();
-
 							}
 
 							else {
@@ -193,13 +167,20 @@ public class InversionMethodLogReader {
 							}
 							l = u + 1;
 						}
-						if (list.get(u).getEventType().equals(EventType.suspend)) {
+						else if (list.get(u).getEventType().equals(EventType.suspend)) {
 							suspend = list.get(u).getTimestamp();
-
-							if (list.get(u).getEventType().equals(EventType.resume)) {
+							System.out.println("suspend found");
+						}
+						else if (list.get(u).getEventType().equals(EventType.resume)) {
 								resume = list.get(u).getTimestamp();
 								suspendResume.add(new Pair(suspend, resume));
+								System.out.println("resume found");
 							}
+						else if (list.get(u).getEventType().equals(EventType.ate_abort)) {
+							l = u + 1;
+							suspendResume.clear();
+							System.out.println("abort found");
+						}
 
 						}
 
@@ -207,7 +188,7 @@ public class InversionMethodLogReader {
 				}
 			}
 
-		}
+		
 		return time;
 	}
 }

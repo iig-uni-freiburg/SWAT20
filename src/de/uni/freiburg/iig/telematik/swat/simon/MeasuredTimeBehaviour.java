@@ -51,7 +51,7 @@ public class MeasuredTimeBehaviour implements ITimeBehaviour {
 		for ( int i = 0; i< inversionArray.size(); i++ ) {
 			if(random <= inversionArray.get(i).getSum()) {
 			result=  inversionArray.get(i).getKey();
-			System.out.println("getNeedetTime " + result);
+			System.out.println("getNeededTime " + result);
 			break;
 		}
 		
