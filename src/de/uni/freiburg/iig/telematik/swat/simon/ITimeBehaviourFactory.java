@@ -52,9 +52,13 @@ public class ITimeBehaviourFactory {
 		case WEIBULL:
 			return new WeibullDistributedBehaviour(params.get(0), params.get(1));
 		case UNIFORM:
+			if(params.get(0)< params.get(1)){
 			return new UniformDistributedBehaviour(params.get(0), params.get(1));
+			}
 		case BINOMIAL:
+			if(params.get(0) >= 0 && params.get(0)<= 1 && params.get(1) >= 0 && params.get(1)<= 1){
 			return new BinomialDistributedBehaviour(params.get(0), params.get(1));
+			}
 		default:
 			break;
 		}

@@ -149,8 +149,11 @@ public class InversionMethodLogReader {
 			for (int l = 0; l < list.size(); l++) {
 				if (list.get(l).getEventType().equals(EventType.start)) {
 					for (int u = l + 1; u < list.size(); u++) {
+						if(list.get(u).getTimestamp() != null && list.get(l).getTimestamp() != null) {
 						if (list.get(u).getEventType().equals(EventType.complete)) {
+							
 							if (!suspendResume.isEmpty()) {
+								
 								for (int i = 0; i < suspendResume.size(); i++) {
 									difference += getDateDiff(suspendResume.get(i).getEndTime(), suspendResume.get(i).getStartTime(), TimeUnit.MINUTES);
 								}
@@ -181,7 +184,7 @@ public class InversionMethodLogReader {
 							suspendResume.clear();
 							System.out.println("abort found");
 						}
-
+						}
 						}
 
 					}
