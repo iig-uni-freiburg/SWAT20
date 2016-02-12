@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
-import org.apache.commons.math3.distribution.NormalDistribution;
+
+
 import org.apache.commons.math3.distribution.PoissonDistribution;
 
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;

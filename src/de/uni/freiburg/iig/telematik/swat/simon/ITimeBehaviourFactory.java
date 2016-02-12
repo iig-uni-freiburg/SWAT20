@@ -18,7 +18,7 @@ public class ITimeBehaviourFactory {
 		ITimeBehaviour test = ITimeBehaviourFactory.getBahaviour(DistributionType.NORMAL, parameter);
 		for (int i = 0; i < 10; i++)
 			System.out.println("Get needed time: " + test.getNeededTime());
-		//"C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml", "A"
+		
 		
 		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/reallog.mxml", "Invoice Receipt (2)");
 		for (int i = 0; i<100;i++){
@@ -27,7 +27,6 @@ public class ITimeBehaviourFactory {
 		
 
 		
-		//reader.parseLog("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BafterA.mxml");
 	}
 
 	public static ITimeBehaviour getBahaviour(DistributionType type, List<Double> params) {
@@ -50,6 +49,12 @@ public class ITimeBehaviourFactory {
 			return new BetaDistributedBehaviour(params.get(0), params.get(1));
 		case F:
 			return new FDistributedBehaviour(params.get(0), params.get(1));
+		case WEIBULL:
+			return new WeibullDistributedBehaviour(params.get(0), params.get(1));
+		case UNIFORM:
+			return new UniformDistributedBehaviour(params.get(0), params.get(1));
+		case BINOMIAL:
+			return new BinomialDistributedBehaviour(params.get(0), params.get(1));
 		default:
 			break;
 		}
