@@ -17,6 +17,7 @@ import de.uni.freiburg.iig.telematik.wolfgang.actions.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.exception.EditorToolbarException;
 import de.uni.freiburg.iig.telematik.wolfgang.menu.AbstractToolBar;
+import de.uni.freiburg.iig.telematik.wolfgang.menu.toolbars.property.cpn.CPNPropertyCheckToolbar;
 
 public class IFNetToolBar extends AbstractToolBar {
 
@@ -95,8 +96,7 @@ public class IFNetToolBar extends AbstractToolBar {
 
 	@Override
 	protected JToolBar createPropertyCheckToolbar() throws ParameterException, PropertyException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return new CPNPropertyCheckToolbar(pnEditor, JToolBar.HORIZONTAL); //TODO: Replace with IFNEt specific PCT
 	}
 
 }
