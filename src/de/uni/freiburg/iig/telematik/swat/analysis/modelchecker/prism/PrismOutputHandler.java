@@ -105,14 +105,17 @@ public class PrismOutputHandler {
 			String node = nodes[j];
 			node = node.substring(1, node.length() - 1);
 			String[] variableValues = node.split(",");
+			//FIXME
 			transitionPath.add(getLastWitnessLine(variableValues));
 			for (int i=0; i<variableValues.length; i++) {
 				String transitionName = indexTransitionMap.get(i);
 				if (transitionName != null && variableValues[i].equals("1")) {
+					//FIXME
 					//transitionPath.add(transitionName);
 				}
 			}
 		}
+		//FIXME
 		//return first null-Entry
 		transitionPath.remove(0);
 		return transitionPath;

@@ -14,6 +14,7 @@ public class MeasuredTimeBehaviour implements ITimeBehaviour {
 	
 	public MeasuredTimeBehaviour(HashMap<Long, Double> map){
 		this.map=map;
+		
 		double sum = 0;
 		for ( Long key : map.keySet() ) {
 			sum += map.get(key);

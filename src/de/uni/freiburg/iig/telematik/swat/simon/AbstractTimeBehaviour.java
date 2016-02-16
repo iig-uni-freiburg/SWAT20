@@ -13,7 +13,7 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 	
 	AbstractRealDistribution distribution;
 	boolean available =true;
-	DistributionType type;
+	DistributionType type = DistributionType.UNKNOWN;
 	DecimalFormat format = new DecimalFormat("##.##");
 	String[] parameterNames;
 

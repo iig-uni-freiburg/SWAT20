@@ -46,9 +46,11 @@ public class BehaviorDetailListener implements ListSelectionListener, MouseListe
 	private List<Double> getTiming(MeasuredTimeBehaviour behaviour){
 		HashMap<Long, Double> map = behaviour.getMap();
 		ArrayList<Double> result = new ArrayList<>();
-		for (long l:map.keySet())
-			result.add((double) l);
+		result.addAll(map.values());
 		return result;
+		//for (long l:map.keySet())
+		//	result.add((double) l);
+		//return result;
 	}
 
 	@Override
