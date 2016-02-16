@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.logs;
 
+import de.invation.code.toval.file.FileUtils;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +9,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.charset.Charset;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,7 +27,6 @@ import javax.swing.event.ChangeListener;
 
 import org.processmining.analysis.sciffchecker.logic.interfaces.ISciffLogReader;
 
-import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.file.MonitoredInputStream;
 import de.invation.code.toval.graphic.util.SpringUtilities;
 import de.invation.code.toval.parser.ParserException;
@@ -43,6 +42,8 @@ import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
+import java.nio.charset.Charset;
+import java.util.Objects;
 
 /**
  * presents view on mxml files. extends {@link JEditorPane}, implements
@@ -52,6 +53,9 @@ import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 public class LogFileViewer extends JScrollPane implements ViewComponent {
 
         private static final long serialVersionUID = 7051631037013916120L;
+        
+        private static final long FILE_TOO_BIG_SIZE = 2097152l;
+        
         private JComponent properties = null;
         private JButton analyzeButton = null;
         private JComponent mainComponent;
@@ -62,14 +66,14 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
         private MXMLLogParser p;
 
         public LogFileViewer(LogModel model) throws Exception {
-                setModel(model);
+                this.model = model;
         }
 
         public LogModel getModel() {
                 return model;
         }
 
-        public final void setModel(LogModel model) {
+        public void setModel(LogModel model) {
                 this.model = model;
         }
 
@@ -89,12 +93,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
         }
 
         private JComponent getEditorField() throws MalformedURLException, IOException {
-                if (model.getFileReference().length() > 2097152l) {
-                        //do not show editor
-//			JLabel label=new JLabel("file too big to dislpay - analysis is possible but might run into performance problems");
-//			label.setPreferredSize(new Dimension(200, 100));
-//			label.setSize(200, 100);
-//			return label;
+                if (model.getFileReference().length() > FILE_TOO_BIG_SIZE) {
                         p = new MXMLLogParser();
                         return getParserPanel(p, getFileReference(), getFileReference().length());
                 } else {
@@ -199,7 +198,9 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                 properties.setLayout(new FlowLayout());
                 properties.add(new JLabel("Textual file"));
                 properties.add(new JLabel("Size: " + model.getFileReference().length() / 1024 + "kB"));
-                properties.add(new JLabel("Lines: " + FileUtils.getLineCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
+                if (model.getFileReference().length() <= FILE_TOO_BIG_SIZE) {
+                        properties.add(new JLabel("Lines: " + FileUtils.getLineCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
+                }
                 properties.add(getSciffButton());
                 properties.validate();
                 properties.repaint();
@@ -208,6 +209,18 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
         @Override
         public int hashCode() {
                 return model.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+                if (obj == null) {
+                        return false;
+                }
+                if (getClass() != obj.getClass()) {
+                        return false;
+                }
+                final LogFileViewer other = (LogFileViewer) obj;
+                return Objects.equals(this.model, other.model);
         }
 
         public ISciffLogReader loadLogReader() throws Exception {

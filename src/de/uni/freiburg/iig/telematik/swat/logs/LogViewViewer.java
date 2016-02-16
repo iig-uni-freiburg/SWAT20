@@ -1,8 +1,12 @@
 package de.uni.freiburg.iig.telematik.swat.logs;
 
 import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.invation.code.toval.properties.PropertyException;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.log.LogView;
+import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -12,6 +16,8 @@ import java.awt.FlowLayout;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Objects;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,6 +31,9 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
 
         private JComponent mainComponent = null;
         private JComponent properties = null;
+        
+        private JButton analyzeButton = null;
+        private JButton exportButton = null;
 
         public LogViewViewer(LogView view) throws ProjectComponentException {
                 this.view = view;
@@ -58,7 +67,14 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                 if (properties == null) {
                         properties = new JPanel();
                         properties.setLayout(new FlowLayout());
-                        properties.add(new JLabel("Textual file"));
+                        properties.add(new JLabel(".view file"));
+                        properties.add(new JLabel("Size: " + view.getFileReference().length() / 1024 + "kB"));
+                        try {
+                                properties.add(getSciffButton());
+                                properties.add(getExportButton());
+                        } catch (ParameterException | PropertyException | IOException ex) {
+                                throw new RuntimeException(ex);
+                        }
                         properties.validate();
                         properties.repaint();
                 }
@@ -104,5 +120,29 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                         return false;
                 }
                 return Objects.equals(this.view, other.view);
+        }
+
+        private JButton getSciffButton() throws ParameterException, PropertyException, IOException {
+                if (analyzeButton == null) {
+                        analyzeButton = new JButton("Analyze with SCIFF");
+                        ImageIcon icon;
+                        icon = IconFactory.getIcon("search");
+                        analyzeButton.setIcon(icon);
+                        analyzeButton.setEnabled(false); // TODO enable
+
+                        analyzeButton.addActionListener(new SciffAnalyzeAction(model.getFileReference()));
+                }
+                return analyzeButton;
+        }
+
+        private JButton getExportButton() throws ParameterException, PropertyException, IOException {
+                if (exportButton == null) {
+                        exportButton = new JButton("Save as new log");
+                        ImageIcon icon;
+                        icon = IconFactory.getIcon("save");
+                        exportButton.setIcon(icon);
+                        exportButton.setEnabled(false); // TODO enable
+                }
+                return exportButton;
         }
 }
