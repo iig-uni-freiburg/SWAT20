@@ -73,26 +73,7 @@ public class InversionMethodLogReader {
 		return map;
 	}
 
-	// public Long inversionMethod(HashMap<Long, Double> map) {
-	//
-	// long a = 0;
-	// double random = Math.random();
-	// double sum = 0;
-	// System.out.println("random " + random);
-	// for ( Long key : map.keySet() ) {
-	// sum += map.get(key);
-	// System.out.println("sum " + sum);
-	// if(random <= sum) {
-	// a= key;
-	// System.out.println(a);
-	// break;
-	// }
-	//
-	// }
-	// return a;
-	//
-	//
-	// }
+	
 	/**
 	 * compute proportion of duration occurence 
 	 * 
@@ -124,7 +105,6 @@ public class InversionMethodLogReader {
 
 
 	public ITimeBehaviour getTimeBehaviourOfActivity(String name) {
-		// TODO: was erwartet MeasuredTimeBehaviour?
 		return new MeasuredTimeBehaviour(probabilityTimeDiagram(createHistogram(name)));
 	}
 
