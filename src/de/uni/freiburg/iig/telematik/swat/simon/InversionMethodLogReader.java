@@ -179,7 +179,7 @@ public class InversionMethodLogReader {
 								suspendResume.add(new Pair(suspend, resume));
 								System.out.println("resume found");
 							}
-						else if (list.get(u).getEventType().equals(EventType.ate_abort)) {
+						else if (list.get(u).getEventType().equals(EventType.ate_abort) || list.get(u).getEventType().equals(EventType.pi_abort)) {
 							l = u + 1;
 							suspendResume.clear();
 							System.out.println("abort found");
