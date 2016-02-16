@@ -9,7 +9,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import de.invation.code.toval.parser.ParserException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
@@ -35,30 +39,14 @@ public class InversionMethodLogReader {
 		
 	}
 
-	// public List<List<LogTrace<LogEntry>>> parseLog(String path) {
-	// try {
-	// logs = LogParser.parse(path);
-	// for(int i = 0; i<logs.size(); i++) {
-	// for(int z = 0; z<logs.get(i).size(); z++) {
-	// System.out.println(logs.get(i).get(z).toString());}}
-	// return logs;
-	//
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// return null;
-	// } catch (ParserException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// return null;
-	// }
-	// }
+	
 
 	public HashMap<Long, Double> createHistogram(String activity) {
 		ArrayList<Long> duration = getTimeofActivity(activity);
 
 		HashMap<Long, Double> map = new HashMap<>();
-		Collections.sort(duration);
+		
+		
 		// counting number of occurrences of each Integers in the Arraylist
 		for (int i = 0; i < duration.size(); i++) {
 			if (!map.containsKey(duration.get(i))) {
@@ -80,9 +68,11 @@ public class InversionMethodLogReader {
 	 * @param map
 	 * @return
 	 */
-	public HashMap<Long, Double> probabilityTimeDiagram(HashMap<Long, Double> map) {
+	public Map<Long, Double> probabilityTimeDiagram(HashMap<Long, Double> map) {
 		Collection<Double> c = map.values();
+		
 		Iterator<Double> itr = c.iterator();
+		
 		double sum = 0;
 		while (itr.hasNext()) {
 			sum += (double) itr.next();
@@ -90,8 +80,15 @@ public class InversionMethodLogReader {
 		for (Long key : map.keySet()) {
 			map.put(key, map.get(key) / sum);
 		}
-		System.out.println("probabiliyTimeDiagramMethod " + map.values().toString());
-		return map;
+		
+		Map<Long, Double> treeMap = new TreeMap<Long, Double>(map);
+		
+		System.out.println("probabiliyTimeDiagramMethod " + "keyset (duration in min): " + treeMap.keySet().toString() + " and the probability: "+ treeMap.values().toString());
+		return treeMap;
+	}
+	
+	public void sortKeyMap(HashMap<Long, Double> map) {
+		
 	}
 
 	/**

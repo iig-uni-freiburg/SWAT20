@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
@@ -44,7 +45,7 @@ public class BehaviorDetailListener implements ListSelectionListener, MouseListe
 	}
 	
 	private List<Double> getTiming(MeasuredTimeBehaviour behaviour){
-		HashMap<Long, Double> map = behaviour.getMap();
+		Map<Long, Double> map = behaviour.getMap();
 		ArrayList<Double> result = new ArrayList<>();
 		result.addAll(map.values());
 		return result;

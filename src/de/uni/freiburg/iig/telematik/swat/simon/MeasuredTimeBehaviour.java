@@ -2,17 +2,18 @@ package de.uni.freiburg.iig.telematik.swat.simon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 
 public class MeasuredTimeBehaviour implements ITimeBehaviour {
 	
-	HashMap<Long, Double> map = new HashMap<>();
+	Map<Long, Double> map = new HashMap<>();
 	// This ArrayList is finally the chart of the inversion method with on one axis the Probability 
 	//and on the other axis the Value
 	private ArrayList<Tuple> inversionArray = new ArrayList<Tuple>();
 	
-	public MeasuredTimeBehaviour(HashMap<Long, Double> map){
+	public MeasuredTimeBehaviour(Map<Long, Double> map){
 		this.map=map;
 		
 		double sum = 0;
@@ -21,10 +22,11 @@ public class MeasuredTimeBehaviour implements ITimeBehaviour {
 			//System.out.println("sum " + sum);
 			inversionArray.add(new Tuple(sum, key));
 		}
+		
 		//hier inversions-array erstellen, dann muss bei getNeededTime nicht ständig die Summe neu berechnet werden.
 	}
 
-	public HashMap<Long, Double> getMap() {
+	public Map<Long, Double> getMap() {
 		return map;
 	}
 
