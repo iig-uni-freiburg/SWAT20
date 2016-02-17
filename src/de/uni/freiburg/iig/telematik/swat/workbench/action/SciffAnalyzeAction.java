@@ -150,12 +150,12 @@ public class SciffAnalyzeAction extends AbstractAction {
 	/** ParserFactory: AristaFlowParser or mxml parser **/
 	private ISciffLogReader getReader() throws Exception {
 		if (file != null)
-			System.out.println("Analayze " + file.getCanonicalPath());
+			System.out.println("Analyze " + file.getCanonicalPath());
 
 		if (file.getName().endsWith("mxml"))
 			return createMxmlParser();
 		if(file.getName().endsWith("xes"))
-				return createXesParser();
+			return createXesParser();
 		return createAristaFlowParser();
 	}
 
@@ -172,10 +172,9 @@ public class SciffAnalyzeAction extends AbstractAction {
 	}
 
 	private ISciffLogReader createMxmlParser() throws ParserException, ParameterException, IOException {
-		LogParserInterface parser = LogParser.getParser(file, LogParsingFormat.XES);
+		LogParserInterface parser = LogParser.getParser(file, LogParsingFormat.MXML);
 		parser.parse(file, ParsingMode.COMPLETE);
 		return new LogParserAdapter(parser);
-
 	}
 
 
