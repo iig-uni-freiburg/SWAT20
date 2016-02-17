@@ -33,6 +33,7 @@ import de.invation.code.toval.graphic.util.SpringUtilities;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sewol.parser.AbstractLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
@@ -105,7 +106,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 
         }
 
-        private JPanel getParserPanel(MXMLLogParser p, File file, long max) throws FileNotFoundException {
+        private JPanel getParserPanel(AbstractLogParser p, File file, long max) throws FileNotFoundException {
                 logReader = null;
                 JPanel panel = new JPanel(new SpringLayout());
                 JButton button = new JButton("parse file for analysis (may take some seconds)");
@@ -232,9 +233,9 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                                                 ((AristaFlowParser) logReader).parse(whichTimestamp.BOTH);
                                                 break;
                                         case MXML:
-//                                                MXMLLogParser mxmlParser = new MXMLLogParser();
-                                                p.parse(mis, ParsingMode.COMPLETE);
-                                                logReader = new LogParserAdapter(p);
+                                                MXMLLogParser mxmlParser = new MXMLLogParser();
+                                                mxmlParser.parse(mis, ParsingMode.COMPLETE);
+                                                logReader = new LogParserAdapter(mxmlParser);
                                                 break;
                                         case XES:
                                                 XESLogParser xesParser = new XESLogParser();

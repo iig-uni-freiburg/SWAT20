@@ -197,8 +197,6 @@ public class SwatComponents extends AbstractProjectComponents {
         }
 
         private void linkLogViews() {
-                List<LogModel> allMyBase = getLogs();
-
                 for (LogView v : logViewContainers.getComponents()) {
                         LogModel logModel = getLog(v.getParentLogName());
                         if (logModel != null) {
