@@ -64,7 +64,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 
         private LogModel model;
         private ISciffLogReader logReader = null;
-        private MXMLLogParser p;
+        private AbstractLogParser p;
 
         public LogFileViewer(LogModel model) throws Exception {
                 this.model = model;
@@ -95,7 +95,13 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 
         private JComponent getEditorField() throws MalformedURLException, IOException {
                 if (model.getFileReference().length() > FILE_TOO_BIG_SIZE) {
-                        p = new MXMLLogParser();
+                        if (model.getFileReference().getName().toLowerCase().endsWith(".mxml")) {
+                                p = new MXMLLogParser();
+                        } else if (model.getFileReference().getName().toLowerCase().endsWith(".xes")) {
+                                p = new XESLogParser();
+                        } else {
+                                // TODO
+                        }
                         return getParserPanel(p, getFileReference(), getFileReference().length());
                 } else {
                         JEditorPane editor = new JEditorPane(model.getFileReference().toURI().toURL());
