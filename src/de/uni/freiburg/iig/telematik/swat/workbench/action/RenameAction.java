@@ -84,6 +84,13 @@ public class RenameAction extends AbstractWorkbenchAction {
                                 newName = requestNetName("Enter new name for Log", "Rename Log");
                                 SwatComponents.getInstance().getContainerAristaflowLogs().renameComponent(oldName, newName);
                                 break;
+                        case LOG_VIEW:
+                                oldName = node.getDisplayName();
+                                newName = requestNetName("Enter new name for log view", "Rename Log View");
+                                if (newName != null && !newName.equals(oldName)) {
+                                        SwatComponents.getInstance().getContainerLogViews().renameComponent(oldName, newName);
+                                }
+                                break;
                         default:
                                 break;
                 }

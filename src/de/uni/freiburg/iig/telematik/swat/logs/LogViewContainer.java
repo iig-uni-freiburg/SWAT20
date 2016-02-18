@@ -81,16 +81,20 @@ public class LogViewContainer extends AbstractComponentContainer<LogView> implem
         }
 
         @Override
-        public void componentAdded(LogView component) throws ProjectComponentException {}
+        public void componentAdded(LogView component) throws ProjectComponentException {
+        }
 
         @Override
-        public void componentRemoved(LogView component) throws ProjectComponentException {}
+        public void componentRemoved(LogView component) throws ProjectComponentException {
+        }
 
         @Override
-        public void componentRenamed(LogView component, String oldName, String newName) throws ProjectComponentException {}
+        public void componentRenamed(LogView component, String oldName, String newName) throws ProjectComponentException {
+        }
 
         @Override
-        public void componentsChanged() throws ProjectComponentException {}
+        public void componentsChanged() throws ProjectComponentException {
+        }
 
         @Override
         public void storeComponent(String componentName) throws ProjectComponentException {

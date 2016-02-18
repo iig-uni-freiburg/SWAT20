@@ -89,6 +89,10 @@ public class LogModel implements NamedComponent, Comparable<LogModel> {
         public void addLogView(LogView view) {
                 views.add(view);
         }
+        
+        public void removeLogView(LogView view) {
+                views.remove(view);
+        }
 
         public List<LogView> getLogViews() {
                 return Collections.unmodifiableList(views);

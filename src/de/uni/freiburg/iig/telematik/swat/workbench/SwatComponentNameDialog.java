@@ -43,9 +43,10 @@ public class SwatComponentNameDialog extends PNNameDialog {
 			return SwatComponents.getInstance().getContainerXESLogs().containsComponent(input);
 		case ARISTAFLOW_LOG:
 			return SwatComponents.getInstance().getContainerAristaflowLogs().containsComponent(input);
+                case LOG_VIEW:
+                        return SwatComponents.getInstance().getContainerLogViews().containsComponent(input);
 		default:
-			throw new ProjectComponentException("can only access Nets and Logs");
+			throw new ProjectComponentException("can only access Nets, Logs, and Views");
 		}
     }
-
 }

@@ -32,12 +32,6 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalIFNet;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalPTNet;
-import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalTimedNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
@@ -58,7 +52,7 @@ import javax.swing.SwingUtilities;
  */
 public class NewViewAction extends AbstractWorkbenchAction {
 
-        private final static String ICON = "rename";
+        private final static String ICON = "invisible";
         private final static String TOOLTIP = "creates a new view for this log";
         private final static int KEY_EVENT = KeyEvent.VK_F3;
 
