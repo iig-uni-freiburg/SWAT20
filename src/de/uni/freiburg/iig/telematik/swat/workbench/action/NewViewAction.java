@@ -89,12 +89,13 @@ public class NewViewAction extends AbstractWorkbenchAction {
         protected void doFancyStuff(ActionEvent e) throws Exception {
                 SwatTreeNode logNode = (SwatTreeNode) Workbench.getInstance().getTreeView().getSelectionPath().getLastPathComponent();
                 LogModel logModel = (LogModel) logNode.getUserObject();
-                String netName = requestNetName("Please choose a name for the new view:", "New Log View");
-                if (netName != null) {
-                        LogView view = new LogView(netName);
+                String viewName = requestNetName("Please choose a name for the new view:", "New Log View");
+                if (viewName != null) {
+                        LogView view = new LogView(viewName);
                         view.setParentLogName(logModel.getName());
                         logModel.addLogView(view);
                         SwatComponents.getInstance().getContainerLogViews().addComponent(view, true);
+                        view.setFileReference(SwatComponents.getInstance().getContainerLogViews().getComponentFile(viewName));
                 }
         }
 

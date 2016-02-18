@@ -279,6 +279,8 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                                         menu = new SwatTreePopupMenuLog(swatNode);
                                 } else if (swatNode.getObjectType() == SwatComponentType.LOG_VIEW) {
                                         menu = new SwatTreePopupMenuView(swatNode);
+                                } else if (swatNode.getObjectType() == SwatComponentType.LOG_VIEW) {
+                                        menu = new SwatTreePopupMenuView(swatNode);
                                 } else {
                                         menu = new SwatTreePopupMenu(swatNode);
                                 }

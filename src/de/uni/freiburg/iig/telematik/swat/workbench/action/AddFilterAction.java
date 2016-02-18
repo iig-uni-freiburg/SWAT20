@@ -50,7 +50,7 @@ public class AddFilterAction extends AbstractWorkbenchAction {
         private final static int KEY_EVENT = KeyEvent.VK_F4;
 
         public AddFilterAction() {
-                super("Add filter");
+                super("Add new filter");
                 setTooltip(TOOLTIP);
                 setAcceleratorKey(KeyStroke.getKeyStroke(KEY_EVENT, 0));
                 try {
