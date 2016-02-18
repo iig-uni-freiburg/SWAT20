@@ -29,9 +29,7 @@ public class DeleteAction extends AbstractWorkbenchAction {
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_DOWN_MASK));
 		try {
 			this.setIcon(IconFactory.getIcon("delete"));
-		} catch (ParameterException e) {
-		} catch (PropertyException e) {
-		} catch (IOException e) {
+		} catch (ParameterException | PropertyException | IOException e) {
 		}
 	}
 

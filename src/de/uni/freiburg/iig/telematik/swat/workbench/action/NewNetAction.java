@@ -75,6 +75,5 @@ public class NewNetAction extends AbstractWorkbenchAction {
 
 	private String requestNetName(String message, String title) throws Exception {
 		return new PNNameDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false).requestInput();
-
 	}
 }

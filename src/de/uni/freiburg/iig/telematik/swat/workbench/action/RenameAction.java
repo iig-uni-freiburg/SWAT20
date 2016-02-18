@@ -12,93 +12,84 @@ import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 
 public class RenameAction extends AbstractWorkbenchAction {
-    
-    private static final long serialVersionUID = 365967570541436082L;
 
-	public RenameAction() {
-		super("Rename");
-		setTooltip("rename current entry");
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		try {
-			setIcon(IconFactory.getIcon("rename"));
-		} catch (ParameterException e) {
-		} catch (PropertyException e) {
-		} catch (IOException e) {
-		}
-	}
+        private static final long serialVersionUID = 365967570541436082L;
 
-	public RenameAction(String name, Icon icon) {
-		super(name);
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		if (icon != null)
-			setIcon(icon);
-	}
+        public RenameAction() {
+                super("Rename");
+                setTooltip("rename current entry");
+                setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+                try {
+                        setIcon(IconFactory.getIcon("rename"));
+                } catch (ParameterException | PropertyException | IOException e) {
+                }
+        }
 
-	public RenameAction(String string) {
-		super(string);
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		setTooltip("Rename");
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		try {
-			setIcon(IconFactory.getIcon("rename"));
-		} catch (ParameterException e) {
-		} catch (PropertyException e) {
-		} catch (IOException e) {
-		}
-	}
+        public RenameAction(String name, Icon icon) {
+                super(name);
+                setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+                if (icon != null) {
+                        setIcon(icon);
+                }
+        }
 
+        public RenameAction(String string) {
+                super(string);
+                setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+                setTooltip("Rename");
+                setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+                try {
+                        setIcon(IconFactory.getIcon("rename"));
+                } catch (ParameterException | PropertyException | IOException e) {
+                }
+        }
 
-	@Override
-	protected void doFancyStuff(ActionEvent e) throws Exception {
-            
-		SwatTreeNode node = (SwatTreeNode) Workbench.getInstance().getTreeView().getSelectionPath().getLastPathComponent();
-		String oldName, newName;
-		Boolean open = SwatTabView.getInstance().containsComponent(node);
-		
-		switch(node.getObjectType()){
-		case LABELING:
-			break;
-		case PETRI_NET:
-			oldName = node.getDisplayName();
-			newName = requestNetName("Enter new name for Petri net", "Rename Petri net");
-			if (newName != null && !newName.equals(oldName)) {
-				if (SwatTabView.getInstance().closeTabAndAskUser(oldName)){
-                                    SwatComponents.getInstance().getContainerPetriNets().renameComponent(oldName, newName);
+        @Override
+        protected void doFancyStuff(ActionEvent e) throws Exception {
+
+                SwatTreeNode node = (SwatTreeNode) Workbench.getInstance().getTreeView().getSelectionPath().getLastPathComponent();
+                String oldName, newName;
+                boolean open = SwatTabView.getInstance().containsComponent(node);
+
+                switch (node.getObjectType()) {
+                        case LABELING:
+                                break;
+                        case PETRI_NET:
+                                oldName = node.getDisplayName();
+                                newName = requestNetName("Enter new name for Petri net", "Rename Petri net");
+                                if (newName != null && !newName.equals(oldName)) {
+                                        if (SwatTabView.getInstance().closeTabAndAskUser(oldName)) {
+                                                SwatComponents.getInstance().getContainerPetriNets().renameComponent(oldName, newName);
+                                        }
                                 }
-                        }		
-                        break;
-		case MXML_LOG:
-                    oldName = node.getDisplayName();
-			newName = requestNetName("Enter new name for Log", "Rename Log");
-			SwatComponents.getInstance().getContainerMXMLLogs().renameComponent(oldName, newName);
-                    break;
-		case XES_LOG:
-                    oldName = node.getDisplayName();
-			newName = requestNetName("Enter new name for Log", "Rename Log");
-			SwatComponents.getInstance().getContainerXESLogs().renameComponent(oldName, newName);
-                    break;
-		case ARISTAFLOW_LOG:
-			oldName = node.getDisplayName();
-			newName = requestNetName("Enter new name for Log", "Rename Log");
-			SwatComponents.getInstance().getContainerAristaflowLogs().renameComponent(oldName, newName);
-                    break;
+                                break;
+                        case MXML_LOG:
+                                oldName = node.getDisplayName();
+                                newName = requestNetName("Enter new name for Log", "Rename Log");
+                                SwatComponents.getInstance().getContainerMXMLLogs().renameComponent(oldName, newName);
+                                break;
+                        case XES_LOG:
+                                oldName = node.getDisplayName();
+                                newName = requestNetName("Enter new name for Log", "Rename Log");
+                                SwatComponents.getInstance().getContainerXESLogs().renameComponent(oldName, newName);
+                                break;
+                        case ARISTAFLOW_LOG:
+                                oldName = node.getDisplayName();
+                                newName = requestNetName("Enter new name for Log", "Rename Log");
+                                SwatComponents.getInstance().getContainerAristaflowLogs().renameComponent(oldName, newName);
+                                break;
+                        default:
+                                break;
+                }
+        }
 
-		default:
-			break;
-		}
-	}
-
-	
-
-	private String requestNetName(String message, String title) throws Exception {
-		return  FileNameDialog.showDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false);
-	}
+        private String requestNetName(String message, String title) throws Exception {
+                return FileNameDialog.showDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), message, title, false);
+        }
 }

@@ -55,7 +55,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
 
         private static final long serialVersionUID = 7051631037013916120L;
         
-        private static final long FILE_TOO_BIG_SIZE = 2097152l;
+        protected static final long SWAT_FILE_TOO_BIG_TO_SHOW_SIZE = 2097152l;
         
         private JComponent properties = null;
         private JButton analyzeButton = null;
@@ -86,15 +86,15 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                         mainComponent.revalidate();
                         mainComponent.repaint();
                 } catch (MalformedURLException e) {
-                        Workbench.errorMessage("Could not generate Log viewer, URL malformed", e, true);
+                        Workbench.errorMessage("Could not generate log viewer, URL malformed", e, true);
                 } catch (IOException e) {
-                        Workbench.errorMessage("Could not generate Log viewer, I/O Error", e, true);
+                        Workbench.errorMessage("Could not generate log viewer, I/O Error", e, true);
                 }
                 return this;
         }
 
         private JComponent getEditorField() throws MalformedURLException, IOException {
-                if (model.getFileReference().length() > FILE_TOO_BIG_SIZE) {
+                if (model.getFileReference().length() > SWAT_FILE_TOO_BIG_TO_SHOW_SIZE) {
                         if (model.getFileReference().getName().toLowerCase().endsWith(".mxml")) {
                                 p = new MXMLLogParser();
                         } else if (model.getFileReference().getName().toLowerCase().endsWith(".xes")) {
@@ -113,8 +113,8 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
         private JPanel getParserPanel(AbstractLogParser p, File file, long max) throws FileNotFoundException {
                 logReader = null;
                 JPanel panel = new JPanel(new SpringLayout());
-                JButton button = new JButton("parse file for analysis (may take some seconds)");
-                panel.add(new JLabel("...file too big to display - analysis is possible but might run into performance issues"));
+                JButton button = new JButton("Parse file for analysis (this may take some time)");
+                panel.add(new JLabel("...file is too big to display - analysis is possible but might run into performance issues"));
                 panel.add(bar);
                 panel.add(button);
                 MonitoredInputStream mis = new MonitoredInputStream(new FileInputStream(file), max, 1024 * 1024 * 5);
@@ -144,7 +144,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                                                                         bar.setValue(100);
                                                                         logReader = new LogParserAdapter(p);
                                                                         getModel().setLogReader(logReader);
-                                                                        button.setText("file parsed");
+                                                                        button.setText("File parsed");
                                                                 }
                                                         });
                                                 }
@@ -203,9 +203,15 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
         private void createPropertiesView() throws IOException, ParameterException, PropertyException {
                 properties = new JPanel();
                 properties.setLayout(new FlowLayout());
-                properties.add(new JLabel("Textual file"));
+                if (model.getFileReference().getName().toLowerCase().endsWith(".mxml")) {
+                        properties.add(new JLabel(".mxml file"));
+                } else if (model.getFileReference().getName().toLowerCase().endsWith(".xes")) {
+                        properties.add(new JLabel(".xes file"));
+                } else {
+                        properties.add(new JLabel("Textual file"));
+                }
                 properties.add(new JLabel("Size: " + model.getFileReference().length() / 1024 + "kB"));
-                if (model.getFileReference().length() <= FILE_TOO_BIG_SIZE) {
+                if (model.getFileReference().length() <= SWAT_FILE_TOO_BIG_TO_SHOW_SIZE) {
                         properties.add(new JLabel("Lines: " + FileUtils.getLineCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
                 }
                 properties.add(getSciffButton());
