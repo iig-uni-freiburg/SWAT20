@@ -26,6 +26,7 @@ import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenu;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenuLog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenuView;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
@@ -276,6 +277,8 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                                 SwatTreePopupMenu menu;
                                 if (swatNode.getObjectType() == SwatComponentType.ARISTAFLOW_LOG || swatNode.getObjectType() == SwatComponentType.MXML_LOG || swatNode.getObjectType() == SwatComponentType.XES_LOG) {
                                         menu = new SwatTreePopupMenuLog(swatNode);
+                                } else if (swatNode.getObjectType() == SwatComponentType.LOG_VIEW) {
+                                        menu = new SwatTreePopupMenuView(swatNode);
                                 } else {
                                         menu = new SwatTreePopupMenu(swatNode);
                                 }
