@@ -35,36 +35,32 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.Icon;
-import javax.swing.KeyStroke;
 
 /**
  *
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public class AddFilterAction extends AbstractWorkbenchAction {
+public class DuplicateFilterAction extends AbstractWorkbenchAction {
 
-        private final static String DEFAULT_ICON = "plus2";
-        private final static String DEFAULT_NAME = "Add new filter";
-        private final static String TOOLTIP = "adds a new filter to the view";
-        private final static int KEY_EVENT = KeyEvent.VK_F4;
+        private final static String DEFAULT_ICON = "rwc";
+        private final static String DEFAULT_NAME = "Duplicate filter";
+        private final static String TOOLTIP = "duplicates the selected filter";
 
         private final SwatTreeNode viewNode;
 
-        public AddFilterAction(SwatTreeNode viewNode) {
+        public DuplicateFilterAction(SwatTreeNode viewNode) {
                 this(DEFAULT_NAME, null, viewNode);
         }
 
-        public AddFilterAction(String name, SwatTreeNode viewNode) {
+        public DuplicateFilterAction(String name, SwatTreeNode viewNode) {
                 this(name, null, viewNode);
         }
 
-        public AddFilterAction(String name, Icon icon, SwatTreeNode viewNode) {
+        public DuplicateFilterAction(String name, Icon icon, SwatTreeNode viewNode) {
                 super(name);
                 setTooltip(TOOLTIP);
-                setAcceleratorKey(KeyStroke.getKeyStroke(KEY_EVENT, 0));
                 this.viewNode = viewNode;
                 if (icon != null) {
                         setIcon(icon);

@@ -44,24 +44,24 @@ import javax.swing.KeyStroke;
  *
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public class AddFilterAction extends AbstractWorkbenchAction {
+public class EditFilterAction extends AbstractWorkbenchAction {
 
-        private final static String DEFAULT_ICON = "plus2";
-        private final static String DEFAULT_NAME = "Add new filter";
-        private final static String TOOLTIP = "adds a new filter to the view";
-        private final static int KEY_EVENT = KeyEvent.VK_F4;
+        private final static String DEFAULT_ICON = "edit";
+        private final static String DEFAULT_NAME = "Edit filter";
+        private final static String TOOLTIP = "edits the selected filter";
+        private final static int KEY_EVENT = KeyEvent.VK_F5;
 
         private final SwatTreeNode viewNode;
 
-        public AddFilterAction(SwatTreeNode viewNode) {
+        public EditFilterAction(SwatTreeNode viewNode) {
                 this(DEFAULT_NAME, null, viewNode);
         }
 
-        public AddFilterAction(String name, SwatTreeNode viewNode) {
+        public EditFilterAction(String name, SwatTreeNode viewNode) {
                 this(name, null, viewNode);
         }
 
-        public AddFilterAction(String name, Icon icon, SwatTreeNode viewNode) {
+        public EditFilterAction(String name, Icon icon, SwatTreeNode viewNode) {
                 super(name);
                 setTooltip(TOOLTIP);
                 setAcceleratorKey(KeyStroke.getKeyStroke(KEY_EVENT, 0));

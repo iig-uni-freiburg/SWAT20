@@ -11,6 +11,6 @@ public class SwatTreePopupMenuView extends SwatTreePopupMenu {
         }
 
         private void generateEntries() {
-                add(new AddFilterAction("Add new filter"));
+                add(new AddFilterAction("Add new filter", node));
         }
 }

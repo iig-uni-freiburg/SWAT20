@@ -4,13 +4,13 @@ import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeFilterNode;
 import javax.swing.JPopupMenu;
 
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AddFilterAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.DuplicateAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteFilterAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.DuplicateFilterAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.EditFilterAction;
 
 public class SwatTreePopupMenuFilter extends JPopupMenu {
 
-        SwatTreeFilterNode node;
+        private final SwatTreeFilterNode node;
 
         public SwatTreePopupMenuFilter(SwatTreeFilterNode node) {
                 this.node = node;
@@ -18,10 +18,9 @@ public class SwatTreePopupMenuFilter extends JPopupMenu {
         }
 
         private void generateEntries() {
-                add(new AddFilterAction("Add new filter"));
-                add(new DeleteAction("Delete filter"));
-                add(new RenameAction("Edit filter"));
-                add(new DuplicateAction("Duplicate filter"));
+                add(new AddFilterAction(node.getParentTreeNode()));
+                add(new EditFilterAction(node.getParentTreeNode()));
+                add(new DeleteFilterAction(node.getParentTreeNode()));
+                add(new DuplicateFilterAction(node.getParentTreeNode()));
         }
-
 }
