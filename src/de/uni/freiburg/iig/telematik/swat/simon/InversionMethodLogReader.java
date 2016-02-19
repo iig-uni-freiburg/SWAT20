@@ -25,7 +25,12 @@ import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
 public class InversionMethodLogReader {
 
 	List<List<LogTrace<LogEntry>>> logs;
-
+/**
+ * Class to parse Log, compute activity durations and built occurence/probability histograms
+ * @param pathToLogFile The destination of the Log
+ * @throws IOException
+ * @throws ParserException
+ */
 	public InversionMethodLogReader(String pathToLogFile) throws IOException, ParserException {
 		logs = LogParser.parse(pathToLogFile);
 		
@@ -40,7 +45,11 @@ public class InversionMethodLogReader {
 	}
 
 	
-
+/**
+ * Create Histogram with duration and number of occurences
+ * @param activity The name of the activity
+ * @return map The Map with the computed occurence and duration 
+ */
 	public HashMap<Long, Double> createHistogram(String activity) {
 		ArrayList<Long> duration = getTimeofActivity(activity);
 
@@ -65,8 +74,8 @@ public class InversionMethodLogReader {
 	/**
 	 * compute proportion of duration occurence 
 	 * 
-	 * @param map
-	 * @return
+	 * @param map The Map with duration and the counted occurence of the duration
+	 * @return map with duration and relative occurences
 	 */
 	public Map<Long, Double> probabilityTimeDiagram(HashMap<Long, Double> map) {
 		Collection<Double> c = map.values();
@@ -87,24 +96,32 @@ public class InversionMethodLogReader {
 		return treeMap;
 	}
 	
-	public void sortKeyMap(HashMap<Long, Double> map) {
-		
-	}
 
-	/**
-	 * Get time difference between start and endtime of an activity
-	 * 
-	 **/
+/**
+ * Compute difference between two dates
+ * @param endTime
+ * @param startTime
+ * @param timeUnit
+ * @return long difference
+ */
 	public static long getDateDiff(Date endTime, Date startTime, TimeUnit timeUnit) {
 		long diffInMillies = endTime.getTime() - startTime.getTime();
 		return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
 	}
 
-
+/**
+ * Get the timebehaviour
+ * @param name Log destination
+ * @return timebehaviour
+ */
 	public ITimeBehaviour getTimeBehaviourOfActivity(String name) {
 		return new MeasuredTimeBehaviour(probabilityTimeDiagram(createHistogram(name)));
 	}
-
+/**
+ * Compute the duration of the activities
+ * @param activity Name of activity
+ * @return time - ArrayList with durations
+ */
 	public ArrayList<Long> getTimeofActivity(String activity) {
 		ArrayList<Long> time = new ArrayList<Long>();
 		ArrayList<Pair> suspendResume = new ArrayList<>();

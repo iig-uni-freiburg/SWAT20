@@ -1,7 +1,11 @@
 package de.uni.freiburg.iig.telematik.swat.simon;
 
 import java.util.Date;
-
+/**
+ * Tuple for inversionarray
+ * @author Schonhart
+ *
+ */
 public class Tuple {
 
 	private Double mSum;
