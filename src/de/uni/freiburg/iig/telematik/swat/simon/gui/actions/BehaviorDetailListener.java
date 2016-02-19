@@ -13,6 +13,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
+import de.uni.freiburg.iig.telematik.swat.misc.plots.ITimeBehaviourPlot;
 import de.uni.freiburg.iig.telematik.swat.misc.plots.SimulationHistogram;
 import de.uni.freiburg.iig.telematik.swat.simon.MeasuredTimeBehaviour;
 
@@ -76,7 +77,8 @@ public class BehaviorDetailListener implements ListSelectionListener, MouseListe
 		if(getMarkedBehaviour(list)==null) return;
 		
 		MeasuredTimeBehaviour behaviour = getMarkedBehaviour(list);
-		new SimulationHistogram(getTiming(behaviour), 50, "Behaviour", "occurence").setVisible(true);
+		//new SimulationHistogram(getTiming(behaviour), 50, "Behaviour", "occurence").setVisible(true);
+		new ITimeBehaviourPlot(behaviour).setVisible();
 		
 	}
 

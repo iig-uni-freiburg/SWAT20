@@ -66,6 +66,10 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 	public String[] getParameters(){
 		return parameterNames;
 	}
+	
+	public double getCummulativeValueAt(double x){
+		return distribution.cumulativeProbability(x);
+	}
 
 	}
 

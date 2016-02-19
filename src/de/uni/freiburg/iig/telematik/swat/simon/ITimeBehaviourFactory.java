@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.invation.code.toval.parser.ParserException;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
 
@@ -52,12 +53,15 @@ public class ITimeBehaviourFactory {
 		case WEIBULL:
 			return new WeibullDistributedBehaviour(params.get(0), params.get(1));
 		case UNIFORM:
-			if(params.get(0)< params.get(1)){
-			return new UniformDistributedBehaviour(params.get(0), params.get(1));
-			}
+			if (params.get(0) < params.get(1)) {
+				return new UniformDistributedBehaviour(params.get(0), params.get(1));
+			} else
+				throw new ParameterException("First parameter must be smaller than second parameter");
 		case BINOMIAL:
-			if(params.get(0) >= 0 && params.get(0)<= 1 && params.get(1) >= 0 && params.get(1)<= 1){
-			return new BinomialDistributedBehaviour(params.get(0), params.get(1));
+			if (params.get(0) >= 0 && params.get(0) <= 1 && params.get(1) >= 0 && params.get(1) <= 1) {
+				return new BinomialDistributedBehaviour(params.get(0), params.get(1));
+			} else {
+				throw new ParameterException("Parameters must be between 0 and 1");
 			}
 		default:
 			break;

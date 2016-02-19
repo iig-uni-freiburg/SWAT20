@@ -3,6 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.simon;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.apache.commons.math3.random.GaussianRandomGenerator;
+
 import com.thoughtworks.xstream.XStream;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
@@ -14,6 +16,8 @@ public class AwesomeTimeContext implements ITimeContext {
 	// hier alles rein, was von ITimeBehaviour (bzw. AbstractTimeBehaviour
 	// ableitet
 	private HashMap<String, ITimeBehaviour> timeBehaviour = new HashMap<>();
+	
+	private HashMap<String, Double> deadlines = new HashMap<>();
 	
 	double time;
 
@@ -38,12 +42,30 @@ public class AwesomeTimeContext implements ITimeContext {
 
 
 
+	public double getDeadlineFor(String name){
+		checkDeadlines();
+		return deadlines.get(name);
+	}
 	
+	public void setDeadline(String name, double deadline){
+		checkDeadlines();
+		deadlines.put(name, deadline);
+	}
+	
+	public boolean containsDeadlineFor(String name){
+		checkDeadlines();
+		return (deadlines.containsKey(name));
+	}
+	
+	private void checkDeadlines(){
+		//create Map if null (compatibility with old searlized verseions of TimeContext)
+		if(deadlines==null)
+			deadlines=new HashMap<>();
+	}
 
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.name;
 	}
 	
