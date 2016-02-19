@@ -22,7 +22,7 @@ import de.uni.freiburg.iig.telematik.swat.simon.MeasuredTimeBehaviour;
 public class ITimeBehaviourPlot {
 
 	private ITimeBehaviour behaviour;
-	private int bins = 50;
+	private int bins = 100;
 	boolean isMeasuredBehaviour = false;
 	
 	private JFrame frame = new JFrame();
@@ -53,7 +53,7 @@ public class ITimeBehaviourPlot {
 			}
 		} else if (behaviour instanceof AbstractTimeBehaviour){
 			AbstractTimeBehaviour abstractBehaviour = (AbstractTimeBehaviour) behaviour;
-			int[] binValues = fillBins(abstractBehaviour);
+			double[] binValues = fillBins(abstractBehaviour);
 			for (int i = 0; i < bins; i++) {
 				series.add(binValues[i],abstractBehaviour.getCummulativeValueAt(binValues[i]));
 			}
@@ -70,18 +70,20 @@ public class ITimeBehaviourPlot {
 		return chartPanel;
 	}
 	
-	private int[] fillBins(AbstractTimeBehaviour behaviour){
+	private double[] fillBins(AbstractTimeBehaviour behaviour){
 		int min = 0;
 		int max = 1;
-		int[] bins = new int[this.bins];
+		double[] bins = new double[this.bins];
 		bins[0]=0;
 		while (true){
-			if(behaviour.getCummulativeValueAt(max)>99)
+			System.out.println(behaviour.getCummulativeValueAt(max));
+			if(behaviour.getCummulativeValueAt(max)>0.99)
 				break;
-			max++;
+			max+=5;
 		}
-		int step = (int) (((double)min)/max)+1;
-		for (int i = 0;i<bins.length;i++)
+		double step = (double)(max-min)/bins.length;
+		System.out.println("Step: "+step);
+		for (int i = 0;i<bins.length-1;i++)
 			bins[i+1]=bins[i]+step;
 		
 		return bins;

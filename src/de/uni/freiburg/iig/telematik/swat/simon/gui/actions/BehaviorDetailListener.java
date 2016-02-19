@@ -27,8 +27,9 @@ public class BehaviorDetailListener implements ListSelectionListener, MouseListe
 		if(list == null) return;
 		if(getMarkedBehaviour(list)==null) return;
 		
-		MeasuredTimeBehaviour behaviour = getMarkedBehaviour(list);
-		new SimulationHistogram(getTiming(behaviour), 50, "Behaviour", "occurence").setVisible(true);
+		ITimeBehaviour behaviour = getMarkedBehaviour(list);
+		new ITimeBehaviourPlot(behaviour).setVisible();
+		//new SimulationHistogram(getTiming(behaviour), 50, "Behaviour", "occurence").setVisible(true);
 	}
 	
 	private JList<ITimeBehaviour> getList(EventObject e){
@@ -38,11 +39,11 @@ public class BehaviorDetailListener implements ListSelectionListener, MouseListe
 		return null;
 	}
 	
-	private MeasuredTimeBehaviour getMarkedBehaviour(JList<ITimeBehaviour> list) {
-		ITimeBehaviour behaviour = list.getSelectedValue();
-		if (behaviour instanceof MeasuredTimeBehaviour) 
-			return (MeasuredTimeBehaviour) behaviour;
-		return null;
+	private ITimeBehaviour getMarkedBehaviour(JList<ITimeBehaviour> list) {
+		return list.getSelectedValue();
+//		if (behaviour instanceof MeasuredTimeBehaviour) 
+//			return (MeasuredTimeBehaviour) behaviour;
+//		return null;
 	}
 	
 	private List<Double> getTiming(MeasuredTimeBehaviour behaviour){
@@ -76,7 +77,7 @@ public class BehaviorDetailListener implements ListSelectionListener, MouseListe
 		if(list == null) return;
 		if(getMarkedBehaviour(list)==null) return;
 		
-		MeasuredTimeBehaviour behaviour = getMarkedBehaviour(list);
+		ITimeBehaviour behaviour = getMarkedBehaviour(list);
 		//new SimulationHistogram(getTiming(behaviour), 50, "Behaviour", "occurence").setVisible(true);
 		new ITimeBehaviourPlot(behaviour).setVisible();
 		
