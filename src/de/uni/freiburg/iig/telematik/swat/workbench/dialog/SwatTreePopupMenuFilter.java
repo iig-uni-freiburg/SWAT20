@@ -5,7 +5,6 @@ import javax.swing.JPopupMenu;
 
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AddFilterAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteFilterAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.DuplicateFilterAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.EditFilterAction;
 
 public class SwatTreePopupMenuFilter extends JPopupMenu {
@@ -21,6 +20,5 @@ public class SwatTreePopupMenuFilter extends JPopupMenu {
                 add(new AddFilterAction(node.getParentTreeNode()));
                 add(new EditFilterAction(node.getParentTreeNode()));
                 add(new DeleteFilterAction(node.getParentTreeNode()));
-                add(new DuplicateFilterAction(node.getParentTreeNode()));
         }
 }

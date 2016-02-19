@@ -32,13 +32,20 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.AbstractLogFilter;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeFilterNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 /**
@@ -80,6 +87,19 @@ public class DeleteFilterAction extends AbstractWorkbenchAction {
 
         @Override
         protected void doFancyStuff(ActionEvent e) throws Exception {
-                // TODO add functionality
+                SwatTreeFilterNode filterNode = (SwatTreeFilterNode) SwatTreeView.getInstance().getSelectionPath().getLastPathComponent();
+                AbstractLogFilter filter = filterNode.getFilter();
+                final String viewName = ((LogView) viewNode.getUserObject()).getName();
+                LogView view = SwatComponents.getInstance().getContainerLogViews().getComponent(viewName);
+
+                int userAnswer = JOptionPane.showConfirmDialog(Workbench.getInstance(), "Delete the selected filter from the view?");
+
+                if (userAnswer != JOptionPane.YES_OPTION) {
+                        return;
+                }
+
+                view.removeFilter(filter);
+                SwatComponents.getInstance().reloadComponents();
+                SwatComponents.getInstance().getContainerLogViews().storeComponent(viewName);
         }
 }
