@@ -25,6 +25,7 @@ import de.uni.freiburg.iig.telematik.sewol.log.filter.AbstractLogFilter;
 import de.uni.freiburg.iig.telematik.swat.analysis.Analysis;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenu;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenuFilter;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenuLog;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.SwatTreePopupMenuView;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -138,13 +139,13 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                                 final DefaultMutableTreeNode logNode = new SwatTreeNode(logModel, logType);
 
                                 for (LogView view : logModel.getLogViews()) {
-                                        DefaultMutableTreeNode viewNode = new SwatTreeNode(view, SwatComponentType.LOG_VIEW);
+                                        SwatTreeNode viewNode = new SwatTreeNode(view, SwatComponentType.LOG_VIEW);
 
                                         // list filters
                                         Iterator<AbstractLogFilter> filterIterator = view.getFilters().iterator();
                                         while (filterIterator.hasNext()) {
                                                 AbstractLogFilter filter = filterIterator.next();
-                                                viewNode.add(new DefaultMutableTreeNode(filter.toString()));
+                                                viewNode.add(new SwatTreeFilterNode(filter, viewNode));
                                         }
                                         
                                         logNode.add(viewNode);
@@ -226,7 +227,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                         if (selectedNode == null) {
                                 return;
                         }
-                        if (!(selectedNode instanceof SwatTreeNode)) {
+                        if (!((selectedNode instanceof SwatTreeNode) || (selectedNode instanceof SwatTreeFilterNode))) {
                                 return;
                         }
 
@@ -272,13 +273,15 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                         }
 
                         Object selectedNode = getSelectionPath().getLastPathComponent();
-                        if (selectedNode instanceof SwatTreeNode) {
+                         if (selectedNode instanceof SwatTreeFilterNode) {
+                                SwatTreeFilterNode treeNode = (SwatTreeFilterNode) selectedNode;
+                                SwatTreePopupMenuFilter menu = new SwatTreePopupMenuFilter(treeNode);
+                                menu.show((Component) e.getSource(), e.getX(), e.getY());
+                        } else if (selectedNode instanceof SwatTreeNode) {
                                 SwatTreeNode swatNode = (SwatTreeNode) selectedNode;
                                 SwatTreePopupMenu menu;
                                 if (swatNode.getObjectType() == SwatComponentType.ARISTAFLOW_LOG || swatNode.getObjectType() == SwatComponentType.MXML_LOG || swatNode.getObjectType() == SwatComponentType.XES_LOG) {
                                         menu = new SwatTreePopupMenuLog(swatNode);
-                                } else if (swatNode.getObjectType() == SwatComponentType.LOG_VIEW) {
-                                        menu = new SwatTreePopupMenuView(swatNode);
                                 } else if (swatNode.getObjectType() == SwatComponentType.LOG_VIEW) {
                                         menu = new SwatTreePopupMenuView(swatNode);
                                 } else {

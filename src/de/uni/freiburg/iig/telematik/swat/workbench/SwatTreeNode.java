@@ -11,9 +11,9 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 public class SwatTreeNode extends DefaultMutableTreeNode {
 
         private static final long serialVersionUID = 8746333990209477776L;
-        private SwatComponentType objectType = null;
+        private final SwatComponentType objectType;
 
-        private String displayName = null;
+        private String displayName;
 
         public SwatTreeNode(Object userObject, SwatComponentType objectType) {
                 super(userObject, false);

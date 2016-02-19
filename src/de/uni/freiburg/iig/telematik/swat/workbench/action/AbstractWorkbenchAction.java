@@ -14,8 +14,6 @@ import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class AbstractWorkbenchAction extends AbstractAction {
 
