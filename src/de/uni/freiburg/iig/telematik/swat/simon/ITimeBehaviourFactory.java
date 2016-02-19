@@ -8,7 +8,11 @@ import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.swat.misc.timecontext.distributions.DistributionType;
-
+/**
+ * For testing
+ * @author Schonhart
+ *
+ */
 public class ITimeBehaviourFactory {
 
 	public static void main(String args[]) throws IOException, ParserException {
@@ -21,15 +25,20 @@ public class ITimeBehaviourFactory {
 			System.out.println("Get needed time: " + test.getNeededTime());
 		
 		
-		ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BNA.mxml", "A");
-		for (int i = 0; i<100;i++){
-			System.out.println("time: " + measuredBehaviour.getNeededTime());
-		}
+		//ITimeBehaviour measuredBehaviour = getBehaviour("C:/Users/Schonhart/Desktop/BachelorThesis/Logfiles/BNA.mxml", "A");
+		//for (int i = 0; i<100;i++){
+			//System.out.println("time: " + measuredBehaviour.getNeededTime());
+		//}
 		
 
 		
 	}
-
+/**
+ * Method to get standard behaviour
+ * @param type The type of the distribution
+ * @param params The parameters
+ * @return Behaviour
+ */
 	public static ITimeBehaviour getBahaviour(DistributionType type, List<Double> params) {
 		switch (type) {
 		case NORMAL:
