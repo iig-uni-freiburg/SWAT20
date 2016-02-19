@@ -110,10 +110,11 @@ class LicenceDialog extends JDialog{
 "\n" +
 "It is based on software from the Department of Telematics of the\n" +
 "Institute of Computer Science and Social Studies, University of\n" +
-"Freiburg, namely TOVAL (http://sourceforge.net/p/toval), JAGAL\n" +
-"(http://sourceforge.net/p/jagal), SEWOL\n" +
-"(https://sourceforge.net/projects/jawl/), and SEPIA\n" +
-"(https://sourceforge.net/projects/sepiaframework/) and encloses the\n" +
+"Freiburg, namely TOVAL (https://github.com/GerdHolz/TOVAL),\n" +
+"JAGAL (https://github.com/iig-uni-freiburg/JAGAL),\n" +
+"SEWOL (https://github.com/iig-uni-freiburg/SEWOL),\n" +
+"SEPIA (https://github.com/iig-uni-freiburg/SEPIA), and\n" +
+"WOLFGANG (https://github.com/iig-uni-freiburg/WOLFGANG) and encloses the\n" +
 "following libraries:\n" +
 "- JGraphX (https://github.com/jgraph/jgraphx)\n" +
 "- OpenXES, (http://www.xes-standard.org/openxes/)\n" +
@@ -143,7 +144,7 @@ class LicenceDialog extends JDialog{
 "- XML Pull (http://www.xmlpull.org/)\n" +
 "\n" +
 "\n" +
-"Copyright (c) 2015, IIG Telematics, Uni Freiburg\n" +
+"Copyright (c) 2016, IIG Telematics, Uni Freiburg\n" +
 "All rights reserved.\n" +
 "\n" +
 "Redistribution and use in source and binary forms, with or without\n" +
