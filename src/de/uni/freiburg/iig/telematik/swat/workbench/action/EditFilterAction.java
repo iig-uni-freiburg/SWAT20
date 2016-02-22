@@ -32,12 +32,28 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.AbstractLogFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.ContainsFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.MaxEventsFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.MinEventsFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.TimeFilter;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeFilterNode;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.AbstractFilterDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.ContainsFilterDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.MaxFilterDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.MinFilterDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.TimeFilterDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 /**
@@ -78,6 +94,32 @@ public class EditFilterAction extends AbstractWorkbenchAction {
 
         @Override
         protected void doFancyStuff(ActionEvent e) throws Exception {
-                // TODO add functionality
+                SwatTreeFilterNode filterNode = (SwatTreeFilterNode) SwatTreeView.getInstance().getSelectionPath().getLastPathComponent();
+                AbstractLogFilter filter = filterNode.getFilter();
+                final String viewName = ((LogView) viewNode.getUserObject()).getName();
+                LogView view = SwatComponents.getInstance().getContainerLogViews().getComponent(viewName);
+
+                AbstractFilterDialog dialog = null;
+                if (filter instanceof ContainsFilter) {
+                        dialog = new ContainsFilterDialog(Workbench.getInstance(), (ContainsFilter) filter);
+                } else if (filter instanceof MaxEventsFilter) {
+                        dialog = new MaxFilterDialog(Workbench.getInstance(), (MaxEventsFilter) filter);
+                } else if (filter instanceof MinEventsFilter) {
+                        dialog = new MinFilterDialog(Workbench.getInstance(), (MinEventsFilter) filter);
+                } else if (filter instanceof TimeFilter) {
+                        dialog = new TimeFilterDialog(Workbench.getInstance(), (TimeFilter) filter);
+                }
+                if (dialog == null) {
+                        return;
+                }
+
+                dialog.pack();
+                dialog.setVisible(true);
+                if (dialog.isAborted()) {
+                        return;
+                }
+
+                SwatComponents.getInstance().reloadComponents();
+                SwatComponents.getInstance().getContainerLogViews().storeComponent(viewName);
         }
 }
