@@ -30,6 +30,7 @@
  */
 package de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter;
 
+import de.uni.freiburg.iig.telematik.sewol.log.filter.TimeFilter;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ItemEvent;
@@ -50,10 +51,36 @@ import javax.swing.event.ChangeListener;
  *
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public class TimeFilterDialog extends AbstractFilterDialog {
+public final class TimeFilterDialog extends AbstractFilterDialog<TimeFilter> {
 
-        public TimeFilterDialog(Frame owner, String title, Map<String, JPanel> dialogOption, boolean inverted) {
-                super(owner, title, dialogOption, inverted);
+        private DatePickerPanel startDatePanel = null;
+        private DatePickerPanel endDatePanel = null;
+
+        public TimeFilterDialog(Frame owner) {
+                this(owner, new TimeFilter());
+        }
+
+        public TimeFilterDialog(Frame owner, TimeFilter filter) {
+                super(owner, filter);
+                setUpDialog();
+        }
+
+        @Override
+        final void setUpDialog() {
+                Map<String, JPanel> dialogOption = new HashMap<>();
+                startDatePanel = new DatePickerPanel(getFilter().getStartDate());
+                dialogOption.put("Start date:", startDatePanel);
+                endDatePanel = new DatePickerPanel(getFilter().getEndDate());
+                dialogOption.put("End date:", endDatePanel);
+
+                initialize("Date filter", dialogOption, getFilter().isInverted());
+        }
+
+        @Override
+        void updateFilter() {
+                super.updateFilter();
+                getFilter().setStartDate(startDatePanel.getDate());
+                getFilter().setEndDate(endDatePanel.getDate());
         }
 
         public static class DatePickerPanel extends JPanel {
@@ -121,14 +148,12 @@ public class TimeFilterDialog extends AbstractFilterDialog {
         }
 
         public static void main(String[] args) {
-                Map<String, JPanel> dialogOption = new HashMap<>();
-                JPanel startDatePanel = new DatePickerPanel(new Date(107, 11, 31, 01, 02));
-                dialogOption.put("Start date:", startDatePanel);
-                JPanel endDatePanel = new DatePickerPanel(null);
-                dialogOption.put("End date:", endDatePanel);
                 JFrame frame = new JFrame();
-                TimeFilterDialog dialog = new TimeFilterDialog(frame, "Date filter", dialogOption, true);
+                TimeFilterDialog dialog = new TimeFilterDialog(frame);
                 dialog.pack();
                 dialog.setVisible(true);
+                if (!dialog.isAborted()) {
+                        System.out.println(dialog.getFilter());
+                }
         }
 }

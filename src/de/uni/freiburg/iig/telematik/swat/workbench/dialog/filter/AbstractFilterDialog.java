@@ -30,12 +30,17 @@
  */
 package de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter;
 
+import de.uni.freiburg.iig.telematik.sewol.log.filter.AbstractLogFilter;
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -47,48 +52,66 @@ import javax.swing.WindowConstants;
 /**
  *
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
+ * @param <O>
  */
-public abstract class AbstractFilterDialog extends JDialog {
+public abstract class AbstractFilterDialog<O extends AbstractLogFilter> extends JDialog {
 
-        protected JButton btnCancel = new JButton("Cancel");
-        protected JButton btnOk = new JButton("OK");
+        final JButton btnCancel = new JButton("Cancel");
+        final JButton btnOk = new JButton("OK");
+        final JCheckBox cbInvertFilter = new JCheckBox();
+
+        boolean abortedClosing = true;
 
         private boolean inverted;
 
-        private Map<String, JPanel> dialogOptions = null;
+        private final O filter;
 
-        public AbstractFilterDialog(Dialog owner, String title, Map<String, JPanel> dialogOptions, boolean inverted) {
+        public AbstractFilterDialog(Dialog owner, O filter) {
                 super(owner);
-                initialize(title, dialogOptions, inverted);
+                this.filter = filter;
         }
 
-        public AbstractFilterDialog(Frame owner, String title, Map<String, JPanel> dialogOptions, boolean inverted) {
+        public AbstractFilterDialog(Frame owner, O filter) {
                 super(owner);
-                initialize(title, dialogOptions, inverted);
+                this.filter = filter;
         }
 
-        public AbstractFilterDialog(Window owner, String title, Map<String, JPanel> dialogOptions, boolean inverted) {
+        public AbstractFilterDialog(Window owner, O filter) {
                 super(owner);
-                initialize(title, dialogOptions, inverted);
+                this.filter = filter;
         }
 
-        private void initialize(String title, Map<String, JPanel> dialogOptions, boolean inverted) {
+        public boolean isInverted() {
+                return inverted;
+        }
+
+        public O getFilter() {
+                return filter;
+        }
+
+        void updateFilter() {
+                getFilter().setInverted(isInverted());
+        }
+
+        public boolean isAborted() {
+                return abortedClosing;
+        }
+
+        void initialize(String title, Map<String, JPanel> dialogOptions, boolean inverted) {
+                setModal(true);
                 setTitle(title);
-
                 setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
                 setLayout(new BorderLayout());
-                this.dialogOptions = dialogOptions;
                 this.inverted = inverted;
-                
+
                 // add inverted checkbox
                 final String invertLabel = "Invert filter:";
                 JPanel invertFilterPanel = new JPanel();
-                JCheckBox invertFilterCheckbox = new JCheckBox();
-                invertFilterCheckbox.setEnabled(inverted);
-                invertFilterPanel.add(invertFilterCheckbox);
+                cbInvertFilter.setSelected(inverted);
+                cbInvertFilter.addItemListener(new InvertedCheckboxListener());
+                invertFilterPanel.add(cbInvertFilter);
                 dialogOptions.put(invertLabel, invertFilterPanel);
-                
+
                 JPanel centerPanel = new JPanel(new GridLayout(dialogOptions.size() + 1, 2));
                 for (Map.Entry<String, JPanel> line : dialogOptions.entrySet()) {
                         final JLabel label = new JLabel(line.getKey());
@@ -99,10 +122,43 @@ public abstract class AbstractFilterDialog extends JDialog {
                         panel.add(line.getValue(), BorderLayout.WEST);
                         centerPanel.add(panel);
                 }
+                btnOk.addActionListener(new OKButtonListener());
+                btnCancel.addActionListener(new CancelButtonListener());
                 JPanel buttonPanel = new JPanel(new FlowLayout());
                 buttonPanel.add(btnOk);
                 buttonPanel.add(btnCancel);
                 add(centerPanel, BorderLayout.CENTER);
                 add(buttonPanel, BorderLayout.SOUTH);
+        }
+
+        abstract void setUpDialog();
+
+        private class InvertedCheckboxListener implements ItemListener {
+
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                        if (e.getSource() == cbInvertFilter) {
+                                inverted = cbInvertFilter.isSelected();
+                        }
+                }
+        }
+
+        private class OKButtonListener implements ActionListener {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                        updateFilter();
+                        abortedClosing = false;
+                        dispose();
+                }
+        }
+
+        private class CancelButtonListener implements ActionListener {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                        abortedClosing = true;
+                        dispose();
+                }
         }
 }

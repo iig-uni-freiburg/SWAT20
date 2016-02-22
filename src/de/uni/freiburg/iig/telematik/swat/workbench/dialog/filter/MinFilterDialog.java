@@ -30,37 +30,57 @@
  */
 package de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter;
 
+import de.uni.freiburg.iig.telematik.sewol.log.filter.MinEventsFilter;
 import java.awt.Frame;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public class MinFilterDialog extends AbstractFilterDialog {
+public final class MinFilterDialog extends AbstractFilterDialog<MinEventsFilter> {
 
-        public MinFilterDialog(Frame owner, String title, Map<String, JPanel> dialogOption, boolean inverted) {
-                super(owner, title, dialogOption, inverted);
+        private final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
+        JSpinner spMin = new JSpinner(spinnerModel);
+
+        public MinFilterDialog(Frame owner) {
+                this(owner, new MinEventsFilter());
+        }
+
+        public MinFilterDialog(Frame owner, MinEventsFilter filter) {
+                super(owner, filter);
+                setUpDialog();
+        }
+
+        @Override
+        void setUpDialog() {
+                Map<String, JPanel> dialogOption = new HashMap<>();
+                JPanel minPanel = new JPanel();
+                spMin.setValue(getFilter().getMin());
+                minPanel.add(spMin);
+                dialogOption.put("Min # of events:", minPanel);
+
+                initialize("Min # of events filter", dialogOption, getFilter().isInverted());
+        }
+
+        @Override
+        void updateFilter() {
+                super.updateFilter();
+                getFilter().setMin((int) spMin.getValue());
         }
 
         public static void main(String[] args) {
-                Map<String, JPanel> dialogOption = new HashMap<>();
-                JPanel minPanel = new JPanel();
-                NumberFormat integerFieldFormatter = NumberFormat.getIntegerInstance();
-                integerFieldFormatter.setGroupingUsed(false);
-                integerFieldFormatter.setMaximumFractionDigits(0);
-                JFormattedTextField minTextField = new JFormattedTextField(integerFieldFormatter);
-                minTextField.setColumns(10);
-                minPanel.add(minTextField);
-                dialogOption.put("Min # of events:", minPanel);
                 JFrame frame = new JFrame();
-                MinFilterDialog dialog = new MinFilterDialog(frame, "Min # of events filter", dialogOption, true);
+                MinFilterDialog dialog = new MinFilterDialog(frame);
                 dialog.pack();
                 dialog.setVisible(true);
+                if (!dialog.isAborted()) {
+                        System.out.println(dialog.getFilter());
+                }
         }
 }
