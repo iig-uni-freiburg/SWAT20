@@ -5,8 +5,6 @@ import java.awt.Window;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class NetNameChooser extends FileNameDialog {
 	
