@@ -28,8 +28,6 @@ public class AwesomeTimeContext implements ITimeContext {
 
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
-
 		this.name = name;
 	}
 

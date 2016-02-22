@@ -65,6 +65,7 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 	public TimeContextGui(AwesomeTimeContext context){
 		this();
 		this.context=context;
+		setTitle("Context: "+context.getName());
 		for(String s:context.getKnownActivities())
 			activities.addElement(s);
 	}
@@ -74,6 +75,10 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 		for(String s:context.getKnownActivities())
 			activities.addElement(s);
 		
+	}
+	
+	public void contextNameChanged(String newName){
+		setTitle("Context: "+newName);
 	}
 	
 	private void setup() {
@@ -86,6 +91,17 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 		add(getCenterPanel(), BorderLayout.CENTER);
 		//add(getBottomButtons(), BorderLayout.PAGE_END);
 		add(new TimeContextToolbar(this),BorderLayout.PAGE_START);
+	}
+	
+	public void setContext(AwesomeTimeContext context){
+		activities.clear();
+		for(String s:context.getKnownActivities())
+			activities.addElement(s);
+		
+		contextNameChanged(context.getName());
+		
+		this.context=context;
+		
 	}
 	
 	private JPanel getCenterPanel(){

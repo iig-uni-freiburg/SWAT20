@@ -76,6 +76,7 @@ public class TimeContextToolbar extends JToolBar {
 				newContext.setName(newName);
 				try {
 					SwatComponents.getInstance().getTimeContextContainer().addComponent(newContext, true);
+					gui.setContext(newContext);
 				} catch (ProjectComponentException e1) {
 					Workbench.errorMessage("Could not store timecontext "+newName, e1, true);
 				}
@@ -102,6 +103,7 @@ public class TimeContextToolbar extends JToolBar {
 				
 				try {
 					SwatComponents.getInstance().getTimeContextContainer().renameComponent(gui.getContext().getName(), newName);
+					gui.contextNameChanged(newName);
 				} catch (ProjectComponentException e1) {
 					Workbench.errorMessage("Could not rename", e1, true);
 					gui.getContext().setName(oldName);
