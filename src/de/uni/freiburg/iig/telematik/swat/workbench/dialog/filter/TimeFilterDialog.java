@@ -43,6 +43,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -82,6 +84,7 @@ public class TimeFilterDialog extends AbstractFilterDialog {
                         }
 
                         cbIsNull.addItemListener(new CheckboxListener());
+                        spDate.addChangeListener(new DatePickerListener());
 
                         add(cbIsNull);
                         add(spDate);
@@ -91,16 +94,27 @@ public class TimeFilterDialog extends AbstractFilterDialog {
                         return date;
                 }
 
-                public void setDate(Date date) {
-                        this.date = date;
-                }
-
                 private class CheckboxListener implements ItemListener {
 
                         @Override
                         public void itemStateChanged(ItemEvent e) {
                                 if (e.getSource() == cbIsNull) {
                                         spDate.setEnabled(!cbIsNull.isSelected());
+                                        if (cbIsNull.isSelected()) {
+                                                date = null;
+                                        } else {
+                                                date = (Date) spDate.getValue();
+                                        }
+                                }
+                        }
+                }
+
+                private class DatePickerListener implements ChangeListener {
+
+                        @Override
+                        public void stateChanged(ChangeEvent e) {
+                                if (e.getSource() == spDate) {
+                                        date = (Date) spDate.getValue();
                                 }
                         }
                 }
@@ -108,7 +122,7 @@ public class TimeFilterDialog extends AbstractFilterDialog {
 
         public static void main(String[] args) {
                 Map<String, JPanel> dialogOption = new HashMap<>();
-                JPanel startDatePanel = new DatePickerPanel(new Date(2007, 12, 31, 01, 02));
+                JPanel startDatePanel = new DatePickerPanel(new Date(107, 11, 31, 01, 02));
                 dialogOption.put("Start date:", startDatePanel);
                 JPanel endDatePanel = new DatePickerPanel(null);
                 dialogOption.put("End date:", endDatePanel);
