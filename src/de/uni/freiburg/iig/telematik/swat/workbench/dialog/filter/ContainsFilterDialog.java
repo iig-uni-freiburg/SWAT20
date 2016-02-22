@@ -30,53 +30,60 @@
  */
 package de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter;
 
-import de.uni.freiburg.iig.telematik.sewol.log.filter.MinEventsFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.ContainsFilter;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.JTextField;
 
 /**
  *
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public final class MinFilterDialog extends AbstractFilterDialog<MinEventsFilter> {
+public final class ContainsFilterDialog extends AbstractFilterDialog<ContainsFilter> {
 
-        private final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
-        JSpinner spMin = new JSpinner(spinnerModel);
+        JComboBox<ContainsFilter.ContainsFilterParameter> tfParameter = new JComboBox<>(ContainsFilter.ContainsFilterParameter.values());
+        JTextField tfValue = new JTextField();
 
-        public MinFilterDialog(Frame owner) {
-                this(owner, new MinEventsFilter());
+        public ContainsFilterDialog(Frame owner) {
+                this(owner, new ContainsFilter());
         }
 
-        public MinFilterDialog(Frame owner, MinEventsFilter filter) {
+        public ContainsFilterDialog(Frame owner, ContainsFilter filter) {
                 super(owner, filter);
                 setUpDialog();
         }
 
         @Override
-        void setUpDialog() {
+        final void setUpDialog() {
                 Map<String, JPanel> dialogOption = new LinkedHashMap<>();
-                JPanel minPanel = new JPanel();
-                spMin.setValue(getFilter().getMin());
-                minPanel.add(spMin);
-                dialogOption.put("Min # of events:", minPanel);
+                JPanel parameterPanel = new JPanel(new FlowLayout());
+                tfParameter.setSelectedItem(getFilter().getParameter());
+                parameterPanel.add(tfParameter);
+                dialogOption.put("Parameter:", parameterPanel);
+                JPanel valuePanel = new JPanel(new FlowLayout());
+                tfValue.setColumns(20);
+                tfValue.setText(getFilter().getValue());
+                valuePanel.add(tfValue);
+                dialogOption.put("Value:", valuePanel);
 
-                initialize("Min # of events filter", dialogOption, getFilter().isInverted());
+                initialize("Contains filter", dialogOption, getFilter().isInverted());
         }
 
         @Override
         void updateFilter() {
                 super.updateFilter();
-                getFilter().setMin((int) spMin.getValue());
+                getFilter().setParameter((ContainsFilter.ContainsFilterParameter) tfParameter.getSelectedItem());
+                getFilter().setValue(tfValue.getText());
         }
 
         public static void main(String[] args) {
                 JFrame frame = new JFrame();
-                MinFilterDialog dialog = new MinFilterDialog(frame);
+                ContainsFilterDialog dialog = new ContainsFilterDialog(frame);
                 dialog.pack();
                 dialog.setVisible(true);
                 if (!dialog.isAborted()) {

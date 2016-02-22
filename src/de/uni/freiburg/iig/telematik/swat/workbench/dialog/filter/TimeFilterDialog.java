@@ -36,7 +36,7 @@ import java.awt.Frame;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -67,7 +67,7 @@ public final class TimeFilterDialog extends AbstractFilterDialog<TimeFilter> {
 
         @Override
         final void setUpDialog() {
-                Map<String, JPanel> dialogOption = new HashMap<>();
+                Map<String, JPanel> dialogOption = new LinkedHashMap<>();
                 startDatePanel = new DatePickerPanel(getFilter().getStartDate());
                 dialogOption.put("Start date:", startDatePanel);
                 endDatePanel = new DatePickerPanel(getFilter().getEndDate());

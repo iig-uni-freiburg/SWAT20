@@ -30,7 +30,7 @@
  */
 package de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter;
 
-import de.uni.freiburg.iig.telematik.sewol.log.filter.MinEventsFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.MaxEventsFilter;
 import java.awt.Frame;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,16 +43,16 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public final class MinFilterDialog extends AbstractFilterDialog<MinEventsFilter> {
+public final class MaxFilterDialog extends AbstractFilterDialog<MaxEventsFilter> {
 
         private final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
-        JSpinner spMin = new JSpinner(spinnerModel);
+        JSpinner spMax = new JSpinner(spinnerModel);
 
-        public MinFilterDialog(Frame owner) {
-                this(owner, new MinEventsFilter());
+        public MaxFilterDialog(Frame owner) {
+                this(owner, new MaxEventsFilter());
         }
 
-        public MinFilterDialog(Frame owner, MinEventsFilter filter) {
+        public MaxFilterDialog(Frame owner, MaxEventsFilter filter) {
                 super(owner, filter);
                 setUpDialog();
         }
@@ -60,23 +60,23 @@ public final class MinFilterDialog extends AbstractFilterDialog<MinEventsFilter>
         @Override
         void setUpDialog() {
                 Map<String, JPanel> dialogOption = new LinkedHashMap<>();
-                JPanel minPanel = new JPanel();
-                spMin.setValue(getFilter().getMin());
-                minPanel.add(spMin);
-                dialogOption.put("Min # of events:", minPanel);
+                JPanel maxPanel = new JPanel();
+                spMax.setValue(getFilter().getMax());
+                maxPanel.add(spMax);
+                dialogOption.put("Max # of events:", maxPanel);
 
-                initialize("Min # of events filter", dialogOption, getFilter().isInverted());
+                initialize("Max # of events filter", dialogOption, getFilter().isInverted());
         }
 
         @Override
         void updateFilter() {
                 super.updateFilter();
-                getFilter().setMin((int) spMin.getValue());
+                getFilter().setMax((int) spMax.getValue());
         }
 
         public static void main(String[] args) {
                 JFrame frame = new JFrame();
-                MinFilterDialog dialog = new MinFilterDialog(frame);
+                MaxFilterDialog dialog = new MaxFilterDialog(frame);
                 dialog.pack();
                 dialog.setVisible(true);
                 if (!dialog.isAborted()) {
