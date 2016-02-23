@@ -32,13 +32,24 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sewol.log.LogView;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.AbstractLogFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.ContainsFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.MaxEventsFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.MinEventsFilter;
+import de.uni.freiburg.iig.telematik.sewol.log.filter.TimeFilter;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.AbstractFilterDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.ContainsFilterDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.MaxFilterDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.MinFilterDialog;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.filter.TimeFilterDialog;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.Icon;
-import javax.swing.KeyStroke;
 
 /**
  *
@@ -46,26 +57,27 @@ import javax.swing.KeyStroke;
  */
 public class AddFilterAction extends AbstractWorkbenchAction {
 
+        public final static String FILTER_NAME_FORMAT = "New %s filter";
+
         private final static String DEFAULT_ICON = "plus2";
-        private final static String DEFAULT_NAME = "Add new filter";
         private final static String TOOLTIP = "adds a new filter to the view";
-        private final static int KEY_EVENT = KeyEvent.VK_F4;
 
         private final SwatTreeNode viewNode;
+        private final AbstractLogFilter filter;
 
-        public AddFilterAction(SwatTreeNode viewNode) {
-                this(DEFAULT_NAME, null, viewNode);
+        public AddFilterAction(SwatTreeNode viewNode, AbstractLogFilter filter) {
+                this(String.format(FILTER_NAME_FORMAT, filter.getName()), null, viewNode, filter);
         }
 
-        public AddFilterAction(String name, SwatTreeNode viewNode) {
-                this(name, null, viewNode);
+        public AddFilterAction(String name, SwatTreeNode viewNode, AbstractLogFilter filter) {
+                this(name, null, viewNode, filter);
         }
 
-        public AddFilterAction(String name, Icon icon, SwatTreeNode viewNode) {
+        public AddFilterAction(String name, Icon icon, SwatTreeNode viewNode, AbstractLogFilter filter) {
                 super(name);
-                setTooltip(TOOLTIP);
-                setAcceleratorKey(KeyStroke.getKeyStroke(KEY_EVENT, 0));
                 this.viewNode = viewNode;
+                this.filter = filter;
+                setTooltip(TOOLTIP);
                 if (icon != null) {
                         setIcon(icon);
                 } else {
@@ -78,6 +90,32 @@ public class AddFilterAction extends AbstractWorkbenchAction {
 
         @Override
         protected void doFancyStuff(ActionEvent e) throws Exception {
-                // TODO add functionality
+                final String viewName = ((LogView) viewNode.getUserObject()).getName();
+                LogView view = SwatComponents.getInstance().getContainerLogViews().getComponent(viewName);
+
+                AbstractFilterDialog dialog = null;
+                if (filter instanceof ContainsFilter) {
+                        dialog = new ContainsFilterDialog(Workbench.getInstance(), (ContainsFilter) filter);
+                } else if (filter instanceof MaxEventsFilter) {
+                        dialog = new MaxFilterDialog(Workbench.getInstance(), (MaxEventsFilter) filter);
+                } else if (filter instanceof MinEventsFilter) {
+                        dialog = new MinFilterDialog(Workbench.getInstance(), (MinEventsFilter) filter);
+                } else if (filter instanceof TimeFilter) {
+                        dialog = new TimeFilterDialog(Workbench.getInstance(), (TimeFilter) filter);
+                }
+                if (dialog == null) {
+                        return;
+                }
+
+                dialog.pack();
+                dialog.setVisible(true);
+                if (dialog.isAborted()) {
+                        return;
+                }
+                
+                view.addFilter(filter);
+
+                SwatComponents.getInstance().reloadComponents();
+                SwatComponents.getInstance().getContainerLogViews().storeComponent(viewName);
         }
 }

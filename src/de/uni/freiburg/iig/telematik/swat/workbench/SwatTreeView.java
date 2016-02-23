@@ -44,8 +44,6 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
         private static final String CONTEXTS_HEADING = "Execution Contexts";
         private static final String ACMODELS_HEADING = "Access Control Models";
         private static final Color DEFAULT_BG_COLOR = UIManager.getColor("Panel.background");
-//        private static final Color BG_COLOR = Color.white;
-//        private static final Color BORDER_COLOR = new Color(237, 237, 237);
 
         private final DefaultTreeModel defaultTreeModel;
 
@@ -292,21 +290,8 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
                 }
         }
 
-        private DefaultMutableTreeNode find(String s) {
-                @SuppressWarnings("unchecked")
-                Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) getModel().getRoot()).depthFirstEnumeration();
-                while (e.hasMoreElements()) {
-                        DefaultMutableTreeNode node = e.nextElement();
-                        if (node.toString().equalsIgnoreCase(s)) {
-                                return node;
-                        }
-                }
-                return null;
-        }
-
         @Override
         public void componentsChanged() {
-//                System.out.println("Components Changed");
                 try {
                         buildTree();
                         defaultTreeModel.reload();
@@ -319,13 +304,7 @@ public class SwatTreeView extends JTree implements SwatStateListener, ComponentL
 
         @Override
         public void componentAdded(Object component) throws ProjectComponentException {
-                //System.out.println("Component Added");
-//        	if(component instanceof NamedComponent){
-//        		SwatTreeNode node = new SwatTreeNode(component, SwatComponentType.PETRI_NET);
-//        		petriNetNode.add(node);
-//        	}
                 buildTree();
-
         }
 
         @Override

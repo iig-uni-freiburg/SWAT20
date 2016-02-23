@@ -53,7 +53,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.Icon;
-import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 /**
