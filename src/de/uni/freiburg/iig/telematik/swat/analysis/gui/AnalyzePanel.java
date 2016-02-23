@@ -44,8 +44,6 @@ import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentExcep
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /** Panel on right side of SWAT. Shows analysis results **/
 public class AnalyzePanel extends JPanel implements ItemListener {
@@ -58,7 +56,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	private JButton mRunButton;
 	private JButton mSaveButton;*/
 
-	private AnalysisController mAnalysisController;
+	private final AnalysisController mAnalysisController;
 	
 	private JComboBox dropDown;
 
@@ -78,7 +76,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	}
 	
 	
-	public void updatePatternResults() throws Exception {
+	public final void updatePatternResults() throws Exception {
 		this.removeAll();
 		JPanel content = new JPanel(new GridBagLayout());
 		JLabel analysisName = new JLabel("Analysis from " + getDateShort());
@@ -134,7 +132,6 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 	                            saveRules();
 	                        } catch (Exception ex) {
 	                            Workbench.errorMessage("Cold not store analysis ", ex, true);
-	                            Logger.getLogger(AnalyzePanel.class.getName()).log(Level.SEVERE, null, ex);
 	                        }
 			}
 		});
@@ -253,7 +250,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
                             
                         }
                     } catch (Exception ex) {
-                        Logger.getLogger(AnalyzePanel.class.getName()).log(Level.SEVERE, null, ex);
+                        throw new RuntimeException(ex);
                     }
 		}
 	}

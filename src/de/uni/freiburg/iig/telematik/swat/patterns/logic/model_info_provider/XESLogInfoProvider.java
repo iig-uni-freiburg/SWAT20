@@ -1,7 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,7 +14,10 @@ import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.logs.LogViewViewer;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
+import java.io.IOException;
+import java.text.ParseException;
 
 public class XESLogInfoProvider implements ModelInfoProvider {
 	
@@ -29,10 +31,10 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 		case Aristaflow:
 			try {
 				AristaFlowParser parser = (AristaFlowParser) viewer.loadLogReader();
-				mActivities = new ArrayList<String>(parser.getActivityCandidates());
-				mSubjects = new ArrayList<String>(parser.getOriginatorCandidates());
-			} catch (Exception e) {
-				e.printStackTrace();
+				mActivities = new ArrayList<>(parser.getActivityCandidates());
+				mSubjects = new ArrayList<>(parser.getOriginatorCandidates());
+			} catch (ParseException | IOException | ParameterException | ParserException e) {
+				throw new RuntimeException(e);
 			}
 			break;
 			
@@ -40,11 +42,39 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 		case XES:
 			try {
 				ISciffLogSummary summary = viewer.loadLogReader().getSummary();
-				mActivities = new ArrayList<String>(Arrays.asList(summary.getModelElements()));
-				mSubjects = new ArrayList<String>(Arrays.asList(summary.getOriginators()));
-				mRoles = new ArrayList<String>(Arrays.asList(summary.getRoles()));
-			} catch (Exception e) {
-				e.printStackTrace();
+				mActivities = new ArrayList<>(Arrays.asList(summary.getModelElements()));
+				mSubjects = new ArrayList<>(Arrays.asList(summary.getOriginators()));
+				mRoles = new ArrayList<>(Arrays.asList(summary.getRoles()));
+			} catch (ParseException | IOException | ParameterException | ParserException e) {
+				throw new RuntimeException(e);
+			}
+		default:
+			break;
+		}
+	}
+	
+	public XESLogInfoProvider (LogViewViewer viewer){
+		
+		switch (viewer.getModel().getType()) {
+		case Aristaflow:
+			try {
+				AristaFlowParser parser = (AristaFlowParser) viewer.loadLogReader();
+				mActivities = new ArrayList<>(parser.getActivityCandidates());
+				mSubjects = new ArrayList<>(parser.getOriginatorCandidates());
+			} catch (ParseException | IOException | ParameterException | ParserException e) {
+				throw new RuntimeException(e);
+			}
+			break;
+			
+		case MXML:
+		case XES:
+			try {
+				ISciffLogSummary summary = viewer.loadLogReader().getSummary();
+				mActivities = new ArrayList<>(Arrays.asList(summary.getModelElements()));
+				mSubjects = new ArrayList<>(Arrays.asList(summary.getOriginators()));
+				mRoles = new ArrayList<>(Arrays.asList(summary.getRoles()));
+			} catch (ParseException | IOException | ParameterException | ParserException e) {
+				throw new RuntimeException(e);
 			}
 		default:
 			break;
@@ -57,13 +87,11 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 			parser.parse(fileReference, ParsingMode.COMPLETE);
 			LogParserAdapter adapter = new LogParserAdapter(parser);
 			ISciffLogSummary summary = adapter.getSummary();
-			mActivities = new ArrayList<String>(Arrays.asList(summary.getModelElements()));
-			mSubjects = new ArrayList<String>(Arrays.asList(summary.getOriginators()));
-			mRoles = new ArrayList<String>(Arrays.asList(summary.getRoles()));
-		} catch (ParameterException e) {
-			e.printStackTrace();
-		} catch (ParserException e) {
-			e.printStackTrace();
+			mActivities = new ArrayList<>(Arrays.asList(summary.getModelElements()));
+			mSubjects = new ArrayList<>(Arrays.asList(summary.getOriginators()));
+			mRoles = new ArrayList<>(Arrays.asList(summary.getRoles()));
+		} catch (ParameterException | ParserException e) {
+			throw new RuntimeException(e);
 		}
 		
 	}
@@ -74,11 +102,11 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 			mxmlParser.parse(fileReference, ParsingMode.COMPLETE);
 			LogParserAdapter adapter = new LogParserAdapter(mxmlParser);
 			ISciffLogSummary summary = adapter.getSummary();
-			mActivities = new ArrayList<String>(Arrays.asList(summary.getModelElements()));
-			mSubjects = new ArrayList<String>(Arrays.asList(summary.getOriginators()));
-			mRoles = new ArrayList<String>(Arrays.asList(summary.getRoles()));
+			mActivities = new ArrayList<>(Arrays.asList(summary.getModelElements()));
+			mSubjects = new ArrayList<>(Arrays.asList(summary.getOriginators()));
+			mRoles = new ArrayList<>(Arrays.asList(summary.getRoles()));
 		} catch (ParameterException | ParserException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 	}
@@ -87,14 +115,11 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 		try {
 			AristaFlowParser parser = new AristaFlowParser(fileReference);
 			parser.parse(whichTimestamp.BOTH);
-			mActivities = new ArrayList<String>(parser.getActivityCandidates());
-			mSubjects = new ArrayList<String>(parser.getOriginatorCandidates());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			mActivities = new ArrayList<>(parser.getActivityCandidates());
+			mSubjects = new ArrayList<>(parser.getOriginatorCandidates());
+		} catch (ParseException | IOException e) {
+			throw new RuntimeException(e);
 		}
-		
 	}
 
 	public XESLogInfoProvider(File xesLogFile) {
@@ -116,11 +141,7 @@ public class XESLogInfoProvider implements ModelInfoProvider {
 	}
 
 	private boolean isAFlog(File xesLogFile) {
-		try {
-			return new AristaFlowParser(xesLogFile).canParse(xesLogFile);
-		} catch (FileNotFoundException e) {
-			return false;
-		}
+		return AristaFlowParser.canParse(xesLogFile);
 	}
 
 	public ArrayList<String> getSubjects() {

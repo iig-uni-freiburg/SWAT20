@@ -11,16 +11,14 @@ import de.uni.freiburg.iig.telematik.swat.patterns.PatternException;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AnalysisController {
 
 	private static AnalysisController mAnalysisController;
 
-	private HashMap<ViewComponent, PatternController> mComponentToPatternControllerMap;
+	private final HashMap<ViewComponent, PatternController> mComponentToPatternControllerMap;
 
-	private HashMap<ViewComponent, AnalyzePanel> mComponentToAnalyzePanelMap;
+	private final HashMap<ViewComponent, AnalyzePanel> mComponentToAnalyzePanelMap;
 
 	private ViewComponent mComponent;
 
@@ -37,8 +35,8 @@ public class AnalysisController {
 	}
 
 	private AnalysisController() {
-		mComponentToPatternControllerMap = new HashMap<ViewComponent, PatternController>();
-		mComponentToAnalyzePanelMap = new HashMap<ViewComponent, AnalyzePanel>();
+		mComponentToPatternControllerMap = new HashMap<>();
+		mComponentToAnalyzePanelMap = new HashMap<>();
 	}
 
 	private void setComponent(ViewComponent component) throws PatternException, Exception {
@@ -93,5 +91,4 @@ public class AnalysisController {
 		mAnalyzePanel.updatePatternResults();
 		mAnalyzePanel.updateUI();
 	}
-
 }

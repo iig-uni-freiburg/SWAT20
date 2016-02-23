@@ -80,7 +80,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 			try {
 				//Try to generate Hints for RuleDialog
 				rule = SciffRuleDialog.showRuleDialog(null, null, getActivityCandidates(reader), getOriginatorCandidates(reader));
-			} catch (Exception e) {
+			} catch (JDOMException | IOException e) {
 				//Could not generate Hints. Continue without
 				rule = SciffRuleDialog.showRuleDialog(null);
 			}
@@ -96,13 +96,8 @@ public class SciffAnalyzeAction extends AbstractAction {
 			CheckerReport report = checker.analyse(reader, rule, TimeGranularity.MILLISECONDS);
 			SciffPresenter sciff = new SciffPresenter(report, rule, previouseRuleString, file);
 			sciff.show();
-			} catch (ParserException e) {
-				e.printStackTrace();
-			} catch (JDOMException e) {
-				e.printStackTrace();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 
 	}
@@ -113,13 +108,13 @@ public class SciffAnalyzeAction extends AbstractAction {
 		try {
 			stream.toXML(rule, new FileWriter(new File("/tmp/", rule.toString() + ".rule")));
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 	}
 
 	private Collection<String> getOriginatorCandidates(ISciffLogReader reader) {
-		HashSet<String> result = new HashSet<String>();
+		HashSet<String> result = new HashSet<>();
 		ISciffLogEntry entry;
 
 		for (ISciffLogTrace trace : reader.getInstances()) {
@@ -134,7 +129,7 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 	private Collection<String> getActivityCandidates(ISciffLogReader reader) {
 		
-		HashSet<String> result = new HashSet<String>();
+		HashSet<String> result = new HashSet<>();
 		ISciffLogEntry entry;
 		
 		for (ISciffLogTrace trace:reader.getInstances()){
@@ -176,7 +171,4 @@ public class SciffAnalyzeAction extends AbstractAction {
 		parser.parse(file, ParsingMode.COMPLETE);
 		return new LogParserAdapter(parser);
 	}
-
-
-
 }

@@ -1,6 +1,5 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
-import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,9 +18,9 @@ public class SwatState {
 	
 	private String activeFile = null;
 
-	private HashMap<String, String> activeContext = new HashMap<String, String>();
+	private final HashMap<String, String> activeContext = new HashMap<>();
 
-	private List<SwatStateListener> listeners = new ArrayList<SwatStateListener>();
+	private final List<SwatStateListener> listeners = new ArrayList<>();
 	
 	public static SwatState getInstance(){
 		if(instance == null){

@@ -9,6 +9,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTNet;
 import de.uni.freiburg.iig.telematik.swat.analysis.AnalysisController;
 import de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer;
+import de.uni.freiburg.iig.telematik.swat.logs.LogViewViewer;
 import de.uni.freiburg.iig.telematik.swat.patterns.gui.PatternDialog;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.factory.AbstractPatternFactory;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.factory.CWNPatternFactory;
@@ -25,7 +26,6 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.CPNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.IFNetEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.PTNetEditorComponent;
-import de.uni.freiburg.iig.telematik.wolfgang.editor.component.RTPNEditorComponent;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +36,7 @@ public class PatternController {
 	private ModelInfoProvider mModelInformationProvider;
 	private ArrayList<CompliancePattern> mPatterns;
 	private PatternDialog mPatternDialog;
-	private AnalysisController mAnalysisController;
+	private final AnalysisController mAnalysisController;
 
 	public PatternController(AnalysisController anaController) throws PatternException, Exception {
 		AbstractPatternFactory mPatternFactory = null;
@@ -56,6 +56,9 @@ public class PatternController {
 			mPatternFactory = new XESLogPatternFactory();
 			//mModelInformationProvider = new XESLogInfoProvider(((LogFileViewer) component).getFile());
 			mModelInformationProvider = new XESLogInfoProvider((LogFileViewer) component);
+		} else if (component instanceof LogViewViewer) {
+			mPatternFactory = new XESLogPatternFactory();
+			mModelInformationProvider = new XESLogInfoProvider((LogViewViewer) component);
 		}
 
 		mPatterns = mPatternFactory.loadPatterns();

@@ -239,17 +239,17 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         	
             if (e.getActionCommand().equals(ACTION_COMMAND_ANALYSIS_MODE)) {
 					if(Workbench.getInstance().getCurrentComponentNeedsParsing() && Workbench.getInstance().getCurrentComponentsSourceSizeTooBig()){
-					JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), "Entering analysis Mode requires parsing first");	
-	                SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.EDIT_MODE);
-	                getEditRadioButton().setSelected(true);
-					}
-					else 
+                                                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), "Entering analysis Mode requires parsing first");	
+                                                SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.EDIT_MODE);
+                                                getEditRadioButton().setSelected(true);
+					} else {
 						SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.ANALYSIS_MODE);
+                                        }
             } else if (e.getActionCommand().equals(ACTION_COMMAND_EDIT_MODE)) {
                 SwatState.getInstance().setOperatingMode(SwatToolbar.this, OperatingMode.EDIT_MODE);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 

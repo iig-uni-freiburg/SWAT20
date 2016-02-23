@@ -16,7 +16,6 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import static de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer.SWAT_FILE_TOO_BIG_TO_SHOW_SIZE;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -56,7 +55,6 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
         private JComponent mainComponent = null;
         private JComponent properties = null;
 
-        private JButton analyzeButton = null;
         private JButton exportButton = null;
 
         private final JProgressBar bar = new JProgressBar();
@@ -163,7 +161,6 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                         properties.add(new JLabel(".view file"));
                         properties.add(new JLabel("Size: " + view.getFileReference().length() / 1024 + "kB"));
                         try {
-                                properties.add(getSciffButton());
                                 properties.add(getExportButton());
                         } catch (ParameterException | PropertyException | IOException ex) {
                                 throw new RuntimeException(ex);
@@ -228,29 +225,31 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                         MonitoredInputStream mis = getInputStream();
 
                         if (!getModel().hasLogReaderSet()) {
+                                AbstractLogParser parser = null;
                                 switch (getModel().getType()) {
                                         case Aristaflow:
                                                 logFileReader = new AristaFlowParser(model.getFileReference());
                                                 ((AristaFlowParser) logFileReader).parse(AristaFlowParser.whichTimestamp.BOTH);
+                                                // TODO initialize parser
                                                 break;
                                         case MXML:
-                                                MXMLLogParser mxmlParser = new MXMLLogParser();
-                                                mxmlParser.parse(mis, ParsingMode.COMPLETE);
-                                                logFileReader = new LogParserAdapter(mxmlParser);
+                                                parser = new MXMLLogParser();
+                                                parser.parse(mis, ParsingMode.COMPLETE);
+                                                logFileReader = new LogParserAdapter(parser);
                                                 break;
                                         case XES:
-                                                XESLogParser xesParser = new XESLogParser();
-                                                xesParser.parse(model.getFileReference(), ParsingMode.COMPLETE);
-                                                logFileReader = new LogParserAdapter(xesParser);
+                                                parser = new XESLogParser();
+                                                parser.parse(model.getFileReference(), ParsingMode.COMPLETE);
+                                                logFileReader = new LogParserAdapter(parser);
                                                 break;
                                         default:
                                                 break;
                                 }
-                                if (logFileReader != null) {
+                                if (logFileReader != null && parser != null) {
                                         getModel().setLogReader(logFileReader);
 
                                         view.reinitialize();
-                                        view.addTraces(((AbstractLogParser) logFileReader).getFirstParsedLog());
+                                        view.addTraces(parser.getFirstParsedLog());
                                         logViewReader = new LogParserAdapter(view);
                                 }
                         }
@@ -265,19 +264,6 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                 repaint();
 
                 return logViewReader;
-        }
-
-        private JButton getSciffButton() throws ParameterException, PropertyException, IOException {
-                if (analyzeButton == null) {
-                        analyzeButton = new JButton("Analyze with SCIFF");
-                        ImageIcon icon;
-                        icon = IconFactory.getIcon("search");
-                        analyzeButton.setIcon(icon);
-                        analyzeButton.setEnabled(false); // TODO enable
-
-                        analyzeButton.addActionListener(new SciffAnalyzeAction(model.getFileReference()));
-                }
-                return analyzeButton;
         }
 
         private JButton getExportButton() throws ParameterException, PropertyException, IOException {
