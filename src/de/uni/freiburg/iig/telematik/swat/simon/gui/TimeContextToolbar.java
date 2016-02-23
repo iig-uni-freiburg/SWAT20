@@ -12,6 +12,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.parser.ParserException;
 import de.uni.freiburg.iig.telematik.sepia.util.PNUtils;
@@ -38,7 +40,7 @@ public class TimeContextToolbar extends JToolBar {
 		add(getSaveAsButton());
 		add(getRenameButton());
 		add(getLoadFromLogBtn());
-		
+		add(getDeadlineButton());
 	}
 	
 	private JButton getSaveButton(){
@@ -140,6 +142,19 @@ public class TimeContextToolbar extends JToolBar {
 			}
 		});
 		return load;
+	}
+	
+	private JButton getDeadlineButton(){
+		JButton deadline = new JButton("set Deadlines...");
+		deadline.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DeadlineDialog dialog = new DeadlineDialog(gui.getContext());
+				dialog.setVisible(true);
+			}
+		});
+		return deadline;
 	}
 	
 	private Set<String> getActivites(List<LogTrace<LogEntry>> log){

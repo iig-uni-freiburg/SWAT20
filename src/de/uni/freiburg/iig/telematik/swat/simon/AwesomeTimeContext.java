@@ -38,7 +38,10 @@ public class AwesomeTimeContext implements ITimeContext {
 		return neededTime;
 	}
 
-
+	public Set<String> getAvailableDeadlines(){
+		checkDeadlines();
+		return deadlines.keySet();
+	}
 
 	public double getDeadlineFor(String name){
 		checkDeadlines();
@@ -53,6 +56,11 @@ public class AwesomeTimeContext implements ITimeContext {
 	public boolean containsDeadlineFor(String name){
 		checkDeadlines();
 		return (deadlines.containsKey(name));
+	}
+	
+	public void removeDeadline(String name){
+		checkDeadlines();
+		deadlines.remove(name);
 	}
 	
 	private void checkDeadlines(){

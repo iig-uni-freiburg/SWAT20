@@ -43,6 +43,8 @@ public class ContextRepo {
 			timeContext.addBehaviour("test3", ITimeBehaviourFactory.getBahaviour(DistributionType.NORMAL, params1));
 			timeContext.addBehaviour("test4", ITimeBehaviourFactory.getBahaviour(DistributionType.LOG_NORMAL, params2));
 			timeContext.addBehaviour("test5", ITimeBehaviourFactory.getBahaviour(DistributionType.NORMAL, params3));
+			timeContext.setDeadline("test", 1234);
+			timeContext.setDeadline("test2", 10);
 		}
 		return timeContext;
 	}
