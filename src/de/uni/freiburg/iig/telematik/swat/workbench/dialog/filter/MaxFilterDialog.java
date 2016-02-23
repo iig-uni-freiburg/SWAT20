@@ -73,14 +73,4 @@ public final class MaxFilterDialog extends AbstractFilterDialog<MaxEventsFilter>
                 super.updateFilter();
                 getFilter().setMax((int) spMax.getValue());
         }
-
-        public static void main(String[] args) {
-                JFrame frame = new JFrame();
-                MaxFilterDialog dialog = new MaxFilterDialog(frame);
-                dialog.pack();
-                dialog.setVisible(true);
-                if (!dialog.isAborted()) {
-                        System.out.println(dialog.getFilter());
-                }
-        }
 }

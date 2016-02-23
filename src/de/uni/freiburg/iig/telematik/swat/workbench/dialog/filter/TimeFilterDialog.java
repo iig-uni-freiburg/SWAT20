@@ -146,14 +146,4 @@ public final class TimeFilterDialog extends AbstractFilterDialog<TimeFilter> {
                         }
                 }
         }
-
-        public static void main(String[] args) {
-                JFrame frame = new JFrame();
-                TimeFilterDialog dialog = new TimeFilterDialog(frame);
-                dialog.pack();
-                dialog.setVisible(true);
-                if (!dialog.isAborted()) {
-                        System.out.println(dialog.getFilter());
-                }
-        }
 }

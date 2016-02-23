@@ -73,14 +73,4 @@ public final class MinFilterDialog extends AbstractFilterDialog<MinEventsFilter>
                 super.updateFilter();
                 getFilter().setMin((int) spMin.getValue());
         }
-
-        public static void main(String[] args) {
-                JFrame frame = new JFrame();
-                MinFilterDialog dialog = new MinFilterDialog(frame);
-                dialog.pack();
-                dialog.setVisible(true);
-                if (!dialog.isAborted()) {
-                        System.out.println(dialog.getFilter());
-                }
-        }
 }

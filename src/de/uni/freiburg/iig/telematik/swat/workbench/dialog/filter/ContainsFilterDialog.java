@@ -80,14 +80,4 @@ public final class ContainsFilterDialog extends AbstractFilterDialog<ContainsFil
                 getFilter().setParameter((ContainsFilter.ContainsFilterParameter) tfParameter.getSelectedItem());
                 getFilter().setValue(tfValue.getText());
         }
-
-        public static void main(String[] args) {
-                JFrame frame = new JFrame();
-                ContainsFilterDialog dialog = new ContainsFilterDialog(frame);
-                dialog.pack();
-                dialog.setVisible(true);
-                if (!dialog.isAborted()) {
-                        System.out.println(dialog.getFilter());
-                }
-        }
 }
