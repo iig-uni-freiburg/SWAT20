@@ -30,14 +30,12 @@ import de.uni.freiburg.iig.telematik.sewol.log.DataAttribute;
 import de.uni.freiburg.iig.telematik.sewol.log.LockingException;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
 import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AristaFlowParser implements ISciffLogReader, Serializable {
 	private static final long serialVersionUID = -420321215814744113L;
-	private File log;
-	private LinkedHashMap<String, ISciffLogTrace> traces = new LinkedHashMap<String, ISciffLogTrace>();
-	private BufferedReader br;
+	private final File log;
+	private final LinkedHashMap<String, ISciffLogTrace> traces = new LinkedHashMap<>();
+	private final BufferedReader br;
 
 	private LinkedHashMap<AristaFlowTokens, Integer> header;
 
@@ -59,22 +57,13 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 
 			System.out.println("Instances: ");
 			System.out.println(parser.getInstances());
-
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException | ParseException e) {
+			throw new RuntimeException(e);
 		}
-
 	}
 
-	/** Returns trace names **/
+	/** Returns trace names
+         * @return  **/
 	public Set<String> getUniqueTraceNames() {
 		return traces.keySet();
 	}
@@ -83,7 +72,7 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
             try {
                 new AristaFlowParser(file).parse(whichTimestamp.START);
                 return true;
-            } catch (Exception ex) {
+            } catch (ParseException | IOException ex) {
                 return false;
             }
         }
@@ -95,7 +84,7 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 		//parse();
 	}
 
-	public void parse(whichTimestamp useStartStopTimestamp) throws Exception {
+	public void parse(whichTimestamp useStartStopTimestamp) throws ParseException, IOException  {
 		if (!isAristaFlowCSV()) {
 			throw new ParseException(this.getClass().getName() + " - " + log.getName() + ": Is not an Arista-Flow CSV log", 0);
 		}
@@ -152,7 +141,7 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 
 	/** Scan first line for header info **/
 	private void getHeader() throws IOException {
-		this.header = new LinkedHashMap<AristaFlowTokens, Integer>(5);
+		this.header = new LinkedHashMap<>(5);
 		String first = br.readLine(); //read first line
 		first = sanitize(first); //sanitize header
 		String[] tokens = first.split(";"); //get individual columns
@@ -187,14 +176,14 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 
 	@Override
 	public List<ISciffLogTrace> getInstances() {
-		LinkedList<ISciffLogTrace> list = new LinkedList<ISciffLogTrace>(traces.values());
+		List<ISciffLogTrace> list = new LinkedList<>(traces.values());
 		return list;
 	}
 
 	@Override
 	public ISciffLogTrace getInstance(int index) {
 		//instances.keySet();
-		LinkedList<ISciffLogTrace> list = new LinkedList<ISciffLogTrace>(traces.values());
+		List<ISciffLogTrace> list = new LinkedList<>(traces.values());
 		return list.get(index);
 	}
 
@@ -214,13 +203,13 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 	}
 
 	public List<List<LogTrace<LogEntry>>> getLogEntries() {
-		ArrayList<List<LogTrace<LogEntry>>> parsedLogFiles = new ArrayList<List<LogTrace<LogEntry>>>();
-		List<LogTrace<LogEntry>> traceList = new ArrayList<LogTrace<LogEntry>>();
+		List<List<LogTrace<LogEntry>>> parsedLogFiles = new ArrayList<>();
+		List<LogTrace<LogEntry>> traceList = new ArrayList<>();
 		parsedLogFiles.add(traceList);
 
 		int i = 0;
 		for (Entry<String, ISciffLogTrace> entry : traces.entrySet()) {
-			LogTrace<LogEntry> logTrace = new LogTrace<LogEntry>(i);
+			LogTrace<LogEntry> logTrace = new LogTrace<>(i);
 			i++;
 			for (int j = 0; j < entry.getValue().size(); j++) {
 				String name;
@@ -233,14 +222,9 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 					logEntry.setTimestamp(iSciffLogEntry.getTimestamp());
 					logEntry.setOriginator(iSciffLogEntry.getOriginator());
 					logTrace.addEntry(logEntry);
-				} catch (IndexOutOfBoundsException e) {
-					//continue
-				} catch (IOException e) {
-					//continue
-				} catch (LockingException e) {
+				} catch (IndexOutOfBoundsException | IOException | LockingException e) {
 					//continue
 				}
-
 			}
 
 			traceList.add(logTrace);
@@ -253,11 +237,10 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 		for (Entry<String, String> entry : iSciffLogEntry.getAttributes().entrySet()) {
 			logEntry.addMetaAttribute(new DataAttribute(entry.getKey(), entry.getValue()));
 		}
-
 	}
 
 	public Collection<String> getOriginatorCandidates() {
-		HashSet<String> result = new HashSet<String>();
+		HashSet<String> result = new HashSet<>();
 		ISciffLogEntry entry;
 
 		for (ISciffLogTrace trace : getInstances()) {
@@ -272,7 +255,7 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 
 	public Collection<String> getActivityCandidates() {
 
-		HashSet<String> result = new HashSet<String>();
+		HashSet<String> result = new HashSet<>();
 		ISciffLogEntry entry;
 
 		for (ISciffLogTrace trace : getInstances()) {
@@ -284,18 +267,6 @@ public class AristaFlowParser implements ISciffLogReader, Serializable {
 		}
 		return Collections.unmodifiableSet(result);
 	}
-
-	//	public List<List<LogTrace<LogEntry>>> parse(File file, ParsingMode parsingMode) throws IOException, ParserException {
-	//		try {
-	//			log = file;
-	//			br = new BufferedReader(new java.io.FileReader(log));
-	//			parse(whichTimestamp.BOTH);
-	//			return getLogEntries();
-	//		} catch (Exception e) {
-	//			throw new IOException("Could not access " + file + e.getMessage());
-	//		}
-	//	}
-
 }
 
 class AristaFlowLogSummary implements ISciffLogSummary, Serializable {
@@ -325,7 +296,7 @@ class AristaFlowLogSummary implements ISciffLogSummary, Serializable {
 
 	@Override
 	public String[] getOriginators() {
-		HashSet<String> set = new HashSet<String>();
+		HashSet<String> set = new HashSet<>();
 		for (ISciffLogTrace trace : parser.getInstances()) {
 			Iterator<ISciffLogEntry> iter = trace.iterator();
 			while (iter.hasNext()) {
@@ -345,6 +316,7 @@ class AristaFlowLogSummary implements ISciffLogSummary, Serializable {
 		return result;
 	}
 
+        @Override
 	public String[] getRoles() {
 		// TODO Auto-generated method stub
 		return null;
@@ -355,7 +327,7 @@ class AristaFlowLogSummary implements ISciffLogSummary, Serializable {
 
 class AristaFlowLogTrace implements ISciffLogTrace, Serializable {
 
-	ArrayList<ISciffLogEntry> entries = new ArrayList<ISciffLogEntry>();
+	ArrayList<ISciffLogEntry> entries = new ArrayList<>();
 	public String name;
 
 	public AristaFlowLogTrace(String name) {
@@ -379,13 +351,11 @@ class AristaFlowLogTrace implements ISciffLogTrace, Serializable {
 
 	@Override
 	public int getNumberOfSimilarTraces() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return name;
 	}
 
@@ -393,6 +363,7 @@ class AristaFlowLogTrace implements ISciffLogTrace, Serializable {
 		entries.add(entry);
 	}
 
+        @Override
 	public String toString() {
 		return name + " (" + entries.size() + " entries)";
 	}
@@ -406,7 +377,7 @@ class AristaFlowLogEntry implements ISciffLogEntry, Serializable {
 	public String originator;
 	public EventType type;
 	public Date timestamp;
-	public Map<String, String> attributes = new HashMap<String, String>(5);
+	public Map<String, String> attributes = new HashMap<>(5);
 	private SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss:SSS");
 	private SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSS");
 
@@ -441,25 +412,21 @@ class AristaFlowLogEntry implements ISciffLogEntry, Serializable {
 
 	@Override
 	public String getElement() {
-		// TODO Auto-generated method stub
 		return element;
 	}
 
 	@Override
 	public String getEventType() {
-		// TODO Auto-generated method stub
 		return type.toString();
 	}
 
 	@Override
 	public Date getTimestamp() {
-		// TODO Auto-generated method stub
 		return timestamp;
 	}
 
 	@Override
 	public String getOriginator() {
-		// TODO Auto-generated method stub
 		return originator;
 	}
 
@@ -470,18 +437,16 @@ class AristaFlowLogEntry implements ISciffLogEntry, Serializable {
 		return attributes;
 	}
 
+        @Override
 	public String toString() {
 		return timestamp + ": " + getElement() + " " + getEventType() + " from " + getOriginator();
 	}
 
 
+        @Override
 	public String getRole() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-
 }
 
 

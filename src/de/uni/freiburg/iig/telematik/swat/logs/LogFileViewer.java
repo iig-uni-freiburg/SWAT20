@@ -44,6 +44,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SciffAnalyzeAction;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.ViewComponent;
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.util.Objects;
 
 /**
@@ -100,7 +101,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                         } else if (model.getFileReference().getName().toLowerCase().endsWith(".xes")) {
                                 p = new XESLogParser();
                         } else {
-                                // TODO
+                                // TODO large aristaflow log support
                         }
                         return getParserPanel(p, getFileReference(), getFileReference().length());
                 } else {
@@ -236,9 +237,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                 return Objects.equals(this.model, other.model);
         }
 
-        public ISciffLogReader loadLogReader() throws Exception {
-//		logReader = null;
-
+        public ISciffLogReader loadLogReader() throws FileNotFoundException, ParseException, IOException, ParameterException, ParserException {
                 //remove MainComponent, add ProgressBar
                 getViewport().removeAll();
                 getViewport().add(bar);

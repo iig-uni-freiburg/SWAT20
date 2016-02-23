@@ -9,6 +9,7 @@ import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.NamedComponent;
 import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.invation.code.toval.parser.ParserException;
+import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
@@ -17,6 +18,9 @@ import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser.whichTimestamp;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -157,7 +161,7 @@ public class LogModel implements NamedComponent, Comparable<LogModel> {
                 return new LogModel(new File(getFileReference().getAbsolutePath()), type);
         }
 
-        public ISciffLogReader getLogReader() throws Exception {
+        public ISciffLogReader getLogReader() throws FileNotFoundException, ParseException, IOException, ParameterException, ParserException {
                 if (logReader == null) {
                         switch (getType()) {
                                 case Aristaflow:
