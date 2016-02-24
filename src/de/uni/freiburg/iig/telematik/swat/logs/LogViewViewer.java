@@ -342,9 +342,6 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                                                 throw new RuntimeException(ex);
                                         }
                                         if (newLogName != null) {
-                                                // TODO create file in WD
-                                                // TODO import by type
-                                                // TODO delete temp file
                                                 String logDirectoryPath = model.getFileReference().getParentFile().getParentFile().toString() + File.separator;
                                                 try {
                                                         final LogWriter w;
@@ -359,6 +356,8 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                                                                                 LogTrace trace = (LogTrace) traceObj;
                                                                                 w.writeTrace(trace);
                                                                         }
+                                                                        // TODO set name
+                                                                        w.setComment(createComment());
                                                                         w.closeFile();
                                                                         tempFile = new File(model.getFileReference().getParentFile().getParentFile(), newLogName + ".mxml");
                                                                         SwatComponents.getInstance().getContainerMXMLLogs().addComponent(tempFile);
@@ -371,6 +370,8 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                                                                                 LogTrace trace = (LogTrace) traceObj;
                                                                                 w.writeTrace(trace);
                                                                         }
+                                                                        // TODO set name
+                                                                        w.setComment(createComment());
                                                                         w.closeFile();
                                                                         tempFile = new File(model.getFileReference().getParentFile().getParentFile(), newLogName + ".xes");
                                                                         SwatComponents.getInstance().getContainerXESLogs().addComponent(tempFile);
@@ -399,7 +400,6 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
 
                                         @Override
                                         public void run() {
-                                                System.out.println("new progress " + mis.getProgress());
                                                 bar.setVisible(true);
                                                 bar.setValue(mis.getProgress());
                                         }
@@ -407,5 +407,12 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                         }
                 });
                 return mis;
+        }
+
+        private String createComment() {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Created from\n");
+                sb.append(view.toString());
+                return sb.toString();
         }
 }
