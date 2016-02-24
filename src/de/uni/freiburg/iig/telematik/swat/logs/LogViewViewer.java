@@ -351,12 +351,11 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                                                                         // TODO add aristaflow support
                                                                         break;
                                                                 case MXML:
-                                                                        w = new LogWriter(LogFormatFactory.MXML(), logDirectoryPath, newLogName);
+                                                                        w = new LogWriter(LogFormatFactory.MXML(newLogName), logDirectoryPath, newLogName);
                                                                         for (Object traceObj : view.getTraces()) {
                                                                                 LogTrace trace = (LogTrace) traceObj;
                                                                                 w.writeTrace(trace);
                                                                         }
-                                                                        // TODO set name
                                                                         w.setComment(createComment());
                                                                         w.closeFile();
                                                                         tempFile = new File(model.getFileReference().getParentFile().getParentFile(), newLogName + ".mxml");
@@ -365,12 +364,11 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                                                                         tempFile.delete();
                                                                         break;
                                                                 case XES:
-                                                                        w = new LogWriter(LogFormatFactory.XES(), logDirectoryPath, newLogName);
+                                                                        w = new LogWriter(LogFormatFactory.XES(newLogName), logDirectoryPath, newLogName);
                                                                         for (Object traceObj : view.getTraces()) {
                                                                                 LogTrace trace = (LogTrace) traceObj;
                                                                                 w.writeTrace(trace);
                                                                         }
-                                                                        // TODO set name
                                                                         w.setComment(createComment());
                                                                         w.closeFile();
                                                                         tempFile = new File(model.getFileReference().getParentFile().getParentFile(), newLogName + ".xes");
