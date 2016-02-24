@@ -1,16 +1,21 @@
 package de.uni.freiburg.iig.telematik.swat.logs;
 
 import de.invation.code.toval.file.MonitoredInputStream;
+import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.graphic.util.SpringUtilities;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sewol.format.LogFormatFactory;
+import de.uni.freiburg.iig.telematik.sewol.log.LogTrace;
 import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.sewol.parser.AbstractLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.ParsingMode;
 import de.uni.freiburg.iig.telematik.sewol.parser.mxml.MXMLLogParser;
 import de.uni.freiburg.iig.telematik.sewol.parser.xes.XESLogParser;
+import de.uni.freiburg.iig.telematik.sewol.writer.LogWriter;
+import de.uni.freiburg.iig.telematik.sewol.writer.PerspectiveException;
 import de.uni.freiburg.iig.telematik.swat.aristaFlow.AristaFlowParser;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import static de.uni.freiburg.iig.telematik.swat.logs.LogFileViewer.SWAT_FILE_TOO_BIG_TO_SHOW_SIZE;
@@ -37,6 +42,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SpringLayout;
@@ -321,7 +327,61 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                                                 }
                                         }
 
-                                        // TODO call export action
+                                        // call export action
+                                        String newLogName = null;
+                                        try {
+                                                boolean firstRun = true;
+                                                do {
+                                                        if (!firstRun) {
+                                                                JOptionPane.showMessageDialog(Workbench.getInstance(), "A log with the specified name \"" + newLogName + "\" already exists.", "Log already exists", JOptionPane.WARNING_MESSAGE);
+                                                        }
+                                                        newLogName = FileNameDialog.showDialog(SwingUtilities.getWindowAncestor(Workbench.getInstance()), "Please specify a name for the new log", "Log Name", false);
+                                                        firstRun = false;
+                                                } while (newLogName != null && SwatComponents.getInstance().getLog(newLogName) != null);
+                                        } catch (Exception ex) {
+                                                throw new RuntimeException(ex);
+                                        }
+                                        if (newLogName != null) {
+                                                // TODO create file in WD
+                                                // TODO import by type
+                                                // TODO delete temp file
+                                                String logDirectoryPath = model.getFileReference().getParentFile().getParentFile().toString() + File.separator;
+                                                try {
+                                                        final LogWriter w;
+                                                        final File tempFile;
+                                                        switch (model.getType()) {
+                                                                case Aristaflow:
+                                                                        // TODO add aristaflow support
+                                                                        break;
+                                                                case MXML:
+                                                                        w = new LogWriter(LogFormatFactory.MXML(), logDirectoryPath, newLogName);
+                                                                        for (Object traceObj : view.getTraces()) {
+                                                                                LogTrace trace = (LogTrace) traceObj;
+                                                                                w.writeTrace(trace);
+                                                                        }
+                                                                        w.closeFile();
+                                                                        tempFile = new File(model.getFileReference().getParentFile().getParentFile(), newLogName + ".mxml");
+                                                                        SwatComponents.getInstance().getContainerMXMLLogs().addComponent(tempFile);
+                                                                        SwatComponents.getInstance().getContainerMXMLLogs().storeComponents();
+                                                                        tempFile.delete();
+                                                                        break;
+                                                                case XES:
+                                                                        w = new LogWriter(LogFormatFactory.XES(), logDirectoryPath, newLogName);
+                                                                        for (Object traceObj : view.getTraces()) {
+                                                                                LogTrace trace = (LogTrace) traceObj;
+                                                                                w.writeTrace(trace);
+                                                                        }
+                                                                        w.closeFile();
+                                                                        tempFile = new File(model.getFileReference().getParentFile().getParentFile(), newLogName + ".xes");
+                                                                        SwatComponents.getInstance().getContainerXESLogs().addComponent(tempFile);
+                                                                        SwatComponents.getInstance().getContainerXESLogs().storeComponents();
+                                                                        tempFile.delete();
+                                                                        break;
+                                                        }
+                                                } catch (IOException | PerspectiveException | ProjectComponentException ex) {
+                                                        throw new RuntimeException(ex);
+                                                }
+                                        }
                                 }
                         });
                 }
