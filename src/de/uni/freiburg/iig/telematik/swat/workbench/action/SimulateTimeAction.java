@@ -7,14 +7,20 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.misc.plots.CumulativeHistrogram;
 import de.uni.freiburg.iig.telematik.swat.misc.plots.SimulationHistogram;
+import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.RTPNEditorComponent;
 
 public class SimulateTimeAction extends AbstractWorkbenchAction {
@@ -81,9 +87,45 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 
 	protected void displayResults(){
 		for(Entry<String, ArrayList<Double>> entry :result.entrySet()){
-			new SimulationHistogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
-			new CumulativeHistrogram(entry.getValue(), 100, "Simulation results", entry.getKey()).setVisible(true);
+			ArrayList<Double> values = entry.getValue();
+			String name = entry.getKey();
+			
+			new SimulationHistogram(values, 100, "Simulation results "+ratioString(entry), name).setVisible(true);
+			new CumulativeHistrogram(values, 100, "Simulation results "+ratioString(entry), name).setVisible(true);
 		}
+	}
+	
+	protected String ratioString(Entry<String, ArrayList<Double>> entry) {
+		String s="";
+		try {
+			AwesomeTimeContext context = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(SwatProperties.getInstance().getActiveTimeContext());
+			if (!context.containsDeadlineFor(entry.getKey()))
+				return s;
+			
+			s = "Success-Ratio: "+getDeadlineRatio(entry);
+		} catch (ProjectComponentException | IOException | NullPointerException e) {
+			Workbench.errorMessage("Could not retrieve deadline for net "+entry.getKey(), e, false);
+		}
+		
+		return s;
+	}
+	
+	protected double getDeadlineRatio(Entry<String, ArrayList<Double>> entry) throws ProjectComponentException, IOException, NullPointerException{
+
+			AwesomeTimeContext context = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(SwatProperties.getInstance().getActiveTimeContext());
+			
+			if(!context.containsDeadlineFor(entry.getKey()))
+				return 1;
+			
+			double deadline = context.getDeadlineFor(entry.getKey());
+			int i = 0;
+			for (double d:entry.getValue()){
+				if (d<=deadline) i++;
+			}
+			
+			double ratio = (double)i/entry.getValue().size();
+			return ratio;
+			
 	}
 
 }

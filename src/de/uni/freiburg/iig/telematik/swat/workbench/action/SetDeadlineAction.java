@@ -34,7 +34,7 @@ public class SetDeadlineAction extends AbstractWorkbenchAction {
 			Double deadline = Double.parseDouble(result);
 			AwesomeTimeContext context = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(SwatProperties.getInstance().getActiveTimeContext());
 			context.setDeadline(net.getName(), deadline);
-			SwatComponents.getInstance().getTimeContextContainer().storeComponent(net.getName());
+			SwatComponents.getInstance().getTimeContextContainer().storeComponent(SwatProperties.getInstance().getActiveTimeContext());
 		}
 
 	}
