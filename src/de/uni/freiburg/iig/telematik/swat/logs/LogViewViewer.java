@@ -140,6 +140,7 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                                                                         view.addTraces(p.getFirstParsedLog());
                                                                         logViewReader = new LogParserAdapter(view);
 
+                                                                        exportButton.setEnabled(true);
                                                                         button.setText("File parsed");
                                                                 }
                                                         });
@@ -272,7 +273,57 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                         ImageIcon icon;
                         icon = IconFactory.getIcon("save");
                         exportButton.setIcon(icon);
-                        exportButton.setEnabled(false); // TODO enable
+
+                        exportButton.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                        // if not parsed yet => parse
+                                        if (logViewReader == null) {
+                                                MonitoredInputStream mis = null;
+                                                AbstractLogParser parser = null;
+                                                try {
+                                                        mis = getInputStream();
+                                                        switch (getModel().getType()) {
+                                                                case Aristaflow:
+                                                                        logFileReader = new AristaFlowParser(model.getFileReference());
+                                                                        ((AristaFlowParser) logFileReader).parse(AristaFlowParser.whichTimestamp.BOTH);
+                                                                        // TODO initialize parser
+                                                                        break;
+                                                                case MXML:
+                                                                        parser = new MXMLLogParser();
+                                                                        parser.parse(mis, ParsingMode.COMPLETE);
+                                                                        logFileReader = new LogParserAdapter(parser);
+                                                                        break;
+                                                                case XES:
+                                                                        parser = new XESLogParser();
+                                                                        parser.parse(model.getFileReference(), ParsingMode.COMPLETE);
+                                                                        logFileReader = new LogParserAdapter(parser);
+                                                                        break;
+                                                                default:
+                                                                        break;
+                                                        }
+                                                        getModel().setLogReader(logFileReader);
+                                                        if (parser != null) {
+                                                                view.reinitialize();
+                                                                view.addTraces(parser.getFirstParsedLog());
+                                                                logViewReader = new LogParserAdapter(view);
+                                                        }
+                                                } catch (ParseException | ParameterException | ParserException | IOException ex) {
+                                                        throw new RuntimeException(ex);
+                                                } finally {
+                                                        try {
+                                                                if (mis != null) {
+                                                                        mis.close();
+                                                                }
+                                                        } catch (IOException ex) {
+                                                                throw new RuntimeException(ex);
+                                                        }
+                                                }
+                                        }
+
+                                        // TODO call export action
+                                }
+                        });
                 }
                 return exportButton;
         }
@@ -291,7 +342,6 @@ public class LogViewViewer extends JScrollPane implements ViewComponent {
                                                 System.out.println("new progress " + mis.getProgress());
                                                 bar.setVisible(true);
                                                 bar.setValue(mis.getProgress());
-
                                         }
                                 });
                         }

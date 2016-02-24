@@ -11,7 +11,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
@@ -29,9 +28,8 @@ public class LogImportAction extends AbstractWorkbenchAction {
 		setTooltip("Import LogFile");
 		try {
 			setIcon(IconFactory.getIcon("import"));
-		} catch (ParameterException e) {
-		} catch (PropertyException e) {
-		} catch (IOException e) {
+		} catch (ParameterException | PropertyException | IOException e) {
+                        throw new RuntimeException(e);
 		}
 	}
 
@@ -82,14 +80,14 @@ public class LogImportAction extends AbstractWorkbenchAction {
 
 	protected SwatLogType getType(File f) {
 		String fileName = f.getName().toLowerCase();
-		if (fileName.endsWith(".csv"))
+		if (fileName.endsWith(".csv")) {
 			return SwatLogType.Aristaflow;
-		if (fileName.endsWith(".mxml"))
+                } else if (fileName.endsWith(".mxml")) {
 			return SwatLogType.MXML;
-		if (fileName.endsWith(".xes"))
+                } else if (fileName.endsWith(".xes")) {
 			return SwatLogType.XES;
-		else
+                } else {
 			return null;
+                }
 	}
-
 }

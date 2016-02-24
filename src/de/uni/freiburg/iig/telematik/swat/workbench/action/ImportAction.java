@@ -20,9 +20,8 @@ public class ImportAction extends AbstractWorkbenchAction {
 		setTooltip("Import from filesystem");
 		try {
 			setIcon(IconFactory.getIcon("import"));
-		} catch (ParameterException e) {
-		} catch (PropertyException e) {
-		} catch (IOException e) {
+		} catch (ParameterException | PropertyException | IOException e) {
+                        throw new RuntimeException(e);
 		}
 	}
 
