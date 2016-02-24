@@ -38,6 +38,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAc
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SelectResourceContextEditAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SendExceptionsAsEmail;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDeadlineAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceContextAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultTimeContextAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
@@ -94,6 +95,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		simulationMenu.add(new SetDefaultResourceContextAction());
 		simulationMenu.add(new EditTimeContextAction());
 		simulationMenu.add(new SetDefaultTimeContextAction());
+		simulationMenu.add(new SetDeadlineAction());
 		return simulationMenu;
 	}
 
