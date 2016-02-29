@@ -53,7 +53,7 @@ public class DeleteAction extends AbstractWorkbenchAction {
                 //get selected item
                 try {
                         SwatTreeNode selectedNode = (SwatTreeNode) SwatTreeView.getInstance().getSelectionPath().getLastPathComponent();
-                        int userAnswer = JOptionPane.showConfirmDialog(Workbench.getInstance(), "Delete " + selectedNode.getDisplayName() + " from DISK?");
+                        int userAnswer = JOptionPane.showConfirmDialog(Workbench.getInstance(), "Delete " + selectedNode.getDisplayName() + " from DISK?", null, JOptionPane.YES_NO_OPTION);
 
                         if (userAnswer != JOptionPane.YES_OPTION) {
                                 return;
