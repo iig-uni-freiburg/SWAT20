@@ -28,8 +28,8 @@ import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.abstr.StatisticListener;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
-import de.uni.freiburg.iig.telematik.swat.misc.plots.CumulativeHistrogram;
-import de.uni.freiburg.iig.telematik.swat.misc.plots.SimulationHistogram;
+import de.uni.freiburg.iig.telematik.swat.simulation.CumulativeHistrogram;
+import de.uni.freiburg.iig.telematik.swat.simulation.SimulationHistogram;
 
 public class SingleTimeSimulation {
 	

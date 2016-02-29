@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.workbench.action;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,9 +15,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
-import de.uni.freiburg.iig.telematik.swat.misc.plots.CumulativeHistrogram;
-import de.uni.freiburg.iig.telematik.swat.misc.plots.SimulationHistogram;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.simulation.CumulativeHistrogram;
+import de.uni.freiburg.iig.telematik.swat.simulation.SimulationHistogram;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
@@ -102,7 +103,7 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 			if (!context.containsDeadlineFor(entry.getKey()))
 				return s;
 			
-			s = "Success-Ratio: "+getDeadlineRatio(entry);
+			s = "Success-Ratio: "+new DecimalFormat("##.##").format(getDeadlineRatio(entry));
 		} catch (ProjectComponentException | IOException | NullPointerException e) {
 			Workbench.errorMessage("Could not retrieve deadline for net "+entry.getKey(), e, false);
 		}

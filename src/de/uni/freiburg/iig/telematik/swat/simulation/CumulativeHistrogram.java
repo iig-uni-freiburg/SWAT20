@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.misc.plots;
+package de.uni.freiburg.iig.telematik.swat.simulation;
 
 import java.awt.BasicStroke;
 import java.awt.Dimension;

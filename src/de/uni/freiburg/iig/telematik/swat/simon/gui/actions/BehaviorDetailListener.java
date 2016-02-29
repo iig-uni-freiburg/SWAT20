@@ -13,9 +13,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
-import de.uni.freiburg.iig.telematik.swat.misc.plots.ITimeBehaviourPlot;
-import de.uni.freiburg.iig.telematik.swat.misc.plots.SimulationHistogram;
 import de.uni.freiburg.iig.telematik.swat.simon.MeasuredTimeBehaviour;
+import de.uni.freiburg.iig.telematik.swat.simulation.ITimeBehaviourPlot;
+import de.uni.freiburg.iig.telematik.swat.simulation.SimulationHistogram;
 
 public class BehaviorDetailListener implements ListSelectionListener, MouseListener{
 
