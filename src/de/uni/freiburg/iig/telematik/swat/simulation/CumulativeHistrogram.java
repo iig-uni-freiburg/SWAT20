@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.simulation;
 
 import java.awt.BasicStroke;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.jfree.ui.ApplicationFrame;
 public class CumulativeHistrogram {
 	
 	JFrame frame;
+	ChartPanel chartPanel;
 	
 	public CumulativeHistrogram(List <Double> values, int bins, String title, String legend) {
 		
@@ -51,6 +53,10 @@ public class CumulativeHistrogram {
 	
 	public void setVisible(boolean visible){
 		frame.setVisible(visible);
+	}
+	
+	public ChartPanel getChart(){
+		return chartPanel;
 	}
 	
 	
@@ -132,7 +138,7 @@ public class CumulativeHistrogram {
             false
         );
          
-        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel = new ChartPanel(chart);
         
         chartPanel.getChart().getXYPlot().getRenderer().setSeriesStroke(0, new BasicStroke(2.0f));
 		

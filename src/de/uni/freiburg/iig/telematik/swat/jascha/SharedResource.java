@@ -1,5 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
+import java.util.Date;
+
+import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
+
 public class SharedResource extends Resource {
 	
 	protected float usage=0.0f;
@@ -50,6 +54,8 @@ public class SharedResource extends Resource {
 	
 	public void decrementUsage() {
 		usage = (usage > increment) ? usage - increment : 0.0f;
+		Date bla = new Date();
+		bla.getTime();
 	}
 	
 	public float getUsage(){

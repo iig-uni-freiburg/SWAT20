@@ -18,6 +18,7 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
 import de.uni.freiburg.iig.telematik.swat.simulation.CumulativeHistrogram;
 import de.uni.freiburg.iig.telematik.swat.simulation.SimulationHistogram;
+import de.uni.freiburg.iig.telematik.swat.simulation.SimulationResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
@@ -68,7 +69,9 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 			timeMachine.clearAllNets();
 			timeMachine.addAllNets(nets);
 			result = timeMachine.simulateAll(numberOfRuns);
-			displayResults();
+			//displayResults();
+			String defTimeContext = SwatProperties.getInstance().getActiveTimeContext();
+			new SimulationResult(timeMachine, (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(defTimeContext)).setVisible(true);
 		}
 		
 	}

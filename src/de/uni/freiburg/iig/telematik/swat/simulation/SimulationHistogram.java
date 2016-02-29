@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.simulation;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.jfree.data.statistics.HistogramType;
 public class SimulationHistogram {
 	
 	private JFrame frame;
+	ChartPanel chartPanel;
 	
 	public SimulationHistogram(List<Double> values, int bins, String title, String legend){
 		double[] buffer = new double[values.size()];
@@ -49,9 +51,9 @@ public class SimulationHistogram {
 		legendTitle.setItemFont(nwfont);
 		//chart.setLegend(legend);
 
-		ChartPanel panel = new ChartPanel(chart);
-		panel.setPreferredSize(new java.awt.Dimension(900, 600));
-		frame.setContentPane(panel);
+		chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new java.awt.Dimension(900, 600));
+		frame.setContentPane(chartPanel);
 		frame.setPreferredSize(new java.awt.Dimension(900, 600));
 		frame.setSize(new Dimension(900, 600));
 		//aFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -72,7 +74,10 @@ public class SimulationHistogram {
 		plot.getDomainAxis().setLabelFont(new Font("Arial", 1, 28));
 		//plot.getLegendItems().get(0).set(new Font("Arial", 1, 26));
 		//plot.getLegendItems().get(1).setLabelFont(new Font("Arial", 1, 24));
-		
+	}
+	
+	public ChartPanel getChart(){
+		return chartPanel;
 	}
 
 }
