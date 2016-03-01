@@ -43,7 +43,7 @@ public class SwatStartup extends AbstractWorkingDirectoryStartup {
     protected AbstractWorkingDirectoryProperties getWorkingDirectoryProperties() throws Exception {
         return SwatProperties.getInstance();
     }
-
+   // test
     public static void main(String[] args) {
         new SwatStartup();
     }
