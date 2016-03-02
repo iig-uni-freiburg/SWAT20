@@ -61,6 +61,7 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
         @Override
 	public void actionPerformed(ActionEvent e) {
 		try {
+			if (SwatTabView.getInstance().getComponentCount() == 0) { return; }
 			doFancyStuff(e);
 			SwatTabView.getInstance().unsetModifiedCurrent();
 		} catch (Exception e1) {
@@ -72,8 +73,10 @@ public class SaveActiveComponentAction extends AbstractWorkbenchAction {
 
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
-		SwatTabView tabView = SwatTabView.getInstance();
+		SwatTabView tabView = SwatTabView.getInstance();		
 		Component selectedComponent = tabView.getSelectedComponent();
+		System.out.println(selectedComponent.toString());
+		//if (selectedComponent == null) { return; }
 		if (selectedComponent instanceof ViewComponent) {
 			ViewComponent component = (ViewComponent) tabView.getSelectedComponent();
 			if (component.getMainComponent() instanceof PNEditorComponent) {
