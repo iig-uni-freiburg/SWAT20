@@ -206,6 +206,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		String analysisTargetName = Workbench.getInstance().getNameOfCurrentComponent();
 		try {
 			String name = JOptionPane.showInputDialog(this, "");
+			if (name == null) { return;}
 			String oldName = getSelectedDropDownItemName();
 			if (name.equalsIgnoreCase(oldName)) {
 				dropDown.removeItemAt(dropDown.getSelectedIndex());
