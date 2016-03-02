@@ -214,7 +214,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	}
 
 	private JMenuItem getPrismPathSettingEntry() {
-		JMenuItem prismPathSetting = new JMenuItem("Set Prism Model Checker Path...");
+		JMenuItem prismPathSetting = new JMenuItem("Set Prism Model Checker Executable...");
 		prismPathSetting.setAccelerator(KeyStroke.getKeyStroke('J', commandKey));
 		prismPathSetting.addActionListener(new ActionListener() {
 			@Override

@@ -12,11 +12,11 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class PrismPathChooser extends ConditionalFileDialog {
 
-	private static final String errorMessage = "Cannot find prism executables under bin/ within chosen directory.\n Please choose another directory.";
+	private static final String errorMessage = "Wrong File. Please choose the proper executable in the bin/ folder";
 
 	public PrismPathChooser(Window parent) {
 		//super(parent, ConditionalFileDialog.FileChooserType.DIRECTORY, "Choose Prism directory");
-		super(parent,ConditionalFileDialog.FileChooserType.FILE,"Choose Prism executable");
+		super(parent,ConditionalFileDialog.FileChooserType.FILE,"Choose Prism executable located in prism/bin/");
 
 	}
 
@@ -37,7 +37,7 @@ public class PrismPathChooser extends ConditionalFileDialog {
 								"Prism failed the execution test. this prism version might differ from prism-4.2.beta1.\br might cause trouble with SWAT",
 								null, false);
 		} catch (ParameterException e) {
-			Workbench.errorMessage("Could not get prism executable path", e, true);
+			//Workbench.errorMessage("Could not get prism executable path", e, true);
 			return false;
 		} catch (IOException e) {
 			Workbench.errorMessage("Could not access prism executable", e, true);
