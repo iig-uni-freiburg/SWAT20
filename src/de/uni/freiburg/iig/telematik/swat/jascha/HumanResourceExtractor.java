@@ -40,6 +40,12 @@ public class HumanResourceExtractor {
 		}
 	}
 	
+	public HumanResourceExtractor(List<LogTrace<LogEntry>> log){
+		humanResources = new LinkedList<String>();
+		this.log = log;
+		extractResources();
+	}
+	
 	public HumanResourceExtractor(String filepath) {
 		humanResources = new LinkedList<String>();
 		extractResourcesOld(filepath);

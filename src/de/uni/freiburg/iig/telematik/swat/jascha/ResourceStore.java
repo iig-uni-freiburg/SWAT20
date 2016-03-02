@@ -46,6 +46,13 @@ public class ResourceStore implements NamedComponent{
 			}
 	}
 	
+	public void addMaterialsFromExtractor(MaterialExtractor extractor){
+			List<String> materials = extractor.getMaterialNames();
+			for (String name: materials){
+				instantiateResource(ResourceType.SIMPLE, name);
+			}
+	}
+	
 	public void addHumanResourcesFromModel(LogModel model){
 		HumanResourceExtractor extractor;
 		try {

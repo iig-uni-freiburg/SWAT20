@@ -1,6 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.timeSimulation;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class ContextRepo {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}			
+			}
 			
 			//resourceContext.addResourceUsage("Handwerkerarbeit", new SimpleResource("Handwerker",store));
 			List<IResource> werkzeuge = new LinkedList<IResource>();
@@ -91,7 +92,7 @@ public class ContextRepo {
 			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Kassierer-1");
 			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Hausmeister");
 			
-			//Test f�r ResourceSets und SimpleResources. Hausmeister kommt in zwei Sets vor, Loeschverhalten wie gewuenscht.
+			//Test fuer ResourceSets und SimpleResources. Hausmeister kommt in zwei Sets vor, Loeschverhalten wie gewuenscht.
 			IResource handerwerkerSet = resourceContext.getResourceStore().instantiateResource(ResourceType.SET, "Handwerker", 5);
 			((ResourceSet)handerwerkerSet).addResource(resourceContext.getResourceStore().getResource("Flaschner-1"));
 			((ResourceSet)handerwerkerSet).addResource(resourceContext.getResourceStore().getResource("Hausmeister"));			

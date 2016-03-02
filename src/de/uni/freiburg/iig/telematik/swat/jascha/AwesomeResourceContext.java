@@ -93,16 +93,33 @@ public class AwesomeResourceContext implements IResourceContext{
 	}
 	
 	public void getResourcesFromFile(LogModel model) throws Exception {
-		HumanResourceExtractor extractor;
-		// get an Object with all distinct originators (= human resources)
-		extractor = new HumanResourceExtractor(model);
-		// create HumanResource objects in the resource store
-		resourceStore.addHumanResourcesFromExtractor(extractor);
-		// add activity/resource pairs to the context
-		// extractor.addActivities(this, resourceStore);
-
+		HumanResourceExtractor hExtractor;
+		MaterialExtractor mExtractor;
 		List<LogTrace<LogEntry>> log = getLog(model);
+		
+		// get an Object with all distinct originators (= human resources)
+		//hExtractor = new HumanResourceExtractor(model);
+		hExtractor = new HumanResourceExtractor(log);
+		
+		// Object with distinct materials from the log
+		mExtractor = new MaterialExtractor(log);
+		
+		System.out.println(mExtractor.materials);
+		
+		
+		// create HumanResource objects in the resource store
+		resourceStore.addHumanResourcesFromExtractor(hExtractor);
+		resourceStore.addMaterialsFromExtractor(mExtractor);
 
+		// Dabei wird das Log ein zweites mal geparst, oder?
+		//List<LogTrace<LogEntry>> log = getLog(model);
+		// So wird nur einmal geparst
+		//List<LogTrace<LogEntry>> log = hExtractor.log;
+		createHumanActivityEntries(log);
+
+	}
+	
+	private void createHumanActivityEntries(List<LogTrace<LogEntry>> log){		
 		for (LogTrace<LogEntry> trace : log) {
 			for (LogEntry logEntry : trace.getEntries()) {
 				try {
@@ -112,8 +129,11 @@ public class AwesomeResourceContext implements IResourceContext{
 				}
 
 			}
-		}
-
+		}		
+	}
+	
+	private void createHumanMaterialActivityEntries(List<LogTrace<LogEntry>> log){
+		
 	}
 	
 	private List<LogTrace<LogEntry>> getLog(LogModel model) throws Exception{
