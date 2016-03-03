@@ -13,6 +13,7 @@ public class ActivityCompoundExtractor {
 	private HashSet<Compound> compoundSet;
 	List<LogTrace<LogEntry>> log;
 	String AttributeName = "Material";
+	String[] AttributeNames = {"Material","Resource","org:resource"};
 	
 	public ActivityCompoundExtractor (List<LogTrace<LogEntry>> log){
 		this.log = log;
@@ -36,9 +37,11 @@ public class ActivityCompoundExtractor {
 
 	private String getMaterial(LogEntry logEntry) {
 		Set<DataAttribute> DA_list = logEntry.getMetaAttributes();
-		for (DataAttribute DA:DA_list){
-			if (DA.name.equals(AttributeName)){
-				return DA.value.toString();
+		for (DataAttribute DA : DA_list) {
+			for (String resourceNames : AttributeNames) {
+				if (DA.name.equalsIgnoreCase(resourceNames)) {
+					return DA.value.toString();
+				}
 			}
 		}
 		return null;
