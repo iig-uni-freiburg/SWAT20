@@ -11,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import org.jfree.chart.ChartPanel;
@@ -32,9 +33,13 @@ public class SimulationResult extends JFrame {
 		setSize(600, 500);
 		setPreferredSize(new Dimension(600, 500));
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		JPanel content = new JPanel();
+		content.setLayout(new BoxLayout(content,BoxLayout.Y_AXIS));
 		for (String name: wtm.getResult().keySet()){
-			getContentPane().add(getResult(name));
+			content.add(getResult(name));
 		}
+		JScrollPane scrollPane = new JScrollPane(content);
+		getContentPane().add(scrollPane);
 	}
 	
 	private JPanel getResult(String netName){

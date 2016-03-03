@@ -40,7 +40,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/WOLFGANG"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SEWOL"/>
 	<classpathentry kind="lib" path="lib/SCIFF.jar"/>
-	<classpathentry kind="lib" path="D:/Programme/eclipse/plugins/commons-lang3-3.4/commons-lang3-3.4.jar"/>
-	<classpathentry kind="lib" path="D:/Programme/eclipse/plugins/commons-lang3-3.4/commons-lang3-3.4-javadoc.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
