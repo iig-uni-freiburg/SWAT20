@@ -230,11 +230,12 @@ public class ResourceStore implements NamedComponent{
 		if (!type.equals(ResourceType.COMPOUND)){
 			throw new ParameterException("The resource needs to be of type COMPOUND");
 		}
-		if (alreadyExists(name)){
-			throw new ParameterException("A resource with this name already exists!");
+		if (!alreadyExists(name)){
+			CompoundResource cr = new CompoundResource(name, elements);
+			resources.put(name, cr);
+			//throw new ParameterException("A resource with this name already exists!");
 		}
-		CompoundResource cr = new CompoundResource(name, elements);
-		resources.put(name, cr);
+
 		// When creating a CompoundResource object with this method, the elements that are part of the CompoundResource 
 		// must have already been instantiated and hence must already be registered with the ResourceStore, so only the new CompoundResource has to be registered.
 		
@@ -330,5 +331,21 @@ public class ResourceStore implements NamedComponent{
 	private void testListenersList(){
 		if(listeners==null)
 			listeners=new LinkedList<>();
+	}
+
+	public void addCompoundsFromExtractor(ActivityCompoundExtractor acExtractor) {
+		String user;
+		String material;
+		LinkedList<IResource> components; 
+		for (Compound element:acExtractor.getCompoundSet()){
+			user = element.getHuman();
+			material = element.getMaterial();
+			components = new LinkedList<IResource>();
+			components.add(this.getResource(user));
+			components.add(this.getResource(material));			
+			instantiateResource(ResourceType.COMPOUND, user+material, components);
+			
+		}
+		
 	}
 }

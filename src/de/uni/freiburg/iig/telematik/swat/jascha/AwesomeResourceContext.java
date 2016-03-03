@@ -95,6 +95,7 @@ public class AwesomeResourceContext implements IResourceContext{
 	public void getResourcesFromFile(LogModel model) throws Exception {
 		HumanResourceExtractor hExtractor;
 		MaterialExtractor mExtractor;
+		ActivityCompoundExtractor acExtractor;
 		List<LogTrace<LogEntry>> log = getLog(model);
 		
 		// get an Object with all distinct originators (= human resources)
@@ -104,21 +105,26 @@ public class AwesomeResourceContext implements IResourceContext{
 		// Object with distinct materials from the log
 		mExtractor = new MaterialExtractor(log);
 		
-		System.out.println(mExtractor.materials);
+		//Object with HashSet containing combinations of occuring Activity/user/material triples
+		acExtractor = new ActivityCompoundExtractor(log);		
 		
-		
-		// create HumanResource objects in the resource store
+		// createResource objects in the resource store
 		resourceStore.addHumanResourcesFromExtractor(hExtractor);
 		resourceStore.addMaterialsFromExtractor(mExtractor);
+		resourceStore.addCompoundsFromExtractor(acExtractor);
 
-		// Dabei wird das Log ein zweites mal geparst, oder?
-		//List<LogTrace<LogEntry>> log = getLog(model);
-		// So wird nur einmal geparst
-		//List<LogTrace<LogEntry>> log = hExtractor.log;
 		createHumanActivityEntries(log);
+		createActivityCompoundEntries(acExtractor);
 
 	}
 	
+	private void createActivityCompoundEntries(ActivityCompoundExtractor acExtractor) {
+		for (Compound compound: acExtractor.getCompoundSet()){
+			addResourceUsage(compound.getActivity(), resourceStore.getResource(compound.getHuman()+compound.getMaterial()));
+		}
+		
+	}
+
 	private void createHumanActivityEntries(List<LogTrace<LogEntry>> log){		
 		for (LogTrace<LogEntry> trace : log) {
 			for (LogEntry logEntry : trace.getEntries()) {
@@ -130,10 +136,6 @@ public class AwesomeResourceContext implements IResourceContext{
 
 			}
 		}		
-	}
-	
-	private void createHumanMaterialActivityEntries(List<LogTrace<LogEntry>> log){
-		
 	}
 	
 	private List<LogTrace<LogEntry>> getLog(LogModel model) throws Exception{

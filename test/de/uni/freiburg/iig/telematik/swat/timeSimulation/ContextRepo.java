@@ -9,6 +9,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.AwesomeResourceContext;
+import de.uni.freiburg.iig.telematik.swat.jascha.Compound;
 import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.HumanResourceExtractor;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceSet;
