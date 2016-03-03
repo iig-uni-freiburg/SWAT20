@@ -280,6 +280,8 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 			}
 			resourceList.addListSelectionListener(this);
 		}
+		revalidate();
+		repaint();
 
 	}
 	

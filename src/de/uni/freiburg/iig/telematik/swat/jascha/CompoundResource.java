@@ -88,5 +88,9 @@ public class CompoundResource extends Resource {
 		for(IResource r:resources)
 			r.reset();
 	}
+	
+	public String toString(){
+		return "("+name+")";
+	}
 
 }
