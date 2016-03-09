@@ -14,6 +14,10 @@ public abstract class Resource implements IResource {
 		return name; //gilt nun fuer alle, die von Resource erben
 	}
 	
+	public void setName(String name){
+		this.name=name;
+	}
+	
 	public Resource(String name){
 		this.name=name; //ebenfalls fuer alle, die von Resource erben. Um Namen muss man sich also nicht mehr kuemmern.
 	}

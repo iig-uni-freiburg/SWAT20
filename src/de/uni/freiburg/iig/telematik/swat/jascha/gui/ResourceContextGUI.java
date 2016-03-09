@@ -201,7 +201,7 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ResourceStoreGUI(context.getResourceStore()).setVisible(true);
+				new ResourceStoreGUI(context.getResourceStore(),getContext()).setVisible(true);
 			}
 		});
 		panel.add(resources);

@@ -348,4 +348,13 @@ public class ResourceStore implements NamedComponent{
 		}
 		
 	}
+	
+	public void renameResource(String oldName, String newName){
+		IResource res = getResource(oldName);
+		res.setName(newName);
+		resources.remove(oldName);
+		informListenersOfResourceRemoval(res);
+		resources.put(newName, res);
+		informListenersOfResourceChange(res);
+	}
 }

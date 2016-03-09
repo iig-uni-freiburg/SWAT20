@@ -316,7 +316,19 @@ public class AwesomeResourceContext implements IResourceContext{
 	}
 	
 	public void renameResource(String oldName, String newName){
-		//TODO
+		resourceStore.renameResource(oldName, newName);
+		
+		List<String> oldRes = resources.remove(oldName);
+		resources.put(newName, oldRes);
+		
+		//update resource references
+		for(List<String> resource: resources.values()){
+			if (resource!=null && resource.contains(oldName)){
+				resource.remove(oldName);
+				resource.add(newName);
+			}
+		}
+		
 	}
 
 }

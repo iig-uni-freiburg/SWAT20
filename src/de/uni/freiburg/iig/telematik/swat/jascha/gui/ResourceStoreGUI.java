@@ -25,6 +25,7 @@ import com.thoughtworks.xstream.XStream;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceStoreContainer;
@@ -46,6 +47,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	JLabel nameOfStore;
 	private final int width=600;
 	private final int height=400;
+	private IResourceContext context;
 	
 	public static void main (String args[]){
 		ResourceStore store = new ResourceStore();
@@ -65,6 +67,13 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	}
 	
 	public ResourceStoreGUI(ResourceStore store){
+		resourceStore=store;
+		resourceStore.addResourceStoreListener(this);
+		setUpFrame();
+	}
+	
+	public ResourceStoreGUI(ResourceStore store, IResourceContext context){
+		this.context=context;
 		resourceStore=store;
 		resourceStore.addResourceStoreListener(this);
 		setUpFrame();
@@ -126,6 +135,8 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 		panel.add(getSaveButton());
 		panel.add(getSaveAsButton());
+		if(context!=null)
+			panel.add(getRenameButton());
 		panel.add(Box.createHorizontalGlue());
 		panel.add(new JLabel("add or remove: "));
 		panel.add(getPlusButton());
@@ -136,6 +147,19 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		return panel;
 	}
 	
+	private JButton getRenameButton() {
+		JButton rename = new JButton("rename resource");
+		rename.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String newName= JOptionPane.showInputDialog(this, "new name: ");
+				context.renameResource(list.getSelectedValue().getName(), newName);
+			}
+		});
+		return rename;
+	}
+
 	private Component getLogExtractButton() {
 		JButton btn = new JButton(new ExtractResourceAction(getResourceStore()));
 		return btn;
