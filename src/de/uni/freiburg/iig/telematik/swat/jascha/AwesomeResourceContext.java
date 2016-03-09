@@ -314,5 +314,9 @@ public class AwesomeResourceContext implements IResourceContext{
 		Set<String> result = resources.keySet();
 		return result;
 	}
+	
+	public void renameResource(String oldName, String newName){
+		//TODO
+	}
 
 }

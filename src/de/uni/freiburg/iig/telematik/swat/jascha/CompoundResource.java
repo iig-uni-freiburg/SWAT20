@@ -63,6 +63,15 @@ public class CompoundResource extends Resource {
 		resources.add(r);
 	}
 	
+	public void removeRessource(String res){
+		IResource match=null;
+		for (IResource r:resources)
+			if (r.getName().equals(res))
+				match = r;
+		if(match!=null)
+			removeResource(match);
+	}
+	
 	public void removeResource(IResource r){
 		resources.remove(r);
 	}
