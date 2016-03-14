@@ -13,7 +13,8 @@ public class MaterialExtractor {
 	
 	List<String> materials;
 	List<LogTrace<LogEntry>> log;
-	String AttributeName = "Material";
+	//String AttributeName = "Material";
+	String[] AttributeNames = {"Material","Resource","org:resource"};
 
 	public MaterialExtractor(List<LogTrace<LogEntry>> log) {
 		this.log = log;
@@ -26,11 +27,12 @@ public class MaterialExtractor {
 		for (LogTrace<LogEntry> trace : log) {
 			for (LogEntry logEntry : trace.getEntries()) {
 				DA_list = logEntry.getMetaAttributes();
-				for (DataAttribute DA:DA_list){
-					if (DA.name.equals(AttributeName)){
-						materialSet.add(DA.value.toString());
-						//If there was only one Entry of Type "Material" one could break here.
-						//break;
+				for (DataAttribute DA : DA_list) {
+					for (String AttributeName : AttributeNames) {
+						if (DA.name.equalsIgnoreCase(AttributeName)) {
+							materialSet.add(DA.value.toString());
+							// break; // Possible there was only one Entry of Type "Material".
+						}
 					}
 				}
 
