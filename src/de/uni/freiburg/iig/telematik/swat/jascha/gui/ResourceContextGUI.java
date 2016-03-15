@@ -196,17 +196,23 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		panel.add(getRemoveButton());
 		panel.add(Box.createHorizontalGlue());
 
+		JButton resources = getEditResButton();
+		panel.add(resources);
+
+		return panel;
+	}
+	
+	private JButton getEditResButton(){
 		JButton resources = new JButton("Edit resources");
 		resources.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ResourceStoreGUI(context.getResourceStore(),getContext()).setVisible(true);
+				new ResourceStoreGUI(context.getResourceStore(), getContext()).setVisible(true);
 			}
 		});
-		panel.add(resources);
-
-		return panel;
+		
+		return resources;
 	}
 	
 	private JButton getRemoveButton(){
