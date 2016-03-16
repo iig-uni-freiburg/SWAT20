@@ -36,18 +36,18 @@ public class SimulationHistogram {
 
 		frame = new JFrame(title);
 		//ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
-		JFreeChart chart = ChartFactory.createHistogram("Distribution of simulated workflow duration",
-				"Duration of Workflow execution in ms", "Relative occurence", histo, PlotOrientation.VERTICAL, true, true, false);
+		JFreeChart chart = ChartFactory.createHistogram("Simulated durations",
+				"Duration in ms", "Relative Occurence", histo, PlotOrientation.VERTICAL, true, true, false);
 
 		// to save as JPG
 		XYPlot plot = (XYPlot) chart.getPlot();
 		XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
 		renderer.setDrawBarOutline(false);
 		renderer.setSeriesOutlinePaint(0, Color.red);
-		setFonts(plot);
+		//setFonts(plot);
 
 		LegendTitle legendTitle = chart.getLegend();
-		Font nwfont = new Font("Arial", 0, 26);
+		Font nwfont = new Font("Arial", 0, 21);
 		legendTitle.setItemFont(nwfont);
 		//chart.setLegend(legend);
 
@@ -77,6 +77,7 @@ public class SimulationHistogram {
 	}
 	
 	public ChartPanel getChart(){
+		chartPanel.getChart().removeLegend();
 		return chartPanel;
 	}
 

@@ -36,6 +36,7 @@ public class addDefinedResourceAction extends AbstractAction {
 		switch (type) {
 		case SIMPLE:
 		case HUMAN:
+		case COMPOUND:
 			String s = (String) JOptionPane.showInputDialog(null, "Enter name of new Resource:", "Resource name",JOptionPane.PLAIN_MESSAGE);
 			if(s!=null && !s.isEmpty())
 				store.instantiateResource(type, s);
@@ -53,8 +54,6 @@ public class addDefinedResourceAction extends AbstractAction {
 				res.setIncrement(1f / maxCapacity);
 			}
 			break;
-		case COMPOUND:
-			// TODO: Compound dialog for many resources
 
 		default:
 			break;

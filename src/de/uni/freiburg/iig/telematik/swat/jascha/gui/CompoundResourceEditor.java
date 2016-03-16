@@ -84,9 +84,11 @@ public class CompoundResourceEditor extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				int result = JOptionPane.showConfirmDialog((Component) e.getSource(), getDialogPanel(), "Add activity...",
 						JOptionPane.OK_CANCEL_OPTION);
-				if (result == JOptionPane.OK_OPTION && comboBox.getSelectedItem()!=null) {
+				if (result == JOptionPane.OK_OPTION && comboBox.getSelectedItem()!=null && comboBox.getSelectedItem()instanceof IResource) {
 					res.addResource((IResource) comboBox.getSelectedItem());
 					model.addElement((IResource) comboBox.getSelectedItem());
+				} else {
+					JOptionPane.showMessageDialog((Component) e.getSource(), "Resource not in Resource-Store");
 				}
 				
 			}

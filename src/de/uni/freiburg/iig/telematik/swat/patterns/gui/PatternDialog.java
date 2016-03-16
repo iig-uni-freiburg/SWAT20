@@ -53,10 +53,11 @@ public class PatternDialog extends JFrame {
                                 for (CompliancePattern pattern : mPatterns) {
                                         if (pattern.isInstantiated()) {
                                                 for (Parameter para : pattern.getParameters()) {
-                                                        if (para.getValue().getValue().isEmpty()) {
-                                                                JOptionPane.showMessageDialog(mDialogPanel, "Please dont leave empty fields!", "Error", JOptionPane.PLAIN_MESSAGE);
-                                                                return;
-                                                        }
+                                                	//Pattern parameters might be set empty by purpose!
+//                                                        if (para.getValue().getValue().isEmpty()) {
+//                                                                JOptionPane.showMessageDialog(mDialogPanel, "Please dont leave empty fields!", "Error", JOptionPane.PLAIN_MESSAGE);
+//                                                                return;
+//                                                        }
                                                 }
                                         }
                                 }

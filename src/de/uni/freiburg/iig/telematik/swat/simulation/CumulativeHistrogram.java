@@ -56,6 +56,7 @@ public class CumulativeHistrogram {
 	}
 	
 	public ChartPanel getChart(){
+		chartPanel.getChart().removeLegend();
 		return chartPanel;
 	}
 	
@@ -120,7 +121,7 @@ public class CumulativeHistrogram {
 	}
 	
 	private ChartPanel createPlotFrame(double[] bin, double[] cumulate, String legend){
-		ApplicationFrame aFrame = new ApplicationFrame("Cumulative Histogram");
+		ApplicationFrame aFrame = new ApplicationFrame("Cumulative Results");
 		XYSeries series = new XYSeries(legend);
 		for(int i = 0;i<bin.length;i++){
 			series.add(bin[i], cumulate[i]);
@@ -128,9 +129,9 @@ public class CumulativeHistrogram {
 		
          XYSeriesCollection data = new XYSeriesCollection(series);
          JFreeChart chart = ChartFactory.createXYLineChart(
-            "XY Series Demo",
-            "X", 
-            "Y", 
+            "Cumulative Results",
+            "Duration", 
+            "Cumulated Probability", 
             data,
             PlotOrientation.VERTICAL,
             true,

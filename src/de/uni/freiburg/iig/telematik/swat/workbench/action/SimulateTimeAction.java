@@ -71,7 +71,8 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 			result = timeMachine.simulateAll(numberOfRuns);
 			//displayResults();
 			String defTimeContext = SwatProperties.getInstance().getActiveTimeContext();
-			new SimulationResult(timeMachine, (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(defTimeContext)).setVisible(true);
+			AwesomeTimeContext defaultContext = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(defTimeContext);
+			new SimulationResult(timeMachine, defaultContext).setVisible(true);
 		}
 		
 	}
