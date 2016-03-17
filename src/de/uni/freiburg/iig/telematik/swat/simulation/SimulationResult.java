@@ -1,13 +1,22 @@
 package de.uni.freiburg.iig.telematik.swat.simulation;
 
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,7 +24,17 @@ import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import alice.util.jedit.InputHandler.document_end;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
 
@@ -30,9 +49,10 @@ public class SimulationResult extends JFrame {
 		this.wtm = wtm;
 		this.tc = tc;
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setSize(600, 500);
+		setSize(800, 600);
 		setPreferredSize(new Dimension(600, 500));
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		//add(getButtons());
 		JPanel content = new JPanel();
 		content.setLayout(new BoxLayout(content,BoxLayout.Y_AXIS));
 		for (String name: wtm.getResult().keySet()){
@@ -44,11 +64,15 @@ public class SimulationResult extends JFrame {
 	
 	private JPanel getResult(String netName){
 		JPanel panel = new JPanel();
+		Dimension d = new Dimension(100, 30);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		JLabel label = new JLabel(netName+": "+getSuccessString(netName));
-		label.setSize(new Dimension(70, 30));
-		label.setPreferredSize(new Dimension(120, 30));
+		//panel.setSize(d);
+		//panel.setPreferredSize(d);
+		JLabel label = new JLabel("<html>"+netName+": <br>"+getSuccessString(netName)+"</html>");
 		panel.add(label);
+		label.setSize(d);
+		label.setPreferredSize(d);
+		label.setMaximumSize(d);
 		panel.add(Box.createHorizontalStrut(5));
 		panel.add(getHistogramm(netName));
 		panel.add(Box.createHorizontalStrut(2));
@@ -94,6 +118,49 @@ public class SimulationResult extends JFrame {
 		CumulativeHistrogram histo = new CumulativeHistrogram(wtm.getResult().get(netName), 100, "title", "legend");
 		ChartPanel panel = histo.getChart();
 		panel.setPreferredSize(new Dimension(150, 75));
+		return panel;
+	}
+	
+	private void toPDF(File file) throws FileNotFoundException, DocumentException{
+		int width= 300;
+		int height = 600;
+		Document doc = new Document();
+		PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(file));
+		doc.open();
+		PdfContentByte cb = writer.getDirectContent();
+		PdfTemplate pdfTP = cb.createTemplate(PageSize.A4.getWidth(),PageSize.A4.getHeight());
+		cb.addTemplate(pdfTP, 0,0);
+		Graphics2D g2d = pdfTP.createGraphics(PageSize.A4.getWidth(),PageSize.A4.getHeight());
+		print(g2d);
+		g2d.dispose();
+		doc.close();
+	}
+	
+	private JPanel getButtons(){
+		JPanel panel = new JPanel();
+		JButton screenshot = new JButton("export");
+		screenshot.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setFileSelectionMode(JFileChooser.SAVE_DIALOG);
+				int result = chooser.showSaveDialog(null);
+				if(result == JFileChooser.APPROVE_OPTION){
+					File file = chooser.getSelectedFile();
+					try {
+						toPDF(file);
+					} catch (FileNotFoundException | DocumentException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				
+			}
+		});
+		panel.add(screenshot);
 		return panel;
 	}
 

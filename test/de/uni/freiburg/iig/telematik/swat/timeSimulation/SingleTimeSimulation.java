@@ -35,7 +35,7 @@ public class SingleTimeSimulation {
 	
 	static Map<String,TimedNet> nets = new HashMap<>();
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws PNException {
 		
 		WorkflowTimeMachine timeMachine = WorkflowTimeMachine.getInstance();
 		

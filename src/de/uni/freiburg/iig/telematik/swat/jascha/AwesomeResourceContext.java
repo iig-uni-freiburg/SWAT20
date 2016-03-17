@@ -270,8 +270,9 @@ public class AwesomeResourceContext implements IResourceContext{
 	@Override
 	public void reset() {
 		for(List<String> resourceList:resources.values())
-			for(String res:resourceList)
+			for(String res:resourceList){
 				getResource(res).reset();
+			}
 	}
 	
 	public String toString(){
