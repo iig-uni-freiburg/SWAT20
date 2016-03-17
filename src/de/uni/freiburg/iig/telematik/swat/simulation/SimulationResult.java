@@ -64,11 +64,13 @@ public class SimulationResult extends JFrame {
 	
 	private JPanel getResult(String netName){
 		JPanel panel = new JPanel();
-		Dimension d = new Dimension(100, 30);
+		Dimension d = new Dimension(120, 70);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		//panel.setSize(d);
 		//panel.setPreferredSize(d);
-		JLabel label = new JLabel("<html>"+netName+": <br>"+getSuccessString(netName)+"</html>");
+		DecimalFormat format = new DecimalFormat("#.##");
+		String deadline = format.format(tc.getDeadlineFor(netName));
+		JLabel label = new JLabel("<html> "+netName+": <br> "+getSuccessString(netName)+" <br> Deadline: <br>"+deadline+" </html> ");
 		panel.add(label);
 		label.setSize(d);
 		label.setPreferredSize(d);
