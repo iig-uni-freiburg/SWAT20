@@ -18,7 +18,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.EditorProperties;
 
 public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatProperty> {
-	// TODO  WHEN A NEW PROPERTY IS ADDED OR REMOVED YOU HAVE TO ADJUST THE SECOND VALUE OF makeCompactGrid
+	// TODO  WHEN A NEW PROPERTY IS ADDED OR REMOVED YOU HAVE TO ADJUST THE SECOND VALUE OF makeCompactGrid in SWATPropertySettingDialog.java
 	//	protected void generateGrid() {           vv  
 	// 		SpringUtilities.makeCompactGrid(this, 27, 2, 5, 5, 5, 5);
 	//	}
