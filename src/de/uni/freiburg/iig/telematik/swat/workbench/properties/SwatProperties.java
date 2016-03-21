@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench.properties;
 
+import de.invation.code.toval.graphic.util.SpringUtilities;
 import de.invation.code.toval.misc.wd.AbstractProjectComponents;
 import java.io.IOException;
 import java.util.HashSet;
@@ -17,7 +18,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.EditorProperties;
 
 public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatProperty> {
-
+	// TODO  WHEN A NEW PROPERTY IS ADDED OR REMOVED YOU HAVE TO ADJUST THE SECOND VALUE OF makeCompactGrid
+	//	protected void generateGrid() {           vv  
+	// 		SpringUtilities.makeCompactGrid(this, 27, 2, 5, 5, 5, 5);
+	//	}
     public static final String WORKING_DIRECTORY_DESCRIPTOR = "Swat Working Directory";
     public static final String DEFAULT_SWAT_WORKING_DIRECTORY_NAME = "SwatWorkingDirectory";
     public static final String SWAT_PROPERTY_FILE_NAME = OSUtils.getUserHomeDirectory() + "/.swatProperties";
