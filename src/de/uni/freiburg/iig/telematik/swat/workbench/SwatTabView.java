@@ -420,13 +420,13 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                 @Override
                 public void stateChanged(ChangeEvent arg0) {
                         SwatTabView view = (SwatTabView) arg0.getSource();
-
-                        if (view.getSelectedComponent() instanceof ViewComponent) {
+                        // removed so the property panel gets cleared when there are no tabs active
+                        //if (view.getSelectedComponent() instanceof ViewComponent) {
                                 for (SwatTabViewListener listener : listeners) {
                                         listener.activeTabChanged(view.getSelectedIndex(),
                                                 (ViewComponent) (view.getSelectedComponent()));
                                 }
-                        }
+                        //}
 
                         if (view.getSelectedComponent() instanceof PNEditorComponent) {
                                 AbstractWolfgang wolfgang = null;

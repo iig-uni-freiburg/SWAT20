@@ -492,6 +492,10 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //	}
     @Override
     public void activeTabChanged(int index, ViewComponent component) {
+    	// needed to clear the property panel after the last tab is closed
+    	getPropertiesPanel().removeAll();
+        getPropertiesPanel().repaint();
+        
         if (index < 0) {
             return; //no tabs inside
         }		// Update Properties Panel & Toolbar according to active tab
