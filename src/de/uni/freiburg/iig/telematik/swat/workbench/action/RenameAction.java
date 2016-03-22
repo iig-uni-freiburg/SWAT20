@@ -72,23 +72,37 @@ public class RenameAction extends AbstractWorkbenchAction {
                         case MXML_LOG:
                                 oldName = node.getDisplayName();
                                 newName = requestNetName("Enter new name for Log", "Rename Log");
-                                SwatComponents.getInstance().getContainerMXMLLogs().renameComponent(oldName, newName);
+                                if (newName != null && !newName.equals(oldName)) {
+                                    if (SwatTabView.getInstance().closeTabAndAskUser(oldName)) {
+                                    	SwatComponents.getInstance().getContainerMXMLLogs().renameComponent(oldName, newName);
+                                    }
+                                }
                                 break;
                         case XES_LOG:
                                 oldName = node.getDisplayName();
                                 newName = requestNetName("Enter new name for Log", "Rename Log");
-                                SwatComponents.getInstance().getContainerXESLogs().renameComponent(oldName, newName);
+                                if (newName != null && !newName.equals(oldName)) {
+                                    if (SwatTabView.getInstance().closeTabAndAskUser(oldName)) {
+                                    	SwatComponents.getInstance().getContainerXESLogs().renameComponent(oldName, newName);
+                                    }
+                                }
                                 break;
                         case ARISTAFLOW_LOG:
                                 oldName = node.getDisplayName();
                                 newName = requestNetName("Enter new name for Log", "Rename Log");
-                                SwatComponents.getInstance().getContainerAristaflowLogs().renameComponent(oldName, newName);
+                                if (newName != null && !newName.equals(oldName)) {
+                                    if (SwatTabView.getInstance().closeTabAndAskUser(oldName)) {
+                                    	SwatComponents.getInstance().getContainerAristaflowLogs().renameComponent(oldName, newName);
+                                    }
+                                }
                                 break;
                         case LOG_VIEW:
                                 oldName = node.getDisplayName();
                                 newName = requestNetName("Enter new name for log view", "Rename Log View");
                                 if (newName != null && !newName.equals(oldName)) {
+                                    if (SwatTabView.getInstance().closeTabAndAskUser(oldName)) {
                                         SwatComponents.getInstance().getContainerLogViews().renameComponent(oldName, newName);
+                                    }
                                 }
                                 break;
                         default:
