@@ -53,7 +53,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
     private static final int MIN_CONSOLE_PANEL_HEIGHT = 300;
 
     private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
-    private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
+    private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(200, 600);
     private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(400, 40);
     private static final Dimension MINIMUM_SIZE_TAB_PANEL = new Dimension(600, MIN_WORKBENCH_HEIGHT - MIN_CONSOLE_PANEL_HEIGHT);
     private static final boolean SHOW_STACK_TRACES = true;
@@ -168,8 +168,9 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //					g.drawRect(rect.x, rect.y, rect.width, rect.height);
 //				}
 //			});
-
-            multiSplitPane.add(new JScrollPane(getTreeView()), "left");
+            JScrollPane jsp = new JScrollPane(getTreeView());
+   
+            multiSplitPane.add(jsp, "left");
             multiSplitPane.add(getPropertiesPanel(), "right");
             multiSplitPane.add(getTabView(), "center");
             multiSplitPane.add(getMessagePanel(), "center.bottom");
