@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -21,6 +22,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcher;
@@ -40,6 +42,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirector
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.LolaPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
+import de.uni.freiburg.iig.telematik.swat.workbench.properties.SWATPropertySettingDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 /**
@@ -249,6 +252,17 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 	private JMenuItem getProperties() {
 		JMenuItem propertiesSettingEntry = new JMenuItem("Properties");
 		propertiesSettingEntry.setAccelerator(KeyStroke.getKeyStroke('M', commandKey));
+		propertiesSettingEntry.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+					try {
+						SWATPropertySettingDialog.showDialog(SwingUtilities.getWindowAncestor(getParent()));
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}				
+			}
+		});
 		return propertiesSettingEntry;
 		
 	}
