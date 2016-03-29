@@ -10,10 +10,13 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import de.invation.code.toval.misc.NamedComponent;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.ResourceStoreListener;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
 public class ResourceStore implements NamedComponent{
 	
@@ -351,10 +354,15 @@ public class ResourceStore implements NamedComponent{
 	
 	public void renameResource(String oldName, String newName){
 		IResource res = getResource(oldName);
-		res.setName(newName);
 		resources.remove(oldName);
 		informListenersOfResourceRemoval(res);
+		res.setName(newName);
 		resources.put(newName, res);
 		informListenersOfResourceChange(res);
+		try {
+			SwatComponents.getInstance().getResourceStoreContainer().storeComponent(getName());
+		} catch (ProjectComponentException e) {
+			Workbench.errorMessage("Could not save resource store "+getName(), e, true);
+		}
 	}
 }

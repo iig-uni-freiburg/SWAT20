@@ -11,6 +11,7 @@ import java.util.Set;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
+import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.parser.ParserException;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
@@ -24,6 +25,8 @@ import de.uni.freiburg.iig.telematik.sewol.parser.LogParsingFormat;
 import de.uni.freiburg.iig.telematik.swat.logs.LogModel;
 import de.uni.freiburg.iig.telematik.swat.logs.SwatLogType;
 import de.uni.freiburg.iig.telematik.swat.plugin.sciff.LogParserAdapter;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
 public class AwesomeResourceContext implements IResourceContext{
 	
@@ -293,12 +296,8 @@ public class AwesomeResourceContext implements IResourceContext{
 		
 	}
 	
-	public void clearUsageFor(String activity){
-		if(resources.containsKey(activity)){
-			if(resources.get(activity)!=null){
-				resources.get(activity).clear();
-			}
-		}
+	public void clearUsageFor(String activity) {
+		resources.remove(activity);
 	}
 	
 	public Set<String> getContainingActivities(){
@@ -319,8 +318,9 @@ public class AwesomeResourceContext implements IResourceContext{
 	public void renameResource(String oldName, String newName){
 		resourceStore.renameResource(oldName, newName);
 		
-		List<String> oldRes = resources.remove(oldName);
-		resources.put(newName, oldRes);
+		
+		//List<String> oldRes = resources.remove(oldName);
+		//resources.put(newName, oldRes);
 		
 		//update resource references
 		for(List<String> resource: resources.values()){
@@ -329,7 +329,11 @@ public class AwesomeResourceContext implements IResourceContext{
 				resource.add(newName);
 			}
 		}
-		
+		try {
+			SwatComponents.getInstance().getResourceContainer().storeComponent(getName());
+		} catch (ProjectComponentException e) {
+			Workbench.errorMessage("Could not save resource context "+getName(), e, true);
+		}
 	}
 
 }

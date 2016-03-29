@@ -153,7 +153,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String newName= JOptionPane.showInputDialog(this, "new name: ");
+				String newName= JOptionPane.showInputDialog("new resource name:", list.getSelectedValue().getName());
 				context.renameResource(list.getSelectedValue().getName(), newName);
 			}
 		});
