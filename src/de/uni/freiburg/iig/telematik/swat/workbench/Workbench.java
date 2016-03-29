@@ -3,7 +3,6 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import de.invation.code.toval.graphic.dialog.MessageDialog;
 import de.invation.code.toval.misc.wd.ComponentListener;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
-import de.uni.freiburg.iig.telematik.sewol.log.LogView;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.awt.BorderLayout;
@@ -51,7 +50,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //	public static final Dimension PREFERRED_SIZE_WORKBENCH = new Dimension(1024,768);
     private static final int MIN_WORKBENCH_HEIGHT = 700;
     private static final int MIN_CONSOLE_PANEL_HEIGHT = 300;
-
     private static final Dimension PREFERRED_SIZE_PROPERTIES_PANEL = new Dimension(200, MIN_WORKBENCH_HEIGHT);
     private static final Dimension PREFERRED_SIZE_TREEVIEW_PANEL = new Dimension(200, 600);
     private static final Dimension PREFERRED_SIZE_CONSOLE_PANEL = new Dimension(400, 40);
@@ -68,7 +66,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
     private JPanel content = null;
     private static JTextArea console = null;
     private static JTextArea errors = null;
-
     private static Workbench myWorkbench;
 
     private Workbench() throws Exception {
@@ -90,7 +87,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
             myWorkbench = new Workbench();
         }
         return myWorkbench;
-
     }
 
     /**
@@ -133,7 +129,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
     private JComponent getContent() throws Exception {
         if (content == null) {
             content = new JPanel(new BorderLayout());
-
 //			String layoutDef = "(COLUMN top (ROW left (COLUMN center center.bottom) right) bottom)";
 //			MultiSplitLayout.Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
             content.add(getSwatToolbar(), BorderLayout.PAGE_START);
@@ -152,7 +147,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
             List centerColChildren = Arrays.asList(center, new Divider(), centerBottom);
             centerCol.setChildren(centerColChildren);
             centerCol.setWeight(0.6);
-
             MultiSplitLayout.Split centerRow = new Split();
             centerRow.setRowLayout(true);
             List centerRowChildren = Arrays.asList(left, new Divider(), centerCol, new Divider(), right);
@@ -168,9 +162,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //					g.drawRect(rect.x, rect.y, rect.width, rect.height);
 //				}
 //			});
-            JScrollPane jsp = new JScrollPane(getTreeView());
    
-            multiSplitPane.add(jsp, "left");
+            multiSplitPane.add(new JScrollPane(getTreeView()), "left");
             multiSplitPane.add(getPropertiesPanel(), "right");
             multiSplitPane.add(getTabView(), "center");
             multiSplitPane.add(getMessagePanel(), "center.bottom");
@@ -395,11 +388,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         errorMessage(messageToShow);
 
         ErrorStorage.getInstance().addMessage(message, e);
-
-        if (SHOW_STACK_TRACES) {
-            e.printStackTrace();
-        }
-
+        if (SHOW_STACK_TRACES) e.printStackTrace();
     }
 
 	private static void errorMessage(String message) {
@@ -432,9 +421,7 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
     @Override
     public void componentActivated(SwatTreeNode node) {
         try {
-            if (getTabView().containsComponent(node)) {
-                return;
-            }
+            if (getTabView().containsComponent(node)) return;
             
             ViewComponent swatComponent = null;
             // add SwatTreeNode to tab and get its swatComponent to make its propertyView
@@ -493,6 +480,11 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
 //	}
     @Override
     public void activeTabChanged(int index, ViewComponent component) {
+        try {
+            updateToolbar();
+        } catch (Exception ex) {
+            errorMessage("Could not update Toolbar", ex, false);
+        }
     	// needed to clear the property panel after the last tab is closed
     	getPropertiesPanel().removeAll();
         getPropertiesPanel().repaint();
@@ -514,8 +506,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
             		//getSwatToolbar().setEditMode(true);
             		SwatState.getInstance().setOperatingMode(null, OperatingMode.EDIT_MODE);
             	}
-
-            		
             } catch (PatternException e) {
                 errorMessage("Cannot load analysis panel", e, true);
             } catch (Exception ex) {
@@ -525,11 +515,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
         }
         getPropertiesPanel().repaint();
         getPropertiesPanel().updateUI();
-        try {
-            updateToolbar();
-        } catch (Exception ex) {
-            errorMessage("Could not update Toolbar", ex, false);
-        }
     }
 
     @Override
@@ -557,7 +542,6 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
                 }
                 // getPropertiesPanel().add(((LogFileViewer) swatComponent).getPropertiesView());
             }
-
             // pack();
             getPropertiesPanel().repaint();
             getPropertiesPanel().updateUI();
@@ -593,10 +577,8 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
             //remove Toolbar-Addons
             getSwatToolbar().clear();
         }
-
         getSwatToolbar().validate();
         getSwatToolbar().repaint();
-
     }
 
     @Override
