@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.simon.gui.DeadlineDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
@@ -14,9 +15,9 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.RTPNEditorComponent;
 
 public class SetDeadlineAction extends AbstractWorkbenchAction {
-	
+
 	public SetDeadlineAction() {
-		super("set deadline...");
+		super("set/show deadline...");
 	}
 
 	public SetDeadlineAction(String name) {
@@ -27,29 +28,39 @@ public class SetDeadlineAction extends AbstractWorkbenchAction {
 
 	@Override
 	protected void doFancyStuff(ActionEvent e) throws Exception {
-		if(isRTPNet()){
+		if (isRTPNet()) {
 			TimedNet net = getRTPNNet();
-			
-			String result = JOptionPane.showInputDialog((Component)e.getSource(), "Deadline for net "+net.getName());
-			Double deadline = Double.parseDouble(result);
-			AwesomeTimeContext context = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(SwatProperties.getInstance().getActiveTimeContext());
-			context.setDeadline(net.getName(), deadline);
-			SwatComponents.getInstance().getTimeContextContainer().storeComponent(SwatProperties.getInstance().getActiveTimeContext());
+			AwesomeTimeContext context = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer()
+					.getComponent(SwatProperties.getInstance().getActiveTimeContext());
+			String result;
+			try {
+				Double oldDeadline = context.getDeadlineFor(net.getName());
+				result = JOptionPane.showInputDialog((Component) e.getSource(), "Deadline for net " + net.getName(), oldDeadline);
+			} catch (Exception e1) {
+				result = JOptionPane.showInputDialog((Component) e.getSource(), "Deadline for net " + net.getName());
+			}
+
+			if (result != null) {
+				Double deadline = Double.parseDouble(result);
+
+				context.setDeadline(net.getName(), deadline);
+				SwatComponents.getInstance().getTimeContextContainer().storeComponent(SwatProperties.getInstance().getActiveTimeContext());
+			}
 		}
 
 	}
-	
-	private boolean isRTPNet() throws Exception{
+
+	private boolean isRTPNet() throws Exception {
 		Component comp = SwatTabView.getInstance().getSelectedComponent();
-		if (comp instanceof RTPNEditorComponent){
+		if (comp instanceof RTPNEditorComponent) {
 			return true;
 		}
 		return false;
 	}
-	
-	private TimedNet getRTPNNet() throws Exception{
+
+	private TimedNet getRTPNNet() throws Exception {
 		Component comp = SwatTabView.getInstance().getSelectedComponent();
-		if (comp instanceof RTPNEditorComponent){
+		if (comp instanceof RTPNEditorComponent) {
 			RTPNEditorComponent editor = (RTPNEditorComponent) comp;
 			return editor.getNetContainer().getPetriNet();
 		}
