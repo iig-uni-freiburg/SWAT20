@@ -336,4 +336,9 @@ public class AwesomeResourceContext implements IResourceContext{
 		}
 	}
 
+	@Override
+	public boolean needsResources(String name) {
+		return resources.containsKey(name);
+	}
+
 }

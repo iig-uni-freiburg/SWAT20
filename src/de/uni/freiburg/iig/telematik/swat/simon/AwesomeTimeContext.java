@@ -39,31 +39,31 @@ public class AwesomeTimeContext implements ITimeContext {
 	}
 
 	public Set<String> getAvailableDeadlines(){
-		checkDeadlines();
+		checkMaps();
 		return deadlines.keySet();
 	}
 
 	public double getDeadlineFor(String name){
-		checkDeadlines();
+		checkMaps();
 		return deadlines.get(name);
 	}
 	
 	public void setDeadline(String name, double deadline){
-		checkDeadlines();
+		checkMaps();
 		deadlines.put(name, deadline);
 	}
 	
 	public boolean containsDeadlineFor(String name){
-		checkDeadlines();
+		checkMaps();
 		return (deadlines.containsKey(name));
 	}
 	
 	public void removeDeadline(String name){
-		checkDeadlines();
+		checkMaps();
 		deadlines.remove(name);
 	}
 	
-	private void checkDeadlines(){
+	private void checkMaps(){
 		//create Map if null (compatibility with old searlized verseions of TimeContext)
 		if(deadlines==null)
 			deadlines=new HashMap<>();
