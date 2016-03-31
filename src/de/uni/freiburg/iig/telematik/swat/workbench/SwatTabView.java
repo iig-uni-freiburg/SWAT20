@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -337,7 +338,6 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                                                 editor.getUndoManager().undo();
                                         }
                         }
-
                 }
                 removeTabAt(index);
                 //openedSwatComponents.remove(getComponent(index));
@@ -431,7 +431,7 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                         if (view.getSelectedComponent() instanceof PNEditorComponent) {
                                 AbstractWolfgang wolfgang = null;
                                 PNEditorComponent pnEditor = (PNEditorComponent) view.getSelectedComponent();
-                                try {
+                                try {                                    
                                         if (pnEditor instanceof PTNetEditorComponent) {
                                                 wolfgang = new WolfgangPT();
                                         } else if (pnEditor instanceof CPNEditorComponent) {
@@ -441,6 +441,10 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                                         } else {
                                                 wolfgang = new WolfgangPT();
                                         }
+                                        // set fileReference for the save shortcut
+                                		String name = "/" + pnEditor.getNetContainer().getName();
+                                		String path = SwatComponents.getInstance().getContainerPetriNets().getBasePath() + name + name;
+                                        wolfgang.setFileReference(new File(path));
                                         /*
                                          * WolfgangIF() do not exist at the moment
                                          * 
@@ -565,15 +569,11 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                         public void actionPerformed(ActionEvent e) {
                                 int i = indexOfTabComponent(ButtonTabComponent.this);
                                 int userChoice = JOptionPane.CANCEL_OPTION;
-                                if (i != -1) {
-
-                                }
                                 if (!checkClose()) {
                                         return; //user aborted
                                 }
                                 clearLogParserOfCurrentComponent();
                                 SwatTabView.this.remove(i); //remove current
-
                         }
 
                         private void clearLogParserOfCurrentComponent() {
@@ -596,7 +596,6 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                                 } catch (Exception e) {
                                         Workbench.errorMessage("Could not remove component", e, true);
                                 }
-
                         }
 
                         //we don't want to update UI for this button
@@ -631,7 +630,6 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                                                                 editor.getUndoManager().undo();
                                                         }
                                         }
-
                                 }
                                 return true; //user decided to either save or reject changes
                         }
@@ -689,7 +687,6 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
                 } else {
                         ((ButtonTabComponent) getTabComponentAt(getSelectedIndex())).unsetModified();
                 }
-
         }
 
         @Override
@@ -726,7 +723,5 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
 
         public void unsetModified(int i) {
                 ((ButtonTabComponent) getTabComponentAt(i)).unsetModified();
-
         }
-
 }
