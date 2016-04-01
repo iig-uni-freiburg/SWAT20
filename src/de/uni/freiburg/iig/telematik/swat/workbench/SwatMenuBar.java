@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.workbench;
 
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,18 +11,23 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import de.invation.code.toval.validate.ParameterException;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcher;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcherFactory;
@@ -42,10 +48,13 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDeadlineAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceContextAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultTimeContextAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.setRecurringAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.LolaPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
+import de.uni.freiburg.iig.telematik.wolfgang.editor.component.RTPNEditorComponent;
 
 /**
  * MenuBar for SWAT20. Observes the EditAnalyzeModel. Menu entries can be
@@ -71,6 +80,9 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 	JRadioButtonMenuItem editModeButton = null;
 	JRadioButtonMenuItem analysisModeButton = null;
+	JCheckBoxMenuItem recurrent;
+	
+	
 
 	public SwatMenuBar() {
 		super();
@@ -96,7 +108,30 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		simulationMenu.add(new EditTimeContextAction());
 		simulationMenu.add(new SetDefaultTimeContextAction());
 		simulationMenu.add(new SetDeadlineAction());
+		simulationMenu.add(getRecurrentToggle());
 		return simulationMenu;
+	}
+	
+	private JCheckBoxMenuItem getRecurrentToggle(){
+		recurrent = new JCheckBoxMenuItem("recurrent");
+		recurrent.setAction(new setRecurringAction());
+		SwatTabView.getInstance().addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				Component c = ((JTabbedPane) e.getSource()).getSelectedComponent();
+				if(c instanceof RTPNEditorComponent){
+					recurrent.setEnabled(true);
+					TimedNet net = ((RTPNEditorComponent)c).getNetContainer().getPetriNet();
+					recurrent.setSelected(net.isRecurring());
+				} else {
+					recurrent.setSelected(false);
+					recurrent.setEnabled(false);
+				}
+				
+			}
+		});
+		return recurrent;
 	}
 
 	private JMenu getFileMenu() {

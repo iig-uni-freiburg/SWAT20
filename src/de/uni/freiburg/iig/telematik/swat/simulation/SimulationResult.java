@@ -35,8 +35,14 @@ import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import alice.util.jedit.InputHandler.document_end;
+import de.invation.code.toval.misc.NamedComponent;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
+import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
+import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalTimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import jdk.nashorn.internal.ir.ReturnNode;
 
 
 public class SimulationResult extends JFrame {
@@ -44,6 +50,7 @@ public class SimulationResult extends JFrame {
 	private static final long serialVersionUID = -4759318829955102188L;
 	WorkflowTimeMachine wtm;
 	private AwesomeTimeContext tc;
+	private static final DecimalFormat format = new DecimalFormat("#.##");
 	
 	public SimulationResult(WorkflowTimeMachine wtm, AwesomeTimeContext tc) {
 		this.wtm = wtm;
@@ -66,11 +73,8 @@ public class SimulationResult extends JFrame {
 		JPanel panel = new JPanel();
 		Dimension d = new Dimension(120, 70);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		//panel.setSize(d);
-		//panel.setPreferredSize(d);
-		DecimalFormat format = new DecimalFormat("#.##");
 		String deadline = format.format(tc.getDeadlineFor(netName));
-		JLabel label = new JLabel("<html> "+netName+": <br> "+getSuccessString(netName)+" <br> Deadline: <br>"+deadline+" </html> ");
+		JLabel label = new JLabel("<html> "+getRecurrentInfo(netName)+": <br> "+getSuccessString(netName)+" <br> Deadline: <br>"+deadline+" </html> ");
 		panel.add(label);
 		label.setSize(d);
 		label.setPreferredSize(d);
@@ -82,6 +86,19 @@ public class SimulationResult extends JFrame {
 		return panel;
 	}
 	
+	private String getRecurrentInfo(String netName) {
+		try { 
+			NamedComponent net = SwatComponents.getInstance().getContainerPetriNets().getComponent(netName);
+			if(net instanceof GraphicalTimedNet){
+				if (((GraphicalTimedNet)net).getPetriNet().isRecurring())
+					return netName+"(r)";
+			}
+		} catch (ProjectComponentException e) {
+			return netName;
+		}
+		return netName;
+	}
+
 	private double getDeadlineFor(String netName){
 		double deadline = Double.NaN;
 		if(tc.containsDeadlineFor(netName))
@@ -104,7 +121,7 @@ public class SimulationResult extends JFrame {
 		String s = "";
 		double successRatio = getSuccessRatio(netName)*100;
 		if(successRatio!=Double.NaN){
-			s = new DecimalFormat("##.##").format(successRatio);
+			s = format.format(successRatio);
 		}
 		return s+"%";
 	}

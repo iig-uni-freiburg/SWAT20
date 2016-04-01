@@ -57,15 +57,15 @@ public class SaveAllAction extends AbstractAction {
 		if (SwatTabView.getInstance().getComponentAt(i) instanceof PNEditorComponent) {
 			PNEditorComponent editor = (PNEditorComponent) SwatTabView.getInstance().getComponentAt(i);
 			String netID = editor.getNetContainer().getPetriNet().getName();
-			try {
+			//try {
 				SwatComponents.getInstance().getContainerPetriNets().storeAnalyses(netID);
 				editor.getUndoManager().clear();
 				Workbench.consoleMessage("Saved " + netID);
 				SwatTabView.getInstance().unsetModified(i);
-			} catch (SwatComponentException e) {
-				JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not successfully store " + netID);
-				Workbench.errorMessage("Could not successfully store " + netID, e, false);
-			}
+			//} catch (SwatComponentException e) {
+			//	JOptionPane.showMessageDialog(Workbench.getInstance(), "Could not successfully store " + netID);
+			//	Workbench.errorMessage("Could not successfully store " + netID, e, false);
+			//}
 		}
 
 	}

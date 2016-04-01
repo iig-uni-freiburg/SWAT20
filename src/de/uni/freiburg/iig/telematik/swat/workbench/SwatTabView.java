@@ -72,12 +72,16 @@ public class SwatTabView extends JTabbedPane implements PNEditorListener, Compon
     //private Map<Object, Component> openedSwatComponents = new HashMap<Object, Component>();
     private Set<SwatTabViewListener> listeners = new HashSet<SwatTabViewListener>();
 
-    private SwatTabView() throws Exception {
+    private SwatTabView()  {
         addChangeListener(new SwatTabViewAdapter());
-        SwatComponents.getInstance().addComponentListener(this);
+        try {
+			SwatComponents.getInstance().addComponentListener(this);
+		} catch (ProjectComponentException e) {
+			Workbench.errorMessage("Could not add SwatTabView as component listener. Saving-hints(*) not available", e, true);
+		}
     }
 
-    public static SwatTabView getInstance() throws Exception {
+    public static SwatTabView getInstance() {
         if (tabView == null) {
             tabView = new SwatTabView();
         }
