@@ -15,6 +15,7 @@ import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeNode;
+import de.uni.freiburg.iig.telematik.swat.workbench.SwatTreeView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 
 public class RenameAction extends AbstractWorkbenchAction {
@@ -68,6 +69,7 @@ public class RenameAction extends AbstractWorkbenchAction {
                                                 SwatComponents.getInstance().getContainerPetriNets().renameComponent(oldName, newName);
                                         }
                                 }
+                                SwatTreeView.getInstance().componentsChanged();
                                 break;
                         case MXML_LOG:
                                 oldName = node.getDisplayName();
