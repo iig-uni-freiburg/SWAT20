@@ -219,6 +219,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
             storeAnalysis(analysisTargetName, save);
 			dropDown.addItem(save);
 			dropDown.setSelectedItem(save);
+			Workbench.getInstance().getTreeView().removeAndUpdateSwatComponents();
 
 		} catch (SwatComponentException e) {
 			Workbench.errorMessage("Could process analysis", e, true);
