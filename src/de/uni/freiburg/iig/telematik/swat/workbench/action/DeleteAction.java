@@ -54,37 +54,38 @@ public class DeleteAction extends AbstractWorkbenchAction {
                 try {
                         SwatTreeNode selectedNode = (SwatTreeNode) SwatTreeView.getInstance().getSelectionPath().getLastPathComponent();
                         int userAnswer = JOptionPane.showConfirmDialog(Workbench.getInstance(), "Delete " + selectedNode.getDisplayName() + " from DISK?", null, JOptionPane.YES_NO_OPTION);
-
                         if (userAnswer != JOptionPane.YES_OPTION) {
                                 return;
                         }
-
                         switch (selectedNode.getObjectType()) {
-                                case PETRI_NET:
-                                        SwatComponents.getInstance().getContainerPetriNets().removeComponent(selectedNode.getDisplayName(), true);
-                                        break;
-                                case MXML_LOG:
-                                        SwatComponents.getInstance().getContainerMXMLLogs().removeComponent(selectedNode.getDisplayName(), true);
-                                        break;
-                                case ARISTAFLOW_LOG:
-                                        SwatComponents.getInstance().getContainerAristaflowLogs().removeComponent(selectedNode.getDisplayName(), true);
-                                        break;
-                                case XES_LOG:
-                                        SwatComponents.getInstance().getContainerXESLogs().removeComponent(selectedNode.getDisplayName(), true);
-                                        break;
-                                case LOG_VIEW:
-                                        LogView view = SwatComponents.getInstance().getContainerLogViews().getComponent(selectedNode.getDisplayName());
-                                        LogModel parentModel = SwatComponents.getInstance().getLog(view.getParentLogName());
-                                        parentModel.removeLogView(view);
-                                        SwatComponents.getInstance().getContainerLogViews().removeComponent(selectedNode.getDisplayName(), true);
-                                        break;
-                                default:
-                                        break;
+                            case PETRI_NET:
+                                SwatComponents.getInstance().getContainerPetriNets().removeComponent(selectedNode.getDisplayName(), true);
+                                break;
+                            case PETRI_NET_ANALYSIS:
+                        		SwatTreeNode parentNode = (SwatTreeNode) SwatTreeView.getInstance().getSelectionPath().getParentPath().getLastPathComponent();
+                        		SwatComponents.getInstance().getContainerPetriNets().getContainerAnalysis(parentNode.getDisplayName()).removeComponent(selectedNode.getDisplayName(), true);
+                                SwatTreeView.getInstance().componentsChanged();
+                        		break;
+                            case MXML_LOG:
+                                SwatComponents.getInstance().getContainerMXMLLogs().removeComponent(selectedNode.getDisplayName(), true);
+                                break;
+                            case ARISTAFLOW_LOG:
+                                SwatComponents.getInstance().getContainerAristaflowLogs().removeComponent(selectedNode.getDisplayName(), true);
+                                break;
+                            case XES_LOG:
+                                SwatComponents.getInstance().getContainerXESLogs().removeComponent(selectedNode.getDisplayName(), true);
+                                break;
+                            case LOG_VIEW:
+                                LogView view = SwatComponents.getInstance().getContainerLogViews().getComponent(selectedNode.getDisplayName());
+                                LogModel parentModel = SwatComponents.getInstance().getLog(view.getParentLogName());
+                                parentModel.removeLogView(view);
+                                SwatComponents.getInstance().getContainerLogViews().removeComponent(selectedNode.getDisplayName(), true);
+                                break;
+                            default:
+                                break;
                         }
                 } catch (NullPointerException e1) {
                         Workbench.errorMessage("No marked element to delete", e1, true);
                 }
-
         }
-
 }
