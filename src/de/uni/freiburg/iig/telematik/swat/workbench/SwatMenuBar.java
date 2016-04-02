@@ -38,7 +38,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SendExceptionsAsEmail;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.ManageWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.LolaPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -100,7 +100,7 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		quit.setAccelerator(KeyStroke.getKeyStroke('Q', commandKey));
 
 		fileMenu.add(newMenu);
-		fileMenu.add(new SwitchWorkingDirectoryAction(UIManager.getIcon("FileView.directoryIcon")));
+		fileMenu.add(new ManageWorkingDirectoryAction(UIManager.getIcon("FileView.directoryIcon")));
 		fileMenu.add(saveAll);
 		fileMenu.add(save);
 		fileMenu.add(new DeleteAction("Delete", null));

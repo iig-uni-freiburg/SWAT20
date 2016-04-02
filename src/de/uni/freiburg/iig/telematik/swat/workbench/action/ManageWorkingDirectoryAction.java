@@ -14,13 +14,13 @@ import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.WorkingDirectoryDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class SwitchWorkingDirectoryAction extends AbstractWorkbenchAction {
+public class ManageWorkingDirectoryAction extends AbstractWorkbenchAction {
 
 	int commandKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
 	private static final long serialVersionUID = 4540373111307405160L;
 
-	public SwitchWorkingDirectoryAction() {
+	public ManageWorkingDirectoryAction() {
 		super("");
 		setTooltip("Manage Working Directories");
 		try {
@@ -37,7 +37,7 @@ public class SwitchWorkingDirectoryAction extends AbstractWorkbenchAction {
 		}
 	}
 
-	public SwitchWorkingDirectoryAction(Icon icon) {
+	public ManageWorkingDirectoryAction(Icon icon) {
 		super("Manage Working Directories", icon);
 		setAcceleratorKey(KeyStroke.getKeyStroke('W', commandKey));
 	}

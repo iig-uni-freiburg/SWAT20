@@ -54,7 +54,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.PopUpToolBarAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.RenameAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveActiveComponentAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
-import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.ManageWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -146,7 +146,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         standardItems.add(new JButton(new SaveActiveComponentAction()));
         standardItems.add(new SwatToolbarButton(ToolbarButtonType.SAVE_ALL));
         standardItems.add(new JButton(new DeleteAction()));
-        standardItems.add(new JButton(new SwitchWorkingDirectoryAction()));
+        standardItems.add(new JButton(new ManageWorkingDirectoryAction()));
         standardItems.add(getNewNetButton());
 		//standardItems.add(new JButton(new ImportAction()));
         //standardItems.add(getImportButon());
