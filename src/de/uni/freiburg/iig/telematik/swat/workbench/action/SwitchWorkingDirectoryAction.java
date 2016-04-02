@@ -22,7 +22,7 @@ public class SwitchWorkingDirectoryAction extends AbstractWorkbenchAction {
 
 	public SwitchWorkingDirectoryAction() {
 		super("");
-		setTooltip("Switch Working Directory");
+		setTooltip("Manage Working Directories");
 		try {
 			setIcon(IconFactory.getIcon("switch_directory"));
 		} catch (ParameterException e) {
@@ -38,7 +38,7 @@ public class SwitchWorkingDirectoryAction extends AbstractWorkbenchAction {
 	}
 
 	public SwitchWorkingDirectoryAction(Icon icon) {
-		super("Switch Working Directory", icon);
+		super("Manage Working Directories", icon);
 		setAcceleratorKey(KeyStroke.getKeyStroke('W', commandKey));
 	}
 
