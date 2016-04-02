@@ -7,7 +7,10 @@ package de.uni.freiburg.iig.telematik.swat.analysis;
 
 import com.thoughtworks.xstream.XStream;
 import de.invation.code.toval.debug.SimpleDebugger;
+import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
+import de.invation.code.toval.misc.wd.ProjectComponentException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
@@ -62,7 +65,25 @@ public class AnalysisContainer extends AbstractComponentContainer<Analysis> {
         writer.checkError();
         writer.close();
     }
-
+    @Override
+    public boolean removeComponent(String componentName, boolean removeFromDisk, boolean notifyListeners) throws ProjectComponentException {
+        validateComponent(componentName);
+        Analysis component = getComponent(componentName);
+        if (removeFromDisk) {
+                        try {	
+                                FileUtils.deleteFile(basePath + getSerializationFileName(getComponent(componentName)) + ".xml");
+                        } catch (Exception e) {
+                                throw new ProjectComponentException("Cannot delete " + getComponentDescriptor() + " file from disk.", e);
+                        }
+        }
+        components.remove(componentName);
+        componentFiles.remove(componentName);
+        if (notifyListeners) {
+                listenerSupport.notifyComponentRemoved(component);
+        }
+        return true;
+}
+    
     @Override
     protected String getFileEndingForComponent(Analysis component) {
          return ANALYSIS_FILE_ENDING;
@@ -72,7 +93,4 @@ public class AnalysisContainer extends AbstractComponentContainer<Analysis> {
     public Set<String> getAcceptedFileEndings() {
         return new HashSet<>(Arrays.asList(ANALYSIS_FILE_ENDING));
     }
-    
-    
-
 }

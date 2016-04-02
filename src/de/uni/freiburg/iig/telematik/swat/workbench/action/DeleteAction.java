@@ -57,13 +57,14 @@ public class DeleteAction extends AbstractWorkbenchAction {
                         if (userAnswer != JOptionPane.YES_OPTION) {
                                 return;
                         }
+                        System.out.println("selnodename: " + selectedNode.getDisplayName());
                         switch (selectedNode.getObjectType()) {
                             case PETRI_NET:
                                 SwatComponents.getInstance().getContainerPetriNets().removeComponent(selectedNode.getDisplayName(), true);
                                 break;
                             case PETRI_NET_ANALYSIS:
                         		SwatTreeNode parentNode = (SwatTreeNode) SwatTreeView.getInstance().getSelectionPath().getParentPath().getLastPathComponent();
-                        		SwatComponents.getInstance().getContainerPetriNets().getContainerAnalysis(parentNode.getDisplayName()).removeComponent(selectedNode.getDisplayName(), true);
+                        		SwatComponents.getInstance().getContainerPetriNets().getContainerAnalysis(parentNode.getDisplayName()).removeComponent(selectedNode.getDisplayName(), true, true);
                                 SwatTreeView.getInstance().componentsChanged();
                         		break;
                             case MXML_LOG:
