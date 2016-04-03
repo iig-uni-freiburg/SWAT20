@@ -59,6 +59,7 @@ public class SaveAllAction extends AbstractAction {
 			String netID = editor.getNetContainer().getPetriNet().getName();
 			try {
 				SwatComponents.getInstance().getContainerPetriNets().storeAnalyses(netID);
+				SwatComponents.getInstance().getContainerPetriNets().storeComponent(netID);
 				editor.getUndoManager().clear();
 				Workbench.consoleMessage("Saved " + netID);
 				SwatTabView.getInstance().unsetModified(i);
