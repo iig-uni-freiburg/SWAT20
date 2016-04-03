@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -36,6 +37,8 @@ import de.uni.freiburg.iig.telematik.swat.logs.LogViewViewer;
 import de.uni.freiburg.iig.telematik.swat.misc.errorhandling.ErrorStorage;
 import de.uni.freiburg.iig.telematik.swat.patterns.PatternException;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.CloseSWATAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SaveAllAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTabViewListener;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatTreeViewListener;
@@ -113,6 +116,15 @@ public class Workbench extends JFrame implements SwatTreeViewListener, SwatTabVi
     private void setUpGUI() {
         setTitle("SWAT 2.0");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        
+        // set close action
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            	new CloseSWATAction().actionPerformed(new ActionEvent(this, 0, "close"));
+            }
+        });
+        
 //		setPreferredSize(PREFERRED_SIZE_WORKBENCH);
         setResizable(true);
 

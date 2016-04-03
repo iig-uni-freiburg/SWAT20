@@ -30,6 +30,7 @@ import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcherF
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatNewNetToolbar.ToolbarNewNetButtonType;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatState.OperatingMode;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.AboutAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.CloseSWATAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.DeleteAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.ExportAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.NewNetAction;
@@ -166,7 +167,6 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 
 	private JMenuItem getExitEntry() {
 		JMenuItem exit = new JMenuItem("Quit");
-
 		try {
 			ImageIcon icon = new ImageIcon(this.getClass().getResource(String.format(iconNameFormat, ICON_SIZE, "close_window", ICON_SIZE)));
 			exit.setIcon(icon);
@@ -175,15 +175,11 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		}
 
 		exit.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Save all Components
-				new SaveAllAction().actionPerformed(new ActionEvent(this, 0, "save"));
-				System.exit(0);
+				new CloseSWATAction().actionPerformed(new ActionEvent(this, 0, "close"));
 			}
 		});
-
 		return exit;
 	}
 
