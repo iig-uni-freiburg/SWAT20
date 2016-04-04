@@ -57,7 +57,6 @@ public class DeleteAction extends AbstractWorkbenchAction {
                         if (userAnswer != JOptionPane.YES_OPTION) {
                                 return;
                         }
-                        System.out.println("selnodename: " + selectedNode.getDisplayName());
                         switch (selectedNode.getObjectType()) {
                             case PETRI_NET:
                                 SwatComponents.getInstance().getContainerPetriNets().removeComponent(selectedNode.getDisplayName(), true);
