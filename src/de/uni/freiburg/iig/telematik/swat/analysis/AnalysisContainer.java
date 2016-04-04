@@ -65,26 +65,27 @@ public class AnalysisContainer extends AbstractComponentContainer<Analysis> {
         writer.checkError();
         writer.close();
     }
-    /*
+    
     @Override
     public boolean removeComponent(String componentName, boolean removeFromDisk, boolean notifyListeners) throws ProjectComponentException {
         validateComponent(componentName);
         Analysis component = getComponent(componentName);
         if (removeFromDisk) {
                         try {	
-                                FileUtils.deleteFile(basePath + getSerializationFileName(getComponent(componentName)) + ".xml");
+                                FileUtils.deleteFile(getBasePath() + getSerializationFileName(getComponent(componentName)) + ".xml");
                         } catch (Exception e) {
                                 throw new ProjectComponentException("Cannot delete " + getComponentDescriptor() + " file from disk.", e);
                         }
         }
-        components.remove(componentName);
-        componentFiles.remove(componentName);
+        getComponentsMap().remove(componentName);
+        getComponentFiles().remove(componentName);
         if (notifyListeners) {
                 listenerSupport.notifyComponentRemoved(component);
         }
         return true;
-}
- */   
+	}
+	
+    
     @Override
     protected String getFileEndingForComponent(Analysis component) {
          return ANALYSIS_FILE_ENDING;
