@@ -65,6 +65,7 @@ public class AnalysisContainer extends AbstractComponentContainer<Analysis> {
         writer.checkError();
         writer.close();
     }
+    /*
     @Override
     public boolean removeComponent(String componentName, boolean removeFromDisk, boolean notifyListeners) throws ProjectComponentException {
         validateComponent(componentName);
@@ -83,7 +84,7 @@ public class AnalysisContainer extends AbstractComponentContainer<Analysis> {
         }
         return true;
 }
-    
+ */   
     @Override
     protected String getFileEndingForComponent(Analysis component) {
          return ANALYSIS_FILE_ENDING;
