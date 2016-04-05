@@ -78,11 +78,16 @@ public class SciffAnalyzeAction extends AbstractAction {
 
 			CompositeRule rule;
 			try {
-				//Try to generate Hints for RuleDialog
-				rule = SciffRuleDialog.showRuleDialog(null, null, getActivityCandidates(reader), getOriginatorCandidates(reader));
+				if (reader.getClass().getCanonicalName().endsWith("LogParserAdapter")) {
+					rule = SciffRuleDialog.showRuleDialog(null);
+				}
+				else {
+					//Try to generate Hints for RuleDialog
+					rule = SciffRuleDialog.showRuleDialog(null, null, getActivityCandidates(reader), getOriginatorCandidates(reader));
+				}
 			} catch (JDOMException | IOException e) {
 				//Could not generate Hints. Continue without
-				rule = SciffRuleDialog.showRuleDialog(null);
+				rule = SciffRuleDialog.showRuleDialog(null, null, getActivityCandidates(reader), getOriginatorCandidates(reader));
 			}
 
 			//saveRule(rule);
