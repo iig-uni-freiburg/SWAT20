@@ -45,6 +45,12 @@ public class LogImportAction extends AbstractWorkbenchAction {
 		}
 		//LogModel model = new LogModel(f, type);
 		String logName = f.getName().replaceFirst("[.][^.]+$", "");
+		if (SwatComponents.getInstance().getContainerAristaflowLogs().containsComponent(logName) ||
+			SwatComponents.getInstance().getContainerMXMLLogs().containsComponent(logName) ||
+			SwatComponents.getInstance().getContainerXESLogs().containsComponent(logName)) {
+			JOptionPane.showMessageDialog(Workbench.getInstance(), "There exists already a Log with the same name");
+			return;
+		}
                 switch(type){
                     case Aristaflow:
                         SwatComponents.getInstance().getContainerAristaflowLogs().addComponent(f);
