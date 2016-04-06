@@ -215,7 +215,7 @@ public class LogFileViewer extends JScrollPane implements ViewComponent {
                 if (model.getFileReference().length() <= SWAT_FILE_TOO_BIG_TO_SHOW_SIZE) {
                         properties.add(new JLabel("Lines: " + FileUtils.getLineCount(model.getFileReference().getAbsolutePath(), Charset.defaultCharset().toString())));
                 }
-                properties.add(getSciffButton());
+                //properties.add(getSciffButton());
                 properties.validate();
                 properties.repaint();
         }
