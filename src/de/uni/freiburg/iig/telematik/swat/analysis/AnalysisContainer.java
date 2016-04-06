@@ -77,8 +77,8 @@ public class AnalysisContainer extends AbstractComponentContainer<Analysis> {
                                 throw new ProjectComponentException("Cannot delete " + getComponentDescriptor() + " file from disk.", e);
                         }
         }
-        getComponentsMap().remove(componentName);
-        getComponentFiles().remove(componentName);
+        components.remove(componentName);
+        componentFiles.remove(componentName);
         if (notifyListeners) {
                 listenerSupport.notifyComponentRemoved(component);
         }
