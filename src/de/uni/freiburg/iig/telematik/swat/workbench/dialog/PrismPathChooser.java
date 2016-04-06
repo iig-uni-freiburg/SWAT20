@@ -42,7 +42,7 @@ public class PrismPathChooser extends ConditionalFileDialog {
 		} catch (IOException e) {
 			Workbench.errorMessage("Could not access prism executable", e, true);
 			return false;
-		}
+		}			
 		return true;
 	}
 	
@@ -50,6 +50,4 @@ public class PrismPathChooser extends ConditionalFileDialog {
 	public static void main(String[] args) {
 		new PrismPathChooser(null).chooseFile();
 	}
-	
-	
 }

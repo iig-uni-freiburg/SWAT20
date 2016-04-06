@@ -30,34 +30,21 @@ public class LolaPathChooser extends ConditionalFileDialog {
 	@Override
 	protected boolean isValid(File path){
 		try {
-			LolaPathValidater.validate(path);
+			return LolaPathValidater.validate(path);
 		} catch (ParameterException e) {
 			return false;
 		} catch (IOException e) {
 			return false;
 		}
-		return true;
-	}
-	
-
-	
-	
+	}	
 }
+
 
 class LolaPathValidater {
 	static boolean validate(File path) throws ParameterException, IOException {
-		File[] possibleFiles = path.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.toLowerCase().contains("lola");
-			}
-		});
-
-		for (File possibleFile : possibleFiles) {
-			if (possibleFile.canExecute())
-				return true;
+		if (path.getName().toLowerCase().contains("lola")) {
+			return true;
 		}
-		return false;
+		return false;		
 	}
 }
