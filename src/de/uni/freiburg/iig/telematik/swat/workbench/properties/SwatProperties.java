@@ -2,19 +2,27 @@ package de.uni.freiburg.iig.telematik.swat.workbench.properties;
 
 import de.invation.code.toval.graphic.util.SpringUtilities;
 import de.invation.code.toval.misc.wd.AbstractProjectComponents;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+
+import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.misc.wd.AbstractWorkingDirectoryProperties;
 import de.invation.code.toval.os.OSUtils;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.uni.freiburg.iig.telematik.swat.analysis.prism.PrismFunctionValidator;
 import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcher;
+import de.uni.freiburg.iig.telematik.swat.analysis.prism.searcher.PrismSearcherFactory;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory.IconSize;
+import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
+import de.uni.freiburg.iig.telematik.swat.workbench.dialog.PrismPathChooser;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.properties.EditorProperties;
 
 public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatProperty> {
@@ -173,8 +181,22 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
 
     public String getPrismPath() throws PropertyException, ParameterException {
         String propertyValue = getProperty(SwatProperty.PRISM_PATH);
+        // if no path is set let the user choose one
         if (propertyValue == null) {
-            throw new PropertyException(SwatProperty.PRISM_PATH, propertyValue);
+			PrismPathChooser chooser = new PrismPathChooser(null);
+			String prismPath = chooser.chooseFile();
+			if (prismPath != null) {
+				try {
+					PrismSearcher searcher = PrismSearcherFactory.getPrismSearcher();
+					File fullPath = searcher.validatePrismPath(prismPath);
+					propertyValue = prismPath;
+					SwatProperties.getInstance().setPrismPath(fullPath.getAbsolutePath());
+					if (!PrismFunctionValidator.checkPrism())
+						Workbench.errorMessage("Could not verify PRISM executable", null, true);
+				} catch (Exception e1) {
+					Workbench.errorMessage("Could not set PRISM path", e1, true);
+				}
+			}
         }
         PrismSearcher.validatePrismPath(propertyValue);
         return propertyValue;
