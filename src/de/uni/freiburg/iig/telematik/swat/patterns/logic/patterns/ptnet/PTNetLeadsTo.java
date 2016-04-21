@@ -61,7 +61,6 @@ public class PTNetLeadsTo extends LeadsTo {
 		}
 		
 		mFormalization = "P=? [G((" + operand1 + ") => (" + "F(" + operand2 + ")))]";
-
 	}
 
 	@Override

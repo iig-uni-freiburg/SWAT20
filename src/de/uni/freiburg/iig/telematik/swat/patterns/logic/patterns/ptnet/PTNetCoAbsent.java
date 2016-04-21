@@ -7,11 +7,12 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.Transition
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.PrismModelAdapter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.PTNetInfoProvider;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CoAbsent;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class PTNetCoAbsent extends CompliancePattern {
+public class PTNetCoAbsent extends CoAbsent {
 	
 	public PTNetCoAbsent() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
@@ -27,16 +28,6 @@ public class PTNetCoAbsent extends CompliancePattern {
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 		mParameters.get(1).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
-	}
-
-	@Override
-	public String getName() {
-		return "P CoAbsent Q";
-	}
-
-	@Override
-	public String getDescription() {
-		return "The absence of P mandates that Q is also absent";
 	}
 
 	@Override
@@ -69,13 +60,10 @@ public class PTNetCoAbsent extends CompliancePattern {
 		}
 		
 		mFormalization = "P=? [ ((G(!(" + operand1 + "))) => (" + "G(!(" + operand2 + "))))]";
-		
-
 	}
 
 	@Override
 	public boolean isAntiPattern() {
 		return false;
 	}
-
 }

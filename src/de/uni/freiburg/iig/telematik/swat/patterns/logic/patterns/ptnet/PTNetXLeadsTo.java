@@ -8,10 +8,11 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranl
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.PTNetInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.XLeadsTo;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class PTNetXLeadsTo extends CompliancePattern {
+public class PTNetXLeadsTo extends XLeadsTo {
 	
 	public PTNetXLeadsTo() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
@@ -27,16 +28,6 @@ public class PTNetXLeadsTo extends CompliancePattern {
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 		mParameters.get(1).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
-	}
-
-	@Override
-	public String getName() {
-		return "P XLeadsTo Q";
-	}
-
-	@Override
-	public String getDescription() {
-		return "P must be directly followed by Q";
 	}
 
 	@Override
@@ -69,13 +60,10 @@ public class PTNetXLeadsTo extends CompliancePattern {
 		}
 		
 		mFormalization = "P=? [G((" + operand1 + ") => (" + "X(" + operand2 + ")))]";
-		
-
 	}
 
 	@Override
 	public boolean isAntiPattern() {
 		return false;
 	}
-
 }

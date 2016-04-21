@@ -8,10 +8,11 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranl
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.PTNetInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.Exclusive;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class PTNetExclusive extends CompliancePattern {
+public class PTNetExclusive extends Exclusive {
 	
 	public PTNetExclusive() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
@@ -30,16 +31,6 @@ public class PTNetExclusive extends CompliancePattern {
 		mParameters.get(1).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions()); //was soll in das 2. DropDown Feld?
 		//p.setTypeRange(ParameterTypeNames.STATEPREDICATE, ptnetInfo.getPlaces());
 
-	}
-
-	@Override
-	public String getName() {
-		return "P Exclusive Q";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Are two transitions exclusive?";
 	}
 
 	@Override
@@ -72,13 +63,10 @@ public class PTNetExclusive extends CompliancePattern {
 		}
 		
 		mFormalization = "P=? [ ((F(" + operand1 + ")) => (" + "G(!(" + operand2 + "))) ) & ( (F("+ operand2 + ")) => (G(!("+operand1+ "))))]";
-		
-
 	}
 
 	@Override
 	public boolean isAntiPattern() {
 		return false;
 	}
-
 }

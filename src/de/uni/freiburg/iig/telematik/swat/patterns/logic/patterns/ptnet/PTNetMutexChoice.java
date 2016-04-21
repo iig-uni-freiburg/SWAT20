@@ -8,10 +8,11 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranl
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.PTNetInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.MutexChoice;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class PTNetMutexChoice extends CompliancePattern {
+public class PTNetMutexChoice extends MutexChoice {
 	
 	public PTNetMutexChoice() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
@@ -27,16 +28,6 @@ public class PTNetMutexChoice extends CompliancePattern {
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 		mParameters.get(1).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
-	}
-
-	@Override
-	public String getName() {
-		return "P MutexChoice Q";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Either P or Q exists, but not both of them";
 	}
 
 	@Override
@@ -69,13 +60,10 @@ public class PTNetMutexChoice extends CompliancePattern {
 		}
 		
 		mFormalization = "P=? [ ((F(" + operand1 + ")) & (" + "G(!(" + operand2 + "))) ) | ( (F("+ operand2 + ")) & (G(!("+operand1+ "))))]";
-		
-
 	}
 
 	@Override
 	public boolean isAntiPattern() {
 		return false;
 	}
-
 }

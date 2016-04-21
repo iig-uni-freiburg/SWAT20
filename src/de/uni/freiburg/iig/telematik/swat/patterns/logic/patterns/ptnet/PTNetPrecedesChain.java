@@ -8,10 +8,11 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranl
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.PTNetInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.PrecedesChain;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class PTNetPrecedesChain extends CompliancePattern {
+public class PTNetPrecedesChain extends PrecedesChain {
 	
 	public PTNetPrecedesChain() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
@@ -29,16 +30,6 @@ public class PTNetPrecedesChain extends CompliancePattern {
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 		mParameters.get(1).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 		mParameters.get(2).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
-	}
-
-	@Override
-	public String getName() {
-		return "P Precedes-Chain (Q, R)";
-	}
-
-	@Override
-	public String getDescription() {
-		return "P precedes a sequence of Q, R";
 	}
 
 	@Override
@@ -80,13 +71,10 @@ public class PTNetPrecedesChain extends CompliancePattern {
 		}
 		
 		mFormalization = "P=? [(F(("+operand2+") & (X(F("+operand3+"))))) => ((!("+operand2+")) U ("+operand1+"))]";
-		
-
 	}
 
 	@Override
 	public boolean isAntiPattern() {
 		return false;
 	}
-
 }

@@ -7,11 +7,12 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.Transition
 import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranlator.PrismModelAdapter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.PTNetInfoProvider;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.ChainPrecedes;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class PTNetChainPrecedes extends CompliancePattern {
+public class PTNetChainPrecedes extends ChainPrecedes {
 	
 	public PTNetChainPrecedes() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
@@ -29,16 +30,6 @@ public class PTNetChainPrecedes extends CompliancePattern {
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 		mParameters.get(1).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 		mParameters.get(2).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
-	}
-
-	@Override
-	public String getName() {
-		return "(P,Q) Chain-Precedes R";
-	}
-
-	@Override
-	public String getDescription() {
-		return "R must be preceded by a sequence of P, Q";
 	}
 
 	@Override
@@ -79,13 +70,10 @@ public class PTNetChainPrecedes extends CompliancePattern {
 		}
 		
 		mFormalization = "P=? [(F("+operand3+")) => ((!("+operand3+")) U (("+operand1+") & (!("+operand3+")) & (X((!("+operand3+")) U ("+operand2+"))))   )]";
-		
-
 	}
 
 	@Override
 	public boolean isAntiPattern() {
 		return false;
 	}
-
 }

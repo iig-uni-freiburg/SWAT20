@@ -8,10 +8,11 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranl
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.PTNetInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.Universal;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class PTNetUniversal extends CompliancePattern {
+public class PTNetUniversal extends Universal {
 	
 	public PTNetUniversal() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
@@ -25,16 +26,6 @@ public class PTNetUniversal extends CompliancePattern {
 		mInfoProvider = ptnetInfo;
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
-	}
-
-	@Override
-	public String getName() {
-		return "Universal P";
-	}
-
-	@Override
-	public String getDescription() {
-		return "P should always hold";
 	}
 
 	@Override
@@ -57,15 +48,12 @@ public class PTNetUniversal extends CompliancePattern {
 		}
 
 		mFormalization = "P=? [ (G(" + operand1 + "))]";
-		
-
 	}
 
 	@Override
 	public boolean isAntiPattern() {
 		return false;
 	}
-
 }
 
 

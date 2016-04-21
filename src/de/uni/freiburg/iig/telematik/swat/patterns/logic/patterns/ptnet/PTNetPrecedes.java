@@ -8,10 +8,11 @@ import de.uni.freiburg.iig.telematik.swat.analysis.modelchecker.prism.modeltranl
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.ModelInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.model_info_provider.PTNetInfoProvider;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.CompliancePattern;
+import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.Precedes;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.Parameter;
 import de.uni.freiburg.iig.telematik.swat.patterns.logic.patterns.parameter.ParameterTypeNames;
 
-public class PTNetPrecedes extends CompliancePattern {
+public class PTNetPrecedes extends Precedes {
 	
 	public PTNetPrecedes() {
 		ArrayList<String> paramTypes = new ArrayList<>( 
@@ -27,16 +28,6 @@ public class PTNetPrecedes extends CompliancePattern {
 		Parameter p = mParameters.get(0);
 		p.setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
 		mParameters.get(1).setTypeRange(ParameterTypeNames.TRANSITION, ptnetInfo.getTransitions());
-	}
-
-	@Override
-	public String getName() {
-		return "P Precedes Q";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Q must always be preceded by P";
 	}
 
 	@Override
@@ -69,13 +60,10 @@ public class PTNetPrecedes extends CompliancePattern {
 		}
 		
 		mFormalization = "P=? [ ((G(!(" + operand2 + "))) | ((!(" + operand2 + ")) U (" + operand1 +  ")))]";
-		
-
 	}
 
 	@Override
 	public boolean isAntiPattern() {
 		return false;
 	}
-
 }
