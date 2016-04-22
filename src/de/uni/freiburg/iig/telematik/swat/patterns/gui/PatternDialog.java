@@ -143,7 +143,7 @@ public class PatternDialog extends JFrame {
                 c.add(jsp, BorderLayout.CENTER);
                 c.add(southPanel, BorderLayout.SOUTH);
                 this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                setSize(900, 600);
+                setSize(1100, 600);
 
                 for (CompliancePattern p : mPatterns) {
                         addPatternToEditPane(p);
