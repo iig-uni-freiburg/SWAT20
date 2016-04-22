@@ -100,7 +100,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		northPanel.add(propertyPanel, BorderLayout.NORTH);
 		JScrollPane jsp = new JScrollPane(northPanel);
 		jsp.getVerticalScrollBar().setUnitIncrement(16);
-		jsp.setPreferredSize(new Dimension(155, 550));
+		jsp.setPreferredSize(new Dimension(170, 550));
 		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jsp.setVisible(true);
 		content.setLayout(new BorderLayout());
