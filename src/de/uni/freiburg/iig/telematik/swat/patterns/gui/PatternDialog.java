@@ -85,6 +85,7 @@ public class PatternDialog extends JFrame {
                 JPanel northPanel = new JPanel(new BorderLayout());
                 northPanel.add(mDialogPanel, BorderLayout.NORTH);
                 JScrollPane jsp = new JScrollPane(northPanel);
+                jsp.getVerticalScrollBar().setUnitIncrement(16);
                 jsp.setVisible(true);
 
                 mAddPatternButton = new JButton("Add Pattern");
