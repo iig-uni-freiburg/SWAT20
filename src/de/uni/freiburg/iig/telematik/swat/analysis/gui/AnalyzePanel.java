@@ -99,6 +99,7 @@ public class AnalyzePanel extends JPanel implements ItemListener {
 		JPanel northPanel = new JPanel(new BorderLayout());
 		northPanel.add(propertyPanel, BorderLayout.NORTH);
 		JScrollPane jsp = new JScrollPane(northPanel);
+		jsp.getVerticalScrollBar().setUnitIncrement(16);
 		// TODO make height dynamic, when the whole window is resized
 		jsp.setPreferredSize(new Dimension(50, 550));
 		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
