@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import de.invation.code.toval.properties.PropertyException;
@@ -73,7 +74,11 @@ public class PatternPanel extends JPanel {
 			Image newimg = image.getScaledInstance(11, 11,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
 			JButton mHelpButton = new JButton(new ImageIcon(newimg));
 			mHelpButton.setToolTipText(mPattern.getDescription());
-			
+			mHelpButton.addActionListener(new ActionListener() {	 
+	            public void actionPerformed(ActionEvent e) {
+	            	JOptionPane.showMessageDialog(null, mPattern.getDescription(), "Pattern Description", JOptionPane.INFORMATION_MESSAGE);
+	            }
+	        });
 			JPanel mTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			mTopPanel.add(label);
 			mTopPanel.add(Box.createHorizontalStrut(10));
