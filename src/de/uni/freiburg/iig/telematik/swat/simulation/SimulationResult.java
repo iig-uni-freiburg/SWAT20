@@ -39,6 +39,7 @@ import de.invation.code.toval.misc.NamedComponent;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalTimedNet;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.abstr.StatisticListener;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
@@ -67,6 +68,7 @@ public class SimulationResult extends JFrame {
 		}
 		JScrollPane scrollPane = new JScrollPane(content);
 		getContentPane().add(scrollPane);
+		new FireSequenceGUI(wtm.getResult().keySet()).setVisible(true);
 	}
 	
 	private JPanel getResult(String netName){
@@ -74,7 +76,7 @@ public class SimulationResult extends JFrame {
 		Dimension d = new Dimension(120, 70);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		String deadline = format.format(tc.getDeadlineFor(netName));
-		JLabel label = new JLabel("<html> "+getRecurrentInfo(netName)+": <br> "+getSuccessString(netName)+" <br> Deadline: <br>"+deadline+" </html> ");
+		JLabel label = new JLabel("<html> "+getNameDetail(netName)+": <br> "+getSuccessString(netName)+" <br> Deadline: <br>"+deadline+" </html> ");
 		panel.add(label);
 		label.setSize(d);
 		label.setPreferredSize(d);
@@ -86,12 +88,12 @@ public class SimulationResult extends JFrame {
 		return panel;
 	}
 	
-	private String getRecurrentInfo(String netName) {
+	private String getNameDetail(String netName) {
 		try { 
 			NamedComponent net = SwatComponents.getInstance().getContainerPetriNets().getComponent(netName);
 			if(net instanceof GraphicalTimedNet){
 				if (((GraphicalTimedNet)net).getPetriNet().isRecurring())
-					return netName+"(r)";
+					return netName+"(r)"; //if net is recurring in the process
 			}
 		} catch (ProjectComponentException e) {
 			return netName;
