@@ -29,6 +29,7 @@ public class PlanExtractor {
 	private StatisticListener listener;
 	private HashMap<String, ArrayList<FireSequence>> fireSequence;
 	private AwesomeTimeContext context;
+	private TreeSet<WorkflowExecutionPlan> plans = new TreeSet<>();
 	
 
 	
@@ -42,41 +43,73 @@ public class PlanExtractor {
 		
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet( net2.getPetriNet());
-		wtm.simulateAll(12345);
+		wtm.simulateAll(4321);
 
-		PlanExtractor ex = new PlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
+		//PlanExtractor ex = new PlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
+		PlanExtractor ex = new PlanExtractor();
+		ArrayList<WorkflowExecutionPlan> set = ex.getExecutionPlan();
+		wtm.simulateExecutionPlan(4000, set.get(set.size()-15).getSeq());
+		new SimulationResult(wtm, getTimeContext()).setVisible(true);
+		
 		System.out.println("End");
-		System.exit(0);
+		//System.exit(0);
+	}
+	
+	
+	public PlanExtractor() throws IOException, ProjectComponentException{
+		this(WorkflowTimeMachine.getInstance(),StatisticListener.getInstance());
 	}
 
-	public PlanExtractor(WorkflowTimeMachine wtm, StatisticListener listener) throws IOException, ProjectComponentException {
-		this.wtm=wtm;
+	private PlanExtractor(WorkflowTimeMachine wtm, StatisticListener listener) throws IOException, ProjectComponentException {
+		this.wtm=WorkflowTimeMachine.getInstance();
 		this.listener = listener;
-		this.fireSequence=getUniqueNets();
-		String context = SwatProperties.getInstance().getActiveTimeContext();
-		this.context=(AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(context);
-		//this.fireSequence=listener.getFireSequences();
-		for(Entry<String, ArrayList<FireSequence>> bla:fireSequence.entrySet()){
-			System.out.print("Net: "+bla.getKey());
-			System.out.println(" size "+bla.getValue().size()+" elements.");
-		}
+		this.fireSequence=getResultsFromNonClonedNets();
+		this.context=getTimeContext();
+
 		
+//		for(Entry<String, ArrayList<FireSequence>> bla:fireSequence.entrySet()){
+//			System.out.print("Net: "+bla.getKey());
+//			System.out.println(" size "+bla.getValue().size()+" elements.");
+//		}
+		
+		//HashSet<String> singlePlans = getUniqueWorkflowExecutions();
+		
+		
+		
+		plans = generatePlans();
+		
+		for(WorkflowExecutionPlan plan:plans)
+			System.out.println(plan);
+		
+//		for(Entry<Double, FireSequence> entry:plan.entrySet()){
+//			System.out.println(entry.getKey()+": "+entry.getValue().getTransitionString());
+//		}
+		
+	}
+	
+	public ArrayList<WorkflowExecutionPlan> getExecutionPlan(){
+		return new ArrayList<>(plans);
+	}
+	
+	private HashSet<String> getUniqueWorkflowExecutions(){
 		HashSet<String> singlePlans = new HashSet<>();
 		for(FireSequence seq: listener.getOverallLog())
 			singlePlans.add(seq.getTransitionString());
 		
 		System.out.println("number of plans: "+singlePlans.size());
 		
-		TreeMap<Double, FireSequence> plan = generatePlans();
-		
-		for(Entry<Double, FireSequence> entry:plan.entrySet()){
-			System.out.println(entry.getKey()+": "+entry.getValue().getTransitionString());
-		}
-		
-
+		return singlePlans;
 	}
+	
+	
+	private static AwesomeTimeContext getTimeContext() throws IOException, ProjectComponentException {
+		String context = SwatProperties.getInstance().getActiveTimeContext();
+		return (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(context);
+	}
+
+
 	/**remove cloned nets from recurring instances**/
-	private HashMap<String, ArrayList<FireSequence>> getUniqueNets(){
+	private HashMap<String, ArrayList<FireSequence>> getResultsFromNonClonedNets(){
 		Set<String> keep = wtm.getResult().keySet();
 		HashMap<String, ArrayList<FireSequence>> result = new HashMap<>();
 		for(String s:keep){
@@ -86,60 +119,79 @@ public class PlanExtractor {
 		
 	}
 	
-	private TreeMap<Double, FireSequence> generatePlans(){
-		TreeMap<WorkflowExecutionPlan,WorkflowExecutionPlan> differentPlanSet = new TreeMap<>();
-		HashMap<FireSequence, LinkedList<Double>> performance = new HashMap<>();
+	private TreeSet<WorkflowExecutionPlan> generatePlans(){
+		
+		//TreeMap<WorkflowExecutionPlan,WorkflowExecutionPlan> differentPlanSet = new TreeMap<>();
+		
+		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
 		for(FireSequence seq: listener.getOverallLog()){
-			WorkflowExecutionPlan plan = new WorkflowExecutionPlan(seq);
-			differentPlanSet.put(plan,plan);
-			if(!performance.containsKey(seq)){ //create list
-				performance.put(seq,new LinkedList<Double>());
+			//WorkflowExecutionPlan plan = new WorkflowExecutionPlan(seq);
+			//differentPlanSet.put(plan,plan);
+			if(!computedResults.containsKey(seq)){ 
+				computedResults.put(seq,new LinkedList<Double>()); //create list
 			}
 		}
 		
 		for(FireSequence seq:listener.getOverallLog()) //add OverallPerformance
-		performance.get(seq).add(getOverallSuccessRatio(seq));
+			computedResults.get(seq).add(getOverallSuccessRatio(seq));
 		
-		for(FireSequence seq:listener.getOverallLog()){
-			WorkflowExecutionPlan plan = differentPlanSet.get(seq);
-			if(plan!=null)
-				plan.addSequence(seq);
+//		for(FireSequence seq:listener.getOverallLog()){
+//			WorkflowExecutionPlan plan = differentPlanSet.get(seq);
+//			if(plan!=null)
+//				plan.addSequence(seq);
+//		}
+//		
+//		for(WorkflowExecutionPlan seq:differentPlanSet.keySet()){
+//			System.out.println(seq);
+//		}
+		
+//		TreeMap<Double, FireSequence> result = new TreeMap<>();
+		TreeSet<WorkflowExecutionPlan> set = new TreeSet<>();
+		
+		for(Entry<FireSequence, LinkedList<Double>> entry:computedResults.entrySet()){
+			//System.out.println(entry.getValue().size()+" entries for: "+entry.getKey().getTransitionString());
+//			result.put(computeAverage(entry.getValue()),entry.getKey());
+			set.add(new WorkflowExecutionPlan(entry.getKey(), entry.getValue().size(), computeAverage(entry.getValue())));
 		}
 		
-		for(WorkflowExecutionPlan seq:differentPlanSet.keySet()){
-			System.out.println(seq);
-		}
+//		for(WorkflowExecutionPlan plan:set){
+//			System.out.println(plan.toString());
+//		}
 		
-		TreeMap<Double, FireSequence> result = new TreeMap<>();
+		//System.out.println("Number of different runnings: "+differentPlanSet.size()); //size is wrong
 		
-		for(Entry<FireSequence, LinkedList<Double>> entry:performance.entrySet()){
-			System.out.println(entry.getValue().size()+" entries for: "+entry.getKey().getTransitionString());
-			result.put(computeAverage(entry.getValue()),entry.getKey());
-		}
-		
-		System.out.println("Number of different runnings: "+differentPlanSet.size()); //size is wrong
-		
-		return result;
+		return set;
 		
 	}
 	
+	/**compute the score of this workflow execution**/
 	private double getOverallSuccessRatio(FireSequence seq){
+		int success = 0;
+		
+		HashMap<String, Double> nets = extractSimulatedTiming(seq); //<NetName, needed time>
+		
+		//count successes
+		for(Entry<String, Double> entry:nets.entrySet()){
+			String netName=entry.getKey();
+			double neededTime=entry.getValue();
+			if(neededTime<=context.getDeadlineFor(netName))
+				success++;
+		}
+		
+		return ((double)success)/nets.keySet().size();
+	}
+	
+	/**extract the time of the last fired activitiy from each net out of a fireSequence**/
+	private HashMap<String, Double> extractSimulatedTiming(FireSequence seq){
 		HashMap<String, Double> nets = new HashMap<>(); //Net-Name, time
-		for(FireElement element: seq.getSequence()){
+		for(FireElement element: seq.getSequence()){ //get fired transitions
 			String netName=element.getTransition().getNet().getName();
 			double time = element.getEndTime();
 			if(nets.containsKey(netName)&&nets.get(netName)>time)
 				System.out.println("Something wrong");
 			nets.put(netName,element.getEndTime());
 		}
-		
-		int success = 0;
-		for(Entry<String, Double> entry:nets.entrySet()){
-			if(entry.getValue()<=context.getDeadlineFor(entry.getKey()))
-				success++;
-		}
-		
-		return success/((double)nets.keySet().size());
+		return nets;
 	}
 	
 	private double computeAverage(List<Double> list){

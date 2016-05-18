@@ -1,98 +1,88 @@
 package de.uni.freiburg.iig.telematik.swat.simulation;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
+import java.text.DecimalFormat;
 
-import de.invation.code.toval.misc.wd.ProjectComponentException;
-import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.FireElement;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.FireSequence;
-import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
-import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
-import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
-import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
-public class WorkflowExecutionPlan extends FireSequence {
+public class WorkflowExecutionPlan implements Comparable<WorkflowExecutionPlan>{
 	
-	int simulatedRuns;
-	int successes;
-	LinkedList<Double> results = new LinkedList<>();
-	private static AwesomeTimeContext context;
-	
-	static {
-		String defContext;
-		try {
-			defContext = SwatProperties.getInstance().getActiveTimeContext();
-			context = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(defContext);
-		} catch (IOException | ProjectComponentException e) {
-			Workbench.errorMessage("Could not initialize timecontext", e, true);
-		}
-		
+	private FireSequence seq;
+	private int numberOfRuns;
+	private double performance;
+	static DecimalFormat df = new DecimalFormat("#.##");
+
+	public WorkflowExecutionPlan(FireSequence seq, int numberOfRuns, double performance) {
+		this.seq=seq;
+		this.numberOfRuns = numberOfRuns;
+		this.performance=performance;
 	}
-	
-	public WorkflowExecutionPlan(FireSequence sequence) {
-		this.entries=sequence.getSequence();
-		simulatedRuns=1;
-		successes=0;
+
+	public FireSequence getSeq() {
+		return seq;
 	}
-	
-	public void addSequence(FireSequence sequence){
-		//compute performance and add to performance list
-		String seq1=getTransitionString();
-		String seq2=sequence.getTransitionString();
-		if(sequence.getTransitionString().equals(getTransitionString())){
-			simulatedRuns++;
-			results.add(getOverallSuccessRatio(sequence));
-			//refresh performance, etc...
-			
-		} else
-			//throw new RuntimeException("This sequence does not comply with the given execution Plan");
-			System.out.println("falsche Zuordnung");
-		
+
+	public void setSeq(FireSequence seq) {
+		this.seq = seq;
 	}
-	
-	public double getOverallPerformance(){
-		//TimeContext
-		//Liste mit bool-Werten, berechnen wie viel % erfolgt sindf
-		//ausgabe
-		return computeAverage(results);
+
+	public int getNumberOfRuns() {
+		return numberOfRuns;
 	}
-	
-	private double getOverallSuccessRatio(FireSequence seq){
-		HashMap<String, Double> nets = new HashMap<>(); //Net-Name, time
-		for(FireElement element: seq.getSequence()){
-			String netName=element.getTransition().getNet().getName();
-			double time = element.getEndTime();
-			if(nets.containsKey(netName)&&nets.get(netName)>time)
-				System.out.println("Something wrong");
-			nets.put(netName,element.getEndTime());
-		}
-		
-		int success = 0;
-		for(Entry<String, Double> entry:nets.entrySet()){
-			if(entry.getValue()<=context.getDeadlineFor(entry.getKey()))
-				success++;
-		}
-		
-		return success/((double)nets.keySet().size());
+
+	public void setNumberOfRuns(int numberOfRuns) {
+		this.numberOfRuns = numberOfRuns;
 	}
-	
-	private double computeAverage(List<Double> list){
-		double sum = 0.0;
-		for(double d:list)
-			sum+=d;
-		return sum/list.size();
+
+	public double getPerformance() {
+		return performance;
 	}
-	
-	/**compares durations of the FireSequence**/
-	public int compareTo(Object o) {
-		return new Double(getOverallPerformance()).compareTo(((WorkflowExecutionPlan) o).getOverallPerformance());
+
+	public void setPerformance(double performance) {
+		this.performance = performance;
 	}
 	
 	public String toString(){
-		return getOverallPerformance()+": "+getTransitionString()+" ("+results.size()+") entries";
+		return df.format(performance*100)+"% ("+numberOfRuns+" entries): "+seq.getTransitionString();
+	}
+
+	@Override
+	public int compareTo(WorkflowExecutionPlan o) {
+		return new Double(performance).compareTo(o.performance);
+		//return new Integer(numberOfRuns).compareTo(o.getNumberOfRuns());
+		//return seq.getTransitionString().compareTo(o.seq.getTransitionString());
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + numberOfRuns;
+		long temp;
+		temp = Double.doubleToLongBits(performance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((seq == null) ? 0 : seq.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WorkflowExecutionPlan other = (WorkflowExecutionPlan) obj;
+		if (numberOfRuns != other.numberOfRuns)
+			return false;
+		if (Double.doubleToLongBits(performance) != Double.doubleToLongBits(other.performance))
+			return false;
+		if (seq == null) {
+			if (other.seq != null)
+				return false;
+		} else if (!seq.equals(other.seq))
+			return false;
+		return true;
 	}
 
 }
