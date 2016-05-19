@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -27,7 +28,7 @@ public class PlanExtractor {
 
 	private WorkflowTimeMachine wtm;
 	private StatisticListener listener;
-	private HashMap<String, ArrayList<FireSequence>> fireSequence;
+	//private HashMap<String, ArrayList<FireSequence>> fireSequence;
 	private AwesomeTimeContext context;
 	private TreeSet<WorkflowExecutionPlan> plans = new TreeSet<>();
 	
@@ -43,15 +44,27 @@ public class PlanExtractor {
 		
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet( net2.getPetriNet());
-		wtm.simulateAll(4321);
+		wtm.simulateAll(54321);
 
 		//PlanExtractor ex = new PlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
 		PlanExtractor ex = new PlanExtractor();
 		ArrayList<WorkflowExecutionPlan> set = ex.getExecutionPlan();
-		wtm.simulateExecutionPlan(4000, set.get(set.size()-15).getSeq());
-		new SimulationResult(wtm, getTimeContext()).setVisible(true);
 		
-		System.out.println("End");
+		int i = 0;
+		for (WorkflowExecutionPlan plan:set){
+			System.out.println(i+": "+plan);
+			i++;
+		}
+		
+		while (true){
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("Enter index to run further simulation");
+		int myint = keyboard.nextInt();
+		wtm.resetAll();
+		wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());
+		new SimulationResult(wtm, getTimeContext()).setVisible(true);
+		}
+		//System.out.println("End");
 		//System.exit(0);
 	}
 	
@@ -63,31 +76,17 @@ public class PlanExtractor {
 	private PlanExtractor(WorkflowTimeMachine wtm, StatisticListener listener) throws IOException, ProjectComponentException {
 		this.wtm=WorkflowTimeMachine.getInstance();
 		this.listener = listener;
-		this.fireSequence=getResultsFromNonClonedNets();
+		//this.fireSequence=getResultsFromNonClonedNets();
 		this.context=getTimeContext();
-
 		
-//		for(Entry<String, ArrayList<FireSequence>> bla:fireSequence.entrySet()){
-//			System.out.print("Net: "+bla.getKey());
-//			System.out.println(" size "+bla.getValue().size()+" elements.");
-//		}
-		
-		//HashSet<String> singlePlans = getUniqueWorkflowExecutions();
-		
-		
-		
-		plans = generatePlans();
-		
-		for(WorkflowExecutionPlan plan:plans)
-			System.out.println(plan);
-		
-//		for(Entry<Double, FireSequence> entry:plan.entrySet()){
-//			System.out.println(entry.getKey()+": "+entry.getValue().getTransitionString());
-//		}
-		
+		//plans = generatePlans();
 	}
 	
+	/**gets (and if needed generates) the orderd execution plan**/
 	public ArrayList<WorkflowExecutionPlan> getExecutionPlan(){
+		if(plans==null||plans.isEmpty()){
+			plans=generatePlans();
+		}
 		return new ArrayList<>(plans);
 	}
 	
@@ -164,7 +163,7 @@ public class PlanExtractor {
 		
 	}
 	
-	/**compute the score of this workflow execution**/
+	/**compute the score of this workflow execution between 0..1**/
 	private double getOverallSuccessRatio(FireSequence seq){
 		int success = 0;
 		
@@ -177,8 +176,13 @@ public class PlanExtractor {
 			if(neededTime<=context.getDeadlineFor(netName))
 				success++;
 		}
+		double result = ((double)success)/nets.keySet().size();
+		if(result>1.0)
+			System.out.println("This is not possible!");
 		
-		return ((double)success)/nets.keySet().size();
+		return result;
+		//if (success==nets.keySet().size()) return 1;
+		//return 0;
 	}
 	
 	/**extract the time of the last fired activitiy from each net out of a fireSequence**/
@@ -198,6 +202,7 @@ public class PlanExtractor {
 		double sum = 0.0;
 		for(double d:list)
 			sum+=d;
-		return sum/list.size();
+		double result = sum/(double)list.size();
+		return result;
 	}
 }
