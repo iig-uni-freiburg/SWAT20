@@ -38,8 +38,8 @@ public class SWATPropertySettingPanel extends WGPropertySettingPanel {
 		SpringUtilities.makeCompactGrid(this, 27, 2, 5, 5, 5, 5);
 	}
 	
+	@Override
 	public boolean getPNValidation(){
 		return checkPNValidation.isSelected();
 	}
-
 }

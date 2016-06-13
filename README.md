@@ -9,9 +9,9 @@ The Security Workflow Analysis Tool (SWAT) is a platform for modelling and analy
 
 ### Latest Release
 
-The most recent release is SWAT 2.0 v0.0.2, released October 22, 2015.
+The most recent release is SWAT 2.0 v0.0.3-20160613-NIGHTLY, released June 13, 2016.
 
-* Runnable JAR: [swat20-0.0.2.jar](https://github.com/iig-uni-freiburg/SWAT20/releases/download/v0.0.2/swat20-0.0.2.jar)
+* Runnable JAR: [swat20-0.0.3-20160613-NIGHTLY.jar](https://github.com/iig-uni-freiburg/SWAT20/releases/download/v0.0.3-20160613-NIGHTLY/swat20-0.0.3-20160613-NIGHTLY.jar)
 
 SWAT needs a JRE 1.8 installation to run.
 
