@@ -2,7 +2,6 @@ package de.uni.freiburg.iig.telematik.swat.simulation;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -58,14 +57,12 @@ public class PlanExtractor {
 		}
 		
 		while (true){
-		Scanner keyboard = new Scanner(System.in);
-		System.out.println("Enter index to run further simulation");
-		int myint = keyboard.nextInt();
-		//printStuffStatic(set.get(myint)); //TODO: zeig mir, wie die performance an Stelle _myint_ zustande kam...
-
-		wtm.resetAll();
-		wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());
-		new SimulationResult(wtm, getTimeContext()).setVisible(true);
+			Scanner keyboard = new Scanner(System.in);
+			System.out.println("Enter index to run further simulation");
+			int myint = keyboard.nextInt();
+			wtm.resetAll();
+			wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());
+			new SimulationResult(wtm, getTimeContext()).setVisible(true);
 		}
 		//System.out.println("End");
 		//System.exit(0);
@@ -125,17 +122,17 @@ public class PlanExtractor {
 		
 		//TreeMap<WorkflowExecutionPlan,WorkflowExecutionPlan> differentPlanSet = new TreeMap<>();
 		
-		HashMap<FireSequence, LinkedList<FireSequence>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
+		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
 		for(FireSequence seq: listener.getOverallLog()){
 			//WorkflowExecutionPlan plan = new WorkflowExecutionPlan(seq);
 			//differentPlanSet.put(plan,plan);
 			if(!computedResults.containsKey(seq)){ 
-				computedResults.put(seq,new LinkedList<FireSequence>()); //create list
+				computedResults.put(seq,new LinkedList<Double>()); //create list
 			}
 		}
 		
 		for(FireSequence seq:listener.getOverallLog()) //add OverallPerformance
-			computedResults.get(seq).add(seq);
+			computedResults.get(seq).add(getOverallSuccessRatio(seq));
 		
 //		for(FireSequence seq:listener.getOverallLog()){
 //			WorkflowExecutionPlan plan = differentPlanSet.get(seq);
@@ -150,7 +147,7 @@ public class PlanExtractor {
 //		TreeMap<Double, FireSequence> result = new TreeMap<>();
 		TreeSet<WorkflowExecutionPlan> set = new TreeSet<>();
 		
-		for(Entry<FireSequence, LinkedList<FireSequence>> entry:computedResults.entrySet()){
+		for(Entry<FireSequence, LinkedList<Double>> entry:computedResults.entrySet()){
 			//System.out.println(entry.getValue().size()+" entries for: "+entry.getKey().getTransitionString());
 //			result.put(computeAverage(entry.getValue()),entry.getKey());
 			set.add(new WorkflowExecutionPlan(entry.getKey(), entry.getValue().size(), computeAverage(entry.getValue())));
@@ -201,82 +198,11 @@ public class PlanExtractor {
 		return nets;
 	}
 	
-	private double computeAverage(LinkedList<FireSequence> linkedList){
-		Set<String> containingNets = getNetsFromSequence(linkedList);
-		HashMap<String,LinkedList<Double>> individualResults = new HashMap<>();
-		HashMap<String,Double> overallResults = new HashMap<>();
-		
-		//extract timing
-		for(String netName:containingNets){
-			individualResults.put(netName, extractTimingForNet(netName, linkedList));
-		}
-		
-		//compute overall performance
-		for(Entry<String, LinkedList<Double>> entry:individualResults.entrySet()){
-			int success=0;
-			double deadline = context.getDeadlineFor(entry.getKey());
-			for(double d:entry.getValue())
-				if(d<=deadline)success++;
-			overallResults.put(entry.getKey(), ((double)success)/entry.getValue().size());
-		}
-		printStuff(overallResults.values());
-		return computeAverage(overallResults.values());
-		
-
-	}
-	
-	public void printStuff(Collection<Double> values) {
-		System.out.print("Result: "+computeAverage(values)+" ");
-		for(double d: values){
-			System.out.print(d+",");
-		}
-		
-	}
-	
-//	public static void printStuffStatic(Collection<Double> values) {
-//	System.out.print("Result: "+computeAverageStatic(values)+" ");
-//	for(double d: values){
-//		System.out.print(d+",");
-//	}
-//	}
-
-
-	private double computeAverage(Collection<Double> list){
+	private double computeAverage(List<Double> list){
 		double sum = 0.0;
 		for(double d:list)
 			sum+=d;
 		double result = sum/(double)list.size();
-		return result;
-	}
-	
-//	private static double computeAverageStatic(Collection<Double> list){
-//		double sum = 0.0;
-//		for(double d:list)
-//			sum+=d;
-//		double result = sum/(double)list.size();
-//		return result;
-//	}
-
-
-	private Set<String> getNetsFromSequence(LinkedList<FireSequence> linkedList) {
-		HashSet<String> result = new HashSet<>();
-		for(FireSequence seq:linkedList)
-			for(FireElement e:seq.getSequence())
-				result.add(e.getTransition().getNet().getName());
-		return result;
-	}
-	
-	private LinkedList<Double> extractTimingForNet(String netName,LinkedList<FireSequence> sequences){
-		LinkedList<Double> result = new LinkedList<>();
-		for(FireSequence seq:sequences){
-			double time = 0;
-			for(FireElement e:seq.getSequence()) {
-				if (e.getTransition().getNet().getName().equals(netName)){
-					time = e.getEndTime();
-				}
-			}
-			result.add(time);
-		}
 		return result;
 	}
 }
