@@ -75,7 +75,7 @@ public class SimulationResult extends JFrame {
 		JPanel panel = new JPanel();
 		Dimension d = new Dimension(120, 70);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		String deadline = format.format(tc.getDeadlineFor(netName));
+		String deadline = getDeadlineString(netName);
 		JLabel label = new JLabel("<html> "+getNameDetail(netName)+": <br> "+getSuccessString(netName)+" <br> Deadline: <br>"+deadline+" </html> ");
 		panel.add(label);
 		label.setSize(d);
@@ -86,6 +86,14 @@ public class SimulationResult extends JFrame {
 		panel.add(Box.createHorizontalStrut(2));
 		panel.add(getCummulativeChart(netName));
 		return panel;
+	}
+	
+	private String getDeadlineString(String netName) {
+		try{
+			return format.format(tc.getDeadlineFor(netName));
+		} catch (Exception e){
+			return "";
+		}
 	}
 	
 	private String getNameDetail(String netName) {

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
+import javax.swing.JOptionPane;
+
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -62,6 +64,10 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 	protected void doFancyStuff(ActionEvent e) throws Exception {
 		//Get all TimedNets from Workbench
 		LinkedList<TimedNet> nets = loadNets();
+		
+		if(!checkContexts(nets)){
+			return;
+		}
 
 		if(!nets.isEmpty()){
 			WorkflowTimeMachine timeMachine = WorkflowTimeMachine.getInstance();
@@ -77,6 +83,26 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 		
 	}
 	
+	private boolean checkContexts(LinkedList<TimedNet> nets) {
+		try {
+			SwatComponents comp = SwatComponents.getInstance();
+			for(TimedNet net:nets){
+				if(!comp.getResourceContainer().containsComponent(net.getResourceContextName())){
+					Workbench.errorMessage("Could not access Resource Context for net "+net.getName()+" with name "+net.getResourceContextName(), null, true);
+					return false;
+				}
+				if(!comp.getTimeContextContainer().containsComponent(net.getTimeContextName())){
+					Workbench.errorMessage("Could not access Time Context for net "+net.getName()+" with name "+net.getTimeContextName(), null, true);
+					return false;
+				}
+			}
+		} catch (ProjectComponentException e) {
+			Workbench.errorMessage("Could not access Swat Components", e, true);
+		}
+		
+		return true;
+	}
+
 	private LinkedList<TimedNet> loadNets() throws Exception {
 		LinkedList<TimedNet> nets = new LinkedList<>();
 		int length = SwatTabView.getInstance().getTabCount();
