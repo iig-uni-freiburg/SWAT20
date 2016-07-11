@@ -168,14 +168,8 @@ public class ResourceStore implements NamedComponent{
 			return resources.get(name);
 		}
 		else {
-			System.out.println("Store does not contain Resource "+name);
 			return null;
 		}
-	}
-	
-	/** return the IResource that is stored within this store that has the same name as res**/
-	public IResource getResource(IResource res){
-		return getResource(res.getName());
 	}
 	
 	// Instantiation of resources of type ResourceSet with a given amount
@@ -240,7 +234,7 @@ public class ResourceStore implements NamedComponent{
 			throw new ParameterException("The resource needs to be of type COMPOUND");
 		}
 		if (!alreadyExists(name)){
-			CompoundResource cr = new CompoundResource(name, elements, this);
+			CompoundResource cr = new CompoundResource(name, elements);
 			resources.put(name, cr);
 			//throw new ParameterException("A resource with this name already exists!");
 		}
