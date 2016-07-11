@@ -172,9 +172,9 @@ public class AwesomeResourceContext implements IResourceContext{
 	}
 	
 	protected IResource getResource(String resource) {
-
-		return resourceStore.getResource(resource);
-
+		IResource result = resourceStore.getResource(resource);
+		if (result==null) throw new NullPointerException("Resource "+resource+" not in Resource Store!");
+		return result;
 	}
 
 	

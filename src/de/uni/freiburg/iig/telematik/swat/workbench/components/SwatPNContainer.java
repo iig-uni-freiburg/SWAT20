@@ -156,8 +156,8 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
         analysisContextContainers.put(component.getName(), createNewAnalysisContextContainer(component));
         debugMessage("Create analysis container for added net \"" + component.getName() + "\"");
         analysisContainers.put(component.getName(), createNewAnalysisContainer(component));
-        debugMessage("Create time context container for added net \"" + component.getName() + "\"");
-        timeContextContainers.put(component.getName(), createNewTimeContextContainer(component));
+        //debugMessage("Create time context container for added net \"" + component.getName() + "\"");
+        //timeContextContainers.put(component.getName(), createNewTimeContextContainer(component));
     }
 
     private String getDirectoryAnalysisContexts(String netName) throws Exception {
@@ -295,7 +295,7 @@ public class SwatPNContainer extends AbstractGraphicalPNContainer implements Com
     	componentAdded((AbstractGraphicalPN) this.getComponent(componentName));
         getContainerAnalysisContext(componentName).storeComponents();
         getContainerAnalysis(componentName).storeComponents();
-        getContainerTimeContexts(componentName).storeComponents();
+        //getContainerTimeContexts(componentName).storeComponents();
     }
 
     public void storeAnalysisContexts() throws ProjectComponentException {

@@ -176,7 +176,7 @@ public class ResourceStore implements NamedComponent{
 	public IResource instantiateResource(ResourceType type, String name, int amount){
 		if(!type.equals(ResourceType.SET))
 			throw new ParameterException("Can only instantiate a Resource Set with amount");
-		if (alreadyExists(name)){
+		if (contains(name)){
 			throw new ParameterException("A resource with this name already exists!");
 		}
 		ResourceSet rs = new ResourceSet(name, amount);
@@ -192,7 +192,7 @@ public class ResourceStore implements NamedComponent{
 	
 	// Instantiating all types of Resources when they are given a type and a name only
 	public IResource instantiateResource(ResourceType type, String name){
-		if (alreadyExists(name)){
+		if (contains(name)){
 			throw new ParameterException("A resource with this name already exists!");
 		}
 		Resource result = null;		
@@ -233,7 +233,7 @@ public class ResourceStore implements NamedComponent{
 		if (!type.equals(ResourceType.COMPOUND)){
 			throw new ParameterException("The resource needs to be of type COMPOUND");
 		}
-		if (!alreadyExists(name)){
+		if (!contains(name)){
 			CompoundResource cr = new CompoundResource(name, elements);
 			resources.put(name, cr);
 			//throw new ParameterException("A resource with this name already exists!");
@@ -265,9 +265,8 @@ public class ResourceStore implements NamedComponent{
 	}
 	
 	// Method for checking if a resource object with this name already exists
-	public boolean alreadyExists(String name){		
+	public boolean contains(String name){		
 		return resources.containsKey(name);
-		//TODO: Maybe test if the resources have the same name AND the same type.
 	}
 	
 	/**
