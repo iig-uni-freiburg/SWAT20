@@ -3,16 +3,26 @@ package de.uni.freiburg.iig.telematik.swat.jascha;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.org.apache.xml.internal.security.keys.storage.StorageResolverException;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.removeResourceAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
 public class CompoundResource extends Resource {
 
 	List<IResource> resources = new ArrayList<>();
 	
-	public CompoundResource(String name, List<IResource> elements){
+	@XStreamOmitField
+	private ResourceStore store;
+
+	public CompoundResource(String name, List<IResource> elements, ResourceStore store){
 		super(name);
-		this.resources=elements;
+		this.store=store;
 		type = ResourceType.COMPOUND;
+		for(IResource res:elements)
+			resources.add(res);
 	}
 	
 	public CompoundResource(String name){
@@ -21,11 +31,11 @@ public class CompoundResource extends Resource {
 	}
 	
 	//Konstruktor, bei dem die Ressource gleich in ein ResourceStore eingetragen wird.
-	public CompoundResource(String name, ResourceStore resourceStore){
-		super(name);
-		resourceStore.addResource(this);
-		type = ResourceType.COMPOUND;
-	}
+//	public CompoundResource(String name, ResourceStore resourceStore){
+//		super(name);
+//		resourceStore.addResource(this);
+//		type = ResourceType.COMPOUND;
+//	}
 
 	@Override
 	public boolean isAvailable() {
@@ -34,14 +44,17 @@ public class CompoundResource extends Resource {
 			return false;
 		
 		for (IResource r : resources) {
-			if (!r.isAvailable())
+			if (!store.getResource(r).isAvailable())
 				return false;
 		}
 		return true;
 	}
 	
 	public List<IResource> getConsistingResources(){
-		return resources;
+		ArrayList<IResource> result = new ArrayList<>();
+		for(IResource res:resources)
+			result.add(store.getResource(res));
+		return result;
 	}
 
 	public String getName() {
@@ -66,21 +79,25 @@ public class CompoundResource extends Resource {
 	public void removeRessource(String res){
 		IResource match=null;
 		for (IResource r:resources)
-			if (r.getName().equals(res))
+			if (r.equals(res))
 				match = r;
 		if(match!=null)
 			removeResource(match);
 	}
 	
-	public void removeResource(IResource r){
+	public void removeResource(String r){
 		resources.remove(r);
+	}
+	
+	public void removeResource(IResource r){
+		resources.remove(r.getName());
 	}
 
 	@Override
 	public void use() {
 		//throw new RuntimeException("Not yet implemented");		
 		for (IResource r: resources){
-			r.use();
+			store.getResource(r).use();
 		}
 	}
 
@@ -88,18 +105,27 @@ public class CompoundResource extends Resource {
 	public void unUse() {
 		//throw new RuntimeException("Not yet implemented");		
 		for (IResource r: resources){
-			r.unUse();
+			store.getResource(r).unUse();
 		}		
 	}
 
 	@Override
 	public void reset() {
-		for(IResource r:resources)
-			r.reset();
+		for(IResource r:resources){
+			if(r == null)
+				System.out.println(getName()+": contains a null ressource!");
+			store.getResource(r).reset();
+		}
 	}
 	
 	public String toString(){
 		return "("+name+")";
+	}
+	
+
+	/**Method used for linking the corresponding ResourceStore to this CompoundResource**/
+	public void setStore(ResourceStore store) {
+		this.store = store;
 	}
 
 }

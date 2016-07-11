@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import com.thoughtworks.xstream.XStream;
 
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
+import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 
 public class ResourceStoreParser {
@@ -24,11 +26,21 @@ public class ResourceStoreParser {
 		try {
 			String content = sb.toString();
 			ResourceStore store = (ResourceStore) new XStream().fromXML(content);
+			linkCompountResources(store);
 			return store;
 		} catch (ClassCastException e) {
 			throw new IOException("Could not convert to ResourceContext: ", e);
 		}
 
+	}
+	
+	static private void linkCompountResources(ResourceStore store){
+		for(IResource res:store.getAllResources()){
+			if(res instanceof CompoundResource){
+				CompoundResource cRes=(CompoundResource) res;
+				cRes.setStore(store);
+			}
+		}
 	}
 
 }
