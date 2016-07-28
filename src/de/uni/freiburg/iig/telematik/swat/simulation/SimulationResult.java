@@ -60,6 +60,7 @@ public class SimulationResult extends JFrame {
 		setSize(800, 600);
 		setPreferredSize(new Dimension(600, 500));
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		setTitle("Simulation Result");
 		//add(getButtons());
 		JPanel content = new JPanel();
 		content.setLayout(new BoxLayout(content,BoxLayout.Y_AXIS));
