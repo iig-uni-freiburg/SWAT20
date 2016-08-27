@@ -65,7 +65,8 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		super(title+": "+context.getName());
 		this.context = (AwesomeResourceContext) context;
 		setup();
-		for(String s:this.context.getContainingActivities()){
+		//for(String s:this.context.getContainingActivities()){
+		for(String s:this.context.getSortedActivities()){
 			activities.addElement(s);
 		}
 		
@@ -104,11 +105,13 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 	
 	public void updateLists(){
 		activities.clear();
-		for(String activites: context.getContainingActivities())
+		//for(String activites: context.getContainingActivities())
+		for(String activites: context.getSortedActivities())
 			activities.addElement(activites);
 		
 		resources.clear();
-		for(IResource res:context.getResourceStore().getAllResources())
+		//for(IResource res:context.getResourceStore().getAllResources())
+		for(IResource res:context.getResourceStore().getAllResourcesSortedByName())
 			resources.addElement(res);
 		
 		activitiesList.repaint();
@@ -176,7 +179,8 @@ public class ResourceContextGUI extends JFrame implements ResourceStoreListener,
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		resourceList.setModel(resources);
 
-		for (IResource res : context.getResourceStore().getAllResources())
+		//for (IResource res : context.getResourceStore().getAllResources())
+		for (IResource res : context.getResourceStore().getAllResourcesSortedByName())
 			resources.addElement(res);
 
 		JScrollPane listScroller = new JScrollPane(resourceList);

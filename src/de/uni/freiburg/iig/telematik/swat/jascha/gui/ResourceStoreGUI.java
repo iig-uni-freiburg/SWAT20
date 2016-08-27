@@ -120,9 +120,11 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 		list = new JList<>();
 		list.setModel(model);
 		list.addMouseListener(new ResourceDetailAction());
-		for(IResource res:resourceStore.getAllResources())
+		//for(IResource res:resourceStore.getAllResources())
+		for(IResource res:resourceStore.getAllResourcesSortedByName())
 			model.addElement(res);
-        list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        //list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		list.setLayoutOrientation(JList.VERTICAL_WRAP);
         list.setVisibleRowCount(-1);
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         JScrollPane listScroller = new JScrollPane(list);
@@ -154,7 +156,13 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String newName= JOptionPane.showInputDialog("new resource name:", list.getSelectedValue().getName());
-				context.renameResource(list.getSelectedValue().getName(), newName);
+				if(newName != null && newName.length() > 0){
+					context.renameResource(list.getSelectedValue().getName(), newName);
+				}
+				else {
+					System.out.println("The new resource name is empty");
+				}
+				
 			}
 		});
 		return rename;

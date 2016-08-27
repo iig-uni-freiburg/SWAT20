@@ -53,15 +53,18 @@ public class ContextRepo {
 
 	public static IResourceContext getResourceContext() {
 		if (resourceContext == null) {
+			
+			//Change name of Store in Context constructor
 			 resourceContext = new AwesomeResourceContext();
-			 resourceContext.setName("TestRepoContext");
+			 //resourceContext.setName("TestRepoContext");
 			 
 			 ResourceStore store = resourceContext.getResourceStore();
 			 
 			 /**
 			  * LogfileResourceExtractor-Test
 			  * Hier den Dateipfad anpassen
-			  */
+			  */	
+			 
 			
 			//LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/smallLog.mxml"), SwatLogType.MXML);
 			LogModel testModel = new LogModel(new File("/D:/Uni/MASTER/MASTERPROJEKT/workspace/P2P-log-v6-anonymized.mxml"), SwatLogType.MXML);
@@ -92,6 +95,7 @@ public class ContextRepo {
 			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Maurer-1");
 			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Kassierer-1");
 			resourceContext.getResourceStore().instantiateResource(ResourceType.HUMAN, "Hausmeister");
+			
 			
 			//Test fuer ResourceSets und SimpleResources. Hausmeister kommt in zwei Sets vor, Loeschverhalten wie gewuenscht.
 			IResource handerwerkerSet = resourceContext.getResourceStore().instantiateResource(ResourceType.SET, "Handwerker", 5);
@@ -128,6 +132,7 @@ public class ContextRepo {
 				System.out.println(resourceContext.getAllowedResourcesFor(activity));
 			}
 		}
+	
 		return resourceContext;
 	}
 

@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.jascha;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +47,10 @@ public class AwesomeResourceContext implements IResourceContext{
 	
 	public AwesomeResourceContext() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public AwesomeResourceContext(String name) {
+		resourceStore.setName(name);
 	}
 	
 	public ResourceStore getResourceStore(){
@@ -305,6 +310,24 @@ public class AwesomeResourceContext implements IResourceContext{
 		return resources.keySet();
 	}
 	
+	public List<String> getSortedActivities(){
+		ArrayList<String> result = new ArrayList<>();
+		Set<String> res = resources.keySet();
+		for (String s:res){
+			result.add(s);
+		}
+		try{
+			Collections.sort(result);
+		} catch (NullPointerException e) {
+			System.out.println("There is a problem with the sorting of activities");
+			result.clear();
+			result.addAll(getContainingActivities());
+			return result;
+		}
+		System.out.println("Sorting of acitivties ended well");
+		return result;
+	}
+	
 	public AwesomeResourceContext clone(){
 		AwesomeResourceContext clone = (AwesomeResourceContext) new XStream().fromXML(new XStream().toXML(this));
 		clone.setResourceStore(getResourceStore());
@@ -317,6 +340,8 @@ public class AwesomeResourceContext implements IResourceContext{
 	}
 	
 	public void renameResource(String oldName, String newName){
+		
+		System.out.println("New resource name is " + newName);
 		resourceStore.renameResource(oldName, newName);
 		
 		

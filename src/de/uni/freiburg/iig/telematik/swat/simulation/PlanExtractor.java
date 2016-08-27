@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.simulation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,14 +34,18 @@ public class PlanExtractor {
 	//private HashMap<String, ArrayList<FireSequence>> fireSequence;
 	private AwesomeTimeContext context;
 	private TreeSet<WorkflowExecutionPlan> plans = new TreeSet<>();
+	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
+	private static int numberOfRuns = 54321;
 	
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
-		//String net1String="Drill_Hole";
-		//String net2String="Drill_Hole1";
-		String net1String="invoiceIn";
-		String net2String="invoiceOut";
+		String net1String="EasyTest1";
+		String net2String="EasyTest2";
+		//String net1String="Abriss";
+		//String net2String="Tiefbau";
+		//String net1String="invoiceIn";
+		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
 		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
@@ -48,17 +53,18 @@ public class PlanExtractor {
 		
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet(net2.getPetriNet());
-		wtm.simulateAll(54321);
+		wtm.simulateAll(numberOfRuns);
 
 		PlanExtractor ex = new PlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
 		//PlanExtractor ex = new PlanExtractor();
 		ArrayList<WorkflowExecutionPlan> set = ex.getExecutionPlan();
 		
 		ex.printResults(set);
+		ex.getOverallFitness(set, numberOfRuns);
 		
 		while (true){
 			Scanner keyboard = new Scanner(System.in);
-			System.out.println("Enter index to run further simulation. Enter 98 or 99 to start simple optimization");
+			System.out.println("Enter index to run further simulation. Enter 97, 98 or 99 to start simple optimization");
 			int myint = keyboard.nextInt();
 			wtm.resetAll();
 			
@@ -72,6 +78,23 @@ public class PlanExtractor {
 				
 				// Another basic approach for combination of results
 				ex.simulateTopTen(set, wtm, ex);
+				break;
+			
+			case 97:
+				/**
+				if (currentSet != null){
+					int r = 0;
+					for (int i=0; i < 10; i++){
+						r = ThreadLocalRandom.current().nextInt(set.size()-7);
+						currentSet.add(set.get(r));
+					
+					
+					ex.simulateMultipleSequences(currentSet, wtm, ex);
+				**/
+				//} else {
+					ex.simulateMultipleSequences(set, wtm, ex);
+				//}
+				
 				break;
 
 			default:
@@ -104,6 +127,29 @@ public class PlanExtractor {
 		//System.exit(0);
 	}
 	
+	private void simulateMultipleSequences(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, PlanExtractor ex) throws PNException {
+			ArrayList<FireSequence> sequences = new ArrayList<FireSequence>();
+			int runs = 20000;
+			int random = 0;
+			// add top 5 and also add 5 random (that are not Top5)
+			// change set.size()-7 to any number to get different Tops, e.g. set.size()-12 for Top10
+			for (int i = set.size()-2; i > set.size()-7; i--){
+				sequences.add(set.get(i).getSeq());
+				random = ThreadLocalRandom.current().nextInt(set.size()-7);
+				sequences.add(set.get(random).getSeq());
+			}
+			
+			plans.clear();			
+			wtm.simulateMultipleSequences(sequences, runs);
+			ArrayList<WorkflowExecutionPlan> executionPlans = ex.getExecutionPlan();
+			getOverallFitness(executionPlans, runs);
+			printResults(executionPlans);
+			currentSet = executionPlans;
+		
+		
+		
+	}
+
 	// Simple simulation that takes the ten best results and runs each 5000 times to see which one is the best
 	private void getBestResultFromTop10 (ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, PlanExtractor ex) throws PNException{		
 		int resultSetSize = set.size()-2; //remove broken result
@@ -184,9 +230,22 @@ public class PlanExtractor {
 			}
 	}
 	
+	private void getOverallFitness(ArrayList<WorkflowExecutionPlan> set, int runs){
+		float sum = 0;
+		float overallFitness;
+		// Weighted sum of sequence performances
+		set.remove(set.size()-1);
+		for (WorkflowExecutionPlan plan:set){
+			sum += plan.getNumberOfRuns() * plan.getPerformance();
+			//System.out.println("Sum = " + sum);
+			}
+		overallFitness = sum / runs;
+		System.out.println("Overall Fitness is: " + overallFitness);
+	}
+	
 	
 	public PlanExtractor() throws IOException, ProjectComponentException{
-		this(WorkflowTimeMachine.getInstance(),StatisticListener.getInstance());
+		this(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
 	}
 
 	private PlanExtractor(WorkflowTimeMachine wtm, StatisticListener listener) throws IOException, ProjectComponentException {
@@ -308,7 +367,7 @@ public class PlanExtractor {
 			String netName=element.getTransition().getNet().getName();
 			double time = element.getEndTime();
 			if(nets.containsKey(netName)&&nets.get(netName)>time)
-				System.out.println("Something wrong");
+				System.out.println("Something wrong in extractSimulatedTiming");
 			nets.put(netName,element.getEndTime());
 		}
 		return nets;

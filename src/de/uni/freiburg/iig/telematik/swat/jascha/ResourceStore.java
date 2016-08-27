@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -180,7 +182,8 @@ public class ResourceStore implements NamedComponent{
 			throw new ParameterException("A resource with this name already exists!");
 		}
 		ResourceSet rs = new ResourceSet(name, amount);
-		resources.put(name, rs);		
+		resources.put(rs.getName(), rs);
+		//resources.put(name, rs);		
 		informListenersOfResourceChange(rs);
 		for(IResource res:rs.getRes()) {
 			resources.put(res.getName(), res);
@@ -282,6 +285,31 @@ public class ResourceStore implements NamedComponent{
 		}
 		return result;
 	}
+		
+	public IResource[] getAllResourcesSortedByName(){
+		IResource[] result = new IResource[resources.values().size()];
+		String[] names = new String[resources.values().size()];
+		int i = 0;
+		for(IResource res:resources.values()){
+				names[i]=res.getName();
+				i++;
+		}
+		
+		try{
+			Arrays.sort(names);
+		} catch (NullPointerException e) {
+			System.out.println("There is a problem with the sorting of resources");
+			return getAllResources();
+		}
+		int j = 0;
+		for (String name:names){
+			result[j] = resources.get(name);
+			j++;
+		}
+		System.out.println("Sorting of resources ended well");
+		return result;
+	}
+	
 	
 	public void addResourceStoreListener(ResourceStoreListener listener){
 		testListenersList();
