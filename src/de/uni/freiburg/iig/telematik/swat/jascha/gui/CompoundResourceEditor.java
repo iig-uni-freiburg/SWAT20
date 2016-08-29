@@ -104,7 +104,7 @@ public class CompoundResourceEditor extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				IResource remove=list.getSelectedValue();
-				res.removeResource(remove);
+				res.removeResource(remove.getName());
 				model.removeElement(remove);
 			}
 		});

@@ -1,15 +1,24 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
+// Resource Sets are Ressources that group similar resources. 
+// If an activity uses a resource set it means it can use ANY ONE resource of the resources in the set.
+// IDEA: If more than one resource of a set (but not specific resources) are needed, make a compound resource where the set is added several times.
 public class ResourceSet extends Resource {
 	
 	List<Resource> resources = new LinkedList<>();
+	int size = 0;
 	
+	public int getSize() {
+		return size;
+	}
+
 	public List<Resource> getRes() {
 		return resources;
 	}
@@ -17,6 +26,7 @@ public class ResourceSet extends Resource {
 	public ResourceSet(String name, int amount) {
 		this.name = name+"-Set";
 		this.type=ResourceType.SET;
+		this.size = amount;
 		for (int i = 0;i<amount;i++){
 			resources.add(new SimpleResource(name+"-"+i, true));
 		}
@@ -32,6 +42,7 @@ public class ResourceSet extends Resource {
 		else {
 			throw new ParameterException("Can only put resources of type SIMPLE and HUMAN into resource sets");
 		}
+		size = resources.size();
 
 	}
 	
@@ -46,13 +57,19 @@ public class ResourceSet extends Resource {
 			{
 				sr.updateAssociatedSets(UpdateType.DECREASE);
 				resources.remove(item);
+				size--;
 			}		
 		}
 
+	//A ResourceSet is available if ONE of the contained resources is available!
 	@Override
 	public boolean isAvailable() {
 		
-		if(isDisabled)
+		 return isOneAvailable();
+		 
+		/**
+		  if(isDisabled)
+		 
 			return false;
 		
 		for (Resource r:resources){
@@ -61,21 +78,44 @@ public class ResourceSet extends Resource {
 			}
 		}
 		return true;
+		*/
 	}
 
+	//Using a ResourceSet means using ONE of the contained resources
 	@Override
 	public void use() {
+		
+		getRandomAvailable().use();
+		
+		/**
 		for (Resource r:resources){
 			r.use();
 		}
+		*/
 
+	}
+	
+	//To be able to tell which Resource of a resource set has to be used/unused 
+	//we have to "pierce" through the set to the contained simple/human resources
+	public String getResourceNameToUse(){		
+		return getRandomAvailable().getName();
+		
+	}
+	
+	public Resource getResourceToUse(){		
+		return getRandomAvailable();
+		
 	}
 
 	@Override
 	public void unUse() {
+		
+		//System.out.println("Someone tried to directly unUse() a ResourceSet"); 
+		/**
 		for (Resource r:resources){
 			r.unUse();
 		}
+		*/
 
 	}
 
@@ -102,6 +142,7 @@ public class ResourceSet extends Resource {
 	}
 	
 	public boolean isOneAvailable() {
+		updateSize();
 		for(Resource r:resources){
 			if (r.isAvailable()){
 				return true;
@@ -117,6 +158,30 @@ public class ResourceSet extends Resource {
 			}
 		}
 		throw new ParameterException("There is no resource available in this ResourceSet!");
+	}
+
+	public boolean checkAvailabiltyWithDuplicates(int dp) {
+		updateSize();
+		List<Resource> result = new ArrayList<Resource>();
+		for (Resource r:resources){
+			if(r.isAvailable()){
+				if (!result.contains(r)){
+					result.add(r);
+				}
+			}
+			if (result.size()>=dp){
+				System.out.println("There are at least " + dp + " resources from this set available");
+				return true;
+			}
+			
+			
+		}
+		return false;		
+		
+	}
+	
+	public void updateSize(){
+		size = resources.size();
 	}
 
 }

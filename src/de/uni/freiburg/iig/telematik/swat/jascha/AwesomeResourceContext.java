@@ -213,18 +213,27 @@ public class AwesomeResourceContext implements IResourceContext{
 			//return dummy resource
 			ArrayList<String> dummy = new ArrayList<>(1);
 			dummy.add("dummy");
+			System.out.println("This activity doesn't exist so we got you a dummy!");
 			return dummy;
 		}
 		List<IResource> possibleResources = getResourceList(activity);
 		LinkedList<String> result = new LinkedList<>();
 		for (IResource possibleResource : possibleResources) {
-			if (possibleResource.isAvailable()) {
-				result.add(possibleResource.getName());
+			if (possibleResource.isAvailable()) {				
 				if(blockResources){
+					if(((Resource)possibleResource).getType() == ResourceType.SET){
+						//If the available resource is a resource set we need to get the contained resource that is to be used
+						String resourceFromSet = ((ResourceSet)possibleResource).getResourceNameToUse(); 
+						result.add(resourceFromSet);
+						resourceStore.getResource(resourceFromSet).use();
+						return result;
+						
+					}
 					//System.out.println("Blocking "+possibleResource.getName());
 					possibleResource.use();
 				}
 				//System.out.println("Blocking "+printList(result));
+				result.add(possibleResource.getName());
 				return result;
 			}
 		}

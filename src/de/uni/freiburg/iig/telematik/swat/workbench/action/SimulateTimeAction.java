@@ -31,7 +31,7 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 
 	private static final long serialVersionUID = 1729386246000057281L;
 
-	private static int numberOfRuns = 12345; //original:50000
+	private static int numberOfRuns = 5; //original:50000
 	private int numberOfBins = 100;
 
 	private boolean drainPlaceReached = false;
