@@ -75,6 +75,7 @@ public class ResourceStore implements NamedComponent{
 	public void removeResource(IResource input) {
 		Resource item = (Resource) input;
 		ResourceType type = item.getType();
+		boolean successfulRemoval = false;
 		switch (type) {
 		case SET:
 			removeResourceSet(item);
@@ -89,7 +90,7 @@ public class ResourceStore implements NamedComponent{
 
 		case COMPOUND:
 			//TODO: Was tun bei compound resources? Sollten deren Einzelteile auch entfernt werden - und andersrum,
-			//muessen dann nicht alle Ressourcen �berpr�ft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
+			//muessen dann nicht alle Ressourcen ueberprueft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
 			System.out.println("Trying to remove compound ...");
 			break;
 			
@@ -106,9 +107,16 @@ public class ResourceStore implements NamedComponent{
 			System.out.println("Missing method to remove resources of type: "+type.toString());
 			break;
 		}
+		if (successfulRemoval){
+			//The Resource was removed successful, so we can inform the listener about it
+			informListenersOfResourceRemoval(item);
+		} else {
+			//to keep it working until the removal fully works as intended
+			resources.remove(item.getName());
+			informListenersOfResourceRemoval(item);
+		}
 		
-		resources.remove(item.getName());
-		informListenersOfResourceRemoval(item);
+
 	}
 
 	private void removeResourceSet(IResource item) {

@@ -22,6 +22,14 @@ public class ResourceSet extends Resource {
 	public List<Resource> getRes() {
 		return resources;
 	}
+	
+	public List<String> getResNames(){
+		List<String> result = new ArrayList<String>();
+		for (Resource r:resources){
+			result.add(r.getName());
+		}
+		return result;
+	}
 
 	public ResourceSet(String name, int amount) {
 		this.name = name+"-Set";
@@ -142,7 +150,10 @@ public class ResourceSet extends Resource {
 	}
 	
 	public boolean isOneAvailable() {
+		
+		//only needed to update old ResourceStore entries with this new parameter
 		updateSize();
+		
 		for(Resource r:resources){
 			if (r.isAvailable()){
 				return true;
@@ -161,7 +172,10 @@ public class ResourceSet extends Resource {
 	}
 
 	public boolean checkAvailabiltyWithDuplicates(int dp) {
+		
+		//only needed to update old ResourceStore entries with this new parameter
 		updateSize();
+		
 		List<Resource> result = new ArrayList<Resource>();
 		for (Resource r:resources){
 			if(r.isAvailable()){
@@ -182,6 +196,16 @@ public class ResourceSet extends Resource {
 	
 	public void updateSize(){
 		size = resources.size();
+	}
+
+	public boolean checkIfResourceIsPart(String resourceName) {
+		for(Resource r:resources){
+			if (r.getName().equals(resourceName)){
+				return true;
+			}
+		}
+		return false;
+		
 	}
 
 }
