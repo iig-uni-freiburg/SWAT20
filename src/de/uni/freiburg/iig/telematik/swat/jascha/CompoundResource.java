@@ -11,10 +11,11 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
 public class CompoundResource extends Resource {
 
-	List<IResource> resources = new ArrayList<>();
-	List<String> namesOfDuplicateSets = new ArrayList<>();
+	private List<IResource> resources = new ArrayList<>(); //Resources that are part of this CompoundResource
+	
+	List<String> namesOfDuplicateSets = new ArrayList<>(); //List of ResourceSets that are multiple times in this CompoundResource
 	Map<String, Integer> resourceSets = new HashMap<>(); // <Name, number of occurrences>
-	List<Resource> usedSetResources = new ArrayList<>();
+	List<Resource> usedSetResources = new ArrayList<>(); //Which resources of a set are used by using this CompoundResource
 	
 	public CompoundResource(String name, List<IResource> elements){
 		super(name);
@@ -22,6 +23,7 @@ public class CompoundResource extends Resource {
 		type = ResourceType.COMPOUND;
 	}
 	
+	//This one is being used
 	public CompoundResource(String name){
 		super(name);
 		type = ResourceType.COMPOUND;
@@ -35,13 +37,10 @@ public class CompoundResource extends Resource {
 	}
 
 	@Override
-	public boolean isAvailable() {
-		
-		System.out.println("Checking availability for Resource: " + this.name);
-		
+	public boolean isAvailable() {		
+		//System.out.println("Checking availability for Resource: " + this.name);		
 		if(isDisabled)
-			return false;
-		
+			return false;		
 		if (!resourceSets.isEmpty()){
 			//System.out.println("There are ResourceSets in this CompoundResource!");
 			boolean duplicates = false;
@@ -61,15 +60,13 @@ public class CompoundResource extends Resource {
 			//System.out.println("No ResourceSets in this CompoundResource");
 			if (!r.isAvailable()){
 				return false;
-				}	
-				
+				}				
 			}
 		}
 		return true;
 	}
 	
-	private boolean checkAvailabilityWithDuplicateSets() {
-		
+	private boolean checkAvailabilityWithDuplicateSets() {		
 			//System.out.println("Checking for availability with duplicates");
 			for (IResource r:resources){
 				if(((Resource)r).getType() == ResourceType.SET){
@@ -78,26 +75,24 @@ public class CompoundResource extends Resource {
 					if (dp > 1){
 						//System.out.println("There are more than one");
 						if(!(((ResourceSet)r).checkAvailabiltyWithDuplicates(dp))){
-							System.out.println("The DupliSet is not available");
+							//System.out.println("The duplicate set is not available");
 							return false;
-						}
-						
+						}						
 					} else if (!r.isAvailable()) {
-						System.out.println("It wasnt a MultiSet but it's unavailable");
+						//System.out.println("It wasnt a MultiSet but it's unavailable");
 						return false;
 					}
 				} 
 				else if(!r.isAvailable()){
-					System.out.println("No set, but unavailable");
+					//System.out.println("No set, but unavailable");
 					return false;
 				}
 			}			
-		System.out.println("Everything's fine, all Res are available");
-		return true;
-		
+		//System.out.println("Everything's fine, all Res are available");
+		return true;		
 	}
 
-	public List<IResource> getConsistingResources(){
+	public List<IResource> getResources(){
 		return resources;
 	}
 	
@@ -117,8 +112,7 @@ public class CompoundResource extends Resource {
 		}
 		for (String s:resultSet){
 			resultList.add(s);
-		}
-		
+		}		
 		return resultList;
 	}
 
@@ -134,32 +128,35 @@ public class CompoundResource extends Resource {
 //			return super.getName();
 //		return super.getName()+": "+result;
 		return super.getName();
-	}
+	}	
 	
-	
-	public void addResource(IResource r){
-
+	public void addResource(IResource r){		
+			//If there is a Collision with the resource, it can't be added
+			if (CollisionDetection(r)){
+				System.out.println("Can't add " +r.getName()+" because there is a collision.");
+				return;
+			}			
 			if (r instanceof ResourceSet){
 				addSetToResources((ResourceSet)r);
 					}
+			/**
 			else if (r instanceof CompoundResource){
 				List<String> thisCompoundList = getAllLinkedResourceNames();
 				List<String> newCompoundList = ((CompoundResource) r).getAllLinkedResourceNames();
 				if(checkForIntersection(thisCompoundList, newCompoundList)){
 					System.out.println("The resource " + r.getName() + " overlaps with " + name + " so it can't be added!");
-				}
+					}
 				else {
 					//the resources don't overlap, so it can be added
 					resources.add(r);
-				}
-			}
-			else {
-				if (!checkForDuplicates(r)) {
-						//Resource is not a duplicate, add it to compound
-						resources.add(r);	
 					}
-					//the resource is already part of the CompoundResource, don't add it again.
 				}
+			*/
+			else {
+				//possible duplicates have been already checked
+				resources.add(r);
+				}
+			
 			//Debug
 			System.out.println("The resources in this compound resource are");
 			for (IResource res:resources){
@@ -167,17 +164,6 @@ public class CompoundResource extends Resource {
 				}		
 	}
 	
-	private boolean checkForIntersection(List<String> thisCompoundList, List<String> newCompoundList) {
-		for (String outer:thisCompoundList){
-			for (String inner:newCompoundList){
-				if (inner.equals(outer)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	public boolean addResource(IResource r, boolean successNecessary){
 		if (successNecessary){
 			int lengthOld = resources.size();
@@ -190,74 +176,71 @@ public class CompoundResource extends Resource {
 			return false;
 		}
 		//should never get here;
-		System.out.println("Shouldn't get to here, use addResource(IResource r, true) only");
+		System.out.println("Shouldn't get here, use addResource(IResource, true) only");
 		return false;
+	}
 
+	public boolean checkForDuplicateInCompound(IResource r){
+		List<CompoundResource> compounds = new ArrayList<CompoundResource>();	
+		for (IResource res:getResources()){
+			if(res instanceof CompoundResource){
+				compounds.add((CompoundResource)res);
+			}
+		}
+		for (CompoundResource cr:compounds){
+			System.out.println("There are CR in this CR!");
+			if (cr.CollisionDetection(r)) return true;
+		}		
+		return false;
 	}
 	
-	private boolean checkForDuplicates(IResource r) {
+	public boolean checkforDuplicateInSets(IResource r){
 		String inputName = r.getName();
-		
-		if (!resourceSets.isEmpty() && (r instanceof SimpleResource || r instanceof HumanResource)){
-			//Take r and check if its present in one of the sets in resourceSets
-			for (String resourceSetName:resourceSets.keySet()){
-				for(IResource compoundElement:resources){
-					if (resourceSetName.equals(compoundElement.getName())){
-						if(((ResourceSet)compoundElement).checkIfResourceIsPart(inputName))
-							System.out.println("The resource "+ inputName +
-									" is already in this CompoundResource (as part of " + resourceSetName +")");
-							return true;
-					}
+		//Take r and check if its present in one of the sets in resourceSets
+		for (String resourceSetName:resourceSets.keySet()){
+			for(IResource compoundElement:resources){
+				if (resourceSetName.equals(compoundElement.getName())){
+					if(((ResourceSet)compoundElement).checkIfResourceIsPart(inputName)){
+						System.out.println("The resource "+ inputName +
+								" is already in this CompoundResource (as part of " + resourceSetName +")");
+						return true;
+					}							
 				}
 			}
 		}
-		
-		for (IResource res:resources){
-			if (inputName.equals(res.getName())){
-				//there is a duplicate resource which is not a ResourceSet
-				return true;
-			}
-			
-		}
 		return false;
 	}
 
-	public void addSetToResources(ResourceSet r){
-		
+	public void addSetToResources(ResourceSet r){		
 		if (checkIfPartOfSetIsAlreadyInside(r)){
 			System.out.println("A resource which is part of this Set is already in the CompoundResource.\nPlease remove it first.");
 			return;
-		}
-		
+		}		
 		String resourceName = r.getName();
 		if((!resourceSets.containsKey(resourceName)) || resourceSets.get(resourceName) == 0){
 			resourceSets.put(resourceName, 1);
 			resources.add(r);
 		} 
-		else	{
-			for (String res:resourceSets.keySet()){
-				if (res.equals(resourceName)){
-					int i = resourceSets.get(resourceName);
-					System.out.println(r.getSize());
-					if (r.getSize() <= i){
-						System.out.println("The ResourceSet is not big enough to be added to a CompoundResource more than " +i+" times!");
-						return;
-					} else {
-						//System.out.println("Old Value is: " + resourceSets.get(resourceName));
-						resourceSets.replace(resourceName, i+1);
-						//System.out.println("New Value is: " + resourceSets.get(resourceName))
-						System.out.println("The ResourceSet is now "+(i+1)+" times in this CompoundResource");
-						resources.add(r);
-					}
-
-					
-				}
-			}	
-			
+		else{
+			int i = resourceSets.get(resourceName);
+			if (r.getSize() <= i){
+				System.out.println("The ResourceSet is not big enough to be added to a CompoundResource more than "+i+" times!");
+				return;
+			} else {
+				resourceSets.replace(resourceName, i+1);
+				resources.add(r);
+			}						
 		}
 	}
 	
-	private boolean checkIfPartOfSetIsAlreadyInside(ResourceSet r) {
+	private boolean checkIfPartOfSetIsAlreadyInside(ResourceSet r) {		
+		List<Resource> simpleList = new ArrayList<Resource>();
+		simpleList = r.getRes();
+		for (Resource res:simpleList){
+			if (CollisionDetection(res)) return true;
+		}
+		return false;
+		/**
 		List<IResource> simpleHumanList = new ArrayList<IResource>();
 		for (IResource res:resources){
 			if (res instanceof SimpleResource || res instanceof HumanResource){
@@ -270,23 +253,25 @@ public class CompoundResource extends Resource {
 			}
 		}
 		return false;
+		*/
 	}
 
 	public void removeResource(String res){
 		IResource match=null;
-		for (IResource r:resources)
+		for (IResource r:this.getResources()){
 			if (r.getName().equals(res)){
-					match = r;
-					String matchName = match.getName();
-					if(resourceSets.containsKey(matchName)){					
-						resourceSets.replace(matchName, resourceSets.get(matchName)-1);
-						System.out.println("Removed " + matchName + " from " + this.name +
-								" Compound, duplicate value is: "+resourceSets.get(matchName));
-				}
-					removeResource(match);
-					//return now so the set gets removed only once.
-					return;
+				match = r;
+				String matchName = match.getName();
+				if(resourceSets.containsKey(matchName)){					
+					resourceSets.replace(matchName, resourceSets.get(matchName)-1);
+					//System.out.println("Removed " + matchName + " from " + this.name +
+					//		" Compound, duplicate value is: "+resourceSets.get(matchName));
+					}
+				removeResource(match);
+				//return now so the set gets removed only once.
+				return;		
 			}
+		}
 	}
 	
 	public void removeResource(IResource r){
@@ -295,19 +280,16 @@ public class CompoundResource extends Resource {
 
 	@Override
 	public void use() {		
-		for (IResource r: resources){
-			
+		for (IResource r: resources){			
 			//if the Resource is a set, save which resource of the set is used
 			if (((Resource)r).getType() == ResourceType.SET){				
 				Resource resourceToUse =((ResourceSet)r).getRandomAvailable();
 				resourceToUse.use();
 				usedSetResources.add(resourceToUse);
-				//namesOfUsedSetResources.add(resourceToUse.getName());
-				
+				//namesOfUsedSetResources.add(resourceToUse.getName());				
 			} else {
 				r.use();	
-			}
-			
+			}			
 		}
 	}
 
@@ -332,5 +314,53 @@ public class CompoundResource extends Resource {
 	public String toString(){
 		return "(" + name + ")";
 	}
+	
+	public boolean CollisionDetection(IResource r){
+		ResourceType type = ((Resource)r).getType();
+		switch (type) {		
+		case SIMPLE:
+			//Test for collision with resources in: Compounds, Sets and in this resource's list
+		case HUMAN:	
+			//Test for collision with resources in: Compounds, Sets and in this resource's list
+			if (getResources().contains(r)) return true;
+			if (checkforDuplicateInSets(r)) return true;	
+			if (checkForDuplicateInCompound(r)) return true;
+			break;
+			
+		case SHARED:
+			//Test for collision with resources in: Compounds and in this resource's list
+			if (getResources().contains(r)) return true;
+			if (checkForDuplicateInCompound(r)) return true;
+			break;
+			
+		case SET:
+			//Test for collision with resources in: Compounds and in this resource's list
+			if (getResources().contains(r)) return true;	
+			if (checkForDuplicateInCompound(r)) return true;
+			//Test contents of ResourceSet for collisions
+			if (checkIfPartOfSetIsAlreadyInside((ResourceSet)r)) return true;
+			break;
+			
+		case COMPOUND:
+			//Test for collision with resources in: Compounds and in this resource's list
+			if (getResources().contains(r)) return true;			
+			if (checkForDuplicateInCompound(r)) return true;
+			//Test contents of CompoundResource for collisions
+			if(checkCompoundContentsForCollison((CompoundResource)r)) return true;
+			break;
+			
+		default:
+			System.out.println("Missing method for collision detection for type " + type + ".");
+			break;
+		}
+		System.out.println("No collision for "+r.getName()+ " detected");
+		return false;
+	}
 
+	private boolean checkCompoundContentsForCollison(CompoundResource r) {		
+		for (IResource res:r.getResources()){
+			if (CollisionDetection(res)) return true;			
+		}		
+		return false;
+	}
 }

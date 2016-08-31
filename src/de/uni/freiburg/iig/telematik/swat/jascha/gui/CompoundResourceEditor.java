@@ -36,7 +36,7 @@ public class CompoundResourceEditor extends JFrame{
 	public CompoundResourceEditor (CompoundResource res, JList<IResource> sourceList){
 		this.res=res;
 		resources=extractResources(res, sourceList);
-		for (IResource r: res.getConsistingResources()){
+		for (IResource r: res.getResources()){
 			model.addElement(r);
 		}
 		setupGUI();
@@ -88,10 +88,9 @@ public class CompoundResourceEditor extends JFrame{
 				if (result == JOptionPane.OK_OPTION && comboBox.getSelectedItem()!=null && comboBox.getSelectedItem()instanceof IResource) {
 					if(res.addResource((IResource) comboBox.getSelectedItem(), true)){
 						model.addElement((IResource) comboBox.getSelectedItem());
-					}
-					
+					}					
 				} else {
-					JOptionPane.showMessageDialog((Component) e.getSource(), "Resource not in Resource-Store");
+					//JOptionPane.showMessageDialog((Component) e.getSource(), "Resource not in Resource-Store");
 				}
 				
 			}

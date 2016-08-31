@@ -7,21 +7,21 @@ public class SimpleResource extends Resource {
 	protected boolean isAvailable;
 	protected int associatedSets;
 
+	//This one is being used
 	protected SimpleResource(String name) {
-		super(name); // Um den Namen soll sich die Ueber-Klasse kuemmern
+		super(name);
 		isAvailable=true;
 		associatedSets = 0;
 		type=ResourceType.SIMPLE;
 	}
 	
-	// Konstruktor, falls die Ressource als Teil eines ResourceSet erstellt wird
+	//This one is being used for construction as part of a ResourceSet
 	public SimpleResource(String name, boolean fromSet){
 		super(name);
 		isAvailable=true;
 		type=ResourceType.SIMPLE;
 		if(fromSet){			
 			associatedSets = 1;
-			//System.out.println("SimpleKonstruktor: associatedSets = " + associatedSets);
 		}
 		else {
 			associatedSets = 0;
@@ -33,8 +33,8 @@ public class SimpleResource extends Resource {
 		super(name);
 		isAvailable=true;
 		associatedSets = 0;
-		resourceStore.addResource(this);
 		type=ResourceType.SIMPLE;
+		resourceStore.addResource(this);
 	}
 	
 	

@@ -40,10 +40,10 @@ public class PlanExtractor {
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
-		String net1String="EasyTest1";
-		String net2String="EasyTest2";
-		//String net1String="Abriss";
-		//String net2String="Tiefbau";
+		//String net1String="EasyTest1";
+		//String net2String="EasyTest2";
+		String net1String="Abriss";
+		String net2String="Tiefbau";
 		//String net1String="invoiceIn";
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();

@@ -12,8 +12,8 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 // IDEA: If more than one resource of a set (but not specific resources) are needed, make a compound resource where the set is added several times.
 public class ResourceSet extends Resource {
 	
-	List<Resource> resources = new LinkedList<>();
-	int size = 0;
+	private List<Resource> resources = new LinkedList<>();
+	private int size = 0;
 	
 	public int getSize() {
 		return size;
@@ -41,11 +41,15 @@ public class ResourceSet extends Resource {
 	}
 	
 	public void addResource(IResource input){
-		if (((Resource)input).type == ResourceType.SIMPLE || ((Resource)input).type == ResourceType.HUMAN)
-		{
+		if (input instanceof SimpleResource) {
 			SimpleResource sr = (SimpleResource)input;
 			sr.updateAssociatedSets(UpdateType.INCREASE);
 			resources.add(sr);
+		}
+		else if (input instanceof HumanResource){
+			HumanResource hr = (HumanResource)input;
+			hr.updateAssociatedSets(UpdateType.INCREASE);
+			resources.add(hr);
 		}
 		else {
 			throw new ParameterException("Can only put resources of type SIMPLE and HUMAN into resource sets");
@@ -55,12 +59,10 @@ public class ResourceSet extends Resource {
 	}
 	
 	public void removeResourceFromSet(Resource item){
-		SimpleResource sr = (SimpleResource)item;
-		
+		SimpleResource sr = (SimpleResource)item;		
 		if (sr.getAssociatedResourceSets() < 1){
 			throw new ParameterException("Can't remove resource from set because it's not part of one");
-		}
-		
+		}		
 		if (sr.getAssociatedResourceSets() >= 1)
 			{
 				sr.updateAssociatedSets(UpdateType.DECREASE);
@@ -68,18 +70,20 @@ public class ResourceSet extends Resource {
 				size--;
 			}		
 		}
+	
+	public void removeResource(Resource item){
+		resources.remove(item);
+		size--;
+	}
 
 	//A ResourceSet is available if ONE of the contained resources is available!
 	@Override
-	public boolean isAvailable() {
-		
-		 return isOneAvailable();
-		 
+	public boolean isAvailable() {	
+		  if (isDisabled) return false;
+		 return isOneAvailable();		 
 		/**
-		  if(isDisabled)
-		 
-			return false;
-		
+		  if(isDisabled)		 
+			return false;		
 		for (Resource r:resources){
 			if (!r.isAvailable()){
 				return false;
@@ -106,25 +110,21 @@ public class ResourceSet extends Resource {
 	//To be able to tell which Resource of a resource set has to be used/unused 
 	//we have to "pierce" through the set to the contained simple/human resources
 	public String getResourceNameToUse(){		
-		return getRandomAvailable().getName();
-		
+		return getRandomAvailable().getName();		
 	}
 	
 	public Resource getResourceToUse(){		
-		return getRandomAvailable();
-		
+		return getRandomAvailable();		
 	}
 
 	@Override
-	public void unUse() {
-		
+	public void unUse() {		
 		//System.out.println("Someone tried to directly unUse() a ResourceSet"); 
 		/**
 		for (Resource r:resources){
 			r.unUse();
 		}
 		*/
-
 	}
 
 	@Override
@@ -146,14 +146,11 @@ public class ResourceSet extends Resource {
 		for (Resource r:resources){
 			r.reset();
 		}
-
 	}
 	
-	public boolean isOneAvailable() {
-		
+	public boolean isOneAvailable() {		
 		//only needed to update old ResourceStore entries with this new parameter
-		updateSize();
-		
+		updateSize();		
 		for(Resource r:resources){
 			if (r.isAvailable()){
 				return true;
@@ -171,11 +168,9 @@ public class ResourceSet extends Resource {
 		throw new ParameterException("There is no resource available in this ResourceSet!");
 	}
 
-	public boolean checkAvailabiltyWithDuplicates(int dp) {
-		
+	public boolean checkAvailabiltyWithDuplicates(int dp) {		
 		//only needed to update old ResourceStore entries with this new parameter
-		updateSize();
-		
+		updateSize();		
 		List<Resource> result = new ArrayList<Resource>();
 		for (Resource r:resources){
 			if(r.isAvailable()){
@@ -184,14 +179,11 @@ public class ResourceSet extends Resource {
 				}
 			}
 			if (result.size()>=dp){
-				System.out.println("There are at least " + dp + " resources from this set available");
+				//System.out.println("There are at least " + dp + " resources from this set available");
 				return true;
-			}
-			
-			
+			}			
 		}
 		return false;		
-		
 	}
 	
 	public void updateSize(){
@@ -204,8 +196,6 @@ public class ResourceSet extends Resource {
 				return true;
 			}
 		}
-		return false;
-		
+		return false;		
 	}
-
 }

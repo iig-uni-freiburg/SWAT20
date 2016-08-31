@@ -167,13 +167,10 @@ public class AwesomeResourceContext implements IResourceContext{
 	@Override
 	public void unBlockResources(List<String> resources) {
 		if(resources==null||resources.isEmpty()) return;
-		//System.out.println("Freeing "+printList(resources));
 		for(String resource:resources){
-			//System.out.println("Unblocking "+resource);
 			if(resourceStore.getResource(resource)!=null)
 				getResource(resource).unUse();
-		}
-		
+		}		
 	}
 	
 	protected IResource getResource(String resource) {
@@ -199,7 +196,7 @@ public class AwesomeResourceContext implements IResourceContext{
 			IResource res = getResource(s);
 			result.add(res);
 			if (res instanceof ResourceSet) {
-				for (IResource resSet : ((ResourceSet) res).resources) {
+				for (IResource resSet : ((ResourceSet) res).getRes()) {
 					result.add(resSet);
 				}
 			}
@@ -213,7 +210,7 @@ public class AwesomeResourceContext implements IResourceContext{
 			//return dummy resource
 			ArrayList<String> dummy = new ArrayList<>(1);
 			dummy.add("dummy");
-			System.out.println("This activity doesn't exist so we got you a dummy!");
+			System.out.println("This activity doesn't exist. Is the correct context set to be the default context?");
 			return dummy;
 		}
 		List<IResource> possibleResources = getResourceList(activity);

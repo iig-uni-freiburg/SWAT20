@@ -17,6 +17,7 @@ public class SharedResource extends Resource {
 		this.increment = increment;
 	}
 
+	//This one is being used
 	public SharedResource(String name) {
 		super(name);
 		type=ResourceType.SHARED;
@@ -54,8 +55,6 @@ public class SharedResource extends Resource {
 	
 	public void decrementUsage() {
 		usage = (usage > increment) ? usage - increment : 0.0f;
-		Date bla = new Date();
-		bla.getTime();
 	}
 	
 	public float getUsage(){

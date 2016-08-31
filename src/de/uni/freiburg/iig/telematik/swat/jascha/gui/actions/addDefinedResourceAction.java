@@ -43,15 +43,32 @@ public class addDefinedResourceAction extends AbstractAction {
 			break;
 		case SET:
 			dialog = new JOptionPaneMultiInput("name", "number");
-			if (dialog.hasUserInput())
+			//If no name is specified for the ResourceSet, do nothing.
+			//If no size is specified for the ResourceSet, create set with one element			
+			if (!dialog.getResult(0).isEmpty() && dialog.getResult(1).isEmpty()){
+				store.instantiateResource(type, dialog.getResult(0));
+			}				
+			else if (!dialog.getResult(0).isEmpty()){
 				store.instantiateResource(type, dialog.getResult(0), Integer.parseInt(dialog.getResult(1)));
+			}			
 			break;
 		case SHARED:
 			dialog = new JOptionPaneMultiInput("name", "max. capacity");
+			if (dialog.getResult(0).isEmpty()){
+				//Don't create a resource without a name, maybe give feedback to the user
+				System.out.println("Someone tried to create a SharedResource without name ...");
+				break;				
+			}
 			if (dialog.hasUserInput()) {
 				SharedResource res = (SharedResource) store.instantiateResource(type, dialog.getResult(0));
-				int maxCapacity = Integer.parseInt(dialog.getResult(1));
-				res.setIncrement(1f / maxCapacity);
+				if (!dialog.getResult(1).isEmpty()){
+					int maxCapacity = Integer.parseInt(dialog.getResult(1));
+					res.setIncrement(1f / maxCapacity);
+				} else {
+					System.out.println("The capacity field was left empty!");
+					// do nothing since the resource has already been created and has an increment size of 0.1 by default
+				}
+
 			}
 			break;
 

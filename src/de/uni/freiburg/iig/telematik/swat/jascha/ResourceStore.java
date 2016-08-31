@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -78,54 +79,108 @@ public class ResourceStore implements NamedComponent{
 		boolean successfulRemoval = false;
 		switch (type) {
 		case SET:
-			removeResourceSet(item);
-			break;
-			
-		case SIMPLE:
-			SimpleResource simpleResource = (SimpleResource) item;
-			if(simpleResource.getAssociatedResourceSets() > 0){
-				removeResourceFromResourceSets(item);
-				}
-			break;
-
-		case COMPOUND:
-			//TODO: Was tun bei compound resources? Sollten deren Einzelteile auch entfernt werden - und andersrum,
-			//muessen dann nicht alle Ressourcen ueberprueft werden, ob sie Teil einer CompoundResource sind und dann entsprechend geupdatet werden?
-			System.out.println("Trying to remove compound ...");
-			break;
-			
-		case SHARED:
-			//do nothing
-			System.out.println("Trying to remove shared...");
+			//TODO:
+			//Remove the set but leave the contents untouched
+			//But update the contents with regard to "associatedSets"
+			//removeResourceSet(item);
+			updateReferences(input);
+			resources.remove(input.getName());
+			successfulRemoval = true;
 			break;
 			
 		case HUMAN:
-			//TODO
+		case SIMPLE:
+			//Check if the simple resource is part of a set or a compound, remove accordingly
+			updateReferencesForSimple(input);
+			resources.remove(input.getName());
+			successfulRemoval = true;
+			break;
+
+		case COMPOUND:
+			//Just remove the compound resource, leave the contents of it untouched
+			resources.remove(input.getName());
+			updateReferences(input);
+			successfulRemoval = true;
+			break;
+			
+		case SHARED:
+			//Check if the shared resource is part of a compound, remove accordingly
+			updateReferences(input);
+			resources.remove(input.getName());
+			successfulRemoval = true;
 			break;
 			
 		default:
 			System.out.println("Missing method to remove resources of type: "+type.toString());
+			successfulRemoval = false;
 			break;
 		}
 		if (successfulRemoval){
 			//The Resource was removed successful, so we can inform the listener about it
 			informListenersOfResourceRemoval(item);
-		} else {
-			//to keep it working until the removal fully works as intended
-			resources.remove(item.getName());
-			informListenersOfResourceRemoval(item);
 		}
-		
+	}
+	
+	//This method also works for removal of CompoundResource, ResourceSet and SharedResource
+	private void updateReferences(IResource input) {
+		List<IResource> compounds = new ArrayList<IResource>();
+		for (IResource r:this.getAllResources()){
+			if (r instanceof CompoundResource){
+				compounds.add(r);
+			}
+		}
+		for (IResource compound:compounds){
+			updateReferenceInCompound((CompoundResource)compound, input);
+		}		
+	}
 
+	private void updateReferencesForSimple(IResource input) {
+		//Make 2 lists, one containing compounds, one containing Sets
+		//for each list check each element if input is part of it. if so, update the contents of the compound/set
+		List<Resource> compounds = new ArrayList<Resource>();
+		List<Resource> sets = new ArrayList<Resource>();
+		for (IResource r:this.getAllResources()){
+			Resource res = (Resource)r;
+			if (res.getType().equals(ResourceType.COMPOUND)){
+				compounds.add(res);
+			}
+			else if (res.getType().equals(ResourceType.SET)){
+				sets.add(res);
+			}
+			else {
+				//not a SET or COMPOUND, don't add it anywhere
+			}
+			for (Resource set:sets){
+				//create method to remove resources from sets
+				updateReferenceInSet((ResourceSet)set, input);
+			}
+			for (Resource compound:compounds){
+				//create method to remove resources from Compounds
+				updateReferenceInCompound((CompoundResource)compound, input);
+			}			
+		}
+	}
+
+	private void updateReferenceInCompound(CompoundResource compound, IResource input) {
+		//compound.removeResource(input.getName());
+		if(compound.getResources().contains(input)){
+			compound.removeResource(input);
+		}		
+	}
+
+	private void updateReferenceInSet(ResourceSet set, IResource input) {
+		if(set.checkIfResourceIsPart(input.getName())){
+			set.removeResource((Resource)input);
+		}		
 	}
 
 	private void removeResourceSet(IResource item) {
 		ResourceSet rs = (ResourceSet) item;
-		for (Resource res:rs.resources){
+		for (Resource res:rs.getRes()){
 			SimpleResource sr = (SimpleResource)res;
 			
 			if (sr.getAssociatedResourceSets() < 1){
-				//Error
+				//Something went wrong, shouldn't get here
 			}
 			// If the simpleResource is associated with only this set it is removed
 			if (sr.getAssociatedResourceSets() == 1){
@@ -190,8 +245,7 @@ public class ResourceStore implements NamedComponent{
 			throw new ParameterException("A resource with this name already exists!");
 		}
 		ResourceSet rs = new ResourceSet(name, amount);
-		resources.put(rs.getName(), rs);
-		//resources.put(name, rs);		
+		resources.put(rs.getName(), rs);		
 		informListenersOfResourceChange(rs);
 		for(IResource res:rs.getRes()) {
 			resources.put(res.getName(), res);
@@ -212,11 +266,11 @@ public class ResourceStore implements NamedComponent{
 			result = new CompoundResource(name);
 			resources.put(name, result);			
 			break;
-
 		case SET:
-			//instantiating a ResourceSet without amount creates a ResourceSet with one element			
-			result = new ResourceSet(name, 1);
-			resources.put(name, result);
+			//instantiating a ResourceSet without amount creates a ResourceSet with one element
+			//We don't inform the listener of a resource change because it's done in the following call of instantiateResource
+			//So result=null remains, else the listener would add it twice
+			instantiateResource(type, name, 1);
 			break;
 		case HUMAN:
 			result = new HumanResource(name);
@@ -225,20 +279,21 @@ public class ResourceStore implements NamedComponent{
 		case SIMPLE:
 			result = new SimpleResource(name);
 			resources.put(name, result);
-			break;
-			
+			break;			
 		case SHARED:	
 			result = new SharedResource(name);
 			resources.put(name, result);
-			break;
-			
+			break;			
 		default:
 			System.out.println("Missing constructor for this type: " + type.toString());
 			break;
 		}
-		informListenersOfResourceChange(result);
+		if (result instanceof Resource){
+			informListenersOfResourceChange(result);
+			}		
 		return result;
 	}
+	
 	// Compound Resource with List of IResource Objects as content
 	public IResource instantiateResource(ResourceType type, String name, List<IResource> elements){
 		if (!type.equals(ResourceType.COMPOUND)){
