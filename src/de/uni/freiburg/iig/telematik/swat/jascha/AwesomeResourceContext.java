@@ -210,7 +210,7 @@ public class AwesomeResourceContext implements IResourceContext{
 			//return dummy resource
 			ArrayList<String> dummy = new ArrayList<>(1);
 			dummy.add("dummy");
-			System.out.println("This activity doesn't exist. Is the correct context set to be the default context?");
+			System.out.println("This activity doesn't exist. Is the correct context set to be the default resource context?");
 			return dummy;
 		}
 		List<IResource> possibleResources = getResourceList(activity);

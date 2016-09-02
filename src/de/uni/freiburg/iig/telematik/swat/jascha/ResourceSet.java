@@ -7,7 +7,7 @@ import java.util.List;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
-// Resource Sets are Ressources that group similar resources. 
+// Resource Sets are Ressources that group similar resources of type SIMPLE or HUMAN.
 // If an activity uses a resource set it means it can use ANY ONE resource of the resources in the set.
 // IDEA: If more than one resource of a set (but not specific resources) are needed, make a compound resource where the set is added several times.
 public class ResourceSet extends Resource {
@@ -149,7 +149,7 @@ public class ResourceSet extends Resource {
 	}
 	
 	public boolean isOneAvailable() {		
-		//only needed to update old ResourceStore entries with this new parameter
+		//only needed to update old ResourceStore entries with the new size field
 		updateSize();		
 		for(Resource r:resources){
 			if (r.isAvailable()){
@@ -169,7 +169,7 @@ public class ResourceSet extends Resource {
 	}
 
 	public boolean checkAvailabiltyWithDuplicates(int dp) {		
-		//only needed to update old ResourceStore entries with this new parameter
+		//only needed to update old ResourceStore entries with the new size field
 		updateSize();		
 		List<Resource> result = new ArrayList<Resource>();
 		for (Resource r:resources){
@@ -179,7 +179,6 @@ public class ResourceSet extends Resource {
 				}
 			}
 			if (result.size()>=dp){
-				//System.out.println("There are at least " + dp + " resources from this set available");
 				return true;
 			}			
 		}

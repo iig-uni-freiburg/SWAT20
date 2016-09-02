@@ -79,10 +79,7 @@ public class ResourceStore implements NamedComponent{
 		boolean successfulRemoval = false;
 		switch (type) {
 		case SET:
-			//TODO:
-			//Remove the set but leave the contents untouched
-			//But update the contents with regard to "associatedSets"
-			//removeResourceSet(item);
+			//Remove the ResourcSet but leave the contents untouched
 			updateReferences(input);
 			resources.remove(input.getName());
 			successfulRemoval = true;
@@ -90,7 +87,7 @@ public class ResourceStore implements NamedComponent{
 			
 		case HUMAN:
 		case SIMPLE:
-			//Check if the simple resource is part of a set or a compound, remove accordingly
+			//Check if the humane/simple resource is part of a set or a compound, remove accordingly
 			updateReferencesForSimple(input);
 			resources.remove(input.getName());
 			successfulRemoval = true;
