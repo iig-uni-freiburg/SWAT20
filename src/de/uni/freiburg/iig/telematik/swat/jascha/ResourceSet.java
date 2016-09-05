@@ -168,7 +168,7 @@ public class ResourceSet extends Resource {
 		throw new ParameterException("There is no resource available in this ResourceSet!");
 	}
 
-	public boolean checkAvailabiltyWithDuplicates(int dp) {		
+	public boolean checkDuplicateAvailability(int dp) {		
 		//only needed to update old ResourceStore entries with the new size field
 		updateSize();		
 		List<Resource> result = new ArrayList<Resource>();

@@ -218,13 +218,12 @@ public class AwesomeResourceContext implements IResourceContext{
 		for (IResource possibleResource : possibleResources) {
 			if (possibleResource.isAvailable()) {				
 				if(blockResources){
-					if(((Resource)possibleResource).getType() == ResourceType.SET){
+					if(possibleResource instanceof ResourceSet){
 						//If the available resource is a resource set we need to get the contained resource that is to be used
 						String resourceFromSet = ((ResourceSet)possibleResource).getResourceNameToUse(); 
 						result.add(resourceFromSet);
 						resourceStore.getResource(resourceFromSet).use();
-						return result;
-						
+						return result;						
 					}
 					//System.out.println("Blocking "+possibleResource.getName());
 					possibleResource.use();

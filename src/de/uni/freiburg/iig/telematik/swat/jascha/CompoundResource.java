@@ -50,43 +50,42 @@ public class CompoundResource extends Resource {
 				if (i > 1){
 					//System.out.println("There is a duplicate set!");
 					duplicates = true;
+					break;
 				}
 			}
 			if (duplicates){
 				return checkAvailabilityWithDuplicateSets();
 			}
-		} else {
+		}	//TODO: Stimmt das??	
 		for (IResource r : resources) {
 			//System.out.println("No ResourceSets in this CompoundResource");
 			if (!r.isAvailable()){
 				return false;
-				}				
-			}
+				}			
 		}
 		return true;
 	}
 	
 	private boolean checkAvailabilityWithDuplicateSets() {
-			for (IResource r:resources){
-				if(r instanceof ResourceSet ){
-					int dp = resourceSets.get(r.getName());
-					if (dp > 1){
-						if(!(((ResourceSet)r).checkAvailabiltyWithDuplicates(dp))){
-							//System.out.println("The duplicate set is not available");
-							return false;
-						}						
-					} else if (!r.isAvailable()) {
-						//System.out.println("It wasn't a multiset but it's unavailable");
+		for (IResource r : resources) {
+			if (r instanceof ResourceSet) {
+				int dp = resourceSets.get(r.getName());
+				if (dp > 1) {
+					if (!(((ResourceSet) r).checkDuplicateAvailability(dp))) {
 						return false;
 					}
-				} 
-				else if(!r.isAvailable()){
-					//System.out.println("the resource is no set but unavailable");
+				} else if (!r.isAvailable()) {
+					// System.out.println("It wasn't a multiset but it's
+					// unavailable");
 					return false;
 				}
-			}			
-		//System.out.println("Everything's fine, all resources are available");
-		return true;		
+			} else if (!r.isAvailable()) {
+				// System.out.println("the resource is no set but unavailable");
+				return false;
+			}
+		}
+		// System.out.println("Everything's fine, all resources are available");
+		return true;
 	}
 
 	public List<IResource> getResources(){

@@ -35,13 +35,11 @@ public class PlanExtractor {
 	private AwesomeTimeContext context;
 	private TreeSet<WorkflowExecutionPlan> plans = new TreeSet<>();
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 54321;
+	private static int numberOfRuns = 10864;
 	
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
-		//String net1String="EasyTest1";
-		//String net2String="EasyTest2";
 		String net1String="Abriss";
 		String net2String="Tiefbau";
 		//String net1String="invoiceIn";
@@ -66,20 +64,15 @@ public class PlanExtractor {
 			Scanner keyboard = new Scanner(System.in);
 			System.out.println("Enter index to run further simulation. Enter 97, 98 or 99 to start simple optimization");
 			int myint = keyboard.nextInt();
-			wtm.resetAll();
-			
+			wtm.resetAll();			
 			switch (myint) {
-			case 99:
-				
-				ex.getBestResultFromTop10(set, wtm, ex);
-				break;
-			
-			case 98:
-				
+			case 99:				
+				ex.getBestResultFromTop10(set, wtm);
+				break;			
+			case 98:				
 				// Another basic approach for combination of results
-				ex.simulateTopTen(set, wtm, ex);
-				break;
-			
+				ex.simulateTopTen(set, wtm);
+				break;			
 			case 97:
 				/**
 				if (currentSet != null){
@@ -92,13 +85,10 @@ public class PlanExtractor {
 					ex.simulateMultipleSequences(currentSet, wtm, ex);
 				**/
 				//} else {
-					ex.simulateMultipleSequences(set, wtm, ex);
-				//}
-				
+					ex.simulateMultipleSequences(set, wtm);
+				//}				
 				break;
-
-			default:
-				
+			default:				
 				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());
 				ex.printResults(set);
 				System.out.println("Above are the initial simulation results!");
@@ -127,9 +117,9 @@ public class PlanExtractor {
 		//System.exit(0);
 	}
 	
-	private void simulateMultipleSequences(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, PlanExtractor ex) throws PNException {
+	private void simulateMultipleSequences(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm) throws PNException {
 			ArrayList<FireSequence> sequences = new ArrayList<FireSequence>();
-			int runs = 20000;
+			int runs = 2000;
 			int random = 0;
 			// add top 5 and also add 5 random (that are not Top5)
 			// change set.size()-7 to any number to get different Tops, e.g. set.size()-12 for Top10
@@ -137,11 +127,10 @@ public class PlanExtractor {
 				sequences.add(set.get(i).getSeq());
 				random = ThreadLocalRandom.current().nextInt(set.size()-7);
 				sequences.add(set.get(random).getSeq());
-			}
-			
+			}			
 			plans.clear();			
 			wtm.simulateMultipleSequences(sequences, runs);
-			ArrayList<WorkflowExecutionPlan> executionPlans = ex.getExecutionPlan();
+			ArrayList<WorkflowExecutionPlan> executionPlans = getExecutionPlan();
 			getOverallFitness(executionPlans, runs);
 			printResults(executionPlans);
 			currentSet = executionPlans;
@@ -151,7 +140,7 @@ public class PlanExtractor {
 	}
 
 	// Simple simulation that takes the ten best results and runs each 5000 times to see which one is the best
-	private void getBestResultFromTop10 (ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, PlanExtractor ex) throws PNException{		
+	private void getBestResultFromTop10 (ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm) throws PNException{		
 		int resultSetSize = set.size()-2; //remove broken result
 		int optimizationRuns = 0;
 		int currentIndex;
@@ -161,12 +150,14 @@ public class PlanExtractor {
 		bestPerformance = set.get(currentIndex).getPerformance();
 		Double bestSimulationPerformance = 0.0;
 		Double thisRunsPerformance;
+		ArrayList<WorkflowExecutionPlan> simulationSet;
 		while (optimizationRuns < 10){
 			plans.clear();
-			wtm.simulateExecutionPlan(5000, set.get(currentIndex).getSeq());
+			wtm.simulateExecutionPlan(500, set.get(currentIndex).getSeq());
 			//System.out.print(wtm.getResult().toString());
-			ArrayList<WorkflowExecutionPlan> simulationSet = ex.getExecutionPlan();
-			ex.printResults(simulationSet);
+			simulationSet = getExecutionPlan();
+			//ex.printResults(simulationSet);
+			printResults(simulationSet);
 			thisRunsPerformance = simulationSet.get(0).getPerformance();
 			if (thisRunsPerformance > bestSimulationPerformance){
 				bestSimulationPerformance = thisRunsPerformance;
@@ -189,7 +180,8 @@ public class PlanExtractor {
 	}
 	
 	// Takes 5 random sequences out of the top10 sequences from the first simulation run
-	private void simulateTopTen(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, PlanExtractor ex) throws PNException, IOException, ProjectComponentException {
+	private void simulateTopTen(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm) 
+			throws PNException, IOException, ProjectComponentException {
 		ArrayList<WorkflowExecutionPlan> top10 = new ArrayList<>();
 		System.out.println("Set Size = " + set.size());
 		if(set.size() >= 11){
@@ -210,9 +202,9 @@ public class PlanExtractor {
 		for (int i = 0; i < 5; i++){
 			//System.out.println(top10.get(intArray[i]));
 			plans.clear();
-			wtm.simulateExecutionPlan(5000, top10.get(intArray[i]).getSeq());
-			ArrayList<WorkflowExecutionPlan> simulationSet = ex.getExecutionPlan();
-			ex.printResults(simulationSet);
+			wtm.simulateExecutionPlan(500, top10.get(intArray[i]).getSeq());
+			ArrayList<WorkflowExecutionPlan> simulationSet = getExecutionPlan();
+			printResults(simulationSet);
 			if (simulationSet.get(0).getPerformance() > bestPerformance){
 				bestPerformance = simulationSet.get(0).getPerformance();
 			}
