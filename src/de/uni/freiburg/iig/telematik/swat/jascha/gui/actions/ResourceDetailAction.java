@@ -8,11 +8,18 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.Resource;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.CompoundResourceEditor;
 
 public class ResourceDetailAction implements MouseListener {
+
+	private IResourceContext resContext;
+
+	public ResourceDetailAction(IResourceContext context) {
+		this.resContext=context;
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -52,7 +59,7 @@ public class ResourceDetailAction implements MouseListener {
 	private void showResourceDialog(JList<IResource> source, Resource res) {
 
 		if (res instanceof CompoundResource) {
-			new CompoundResourceEditor((CompoundResource) res, source).setVisible(true);
+			new CompoundResourceEditor((CompoundResource) res, source, resContext).setVisible(true);
 		} else {
 			JOptionPane.showMessageDialog(source, res.getDetailString());
 		}

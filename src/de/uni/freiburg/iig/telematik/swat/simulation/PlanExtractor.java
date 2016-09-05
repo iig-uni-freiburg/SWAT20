@@ -35,15 +35,16 @@ public class PlanExtractor {
 	private AwesomeTimeContext context;
 	private TreeSet<WorkflowExecutionPlan> plans = new TreeSet<>();
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 10864;
+	//private static int numberOfRuns = 10864;
+	private static int numberOfRuns = 1;
 	
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
-		String net1String="Abriss";
-		String net2String="Tiefbau";
-		//String net1String="invoiceIn";
-		//String net2String="invoiceOut";
+		//String net1String="Abriss";
+		//String net2String="Tiefbau";
+		String net1String="invoiceIn";
+		String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
 		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
@@ -129,7 +130,7 @@ public class PlanExtractor {
 				sequences.add(set.get(random).getSeq());
 			}			
 			plans.clear();			
-			wtm.simulateMultipleSequences(sequences, runs);
+			//wtm.simulateMultipleSequences(sequences, runs);
 			ArrayList<WorkflowExecutionPlan> executionPlans = getExecutionPlan();
 			getOverallFitness(executionPlans, runs);
 			printResults(executionPlans);

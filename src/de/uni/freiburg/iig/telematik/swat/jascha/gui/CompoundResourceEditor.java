@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
+import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.AddActivityAction;
 
@@ -32,9 +33,12 @@ public class CompoundResourceEditor extends JFrame{
 	DefaultListModel<IResource> model = new javax.swing.DefaultListModel<>();
 	ArrayList<IResource> resources = new ArrayList<>();
 	JComboBox<IResource> comboBox;
+	private IResourceContext resContext;
+	
 
-	public CompoundResourceEditor (CompoundResource res, JList<IResource> sourceList){
+	public CompoundResourceEditor (CompoundResource res, JList<IResource> sourceList, IResourceContext resContexet){
 		this.res=res;
+		this.resContext=resContexet;
 		resources=extractResources(res, sourceList);
 		for (IResource r: res.getResources()){
 			model.addElement(r);

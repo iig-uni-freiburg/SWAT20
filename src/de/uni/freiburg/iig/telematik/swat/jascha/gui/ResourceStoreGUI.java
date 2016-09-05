@@ -119,7 +119,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 	private JScrollPane getList(){
 		list = new JList<>();
 		list.setModel(model);
-		list.addMouseListener(new ResourceDetailAction());
+		list.addMouseListener(new ResourceDetailAction(context));
 		//for(IResource res:resourceStore.getAllResources())
 		for(IResource res:resourceStore.getAllResourcesSortedByName())
 			model.addElement(res);
