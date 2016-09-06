@@ -33,10 +33,10 @@ public class PlanExtractor {
 	private StatisticListener listener;
 	//private HashMap<String, ArrayList<FireSequence>> fireSequence;
 	private AwesomeTimeContext context;
-	private TreeSet<WorkflowExecutionPlan> plans = new TreeSet<>();
+	private Set<WorkflowExecutionPlan> plans;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
 	//private static int numberOfRuns = 10864;
-	private static int numberOfRuns = 1;
+	private static int numberOfRuns = 20;
 	
 
 	
@@ -286,49 +286,47 @@ public class PlanExtractor {
 		
 	}
 	
-	private TreeSet<WorkflowExecutionPlan> generatePlans(){
+	private Set<WorkflowExecutionPlan> generatePlans(){
 		
-		//TreeMap<WorkflowExecutionPlan,WorkflowExecutionPlan> differentPlanSet = new TreeMap<>();
 		
 		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
 		for(FireSequence seq: listener.getOverallLog()){
-			//WorkflowExecutionPlan plan = new WorkflowExecutionPlan(seq);
-			//differentPlanSet.put(plan,plan);
+
 			if(!computedResults.containsKey(seq)){ 
 				computedResults.put(seq,new LinkedList<Double>()); //create list
 			}
 		}
 		
-		for(FireSequence seq:listener.getOverallLog()) //add OverallPerformance
+		
+		for(FireSequence seq:listener.getOverallLog()){ //add OverallPerformance
 			computedResults.get(seq).add(getOverallSuccessRatio(seq));
-		
-//		for(FireSequence seq:listener.getOverallLog()){
-//			WorkflowExecutionPlan plan = differentPlanSet.get(seq);
-//			if(plan!=null)
-//				plan.addSequence(seq);
-//		}
-//		
-//		for(WorkflowExecutionPlan seq:differentPlanSet.keySet()){
-//			System.out.println(seq);
-//		}
-		
-//		TreeMap<Double, FireSequence> result = new TreeMap<>();
-		TreeSet<WorkflowExecutionPlan> set = new TreeSet<>();
+		}
+
+		HashSet<WorkflowExecutionPlan> set = new HashSet<>();
 		
 		for(Entry<FireSequence, LinkedList<Double>> entry:computedResults.entrySet()){
-			//System.out.println(entry.getValue().size()+" entries for: "+entry.getKey().getTransitionString());
-//			result.put(computeAverage(entry.getValue()),entry.getKey());
-			set.add(new WorkflowExecutionPlan(entry.getKey(), entry.getValue().size(), computeAverage(entry.getValue())));
+			FireSequence sequence = entry.getKey();
+			List<Double> deadlineResults = entry.getValue();
+			WorkflowExecutionPlan plan=new WorkflowExecutionPlan(sequence, deadlineResults.size(), computeAverage(deadlineResults));
+			
+			if(set.contains(plan)){
+				System.out.println(compareEntries(set, plan)); //this should never be the case.
+			}
+			
+			set.add(plan);
 		}
-		
-//		for(WorkflowExecutionPlan plan:set){
-//			System.out.println(plan.toString());
-//		}
-		
-		//System.out.println("Number of different runnings: "+differentPlanSet.size()); //size is wrong
 		
 		return set;
 		
+	}
+	
+	private String compareEntries(Set<WorkflowExecutionPlan> set, WorkflowExecutionPlan plan){
+		StringBuilder b = new StringBuilder();
+		b.append("Plan to add: "+plan.toString()+" Hash: "+plan.hashCode()+"\r\n");
+		for(Object o:set){
+			b.append(o.toString()+" ("+o.hashCode()+") equals: "+o.equals(plan)+"\r\n");
+		}
+		return b.toString();
 	}
 	
 	/**compute the score of this workflow execution between 0..1**/
