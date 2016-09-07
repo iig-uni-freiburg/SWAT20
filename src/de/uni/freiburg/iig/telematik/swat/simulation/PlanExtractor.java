@@ -42,7 +42,7 @@ public class PlanExtractor {
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		//String net1String="Abriss";
-		//String net2String="Tiefbau";
+		//String net2String="Strassenbau";
 		String net1String="invoiceIn";
 		String net2String="invoiceOut";
 		SwatComponents.getInstance();
@@ -75,19 +75,7 @@ public class PlanExtractor {
 				ex.simulateTopTen(set, wtm);
 				break;			
 			case 97:
-				/**
-				if (currentSet != null){
-					int r = 0;
-					for (int i=0; i < 10; i++){
-						r = ThreadLocalRandom.current().nextInt(set.size()-7);
-						currentSet.add(set.get(r));
-					
-					
-					ex.simulateMultipleSequences(currentSet, wtm, ex);
-				**/
-				//} else {
-					ex.simulateMultipleSequences(set, wtm);
-				//}				
+				ex.simulateMultipleSequences(set, wtm);			
 				break;
 			default:				
 				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());
@@ -96,22 +84,6 @@ public class PlanExtractor {
 				new SimulationResult(wtm, getTimeContext()).setVisible(true);
 				break;
 			}
-			/*
-			if	(myint == 99) { //input code to do this simulation
-				ex.getBestResultFromTop10(set, wtm, ex);
-
-			}
-			if (myint == 98) {
-				// Another basic approach for combination of results
-				ex.simulateTopTen(set, wtm, ex);
-			}
-			else {
-				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());
-				ex.printResults(set);
-				System.out.println("Above are the initial simulation results!");
-				new SimulationResult(wtm, getTimeContext()).setVisible(true);
-			}
-			*/
 
 		}
 		//System.out.println("End");
@@ -286,8 +258,7 @@ public class PlanExtractor {
 		
 	}
 	
-	private Set<WorkflowExecutionPlan> generatePlans(){
-		
+	private Set<WorkflowExecutionPlan> generatePlans(){		
 		
 		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
 		for(FireSequence seq: listener.getOverallLog()){
@@ -295,14 +266,14 @@ public class PlanExtractor {
 			if(!computedResults.containsKey(seq)){ 
 				computedResults.put(seq,new LinkedList<Double>()); //create list
 			}
-		}
-		
+		}		
 		
 		for(FireSequence seq:listener.getOverallLog()){ //add OverallPerformance
 			computedResults.get(seq).add(getOverallSuccessRatio(seq));
 		}
 
-		HashSet<WorkflowExecutionPlan> set = new HashSet<>();
+		//HashSet<WorkflowExecutionPlan> set = new HashSet<>();
+		TreeSet<WorkflowExecutionPlan> set = new TreeSet<>();
 		
 		for(Entry<FireSequence, LinkedList<Double>> entry:computedResults.entrySet()){
 			FireSequence sequence = entry.getKey();
@@ -311,11 +282,9 @@ public class PlanExtractor {
 			
 			if(set.contains(plan)){
 				System.out.println(compareEntries(set, plan)); //this should never be the case.
-			}
-			
+			}			
 			set.add(plan);
-		}
-		
+		}		
 		return set;
 		
 	}
@@ -365,10 +334,19 @@ public class PlanExtractor {
 	}
 	
 	private double computeAverage(List<Double> list){
+		if (list.isEmpty()){
+			System.out.println("computerAverage: the list is empty");
+			return 0.4321;
+		}
 		double sum = 0.0;
 		for(double d:list)
 			sum+=d;
 		double result = sum/(double)list.size();
+		if (Double.isNaN(result)){
+			System.out.println("result is NaN, give it 12.34%");
+			//Random result to find the entry
+			result = 0.1234;
+		}
 		return result;
 	}
 }

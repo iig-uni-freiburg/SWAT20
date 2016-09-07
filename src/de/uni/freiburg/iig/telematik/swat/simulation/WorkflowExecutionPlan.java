@@ -47,9 +47,39 @@ public class WorkflowExecutionPlan implements Comparable<WorkflowExecutionPlan>{
 
 	@Override
 	public int compareTo(WorkflowExecutionPlan o) {
-		return new Double(performance).compareTo(o.performance);
+		return myCompareTo(o);
+		//return new Double(performance).compareTo(o.performance);
 		//return new Integer(numberOfRuns).compareTo(o.getNumberOfRuns());
 		//return seq.getTransitionString().compareTo(o.seq.getTransitionString());
+	}
+	
+	public int myCompareTo(WorkflowExecutionPlan plan){
+		if (Double.isNaN(performance) || Double.isNaN(plan.getPerformance())){
+			System.out.println("One performance is NaN!");
+			return 1;
+		}
+		if (this.equals(plan)){
+			System.out.println("We're equal because:");
+			System.out.println(this.toString());
+			System.out.println("equals");
+			System.out.println(plan.toString());
+			//Returning 0 in compareTo means the TreeSet thinks the objects are equal
+			return 0;
+		}
+		if (performance == plan.getPerformance()){
+			//here we do a second level ordering with numberOfRuns
+			if (numberOfRuns < plan.getNumberOfRuns())
+				return -1;
+			if (numberOfRuns >= plan.getNumberOfRuns())
+				return 1;
+		}		
+		else if (performance > plan.getPerformance()){
+			return 1;
+		}
+		else if(performance < plan.getPerformance()){
+			return -1;
+		}
+		return 0;
 	}
 
 	@Override
