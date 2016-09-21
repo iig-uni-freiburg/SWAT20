@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 
 public class CompoundResource extends Resource {
@@ -37,8 +38,9 @@ public class CompoundResource extends Resource {
 	}
 
 	@Override
-	public boolean isAvailable() {		
-		//System.out.println("Checking availability for Resource: " + this.name);		
+	public boolean isAvailable() {
+		validate();
+		//System.out.println("Checking availability for Resource: " + this.name);
 		if(isDisabled)
 			return false;		
 		if (!resourceSets.isEmpty()){
@@ -378,5 +380,11 @@ public class CompoundResource extends Resource {
 			if (CollisionDetection(res)) return true;			
 		}		
 		return false;
+	}
+	
+	private void validate(){
+		Validate.notNull(resourceSets,"ressouceSet in "+getName()+" is null");
+		Validate.notNull(namesOfDuplicateSets,"namesOfDuplicateSets in "+getName()+" is null");
+		Validate.notNull(usedSetResources,"usedSetResources in "+getName()+" is null");
 	}
 }

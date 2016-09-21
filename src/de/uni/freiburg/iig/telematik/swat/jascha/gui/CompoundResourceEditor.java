@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
+import de.invation.code.toval.validate.Validate;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResource;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceContext;
 import de.uni.freiburg.iig.telematik.swat.jascha.CompoundResource;
@@ -38,8 +39,8 @@ public class CompoundResourceEditor extends JFrame{
 
 	public CompoundResourceEditor (CompoundResource res, JList<IResource> sourceList, IResourceContext resContexet){
 		this.res=res;
-		this.resContext=resContexet;
-		resources=extractResources(res, sourceList);
+		this.resContext=resContexet; //actually it is never used!
+		resources=extractResourcesFromSourceList(res, sourceList);
 		for (IResource r: res.getResources()){
 			model.addElement(r);
 		}
@@ -47,16 +48,18 @@ public class CompoundResourceEditor extends JFrame{
 		
 	}
 	
-	private ArrayList<IResource> extractResources (CompoundResource exclude, JList<IResource> sourceList){
+	private ArrayList<IResource> extractResourcesFromSourceList (CompoundResource exclude, JList<IResource> sourceList){
 		ArrayList<IResource>result = new ArrayList<>();
 		
 		for (int i = 0;i<sourceList.getModel().getSize();i++){
-			if(!sourceList.getModel().getElementAt(i).equals(exclude))
-				//if(!(sourceList.getModel().getElementAt(i) instanceof CompoundResource))
-					result.add(sourceList.getModel().getElementAt(i));
+			IResource resStoreRessource=sourceList.getModel().getElementAt(i);
 			
+			if(resStoreRessource == null) 
+				continue; //why can it get null?
+			
+			if(!resStoreRessource.equals(exclude))
+					result.add(sourceList.getModel().getElementAt(i));
 		}
-		
 		return result;
 		
 	}
