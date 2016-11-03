@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.itextpdf.text.log.SysoCounter;
+
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
@@ -35,35 +38,50 @@ public class PlanExtractor {
 	private AwesomeTimeContext context;
 	private Set<WorkflowExecutionPlan> plans;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	//private static int numberOfRuns = 10864;
-	private static int numberOfRuns = 20;
+	private static int numberOfRuns = 40000;
 	
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
-		//String net1String="Abriss";
-		//String net2String="Strassenbau";
-		String net1String="invoiceIn";
-		String net2String="invoiceOut";
+		String net1String="Tiefbau";
+		String net2String="Strassenbau";
+		String net3String="Fundament";
+		//String net4String="Sisyphos";
+		//String net5String="Strassenlaterne";
+		//String net6String="Abriss";
+		//String net1String="Multinom1";
+		//String net2String="Multinom2";
+		//String net3String="Multinom3";
+		
+		//String net1String="invoiceIn";
+		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
 		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
+		//GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
+		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 		
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet(net2.getPetriNet());
+		wtm.addNet(net3.getPetriNet());
+		//wtm.addNet(net4.getPetriNet());
+		//wtm.addNet(net5.getPetriNet());
+		//wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		PlanExtractor ex = new PlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
 		//PlanExtractor ex = new PlanExtractor();
 		ArrayList<WorkflowExecutionPlan> set = ex.getExecutionPlan();
 		
-		ex.printResults(set);
+		ex.printResults(set, 0);
 		ex.getOverallFitness(set, numberOfRuns);
 		
 		while (true){
 			Scanner keyboard = new Scanner(System.in);
-			System.out.println("Enter index to run further simulation. Enter 97, 98 or 99 to start simple optimization");
+			System.out.println("Enter index (1 = best result, set size = worst result) to run further simulation. Enter 97, 98 or 99 to start simple optimization");
 			int myint = keyboard.nextInt();
 			wtm.resetAll();			
 			switch (myint) {
@@ -77,9 +95,11 @@ public class PlanExtractor {
 			case 97:
 				ex.simulateMultipleSequences(set, wtm);			
 				break;
-			default:				
-				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());
-				ex.printResults(set);
+			default:
+				// changed display index, so we need to correct it here
+				int newint = set.size() - myint;
+				wtm.simulateExecutionPlan(8000, set.get(newint).getSeq());				
+				ex.printResults(set, 0);
 				System.out.println("Above are the initial simulation results!");
 				new SimulationResult(wtm, getTimeContext()).setVisible(true);
 				break;
@@ -105,7 +125,7 @@ public class PlanExtractor {
 			//wtm.simulateMultipleSequences(sequences, runs);
 			ArrayList<WorkflowExecutionPlan> executionPlans = getExecutionPlan();
 			getOverallFitness(executionPlans, runs);
-			printResults(executionPlans);
+			printResults(executionPlans, 1);
 			currentSet = executionPlans;
 		
 		
@@ -130,7 +150,7 @@ public class PlanExtractor {
 			//System.out.print(wtm.getResult().toString());
 			simulationSet = getExecutionPlan();
 			//ex.printResults(simulationSet);
-			printResults(simulationSet);
+			printResults(simulationSet, 1);
 			thisRunsPerformance = simulationSet.get(0).getPerformance();
 			if (thisRunsPerformance > bestSimulationPerformance){
 				bestSimulationPerformance = thisRunsPerformance;
@@ -177,7 +197,7 @@ public class PlanExtractor {
 			plans.clear();
 			wtm.simulateExecutionPlan(500, top10.get(intArray[i]).getSeq());
 			ArrayList<WorkflowExecutionPlan> simulationSet = getExecutionPlan();
-			printResults(simulationSet);
+			printResults(simulationSet, 1);
 			if (simulationSet.get(0).getPerformance() > bestPerformance){
 				bestPerformance = simulationSet.get(0).getPerformance();
 			}
@@ -187,12 +207,36 @@ public class PlanExtractor {
 	}
 	
 	
-	private void printResults (ArrayList<WorkflowExecutionPlan> set){
-		int i = 0;
-		for (WorkflowExecutionPlan plan:set){
-			System.out.println(i+": "+plan);
-			i++;
+	private void printResults (ArrayList<WorkflowExecutionPlan> set, int n){
+		switch (n) {
+		case 0:
+			 //Prints Top50 Results
+			int i = set.size();
+			int j = 1;
+			for (int k = i-1; k>(i-51); k--){
+				
+				System.out.println(j+": "+set.get(k));
+				j++;
+				
 			}
+			
+			System.out.println("Set size = " + i);
+			
+			break;
+
+		default:			
+			 //Prints all results
+			int l = 0;
+			for (WorkflowExecutionPlan plan:set){
+				System.out.println(l+": "+plan);
+				l++;
+				}
+			break;
+		}
+
+
+			
+		
 	}
 	
 	private void getOverallFitness(ArrayList<WorkflowExecutionPlan> set, int runs){
@@ -222,7 +266,7 @@ public class PlanExtractor {
 		//plans = generatePlans();
 	}
 	
-	/**gets (and if needed generates) the orderd execution plan**/
+	/**gets (and if needed generates) the ordered execution plan**/
 	public ArrayList<WorkflowExecutionPlan> getExecutionPlan(){
 		if(plans==null||plans.isEmpty()){
 			plans=generatePlans();
@@ -320,7 +364,7 @@ public class PlanExtractor {
 		//return 0;
 	}
 	
-	/**extract the time of the last fired activitiy from each net out of a fireSequence**/
+	/**extract the time of the last fired activity from each net out of a fireSequence**/
 	private HashMap<String, Double> extractSimulatedTiming(FireSequence seq){
 		HashMap<String, Double> nets = new HashMap<>(); //Net-Name, time
 		for(FireElement element: seq.getSequence()){ //get fired transitions
