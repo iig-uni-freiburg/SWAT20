@@ -3,9 +3,9 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import java.awt.Window;
 
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
-import de.invation.code.toval.validate.ExceptionDialog;
 
 public class PNNameDialog extends FileNameDialog {
 

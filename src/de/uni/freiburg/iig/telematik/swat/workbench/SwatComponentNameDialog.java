@@ -2,8 +2,8 @@ package de.uni.freiburg.iig.telematik.swat.workbench;
 
 import java.awt.Window;
 
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
-import de.invation.code.toval.validate.ExceptionDialog;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponentType;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 

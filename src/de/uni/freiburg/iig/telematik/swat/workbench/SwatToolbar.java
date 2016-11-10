@@ -27,11 +27,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import de.invation.code.toval.graphic.component.DisplayFrame;
+import de.invation.code.toval.graphic.dialog.ExceptionDialog;
 import de.invation.code.toval.graphic.dialog.FileNameDialog;
 import de.invation.code.toval.graphic.dialog.MessageDialog;
 import de.invation.code.toval.graphic.dialog.StringDialog;
 import de.invation.code.toval.properties.PropertyException;
-import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.graphic.AbstractGraphicalPN;
 import de.uni.freiburg.iig.telematik.sepia.graphic.GraphicalCPN;
@@ -63,7 +63,7 @@ import de.uni.freiburg.iig.telematik.wolfgang.menu.WrapLayout;
 
 /**
  * Model for Buttons. Holds buttons like "open", "save", ... With
- * {@link #getButtonPanel()} the buttons are available inside a {@link JPanel}.
+ * {@link #getPanelButtons()} the buttons are available inside a {@link JPanel}.
  * Each button can be accesed through get(enum)
  *
  * @author richard

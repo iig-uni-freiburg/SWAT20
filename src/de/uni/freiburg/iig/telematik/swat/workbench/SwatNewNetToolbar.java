@@ -25,7 +25,7 @@ import de.uni.freiburg.iig.telematik.wolfgang.menu.WrapLayout;
 
 /**
  * Model for Buttons. Holds buttons like "open", "save", ... With
- * {@link #getButtonPanel()} the buttons are available inside a {@link JPanel}.
+ * {@link #getPanelButtons()} the buttons are available inside a {@link JPanel}.
  * Each button can be accesed through get(enum)
  * 
  * @author richard
