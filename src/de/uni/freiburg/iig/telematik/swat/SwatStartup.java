@@ -9,7 +9,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 
 public class SwatStartup extends AbstractWorkingDirectoryStartup {
 
-    public final static String VERSION_NUMBER = "0.0.2";
+    public final static String VERSION_NUMBER = "0.0.3-20160613-NIGHTLY";
     public final static String VERSION_NAME = "v" + VERSION_NUMBER;
     private static final String TOOL_NAME = "SWAT";
     private static final String WORKING_DIRECTORY_DESCRIPTOR = "Working Directory";
