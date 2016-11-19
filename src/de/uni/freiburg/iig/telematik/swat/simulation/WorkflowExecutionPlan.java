@@ -1,6 +1,9 @@
 package de.uni.freiburg.iig.telematik.swat.simulation;
 
 import java.text.DecimalFormat;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.FireSequence;
 
@@ -9,7 +12,8 @@ public class WorkflowExecutionPlan implements Comparable<WorkflowExecutionPlan>{
 	private FireSequence seq;
 	private int numberOfRuns;
 	private double performance;
-	static DecimalFormat df = new DecimalFormat("#.##");
+	static DecimalFormat df = new DecimalFormat("#.##");	
+	private List<Double> endingTimes = new LinkedList<>(); //The (sorted) list of actual ending times of simulation runs with this FireSequence
 
 	public WorkflowExecutionPlan(FireSequence seq, int numberOfRuns, double performance) {
 		this.seq=seq;
@@ -39,6 +43,20 @@ public class WorkflowExecutionPlan implements Comparable<WorkflowExecutionPlan>{
 
 	public void setPerformance(double performance) {
 		this.performance = performance;
+	}
+	
+	public void setEndingTimes (List<Double> endingTimesList){
+		endingTimes = endingTimesList;
+		Collections.sort(endingTimes);
+	}
+	
+	public void addEndingTime(Double d){
+		endingTimes.add(d);
+	}
+	
+	public List<Double> getEndingTimes(){
+		Collections.sort(endingTimes);
+		return endingTimes;
 	}
 	
 	public String toString(){

@@ -38,16 +38,17 @@ public class PlanExtractor {
 	private AwesomeTimeContext context;
 	private Set<WorkflowExecutionPlan> plans;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 40000;
+	private static int numberOfRuns = 10000;
+	private TreeSet<Double> endingTimes = new TreeSet<>(); //Set with ending times of all FireSequences of the latest run
 	
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
-		String net2String="Strassenbau";
-		String net3String="Fundament";
+		String net2String="Strassenlaterne";
+		//String net3String="Fundament";
 		//String net4String="Sisyphos";
-		//String net5String="Strassenlaterne";
+		//String net5String="Strassenbau";
 		//String net6String="Abriss";
 		//String net1String="Multinom1";
 		//String net2String="Multinom2";
@@ -58,7 +59,7 @@ public class PlanExtractor {
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
 		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
-		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
 		//GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
 		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
@@ -66,7 +67,7 @@ public class PlanExtractor {
 		
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet(net2.getPetriNet());
-		wtm.addNet(net3.getPetriNet());
+		//wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
 		//wtm.addNet(net5.getPetriNet());
 		//wtm.addNet(net6.getPetriNet());
@@ -78,10 +79,11 @@ public class PlanExtractor {
 		
 		ex.printResults(set, 0);
 		ex.getOverallFitness(set, numberOfRuns);
+		// ex.printEndingTimes(); // prints out best 10 and worst 10 ending times
 		
 		while (true){
 			Scanner keyboard = new Scanner(System.in);
-			System.out.println("Enter index (1 = best result, set size = worst result) to run further simulation. Enter 97, 98 or 99 to start simple optimization");
+			System.out.println("Enter index (1 equals best result, set size equals worst result) to run further simulation. Enter 97, 98 or 99 to start simple optimization");
 			int myint = keyboard.nextInt();
 			wtm.resetAll();			
 			switch (myint) {
@@ -94,6 +96,10 @@ public class PlanExtractor {
 				break;			
 			case 97:
 				ex.simulateMultipleSequences(set, wtm);			
+				break;
+			case 666:
+				//Print out ending times of best WorkflowExecutionPlan
+				ex.printEndingTimesOfWEP(set);				
 				break;
 			default:
 				// changed display index, so we need to correct it here
@@ -110,6 +116,22 @@ public class PlanExtractor {
 		//System.exit(0);
 	}
 	
+	private void printEndingTimesOfWEP(ArrayList<WorkflowExecutionPlan> set){
+		List<FireSequence> sequences = listener.getOverallLog();
+		for (FireSequence seq:sequences){
+			for (WorkflowExecutionPlan wep:set){
+				if (seq.equals(wep.getSeq())){
+					wep.addEndingTime(seq.getEndingTime());
+					break;
+				}
+			}
+		}
+		for (int i = set.size()-1; i > set.size()-15; i--){
+			System.out.println("There were " + set.get(i).getNumberOfRuns()+" runs and these ending times:"+set.get(i).getEndingTimes()+ " + performance:"
+					+ set.get(i).getPerformance());
+		}
+	}
+
 	private void simulateMultipleSequences(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm) throws PNException {
 			ArrayList<FireSequence> sequences = new ArrayList<FireSequence>();
 			int runs = 2000;
@@ -305,8 +327,10 @@ public class PlanExtractor {
 	private Set<WorkflowExecutionPlan> generatePlans(){		
 		
 		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
+		endingTimes.clear(); //TreeSet with ending times off all FireSequences
 		for(FireSequence seq: listener.getOverallLog()){
-
+			
+			endingTimes.add(seq.getEndingTime());
 			if(!computedResults.containsKey(seq)){ 
 				computedResults.put(seq,new LinkedList<Double>()); //create list
 			}
@@ -323,7 +347,7 @@ public class PlanExtractor {
 			FireSequence sequence = entry.getKey();
 			List<Double> deadlineResults = entry.getValue();
 			WorkflowExecutionPlan plan=new WorkflowExecutionPlan(sequence, deadlineResults.size(), computeAverage(deadlineResults));
-			
+						
 			if(set.contains(plan)){
 				System.out.println(compareEntries(set, plan)); //this should never be the case.
 			}			
@@ -392,5 +416,23 @@ public class PlanExtractor {
 			result = 0.1234;
 		}
 		return result;
+	}
+	
+	//prints the best and the worst ending times of this simulation run
+	private void printEndingTimes() {
+		List<Double> endingTimesList = new ArrayList<>(endingTimes);
+		List<Double> topTimes = new LinkedList<Double>();
+		List<Double> flopTimes = new LinkedList<Double>();
+		for (int i = 0; i < 10;i++){
+			topTimes.add(endingTimesList.get(i));
+		}
+		for (int j = endingTimesList.size()-11; j < endingTimesList.size();j++){
+			flopTimes.add(endingTimesList.get(j));
+		}
+		System.out.println("The top ending times are:");
+		System.out.println(topTimes);
+		System.out.println("The latest ending times are:");
+		System.out.println(flopTimes);		
+		
 	}
 }
