@@ -34,6 +34,7 @@ public class PlanExtractor {
 	//private HashMap<String, ArrayList<FireSequence>> fireSequence;
 	private AwesomeTimeContext context;
 	private Set<WorkflowExecutionPlan> plans;
+	private TreeSet<Double> endingTimes;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
 	//private static int numberOfRuns = 10864;
 	private static int numberOfRuns = 5000;
@@ -70,7 +71,7 @@ public class PlanExtractor {
 		//PlanExtractor ex = new PlanExtractor();
 		ArrayList<WorkflowExecutionPlan> set = ex.getExecutionPlan();
 		
-		ex.printResults(set);
+		ex.printResults(set,1);
 		ex.getOverallFitness(set, numberOfRuns);
 		
 		while (true){
@@ -91,7 +92,7 @@ public class PlanExtractor {
 				break;
 			default:				
 				wtm.simulateExecutionPlan(200, set.get(myint).getSeq());
-				ex.printResults(set);
+				ex.printResults(set,1);
 				System.out.println("Above are the initial simulation results!");
 				new SimulationResult(wtm, getTimeContext(), false).setVisible(true);
 				break;
