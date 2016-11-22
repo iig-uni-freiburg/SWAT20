@@ -102,6 +102,22 @@ public class PlanExtractor {
 		//System.exit(0);
 	}
 	
+	private void printEndingTimesOfWEP(ArrayList<WorkflowExecutionPlan> set){
+		List<FireSequence> sequences = listener.getOverallLog();
+		for (FireSequence seq:sequences){
+			for (WorkflowExecutionPlan wep:set){
+				if (seq.equals(wep.getSeq())){
+					wep.addEndingTime(seq.getEndingTime());
+					break;
+				}
+			}
+		}
+		for (int i = set.size()-1; i > set.size()-15; i--){
+			System.out.println("There were " + set.get(i).getNumberOfRuns()+" runs and these ending times:"+set.get(i).getEndingTimes()+ " + performance:"
+					+ set.get(i).getPerformance());
+		}
+	}
+
 	private void simulateMultipleSequences(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm) throws PNException {
 			ArrayList<FireSequence> sequences = new ArrayList<FireSequence>();
 			int runs = 2000;
@@ -117,7 +133,7 @@ public class PlanExtractor {
 			//wtm.simulateMultipleSequences(sequences, runs);
 			ArrayList<WorkflowExecutionPlan> executionPlans = getExecutionPlan();
 			getOverallFitness(executionPlans, runs);
-			printResults(executionPlans);
+			printResults(executionPlans, 1);
 			currentSet = executionPlans;
 		
 		
@@ -142,7 +158,7 @@ public class PlanExtractor {
 			//System.out.print(wtm.getResult().toString());
 			simulationSet = getExecutionPlan();
 			//ex.printResults(simulationSet);
-			printResults(simulationSet);
+			printResults(simulationSet, 1);
 			thisRunsPerformance = simulationSet.get(0).getPerformance();
 			if (thisRunsPerformance > bestSimulationPerformance){
 				bestSimulationPerformance = thisRunsPerformance;
@@ -189,7 +205,7 @@ public class PlanExtractor {
 			plans.clear();
 			wtm.simulateExecutionPlan(500, top10.get(intArray[i]).getSeq());
 			ArrayList<WorkflowExecutionPlan> simulationSet = getExecutionPlan();
-			printResults(simulationSet);
+			printResults(simulationSet, 1);
 			if (simulationSet.get(0).getPerformance() > bestPerformance){
 				bestPerformance = simulationSet.get(0).getPerformance();
 			}
@@ -199,12 +215,36 @@ public class PlanExtractor {
 	}
 	
 	
-	private void printResults (ArrayList<WorkflowExecutionPlan> set){
-		int i = 0;
-		for (WorkflowExecutionPlan plan:set){
-			System.out.println(i+": "+plan);
-			i++;
+	private void printResults (ArrayList<WorkflowExecutionPlan> set, int n){
+		switch (n) {
+		case 0:
+			 //Prints Top50 Results
+			int i = set.size();
+			int j = 1;
+			for (int k = i-1; k>(i-51); k--){
+				
+				System.out.println(j+": "+set.get(k));
+				j++;
+				
 			}
+			
+			System.out.println("Set size = " + i);
+			
+			break;
+
+		default:			
+			 //Prints all results
+			int l = 0;
+			for (WorkflowExecutionPlan plan:set){
+				System.out.println(l+": "+plan);
+				l++;
+				}
+			break;
+		}
+
+
+			
+		
 	}
 	
 	private void getOverallFitness(ArrayList<WorkflowExecutionPlan> set, int runs){
@@ -234,7 +274,7 @@ public class PlanExtractor {
 		//plans = generatePlans();
 	}
 	
-	/**gets (and if needed generates) the orderd execution plan**/
+	/**gets (and if needed generates) the ordered execution plan**/
 	public ArrayList<WorkflowExecutionPlan> getExecutionPlan(){
 		if(plans==null||plans.isEmpty()){
 			plans=generatePlans();
@@ -273,8 +313,10 @@ public class PlanExtractor {
 	private Set<WorkflowExecutionPlan> generatePlans(){		
 		
 		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
+		endingTimes.clear(); //TreeSet with ending times off all FireSequences
 		for(FireSequence seq: listener.getOverallLog()){
-
+			
+			endingTimes.add(seq.getEndingTime());
 			if(!computedResults.containsKey(seq)){ 
 				computedResults.put(seq,new LinkedList<Double>()); //create list
 			}
@@ -360,5 +402,23 @@ public class PlanExtractor {
 			result = 0.1234;
 		}
 		return result;
+	}
+	
+	//prints the best and the worst ending times of this simulation run
+	private void printEndingTimes() {
+		List<Double> endingTimesList = new ArrayList<>(endingTimes);
+		List<Double> topTimes = new LinkedList<Double>();
+		List<Double> flopTimes = new LinkedList<Double>();
+		for (int i = 0; i < 10;i++){
+			topTimes.add(endingTimesList.get(i));
+		}
+		for (int j = endingTimesList.size()-11; j < endingTimesList.size();j++){
+			flopTimes.add(endingTimesList.get(j));
+		}
+		System.out.println("The top ending times are:");
+		System.out.println(topTimes);
+		System.out.println("The latest ending times are:");
+		System.out.println(flopTimes);		
+		
 	}
 }

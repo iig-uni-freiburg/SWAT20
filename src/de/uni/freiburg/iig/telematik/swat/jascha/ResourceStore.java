@@ -238,7 +238,7 @@ public class ResourceStore implements NamedComponent{
 	public IResource instantiateResource(ResourceType type, String name, int amount){
 		if(!type.equals(ResourceType.SET))
 			throw new ParameterException("Can only instantiate a Resource Set with amount");
-		if (contains(name)){
+		if (contains(name+"-Set")){
 			throw new ParameterException("A resource with this name already exists!");
 		}
 		ResourceSet rs = new ResourceSet(name, amount);
