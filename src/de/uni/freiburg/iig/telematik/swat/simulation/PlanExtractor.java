@@ -36,22 +36,34 @@ public class PlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
 	//private static int numberOfRuns = 10864;
-	private static int numberOfRuns = 20;
+	private static int numberOfRuns = 5000;
 	
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		//String net1String="Abriss";
 		//String net2String="Strassenbau";
-		String net1String="invoiceIn";
-		String net2String="invoiceOut";
+		String net1String="Abriss";
+		String net2String="Fundament";
+		String net3String="Sisyphos";
+		String net4String="Strassenbau";
+		String net5String="Strassenlaterne";
+		String net6String="Tiefbau";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
 		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
+		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
+		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 		
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet(net2.getPetriNet());
+		wtm.addNet(net3.getPetriNet());
+		wtm.addNet(net4.getPetriNet());
+		wtm.addNet(net5.getPetriNet());
+		wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		PlanExtractor ex = new PlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
@@ -78,10 +90,10 @@ public class PlanExtractor {
 				ex.simulateMultipleSequences(set, wtm);			
 				break;
 			default:				
-				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());
+				wtm.simulateExecutionPlan(200, set.get(myint).getSeq());
 				ex.printResults(set);
 				System.out.println("Above are the initial simulation results!");
-				new SimulationResult(wtm, getTimeContext()).setVisible(true);
+				new SimulationResult(wtm, getTimeContext(), false).setVisible(true);
 				break;
 			}
 

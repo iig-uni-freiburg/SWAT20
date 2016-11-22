@@ -190,11 +190,15 @@ public class ResourceSet extends Resource {
 	}
 
 	public boolean checkIfResourceIsPart(String resourceName) {
+		try{
 		for(Resource r:resources){
 			if (r.getName().equals(resourceName)){
 				return true;
 			}
 		}
 		return false;		
+		} catch (NullPointerException e) {
+			return false;
+		}
 	}
 }

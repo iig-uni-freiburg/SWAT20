@@ -14,6 +14,7 @@ public class JOptionPaneMultiInput {
 	
 	String[] results;
 	boolean hasUserInput=false;
+	JTextField[] fields;
 	
 	public static void main (String args[]){
 		
@@ -22,16 +23,30 @@ public class JOptionPaneMultiInput {
 		System.out.println(test.getResult(1));
 		
 	}
+	
+//	public JOptionPaneMultiInput (String[] fieldNames, String[] fieldDefaultValues){
+//		this(fieldNames);
+//		for(int i = 0;i<fields.length;i++){
+//			fields[i].setText(fieldDefaultValues[i]);
+//			System.out.println("setting text "+fieldDefaultValues[i]);
+//			fields[i].repaint();
+//		}
+//	}
+	
+		public JOptionPaneMultiInput(String... fieldNames){
+			this(null,fieldNames);
+		}
 	 
-	   public JOptionPaneMultiInput (String... fieldNames) {
-		   
-		   JTextField[] fields = new JTextField[fieldNames.length];
-		   JLabel[] labels = new JLabel[fieldNames.length];
+	   public JOptionPaneMultiInput (String[] fieldDefaultValues, String... fieldNames) {
+		   fields = new JTextField[fieldNames.length];
+			   
+		   //JLabel[] labels = new JLabel[fieldNames.length];
 		   JPanel dialogPanel = new JPanel();
 		   
 		   for (int i = 0;i<fieldNames.length;i++){
 			   dialogPanel.add(new JLabel(fieldNames[i]+": "));
 			   fields[i]=new JTextField(6);
+			   trySetDefaultValue(fields[i],i,fieldDefaultValues);
 			   dialogPanel.add(fields[i]);
 			   dialogPanel.add(Box.createHorizontalStrut(5));
 		   }
@@ -48,7 +63,16 @@ public class JOptionPaneMultiInput {
 	      }
 	   }
 	   
-	   public String getResult(int index){
+	   private void trySetDefaultValue(JTextField jTextField, int i, String[] fieldDefaultValues) {
+		try{
+			jTextField.setText(fieldDefaultValues[i]);
+		} catch (NullPointerException e){
+			//ignore
+		}
+		
+	}
+
+	public String getResult(int index){
 		   return results[index];
 	   }
 	   

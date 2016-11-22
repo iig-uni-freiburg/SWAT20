@@ -31,8 +31,8 @@ public class SimulationHistogram {
 		// The histogram takes an array
 		HistogramDataset histo = new HistogramDataset();
 		histo.addSeries(legend, buffer, bins);
-		histo.setType(HistogramType.RELATIVE_FREQUENCY);
-		//histo.setType(HistogramType.SCALE_AREA_TO_1);
+		//histo.setType(HistogramType.RELATIVE_FREQUENCY);
+		histo.setType(HistogramType.SCALE_AREA_TO_1);
 
 		frame = new JFrame(title);
 		//ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());

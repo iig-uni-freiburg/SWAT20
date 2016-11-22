@@ -31,7 +31,7 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 
 	private static final long serialVersionUID = 1729386246000057281L;
 
-	private static int numberOfRuns = 15000; //original:50000
+	private static int numberOfRuns = 25000; //original:50000
 	private int numberOfBins = 100;
 
 	private boolean drainPlaceReached = false;
@@ -78,7 +78,7 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 			//displayResults();
 			String defTimeContext = SwatProperties.getInstance().getActiveTimeContext();
 			AwesomeTimeContext defaultContext = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(defTimeContext);
-			new SimulationResult(timeMachine, defaultContext).setVisible(true);
+			new SimulationResult(timeMachine, defaultContext, true).setVisible(true);
 		}
 		
 	}

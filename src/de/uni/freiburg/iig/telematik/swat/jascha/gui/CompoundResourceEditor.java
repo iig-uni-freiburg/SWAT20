@@ -52,12 +52,12 @@ public class CompoundResourceEditor extends JFrame{
 		ArrayList<IResource>result = new ArrayList<>();
 		
 		for (int i = 0;i<sourceList.getModel().getSize();i++){
-			IResource resStoreRessource=sourceList.getModel().getElementAt(i);
+			IResource resStoreResource=sourceList.getModel().getElementAt(i);
 			
-			if(resStoreRessource == null) 
+			if(resStoreResource == null) 
 				continue; //why can it get null?
 			
-			if(!resStoreRessource.equals(exclude))
+			if(!resStoreResource.equals(exclude))
 					result.add(sourceList.getModel().getElementAt(i));
 		}
 		return result;
