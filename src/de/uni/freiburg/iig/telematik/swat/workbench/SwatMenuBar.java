@@ -48,8 +48,10 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SetCostAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDeadlineAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceContextAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultTimeContextAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.SetNetWeightAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.setRecurringAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.setSimulationRunsAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.LolaPathChooser;
 import de.uni.freiburg.iig.telematik.swat.workbench.dialog.PrismPathChooser;
@@ -110,6 +112,8 @@ public class SwatMenuBar extends JMenuBar implements ActionListener, SwatStateLi
 		simulationMenu.add(new SetDefaultTimeContextAction());
 		simulationMenu.add(new SetDeadlineAction());
 		simulationMenu.add(new SetCostAction());
+		simulationMenu.add(new SetNetWeightAction());
+		simulationMenu.add(new setSimulationRunsAction());
 		simulationMenu.add(getRecurrentToggle());
 		return simulationMenu;
 	}

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import de.invation.code.toval.misc.wd.AbstractWorkingDirectoryProperties;
 import de.invation.code.toval.os.OSUtils;
 import de.invation.code.toval.properties.PropertyException;
@@ -257,6 +259,20 @@ public class SwatProperties extends AbstractWorkingDirectoryProperties<SwatPrope
     
     public void setActiveTimeContext(String timeContextName){
     	setProperty(SwatProperty.DEFAULT_TIME_CONTEXT, timeContextName);
+    }
+    
+    public long getNumberOfSimulationsRuns(){
+    	long result=0;
+    	try{
+    		result = Long.parseLong(getProperty(SwatProperty.SIMULATION_RUNS));
+    	} catch (NullPointerException|java.lang.NumberFormatException e){
+    		result=10000; //default value
+    	}
+    	return result;
+    }
+    
+    public void setNumberOfSimulationRuns(long simulationRuns){
+    	setProperty(SwatProperty.SIMULATION_RUNS, Long.toString(simulationRuns));
     }
 
     @Override

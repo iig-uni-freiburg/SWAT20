@@ -4,12 +4,14 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import de.invation.code.toval.misc.wd.NewWorkingDirectoryAction;
 import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ParameterException;
@@ -31,14 +33,14 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 
 	private static final long serialVersionUID = 1729386246000057281L;
 
-	private static int numberOfRuns = 25000; //original:50000
+	private static long numberOfRuns = 100000; //original:50000
 	private int numberOfBins = 100;
 
 	private boolean drainPlaceReached = false;
 
 	private HashMap<String, ArrayList<Double>> result;
 
-	public SimulateTimeAction(int numberOfRuns) {
+	public SimulateTimeAction(long numberOfRuns) {
 		super("");
 		this.numberOfRuns = numberOfRuns;
 		setTooltip("Simulate Timing");
@@ -70,11 +72,18 @@ public class SimulateTimeAction extends AbstractWorkbenchAction {
 		}
 
 		if(!nets.isEmpty()){
+			
+			//set number of simulations
+			numberOfRuns=SwatProperties.getInstance().getNumberOfSimulationsRuns();
+			
 			WorkflowTimeMachine timeMachine = WorkflowTimeMachine.getInstance();
 			timeMachine.resetAll();
 			timeMachine.clearAllNets();
 			timeMachine.addAllNets(nets);
+			long start = new Date().getTime();
 			result = timeMachine.simulateAll(numberOfRuns);
+			long duration = new Date().getTime()-start;
+			System.out.println("Time: "+duration/1000d+" seconds");
 			//displayResults();
 			String defTimeContext = SwatProperties.getInstance().getActiveTimeContext();
 			AwesomeTimeContext defaultContext = (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(defTimeContext);
