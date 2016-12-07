@@ -327,7 +327,7 @@ public class PlanExtractor {
 				computedResults.put(seq,new LinkedList<Double>()); //create list
 			}
 		}		
-		
+		//merge fire sequences: same fire sequences have same hash-value
 		for(FireSequence seq:listener.getOverallLog()){ //add OverallPerformance
 			//computedResults.get(seq).add(getOverallSuccessRatio(seq));
 			computedResults.get(seq).add(ar.getWeightedSuccessRatio(seq));
