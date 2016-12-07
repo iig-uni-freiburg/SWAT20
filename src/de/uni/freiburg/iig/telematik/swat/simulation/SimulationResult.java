@@ -96,7 +96,9 @@ public class SimulationResult extends JFrame {
 		JPanel results = new JPanel();
 		results.setLayout(new BoxLayout(results, BoxLayout.LINE_AXIS));
 		results.add(new JLabel("Overall Performance: "));
-		results.add(new JLabel(format.format(100*ar.getArchitectureResult())));
+		results.add(new JLabel(format.format(100*ar.getArchitecturePerformance())));
+		results.add(new JLabel(" Overall Costs: "));
+		results.add(new JLabel(format.format(ar.totalGeneratedCosts())));
 		return results;
 	}
 	

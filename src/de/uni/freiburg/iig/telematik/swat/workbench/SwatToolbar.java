@@ -60,6 +60,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceCon
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultResourceStoreAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SetDefaultTimeContextAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SimulateTimeAction;
+import de.uni.freiburg.iig.telematik.swat.workbench.action.StartOptimizationAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SwitchWorkingDirectoryAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.exception.SwatComponentException;
 import de.uni.freiburg.iig.telematik.swat.workbench.listener.SwatStateListener;
@@ -178,6 +179,7 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         standardItems.add(getAnalysisRadioButton());
         standardItems.add(getEditRadioButton());
         standardItems.add(getTimeSimulationButton());
+        standardItems.add(getOptimizationButton());
         //standardItems.add(getEditResourceContext());
         //standardItems.add(getSetDefaultResourceContextBtn());
         //standardItems.add(getSetDefaultResourceStoreBtn());
@@ -185,7 +187,11 @@ public class SwatToolbar extends JToolBar implements ActionListener, SwatStateLi
         //standardItems.add(getDebugButton());
     }
 
-    private JComponent getDebugButton() {
+    private JComponent getOptimizationButton() {
+		return new JButton(new StartOptimizationAction());
+	}
+
+	private JComponent getDebugButton() {
 		JButton debugBtn = new JButton("what is this?");
 		debugBtn.addActionListener(new ActionListener() {
 			

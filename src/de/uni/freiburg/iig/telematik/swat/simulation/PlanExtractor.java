@@ -34,7 +34,8 @@ public class PlanExtractor {
 	//private HashMap<String, ArrayList<FireSequence>> fireSequence;
 	private AwesomeTimeContext context;
 	private Set<WorkflowExecutionPlan> plans;
-	private TreeSet<Double> endingTimes;
+	private TreeSet<Double> endingTimes = new TreeSet<>();
+	private ArchitectureResults ar;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
 	//private static int numberOfRuns = 10864;
 	private static int numberOfRuns = 5000;
@@ -42,29 +43,32 @@ public class PlanExtractor {
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
+		
+		String net1String="invoiceIn";
+		String net2String="invoiceOut";
 		//String net1String="Abriss";
 		//String net2String="Strassenbau";
-		String net1String="Abriss";
-		String net2String="Fundament";
-		String net3String="Sisyphos";
-		String net4String="Strassenbau";
-		String net5String="Strassenlaterne";
-		String net6String="Tiefbau";
+		//String net1String="Abriss";
+		//String net2String="Fundament";
+		//String net3String="Sisyphos";
+		//String net4String="Strassenbau";
+		//String net5String="Strassenlaterne";
+		//String net6String="Tiefbau";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
 		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
-		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
-		GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
-		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
-		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
+		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
+		//GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
+		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 		
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet(net2.getPetriNet());
-		wtm.addNet(net3.getPetriNet());
-		wtm.addNet(net4.getPetriNet());
-		wtm.addNet(net5.getPetriNet());
-		wtm.addNet(net6.getPetriNet());
+		//wtm.addNet(net3.getPetriNet());
+		//wtm.addNet(net4.getPetriNet());
+		//wtm.addNet(net5.getPetriNet());
+		//wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		PlanExtractor ex = new PlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
@@ -271,6 +275,7 @@ public class PlanExtractor {
 		this.listener = listener;
 		//this.fireSequence=getResultsFromNonClonedNets();
 		this.context=getTimeContext();
+		this.ar = new ArchitectureResults(wtm);
 		
 		//plans = generatePlans();
 	}
@@ -314,7 +319,7 @@ public class PlanExtractor {
 	private Set<WorkflowExecutionPlan> generatePlans(){		
 		
 		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
-		endingTimes.clear(); //TreeSet with ending times off all FireSequences
+		endingTimes.clear(); //TreeSet with ending times of all FireSequences
 		for(FireSequence seq: listener.getOverallLog()){
 			
 			endingTimes.add(seq.getEndingTime());
@@ -324,7 +329,8 @@ public class PlanExtractor {
 		}		
 		
 		for(FireSequence seq:listener.getOverallLog()){ //add OverallPerformance
-			computedResults.get(seq).add(getOverallSuccessRatio(seq));
+			//computedResults.get(seq).add(getOverallSuccessRatio(seq));
+			computedResults.get(seq).add(ar.getWeightedSuccessRatio(seq));
 		}
 
 		//HashSet<WorkflowExecutionPlan> set = new HashSet<>();
@@ -355,11 +361,14 @@ public class PlanExtractor {
 		return b.toString();
 	}
 	
+
+	
 	/**compute the score of this workflow execution between 0..1**/
 	private double getOverallSuccessRatio(FireSequence seq){
 		int success = 0;
 		
-		HashMap<String, Double> nets = extractSimulatedTiming(seq); //<NetName, needed time>
+		//HashMap<String, Double> nets = extractSimulatedTiming(seq); //<NetName, needed time>
+		HashMap<String, Double> nets = seq.getFinishTimes();
 		
 		//count successes
 		for(Entry<String, Double> entry:nets.entrySet()){
@@ -376,7 +385,8 @@ public class PlanExtractor {
 		//if (success==nets.keySet().size()) return 1;
 		//return 0;
 	}
-	
+
+
 	/**extract the end-time of the last fired activitiy from each net out of a fireSequence**/
 	private HashMap<String, Double> extractSimulatedTiming(FireSequence seq){
 		HashMap<String, Double> nets = new HashMap<>(); //Net-Name, time
