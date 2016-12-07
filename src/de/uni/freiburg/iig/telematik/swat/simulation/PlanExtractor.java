@@ -332,8 +332,10 @@ public class PlanExtractor {
 		
 		for(Entry<FireSequence, LinkedList<Double>> entry:computedResults.entrySet()){
 			FireSequence sequence = entry.getKey();
+			int numberOfSimulationRuns = entry.getValue().size(); //entryValues are results of how many nets met their deadline
+			double performance = computeAverage(entry.getValue()); //or weighted result
 			List<Double> deadlineResults = entry.getValue();
-			WorkflowExecutionPlan plan=new WorkflowExecutionPlan(sequence, deadlineResults.size(), computeAverage(deadlineResults));
+			WorkflowExecutionPlan plan=new WorkflowExecutionPlan(sequence, numberOfSimulationRuns, performance);
 			
 			if(set.contains(plan)){
 				System.out.println(compareEntries(set, plan)); //this should never be the case.
@@ -375,7 +377,7 @@ public class PlanExtractor {
 		//return 0;
 	}
 	
-	/**extract the time of the last fired activitiy from each net out of a fireSequence**/
+	/**extract the end-time of the last fired activitiy from each net out of a fireSequence**/
 	private HashMap<String, Double> extractSimulatedTiming(FireSequence seq){
 		HashMap<String, Double> nets = new HashMap<>(); //Net-Name, time
 		for(FireElement element: seq.getSequence()){ //get fired transitions

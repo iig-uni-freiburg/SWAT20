@@ -62,11 +62,13 @@ public class SimulationResult extends JFrame {
 	private AwesomeTimeContext tc;
 	private static final DecimalFormat format = new DecimalFormat("#.##");
 	private JPanel content;
+	private ArchitectureResults ar;
 	
 	
 	public SimulationResult(WorkflowTimeMachine wtm, AwesomeTimeContext tc, boolean storeResults) {
 		this.wtm = wtm;
 		this.tc = tc;
+		this.ar = new ArchitectureResults(wtm,tc);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(800, 600);
 		setPreferredSize(new Dimension(600, 500));
@@ -75,6 +77,7 @@ public class SimulationResult extends JFrame {
 		//add(getButtons());
 		content = new JPanel();
 		content.setLayout(new BoxLayout(content,BoxLayout.Y_AXIS));
+		content.add(overallResult());
 		for (String name: wtm.getResult().keySet()){
 			content.add(getResult(name));
 			//writeToFile(new File("/home/richard/Dokumente/diss/Ausarbeitung mit Vorlage/img/simulation"+name+".txt"), name);
@@ -87,6 +90,14 @@ public class SimulationResult extends JFrame {
 		
 		new FireSequenceGUI(wtm.getResult().keySet()).setVisible(true);
 		
+	}
+	
+	private JPanel overallResult(){
+		JPanel results = new JPanel();
+		results.setLayout(new BoxLayout(results, BoxLayout.LINE_AXIS));
+		results.add(new JLabel("Overall Performance: "));
+		results.add(new JLabel(format.format(100*ar.getArchitectureResult())));
+		return results;
 	}
 	
 	public void setVisible(boolean visible){
@@ -114,24 +125,8 @@ public class SimulationResult extends JFrame {
 	}
 	
 	private String getCostString(String netName) {
-		double cost = getCost(netName);
+		double cost = ar.getCost(netName);
 		return format.format(cost);
-	}
-
-	public double getCost(String netName) {
-		ArrayList<Double> results = wtm.getResult().get(netName);
-		double cost = 0;
-		double deadline = getDeadlineFor(netName);
-		TimedNet net = wtm.getNets().get(netName);
-		for(double result: results){
-			if(result>deadline){ //net has not met deadline
-				cost += deadline * net.getCostPerTimeUnit(); //cost to deadline
-				cost += (result-deadline)*net.getCostPerTimeUnitAfterDeadline(); //costs after deadline
-			} else { //net is within deadline
-				cost += result*net.getCostPerTimeUnit();
-			}
-		}
-		return cost/(double)results.size();
 	}
 
 	private String getDeadlineString(String netName) {
@@ -154,28 +149,10 @@ public class SimulationResult extends JFrame {
 		}
 		return netName;
 	}
-
-	private double getDeadlineFor(String netName){
-		double deadline = Double.NaN;
-		if(tc.containsDeadlineFor(netName))
-			deadline = tc.getDeadlineFor(netName);
-		return deadline;
-	}
-	
-	private double getSuccessRatio(String netName){
-		double deadline = getDeadlineFor(netName);
-		ArrayList<Double> result = wtm.getResult().get(netName);
-		int size = result.size();
-		int success = 0;
-		for (double d:result)
-			if (d<=deadline)
-				success++;
-		return (double)success/size;
-	}
 	
 	private String getSuccessString(String netName){
 		String s = "";
-		double successRatio = getSuccessRatio(netName)*100;
+		double successRatio = ar.getSuccessRatio(netName)*100;
 		if(successRatio!=Double.NaN){
 			s = format.format(successRatio);
 		}
@@ -323,7 +300,7 @@ public class SimulationResult extends JFrame {
 		HashMap<String, LinkedList<Double>> costResult = new HashMap<>();
 		for(String netName:wtm.getResult().keySet()){
 			LinkedList<Double> resultList = new LinkedList<>();
-			double deadline = getDeadlineFor(netName);
+			double deadline = ar.getDeadlineFor(netName);
 			TimedNet net = wtm.getNets().get(netName);
 			for(double result: wtm.getResult().get(netName)){
 				double cost=0;
