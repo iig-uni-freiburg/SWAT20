@@ -44,11 +44,11 @@ public class JaschaPlanExtractor {
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
-		String net2String="Strassenlaterne";
-		String net3String="Fundament";
+		//String net2String="Strassenlaterne";
+		//String net3String="Fundament";
 		////String net4String="Sisyphos";
-		//String net5String="Strassenbau";
-		//String net6String="Abriss";
+		String net5String="Strassenbau";
+		String net6String="Abriss";
 		//String net1String="Multinom1";
 		//String net2String="Multinom2";
 		//String net3String="Multinom3";
@@ -57,19 +57,19 @@ public class JaschaPlanExtractor {
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
-		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
-		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		//GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
-		//GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
-		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
+		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
+		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 		
 		wtm.addNet(net1.getPetriNet());
-		wtm.addNet(net2.getPetriNet());
-		wtm.addNet(net3.getPetriNet());
+		//wtm.addNet(net2.getPetriNet());
+		//wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
-		//wtm.addNet(net5.getPetriNet());
-		//wtm.addNet(net6.getPetriNet());
+		wtm.addNet(net5.getPetriNet());
+		wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		JaschaPlanExtractor ex = new JaschaPlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
@@ -397,7 +397,8 @@ public class JaschaPlanExtractor {
 	private double getOverallSuccessRatio(FireSequence seq){
 		int success = 0;
 		
-		HashMap<String, Double> nets = extractSimulatedTiming(seq); //<NetName, needed time>
+		//HashMap<String, Double> nets = extractSimulatedTiming(seq); //<NetName, needed time>
+		HashMap<String, Double> nets = seq.getFinishTimes(); //falls es doch nicht geht, das hier raus
 		
 		//count successes
 		for(Entry<String, Double> entry:nets.entrySet()){
