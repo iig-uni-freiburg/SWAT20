@@ -10,5 +10,6 @@ public class ExponentialDistributedBehaviour extends AbstractTimeBehaviour {
 	distribution = new ExponentialDistribution(mean);
 	type=DistributionType.EXPONENTIAL;
 	setParameterNames("mean");
+	setParameterValues(mean);
 }
 }

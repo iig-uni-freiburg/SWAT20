@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.simulation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.invation.code.toval.misc.wd.ProjectComponentException;
@@ -18,7 +19,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 
 public class WorkflowPermutations {
 	
-	private ArrayList<TimedNet> nets = new ArrayList<>();
+	private Collection<TimedNet> nets = new ArrayList<>();
 	private WorkflowExecutionPlan plan;
 	
 	public static void main (String[] args) throws ProjectComponentException, PNException, IOException {
@@ -29,7 +30,9 @@ public class WorkflowPermutations {
 		wtm.simulateAll(100);
 		PlanExtractor ex = new PlanExtractor();
 		ArrayList<WorkflowExecutionPlan> plans = ex.getExecutionPlan();
-		WorkflowPermutations factory = new WorkflowPermutations(exampleNets, plans.get(0));
+		WorkflowPermutations factory = new WorkflowPermutations(exampleNets, plans.get(1));
+		WorkflowExecutionPlan plan1 = plans.get(0);
+		System.out.println(plan1);
 		List<AbstractTimedTransition> result = factory.getPermutation(1);
 		System.out.println("-------");
 		for (AbstractTimedTransition t:result){
@@ -49,22 +52,27 @@ public class WorkflowPermutations {
 		return netList;
 	}
 	
-	public WorkflowPermutations(ArrayList<TimedNet> nets, WorkflowExecutionPlan plan){
+	public WorkflowPermutations(Collection<TimedNet> nets, WorkflowExecutionPlan plan){
 		this.nets=nets;
 		this.plan=plan;
 	}
 	
+	public WorkflowPermutations(WorkflowExecutionPlan plan) {
+		this(WorkflowTimeMachine.getInstance().getNets().values(),plan);
+	}
+	
 	public List<AbstractTimedTransition> getPermutationFor(AbstractTimedTransition t){
 		ArrayList<AbstractTimedTransition> result = new ArrayList<>();
-		List<AbstractTimedFlowRelation> outgoing = t.getOutgoingRelations(); //outgoing flows
-		for(AbstractTimedFlowRelation flow:outgoing) {
+		List<AbstractTimedFlowRelation> incoming = t.getIncomingRelations(); //outgoing flows
+		for(AbstractTimedFlowRelation flow:incoming) {
 			AbstractPlace place= flow.getPlace(); //connected places
-			List<AbstractTimedFlowRelation> outgoing2 = place.getOutgoingRelations(); //outgoing flows from places
-			for (AbstractTimedFlowRelation rel2:outgoing2){
+			List<AbstractTimedFlowRelation> outgoing = place.getOutgoingRelations(); //outgoing flows from places
+			for (AbstractTimedFlowRelation rel2:outgoing){
 				result.add((AbstractTimedTransition) rel2.getTransition()); //transitions from outgoing place flows
 			}
 			
 		}
+		result.remove(t);
 		return result;
 	}
 	

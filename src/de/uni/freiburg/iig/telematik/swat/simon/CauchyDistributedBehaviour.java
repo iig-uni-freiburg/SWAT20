@@ -11,5 +11,6 @@ public class CauchyDistributedBehaviour extends AbstractTimeBehaviour {
 		distribution = new CauchyDistribution(median, scale);
 		type=DistributionType.CAUCHY;
 		setParameterNames("median","scale");
+		setParameterValues(median, scale);
 	}
 }

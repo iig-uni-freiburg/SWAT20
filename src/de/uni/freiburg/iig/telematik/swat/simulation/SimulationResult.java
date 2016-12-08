@@ -275,8 +275,8 @@ public class SimulationResult extends JFrame {
 				
 			}
 		});
-		costResultThread.run();
-		timeResultThread.run();
+		costResultThread.start();
+		timeResultThread.start();
 	}
 	
 	private void writeCostsResults() {

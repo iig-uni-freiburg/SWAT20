@@ -10,5 +10,6 @@ public class BetaDistributedBehaviour extends AbstractTimeBehaviour{
 		distribution = new BetaDistribution(mean, scale);
 		type=DistributionType.BETA;
 		setParameterNames("mean","scale");
+		setParameterValues(mean, scale);
 	}
 }

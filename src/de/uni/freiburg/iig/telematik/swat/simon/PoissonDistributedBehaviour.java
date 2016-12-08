@@ -16,6 +16,7 @@ public class PoissonDistributedBehaviour extends AbstractTimeBehaviour {
 		distribution = new PoissonDistribution(mean);
 		type=DistributionType.POISSON;
 		setParameterNames("mean");
+		setParameterValues(mean);
 	}
 	
 	public double getNeededTime() {

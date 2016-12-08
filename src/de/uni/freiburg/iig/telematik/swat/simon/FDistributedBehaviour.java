@@ -9,5 +9,6 @@ public class FDistributedBehaviour extends AbstractTimeBehaviour{
 		distribution = new FDistribution(numeratorDegreesOfFreedom, denominatorDegreesOfFreedom);
 		type=DistributionType.F;
 		setParameterNames("numeratorDegreesOfFreedom","denominatorDegreesOfFreedom");
+		setParameterValues(numeratorDegreesOfFreedom, denominatorDegreesOfFreedom);
 	}
 }

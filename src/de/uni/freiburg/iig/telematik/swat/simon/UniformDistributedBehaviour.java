@@ -12,5 +12,6 @@ public class UniformDistributedBehaviour extends AbstractTimeBehaviour{
 		distribution=new UniformRealDistribution(lower, upper);
 		type=DistributionType.UNIFORM;
 		setParameterNames("lower","upper");
+		setParameterValues(lower, upper);
 	}
 }

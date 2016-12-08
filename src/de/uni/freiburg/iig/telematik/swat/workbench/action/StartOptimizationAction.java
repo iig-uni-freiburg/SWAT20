@@ -10,6 +10,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.simulation.PlanExtractor;
+import de.uni.freiburg.iig.telematik.swat.simulation.PlanExtractorResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 import de.uni.freiburg.iig.telematik.wolfgang.editor.component.RTPNEditorComponent;
@@ -38,6 +39,7 @@ public class StartOptimizationAction extends AbstractWorkbenchAction {
 		wtm.addAllNets(loadNets());
 		wtm.simulateAll(SwatProperties.getInstance().getNumberOfSimulationsRuns());
 		PlanExtractor pe = new PlanExtractor();
+		PlanExtractorResult result = new PlanExtractorResult(pe);
 
 	}
 	

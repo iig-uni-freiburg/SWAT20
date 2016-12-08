@@ -347,7 +347,7 @@ public class PlanExtractor {
 				System.out.println(compareEntries(set, plan)); //this should never be the case.
 			}			
 			set.add(plan);
-		}		
+		}
 		return set;
 		
 	}

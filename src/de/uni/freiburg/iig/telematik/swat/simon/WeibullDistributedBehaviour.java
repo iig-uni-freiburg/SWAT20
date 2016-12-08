@@ -10,6 +10,7 @@ public class WeibullDistributedBehaviour  extends AbstractTimeBehaviour{
 		distribution=new WeibullDistribution(alpha, beta);
 		type=DistributionType.WEIBULL;
 		setParameterNames("alpha","beta");
+		setParameterValues(alpha, beta);
 	}
 
 }

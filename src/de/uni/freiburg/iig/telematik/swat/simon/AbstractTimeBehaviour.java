@@ -3,7 +3,8 @@ package de.uni.freiburg.iig.telematik.swat.simon;
 import java.text.DecimalFormat;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
-
+import org.apache.commons.math3.distribution.GammaDistribution;
+import org.apache.commons.math3.distribution.LogNormalDistribution;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeBehaviour;
 import de.uni.freiburg.iig.telematik.sewol.log.LogEntry;
@@ -16,6 +17,8 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 	DistributionType type = DistributionType.UNKNOWN;
 	DecimalFormat format = new DecimalFormat("##.##");
 	String[] parameterNames;
+	private double[] parameterValues;
+
 
 	@Override
 	public boolean isAvailable() {
@@ -38,21 +41,35 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 		return type;
 	}
 	
-	public String toString(){
+	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(type.toString());
-		try{
-			sb.append("("+format.format(distribution.getNumericalMean()));
-			sb.append(", "+format.format(distribution.getNumericalVariance())+")");
-		} catch (Exception e){
-			//ignore parameters
-		}
-		
+		sb.append("(");
+
+		try {
+			for (double d : getParameterValues()) //insert later, after all log normals alre finished
+				sb.append(format.format(d)+", ");
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+			
+		} catch (Exception e) {
+				sb.append(format.format(distribution.getNumericalMean()));
+				sb.append(", " + format.format(distribution.getNumericalVariance()));
+			} 
+		sb.append(")");
 		return sb.toString();
 	}
 	
 	protected void setParameterNames(String... names){
 		parameterNames=names;
+	}
+	
+	protected void setParameterValues(double... values){
+		parameterValues = values;
+	}
+	
+	public double[] getParameterValues() {
+		return parameterValues;
 	}
 	
 	public int getNumberOfParameters(){
@@ -69,6 +86,16 @@ public abstract class AbstractTimeBehaviour implements ITimeBehaviour {
 	
 	public double getCummulativeValueAt(double x){
 		return distribution.cumulativeProbability(x);
+	}
+	
+	public void setParameterValues(double val1, double val2){
+		double[] result={val1,val2};
+		setParameterValues(result);
+	}
+	
+	public void setParameterValues(double val1){
+		double[] result={val1};
+		setParameterValues(result);
 	}
 
 	}
