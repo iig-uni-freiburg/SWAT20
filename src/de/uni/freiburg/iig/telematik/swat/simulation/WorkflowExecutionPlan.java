@@ -77,11 +77,8 @@ public class WorkflowExecutionPlan implements Comparable<WorkflowExecutionPlan>{
 			return 1;
 		}
 		if (this.equals(plan)){
-			System.out.println("We're equal because:");
-			System.out.println(this.toString());
-			System.out.println("equals");
-			System.out.println(plan.toString());
 			//Returning 0 in compareTo means the TreeSet thinks the objects are equal
+			//This always happens when entering the first entry to a TreeSet<WorkfloeExecutionPlan> because it compares the first entry to itself.
 			return 0;
 		}
 		if (performance == plan.getPerformance()){
