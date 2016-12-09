@@ -23,6 +23,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.FireElemen
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.FireSequence;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.simulation.gui.SimulationResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SimulateTimeAction;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;

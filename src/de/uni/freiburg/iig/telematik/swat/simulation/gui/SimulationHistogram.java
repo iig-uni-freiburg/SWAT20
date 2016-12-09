@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.simulation;
+package de.uni.freiburg.iig.telematik.swat.simulation.gui;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -37,7 +37,7 @@ public class SimulationHistogram {
 		frame = new JFrame(title);
 		//ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
 		JFreeChart chart = ChartFactory.createHistogram("Simulated durations",
-				"Duration in ms", "Relative Occurence", histo, PlotOrientation.VERTICAL, true, true, false);
+				"Duration", "Relative Occurence", histo, PlotOrientation.VERTICAL, true, true, false);
 
 		// to save as JPG
 		XYPlot plot = (XYPlot) chart.getPlot();

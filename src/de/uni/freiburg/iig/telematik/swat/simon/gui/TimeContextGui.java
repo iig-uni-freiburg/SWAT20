@@ -125,14 +125,14 @@ public class TimeContextGui extends JFrame implements ListSelectionListener{
 		panel.add(listScroller);
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
-		buttonPanel.add(new JButton(new AddActivityAction(activities, null)));
+		buttonPanel.add(new JButton(new AddActivityAction(activities)));
 		//buttonPanel.add(new JButton(new AddActivityAction(activities, getActivitieHints())));
 		buttonPanel.add(Box.createHorizontalGlue());
 		panel.add(buttonPanel);
 
 		return panel;
 	}
-	
+
 	private JPanel getBehaviorPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));

@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.simulation;
+package de.uni.freiburg.iig.telematik.swat.simulation.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Container;
