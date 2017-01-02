@@ -39,16 +39,17 @@ public class JaschaPlanExtractor {
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
 	private static int numberOfRuns = 2000;
+	private ArchitectureResults ar;
 	
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
-		//String net2String="Strassenlaterne";
+		String net2String="Strassenlaterne";
 		//String net3String="Fundament";
 		////String net4String="Sisyphos";
 		String net5String="Strassenbau";
-		String net6String="Abriss";
+		//String net6String="Abriss";
 		//String net1String="Multinom1";
 		//String net2String="Multinom2";
 		//String net3String="Multinom3";
@@ -57,19 +58,19 @@ public class JaschaPlanExtractor {
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
-		//GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
 		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
 		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
-		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
+		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 		
 		wtm.addNet(net1.getPetriNet());
-		//wtm.addNet(net2.getPetriNet());
+		wtm.addNet(net2.getPetriNet());
 		//wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
 		wtm.addNet(net5.getPetriNet());
-		wtm.addNet(net6.getPetriNet());
+		//wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		JaschaPlanExtractor ex = new JaschaPlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
@@ -130,19 +131,22 @@ public class JaschaPlanExtractor {
 	private void simulateReduction(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, int p, int runs) {
 		//create copy of original set:
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>(set);
+		System.out.println("simulateReduction: intermediateList Average of index 0: " +intermediateList.get(0).getPerformance());
 		ArrayList<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
 		int goalSize = 10;
 		int size = set.size();
 		int round = 0;
-		//Idee: reduziere Ergebnismenge auf weniger als 10 oder Stoppe nach 10 Runden
-		while (size >= goalSize && round < 10){
+		//Idee: reduziere Ergebnismenge auf weniger als 10 oder stoppe nach 10 Runden
+		while (size >= goalSize && round < 1){
 			round++;
 			newList.clear();
 			try {
 				newList = simulateTopPercent(intermediateList, wtm, p, runs);
 				size = newList.size();
+				System.out.println("simulateReduction in loop: newList Average of index 0: " +newList.get(0).getPerformance());
 				intermediateList.clear();
 				intermediateList.addAll(newList);
+				System.out.println("simulateReduction in loop: intermediateList Average of index 0: " +intermediateList.get(0).getPerformance());
 				
 			} catch (PNException e) {
 				// TODO Auto-generated catch block
@@ -234,7 +238,6 @@ public class JaschaPlanExtractor {
 			throws PNException, IOException, ProjectComponentException {		
 		ArrayList<WorkflowExecutionPlan> originalList = new ArrayList<>();
 		Set<WorkflowExecutionPlan> resultSet = new TreeSet<WorkflowExecutionPlan>();
-		//double percent = (p/100.0);
 		int simulationSize = (int) (set.size() * ((double)p/100)) +1; //determine the number of sequences which should be simulated and round up
 		//System.out.println("simulateTopPercent: simulationSize = "+simulationSize+" and set.size() = "+set.size()+
 		//		" and percent = "+((double)p/100)+" and p = "+p);
@@ -247,15 +250,19 @@ public class JaschaPlanExtractor {
 		for (int i=0; i<simulationSize; i++){
 			originalList.add(set.get(i));
 		}
+		System.out.println("simulateTopPercent: originalList performance of index 0 = "+originalList.get(0).getPerformance());
 		for (WorkflowExecutionPlan wep:originalList){
 			//plans.clear();
 			wtm.simulateExecutionPlan(runEach, wep.getSeq());
 			Set<WorkflowExecutionPlan> intermediateSet = generatePlans();
+			System.out.println("simulateTopPercent: intermediateSet performance of index 0 = "+intermediateSet.toString());
 			//System.out.println("intermediateSet size = "+intermediateSet.size());
 			resultSet.addAll(intermediateSet); //intermediateSet should only contain one WorkflowExecutionPlan
+			System.out.println("simulateTopPercent: resultSet performance of index 0 = "+resultSet.toString());
 			intermediateSet.clear();			
 		}		
 		ArrayList<WorkflowExecutionPlan> resultList = new ArrayList<WorkflowExecutionPlan>(resultSet);
+		System.out.println("simulateTopPercent: resultList performance of index 0 = "+resultList.get(0).getPerformance());
 		Collections.reverse(resultList);
 		//printResults(resultList);
 		return resultList;
@@ -302,6 +309,7 @@ public class JaschaPlanExtractor {
 		this.listener = listener;
 		//this.fireSequence=getResultsFromNonClonedNets();
 		this.context=getTimeContext();
+		this.ar = new ArchitectureResults(wtm);
 		
 		//plans = generatePlans();
 	}
@@ -353,13 +361,15 @@ public class JaschaPlanExtractor {
 		for(FireSequence seq: fireSeqList){
 			if(!computedResults.containsKey(seq)){ 
 				computedResults.put(seq,new LinkedList<Double>()); //create list
-				computedResults.get(seq).add(getOverallSuccessRatio(seq));
+				//computedResults.get(seq).add(getOverallSuccessRatio(seq));
+				computedResults.get(seq).add(ar.getWeightedSuccessRatio(seq));
 				endingTimesMap.put(seq, new LinkedList<Double>()); //create second list
 				endingTimesMap.get(seq).add(seq.getEndingTime()); //add ending time to FireSequence
 			}
 			else {
 				endingTimesMap.get(seq).add(seq.getEndingTime()); //list already contains the FireSequence, add another ending time
-				computedResults.get(seq).add(getOverallSuccessRatio(seq));
+				//computedResults.get(seq).add(getOverallSuccessRatio(seq));
+				computedResults.get(seq).add(ar.getWeightedSuccessRatio(seq));
 			}
 		}
 		/*	
@@ -372,7 +382,8 @@ public class JaschaPlanExtractor {
 		for(Entry<FireSequence, LinkedList<Double>> entry:computedResults.entrySet()){
 			FireSequence sequence = entry.getKey();
 			List<Double> deadlineResults = entry.getValue();
-			WorkflowExecutionPlan plan=new WorkflowExecutionPlan(sequence, deadlineResults.size(), computeAverage(deadlineResults));
+			double performance = computeAverage(deadlineResults);
+			WorkflowExecutionPlan plan=new WorkflowExecutionPlan(sequence, deadlineResults.size(), performance);
 			plan.setEndingTimes(endingTimesMap.get(sequence)); //adds the actual ending times to the WorkflowExecutionPlan
 						
 			if(set.contains(plan)){
@@ -436,11 +447,14 @@ public class JaschaPlanExtractor {
 			return 0.4321;
 		}
 		double sum = 0.0;
-		for(double d:list)
+		for(double d:list){
+			System.out.println("ComputeAverage: d = "+d);
 			sum+=d;
+			System.out.println("ComputeAverage: sum+d = "+ (sum+d));
+		}			
 		double result = sum/(double)list.size();
 		if (Double.isNaN(result)){
-			System.out.println("computeAverage: result is NaN, give it 12.34%. ListSize = "+list.size()+" and sum = "+sum);
+			//System.out.println("computeAverage: result is NaN, give it 12.34%. ListSize = "+list.size()+" and sum = "+sum);
 			//Random result to find the entry
 			result = 0.1234;
 		}
