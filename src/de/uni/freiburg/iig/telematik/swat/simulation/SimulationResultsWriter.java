@@ -46,11 +46,11 @@ public class SimulationResultsWriter {
 		fw.close();
 	}
 	
-	static File getFile(){
+	public static File getFile(){
 		return file;
 	}
 	
-	static void writeIntoIndividualFiles(WorkflowTimeMachine wtm, File path) throws IOException{
+	public static void writeIntoIndividualFiles(WorkflowTimeMachine wtm, File path) throws IOException{
 		for(Entry<String, ArrayList<Double>> entry:wtm.getResult().entrySet()){
 			String currentNet=entry.getKey();
 			ArrayList<Double>results=entry.getValue();

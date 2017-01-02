@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.simulation;
+package de.uni.freiburg.iig.telematik.swat.simulation.gui;
 
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -50,6 +50,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.abstr.StatisticList
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.misc.PrintToPdf;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.simulation.ArchitectureResults;
+import de.uni.freiburg.iig.telematik.swat.simulation.FireSequenceGUI;
+import de.uni.freiburg.iig.telematik.swat.simulation.SimulationResultsWriter;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import jdk.nashorn.internal.ir.ReturnNode;

@@ -1,4 +1,4 @@
-package de.uni.freiburg.iig.telematik.swat.simulation;
+package de.uni.freiburg.iig.telematik.swat.simulation.gui;
 
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -21,6 +21,8 @@ import de.invation.code.toval.misc.wd.ProjectComponentException;
 import de.uni.freiburg.iig.telematik.sepia.exception.PNException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
+import de.uni.freiburg.iig.telematik.swat.simulation.PlanExtractor;
+import de.uni.freiburg.iig.telematik.swat.simulation.WorkflowExecutionPlan;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
 import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
@@ -28,6 +30,7 @@ import de.uni.freiburg.iig.telematik.swat.workbench.properties.SwatProperties;
 public class PlanExtractorResult extends JFrame   {
 	
 	private PlanExtractor ex;
+	JList<WorkflowExecutionPlan> jlist;
 
 	public PlanExtractorResult(PlanExtractor ex) {
 		this.ex = ex;
@@ -41,6 +44,7 @@ public class PlanExtractorResult extends JFrame   {
 	private JPanel content(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(new PlanExtractorGuiToolbar(this));
 		panel.add(new JLabel("possible execution plans: "));
 		panel.add(getList());
 		return panel;
@@ -49,7 +53,7 @@ public class PlanExtractorResult extends JFrame   {
 	private JScrollPane getList(){
 		WorkflowExecutionPlan[] plans = new WorkflowExecutionPlan[1];
 		plans = ex.getExecutionPlan().toArray(plans);
-		JList<WorkflowExecutionPlan> jlist = new JList<>(plans);
+		jlist = new JList<>(plans);
 		jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jlist.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
@@ -92,6 +96,11 @@ public class PlanExtractorResult extends JFrame   {
 
 	protected AwesomeTimeContext getTimeContext() throws ProjectComponentException, IOException {
 		return (AwesomeTimeContext) SwatComponents.getInstance().getTimeContextContainer().getComponent(SwatProperties.getInstance().getActiveTimeContext());
+	}
+
+
+	public WorkflowExecutionPlan getSelectedValue() {
+		return jlist.getSelectedValue();
 	}
 
 

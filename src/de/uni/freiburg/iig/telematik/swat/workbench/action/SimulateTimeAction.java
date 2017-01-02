@@ -20,9 +20,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.ITimeConte
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
-import de.uni.freiburg.iig.telematik.swat.simulation.CumulativeHistrogram;
-import de.uni.freiburg.iig.telematik.swat.simulation.SimulationHistogram;
-import de.uni.freiburg.iig.telematik.swat.simulation.SimulationResult;
+import de.uni.freiburg.iig.telematik.swat.simulation.gui.CumulativeHistrogram;
+import de.uni.freiburg.iig.telematik.swat.simulation.gui.SimulationHistogram;
+import de.uni.freiburg.iig.telematik.swat.simulation.gui.SimulationResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
 import de.uni.freiburg.iig.telematik.swat.workbench.Workbench;
 import de.uni.freiburg.iig.telematik.swat.workbench.components.SwatComponents;
