@@ -132,22 +132,19 @@ public class JaschaPlanExtractor {
 	private void simulateReduction(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, int p, int runs) {
 		//create copy of original set:
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>(set);
-		System.out.println("simulateReduction: intermediateList Average of index 0: " +intermediateList.get(0).getPerformance());
 		ArrayList<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
 		int goalSize = 10;
 		int size = set.size();
 		int round = 0;
 		//Idee: reduziere Ergebnismenge auf weniger als 10 oder stoppe nach 10 Runden
-		while (size >= goalSize && round < 1){
+		while (size >= goalSize && round < 10){
 			round++;
 			newList.clear();
 			try {
 				newList = simulateTopPercent(intermediateList, wtm, p, runs);
 				size = newList.size();
-				System.out.println("simulateReduction in loop: newList Average of index 0: " +newList.get(0).getPerformance());
 				intermediateList.clear();
 				intermediateList.addAll(newList);
-				System.out.println("simulateReduction in loop: intermediateList Average of index 0: " +intermediateList.get(0).getPerformance());
 				
 			} catch (PNException e) {
 				// TODO Auto-generated catch block
@@ -240,30 +237,22 @@ public class JaschaPlanExtractor {
 		ArrayList<WorkflowExecutionPlan> originalList = new ArrayList<>();
 		Set<WorkflowExecutionPlan> resultSet = new TreeSet<WorkflowExecutionPlan>();
 		int simulationSize = (int) (set.size() * ((double)p/100)) +1; //determine the number of sequences which should be simulated and round up
-		//System.out.println("simulateTopPercent: simulationSize = "+simulationSize+" and set.size() = "+set.size()+
-		//		" and percent = "+((double)p/100)+" and p = "+p);
 		int runEach = (int) runs/simulationSize;
 		if (runEach <2){
 			//set the number of runs for each sequence to at least two
 			runEach = 2;
 			}
-		System.out.println("Each Sequence will be run "+runEach+" times");
 		for (int i=0; i<simulationSize; i++){
 			originalList.add(set.get(i));
 		}
-		System.out.println("simulateTopPercent: originalList performance of index 0 = "+originalList.get(0).getPerformance());
-		for (WorkflowExecutionPlan wep:originalList){
-			//plans.clear();
+		for (WorkflowExecutionPlan wep:originalList){			
 			wtm.simulateExecutionPlan(runEach, wep.getSeq());
+			//plans.clear();
 			Set<WorkflowExecutionPlan> intermediateSet = generatePlans();
-			System.out.println("simulateTopPercent: intermediateSet performance of index 0 = "+intermediateSet.toString());
-			//System.out.println("intermediateSet size = "+intermediateSet.size());
 			resultSet.addAll(intermediateSet); //intermediateSet should only contain one WorkflowExecutionPlan
-			System.out.println("simulateTopPercent: resultSet performance of index 0 = "+resultSet.toString());
 			intermediateSet.clear();			
 		}		
 		ArrayList<WorkflowExecutionPlan> resultList = new ArrayList<WorkflowExecutionPlan>(resultSet);
-		System.out.println("simulateTopPercent: resultList performance of index 0 = "+resultList.get(0).getPerformance());
 		Collections.reverse(resultList);
 		//printResults(resultList);
 		return resultList;
@@ -352,7 +341,7 @@ public class JaschaPlanExtractor {
 	}
 	
 	private Set<WorkflowExecutionPlan> generatePlans(){
-		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)		
+		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
 		endingTimesMap = new HashMap<>(); //store fire sequence and the ending times which occurred for this sequence during the simulation
 		
 		//listener.getOverallLog gives an empty FireSequence as the last Object --> remove it
@@ -449,14 +438,11 @@ public class JaschaPlanExtractor {
 		}
 		double sum = 0.0;
 		for(double d:list){
-			System.out.println("ComputeAverage: d = "+d);
 			sum+=d;
-			System.out.println("ComputeAverage: sum+d = "+ (sum+d));
 		}			
 		double result = sum/(double)list.size();
 		if (Double.isNaN(result)){
-			//System.out.println("computeAverage: result is NaN, give it 12.34%. ListSize = "+list.size()+" and sum = "+sum);
-			//Random result to find the entry
+			//Random result to find the broken entry
 			result = 0.1234;
 		}
 		return result;
