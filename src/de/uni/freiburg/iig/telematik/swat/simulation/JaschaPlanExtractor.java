@@ -39,18 +39,18 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 2000;
+	private static int numberOfRuns = 200;
 	private ArchitectureResults ar;
 	
 
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
-		//String net2String="Strassenlaterne";
-		//String net3String="Fundament";
-		////String net4String="Sisyphos";
-		String net5String="Strassenbau";
-		String net6String="Abriss";
+		String net2String="Strassenlaterne";
+		String net3String="Fundament";
+		//String net4String="Sisyphos";
+		//String net5String="Strassenbau";
+		//String net6String="Abriss";
 		//String net1String="Multinom1";
 		//String net2String="Multinom2";
 		//String net3String="Multinom3";
@@ -59,19 +59,19 @@ public class JaschaPlanExtractor {
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
-		//GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
-		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
-		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
-		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
+		//GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
+		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 		
 		wtm.addNet(net1.getPetriNet());
-		//wtm.addNet(net2.getPetriNet());
-		//wtm.addNet(net3.getPetriNet());
+		wtm.addNet(net2.getPetriNet());
+		wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
-		wtm.addNet(net5.getPetriNet());
-		wtm.addNet(net6.getPetriNet());
+		//wtm.addNet(net5.getPetriNet());
+		//wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		JaschaPlanExtractor ex = new JaschaPlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
@@ -98,12 +98,19 @@ public class JaschaPlanExtractor {
 				ex.simulateTopPercent(set, wtm, 10, numberOfRuns); //top% to be simulated and number of runs
 				break;
 				
-			case 97:
+			case 97:				
 				ex.simulateMultipleSequences(set, wtm);			
 				break;	
 				
 			case 96:
-				ex.simulateReduction(set, wtm, 5, numberOfRuns);
+				ArrayList<WorkflowExecutionPlan> reductionResult = new ArrayList<WorkflowExecutionPlan>();
+				reductionResult = ex.simulateReduction(set, wtm, 5, numberOfRuns);
+				System.out.println("Do you want to find the best (shortest) ending times? 0 for yes, 1 for no");
+				int inputInt = keyboard.nextInt();
+				if (inputInt == 0){
+					// get best ending times from result
+					ex.getEndingTimesFromWEP(reductionResult);
+				}
 				break;
 				
 			case 666:
@@ -129,22 +136,50 @@ public class JaschaPlanExtractor {
 		//System.exit(0);
 	}
 	
-	private void simulateReduction(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, int p, int runs) {
+	// relies on ending times being unique - which they usually are
+	private void getEndingTimesFromWEP(ArrayList<WorkflowExecutionPlan> set) {
+		HashMap<Double, String> map = new HashMap<Double, String>();
+		List<Double> resultList = new ArrayList<Double>();
+		for (WorkflowExecutionPlan wep: set){
+			double d = wep.getEndingTimes().get(0);
+			map.put(d, wep.getSeq().toString());
+			resultList.add(d);
+		}
+		Collections.sort(resultList);
+		System.out.println("The shortest ending times were:");
+		for (int i=0; i < 20; i++){
+			System.out.println(i+". "+ resultList.get(i) + " for Sequence "+ map.get(resultList.get(i)).toString());			
+		}		
+	}
+
+	private ArrayList<WorkflowExecutionPlan> simulateReduction(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, int p, int runs) {
 		//create copy of original set:
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>(set);
 		ArrayList<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
 		int goalSize = 10;
 		int size = set.size();
 		int round = 0;
-		//Idee: reduziere Ergebnismenge auf weniger als 10 oder stoppe nach 10 Runden
-		while (size >= goalSize && round < 10){
+		int counter = 0;
+		//Idee: reduziere Ergebnismenge auf weniger als 10 oder stoppe nach 10 Runden oder stoppe wenn Ergebnis nicht weiter reduziert wird
+		while (size >= goalSize && round < 20){
 			round++;
 			newList.clear();
 			try {
 				newList = simulateTopPercent(intermediateList, wtm, p, runs);
-				size = newList.size();
 				intermediateList.clear();
 				intermediateList.addAll(newList);
+				
+				if (newList.size() >= (double)size*0.95){
+					counter++;					
+					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar größer wurde, Abbruch
+					if (counter >=3){
+						System.out.println("Breaking because the counter reached 3");
+						break;
+					}
+				}
+				size = newList.size();
+				System.out.println("Round "+round+": Result size = "+size);
+				System.out.println("Counter is at "+counter);
 				
 			} catch (PNException e) {
 				// TODO Auto-generated catch block
@@ -160,6 +195,7 @@ public class JaschaPlanExtractor {
 		}
 		System.out.println("simulateReduction: size = "+size+" and round = "+round);
 		printResults(intermediateList);
+		return intermediateList;
 		
 		
 	}
