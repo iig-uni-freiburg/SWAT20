@@ -24,6 +24,7 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.abstr.StatisticList
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.FireElement;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.FireSequence;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
+import de.uni.freiburg.iig.telematik.swat.jascha.OptimizationResult;
 import de.uni.freiburg.iig.telematik.swat.simon.AwesomeTimeContext;
 import de.uni.freiburg.iig.telematik.swat.simulation.gui.SimulationResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.action.SimulateTimeAction;
@@ -39,8 +40,9 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 200;
+	private static int numberOfRuns = 2000;
 	private ArchitectureResults ar;
+	private List<OptimizationResult> optimizationResults = new ArrayList<OptimizationResult>();
 	
 
 	
@@ -76,6 +78,7 @@ public class JaschaPlanExtractor {
 
 		JaschaPlanExtractor ex = new JaschaPlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
 		ArrayList<WorkflowExecutionPlan> set = ex.getExecutionPlan();
+		ex.optimizationResults.add(new OptimizationResult(new FireSequence(), set));
 		
 		//Reverse list for easier working with it
 		Collections.reverse(set);
@@ -105,11 +108,17 @@ public class JaschaPlanExtractor {
 			case 96:
 				ArrayList<WorkflowExecutionPlan> reductionResult = new ArrayList<WorkflowExecutionPlan>();
 				reductionResult = ex.simulateReduction(set, wtm, 5, numberOfRuns);
-				System.out.println("Do you want to find the best (shortest) ending times? 0 for yes, 1 for no");
+				System.out.println("Do you want to find the best (shortest) ending times? 0 for yes, 1 for no, 2 for OptimzationResults");
 				int inputInt = keyboard.nextInt();
 				if (inputInt == 0){
 					// get best ending times from result
 					ex.getEndingTimesFromWEP(reductionResult);
+				} else 
+				if (inputInt == 2){
+					System.out.println("optimizationResults size="+ex.optimizationResults.size());
+					for (OptimizationResult or:ex.optimizationResults){
+						System.out.println(or.toString());
+					}
 				}
 				break;
 				
@@ -153,10 +162,12 @@ public class JaschaPlanExtractor {
 	}
 
 	private ArrayList<WorkflowExecutionPlan> simulateReduction(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, int p, int runs) {
+		//clear the list with the results of former optimizations
+		//optimizationResults.clear();
 		//create copy of original set:
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>(set);
 		ArrayList<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
-		int goalSize = 10;
+		int goalSize = 5;
 		int size = set.size();
 		int round = 0;
 		int counter = 0;
@@ -169,7 +180,7 @@ public class JaschaPlanExtractor {
 				intermediateList.clear();
 				intermediateList.addAll(newList);
 				
-				if (newList.size() >= (double)size*0.95){
+				if (newList.size() >= (double)size*0.90){ //Reduktion auf mindestens 90%, sonst counter++
 					counter++;					
 					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar größer wurde, Abbruch
 					if (counter >=3){
@@ -194,6 +205,9 @@ public class JaschaPlanExtractor {
 			
 		}
 		System.out.println("simulateReduction: size = "+size+" and round = "+round);
+		for (WorkflowExecutionPlan wep: intermediateList){
+			
+		}
 		printResults(intermediateList);
 		return intermediateList;
 		
@@ -272,6 +286,8 @@ public class JaschaPlanExtractor {
 			throws PNException, IOException, ProjectComponentException {		
 		ArrayList<WorkflowExecutionPlan> originalList = new ArrayList<>();
 		Set<WorkflowExecutionPlan> resultSet = new TreeSet<WorkflowExecutionPlan>();
+		Set<WorkflowExecutionPlan> intermediateSet;
+		//optimizationResults.clear(); //clearing the results here; it's a bad solution!
 		int simulationSize = (int) (set.size() * ((double)p/100)) +1; //determine the number of sequences which should be simulated and round up
 		int runEach = (int) runs/simulationSize;
 		if (runEach <2){
@@ -283,9 +299,10 @@ public class JaschaPlanExtractor {
 		}
 		for (WorkflowExecutionPlan wep:originalList){			
 			wtm.simulateExecutionPlan(runEach, wep.getSeq());
-			//plans.clear();
-			Set<WorkflowExecutionPlan> intermediateSet = generatePlans();
-			resultSet.addAll(intermediateSet); //intermediateSet should only contain one WorkflowExecutionPlan
+			intermediateSet = generatePlans();
+			resultSet.addAll(intermediateSet);
+			//Add the result of this Sequence to the OptimizationResults list
+			optimizationResults.add(new OptimizationResult(wep.getSeq(), new ArrayList<WorkflowExecutionPlan>(intermediateSet)));
 			intermediateSet.clear();			
 		}		
 		ArrayList<WorkflowExecutionPlan> resultList = new ArrayList<WorkflowExecutionPlan>(resultSet);
