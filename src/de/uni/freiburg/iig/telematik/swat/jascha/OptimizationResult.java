@@ -19,12 +19,14 @@ public class OptimizationResult {
 	private double overallFitness=0.0;
 	private double averageFinishTime=0.0;
 	private double medianFinishTime=0.0;
+	private int numberOfRuns;
 
 	public OptimizationResult(FireSequence originalSequence, List<WorkflowExecutionPlan> plans) {
 		this.originalSequence = originalSequence;
 		this.plans = plans;
 		finishTimes = new ArrayList<Double>();		
 		name = originalSequence.toString();
+		numberOfRuns = 0;
 		initialise();
 	}
 	
@@ -36,17 +38,18 @@ public class OptimizationResult {
 				}
 			else {
 				finishTimes.addAll(wep.getEndingTimes());
-				performanceList.add(wep.getPerformance());
+				performanceList.add(wep.getPerformance()*wep.getNumberOfRuns());
+				numberOfRuns += wep.getNumberOfRuns();				
 				}			
 		}
 		averageFinishTime = computeAverage(finishTimes);
 		medianFinishTime = computeMedian(finishTimes);
-		overallFitness = computeAverage(performanceList);		
+		overallFitness = computeAverage(performanceList, numberOfRuns);		
 		
 	}
 
 	private double computeMedian(List<Double> list) {
-		double result = list.get((list.size()/2));
+		double result = list.get(list.size()/2);
 		return result;
 	}
 
@@ -56,10 +59,20 @@ public class OptimizationResult {
 		for (double d: list){
 			sum+=d;
 		}
-		result = sum / list.size();
+		result = sum / (double)list.size();
 		return result;
 	}
 
+	private double computeAverage(List<Double> list, int runs) {
+		double sum = 0.0;
+		double result = 0.0;
+		for (double d: list){
+			sum+=d;
+		}
+		result = sum / runs;
+		return result;
+	}
+	
 	public FireSequence getOriginalSequence() {
 		return originalSequence;
 	}
@@ -70,6 +83,10 @@ public class OptimizationResult {
 	
 	public List<Double> getFinishTimes() {
 		return finishTimes;
+	}
+	
+	public int getNumberOfRuns() {
+		return numberOfRuns;
 	}
 	
 	public double getOverallFitness() {
