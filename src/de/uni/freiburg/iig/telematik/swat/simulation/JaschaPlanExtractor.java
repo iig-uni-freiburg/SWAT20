@@ -40,7 +40,7 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 2000;
+	private static int numberOfRuns = 10000;
 	private ArchitectureResults ar;
 	private List<OptimizationResult> optimizationResults = new ArrayList<OptimizationResult>();
 	
@@ -48,11 +48,11 @@ public class JaschaPlanExtractor {
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
-		String net2String="Strassenlaterne";
+		//String net2String="Strassenlaterne";
 		String net3String="Fundament";
 		//String net4String="Sisyphos";
-		//String net5String="Strassenbau";
-		//String net6String="Abriss";
+		String net5String="Strassenbau";
+		String net6String="Abriss";
 		//String net1String="Multinom1";
 		//String net2String="Multinom2";
 		//String net3String="Multinom3";
@@ -61,19 +61,19 @@ public class JaschaPlanExtractor {
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
-		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		//GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
 		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
-		//GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
-		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
+		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
+		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 		
 		wtm.addNet(net1.getPetriNet());
-		wtm.addNet(net2.getPetriNet());
+		//wtm.addNet(net2.getPetriNet());
 		wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
-		//wtm.addNet(net5.getPetriNet());
-		//wtm.addNet(net6.getPetriNet());
+		wtm.addNet(net5.getPetriNet());
+		wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		JaschaPlanExtractor ex = new JaschaPlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
@@ -84,7 +84,7 @@ public class JaschaPlanExtractor {
 		Collections.reverse(set);
 		
 		ex.printResults(set);
-		ex.getOverallFitness(set);
+		ex.printOverallFitness(set);
 		
 		while (true){
 			Scanner keyboard = new Scanner(System.in);
@@ -98,7 +98,7 @@ public class JaschaPlanExtractor {
 				
 			case 98:				
 				// Another basic approach for combination of results
-				ex.simulateTopPercent(set, wtm, 10, numberOfRuns); //top% to be simulated and number of runs
+				ex.simulateTopPercent(set, wtm, 10, numberOfRuns, true); //top% to be simulated and number of runs
 				break;
 				
 			case 97:				
@@ -116,8 +116,20 @@ public class JaschaPlanExtractor {
 				} else 
 				if (inputInt == 2){
 					System.out.println("optimizationResults size="+ex.optimizationResults.size());
-					for (OptimizationResult or:ex.optimizationResults){
-						System.out.println(or.toString());
+					if (ex.optimizationResults.size()<50){
+						int i = 1;
+						for (OptimizationResult or:ex.optimizationResults){
+							System.out.println(i +". "+ or.toString());
+							i++;
+						} 						
+					} else {
+						System.out.println("1. "+ex.optimizationResults.get(0).toString());
+						int j = 2;
+						for (int i = ex.optimizationResults.size()-50; i<ex.optimizationResults.size(); i++){
+							System.out.println(j +". "+ex.optimizationResults.get(i));
+							j++;
+						}
+					
 					}
 				}
 				break;
@@ -167,7 +179,8 @@ public class JaschaPlanExtractor {
 		//create copy of original set:
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>(set);
 		ArrayList<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
-		int goalSize = 5;
+		boolean generateOptimizationResults = false;
+		int goalSize = 2;
 		int size = set.size();
 		int round = 0;
 		int counter = 0;
@@ -176,7 +189,10 @@ public class JaschaPlanExtractor {
 			round++;
 			newList.clear();
 			try {
-				newList = simulateTopPercent(intermediateList, wtm, p, runs);
+				if (counter >=2){
+					generateOptimizationResults = true;
+				}
+				newList = simulateTopPercent(intermediateList, wtm, p, runs, generateOptimizationResults);
 				intermediateList.clear();
 				intermediateList.addAll(newList);
 				
@@ -185,6 +201,7 @@ public class JaschaPlanExtractor {
 					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar größer wurde, Abbruch
 					if (counter >=3){
 						System.out.println("Breaking because the counter reached 3");
+						size = newList.size();
 						break;
 					}
 				}
@@ -231,7 +248,7 @@ public class JaschaPlanExtractor {
 			//wtm.simulateMultipleSequences(sequences, runs);
 			System.out.println("Simulation ended successfully");
 			ArrayList<WorkflowExecutionPlan> executionPlans = getExecutionPlan();
-			getOverallFitness(executionPlans);
+			printOverallFitness(executionPlans);
 			printResults(executionPlans);
 			currentSet = executionPlans;
 		
@@ -282,7 +299,8 @@ public class JaschaPlanExtractor {
 	
 	// Take top 10% results and simulate them again --> greedy simulation leads to no significant reduction 
 	// in the number sequences if many nets are simulated.
-	private ArrayList<WorkflowExecutionPlan> simulateTopPercent(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, int p, int runs) 
+	private ArrayList<WorkflowExecutionPlan> simulateTopPercent(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm,
+			int p, int runs, boolean generateOptimizationResults) 
 			throws PNException, IOException, ProjectComponentException {		
 		ArrayList<WorkflowExecutionPlan> originalList = new ArrayList<>();
 		Set<WorkflowExecutionPlan> resultSet = new TreeSet<WorkflowExecutionPlan>();
@@ -297,14 +315,24 @@ public class JaschaPlanExtractor {
 		for (int i=0; i<simulationSize; i++){
 			originalList.add(set.get(i));
 		}
-		for (WorkflowExecutionPlan wep:originalList){			
-			wtm.simulateExecutionPlan(runEach, wep.getSeq());
-			intermediateSet = generatePlans();
-			resultSet.addAll(intermediateSet);
-			//Add the result of this Sequence to the OptimizationResults list
-			optimizationResults.add(new OptimizationResult(wep.getSeq(), new ArrayList<WorkflowExecutionPlan>(intermediateSet)));
-			intermediateSet.clear();			
-		}		
+		if (generateOptimizationResults){
+			for (WorkflowExecutionPlan wep:originalList){			
+				wtm.simulateExecutionPlan(runEach, wep.getSeq());
+				intermediateSet = generatePlans();
+				resultSet.addAll(intermediateSet);
+				//Add the result of this Sequence to the OptimizationResults list
+				optimizationResults.add(new OptimizationResult(wep.getSeq(), new ArrayList<WorkflowExecutionPlan>(intermediateSet)));
+				intermediateSet.clear();			
+			}
+		} else {
+			for (WorkflowExecutionPlan wep:originalList){			
+				wtm.simulateExecutionPlan(runEach, wep.getSeq());
+				intermediateSet = generatePlans();
+				resultSet.addAll(intermediateSet);
+				intermediateSet.clear();			
+			}
+		}
+				
 		ArrayList<WorkflowExecutionPlan> resultList = new ArrayList<WorkflowExecutionPlan>(resultSet);
 		Collections.reverse(resultList);
 		//printResults(resultList);
@@ -329,7 +357,7 @@ public class JaschaPlanExtractor {
 		}		
 	}
 	
-	private void getOverallFitness(ArrayList<WorkflowExecutionPlan> set){
+	private void printOverallFitness(ArrayList<WorkflowExecutionPlan> set){
 		float sum = 0;
 		float overallFitness;
 		int runs = 0;

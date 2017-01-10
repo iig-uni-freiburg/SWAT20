@@ -114,6 +114,6 @@ public class OptimizationResult {
 	public String toString() {
 		return "OptimizationResult [originalPlan=" + originalSequence.toString() + ", overallFitness="
 				+ overallFitness + ", averageFinishTime=" + averageFinishTime + ", medianFinishTime=" + medianFinishTime
-				+ ", number of contained Sequences=" + plans.size() + "]";
+				+ ", number of Runs=" + numberOfRuns + ", number of contained Sequences=" + plans.size() + "]";
 	}
 }
