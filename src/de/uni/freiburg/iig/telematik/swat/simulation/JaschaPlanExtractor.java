@@ -40,7 +40,7 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 10000;
+	private static int numberOfRuns = 50000;
 	private ArchitectureResults ar;
 	private List<OptimizationResult> optimizationResults = new ArrayList<OptimizationResult>();
 	
@@ -48,11 +48,11 @@ public class JaschaPlanExtractor {
 	
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
-		//String net2String="Strassenlaterne";
+		String net2String="Strassenlaterne";
 		String net3String="Fundament";
 		//String net4String="Sisyphos";
 		String net5String="Strassenbau";
-		String net6String="Abriss";
+		//String net6String="Abriss";
 		//String net1String="Multinom1";
 		//String net2String="Multinom2";
 		//String net3String="Multinom3";
@@ -61,19 +61,19 @@ public class JaschaPlanExtractor {
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
-		//GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
 		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
 		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
-		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
+		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 		
 		wtm.addNet(net1.getPetriNet());
-		//wtm.addNet(net2.getPetriNet());
+		wtm.addNet(net2.getPetriNet());
 		wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
 		wtm.addNet(net5.getPetriNet());
-		wtm.addNet(net6.getPetriNet());
+		//wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		JaschaPlanExtractor ex = new JaschaPlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
@@ -107,7 +107,7 @@ public class JaschaPlanExtractor {
 				
 			case 96:
 				ArrayList<WorkflowExecutionPlan> reductionResult = new ArrayList<WorkflowExecutionPlan>();
-				reductionResult = ex.simulateReduction(set, wtm, 5, numberOfRuns);
+				reductionResult = ex.simulateReduction(set, wtm, 1, 10000);
 				System.out.println("Do you want to find the best (shortest) ending times? 0 for yes, 1 for no, 2 for OptimzationResults");
 				int inputInt = keyboard.nextInt();
 				if (inputInt == 0){
@@ -121,7 +121,8 @@ public class JaschaPlanExtractor {
 						for (OptimizationResult or:ex.optimizationResults){
 							System.out.println(i +". "+ or.toString());
 							i++;
-						} 						
+						}
+						
 					} else {
 						System.out.println("1. "+ex.optimizationResults.get(0).toString());
 						int j = 2;
@@ -129,7 +130,7 @@ public class JaschaPlanExtractor {
 							System.out.println(j +". "+ex.optimizationResults.get(i));
 							j++;
 						}
-					
+						ex.printWorstAndBestFitness(ex.optimizationResults);					
 					}
 				}
 				break;
@@ -157,6 +158,24 @@ public class JaschaPlanExtractor {
 		//System.exit(0);
 	}
 	
+	private void printWorstAndBestFitness(List<OptimizationResult> list) {
+		List<Double> extremes = new LinkedList<Double>();
+		for (OptimizationResult or:list){
+			extremes.add(or.getOverallFitness());
+		}
+		Collections.sort(extremes);
+		System.out.println("Best Fitness Results:");
+		for (int l = extremes.size()-1; l >=extremes.size()-11; l--){
+			System.out.println(l+". "+ extremes.get(l));
+		}
+		System.out.println("Worst Fitness Results:");
+		for (int k = 0; k <=10; k++){
+			System.out.println((k+10)+". "+ extremes.get(k));
+		}
+		
+	}
+
+
 	// relies on ending times being unique - which they usually are
 	private void getEndingTimesFromWEP(ArrayList<WorkflowExecutionPlan> set) {
 		HashMap<Double, String> map = new HashMap<Double, String>();
@@ -184,6 +203,7 @@ public class JaschaPlanExtractor {
 		int size = set.size();
 		int round = 0;
 		int counter = 0;
+		runs = 10000; //set runs to 10000 for testing
 		//Idee: reduziere Ergebnismenge auf weniger als 10 oder stoppe nach 10 Runden oder stoppe wenn Ergebnis nicht weiter reduziert wird
 		while (size >= goalSize && round < 20){
 			round++;
@@ -196,7 +216,7 @@ public class JaschaPlanExtractor {
 				intermediateList.clear();
 				intermediateList.addAll(newList);
 				
-				if (newList.size() >= (double)size*0.90){ //Reduktion auf mindestens 90%, sonst counter++
+				if (newList.size() >= (double)size*0.95){ //Reduktion auf mindestens 95%, sonst counter++
 					counter++;					
 					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar größer wurde, Abbruch
 					if (counter >=3){
