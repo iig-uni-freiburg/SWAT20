@@ -2,6 +2,7 @@ package de.uni.freiburg.iig.telematik.swat.jascha;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.FireSequence;
@@ -116,4 +117,45 @@ public class OptimizationResult {
 				+ overallFitness + ", averageFinishTime=" + averageFinishTime + ", medianFinishTime=" + medianFinishTime
 				+ ", number of Runs=" + numberOfRuns + ", number of contained Sequences=" + plans.size() + "]";
 	}
+	
+	public static Comparator<OptimizationResult> OptimizationResultPerformanceComparator = new Comparator<OptimizationResult>() {
+
+		@Override
+		public int compare(OptimizationResult o1, OptimizationResult o2) {
+			Double d1 = o1.getOverallFitness();
+			Double d2 = o2.getOverallFitness();
+			return d1.compareTo(d2);
+		}		
+	};
+	
+	public static Comparator<OptimizationResult> OptimizationResultAverageComparator = new Comparator<OptimizationResult>() {
+
+		@Override
+		public int compare(OptimizationResult o1, OptimizationResult o2) {
+			Double d1 = o1.getAverageFinishTime();
+			Double d2 = o2.getAverageFinishTime();
+			return d1.compareTo(d2);
+		}		
+	};
+	
+	public static Comparator<OptimizationResult> OptimizationResultMedianComparator = new Comparator<OptimizationResult>() {
+
+		@Override
+		public int compare(OptimizationResult o1, OptimizationResult o2) {
+			Double d1 = o1.getMedianFinishTime();
+			Double d2 = o2.getMedianFinishTime();
+			return d1.compareTo(d2);
+		}		
+	};
+	
+	public static Comparator<OptimizationResult> OptimizationSequenceComparator = new Comparator<OptimizationResult>() {
+
+		@Override
+		public int compare(OptimizationResult o1, OptimizationResult o2) {
+			String s1 = o1.getOriginalSequence().getTransitionString();
+			String s2 = o2.getOriginalSequence().getTransitionString();
+			return s1.compareTo(s2);
+		}		
+	};
+	
 }
