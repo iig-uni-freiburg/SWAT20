@@ -44,7 +44,7 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 500;
+	private static int numberOfRuns = 2000;
 	private ArchitectureResults ar;
 	private List<OptimizationResult> optimizationResults = new ArrayList<OptimizationResult>();
 	private HashMap<String, Integer> compareMap = new HashMap<String, Integer>();;
@@ -287,7 +287,6 @@ public class JaschaPlanExtractor {
 		int size = set.size();
 		int round = 0;
 		int counter = 0;
-		//runs = 10000; //set runs to 10000 for testing
 		//Idee: reduziere Ergebnismenge auf weniger als 10 oder stoppe nach 10 Runden oder stoppe wenn Ergebnis nicht weiter reduziert wird
 		while (size >= goalSize && round < 20){
 			round++;
@@ -312,7 +311,6 @@ public class JaschaPlanExtractor {
 				size = newList.size();
 				System.out.println("Round "+round+": Result size = "+size);
 				System.out.println("The counter is at "+counter);
-
 			} catch (PNException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -323,10 +321,10 @@ public class JaschaPlanExtractor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 		System.out.println("simulateReduction: size = "+size+" and round = "+round);
 		intermediateList.sort(new WEPsortByPerformance());
+		Collections.reverse(intermediateList);
 		printResults(intermediateList);
 		//Debug:
 		//countFireSequenceOccurences(intermediateList);
@@ -474,12 +472,10 @@ public class JaschaPlanExtractor {
 		}
 		//ArrayList<WorkflowExecutionPlan> mergeList = new ArrayList<WorkflowExecutionPlan>(resultSet);
 		//Merge Duplicate FireSequences for the intermediate result
-		//ArrayList<WorkflowExecutionPlan> resultList = mergeEqualWorkflowExecutionPlans(intermediateList);
-		ArrayList<WorkflowExecutionPlan> resultList = new ArrayList<WorkflowExecutionPlan>(intermediateList);
+		ArrayList<WorkflowExecutionPlan> resultList = mergeEqualWorkflowExecutionPlans(intermediateList);
 		//Collections.sort(resultList);
 		//resultList.sort(new WEPsortByFireSequence());
 		//Collections.reverse(resultList);
-		//printResults(resultList);
 		return resultList;
 	}
 
