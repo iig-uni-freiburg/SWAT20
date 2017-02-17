@@ -44,7 +44,9 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 2000;
+	private static int numberOfRuns = 20000;
+	private static int numberOfOptiRuns = 40000;
+	private static int probability = 10; //Im Moment p/10000
 	private ArchitectureResults ar;
 	private List<OptimizationResult> optimizationResults = new ArrayList<OptimizationResult>();
 	private HashMap<String, Integer> compareMap = new HashMap<String, Integer>();;
@@ -53,11 +55,11 @@ public class JaschaPlanExtractor {
 
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
-		String net2String="Strassenlaterne";
-		//String net3String="Fundament";
+		//String net2String="Strassenlaterne";
+		String net3String="Fundament";
 		//String net4String="Sisyphos";
 		String net5String="Strassenbau";
-		//String net6String="Abriss";
+		String net6String="Abriss";
 		//String net1String="Multinom1";
 		//String net2String="Multinom2";
 		//String net3String="Multinom3";
@@ -66,19 +68,19 @@ public class JaschaPlanExtractor {
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
-		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
-		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		//GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
 		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
-		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
+		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 
 		wtm.addNet(net1.getPetriNet());
-		wtm.addNet(net2.getPetriNet());
-		//wtm.addNet(net3.getPetriNet());
+		//wtm.addNet(net2.getPetriNet());
+		wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
 		wtm.addNet(net5.getPetriNet());
-		//wtm.addNet(net6.getPetriNet());
+		wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		JaschaPlanExtractor ex = new JaschaPlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
@@ -90,7 +92,44 @@ public class JaschaPlanExtractor {
 
 		ex.printResults(set);
 		ex.printOverallFitness(set);
+		
+		/**
+		 * Für schnellere Experimente; für normale Durchführung entfernen
+		 */
+		ArrayList<WorkflowExecutionPlan> reductionResult2 = new ArrayList<WorkflowExecutionPlan>();
+		reductionResult2 = ex.simulateReduction(set, wtm, probability, numberOfOptiRuns);
+		
+		Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+		System.out.println("optimizationResults size="+ex.optimizationResults.size());
+		if (ex.optimizationResults.size()<50){
+			int i = 1;
+			for (OptimizationResult or:ex.optimizationResults){
+				System.out.println(i +". "+ or.toString());
+				i++;
+			}
 
+		} else {
+			System.out.println("1. "+ex.optimizationResults.get(0).toString());
+			int j = 2;
+			for (int i = ex.optimizationResults.size()-50; i<ex.optimizationResults.size(); i++){
+				System.out.println(j +". "+ex.optimizationResults.get(i));
+				j++;
+			}
+			ex.printWorstAndBestFitness(ex.optimizationResults);					
+		}
+		int test = 1;
+		while (test == 1){
+			wtm.resetAll();	
+			Scanner keyboard2 = new Scanner(System.in);
+			int myint2 = keyboard2.nextInt();	
+			wtm.simulateExecutionPlan(8000, ex.optimizationResults.get(myint2).getOriginalSequence());			
+			System.out.println("The simulated pattern was:" + ex.optimizationResults.get(myint2).getOriginalSequence());
+			new SimulationResult(wtm, getTimeContext(),false).setVisible(true);
+		}
+		/**
+		 * Bis hier entfernen
+		 */
+		
 		while (true){
 			Scanner keyboard = new Scanner(System.in);
 			System.out.println("Enter index (0 equals best result) to run further simulation. Enter 96, 97, 98 or 99 to start simple optimization");
@@ -113,7 +152,7 @@ public class JaschaPlanExtractor {
 
 			case 96:
 				ArrayList<WorkflowExecutionPlan> reductionResult = new ArrayList<WorkflowExecutionPlan>();
-				reductionResult = ex.simulateReduction(set, wtm, 5, numberOfRuns);
+				reductionResult = ex.simulateReduction(set, wtm, 10, numberOfRuns);
 				System.out.println("Do you want to find the best (shortest) ending times? 0 for yes, 1 for no, 2 for OptimzationResults");
 				int inputInt = keyboard.nextInt();
 				if (inputInt == 0){
@@ -281,36 +320,36 @@ public class JaschaPlanExtractor {
 		//optimizationResults.clear();
 		//create copy of original set:
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>(set);
-		ArrayList<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
+		List<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
 		boolean generateOptimizationResults = false;
-		int goalSize = 2;
 		int size = set.size();
 		int round = 0;
 		int counter = 0;
 		//Idee: reduziere Ergebnismenge auf weniger als 10 oder stoppe nach 10 Runden oder stoppe wenn Ergebnis nicht weiter reduziert wird
-		while (size >= goalSize && round < 20){
+		while (round < 20){			
 			round++;
+			System.out.println("Starting round "+round+"...");
 			newList.clear();
 			try {
-				if (counter >=2){
+				if (counter >=3 || round == 20){
 					generateOptimizationResults = true;
 				}
 				newList = simulateTopPercent(intermediateList, wtm, p, runs, generateOptimizationResults);
 				intermediateList.clear();
-				intermediateList.addAll(newList);
-
-				if (newList.size() >= (double)size*0.90){ //Reduktion auf mindestens 95%, sonst counter++
+				intermediateList.addAll(newList);				 
+				if (newList.size() > (double)size*0.90){ //Reduktion auf mindestens 90%, sonst counter++
 					counter++;					
 					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar größer wurde, Abbruch
-					if (counter >=3){
-						System.out.println("Breaking because the counter reached 3");
+					if (counter >=4){
+						System.out.println("Breaking because the counter reached "+counter);
 						size = newList.size();
 						break;
 					}
-				}
+				}				
 				size = newList.size();
-				System.out.println("Round "+round+": Result size = "+size);
+				System.out.println("Result size = "+size);
 				System.out.println("The counter is at "+counter);
+				System.out.println("-----------------------------------------------");
 			} catch (PNException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -333,7 +372,7 @@ public class JaschaPlanExtractor {
 	}
 	
 	// checks for WorkflowExecutionPlans with the same FireSequence and merges them (deletes them and creates one new)
-	private ArrayList<WorkflowExecutionPlan> mergeEqualWorkflowExecutionPlans(ArrayList<WorkflowExecutionPlan> list) {
+	private List<WorkflowExecutionPlan> mergeEqualWorkflowExecutionPlans(List<WorkflowExecutionPlan> list) {
 		HashMap<FireSequence, ArrayList<WorkflowExecutionPlan>> map = new HashMap<FireSequence, ArrayList<WorkflowExecutionPlan>>();
 		for (WorkflowExecutionPlan wep:list){
 			if (!map.containsKey(wep.getSeq())){
@@ -344,14 +383,14 @@ public class JaschaPlanExtractor {
 			}
 		}
 		//for each FireSequence that has more than one WEP a new WEP with the merged values is created
-		for (Entry<FireSequence, ArrayList<WorkflowExecutionPlan>> entry:map.entrySet()){
+		for (Entry<FireSequence, ArrayList<WorkflowExecutionPlan>> entry:map.entrySet()){			
 			if (entry.getValue().size()>1){
 				double newPerformance;
 				double nr = 0.0;
 				int newNumberOfRuns = 0;
 				List<Double> newEndingTimes = new ArrayList<Double>();
 				for (WorkflowExecutionPlan wep2:entry.getValue()){
-					nr += (wep2.getPerformance()* wep2.getNumberOfRuns());
+					nr += (wep2.getPerformance() * wep2.getNumberOfRuns());
 					newNumberOfRuns += wep2.getNumberOfRuns();
 					newEndingTimes.addAll(wep2.getEndingTimes());
 					list.remove(wep2);
@@ -363,7 +402,11 @@ public class JaschaPlanExtractor {
 			}
 		}
 		return list;
-	}	
+	}
+	
+	private void remap(ArrayList<WorkflowExecutionPlan> oldWeps, ArrayList<WorkflowExecutionPlan> newWep){
+		
+	}
 
 	// not working!
 	private void simulateMultipleSequences(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm) throws PNException {
@@ -432,17 +475,18 @@ public class JaschaPlanExtractor {
 
 	}
 
-	// Take top 10% results and simulate them again --> greedy simulation leads to no significant reduction 
-	// in the number sequences if many nets are simulated.
-	private ArrayList<WorkflowExecutionPlan> simulateTopPercent(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm,
+	// Take top % results and simulate them again
+	private List<WorkflowExecutionPlan> simulateTopPercent(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm,
 			int p, int runs, boolean generateOptimizationResults) 
 					throws PNException, IOException, ProjectComponentException {		
 		ArrayList<WorkflowExecutionPlan> originalList = new ArrayList<>();		
 		//initializes the TreeSet with the custom comparator WEPsortByPerformance
 		//Set<WorkflowExecutionPlan> resultSet = new TreeSet<WorkflowExecutionPlan>(new WEPsortByPerformance());
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>();
-		Set<WorkflowExecutionPlan> intermediateSet;
-		int simulationSize = (int) (set.size() * ((double)p/100)) +1; //determine the number of sequences which should be simulated and round up
+		Set<WorkflowExecutionPlan> intermediateSet;		
+		//p/1000 for percentages below 1%
+		int simulationSize = (int) (set.size() * ((double)p/10000)) +1; //determine the number of sequences which should be simulated and round up
+		System.out.println("simulationSize ="+simulationSize);
 		int runEach = (int) runs/simulationSize;
 		if (runEach <2){
 			//set the number of runs for each sequence to at least two
@@ -459,7 +503,7 @@ public class JaschaPlanExtractor {
 				intermediateList.addAll(intermediateSet);
 				//Add the result of this Sequence to the OptimizationResults list
 				optimizationResults.add(new OptimizationResult(wep.getSeq(), new ArrayList<WorkflowExecutionPlan>(intermediateSet)));
-				intermediateSet.clear();			
+				intermediateSet.clear();
 			}
 		} else {
 			for (WorkflowExecutionPlan wep:originalList){			
@@ -467,15 +511,39 @@ public class JaschaPlanExtractor {
 				intermediateSet = generatePlans();
 				//resultSet.addAll(intermediateSet);
 				intermediateList.addAll(intermediateSet);
-				intermediateSet.clear();			
+				intermediateSet.clear();
 			}
 		}
-		//ArrayList<WorkflowExecutionPlan> mergeList = new ArrayList<WorkflowExecutionPlan>(resultSet);
-		//Merge Duplicate FireSequences for the intermediate result
-		ArrayList<WorkflowExecutionPlan> resultList = mergeEqualWorkflowExecutionPlans(intermediateList);
-		//Collections.sort(resultList);
-		//resultList.sort(new WEPsortByFireSequence());
-		//Collections.reverse(resultList);
+		
+		List<WorkflowExecutionPlan> resultList = new ArrayList<WorkflowExecutionPlan>();		
+		//Merge Duplicate FireSequences for the intermediate result. Takes a long time to compute --> remove worst 66% before merging		
+		if (generateOptimizationResults){
+			if(intermediateList.size() >1){
+				System.out.println("start merging "+intermediateList.size()+" entries ...");
+				resultList = mergeEqualWorkflowExecutionPlans(intermediateList);
+				resultList.sort(new WEPsortByPerformance());
+			} else {
+				resultList.addAll(intermediateList);
+				resultList.sort(new WEPsortByPerformance());
+			}
+
+		} else {
+			intermediateList.sort(new WEPsortByPerformance());
+			//take top third of sequences and merge them for further optimization			
+			int startIndex = (int)(intermediateList.size() / 1.5);
+			//System.out.println("startIndex="+startIndex+", intermediateList.size="+intermediateList.size());
+			System.out.println("start merging "+(intermediateList.size()-startIndex)+" entries ...");
+			resultList = mergeEqualWorkflowExecutionPlans(intermediateList.subList(startIndex, intermediateList.size()));
+			//take bottom 66% of sequences and remove duplicates to retain the correct reduction factor.
+			TreeSet<WorkflowExecutionPlan> ts = new TreeSet<WorkflowExecutionPlan>(new WEPsortByFireSequence());
+			ts.addAll(intermediateList.subList(0, (startIndex)-1));
+			//System.out.println("intermediateList.size="+intermediateList.size()+", startIndex="+startIndex+
+			//		", resultList.size="+resultList.size()+", ts.size()="+ts.size());
+			resultList.addAll(ts);
+			resultList.sort(new WEPsortByPerformance());
+		}
+		Collections.reverse(resultList);
+		System.out.println("returning "+resultList.size()+" entries");
 		return resultList;
 	}
 
@@ -562,6 +630,7 @@ public class JaschaPlanExtractor {
 	}
 
 	private Set<WorkflowExecutionPlan> generatePlans(){
+		//System.out.println("Starting generatePlans() in PlanExtractor");
 		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
 		endingTimesMap = new HashMap<>(); //store fire sequence and the ending times which occurred for this sequence during the simulation
 

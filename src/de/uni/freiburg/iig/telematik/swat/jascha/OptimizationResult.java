@@ -28,14 +28,14 @@ public class OptimizationResult {
 		finishTimes = new ArrayList<Double>();		
 		name = originalSequence.toString();
 		numberOfRuns = 0;
-		initialise();
+		initialize();
 	}
 	
-	private void initialise() {
+	private void initialize() {
 		List<Double> performanceList = new ArrayList<Double>();
 		for (WorkflowExecutionPlan wep:plans){
 			if (wep == null) {
-				System.out.println("this wep is null:"+wep);
+				System.out.println("OptimizationResult init(): this wep is null:"+wep);
 				}
 			else {
 				finishTimes.addAll(wep.getEndingTimes());

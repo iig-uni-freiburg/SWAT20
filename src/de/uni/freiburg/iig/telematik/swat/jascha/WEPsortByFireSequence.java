@@ -9,7 +9,7 @@ import de.uni.freiburg.iig.telematik.swat.simulation.WorkflowExecutionPlan;
 
 /**
  * @author Jascha
- * Compares (sorts) WorkflowExecutionPlans according to their FireSequences "names" (lexicographical).
+ * Compares (sorts) WorkflowExecutionPlans according to their FireSequences' "names" (lexicographical).
  * IMPORTANT:
  * For TreeSets using this comparator means that two WorkflowExecutionPlans are equal when their FireSequence is the same!
  * This also means that the "older" WEP will be replaced with the new WEP since each object can only be once in a TreeSet!
