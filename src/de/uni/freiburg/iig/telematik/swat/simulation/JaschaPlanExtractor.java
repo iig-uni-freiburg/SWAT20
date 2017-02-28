@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 
 import com.itextpdf.text.log.SysoCounter;
 
@@ -44,7 +45,7 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 20000;
+	private static int numberOfRuns = 100;
 	private static int numberOfOptiRuns = 40000;
 	private static int probability = 10; //Im Moment p/10000
 	private ArchitectureResults ar;
@@ -55,8 +56,8 @@ public class JaschaPlanExtractor {
 
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
-		//String net2String="Strassenlaterne";
-		String net3String="Fundament";
+		String net2String="Strassenlaterne";
+		//String net3String="Fundament";
 		//String net4String="Sisyphos";
 		String net5String="Strassenbau";
 		String net6String="Abriss";
@@ -68,16 +69,16 @@ public class JaschaPlanExtractor {
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
-		//GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
-		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
 		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
 		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 
 		wtm.addNet(net1.getPetriNet());
-		//wtm.addNet(net2.getPetriNet());
-		wtm.addNet(net3.getPetriNet());
+		wtm.addNet(net2.getPetriNet());
+		//wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
 		wtm.addNet(net5.getPetriNet());
 		wtm.addNet(net6.getPetriNet());
@@ -96,36 +97,36 @@ public class JaschaPlanExtractor {
 		/**
 		 * Für schnellere Experimente; für normale Durchführung entfernen
 		 */
-		ArrayList<WorkflowExecutionPlan> reductionResult2 = new ArrayList<WorkflowExecutionPlan>();
-		reductionResult2 = ex.simulateReduction(set, wtm, probability, numberOfOptiRuns);
-		
-		Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
-		System.out.println("optimizationResults size="+ex.optimizationResults.size());
-		if (ex.optimizationResults.size()<50){
-			int i = 1;
-			for (OptimizationResult or:ex.optimizationResults){
-				System.out.println(i +". "+ or.toString());
-				i++;
-			}
-
-		} else {
-			System.out.println("1. "+ex.optimizationResults.get(0).toString());
-			int j = 2;
-			for (int i = ex.optimizationResults.size()-50; i<ex.optimizationResults.size(); i++){
-				System.out.println(j +". "+ex.optimizationResults.get(i));
-				j++;
-			}
-			ex.printWorstAndBestFitness(ex.optimizationResults);					
-		}
-		int test = 1;
-		while (test == 1){
-			wtm.resetAll();	
-			Scanner keyboard2 = new Scanner(System.in);
-			int myint2 = keyboard2.nextInt();	
-			wtm.simulateExecutionPlan(8000, ex.optimizationResults.get(myint2).getOriginalSequence());			
-			System.out.println("The simulated pattern was:" + ex.optimizationResults.get(myint2).getOriginalSequence());
-			new SimulationResult(wtm, getTimeContext(),false).setVisible(true);
-		}
+//		ArrayList<WorkflowExecutionPlan> reductionResult2 = new ArrayList<WorkflowExecutionPlan>();
+//		reductionResult2 = ex.simulateReduction(set, wtm, probability, numberOfOptiRuns);
+//		
+//		Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+//		System.out.println("optimizationResults size="+ex.optimizationResults.size());
+//		if (ex.optimizationResults.size()<50){
+//			int i = 1;
+//			for (OptimizationResult or:ex.optimizationResults){
+//				System.out.println(i +". "+ or.toString());
+//				i++;
+//			}
+//
+//		} else {
+//			System.out.println("1. "+ex.optimizationResults.get(0).toString());
+//			int j = 2;
+//			for (int i = ex.optimizationResults.size()-50; i<ex.optimizationResults.size(); i++){
+//				System.out.println(j +". "+ex.optimizationResults.get(i));
+//				j++;
+//			}
+//			ex.printWorstAndBestFitness(ex.optimizationResults);					
+//		}
+//		int test = 1;
+//		while (test == 1){
+//			wtm.resetAll();	
+//			Scanner keyboard2 = new Scanner(System.in);
+//			int myint2 = keyboard2.nextInt();	
+//			wtm.simulateExecutionPlan(8000, ex.optimizationResults.get(myint2).getOriginalSequence());			
+//			System.out.println("The simulated pattern was:" + ex.optimizationResults.get(myint2).getOriginalSequence());
+//			new SimulationResult(wtm, getTimeContext(),false).setVisible(true);
+//		}
 		/**
 		 * Bis hier entfernen
 		 */
@@ -134,8 +135,58 @@ public class JaschaPlanExtractor {
 			Scanner keyboard = new Scanner(System.in);
 			System.out.println("Enter index (0 equals best result) to run further simulation. Enter 96, 97, 98 or 99 to start simple optimization");
 			int myint = keyboard.nextInt();
-			wtm.resetAll();			
+			wtm.resetAll();	
+			
 			switch (myint) {
+			case 95:
+				ArrayList<FireSequence> subList = new ArrayList<FireSequence>();
+				double quota = 0.0;
+				for (int i=0; i<20; i++){
+					subList.add(set.get(i).getSeq());
+				}
+				System.out.println("starting round 0 ...");
+				ex.crossSectionOptimization(subList);
+				//HashMap<Integer, List<OptimizationResult>> crossSectionOptimizationResultsMap = new HashMap<Integer, List<OptimizationResult>>();
+				Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+				//reverse to get best performances on top of the list
+				Collections.reverse(ex.optimizationResults);
+				//only keep the 20 best results for further optimization
+				if (ex.optimizationResults.size()>20){
+					ex.optimizationResults=ex.optimizationResults.subList(0, 20);					
+				}
+				//crossSectionOptimizationResultsMap.put(0, new ArrayList<OptimizationResult>(ex.optimizationResults));
+				for (int i = 1; i < 20; i++){ //outer loop doing 4 rounds of optimizations after first round
+					System.out.println("starting round "+i+" ...");
+					subList.clear();
+					for (OptimizationResult or:ex.optimizationResults){						
+						subList.add(or.getOriginalSequence());						
+					}
+					ex.crossSectionOptimization(subList);
+					//new method sort and revert
+					Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+					Collections.reverse(ex.optimizationResults);
+					if (ex.optimizationResults.size()>20){
+						ex.optimizationResults=ex.optimizationResults.subList(0, 20);					
+					}
+					
+					//Breaking if the worst result of top20 has a fitness of at least 95% of top result
+					quota = ex.optimizationResults.get(19).getOverallFitness() / ex.optimizationResults.get(0).getOverallFitness();
+					System.out.println("Worst of top 20 / best of top 20: "+
+							ex.optimizationResults.get(19).getOverallFitness() + "/"+ 
+							ex.optimizationResults.get(0).getOverallFitness() + " = "+quota);
+					if (quota > 0.95){
+						System.out.println("breaking...");
+						break;
+					}
+					//Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+					//crossSectionOptimizationResultsMap.put(i, new ArrayList<OptimizationResult>(ex.optimizationResults));					
+				}				
+				System.out.println("printing OptimizationResults...");
+				
+				//ex.printCrossSectionResults(crossSectionOptimizationResultsMap);
+				ex.printOptimizationResults();				
+				break;
+			
 			case 99:				
 				ex.getBestResultFromTop10(set, wtm);
 				break;
@@ -189,19 +240,149 @@ public class JaschaPlanExtractor {
 				for (int i=0; i<maxIndex; i++){
 					System.out.println("The ending times of the run with a performance of "+ set.get(i).getPerformance() + " are:\n"+set.get(i).getEndingTimes() + "\n");
 				}
-				break;			
+				break;		
 
 			default:
-				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());				
-				ex.printResults(set);
-				System.out.println("Above are the initial simulation results!");
-				System.out.println("The simulated plan was:" + set.get(myint).getSeq());
+				System.out.println("Choose sequence to test with 10000 simulation runs");
+				wtm.simulateExecutionPlan(10000, ex.optimizationResults.get(myint).getOriginalSequence());
+//				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());				
+//				ex.printResults(set);
+//				System.out.println("Above are the initial simulation results!");
+//				System.out.println("The simulated plan was:" + set.get(myint).getSeq());
 				new SimulationResult(wtm, getTimeContext(),false).setVisible(true);
 				break;
 			}
 		}
 		//System.out.println("End");
 		//System.exit(0);
+	}
+
+	private void printCrossSectionResults(HashMap<Integer, List<OptimizationResult>> map) {
+		int counter;
+		for (Entry<Integer, List<OptimizationResult>> e:map.entrySet()){
+			counter = 0;
+			System.out.println("Best optimization results of round "+e.getKey()+":");
+			ArrayList<OptimizationResult> intermediateList = (ArrayList<OptimizationResult>)e.getValue();
+			Collections.sort(intermediateList, OptimizationResult.OptimizationResultPerformanceComparator);			
+			for (int i = intermediateList.size()-1; i >= 0; i--){
+				System.out.println(i+". "+intermediateList.get(i).toString());
+				counter ++;
+//				if(counter == 4)
+//					break;
+			}			
+		}
+	}
+
+	private void printOptimizationResults() {		
+		Collections.sort(optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+		System.out.println("optimizationResults size="+optimizationResults.size());
+		if (optimizationResults.size()<50){
+			int i = 1;
+			for (OptimizationResult or:optimizationResults){
+				System.out.println(i +". "+ or.toString());
+				i++;
+			}
+
+		} else {
+			System.out.println("1. "+optimizationResults.get(0).toString());
+			int j = 2;
+			for (int i = optimizationResults.size()-50; i<optimizationResults.size(); i++){
+				System.out.println(j +". "+optimizationResults.get(i));
+				j++;
+			}
+			printWorstAndBestFitness(optimizationResults);	
+		}		
+	}
+
+	private void crossSectionOptimization(List<FireSequence> list) {		
+		// get top pattern from set		
+		// for each pattern select random net for cross-section
+		ArrayList<String> netNames = new ArrayList<String>(wtm.getNets().keySet());
+		int randUpperBound = netNames.size();
+		int simulationRuns = getSimulationRuns(netNames.size());
+		int randomNet = 0;
+		int randomPosition = 0;
+		// do random and position true cross-section for each pattern		
+		for (int counter = 0; counter <= ((list.size()/2)); counter++){
+			//System.out.println("Starting round "+counter+" ...");
+			FireSequence seq = list.get(counter);
+			//Get two random sequences to cross-sect with
+			randomPosition = getRandomSequencePosition(counter, list.size());
+			FireSequence seq1 = list.get(randomPosition);
+			randomPosition = getRandomSequencePosition(counter, list.size());
+			FireSequence seq2 = list.get(randomPosition);
+			
+			//Get random nets that will be exchanged
+			randomNet = ThreadLocalRandom.current().nextInt(randUpperBound);
+			String netName = netNames.get(randomNet);
+			randomNet = ThreadLocalRandom.current().nextInt(randUpperBound);
+			String netName2 = netNames.get(randomNet);
+			
+			//System.out.println("Starting position-true cross-section...");
+			FireSequence ptSequence = positionTrueCrossSection(seq, seq1, netName);
+			//System.out.println("Starting random cross-section...");
+			FireSequence randSequence = randomCrossSection(seq, seq2, netName2);
+			
+			// compare new patterns to previous patterns by simulating the new patterns
+			Set<WorkflowExecutionPlan> intermediateSet;
+			try {
+				//System.out.println("Starting simulation of position-true cross-section...");
+				wtm.simulateExecutionPlan(simulationRuns, ptSequence);
+				intermediateSet = generatePlans();
+				OptimizationResult or1= new OptimizationResult(ptSequence, new ArrayList<WorkflowExecutionPlan>(intermediateSet));
+				intermediateSet.clear();
+				//System.out.println("Starting simulation of random cross-section...");
+				wtm.simulateExecutionPlan(simulationRuns, randSequence);
+				intermediateSet = generatePlans();
+				OptimizationResult or2= new OptimizationResult(randSequence, new ArrayList<WorkflowExecutionPlan>(intermediateSet));
+				optimizationResults.add(or1);
+				optimizationResults.add(or2);
+			} catch (PNException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}		
+		// repeat until some condition
+		
+	}
+
+	private int getRandomSequencePosition(int counter, int size) {
+		int randomPosition = ThreadLocalRandom.current().nextInt(size);
+		if (randomPosition==counter){
+			if (counter == 0){
+				randomPosition = 1;					
+			} else {
+				randomPosition--;
+			}
+		}
+		return randomPosition;
+	}
+
+	//Returns number of runs per pattern simulation depending on number of simulated nets
+	private int getSimulationRuns(int size) {
+		int result=0;
+		switch (size) {
+		case 1:
+			result=10;
+			break;
+		case 2:
+			result=100;
+			break;
+		case 3:
+			result=1000;
+			break;
+		case 4:
+			result=2000;
+			break;
+		case 5:
+			result=3000;
+			break;
+		default:
+			result=1000;
+			break;
+		}
+		return result;
 	}
 
 	private void simulateRepeatedly(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, int runs, int repetitions, int topNumber) {		
@@ -634,7 +815,9 @@ public class JaschaPlanExtractor {
 		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
 		endingTimesMap = new HashMap<>(); //store fire sequence and the ending times which occurred for this sequence during the simulation
 
-		//listener.getOverallLog gives an empty FireSequence as the last Object --> remove it
+		/**
+		 * listener.getOverallLog gives an empty FireSequence as the last Object --> remove it 
+		 */
 		List<FireSequence> fireSeqList = listener.getOverallLog();		
 		fireSeqList.remove(fireSeqList.size()-1);
 
@@ -731,4 +914,116 @@ public class JaschaPlanExtractor {
 		}
 		return result;
 	}
+	
+	private FireSequence randomCrossSection(FireSequence seq0, FireSequence seq1, String netName){
+		
+		ArrayList<FireElement> elementList = retrieveElementsFromNet(seq1, netName, false);
+		ArrayList<FireElement> resultSeqList = new ArrayList<FireElement>(seq0.getSequence());
+		ArrayList<ArrayList<FireElement>> results = new ArrayList<ArrayList<FireElement>>();
+		results.add(elementList);
+		
+		//Remove all FireElements that belong to the net of netName
+		Predicate<FireElement> FireElementPredicate = fireElement -> fireElement.getTransition().getNet().getName().equals(netName);
+		resultSeqList.removeIf(FireElementPredicate);
+		int random = 0;
+		int previousRandom = -1;
+		//bound and randBound reduce the upper bound of the random Integer during the first few rounds so the random numbers don't get clustered too soon
+		int bound = elementList.size();
+		if(bound+2>=resultSeqList.size())
+			bound = (resultSeqList.size()-(int)(resultSeqList.size()/2));
+		int round = 0;
+		//System.out.println("bound = "+bound);
+		for (FireElement elem:elementList){
+			int randBound=bound-round;
+			if (randBound<0)
+				randBound=0;
+			random = ThreadLocalRandom.current().nextInt(previousRandom+1, resultSeqList.size()+1-randBound);
+			if(random > resultSeqList.size()){
+				resultSeqList.add(elem);
+			} else {
+				resultSeqList.add(random, elem);
+			}			
+			previousRandom = random;
+			round++;
+			//System.out.println("random ="+random+", resultSeqList.size()="+resultSeqList.size());
+		}
+		results.add(resultSeqList);
+		FireSequence result = new FireSequence();
+		for (FireElement elem:resultSeqList){
+			result.add(elem);
+		}
+		return result;
+	}
+	
+	private FireSequence positionTrueCrossSection(FireSequence seq0, FireSequence seq1, String netName){
+		// Lists with Transitions from one particular net (netName)
+		ArrayList<FireElement> elementList = retrieveElementsFromNet(seq0, netName, true);
+		ArrayList<FireElement> elementList2 = retrieveElementsFromNet(seq1, netName, false);
+		ArrayList<FireElement> resultSeqList = new ArrayList<FireElement>();
+		ArrayList<FireElement> originalElements = seq0.getSequence();
+		
+		int position = 0;
+		for (FireElement element:elementList){
+			if (element != null){
+				FireElement fe = getNextNotNull(elementList2);
+				if (fe!=null){
+					resultSeqList.add(position, fe);
+				} else {
+					// do nothing, elementList2 is empty and the net (netName) should be finished
+				}
+			} else {
+				if (position > resultSeqList.size()){
+					resultSeqList.add(originalElements.get(position));
+				} else {
+					resultSeqList.add(position, originalElements.get(position));
+				}				
+			}
+			position++;
+		}
+		while (!elementList2.isEmpty()){
+			resultSeqList.add(getNextNotNull(elementList2));
+		}
+		FireSequence result = new FireSequence();
+		for (FireElement elem:resultSeqList){
+			result.add(elem);
+		}
+		return result;
+	}
+	
+	private FireElement getNextNotNull(ArrayList<FireElement> list){
+		int position = 0;
+		for (FireElement element:list){
+			if (element != null){
+				list.remove(position);
+				return element;
+			} else {
+				System.out.println("There shouldn't be a null value in getNextNotNull!");
+			}
+			position++;
+		}
+		return null;
+	}
+	
+	private ArrayList<FireElement> retrieveElementsFromNet (FireSequence seq, String netName, boolean positionTrue){
+		ArrayList<FireElement> elementList = new ArrayList<FireElement>();
+		if (positionTrue){
+			int positionCounter = 0;
+			for (FireElement elem:seq.getSequence()){
+				if (elem.getTransition().getNet().getName().equals(netName)){
+					elementList.add(positionCounter, elem);
+				} else {
+					elementList.add(positionCounter, null);
+				}
+				positionCounter++;
+			}
+		} else {
+			for (FireElement elem:seq.getSequence()){
+				if (elem.getTransition().getNet().getName().equals(netName)){
+					elementList.add(elem);
+				}
+			}
+		}
+		return elementList;
+	}
+	
 }

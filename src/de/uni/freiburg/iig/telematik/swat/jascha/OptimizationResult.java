@@ -117,7 +117,7 @@ public class OptimizationResult {
 				+ overallFitness + ", averageFinishTime=" + averageFinishTime + ", medianFinishTime=" + medianFinishTime
 				+ ", number of Runs=" + numberOfRuns + ", number of contained Sequences=" + plans.size() + "]";
 	}
-	
+	// Best fitness result is at the bottom of the list when sorted, worst fitness is at the top!
 	public static Comparator<OptimizationResult> OptimizationResultPerformanceComparator = new Comparator<OptimizationResult>() {
 
 		@Override
