@@ -45,7 +45,7 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 100;
+	private static int numberOfRuns = 10000;
 	private static int numberOfOptiRuns = 40000;
 	private static int probability = 10; //Im Moment p/10000
 	private ArchitectureResults ar;
@@ -57,7 +57,7 @@ public class JaschaPlanExtractor {
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
 		String net1String="Tiefbau";
 		String net2String="Strassenlaterne";
-		//String net3String="Fundament";
+		String net3String="Fundament";
 		//String net4String="Sisyphos";
 		String net5String="Strassenbau";
 		String net6String="Abriss";
@@ -70,7 +70,7 @@ public class JaschaPlanExtractor {
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
 		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
-		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
 		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
 		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
@@ -78,7 +78,7 @@ public class JaschaPlanExtractor {
 
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet(net2.getPetriNet());
-		//wtm.addNet(net3.getPetriNet());
+		wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
 		wtm.addNet(net5.getPetriNet());
 		wtm.addNet(net6.getPetriNet());
@@ -174,7 +174,7 @@ public class JaschaPlanExtractor {
 					System.out.println("Worst of top 20 / best of top 20: "+
 							ex.optimizationResults.get(19).getOverallFitness() + "/"+ 
 							ex.optimizationResults.get(0).getOverallFitness() + " = "+quota);
-					if (quota > 0.95){
+					if (quota > 0.98){
 						System.out.println("breaking...");
 						break;
 					}
@@ -233,13 +233,12 @@ public class JaschaPlanExtractor {
 				break;
 
 			case 666:
-				//Idea: Print best ending time for Top15 Results				
-				int maxIndex = 15;
-				if (set.size()<15) 
-					maxIndex=set.size();
-				for (int i=0; i<maxIndex; i++){
-					System.out.println("The ending times of the run with a performance of "+ set.get(i).getPerformance() + " are:\n"+set.get(i).getEndingTimes() + "\n");
+				//Check how many Sequences are duplicates in optimizationResults
+				HashSet<FireSequence> hashSet = new HashSet<FireSequence>();
+				for (OptimizationResult or:ex.optimizationResults){
+					hashSet.add(or.getOriginalSequence());
 				}
+				System.out.println("HashSet.size = "+hashSet.size());
 				break;		
 
 			default:
@@ -302,15 +301,13 @@ public class JaschaPlanExtractor {
 		int simulationRuns = getSimulationRuns(netNames.size());
 		int randomNet = 0;
 		int randomPosition = 0;
-		// do random and position true cross-section for each pattern		
+		// do random and position true cross-section for each pattern of first half of list	
 		for (int counter = 0; counter <= ((list.size()/2)); counter++){
 			//System.out.println("Starting round "+counter+" ...");
 			FireSequence seq = list.get(counter);
-			//Get two random sequences to cross-sect with
-			randomPosition = getRandomSequencePosition(counter, list.size());
-			FireSequence seq1 = list.get(randomPosition);
-			randomPosition = getRandomSequencePosition(counter, list.size());
-			FireSequence seq2 = list.get(randomPosition);
+			//Get two random sequences different to seq to cross-sect with
+			FireSequence seq1 = getRandomSequence(seq, list);
+			FireSequence seq2 = getRandomSequence(seq, list);
 			
 			//Get random nets that will be exchanged
 			randomNet = ThreadLocalRandom.current().nextInt(randUpperBound);
@@ -343,20 +340,18 @@ public class JaschaPlanExtractor {
 			}
 			
 		}		
-		// repeat until some condition
-		
 	}
 
-	private int getRandomSequencePosition(int counter, int size) {
-		int randomPosition = ThreadLocalRandom.current().nextInt(size);
-		if (randomPosition==counter){
-			if (counter == 0){
-				randomPosition = 1;					
-			} else {
-				randomPosition--;
-			}
+	//Returns random FireSequence != to the one at list.get(counter)
+	private FireSequence getRandomSequence(FireSequence seq, List<FireSequence> list) {
+		int randomPosition = ThreadLocalRandom.current().nextInt(list.size());
+		while (seq.equals(list.get(randomPosition))){
+			int i =1;
+			System.out.println("GetRandomSequence picked the same sequence "+i+" time(s)");
+			randomPosition = ThreadLocalRandom.current().nextInt(list.size());
+			i++;
 		}
-		return randomPosition;
+		return list.get(randomPosition);
 	}
 
 	//Returns number of runs per pattern simulation depending on number of simulated nets
@@ -373,10 +368,10 @@ public class JaschaPlanExtractor {
 			result=1000;
 			break;
 		case 4:
-			result=2000;
+			result=500;
 			break;
 		case 5:
-			result=3000;
+			result=1000;
 			break;
 		default:
 			result=1000;
@@ -919,8 +914,6 @@ public class JaschaPlanExtractor {
 		
 		ArrayList<FireElement> elementList = retrieveElementsFromNet(seq1, netName, false);
 		ArrayList<FireElement> resultSeqList = new ArrayList<FireElement>(seq0.getSequence());
-		ArrayList<ArrayList<FireElement>> results = new ArrayList<ArrayList<FireElement>>();
-		results.add(elementList);
 		
 		//Remove all FireElements that belong to the net of netName
 		Predicate<FireElement> FireElementPredicate = fireElement -> fireElement.getTransition().getNet().getName().equals(netName);
@@ -947,10 +940,11 @@ public class JaschaPlanExtractor {
 			round++;
 			//System.out.println("random ="+random+", resultSeqList.size()="+resultSeqList.size());
 		}
-		results.add(resultSeqList);
 		FireSequence result = new FireSequence();
 		for (FireElement elem:resultSeqList){
-			result.add(elem);
+			//create new FireElement instead of re-using the old one to avoid confusion
+			//result.add(elem);
+			result.add(new FireElement(elem.getTransition()));
 		}
 		return result;
 	}
@@ -980,41 +974,46 @@ public class JaschaPlanExtractor {
 			}
 			position++;
 		}
+		//if elementList is finished but there are still FireElements in elementList2, add them at the end
 		while (!elementList2.isEmpty()){
 			resultSeqList.add(getNextNotNull(elementList2));
 		}
 		FireSequence result = new FireSequence();
 		for (FireElement elem:resultSeqList){
-			result.add(elem);
+			//create new FireElement instead of re-using the old one to avoid confusion
+			//result.add(elem);
+			result.add(new FireElement(elem.getTransition()));
 		}
 		return result;
 	}
 	
 	private FireElement getNextNotNull(ArrayList<FireElement> list){
-		int position = 0;
+		if (list.isEmpty())
+			return null;
+		int position = -1;
+		FireElement result = null;
 		for (FireElement element:list){
-			if (element != null){
-				list.remove(position);
-				return element;
+			position++;
+			if (element != null){				
+				result = element;
+				break;
 			} else {
 				System.out.println("There shouldn't be a null value in getNextNotNull!");
 			}
-			position++;
 		}
-		return null;
+		list.remove(position);
+		return result;
 	}
 	
 	private ArrayList<FireElement> retrieveElementsFromNet (FireSequence seq, String netName, boolean positionTrue){
 		ArrayList<FireElement> elementList = new ArrayList<FireElement>();
 		if (positionTrue){
-			int positionCounter = 0;
 			for (FireElement elem:seq.getSequence()){
 				if (elem.getTransition().getNet().getName().equals(netName)){
-					elementList.add(positionCounter, elem);
+					elementList.add(elem);
 				} else {
-					elementList.add(positionCounter, null);
+					elementList.add(null);
 				}
-				positionCounter++;
 			}
 		} else {
 			for (FireElement elem:seq.getSequence()){
