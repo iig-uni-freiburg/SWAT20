@@ -117,7 +117,8 @@ public class SimulationResult extends JFrame {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		String deadline = getDeadlineString(netName);
 		String cost = getCostString(netName);
-		JLabel label = new JLabel("<html> "+getNameDetail(netName)+": <br> "+getSuccessString(netName)+" <br> Deadline: <br>"+deadline+"<br> Cost: "+cost+" </html> ");
+		JLabel label = new JLabel("<html>&emsp;"+getNameDetail(netName)+": <br>&emsp;"+getSuccessString(netName)+
+				"<br>&emsp;Deadline:<br>&emsp;"+deadline+"<br>&emsp;Cost: "+cost+"</html>");
 		panel.add(label);
 		label.setSize(d);
 		label.setPreferredSize(d);
