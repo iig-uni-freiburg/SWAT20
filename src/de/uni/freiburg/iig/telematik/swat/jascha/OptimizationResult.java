@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -112,10 +114,13 @@ public class OptimizationResult {
 	}
 	
 	@Override
-	public String toString() {
-		return "OptimizationResult [originalPlan=" + originalSequence.toString() + ", overallFitness="
-				+ overallFitness + ", averageFinishTime=" + averageFinishTime + ", medianFinishTime=" + medianFinishTime
-				+ ", number of Runs=" + numberOfRuns + ", number of contained Sequences=" + plans.size() + "]";
+	public String toString() {		
+		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+		dfs.setDecimalSeparator('.');
+		DecimalFormat df = new DecimalFormat("#.###", dfs);
+		return "OptimizationResult: [overallFitness=" + df.format(overallFitness) + ", averageFinishTime=" + df.format(averageFinishTime)
+				+ ", medianFinishTime=" + df.format(medianFinishTime) + ", number of Runs=" + numberOfRuns + ", number of contained Sequences=" + plans.size()
+				+ ", originalPlan=" + originalSequence.getTransitionString() +"]";
 	}
 	// Best fitness result is at the bottom of the list when sorted, worst fitness is at the top!
 	public static Comparator<OptimizationResult> OptimizationResultPerformanceComparator = new Comparator<OptimizationResult>() {

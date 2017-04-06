@@ -48,10 +48,11 @@ public class JaschaPlanExtractor {
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
 	private static int numberOfRuns = 1000;
 	private static int numberOfOptiRuns = 100;
-	private static double quote = 0.95;
+	private static double quote = 0.98;
 	private static int probability = 100; //Im Moment p/10000
 	private ArchitectureResults ar;
 	private List<OptimizationResult> optimizationResults = new ArrayList<OptimizationResult>();
+
 	private HashMap<String, Integer> compareMap = new HashMap<String, Integer>();;
 
 
@@ -271,6 +272,72 @@ public class JaschaPlanExtractor {
 		}
 		//System.out.println("End");
 		//System.exit(0);
+	}
+	public void runCrosssectionOptimization(){
+		//create initial sequences
+		ArrayList<WorkflowExecutionPlan> set = getExecutionPlan();
+		//necessary to reverse
+		Collections.reverse(set);
+		//initiate cross-section optimization
+		ArrayList<FireSequence> subList = new ArrayList<FireSequence>();
+		double quota = 0.0;
+		for (int i=0; i<20; i++){ 
+			subList.add(set.get(i).getSeq());
+		}
+		System.out.println("starting round 0 ...");
+		crossSectionOptimization(subList);
+		//HashMap<Integer, List<OptimizationResult>> crossSectionOptimizationResultsMap = new HashMap<Integer, List<OptimizationResult>>();
+		Collections.sort(optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+		//reverse to get best performances on top of the list
+		Collections.reverse(optimizationResults);
+		//only keep the 20 best results for further optimization
+		if (optimizationResults.size()>20){
+			optimizationResults=optimizationResults.subList(0, 20);
+		}
+
+		quota = optimizationResults.get(19).getOverallFitness() / optimizationResults.get(0).getOverallFitness();
+		System.out.println("Worst of top 20 / best of top 20: "+
+				optimizationResults.get(19).getOverallFitness() + "/"+ 
+				optimizationResults.get(0).getOverallFitness() + " = "+quota);
+		//Only necessary if quota is reached after first round
+//		if (quota > quote){
+//			printOptimizationResults();
+//			System.out.println("breaking...");					
+//			break;
+//		}
+
+		//crossSectionOptimizationResultsMap.put(0, new ArrayList<OptimizationResult>(ex.optimizationResults));
+		for (int i = 1; i < 20; i++){ //outer loop doing 20 rounds of optimizations if not broken first
+			System.out.println("starting round "+i+" ...");
+			subList.clear();
+			for (OptimizationResult or:optimizationResults){						
+				subList.add(or.getOriginalSequence());						
+			}
+			crossSectionOptimization(subList);
+			//new method sort and revert
+			Collections.sort(optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+			Collections.reverse(optimizationResults);
+			if (optimizationResults.size()>20){
+				optimizationResults=optimizationResults.subList(0, 20);					
+			}
+
+			//Breaking if the worst result of top20 has a fitness of at least 95% of top result
+			quota = optimizationResults.get(19).getOverallFitness() / optimizationResults.get(0).getOverallFitness();
+			System.out.println("Worst of top 20 / best of top 20: "+
+					optimizationResults.get(19).getOverallFitness() + "/"+ 
+					optimizationResults.get(0).getOverallFitness() + " = "+quota);
+			if (quota > quote){
+				System.out.println("breaking...");
+				break;
+			}
+			//Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+			//crossSectionOptimizationResultsMap.put(i, new ArrayList<OptimizationResult>(ex.optimizationResults));					
+		}				
+		System.out.println("printing OptimizationResults...");
+
+		//ex.printCrossSectionResults(crossSectionOptimizationResultsMap);
+		printOptimizationResults();	
+		System.out.println("Choose sequence to test with 10000 simulation runs");
 	}
 
 	private void printCrossSectionResults(HashMap<Integer, List<OptimizationResult>> map) {
@@ -1102,6 +1169,12 @@ public class JaschaPlanExtractor {
 			}
 		}
 		return elementList;
+	}
+	public List<OptimizationResult> getOptimizationResults() {
+		return optimizationResults;
+	}
+	public static int getNumberOfRuns() {
+		return numberOfRuns;
 	}
 	
 }

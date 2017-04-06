@@ -91,7 +91,8 @@ public class SimulationResult extends JFrame {
 		if(storeResults)
 			writeResults();
 		
-		new FireSequenceGUI(wtm.getResult().keySet()).setVisible(true);
+//		creates window with sequences for each net --> removed for presentation
+//		new FireSequenceGUI(wtm.getResult().keySet()).setVisible(true);
 		
 	}
 	
