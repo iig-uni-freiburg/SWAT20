@@ -44,7 +44,7 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 2000;
+	private static int numberOfRuns = 10000;
 	private ArchitectureResults ar;
 	private List<OptimizationResult> optimizationResults = new ArrayList<OptimizationResult>();
 	private HashMap<String, Integer> compareMap = new HashMap<String, Integer>();;
@@ -52,9 +52,10 @@ public class JaschaPlanExtractor {
 
 
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
+		
 		String net1String="Tiefbau";
 		String net2String="Strassenlaterne";
-		//String net3String="Fundament";
+		String net3String="Fundament";
 		//String net4String="Sisyphos";
 		String net5String="Strassenbau";
 		//String net6String="Abriss";
@@ -67,7 +68,7 @@ public class JaschaPlanExtractor {
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
 		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
-		//GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
+		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
 		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
 		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
 		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
@@ -75,7 +76,7 @@ public class JaschaPlanExtractor {
 
 		wtm.addNet(net1.getPetriNet());
 		wtm.addNet(net2.getPetriNet());
-		//wtm.addNet(net3.getPetriNet());
+		wtm.addNet(net3.getPetriNet());
 		//wtm.addNet(net4.getPetriNet());
 		wtm.addNet(net5.getPetriNet());
 		//wtm.addNet(net6.getPetriNet());
@@ -301,7 +302,7 @@ public class JaschaPlanExtractor {
 
 				if (newList.size() >= (double)size*0.90){ //Reduktion auf mindestens 95%, sonst counter++
 					counter++;					
-					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar größer wurde, Abbruch
+					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar grï¿½ï¿½er wurde, Abbruch
 					if (counter >=3){
 						System.out.println("Breaking because the counter reached 3");
 						size = newList.size();

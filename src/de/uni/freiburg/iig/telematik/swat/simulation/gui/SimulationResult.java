@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
 import org.jfree.chart.ChartPanel;
@@ -80,6 +81,7 @@ public class SimulationResult extends JFrame {
 		//add(getButtons());
 		content = new JPanel();
 		content.setLayout(new BoxLayout(content,BoxLayout.Y_AXIS));
+		content.add(getSaveButtons());
 		content.add(overallResult());
 		for (String name: wtm.getResult().keySet()){
 			content.add(getResult(name));
@@ -88,8 +90,8 @@ public class SimulationResult extends JFrame {
 		JScrollPane scrollPane = new JScrollPane(content);
 		getContentPane().add(scrollPane);
 		
-		if(storeResults)
-			writeResults();
+		//if(storeResults)
+		//	writeResults();
 		
 		new FireSequenceGUI(wtm.getResult().keySet()).setVisible(true);
 		
@@ -103,6 +105,50 @@ public class SimulationResult extends JFrame {
 		results.add(new JLabel(" Overall Costs: "));
 		results.add(new JLabel(format.format(ar.totalGeneratedCosts())));
 		return results;
+	}
+	
+	private JButton getSaveGanttButton(){
+		JButton gantt = new JButton("save for gantt");
+		gantt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				File pathForResults = new File("/home/richard/Dokumente/diss/Ausarbeitung mit Vorlage/img/gantt/tmp/");
+				writeResults(pathForResults, pathForResults);
+				try {
+					SimulationResultsWriter.writePerformance(wtm, pathForResults);
+				} catch (IOException | ProjectComponentException e1) {
+				}
+				//SimulationResultsWriter.writeFireSequence(pathForResults, fireSequence);
+				
+				
+			}
+		});
+		return gantt;
+	}
+	
+	
+	private JToolBar getSaveButtons(){
+		JToolBar panel = new JToolBar();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		panel.add(getSaveAllButton());
+		panel.add(getSaveGanttButton());
+		return panel;
+	}
+	
+	private JButton getSaveAllButton(){
+		JButton save = new JButton("save timing and simulation");
+		save.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				File timePath = new File("/home/richard/Dokumente/diss/Ausarbeitung mit Vorlage/img/simulation/");
+				File pathForCostResults = new File("/home/richard/Dokumente/diss/Ausarbeitung mit Vorlage/img/costs/");
+				writeResults(timePath,pathForCostResults);	
+				
+			}
+		});
+		return save;
 	}
 	
 	public void setVisible(boolean visible){
@@ -221,48 +267,38 @@ public class SimulationResult extends JFrame {
 		return panel;
 	}
 	
-	private void writeToFile(File file, String netName){
-		Thread thread = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				ArrayList<Double> results = wtm.getResult().get(netName);
-				try {
-					FileWriter fw = new FileWriter(file);
-					for(double d: results){
-						fw.write(Double.toString(d));
-						fw.write(System.getProperty("line.separator"));
-					}
-					fw.flush();
-					fw.close();
-				} catch (IOException e) {
-					Workbench.errorMessage("Could not write result file "+file.getAbsolutePath(), e, false);
-				}
-				
-			}
-		});
-		thread.run();
-
-	}
+//	private void writeToFile(File file, String netName){
+//		Thread thread = new Thread(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				ArrayList<Double> results = wtm.getResult().get(netName);
+//				try {
+//					FileWriter fw = new FileWriter(file);
+//					for(double d: results){
+//						fw.write(Double.toString(d));
+//						fw.write(System.getProperty("line.separator"));
+//					}
+//					fw.flush();
+//					fw.close();
+//				} catch (IOException e) {
+//					Workbench.errorMessage("Could not write result file "+file.getAbsolutePath(), e, false);
+//				}
+//				
+//			}
+//		});
+//		thread.run();
+//
+//	}
 	
-	private void writeResults(){
-		boolean show=false;
-		try {
-			Workbench workbench = Workbench.getInstance();
-			if (JOptionPane.showConfirmDialog(null, "write Files?")==JOptionPane.YES_OPTION) 
-				show =true;
-			
-		} catch (Exception e1) {
-		}
-		
-		if(!show) return;
-		
+	
+	private void writeResults(File pathForTimingResults, File pathForCostsResult){		
 		Thread timeResultThread = new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				try {
-					SimulationResultsWriter.writeIntoIndividualFiles(wtm, new File("/home/richard/Dokumente/diss/Ausarbeitung mit Vorlage/img/simulation/"));
+					SimulationResultsWriter.writeTimeResults(wtm, pathForTimingResults);
 				} catch (IOException e) {
 					Workbench.errorMessage("Could not write result file "+SimulationResultsWriter.getFile().getAbsolutePath(), e, false);
 				}
@@ -274,7 +310,11 @@ public class SimulationResult extends JFrame {
 			
 			@Override
 			public void run() {
-				writeCostsResults();
+				try {
+					SimulationResultsWriter.writeCostsResults(wtm,pathForCostsResult);
+				} catch (ProjectComponentException | IOException e) {
+					Workbench.errorMessage("Could not write cost result file "+SimulationResultsWriter.getFile().getAbsolutePath(), e, false);
+				}
 				
 			}
 		});
@@ -282,55 +322,56 @@ public class SimulationResult extends JFrame {
 		timeResultThread.start();
 	}
 	
-	private void writeCostsResults() {
-		HashMap<String, LinkedList<Double>> costs = generateCostMap();
-		for(String netName:costs.keySet()){
-			File path = new File("/home/richard/Dokumente/diss/Ausarbeitung mit Vorlage/img/costs/");
-			File file = getFileNameFor(path, netName);
-			try {
-				FileWriter fw = new FileWriter(file);
-				for(Double cost:costs.get(netName)){
-					fw.write(Double.toString(cost));
-					fw.write(System.getProperty("line.separator"));
-				}
-				fw.flush();
-				fw.close();
-			} catch (IOException e) {
-				// Do nothing
-			}
-		}
-	}
 	
-	private HashMap<String, LinkedList<Double>> generateCostMap() {
-		HashMap<String, LinkedList<Double>> costResult = new HashMap<>();
-		for(String netName:wtm.getResult().keySet()){
-			LinkedList<Double> resultList = new LinkedList<>();
-			double deadline = ar.getDeadlineFor(netName);
-			TimedNet net = wtm.getNets().get(netName);
-			for(double result: wtm.getResult().get(netName)){
-				double cost=0;
-				if(result>deadline){ //net has not met deadline
-					cost += deadline * net.getCostPerTimeUnit(); //cost to deadline
-					cost += (result-deadline)*net.getCostPerTimeUnitAfterDeadline(); //costs after deadline
-				} else { //net is within deadline
-					cost += result*net.getCostPerTimeUnit();
-				}
-				resultList.add(cost);
-			}
-			costResult.put(netName, resultList);
-		}
-		return costResult;
-	}
-
-	private File getFileNameFor(File path, String currentNet){
-		StringBuilder b = new StringBuilder();
-		b.append(path.getAbsolutePath()+"/");
-		for(String netNames:wtm.getResult().keySet()) //get names of remaining open nets
-			b.append(netNames+"-");
-		b.append("("+currentNet.toUpperCase()+").csv"); //point out simulated net
-		System.out.println("FilePath: "+b.toString());
-		return new File(b.toString());
-	}
+//	private void writeCostsResults(File path) {
+//		HashMap<String, LinkedList<Double>> costs = generateCostMap();
+//		for(String netName:costs.keySet()){
+//			//File path = new File("/home/richard/Dokumente/diss/Ausarbeitung mit Vorlage/img/costs/");
+//			File file = getFileNameFor(path, netName);
+//			try {
+//				FileWriter fw = new FileWriter(file);
+//				for(Double cost:costs.get(netName)){
+//					fw.write(Double.toString(cost));
+//					fw.write(System.getProperty("line.separator"));
+//				}
+//				fw.flush();
+//				fw.close();
+//			} catch (IOException e) {
+//				// Do nothing
+//			}
+//		}
+//	}
+//	
+//	private HashMap<String, LinkedList<Double>> generateCostMap() {
+//		HashMap<String, LinkedList<Double>> costResult = new HashMap<>();
+//		for(String netName:wtm.getResult().keySet()){
+//			LinkedList<Double> resultList = new LinkedList<>();
+//			double deadline = ar.getDeadlineFor(netName);
+//			TimedNet net = wtm.getNets().get(netName);
+//			for(double result: wtm.getResult().get(netName)){
+//				double cost=0;
+//				if(result>deadline){ //net has not met deadline
+//					cost += deadline * net.getCostPerTimeUnit(); //cost to deadline
+//					cost += (result-deadline)*net.getCostPerTimeUnitAfterDeadline(); //costs after deadline
+//				} else { //net is within deadline
+//					cost += result*net.getCostPerTimeUnit();
+//				}
+//				resultList.add(cost);
+//			}
+//			costResult.put(netName, resultList);
+//		}
+//		return costResult;
+//	}
+//
+//	private File getFileNameFor(File path, String currentNet){
+//		StringBuilder b = new StringBuilder();
+//		b.append(path.getAbsolutePath()+"/");
+//		for(String netNames:wtm.getResult().keySet()) //get names of remaining open nets
+//			b.append(netNames+"-");
+//		b.append("("+currentNet.toUpperCase()+").csv"); //point out simulated net
+//		System.out.println("FilePath: "+b.toString());
+//		return new File(b.toString());
+//	}
 	
 
 

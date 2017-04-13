@@ -387,4 +387,15 @@ public class CompoundResource extends Resource {
 		Validate.notNull(namesOfDuplicateSets,"namesOfDuplicateSets in "+getName()+" is null");
 		Validate.notNull(usedSetResources,"usedSetResources in "+getName()+" is null");
 	}
+
+	public void changeResource(IResource old, IResource newResource) {
+		for(IResource res:resources){
+			if(res instanceof CompoundResource){
+				((CompoundResource)res).changeResource(old, newResource);
+			}
+			resources.remove(old);
+			resources.add(newResource);
+		}
+		
+	}
 }

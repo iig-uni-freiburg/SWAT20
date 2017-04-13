@@ -78,7 +78,7 @@ public class PlanExtractorResult extends JFrame   {
 			public void run() {
 				WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 				try {
-					wtm.simulateExecutionPlan(2000, workflowExecutionPlan.getSeq());
+					wtm.simulateExecutionPlan(10000, workflowExecutionPlan.getSeq());
 					new SimulationResult(wtm, getTimeContext(), false).setVisible(true);
 				} catch (PNException e) {
 					Workbench.errorMessage("Could not simulate execution plan", e, true);

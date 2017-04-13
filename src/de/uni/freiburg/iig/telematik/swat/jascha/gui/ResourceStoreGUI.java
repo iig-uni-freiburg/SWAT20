@@ -29,7 +29,9 @@ import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.IResourceC
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceStore;
 import de.uni.freiburg.iig.telematik.swat.jascha.ResourceType;
 import de.uni.freiburg.iig.telematik.swat.jascha.fileHandling.ResourceStoreContainer;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeDefinedResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeNamedComponentAction;
+import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ChangeResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ExtractResourceAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.ResourceDetailAction;
 import de.uni.freiburg.iig.telematik.swat.jascha.gui.actions.SaveResourceStoreAction;
@@ -141,6 +143,7 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 			panel.add(getRenameButton());
 		panel.add(Box.createHorizontalGlue());
 		panel.add(new JLabel("add or remove: "));
+		panel.add(getChangeButton());
 		panel.add(getPlusButton());
 		panel.add(getMinusButton());
 		panel.add(Box.createHorizontalStrut(5));
@@ -197,6 +200,13 @@ public class ResourceStoreGUI extends JFrame implements ResourceStoreListener{
 			}
 		});
 		return save;
+	}
+	
+	private JButton getChangeButton(){
+		JButton change = new JButton("change...");
+		change.setText("change...");
+		change.addActionListener(new ChangeDefinedResourceAction(ResourceType.SHARED, resourceStore, list));
+		return change;
 	}
 	
 	private JButton getPlusButton(){

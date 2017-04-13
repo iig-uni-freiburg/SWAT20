@@ -118,6 +118,20 @@ public class ResourceStore implements NamedComponent{
 		}
 	}
 	
+	public void changeResource(IResource old, IResource newResource) throws Exception{
+		//if(!old.getName().equals(newResource.getName()))
+		//	throw new Exception("Resources must have the same name");
+		for(IResource res:resources.values()){
+			if(res instanceof CompoundResource){
+				((CompoundResource)res).changeResource(old, newResource);
+			}
+		}
+		resources.remove(old);
+		informListenersOfResourceRemoval(old);
+		resources.put(newResource.getName(), newResource);
+		informListenersOfResourceChange(newResource);
+	}
+	
 	//This method also works for removal of CompoundResource, ResourceSet and SharedResource
 	private void updateReferences(IResource input) {
 		List<IResource> compounds = new ArrayList<IResource>();
