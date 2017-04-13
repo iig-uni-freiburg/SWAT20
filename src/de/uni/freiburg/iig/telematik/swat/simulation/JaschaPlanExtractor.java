@@ -1,5 +1,6 @@
 package de.uni.freiburg.iig.telematik.swat.simulation;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 
 import com.itextpdf.text.log.SysoCounter;
 
@@ -44,7 +46,10 @@ public class JaschaPlanExtractor {
 	private Set<WorkflowExecutionPlan> plans;
 	private HashMap<FireSequence, LinkedList<Double>> endingTimesMap;
 	private static ArrayList<WorkflowExecutionPlan> currentSet = null;
-	private static int numberOfRuns = 10000;
+	private static int numberOfRuns = 1000;
+	private static int numberOfOptiRuns = 100;
+	private static double quote = 0.98;
+	private static int probability = 100; //Im Moment p/10000
 	private ArchitectureResults ar;
 	private List<OptimizationResult> optimizationResults = new ArrayList<OptimizationResult>();
 	private HashMap<String, Integer> compareMap = new HashMap<String, Integer>();;
@@ -52,13 +57,12 @@ public class JaschaPlanExtractor {
 
 
 	public static void main(String args[]) throws IOException, ParserException, PNException, ProjectComponentException {
-		
 		String net1String="Tiefbau";
-		String net2String="Strassenlaterne";
+//		String net2String="Strassenlaterne";
 		String net3String="Fundament";
 		//String net4String="Sisyphos";
 		String net5String="Strassenbau";
-		//String net6String="Abriss";
+		String net6String="Abriss";
 		//String net1String="Multinom1";
 		//String net2String="Multinom2";
 		//String net3String="Multinom3";
@@ -67,24 +71,28 @@ public class JaschaPlanExtractor {
 		//String net2String="invoiceOut";
 		SwatComponents.getInstance();
 		GraphicalTimedNet net1 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net1String);
-		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
+//		GraphicalTimedNet net2 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net2String);
 		GraphicalTimedNet net3 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net3String);
-		//GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
+//		GraphicalTimedNet net4 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net4String);
 		GraphicalTimedNet net5 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net5String);
-		//GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
+		GraphicalTimedNet net6 = (GraphicalTimedNet) SwatComponents.getInstance().getContainerPetriNets().getComponent(net6String);
 		WorkflowTimeMachine wtm = WorkflowTimeMachine.getInstance();
 
 		wtm.addNet(net1.getPetriNet());
-		wtm.addNet(net2.getPetriNet());
+//		wtm.addNet(net2.getPetriNet());
 		wtm.addNet(net3.getPetriNet());
-		//wtm.addNet(net4.getPetriNet());
+//		wtm.addNet(net4.getPetriNet());
 		wtm.addNet(net5.getPetriNet());
-		//wtm.addNet(net6.getPetriNet());
+		wtm.addNet(net6.getPetriNet());
 		wtm.simulateAll(numberOfRuns);
 
 		JaschaPlanExtractor ex = new JaschaPlanExtractor(WorkflowTimeMachine.getInstance(), StatisticListener.getInstance());
 		ArrayList<WorkflowExecutionPlan> set = ex.getExecutionPlan();
-		ex.optimizationResults.add(new OptimizationResult(new FireSequence(), set));
+		
+		//messes with pattern cross-section optimization
+		//ex.optimizationResults.add(new OptimizationResult(new FireSequence(), set));
+		OptimizationResult startingSimulationResult = new OptimizationResult(new FireSequence(), set); 
+		System.out.println(startingSimulationResult.toString());
 
 		//Reverse list for easier working with it
 		Collections.reverse(set);
@@ -93,11 +101,73 @@ public class JaschaPlanExtractor {
 		ex.printOverallFitness(set);
 
 		while (true){
-			Scanner keyboard = new Scanner(System.in);
-			System.out.println("Enter index (0 equals best result) to run further simulation. Enter 96, 97, 98 or 99 to start simple optimization");
+			Scanner keyboard = new Scanner(System.in);			
+			System.out.println("Enter 96, 97, 98 or 99 to start simple optimization");
 			int myint = keyboard.nextInt();
-			wtm.resetAll();			
+			wtm.resetAll();	
+			
 			switch (myint) {
+			case 95:
+				ArrayList<FireSequence> subList = new ArrayList<FireSequence>();
+				double quota = 0.0;
+				for (int i=0; i<20; i++){ 
+					subList.add(set.get(i).getSeq());
+				}
+				System.out.println("starting round 0 ...");
+				ex.crossSectionOptimization(subList);
+				//HashMap<Integer, List<OptimizationResult>> crossSectionOptimizationResultsMap = new HashMap<Integer, List<OptimizationResult>>();
+				Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+				//reverse to get best performances on top of the list
+				Collections.reverse(ex.optimizationResults);
+				//only keep the 20 best results for further optimization
+				if (ex.optimizationResults.size()>20){
+					ex.optimizationResults=ex.optimizationResults.subList(0, 20);
+				}
+				
+				quota = ex.optimizationResults.get(19).getOverallFitness() / ex.optimizationResults.get(0).getOverallFitness();
+				System.out.println("Worst of top 20 / best of top 20: "+
+						ex.optimizationResults.get(19).getOverallFitness() + "/"+ 
+						ex.optimizationResults.get(0).getOverallFitness() + " = "+quota);
+				if (quota > quote){
+					ex.printOptimizationResults();
+					System.out.println("breaking...");					
+					break;
+				}
+				
+				//crossSectionOptimizationResultsMap.put(0, new ArrayList<OptimizationResult>(ex.optimizationResults));
+				for (int i = 1; i < 20; i++){ //outer loop doing 20 rounds of optimizations if not broken first
+					System.out.println("starting round "+i+" ...");
+					subList.clear();
+					for (OptimizationResult or:ex.optimizationResults){						
+						subList.add(or.getOriginalSequence());						
+					}
+					ex.crossSectionOptimization(subList);
+					//new method sort and revert
+					Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+					Collections.reverse(ex.optimizationResults);
+					if (ex.optimizationResults.size()>20){
+						ex.optimizationResults=ex.optimizationResults.subList(0, 20);					
+					}
+					
+					//Breaking if the worst result of top20 has a fitness of at least 95% of top result
+					quota = ex.optimizationResults.get(19).getOverallFitness() / ex.optimizationResults.get(0).getOverallFitness();
+					System.out.println("Worst of top 20 / best of top 20: "+
+							ex.optimizationResults.get(19).getOverallFitness() + "/"+ 
+							ex.optimizationResults.get(0).getOverallFitness() + " = "+quota);
+					if (quota > quote){
+						System.out.println("breaking...");
+						break;
+					}
+					//Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+					//crossSectionOptimizationResultsMap.put(i, new ArrayList<OptimizationResult>(ex.optimizationResults));					
+				}				
+				System.out.println("printing OptimizationResults...");
+				
+				//ex.printCrossSectionResults(crossSectionOptimizationResultsMap);
+				ex.printOptimizationResults();	
+				System.out.println("Choose sequence to test with 10000 simulation runs");
+				break;
+			
 			case 99:				
 				ex.getBestResultFromTop10(set, wtm);
 				break;
@@ -114,7 +184,7 @@ public class JaschaPlanExtractor {
 
 			case 96:
 				ArrayList<WorkflowExecutionPlan> reductionResult = new ArrayList<WorkflowExecutionPlan>();
-				reductionResult = ex.simulateReduction(set, wtm, 5, numberOfRuns);
+				reductionResult = ex.simulateReduction(set, wtm, 10, numberOfRuns);
 				System.out.println("Do you want to find the best (shortest) ending times? 0 for yes, 1 for no, 2 for OptimzationResults");
 				int inputInt = keyboard.nextInt();
 				if (inputInt == 0){
@@ -144,26 +214,254 @@ public class JaschaPlanExtractor {
 				break;
 
 			case 666:
-				//Idea: Print best ending time for Top15 Results				
-				int maxIndex = 15;
-				if (set.size()<15) 
-					maxIndex=set.size();
-				for (int i=0; i<maxIndex; i++){
-					System.out.println("The ending times of the run with a performance of "+ set.get(i).getPerformance() + " are:\n"+set.get(i).getEndingTimes() + "\n");
+				//Check how many Sequences are duplicates in optimizationResults
+				HashSet<FireSequence> hashSet = new HashSet<FireSequence>();
+				for (OptimizationResult or:ex.optimizationResults){
+					hashSet.add(or.getOriginalSequence());
 				}
-				break;			
+				System.out.println("HashSet.size = "+hashSet.size());
+				break;		
 
-			default:
-				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());				
-				ex.printResults(set);
-				System.out.println("Above are the initial simulation results!");
-				System.out.println("The simulated plan was:" + set.get(myint).getSeq());
+			default:				
+				wtm.simulateExecutionPlan(10000, ex.optimizationResults.get(myint).getOriginalSequence());
+//				wtm.simulateExecutionPlan(8000, set.get(myint).getSeq());				
+//				ex.printResults(set);
+//				System.out.println("Above are the initial simulation results!");
+//				System.out.println("The simulated plan was:" + set.get(myint).getSeq());
 				new SimulationResult(wtm, getTimeContext(),false).setVisible(true);
 				break;
 			}
 		}
 		//System.out.println("End");
 		//System.exit(0);
+	}
+	public void runCrosssectionOptimization(){
+		//create initial sequences
+		ArrayList<WorkflowExecutionPlan> set = getExecutionPlan();
+		//necessary to reverse
+		Collections.reverse(set);
+		//initiate cross-section optimization
+		ArrayList<FireSequence> subList = new ArrayList<FireSequence>();
+		double quota = 0.0;
+		for (int i=0; i<20; i++){ 
+			subList.add(set.get(i).getSeq());
+		}
+		System.out.println("starting round 0 ...");
+		crossSectionOptimization(subList);
+		//HashMap<Integer, List<OptimizationResult>> crossSectionOptimizationResultsMap = new HashMap<Integer, List<OptimizationResult>>();
+		Collections.sort(optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+		//reverse to get best performances on top of the list
+		Collections.reverse(optimizationResults);
+		//only keep the 20 best results for further optimization
+		if (optimizationResults.size()>20){
+			optimizationResults=optimizationResults.subList(0, 20);
+		}
+
+		quota = optimizationResults.get(19).getOverallFitness() / optimizationResults.get(0).getOverallFitness();
+		System.out.println("Worst of top 20 / best of top 20: "+
+				optimizationResults.get(19).getOverallFitness() + "/"+ 
+				optimizationResults.get(0).getOverallFitness() + " = "+quota);
+		//Only necessary if quota is reached after first round
+//		if (quota > quote){
+//			printOptimizationResults();
+//			System.out.println("breaking...");					
+//			break;
+//		}
+
+		//crossSectionOptimizationResultsMap.put(0, new ArrayList<OptimizationResult>(ex.optimizationResults));
+		for (int i = 1; i < 20; i++){ //outer loop doing 20 rounds of optimizations if not broken first
+			System.out.println("starting round "+i+" ...");
+			subList.clear();
+			for (OptimizationResult or:optimizationResults){						
+				subList.add(or.getOriginalSequence());						
+			}
+			crossSectionOptimization(subList);
+			//new method sort and revert
+			Collections.sort(optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+			Collections.reverse(optimizationResults);
+			if (optimizationResults.size()>20){
+				optimizationResults=optimizationResults.subList(0, 20);					
+			}
+
+			//Breaking if the worst result of top20 has a fitness of at least 95% of top result
+			quota = optimizationResults.get(19).getOverallFitness() / optimizationResults.get(0).getOverallFitness();
+			System.out.println("Worst of top 20 / best of top 20: "+
+					optimizationResults.get(19).getOverallFitness() + "/"+ 
+					optimizationResults.get(0).getOverallFitness() + " = "+quota);
+			if (quota > quote){
+				System.out.println("breaking...");
+				break;
+			}
+			//Collections.sort(ex.optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+			//crossSectionOptimizationResultsMap.put(i, new ArrayList<OptimizationResult>(ex.optimizationResults));					
+		}				
+		System.out.println("printing OptimizationResults...");
+
+		//ex.printCrossSectionResults(crossSectionOptimizationResultsMap);
+		printOptimizationResults();	
+		System.out.println("Choose sequence to test with 10000 simulation runs");
+	}
+
+	private void printCrossSectionResults(HashMap<Integer, List<OptimizationResult>> map) {
+		int counter;
+		for (Entry<Integer, List<OptimizationResult>> e:map.entrySet()){
+			counter = 0;
+			System.out.println("Best optimization results of round "+e.getKey()+":");
+			ArrayList<OptimizationResult> intermediateList = (ArrayList<OptimizationResult>)e.getValue();
+			Collections.sort(intermediateList, OptimizationResult.OptimizationResultPerformanceComparator);			
+			for (int i = intermediateList.size()-1; i >= 0; i--){
+				System.out.println(i+". "+intermediateList.get(i).toString());
+				counter ++;
+//				if(counter == 4)
+//					break;
+			}			
+		}
+	}
+
+	private void printOptimizationResults() {		
+		Collections.sort(optimizationResults, OptimizationResult.OptimizationResultPerformanceComparator);
+		System.out.println("optimizationResults size="+optimizationResults.size());
+		if (optimizationResults.size()<50){
+			int i = 1;
+			for (OptimizationResult or:optimizationResults){
+				System.out.println(i +". "+ or.toString());
+				i++;
+			}
+
+		} else {
+			System.out.println("1. "+optimizationResults.get(0).toString());
+			int j = 2;
+			for (int i = optimizationResults.size()-50; i<optimizationResults.size(); i++){
+				System.out.println(j +". "+optimizationResults.get(i));
+				j++;
+			}
+			printWorstAndBestFitness(optimizationResults);	
+		}		
+	}
+
+	private void crossSectionOptimization(List<FireSequence> list) {		
+		// get top pattern from set		
+		// for each pattern select random net for cross-section
+		ArrayList<String> netNames = new ArrayList<String>(wtm.getNets().keySet());
+		int randUpperBound = netNames.size();
+		int simulationRuns = numberOfOptiRuns;
+//		int simulationRuns = getSimulationRuns(netNames.size());
+		int randomNet = 0;
+		int randomPosition = 0;
+		// do random and position true cross-section for each pattern of first half of list	
+		for (int counter = 0; counter <= ((list.size()/2)); counter++){
+			//System.out.println("Starting round "+counter+" ...");
+			
+			//Get random nets that will be exchanged
+			randomNet = ThreadLocalRandom.current().nextInt(randUpperBound);
+			String netName = netNames.get(randomNet);
+			randomNet = ThreadLocalRandom.current().nextInt(randUpperBound);
+			String netName2 = netNames.get(randomNet);
+//			System.out.println("netName = "+netName +" and netName2 = "+netName2);
+			
+			FireSequence seq = list.get(counter);
+			//Get two random sequences different to seq to cross-sect with
+			FireSequence seq1 = getRandomSequence(seq, list);
+			FireSequence seq2 = getRandomSequence(seq, list);
+//			System.out.println("seq = " +seq.toString());
+//			System.out.println("seq1 = " +seq1.toString());
+//			System.out.println("seq2 = " +seq2.toString());
+
+			//System.out.println("Starting position-true cross-section...");
+			FireSequence ptSequence = positionTrueCrossSection(seq, seq1, netName);
+			//System.out.println("Starting random cross-section...");
+			FireSequence randSequence = randomCrossSection(seq, seq2, netName2);
+			
+			boolean checkPtSequence = true;
+			boolean checkRandomSequence = true;
+			
+			//Avoid simulation of sequences that are already inside the optimizationResuls list
+			for (OptimizationResult or:optimizationResults){
+				if (!checkPtSequence && !checkRandomSequence){
+					break;
+				}
+				if (checkPtSequence){
+					if (ptSequence.equals(or.getOriginalSequence())){
+						ptSequence = null;
+						System.out.println("I just threw a ptSequence away!");
+						checkPtSequence = false;						
+					}
+				}
+				if (checkRandomSequence){
+					if (randSequence.equals(or.getOriginalSequence())){
+						randSequence = null;
+						System.out.println("I just threw a randomSequence away!");
+						checkRandomSequence = false;
+					}
+				}
+				
+			}			
+			// compare new patterns to previous patterns by simulating the new patterns and creating optimizationResults
+			Set<WorkflowExecutionPlan> intermediateSet;
+			try {				
+				if (ptSequence!=null){
+					System.out.println("Starting simulation of position-true cross-section...");
+					wtm.simulateExecutionPlan(simulationRuns, ptSequence);
+					System.out.println("generating plans...");
+					intermediateSet = generatePlans();
+					OptimizationResult or1= new OptimizationResult(ptSequence, new ArrayList<WorkflowExecutionPlan>(intermediateSet));
+					intermediateSet.clear();
+					optimizationResults.add(or1);
+				}
+				if (randSequence!=null){
+					System.out.println("Starting simulation of random cross-section...");
+					wtm.simulateExecutionPlan(simulationRuns, randSequence);
+					System.out.println("generating plans...");
+					intermediateSet = generatePlans();
+					OptimizationResult or2= new OptimizationResult(randSequence, new ArrayList<WorkflowExecutionPlan>(intermediateSet));
+					intermediateSet.clear();
+					optimizationResults.add(or2);	
+				}		
+
+			} catch (PNException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}
+
+	//Returns random FireSequence != to the one at list.get(counter)
+	private FireSequence getRandomSequence(FireSequence seq, List<FireSequence> list) {
+		int randomPosition = ThreadLocalRandom.current().nextInt(list.size());
+		int i=1;
+		while (seq.equals(list.get(randomPosition))){			
+			//System.out.println("GetRandomSequence picked the same sequence "+i+" time(s)");
+			randomPosition = ThreadLocalRandom.current().nextInt(list.size());
+			i++;
+		}
+		return list.get(randomPosition);
+	}
+
+	//Returns number of runs per pattern simulation depending on number of simulated nets
+	private int getSimulationRuns(int size) {
+		int result=0;
+		switch (size) {
+		case 1:
+			result=10;
+			break;
+		case 2:
+			result=100;
+			break;
+		case 3:
+			result=1000;
+			break;
+		case 4:
+			result=1000;
+			break;
+		case 5:
+			result=100;
+			break;
+		default:
+			result=1000;
+			break;
+		}
+		return result;
 	}
 
 	private void simulateRepeatedly(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm, int runs, int repetitions, int topNumber) {		
@@ -282,36 +580,36 @@ public class JaschaPlanExtractor {
 		//optimizationResults.clear();
 		//create copy of original set:
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>(set);
-		ArrayList<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
+		List<WorkflowExecutionPlan> newList = new ArrayList<WorkflowExecutionPlan>();
 		boolean generateOptimizationResults = false;
 		int goalSize = 2;
 		int size = set.size();
 		int round = 0;
 		int counter = 0;
 		//Idee: reduziere Ergebnismenge auf weniger als 10 oder stoppe nach 10 Runden oder stoppe wenn Ergebnis nicht weiter reduziert wird
-		while (size >= goalSize && round < 20){
+		while (round < 20){			
 			round++;
 			newList.clear();
 			try {
-				if (counter >=2){
+				if (counter >=3 || round == 20){
 					generateOptimizationResults = true;
 				}
 				newList = simulateTopPercent(intermediateList, wtm, p, runs, generateOptimizationResults);
 				intermediateList.clear();
-				intermediateList.addAll(newList);
-
-				if (newList.size() >= (double)size*0.90){ //Reduktion auf mindestens 95%, sonst counter++
+				intermediateList.addAll(newList);				 
+				if (newList.size() > (double)size*0.90){ //Reduktion auf mindestens 90%, sonst counter++
 					counter++;					
-					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar grï¿½ï¿½er wurde, Abbruch
-					if (counter >=3){
-						System.out.println("Breaking because the counter reached 3");
+					//wenn das neue Ergebnis 3 Mal kaum kleiner oder sogar größer wurde, Abbruch
+					if (counter >=4){
+						System.out.println("Breaking because the counter reached "+counter);
 						size = newList.size();
 						break;
 					}
-				}
+				}				
 				size = newList.size();
-				System.out.println("Round "+round+": Result size = "+size);
+				System.out.println("Result size = "+size);
 				System.out.println("The counter is at "+counter);
+				System.out.println("-----------------------------------------------");
 			} catch (PNException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -334,7 +632,7 @@ public class JaschaPlanExtractor {
 	}
 	
 	// checks for WorkflowExecutionPlans with the same FireSequence and merges them (deletes them and creates one new)
-	private ArrayList<WorkflowExecutionPlan> mergeEqualWorkflowExecutionPlans(ArrayList<WorkflowExecutionPlan> list) {
+	private List<WorkflowExecutionPlan> mergeEqualWorkflowExecutionPlans(List<WorkflowExecutionPlan> list) {
 		HashMap<FireSequence, ArrayList<WorkflowExecutionPlan>> map = new HashMap<FireSequence, ArrayList<WorkflowExecutionPlan>>();
 		for (WorkflowExecutionPlan wep:list){
 			if (!map.containsKey(wep.getSeq())){
@@ -345,14 +643,14 @@ public class JaschaPlanExtractor {
 			}
 		}
 		//for each FireSequence that has more than one WEP a new WEP with the merged values is created
-		for (Entry<FireSequence, ArrayList<WorkflowExecutionPlan>> entry:map.entrySet()){
+		for (Entry<FireSequence, ArrayList<WorkflowExecutionPlan>> entry:map.entrySet()){			
 			if (entry.getValue().size()>1){
 				double newPerformance;
 				double nr = 0.0;
 				int newNumberOfRuns = 0;
 				List<Double> newEndingTimes = new ArrayList<Double>();
 				for (WorkflowExecutionPlan wep2:entry.getValue()){
-					nr += (wep2.getPerformance()* wep2.getNumberOfRuns());
+					nr += (wep2.getPerformance() * wep2.getNumberOfRuns());
 					newNumberOfRuns += wep2.getNumberOfRuns();
 					newEndingTimes.addAll(wep2.getEndingTimes());
 					list.remove(wep2);
@@ -364,7 +662,11 @@ public class JaschaPlanExtractor {
 			}
 		}
 		return list;
-	}	
+	}
+	
+	private void remap(ArrayList<WorkflowExecutionPlan> oldWeps, ArrayList<WorkflowExecutionPlan> newWep){
+		
+	}
 
 	// not working!
 	private void simulateMultipleSequences(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm) throws PNException {
@@ -433,17 +735,18 @@ public class JaschaPlanExtractor {
 
 	}
 
-	// Take top 10% results and simulate them again --> greedy simulation leads to no significant reduction 
-	// in the number sequences if many nets are simulated.
-	private ArrayList<WorkflowExecutionPlan> simulateTopPercent(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm,
+	// Take top % results and simulate them again
+	private List<WorkflowExecutionPlan> simulateTopPercent(ArrayList<WorkflowExecutionPlan> set, WorkflowTimeMachine wtm,
 			int p, int runs, boolean generateOptimizationResults) 
 					throws PNException, IOException, ProjectComponentException {		
 		ArrayList<WorkflowExecutionPlan> originalList = new ArrayList<>();		
 		//initializes the TreeSet with the custom comparator WEPsortByPerformance
 		//Set<WorkflowExecutionPlan> resultSet = new TreeSet<WorkflowExecutionPlan>(new WEPsortByPerformance());
 		ArrayList<WorkflowExecutionPlan> intermediateList = new ArrayList<>();
-		Set<WorkflowExecutionPlan> intermediateSet;
-		int simulationSize = (int) (set.size() * ((double)p/100)) +1; //determine the number of sequences which should be simulated and round up
+		Set<WorkflowExecutionPlan> intermediateSet;		
+		//p/1000 for percentages below 1%
+		int simulationSize = (int) (set.size() * ((double)p/10000)) +1; //determine the number of sequences which should be simulated and round up
+		System.out.println("simulationSize ="+simulationSize);
 		int runEach = (int) runs/simulationSize;
 		if (runEach <2){
 			//set the number of runs for each sequence to at least two
@@ -460,7 +763,7 @@ public class JaschaPlanExtractor {
 				intermediateList.addAll(intermediateSet);
 				//Add the result of this Sequence to the OptimizationResults list
 				optimizationResults.add(new OptimizationResult(wep.getSeq(), new ArrayList<WorkflowExecutionPlan>(intermediateSet)));
-				intermediateSet.clear();			
+				intermediateSet.clear();
 			}
 		} else {
 			for (WorkflowExecutionPlan wep:originalList){			
@@ -468,15 +771,39 @@ public class JaschaPlanExtractor {
 				intermediateSet = generatePlans();
 				//resultSet.addAll(intermediateSet);
 				intermediateList.addAll(intermediateSet);
-				intermediateSet.clear();			
+				intermediateSet.clear();
 			}
 		}
-		//ArrayList<WorkflowExecutionPlan> mergeList = new ArrayList<WorkflowExecutionPlan>(resultSet);
-		//Merge Duplicate FireSequences for the intermediate result
-		ArrayList<WorkflowExecutionPlan> resultList = mergeEqualWorkflowExecutionPlans(intermediateList);
-		//Collections.sort(resultList);
-		//resultList.sort(new WEPsortByFireSequence());
-		//Collections.reverse(resultList);
+		
+		List<WorkflowExecutionPlan> resultList = new ArrayList<WorkflowExecutionPlan>();		
+		//Merge Duplicate FireSequences for the intermediate result. Takes a long time to compute --> remove worst 66% before merging		
+		if (generateOptimizationResults){
+			if(intermediateList.size() >1){
+				System.out.println("start merging "+intermediateList.size()+" entries ...");
+				resultList = mergeEqualWorkflowExecutionPlans(intermediateList);
+				resultList.sort(new WEPsortByPerformance());
+			} else {
+				resultList.addAll(intermediateList);
+				resultList.sort(new WEPsortByPerformance());
+			}
+
+		} else {
+			intermediateList.sort(new WEPsortByPerformance());
+			//take top third of sequences and merge them for further optimization			
+			int startIndex = (int)(intermediateList.size() / 1.5);
+			//System.out.println("startIndex="+startIndex+", intermediateList.size="+intermediateList.size());
+			System.out.println("start merging "+(intermediateList.size()-startIndex)+" entries ...");
+			resultList = mergeEqualWorkflowExecutionPlans(intermediateList.subList(startIndex, intermediateList.size()));
+			//take bottom 66% of sequences and remove duplicates to retain the correct reduction factor.
+			TreeSet<WorkflowExecutionPlan> ts = new TreeSet<WorkflowExecutionPlan>(new WEPsortByFireSequence());
+			ts.addAll(intermediateList.subList(0, (startIndex)-1));
+			//System.out.println("intermediateList.size="+intermediateList.size()+", startIndex="+startIndex+
+			//		", resultList.size="+resultList.size()+", ts.size()="+ts.size());
+			resultList.addAll(ts);
+			resultList.sort(new WEPsortByPerformance());
+		}
+		Collections.reverse(resultList);
+		System.out.println("returning "+resultList.size()+" entries");
 		return resultList;
 	}
 
@@ -563,11 +890,14 @@ public class JaschaPlanExtractor {
 	}
 
 	private Set<WorkflowExecutionPlan> generatePlans(){
+		//System.out.println("Starting generatePlans() in PlanExtractor");
 		HashMap<FireSequence, LinkedList<Double>> computedResults = new HashMap<>(); //store fire sequence and simulation results (performance)
 		endingTimesMap = new HashMap<>(); //store fire sequence and the ending times which occurred for this sequence during the simulation
 
-		//listener.getOverallLog gives an empty FireSequence as the last Object --> remove it
-		List<FireSequence> fireSeqList = listener.getOverallLog();		
+		/**
+		 * listener.getOverallLog gives an empty FireSequence as the last Object --> remove it 
+		 */
+		List<FireSequence> fireSeqList = listener.getOverallLog();
 		fireSeqList.remove(fireSeqList.size()-1);
 
 		for(FireSequence seq: fireSeqList){
@@ -658,9 +988,155 @@ public class JaschaPlanExtractor {
 		}			
 		double result = sum/(double)list.size();
 		if (Double.isNaN(result)){
-			//Random result to find the broken entry
+			//Arbitrary result to find the broken entry
 			result = 0.1234;
 		}
 		return result;
 	}
+	
+	private FireSequence randomCrossSection(FireSequence seq0, FireSequence seq1, String netName){
+		
+		ArrayList<FireElement> elementList = retrieveElementsFromNet(seq1, netName, false);
+		ArrayList<FireElement> resultSeqList = new ArrayList<FireElement>(seq0.getSequence());
+//		System.out.println("elementList ="+elementList.toString());
+//		System.out.println("resultSeqList ="+resultSeqList.toString());
+		
+		//Remove all FireElements that belong to the net of netName
+		Predicate<FireElement> FireElementPredicate = fireElement -> fireElement.getTransition().getNet().getName().equals(netName);
+		resultSeqList.removeIf(FireElementPredicate);
+//		System.out.println("resultSeqList after removeIf ="+resultSeqList.toString());
+		int random = 0;
+		int previousRandom = -1;
+		//bound and randBound reduce the upper bound of the random Integer during the first few rounds so the random numbers don't get clustered too soon
+		int bound = elementList.size();
+		if(bound+2>=resultSeqList.size())
+			bound = (resultSeqList.size()-(int)(resultSeqList.size()/2));
+		int round = 0;
+		//System.out.println("bound = "+bound);
+		for (FireElement elem:elementList){
+			int randBound=bound-round;
+			if (randBound<0)
+				randBound=0;
+			random = ThreadLocalRandom.current().nextInt(previousRandom+1, resultSeqList.size()+1-randBound);
+			if(random > resultSeqList.size()){
+				resultSeqList.add(elem);
+			} else {
+				resultSeqList.add(random, elem);
+			}			
+			previousRandom = random;
+			round++;
+			//System.out.println("random ="+random+", resultSeqList.size()="+resultSeqList.size());
+		}
+		HashSet<String> testSet = new HashSet<String>();
+		FireSequence result = new FireSequence();
+		for (FireElement elem:resultSeqList){			
+			//result.add(elem);
+			//create new FireElement instead of re-using the old one to avoid confusion
+			result.add(new FireElement(elem.getTransition()));
+			testSet.add(elem.getTransition().getNet().getName());
+		}
+//		System.out.println("resultSeqList ="+resultSeqList.toString());
+//		System.out.println("result ="+result.toString());
+//		System.out.println("-------returning from random position cross-section-------");
+		return result;
+	}
+	
+	private FireSequence positionTrueCrossSection(FireSequence seq0, FireSequence seq1, String netName){
+		// Lists with Transitions from one particular net (netName)
+		ArrayList<FireElement> elementList = retrieveElementsFromNet(seq0, netName, true);
+		ArrayList<FireElement> elementList2 = retrieveElementsFromNet(seq1, netName, false);
+		ArrayList<FireElement> resultSeqList = new ArrayList<FireElement>();
+		ArrayList<FireElement> originalElements = seq0.getSequence();
+//		System.out.println("elementList ="+elementList.toString());
+//		System.out.println("elementList2 ="+elementList2.toString());
+//		System.out.println("originalElements ="+originalElements.toString());
+		
+		HashSet<String> testSet = new HashSet<String>();
+		
+		int position = 0;
+		for (FireElement element:elementList){
+			if (element != null){
+				FireElement fe = getNextNotNull(elementList2);
+				if (fe!=null){
+					resultSeqList.add(position, fe);
+				} else {
+					// do nothing, elementList2 is empty and the net (netName) should be finished
+				}
+			} else {
+				if (position > resultSeqList.size()){
+					resultSeqList.add(originalElements.get(position));
+				} else {
+					resultSeqList.add(position, originalElements.get(position));
+				}				
+			}
+			position++;
+		}
+		//if elementList is finished but there are still FireElements in elementList2, add them at the end
+		while (!elementList2.isEmpty()){
+			resultSeqList.add(getNextNotNull(elementList2));
+		}
+		FireSequence result = new FireSequence();
+		for (FireElement elem:resultSeqList){
+			if (elem!=null){
+				//result.add(elem);
+				//create new FireElement instead of re-using the old one to avoid confusion
+				result.add(new FireElement(elem.getTransition()));
+				testSet.add(elem.getTransition().getNet().getName());
+			} else {
+				System.out.println("There was a null value in ResultSeqList in positionTrueCrossSection");
+			}						
+		}
+		if (testSet.size()<2){
+			//Toggle breakpoint
+		}
+//		System.out.println("resultSeqList = "+resultSeqList.toString());
+//		System.out.println("result = "+result.toString());
+//		System.out.println("-------returning from position true cross-section-------");
+		return result;
+	}
+	
+	private FireElement getNextNotNull(ArrayList<FireElement> list){
+		if (list.isEmpty())
+			return null;
+		int position = -1;
+		FireElement result = null;
+		for (FireElement element:list){
+			position++;
+			if (element != null){				
+				result = element;
+				break;
+			} else {
+				System.out.println("There shouldn't be a null value in getNextNotNull!");
+			}
+		}
+		list.remove(position);
+		return result;
+	}
+	
+	private ArrayList<FireElement> retrieveElementsFromNet (FireSequence seq, String netName, boolean positionTrue){
+		ArrayList<FireElement> elementList = new ArrayList<FireElement>();
+		if (positionTrue){
+			for (FireElement elem:seq.getSequence()){
+				if (elem.getTransition().getNet().getName().equals(netName)){
+					elementList.add(elem);
+				} else {
+					elementList.add(null);
+				}
+			}
+		} else {
+			for (FireElement elem:seq.getSequence()){
+				if (elem.getTransition().getNet().getName().equals(netName)){
+					elementList.add(elem);
+				}
+			}
+		}
+		return elementList;
+	}
+	public List<OptimizationResult> getOptimizationResults() {
+		return optimizationResults;
+	}
+	public static int getNumberOfRuns() {
+		return numberOfRuns;
+	}
+	
 }

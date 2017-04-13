@@ -9,6 +9,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.TimedNet;
 import de.uni.freiburg.iig.telematik.sepia.petrinet.timedNet.concepts.WorkflowTimeMachine;
 import de.uni.freiburg.iig.telematik.swat.icons.IconFactory;
+import de.uni.freiburg.iig.telematik.swat.simulation.JaschaPlanExtractor;
 import de.uni.freiburg.iig.telematik.swat.simulation.PlanExtractor;
 import de.uni.freiburg.iig.telematik.swat.simulation.gui.PlanExtractorResult;
 import de.uni.freiburg.iig.telematik.swat.workbench.SwatTabView;
@@ -38,9 +39,11 @@ public class StartOptimizationAction extends AbstractWorkbenchAction {
 		wtm.clearAllNets();
 		wtm.addAllNets(loadNets());
 		wtm.resetAll();
-		wtm.simulateAll(SwatProperties.getInstance().getNumberOfSimulationsRuns());
-		PlanExtractor pe = new PlanExtractor();
-		PlanExtractorResult result = new PlanExtractorResult(pe);
+//		wtm.simulateAll(SwatProperties.getInstance().getNumberOfSimulationsRuns());
+//		PlanExtractor pe = new PlanExtractor();
+		JaschaPlanExtractor jpe = new JaschaPlanExtractor();
+		wtm.simulateAll(jpe.getNumberOfRuns());
+		PlanExtractorResult result = new PlanExtractorResult(jpe);
 
 	}
 	

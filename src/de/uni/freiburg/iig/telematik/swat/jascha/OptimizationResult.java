@@ -1,5 +1,7 @@
 package de.uni.freiburg.iig.telematik.swat.jascha;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,14 +30,14 @@ public class OptimizationResult {
 		finishTimes = new ArrayList<Double>();		
 		name = originalSequence.toString();
 		numberOfRuns = 0;
-		initialise();
+		initialize();
 	}
 	
-	private void initialise() {
+	private void initialize() {
 		List<Double> performanceList = new ArrayList<Double>();
 		for (WorkflowExecutionPlan wep:plans){
 			if (wep == null) {
-				System.out.println("this wep is null:"+wep);
+				System.out.println("OptimizationResult init(): this wep is null:"+wep);
 				}
 			else {
 				finishTimes.addAll(wep.getEndingTimes());
@@ -112,12 +114,15 @@ public class OptimizationResult {
 	}
 	
 	@Override
-	public String toString() {
-		return "OptimizationResult [originalPlan=" + originalSequence.toString() + ", overallFitness="
-				+ overallFitness + ", averageFinishTime=" + averageFinishTime + ", medianFinishTime=" + medianFinishTime
-				+ ", number of Runs=" + numberOfRuns + ", number of contained Sequences=" + plans.size() + "]";
+	public String toString() {		
+		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+		dfs.setDecimalSeparator('.');
+		DecimalFormat df = new DecimalFormat("#.###", dfs);
+		return "OptimizationResult: [overallFitness=" + df.format(overallFitness) + ", averageFinishTime=" + df.format(averageFinishTime)
+				+ ", medianFinishTime=" + df.format(medianFinishTime) + ", number of Runs=" + numberOfRuns + ", number of contained Sequences=" + plans.size()
+				+ ", originalPlan=" + originalSequence.getTransitionString() +"]";
 	}
-	
+	// Best fitness result is at the bottom of the list when sorted, worst fitness is at the top!
 	public static Comparator<OptimizationResult> OptimizationResultPerformanceComparator = new Comparator<OptimizationResult>() {
 
 		@Override
@@ -157,5 +162,9 @@ public class OptimizationResult {
 			return s1.compareTo(s2);
 		}		
 	};
+
+	public FireSequence getSeq() {
+		return originalSequence;
+	}
 	
 }

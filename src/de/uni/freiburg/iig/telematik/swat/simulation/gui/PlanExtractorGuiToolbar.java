@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JToolBar;
 
+import de.uni.freiburg.iig.telematik.swat.jascha.OptimizationResult;
 import de.uni.freiburg.iig.telematik.swat.simulation.SimulationResultsWriter;
 import de.uni.freiburg.iig.telematik.swat.simulation.WorkflowExecutionPlan;
 
@@ -25,7 +26,7 @@ public class PlanExtractorGuiToolbar extends JToolBar {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WorkflowExecutionPlan plan = planExtractorResult.getSelectedValue();
+				OptimizationResult plan = planExtractorResult.getSelectedValue();
 				File path = new File("/home/richard/Dokumente/diss/Ausarbeitung mit Vorlage/img/gantt/tmp/");
 				try {
 					SimulationResultsWriter.writeFireSequence(path,plan.getSeq());
